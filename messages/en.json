@@ -3,7 +3,8 @@
         "noAccount": "Don’t have an account?",
         "signUp": "Sign up",
         "login": "log in",
-        "haveAccount": "Already have an account?"
+        "haveAccount": "Already have an account?",
+        "notice": "By continuing with an account located in Vietnam, you agree to our <terms>Terms of Service</terms> and acknowledge that you have read our <privacy>Privacy Policy</privacy>."
     },
     "LoginPage": {
         "title": "Log in to TikTok",
@@ -11,10 +12,12 @@
         "goBack": "Go back",
         "noAccount": "Don’t have an account?",
         "signUp": "Sign up",
-        "forgotPassword": "Forgot password?",
-        "notice": "By continuing with an account located in Vietnam, you agree to our {tosLink} and acknowledge that you have read our {privacyLink}.",
-        "terms": "Terms of Service",
-        "privacy": "Privacy Policy"
+        "forgotPassword": "Forgot password?"
+    },
+    "SignUpPage": {
+        "title": "Sign up for TikTok",
+        "description": "Create a profile, follow other accounts, make your own videos, and more.",
+        "goBack": "Go back"
     },
     "SwitchLanguage": {
         "label": "Switch language",
