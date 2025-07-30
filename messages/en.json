@@ -1,0 +1,21 @@
+{
+    "LoginPage": {
+        "title": "Log in to TikTok",
+        "description": "Manage your account, check notifications, comment on videos, and more.",
+        "goBack": "Go back",
+        "noAccount": "Don’t have an account?",
+        "signUp": "Sign up",
+        "forgotPassword": "Forgot password?",
+        "notice": "By continuing with an account located in Vietnam, you agree to our {tosLink} and acknowledge that you have read our {privacyLink}.",
+        "terms": "Terms of Service",
+        "privacy": "Privacy Policy"
+    },
+    "SwitchLanguage": {
+        "label": "Switch language",
+        "en": "English",
+        "vi": "Vietnamese"
+    },
+    "header": {
+        "help": "Feedback and Help"
+    }
+}
