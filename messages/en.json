@@ -1,4 +1,10 @@
 {
+    "AuthLayout": {
+        "noAccount": "Don’t have an account?",
+        "signUp": "Sign up",
+        "login": "log in",
+        "haveAccount": "Already have an account?"
+    },
     "LoginPage": {
         "title": "Log in to TikTok",
         "description": "Manage your account, check notifications, comment on videos, and more.",

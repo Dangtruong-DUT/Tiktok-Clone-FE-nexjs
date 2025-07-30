@@ -1,3 +1,4 @@
+import { AuthNav } from "@/app/[locale]/(public)/(auth)/auth-nav";
 import AuthFooter from "@/components/auth-footer";
 import AuthHeader from "@/components/auth-header";
 import { LocalesType } from "@/i18n/config";
@@ -18,7 +19,8 @@ export default function AuthLayout({
     return (
         <div>
             <AuthHeader />
-            <main className="bg-white text-black h-[calc(100vh-3.75rem-5.25rem)] overflow-auto">{children}</main>
+            <main className="bg-white text-black h-[calc(100vh-3.75rem-5.25rem-4rem)] overflow-auto">{children}</main>
+            <AuthNav />
             <AuthFooter />
         </div>
     );
