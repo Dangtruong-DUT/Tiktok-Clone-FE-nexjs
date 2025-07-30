@@ -4,13 +4,27 @@
         "signUp": "Đăng ký",
         "login": "Đăng nhập",
         "haveAccount": "Đã có tài khoản?",
-        "notice": "Bằng cách tiếp tục với tài khoản tại Việt Nam, bạn đồng ý với <terms>Điều khoản dịch vụ</terms> và xác nhận rằng bạn đã đọc <privacy> Chính sách quyền riêng tư</privacy>."
+        "notice": "Bằng cách tiếp tục với tài khoản ở Việt Nam, bạn đồng ý với <terms>Điều khoản Dịch vụ</terms> của chúng tôi và xác nhận rằng bạn đã đọc <privacy>Chính sách Bảo mật</privacy>."
     },
     "LoginPage": {
-        "title": "Đăng nhập TikTok",
-        "description": "Quản lý tài khoản, kiểm tra thông báo, bình luận video và nhiều hơn nữa.",
+        "title": "Đăng nhập vào TikTok",
+        "description": "Quản lý tài khoản của bạn, kiểm tra thông báo, bình luận video và nhiều hơn nữa.",
         "goBack": "Quay lại",
-        "forgotPassword": "Quên mật khẩu?"
+        "noAccount": "Chưa có tài khoản?",
+        "signUp": "Đăng ký",
+        "forgotPassword": "Quên mật khẩu?",
+        "email": {
+            "title": "Đăng nhập",
+            "subtitle": "Đăng nhập",
+            "emailPlaceholder": "Email",
+            "passwordPlaceholder": "Mật khẩu",
+            "forgotPassword": "Quên mật khẩu?"
+        }
+    },
+    "SignUpPage": {
+        "title": "Đăng ký TikTok",
+        "description": "Tạo hồ sơ, theo dõi tài khoản khác, tạo video của riêng bạn và nhiều hơn nữa.",
+        "goBack": "Quay lại"
     },
     "SwitchLanguage": {
         "label": "Chuyển ngôn ngữ",
@@ -18,6 +32,6 @@
         "vi": "Tiếng Việt"
     },
     "header": {
-        "help": "Phản hồi và trợ giúp"
+        "help": "Phản hồi và Trợ giúp"
     }
 }

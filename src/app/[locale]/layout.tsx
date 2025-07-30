@@ -6,6 +6,7 @@ import { routing } from "@/i18n/routing";
 import { LocalesType } from "@/i18n/config";
 import { tiktokDisplayFont, tiktokFont } from "@/config/font";
 import { ThemeProvider } from "@/provider/theme-provider";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
     title: "Tiktok",
@@ -35,6 +36,7 @@ export default async function LocaleLayout({
                 <NextIntlClientProvider>
                     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
                         {children}
+                        <Toaster />
                     </ThemeProvider>
                 </NextIntlClientProvider>
             </body>

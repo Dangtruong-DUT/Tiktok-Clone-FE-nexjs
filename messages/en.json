@@ -12,8 +12,16 @@
         "goBack": "Go back",
         "noAccount": "Don’t have an account?",
         "signUp": "Sign up",
-        "forgotPassword": "Forgot password?"
+        "forgotPassword": "Forgot password?",
+        "email": {
+            "title": "Log in",
+            "subtitle": "Log in",
+            "emailPlaceholder": "Email",
+            "passwordPlaceholder": "Password",
+            "forgotPassword": "Forgot password?"
+        }
     },
+
     "SignUpPage": {
         "title": "Sign up for TikTok",
         "description": "Create a profile, follow other accounts, make your own videos, and more.",
