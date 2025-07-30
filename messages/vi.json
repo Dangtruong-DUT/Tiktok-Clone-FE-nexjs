@@ -24,7 +24,14 @@
     "SignUpPage": {
         "title": "Đăng ký TikTok",
         "description": "Tạo hồ sơ, theo dõi tài khoản khác, tạo video của riêng bạn và nhiều hơn nữa.",
-        "goBack": "Quay lại"
+        "goBack": "Quay lại",
+        "email": {
+            "title": "Đăng ký",
+            "subtitle": "Đăng ký",
+            "emailPlaceholder": "Email",
+            "passwordPlaceholder": "Mật khẩu",
+            "confirmPasswordPlaceholder": "Xác nhận mật khẩu"
+        }
     },
     "SwitchLanguage": {
         "label": "Chuyển ngôn ngữ",

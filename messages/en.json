@@ -25,7 +25,14 @@
     "SignUpPage": {
         "title": "Sign up for TikTok",
         "description": "Create a profile, follow other accounts, make your own videos, and more.",
-        "goBack": "Go back"
+        "goBack": "Go back",
+        "email": {
+            "title": "Sign up",
+            "subtitle": "Sign up",
+            "emailPlaceholder": "Email",
+            "passwordPlaceholder": "Password",
+            "confirmPasswordPlaceholder": "Confirm password"
+        }
     },
     "SwitchLanguage": {
         "label": "Switch language",
