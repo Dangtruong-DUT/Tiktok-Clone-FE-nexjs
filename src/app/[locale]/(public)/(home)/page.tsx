@@ -1,7 +1,7 @@
 export default function HomePage() {
     return (
-        <main>
+        <div>
             <h1>Welcome to TikTok</h1>
-        </main>
+        </div>
     );
 }

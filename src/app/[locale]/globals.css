@@ -132,6 +132,41 @@
     }
 }
 
+@utility scrollbar-hidden {
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+@layer utilities {
+    @keyframes slide-in {
+        0% {
+            opacity: 0;
+            width: 0;
+        }
+        100% {
+            opacity: 1;
+            width: min(336px, 70vw);
+        }
+    }
+
+    .animate-slide-in {
+        animation: slide-in 400ms ease forwards;
+    }
+}
+
+.brand-input {
+    @apply h-11 border rounded-xs border-stone-200 bg-neutral-100 placeholder:text-stone-500 
+           focus:outline-none focus:ring-0 focus:ring-offset-0 
+           focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 
+           focus-visible:border-stone-200 focus:shadow-none text-base;
+}
+
+.primary-button {
+    @apply h-11 rounded-xs bg-brand mt-4 text-base font-bold hover:bg-brand/90 text-white 
+           disabled:bg-neutral-300! disabled:text-neutral-500!;
+}
+
 body {
     font-family: var(--font-tiktok);
     caret-color: var(--color-brand);
@@ -150,15 +185,4 @@ html *::-webkit-scrollbar-thumb {
 html *::-webkit-scrollbar-track {
     border-radius: 0;
     background-color: var(--background);
-}
-
-.brand-input {
-    @apply h-11 border rounded-xs border-stone-200 bg-neutral-100 placeholder:text-stone-500 
-             focus:outline-none focus:ring-0 focus:ring-offset-0 
-             focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 
-             focus-visible:border-stone-200 focus:shadow-none text-base;
-}
-
-.primary-button {
-    @apply h-11 rounded-xs bg-brand  mt-4 text-base font-bold hover:bg-brand/90 text-white disabled:bg-neutral-300! disabled:text-neutral-500!;
 }
