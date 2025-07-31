@@ -9,13 +9,45 @@ import NavItems from "@/app/[locale]/(public)/(home)/_components/sidebar/compone
 import useSidebar, {
     SidebarProvider,
 } from "@/app/[locale]/(public)/(home)/_components/sidebar/context/sidebar.context";
+import { useCallback, useEffect, useState } from "react";
+import SearchDrawerContent from "@/app/[locale]/(public)/(home)/_components/sidebar/components/drawer/search-drawer-content";
+import DrawerSidebar from "@/app/[locale]/(public)/(home)/_components/sidebar/components/drawer/drawer";
+import SettingsMenuDrawerContent from "@/app/[locale]/(public)/(home)/_components/sidebar/components/drawer/settings-menu-drawer-content";
 
 export interface SidebarProps {
     className?: string;
 }
 
 export default function Sidebar({ className }: SidebarProps) {
-    const { isOpenDrawer } = useSidebar();
+    const { isOpenDrawer, setIsOpenDrawer } = useSidebar();
+    const [isOpenSearch, setIsOpenSearch] = useState<boolean>(false);
+    const [isOpenSettings, setIsOpenSettings] = useState<boolean>(false);
+    const [searchValue, setSearchValue] = useState<string>("");
+
+    useEffect(() => {
+        if (isOpenDrawer === false) {
+            setIsOpenSearch(false);
+            setIsOpenSettings(false);
+        }
+    }, [isOpenDrawer]);
+
+    const toggleSearchDrawer = useCallback(() => {
+        if (isOpenSearch) {
+            setIsOpenDrawer(false);
+        } else {
+            setIsOpenDrawer(true);
+        }
+        setIsOpenSearch((prev) => !prev);
+    }, [isOpenSearch, setIsOpenSearch]);
+
+    const toggleSettingsDrawer = useCallback(() => {
+        if (isOpenSettings) {
+            setIsOpenDrawer(false);
+        } else {
+            setIsOpenDrawer(true);
+        }
+        setIsOpenSettings((prev) => !prev);
+    }, [isOpenSettings, setIsOpenDrawer, setIsOpenSettings]);
 
     return (
         <SidebarProvider>
@@ -26,6 +58,12 @@ export default function Sidebar({ className }: SidebarProps) {
                     className
                 )}
             >
+                <DrawerSidebar isOpen={isOpenSearch} setIsOpenDrawer={setIsOpenSearch}>
+                    <SearchDrawerContent searchValue={searchValue} setSearchValue={setSearchValue} />
+                </DrawerSidebar>
+                <DrawerSidebar isOpen={isOpenSettings} setIsOpenDrawer={setIsOpenSettings}>
+                    <SettingsMenuDrawerContent />
+                </DrawerSidebar>
                 <aside
                     className={cn(
                         "flex flex-col w-full py-5 px-0 pb-[26px] h-full flex-shrink-0",
@@ -33,7 +71,7 @@ export default function Sidebar({ className }: SidebarProps) {
                         isOpenDrawer && "w-14 border-r border-border"
                     )}
                 >
-                    <SidebarHeader />
+                    <SidebarHeader isOpenSearch={isOpenSearch} toggleSearchDrawer={toggleSearchDrawer} />
 
                     <div className={cn("flex-shrink-0 flex-1 overflow-hidden overflow-y-auto scrollbar-hidden")}>
                         <NavItems />

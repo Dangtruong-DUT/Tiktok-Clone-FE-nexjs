@@ -36,6 +36,19 @@
             "dateOfBirthDescription": "Ngày sinh của bạn sẽ không được hiển thị công khai."
         }
     },
+    "HomePage": {
+        "menu": {
+            "forYou": "Dành cho bạn",
+            "explore": "Khám phá",
+            "following": "Đang theo dõi",
+            "friends": "Bạn bè",
+            "upload": "Tải lên",
+            "activity": "Hoạt động",
+            "messages": "Tin nhắn",
+            "more": "Thêm",
+            "profile": "Hồ sơ"
+        }
+    },
     "SwitchLanguage": {
         "label": "Chuyển ngôn ngữ",
         "en": "Tiếng Anh",

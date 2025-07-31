@@ -149,6 +149,19 @@
             width: min(336px, 70vw);
         }
     }
+    @keyframes slide-out {
+        0% {
+            opacity: 1;
+            width: min(336px, 70vw);
+        }
+        100% {
+            opacity: 0;
+            width: 0;
+        }
+    }
+    .animate-slide-out {
+        animation: slide-out 400ms ease forwards;
+    }
 
     .animate-slide-in {
         animation: slide-in 400ms ease forwards;

@@ -1,11 +1,16 @@
 import React, { useCallback, useRef, useState } from "react";
 import { X, Search as SearchIcon, Loader2 } from "lucide-react";
 import useDebounce from "@/hooks/shared/useDebounce";
-import useSidebar from "@/app/[locale]/(public)/(home)/_components/sidebar/context/sidebar.context";
 import DialogHeader from "@/components/dialog-header";
+import { useDrawerSidebar } from "@/app/[locale]/(public)/(home)/_components/sidebar/components/drawer/drawer";
 
-export default function SearchDrawerContent() {
-    const { searchValue, setSearchValue, toggleDrawer } = useSidebar();
+type SearchDrawerContentProps = {
+    searchValue: string;
+    setSearchValue: (value: string) => void;
+};
+
+export default function SearchDrawerContent({ searchValue, setSearchValue }: SearchDrawerContentProps) {
+    const { toggleDrawer } = useDrawerSidebar();
     const [searchResults, setSearchResults] = useState([]);
     const [showLoading, setShowLoading] = useState(false);
     const debounceValue = useDebounce(searchValue, 500);
@@ -18,13 +23,9 @@ export default function SearchDrawerContent() {
         inputRef.current?.focus();
     }, [setSearchValue, setSearchResults]);
 
-    const handleCloseDrawer = useCallback(() => {
-        toggleDrawer(false);
-    }, [toggleDrawer]);
-
     return (
         <div className="w-full">
-            <DialogHeader title="Search" onClose={handleCloseDrawer} />
+            <DialogHeader title="Search" onClose={toggleDrawer} />
 
             <div className="mt-6 flex items-center flex-row h-[42px] rounded-[92px] px-4 py-2.5 bg-input overflow-hidden relative hover:outline-1 hover:outline-border focus-within:outline-1 focus-within:outline-border">
                 <SearchIcon size={16} className="text-muted-foreground mr-3 flex-shrink-0" />

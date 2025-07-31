@@ -37,6 +37,19 @@
             "dateOfBirthDescription": "Your birthday won't be shown publicly."
         }
     },
+    "HomePage": {
+        "menu": {
+            "forYou": "For You",
+            "explore": "Explore",
+            "following": "Following",
+            "friends": "Friends",
+            "upload": "Upload",
+            "activity": "Activity",
+            "messages": "Messages",
+            "more": "More",
+            "profile": "Profile"
+        }
+    },
     "SwitchLanguage": {
         "label": "Switch language",
         "en": "English",

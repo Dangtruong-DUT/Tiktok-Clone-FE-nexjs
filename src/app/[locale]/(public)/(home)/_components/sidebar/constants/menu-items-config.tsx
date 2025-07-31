@@ -23,7 +23,6 @@ import {
 } from "react-icons/hi2";
 
 import { IconType } from "react-icons";
-
 const config = {
     routes: {
         home: "/",
@@ -37,9 +36,9 @@ const config = {
         profile: "/profile",
     },
 };
-
 interface MenuItemConfig {
-    title: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    titleKey: any;
     to: string;
     Icon: IconType;
     ActiveIcon?: IconType;
@@ -47,45 +46,45 @@ interface MenuItemConfig {
 
 export const HOME_MENU_ITEMS: MenuItemConfig[] = [
     {
-        title: "For You",
+        titleKey: "HomePage.menu.forYou",
         to: config.routes.home,
         Icon: AiOutlineHome,
-        ActiveIcon: AiFillHome, // Filled version
+        ActiveIcon: AiFillHome,
     },
     {
-        title: "Explore",
+        titleKey: "HomePage.menu.explore",
         to: config.routes.explore,
         Icon: AiOutlineCompass,
-        ActiveIcon: AiFillCompass, // Filled version
+        ActiveIcon: AiFillCompass,
     },
     {
-        title: "Following",
+        titleKey: "HomePage.menu.following",
         to: config.routes.following,
         Icon: HiOutlineUsers,
-        ActiveIcon: HiUsers, // Filled version
+        ActiveIcon: HiUsers,
     },
     {
-        title: "Friends",
+        titleKey: "HomePage.menu.friends",
         to: config.routes.friends,
         Icon: HiOutlineUserPlus,
-        ActiveIcon: HiUserPlus, // Filled version
+        ActiveIcon: HiUserPlus,
     },
     {
-        title: "Upload",
+        titleKey: "HomePage.menu.upload",
         to: config.routes.upload,
         Icon: AiOutlineCloudUpload,
-        ActiveIcon: HiCloudArrowUp, // Filled version
+        ActiveIcon: HiCloudArrowUp,
     },
     {
-        title: "Activity",
+        titleKey: "HomePage.menu.activity",
         to: config.routes.activity,
         Icon: AiOutlineBell,
-        ActiveIcon: AiFillBell, // Filled version
+        ActiveIcon: AiFillBell,
     },
     {
-        title: "Messages",
+        titleKey: "HomePage.menu.messages",
         to: config.routes.messages,
         Icon: AiOutlineMessage,
-        ActiveIcon: AiFillMessage, // Filled version
+        ActiveIcon: AiFillMessage,
     },
 ];

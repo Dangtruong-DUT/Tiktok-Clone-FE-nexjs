@@ -1,27 +1,17 @@
 import React, { createContext, useCallback, useContext, useState } from "react";
 export interface SidebarContextType {
     isOpenDrawer: boolean;
-    toggleDrawer: (isOpen: boolean) => void;
-    searchValue: string;
-    setSearchValue: (value: string) => void;
+    setIsOpenDrawer: (isOpen: boolean) => void;
 }
 
 const SidebarContext = createContext<SidebarContextType>({
     isOpenDrawer: false,
-    toggleDrawer: () => {},
-    searchValue: "",
-    setSearchValue: () => {},
+    setIsOpenDrawer: () => {},
 });
 
 export function SidebarProvider({ children }: { children: React.ReactNode }) {
     const [isOpenDrawer, setIsOpenDrawer] = useState(false);
-    const [searchValue, setSearchValue] = useState("");
-    const toggleDrawer = useCallback((isOpen: boolean) => {
-        setIsOpenDrawer(isOpen);
-    }, []);
-    return (
-        <SidebarContext value={{ isOpenDrawer, toggleDrawer, searchValue, setSearchValue }}>{children}</SidebarContext>
-    );
+    return <SidebarContext value={{ isOpenDrawer, setIsOpenDrawer }}>{children}</SidebarContext>;
 }
 
 export default function useSidebar() {

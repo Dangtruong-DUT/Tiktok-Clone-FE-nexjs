@@ -1,12 +1,18 @@
+"client";
+
 import { HOME_MENU_ITEMS } from "@/app/[locale]/(public)/(home)/_components/sidebar/constants/menu-items-config";
 import useSidebar from "@/app/[locale]/(public)/(home)/_components/sidebar/context/sidebar.context";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 
 export default function NavItems() {
     const { isOpenDrawer } = useSidebar();
     const pathname = usePathname();
+
+    const t = useTranslations();
+
     return (
         <nav className="flex flex-col gap-[0.25rem] ">
             {HOME_MENU_ITEMS.map((item, index) => {
@@ -31,7 +37,7 @@ export default function NavItems() {
                         />
                         {!isOpenDrawer && (
                             <span className={cn("text-base font-medium transition-colors duration-200")}>
-                                {item.title}
+                                {t(item.titleKey)}
                             </span>
                         )}
                     </Link>
