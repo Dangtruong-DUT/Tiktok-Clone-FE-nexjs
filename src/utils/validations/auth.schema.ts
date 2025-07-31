@@ -17,7 +17,16 @@ export const RegisterBody = z
         confirm_password: z.string().min(6).max(100),
         date_of_birth: z.iso.datetime(),
     })
-    .strict();
+    .strict()
+    .superRefine(({ confirm_password, password }, ctx) => {
+        if (confirm_password !== password) {
+            ctx.addIssue({
+                code: "custom",
+                message: "Passwords do not match",
+                path: ["confirm_password"],
+            });
+        }
+    });
 
 export type RegisterBodyType = z.TypeOf<typeof RegisterBody>;
 

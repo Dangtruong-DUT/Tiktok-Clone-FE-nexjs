@@ -13,7 +13,7 @@ export function GoBack() {
     return (
         <button
             onClick={handleGoBack}
-            className="mt-4  h-11 w-full flex items-center justify-center gap-2 rounded-xs cursor-pointer text-sm"
+            className="mt-4  h-11 w-full flex items-center justify-center gap-0.5 rounded-xs cursor-pointer text-sm"
         >
             <ChevronLeft />
             {t("goBack")}

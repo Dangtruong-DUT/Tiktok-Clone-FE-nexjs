@@ -28,9 +28,12 @@
         "email": {
             "title": "Đăng ký",
             "subtitle": "Đăng ký",
+            "namePlaceholder": "Họ và tên",
             "emailPlaceholder": "Email",
             "passwordPlaceholder": "Mật khẩu",
-            "confirmPasswordPlaceholder": "Xác nhận mật khẩu"
+            "confirmPasswordPlaceholder": "Xác nhận mật khẩu",
+            "dateOfBirthLabel": "Ngày sinh của bạn là khi nào?",
+            "dateOfBirthDescription": "Ngày sinh của bạn sẽ không được hiển thị công khai."
         }
     },
     "SwitchLanguage": {

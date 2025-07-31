@@ -29,9 +29,12 @@
         "email": {
             "title": "Sign up",
             "subtitle": "Sign up",
+            "namePlaceholder": "Full name",
             "emailPlaceholder": "Email",
             "passwordPlaceholder": "Password",
-            "confirmPasswordPlaceholder": "Confirm password"
+            "confirmPasswordPlaceholder": "Confirm password",
+            "dateOfBirthLabel": "When’s your birthday?",
+            "dateOfBirthDescription": "Your birthday won't be shown publicly."
         }
     },
     "SwitchLanguage": {

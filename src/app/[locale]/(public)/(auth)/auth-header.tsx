@@ -1,5 +1,6 @@
 "use server";
 
+import { ModeToggle } from "@/components/dark-mode-toggle";
 import LogoBrand from "@/components/logo-brand";
 import { Link } from "@/i18n/navigation";
 import { MessageCircleQuestionMark } from "lucide-react";
@@ -10,7 +11,7 @@ export default async function AuthHeader() {
     return (
         <header className="flex items-center justify-between bg-white px-4 h-[3.75rem] text-black ">
             <Link href="/">
-                <LogoBrand className="h-10" />
+                <LogoBrand className="h-10" /> <ModeToggle />
                 <span className="sr-only">tiktok</span>
             </Link>
             <Link href="/help" className="text-sm font-semibold hover:text-neutral-800 flex items-center gap-2">

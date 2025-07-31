@@ -1,4 +1,4 @@
-import { GoBack } from "@/app/[locale]/(public)/(auth)/login/email/button-go-back";
+import { GoBack } from "@/app/[locale]/(public)/(auth)/button-go-back";
 import { LoginForm } from "@/app/[locale]/(public)/(auth)/login/email/form-login";
 import { getTranslations } from "next-intl/server";
 

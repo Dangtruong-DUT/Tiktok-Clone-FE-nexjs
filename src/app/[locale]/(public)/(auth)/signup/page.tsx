@@ -14,7 +14,10 @@ export default async function SignUpPage() {
                     if (!item.for.includes("signup")) return null;
                     return (
                         <Link key={item.title} href={item.href}>
-                            <Button className="w-full cursor-pointer relative h-11" variant="outline">
+                            <Button
+                                className="w-full cursor-pointer relative h-11 border border-neutral-300! bg-white! text-black hover:bg-neutral-100! hover:text-black"
+                                variant="outline"
+                            >
                                 <span className="absolute left-4">{item.icon}</span>
                                 <span className="text-center text-base">{item.title}</span>
                             </Button>

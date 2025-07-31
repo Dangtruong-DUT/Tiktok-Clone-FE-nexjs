@@ -56,10 +56,7 @@ export function LoginForm() {
                 <Link href="/forgot-password" className="text-xs text-neutral-500  hover:underline">
                     {t("forgotPassword")}
                 </Link>
-                <Button
-                    type="submit"
-                    className="h-11 rounded-xs bg-brand w-full mt-4 text-base font-semibold hover:bg-brand/90"
-                >
+                <Button type="submit" className="primary-button w-full" disabled={false}>
                     {t("subtitle")}
                 </Button>
             </form>
