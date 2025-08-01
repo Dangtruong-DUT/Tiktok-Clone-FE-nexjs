@@ -15,10 +15,8 @@ import {
 import {
     // Outline icons từ Heroicons v2
     HiOutlineUsers,
-    HiOutlineUserPlus,
     // Filled icons từ Heroicons v2
     HiUsers,
-    HiUserPlus,
     HiCloudArrowUp,
 } from "react-icons/hi2";
 
@@ -28,7 +26,6 @@ const config = {
         home: "/",
         explore: "/explore",
         following: "/following",
-        friends: "/friends",
         upload: "/upload",
         activity: "/activity",
         messages: "/messages",
@@ -62,12 +59,6 @@ export const HOME_MENU_ITEMS: MenuItemConfig[] = [
         to: config.routes.following,
         Icon: HiOutlineUsers,
         ActiveIcon: HiUsers,
-    },
-    {
-        titleKey: "HomePage.menu.friends",
-        to: config.routes.friends,
-        Icon: HiOutlineUserPlus,
-        ActiveIcon: HiUserPlus,
     },
     {
         titleKey: "HomePage.menu.upload",

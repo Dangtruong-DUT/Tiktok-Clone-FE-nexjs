@@ -199,3 +199,23 @@ html *::-webkit-scrollbar-track {
     border-radius: 0;
     background-color: var(--background);
 }
+
+/* VideoPlayer popup animation */
+@keyframes popup {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) translate(-50%, -50%);
+    }
+    40% {
+        opacity: 0.3;
+        transform: scale(1) translate(-50%, -50%);
+    }
+    70% {
+        opacity: 0.5;
+        transform: scale(1.2) translate(-50%, -50%);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.3) translate(-50%, -50%);
+    }
+}
