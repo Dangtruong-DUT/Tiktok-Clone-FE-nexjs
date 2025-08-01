@@ -1,6 +1,6 @@
 import { LocalesType } from "@/i18n/config";
-import { useRouter } from "@/i18n/navigation";
-import { useParams, usePathname } from "next/navigation";
+import { useRouter, usePathname } from "@/i18n/navigation";
+import { useParams } from "next/navigation";
 import { useTransition } from "react";
 
 export default function useLanguage() {

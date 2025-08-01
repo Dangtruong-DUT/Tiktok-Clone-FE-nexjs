@@ -9,14 +9,16 @@ export interface MenuGroup {
         title: string;
         items: MenuOption[];
     };
-    for: Array<"guest" | "user">;
+    for: Array<RoleType>;
 }
 
 export interface MenuItem {
     type: "item";
     title: string;
     to?: string;
-    for: Array<"guest" | "user">;
+    for: Array<RoleType>;
     key?: string;
     value?: string;
 }
+
+export type RoleType = "guest" | "user";

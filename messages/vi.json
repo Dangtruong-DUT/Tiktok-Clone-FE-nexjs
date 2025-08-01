@@ -56,5 +56,18 @@
     },
     "header": {
         "help": "Phản hồi và Trợ giúp"
+    },
+    "menuMore": {
+        "title": "Thêm",
+        "language": "Ngôn ngữ",
+        "language_english": "Tiếng Anh",
+        "language_vietnamese": "Tiếng Việt",
+        "feedback": "Góp ý và trợ giúp",
+        "darkmode": "Chế độ tối",
+        "darkmode_system": "Theo hệ thống",
+        "darkmode_dark": "Chế độ tối",
+        "darkmode_light": "Chế độ sáng",
+        "settings": "Cài đặt",
+        "logout": "Đăng xuất"
     }
 }

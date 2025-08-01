@@ -1,7 +1,8 @@
 import { useDrawerSidebar } from "@/app/[locale]/(public)/(home)/_components/sidebar/components/drawer/drawer";
-import MENU_ITEMS from "@/app/[locale]/(public)/(home)/constants/more-menu-items";
+import MENU_ITEMS from "@/app/[locale]/(public)/(home)/_components/sidebar/constants/more-menu-items";
 import NestedMenu from "@/components/nested-menu/nested-menu";
 import { MenuGroup, MenuOption } from "@/components/nested-menu/types";
+import useLanguage from "@/hooks/shared/useLanguage";
 import { useLocale } from "next-intl";
 import { useTheme } from "next-themes";
 import { useCallback } from "react";
@@ -9,11 +10,22 @@ import { useCallback } from "react";
 export default function SettingsMenuDrawerContent() {
     const { toggleDrawer } = useDrawerSidebar();
     const locale = useLocale();
-    const { theme } = useTheme();
+    const { onChange: changeLanguage } = useLanguage();
+    const { theme, setTheme } = useTheme();
 
-    const onChange = useCallback((item: MenuOption) => {
-        console.log("Selected item:", item);
-    }, []);
+    const onChange = useCallback(
+        (item: MenuOption) => {
+            console.log("Selected item:", item);
+            if (item.type === "item" && item.key === "language") {
+                return changeLanguage(item.value as string);
+            }
+            if (item.type === "item" && item.key === "theme") {
+                return setTheme(item.value as string);
+            }
+        },
+        [changeLanguage, setTheme]
+    );
+
     const setIChecked = useCallback(
         (item: MenuOption) => {
             if (item.type === "item" && item.key === "language") {
@@ -27,13 +39,16 @@ export default function SettingsMenuDrawerContent() {
         [locale, theme]
     );
 
-    const getTitleOfGroup = useCallback((item: MenuGroup) => {
-        if (item.groupKey === "language") {
-            return locale == "en" ? "English" : "Tiếng Việt";
-        }
+    const getTitleOfGroup = useCallback(
+        (item: MenuGroup) => {
+            if (item.groupKey === "language") {
+                return locale == "en" ? "English" : "Tiếng Việt";
+            }
 
-        return item.title;
-    }, []);
+            return item.title;
+        },
+        [locale]
+    );
 
     return (
         <NestedMenu
@@ -42,7 +57,8 @@ export default function SettingsMenuDrawerContent() {
             onChange={onChange}
             onClose={toggleDrawer}
             isChecked={setIChecked}
-            title="More"
+            titleKeyI18n="menuMore.title"
+            for="guest"
         />
     );
 }

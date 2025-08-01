@@ -1,3 +1,4 @@
+import { SidebarProvider } from "@/app/[locale]/(public)/(home)/_components/sidebar/context/sidebar.context";
 import Sidebar from "@/app/[locale]/(public)/(home)/_components/sidebar/sidebar";
 import { LocalesType } from "@/i18n/config";
 import { setRequestLocale } from "next-intl/server";
@@ -16,7 +17,9 @@ export default function HomeLayout({
     setRequestLocale(locale);
     return (
         <div className="sm:flex sm:flex-row">
-            <Sidebar />
+            <SidebarProvider>
+                <Sidebar />
+            </SidebarProvider>
             <main className="flex-1">{children}</main>
         </div>
     );

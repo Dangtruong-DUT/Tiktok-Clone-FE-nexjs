@@ -1,4 +1,6 @@
-import React, { createContext, useCallback, useContext, useState } from "react";
+"use client";
+
+import React, { createContext, useContext, useState } from "react";
 export interface SidebarContextType {
     isOpenDrawer: boolean;
     setIsOpenDrawer: (isOpen: boolean) => void;
@@ -10,7 +12,7 @@ const SidebarContext = createContext<SidebarContextType>({
 });
 
 export function SidebarProvider({ children }: { children: React.ReactNode }) {
-    const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+    const [isOpenDrawer, setIsOpenDrawer] = useState<boolean>(false);
     return <SidebarContext value={{ isOpenDrawer, setIsOpenDrawer }}>{children}</SidebarContext>;
 }
 

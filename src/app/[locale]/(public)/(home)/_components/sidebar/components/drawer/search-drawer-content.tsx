@@ -23,6 +23,14 @@ export default function SearchDrawerContent({ searchValue, setSearchValue }: Sea
         inputRef.current?.focus();
     }, [setSearchValue, setSearchResults]);
 
+    const handleSetSearchValue = useCallback(
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            const value = e.target.value.trim();
+            setSearchValue(value);
+        },
+        [setSearchValue]
+    );
+
     return (
         <div className="w-full">
             <DialogHeader title="Search" onClose={toggleDrawer} />
@@ -37,6 +45,7 @@ export default function SearchDrawerContent({ searchValue, setSearchValue }: Sea
                     placeholder="Search"
                     spellCheck={false}
                     value={searchValue}
+                    onChange={handleSetSearchValue}
                 />
 
                 {!showLoading && searchValue.length > 0 && (

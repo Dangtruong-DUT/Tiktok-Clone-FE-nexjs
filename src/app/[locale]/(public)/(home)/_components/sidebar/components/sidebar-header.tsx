@@ -2,17 +2,14 @@ import { Search } from "lucide-react";
 import LogoBrand from "@/components/logo-brand";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-import useSidebar from "@/app/[locale]/(public)/(home)/_components/sidebar/context/sidebar.context";
 
-export default function SidebarHeader({
-    isOpenSearch,
-    toggleSearchDrawer,
-}: {
+interface SidebarHeaderProps {
     isOpenSearch: boolean;
     toggleSearchDrawer: () => void;
-}) {
-    const { searchValue } = useSidebar();
+    searchValue: string;
+}
 
+export default function SidebarHeader({ isOpenSearch, toggleSearchDrawer, searchValue }: SidebarHeaderProps) {
     return (
         <header
             className={cn("w-full flex flex-col items-stretch mb-3 gap-4 transition-all duration-200 ease-out", {

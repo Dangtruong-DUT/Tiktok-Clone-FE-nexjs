@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+
 import { X, ChevronLeft } from "lucide-react";
 
 interface DrawerHeaderProps {
@@ -9,12 +10,12 @@ interface DrawerHeaderProps {
 
 export default function DialogHeader({ title, onClose, onBack }: DrawerHeaderProps) {
     return (
-        <header className="px-2 flex justify-between items-center">
+        <header className="px-2 flex justify-between items-center w-full">
             <div className="flex items-center gap-2">
                 {onBack && (
                     <button
                         onClick={onBack}
-                        className="inline-flex items-center justify-center rounded-full text-foreground w-6 h-6 bg-input hover:bg-accent transition-colors"
+                        className="inline-flex items-center justify-center rounded-full text-foreground w-6 h-6 bg-input hover:bg-accent transition-colors cursor-pointer"
                     >
                         <ChevronLeft size={12} />
                     </button>
@@ -24,7 +25,7 @@ export default function DialogHeader({ title, onClose, onBack }: DrawerHeaderPro
             {onClose && (
                 <button
                     onClick={onClose}
-                    className="cursor-pointer w-7 h-7 rounded-full bg-input text-foreground hover:bg-accent transition-colors"
+                    className="cursor-pointer w-7 h-7 rounded-full bg-input text-foreground hover:bg-accent transition-colors z"
                 >
                     <X size={16} className="text-current m-auto" />
                 </button>

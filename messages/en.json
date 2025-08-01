@@ -57,5 +57,18 @@
     },
     "header": {
         "help": "Feedback and Help"
+    },
+    "menuMore": {
+        "title": "More",
+        "language": "Language",
+        "language_english": "English",
+        "language_vietnamese": "Vietnamese",
+        "feedback": "Feedback and help",
+        "darkmode": "Dark mode",
+        "darkmode_system": "Use device theme",
+        "darkmode_dark": "Dark mode",
+        "darkmode_light": "Light mode",
+        "settings": "Settings",
+        "logout": "Log out"
     }
 }

@@ -2,25 +2,25 @@ import { MenuOption } from "@/components/nested-menu/types";
 
 const MENU_ITEMS: MenuOption[] = [
     {
-        title: "Language",
+        title: "menuMore.language",
         type: "group",
         selectionType: "single",
         for: ["guest", "user"],
         children: {
-            title: "Language",
+            title: "menuMore.language",
             items: [
                 {
                     type: "item",
                     value: "en",
                     key: "language",
-                    title: "English",
+                    title: "menuMore.language_english",
                     for: ["guest", "user"],
                 },
                 {
                     type: "item",
                     value: "vi",
                     key: "language",
-                    title: "Vietnamese",
+                    title: "menuMore.language_vietnamese",
                     for: ["guest", "user"],
                 },
             ],
@@ -28,34 +28,34 @@ const MENU_ITEMS: MenuOption[] = [
     },
     {
         type: "item",
-        title: "Feedback and help",
+        title: "menuMore.feedback",
         to: "/feedback",
         for: ["guest", "user"],
     },
     {
         type: "group",
-        title: "Dark mode",
+        title: "menuMore.darkmode",
         for: ["guest", "user"],
         children: {
-            title: "Dark mode",
+            title: "menuMore.darkmode",
             items: [
                 {
                     type: "item",
-                    title: "Use device theme",
+                    title: "menuMore.darkmode_system",
                     key: "theme",
                     value: "system",
                     for: ["guest", "user"],
                 },
                 {
                     type: "item",
-                    title: "Dark mode",
+                    title: "menuMore.darkmode_dark",
                     key: "theme",
                     value: "dark",
                     for: ["guest", "user"],
                 },
                 {
                     type: "item",
-                    title: "Light mode",
+                    title: "menuMore.darkmode_light",
                     key: "theme",
                     value: "light",
                     for: ["guest", "user"],
@@ -65,13 +65,13 @@ const MENU_ITEMS: MenuOption[] = [
     },
     {
         type: "item",
-        title: "Settings",
+        title: "menuMore.settings",
         to: "/settings",
         for: ["user"],
     },
     {
         type: "item",
-        title: "Log out",
+        title: "menuMore.logout",
         to: "/logout",
         for: ["user"],
     },

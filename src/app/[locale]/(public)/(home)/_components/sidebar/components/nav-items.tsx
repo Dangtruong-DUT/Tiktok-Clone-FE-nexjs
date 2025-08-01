@@ -14,7 +14,7 @@ export default function NavItems() {
     const t = useTranslations();
 
     return (
-        <nav className="flex flex-col gap-[0.25rem] ">
+        <nav className="flex flex-col gap-[0.5rem] ">
             {HOME_MENU_ITEMS.map((item, index) => {
                 const isActive =
                     (pathname.includes(item.to) && pathname !== "/en" && pathname !== "/vi") || item.to == "/";
@@ -24,7 +24,7 @@ export default function NavItems() {
                     <Link
                         key={index}
                         className={cn(
-                            "flex items-center h-12 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent"
+                            "flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent"
                         )}
                         href={item.to}
                     >
@@ -32,13 +32,13 @@ export default function NavItems() {
                             size={24}
                             className={cn(
                                 "transition-colors duration-200",
-                                isActive ? "text-brand" : "text-muted-foreground"
+                                isActive ? "text-brand" : "text-foreground"
                             )}
                         />
                         {!isOpenDrawer && (
-                            <span className={cn("text-base font-medium transition-colors duration-200")}>
+                            <h2 className={cn("text-base font-medium transition-colors duration-200")}>
                                 {t(item.titleKey)}
-                            </span>
+                            </h2>
                         )}
                     </Link>
                 );
