@@ -61,7 +61,7 @@ function VolumeBar({
 
     return (
         <div
-            className={cn("flex h-10 justify-center items-center group", className)}
+            className={cn("flex h-10 justify-center items-center group/volume", className)}
             onMouseMove={handleMove}
             onMouseUp={handleEnd}
             onMouseLeave={handleEnd}
@@ -69,16 +69,16 @@ function VolumeBar({
             onTouchEnd={handleEnd}
         >
             <div
-                className={cn(
-                    "relative p-2 w-10 h-10 z-[6] transition-opacity duration-300 text-white cursor-pointer",
-                    isMuted || volume === 0 ? "opacity-100" : "opacity-0",
-                    isParentHovered && "group-hover:opacity-100"
-                )}
+                className={cn("relative p-2 w-10 h-10 z-[6] transition-opacity duration-300 text-white cursor-pointer")}
                 onClick={handleMuteClick}
             >
                 {/* Placeholder for sound icon */}
-                <div className="w-full h-full flex items-center justify-center text-white">
-                    {isMuted || volume === 0 ? <FaVolumeMute /> : <HiSpeakerWave />}
+                <div
+                    className={cn("opacity-0 w-full h-full flex items-center justify-center text-white", {
+                        "opacity-100": isParentHovered || isMuted || volume === 0,
+                    })}
+                >
+                    {isMuted || volume === 0 ? <FaVolumeMute size={24} /> : <HiSpeakerWave size={24} />}
                 </div>
             </div>
 
@@ -86,7 +86,7 @@ function VolumeBar({
                 className={cn(
                     "w-16 h-6 relative bg-black/34 rounded-[32px] my-[7px] mx-2 cursor-pointer transition-all duration-300 ease-out origin-left-center",
                     "opacity-0 invisible scale-[0.3]",
-                    "group-hover:opacity-100 group-hover:visible group-hover:scale-100"
+                    "group-hover/volume:opacity-100 group-hover/volume:visible group-hover/volume:scale-100"
                 )}
                 ref={volumeRef}
                 onMouseDown={handleStart}

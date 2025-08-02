@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { useLocale } from "next-intl";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
@@ -19,7 +19,7 @@ interface VideoPlayerProps {
 }
 
 export default function VideoPlayer({ className, post, author }: VideoPlayerProps) {
-    const videoRef = useRef<HTMLVideoElement>(null);
+    const videoRef = useRef<HTMLVideoElement | null>(null);
     const [isHovered, setIsHovered] = useState(false);
     const [isProgressBarActive, setIsProgressBarActive] = useState(false);
 
@@ -44,54 +44,52 @@ export default function VideoPlayer({ className, post, author }: VideoPlayerProp
     }, []);
 
     return (
-        <div className={cn("relative cursor-pointer", className)}>
-            <section
-                className="block absolute top-0 left-0 w-full h-full group aspect-[9/16]"
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
+        <section
+            className={cn("block relative top-0 left-0 w-full h-full group cursor-pointer", className)}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            {/* Video Controls Top */}
+            <VideoControlsTop
+                volume={volume}
+                onVolumeChange={handleVolumeChange}
+                isMuted={isMuted}
+                onMuteToggle={handleMuteToggle}
+                isParentHovered={isHovered}
+            />
+
+            {/* Overlay Icons */}
+            <VideoOverlayIcons
+                showPlayPauseIcon={showPlayPauseIcon}
+                showMutedIcon={showMutedIcon}
+                isPlaying={isPlaying}
+                isMuted={isMuted}
+            />
+
+            {/* Video Element */}
+            <video
+                onClick={handlePlayPause}
+                className="w-full aspect-[9/16] rounded-2xl object-cover"
+                ref={videoRef}
+                playsInline
+                loop
+                muted={isMuted}
             >
-                {/* Video Controls Top */}
-                <VideoControlsTop
-                    volume={volume}
-                    onVolumeChange={handleVolumeChange}
-                    isMuted={isMuted}
-                    onMuteToggle={handleMuteToggle}
-                    isParentHovered={isHovered}
-                />
+                <source src={post.medias[0].url} type="video/mp4" />
+            </video>
 
-                {/* Overlay Icons */}
-                <VideoOverlayIcons
-                    showPlayPauseIcon={showPlayPauseIcon}
-                    showMutedIcon={showMutedIcon}
-                    isPlaying={isPlaying}
-                    isMuted={isMuted}
-                />
-
-                {/* Video Element */}
-                <video
-                    onClick={handlePlayPause}
-                    className="w-full aspect-[9/16] rounded-2xl object-cover"
-                    ref={videoRef}
-                    playsInline
-                    loop
-                    muted={isMuted}
-                >
-                    <source src={post.medias[0].url} type="video/mp4" />
-                </video>
-
-                {/* Video Controls Bottom */}
-                <VideoControlsBottom
-                    post={post}
-                    author={author}
-                    locale={locale}
-                    currentTime={currentTime}
-                    duration={duration}
-                    isProgressBarActive={isProgressBarActive}
-                    onSeek={handleSeek}
-                    onProgressBarActive={handleProgressBarActive}
-                    onPlayPause={handlePlayPause}
-                />
-            </section>
-        </div>
+            {/* Video Controls Bottom */}
+            <VideoControlsBottom
+                post={post}
+                author={author}
+                locale={locale}
+                currentTime={currentTime}
+                duration={duration}
+                isProgressBarActive={isProgressBarActive}
+                onSeek={handleSeek}
+                onProgressBarActive={handleProgressBarActive}
+                onPlayPause={handlePlayPause}
+            />
+        </section>
     );
 }

@@ -31,7 +31,7 @@ export function VideoControlsBottom({
 }: VideoControlsBottomProps) {
     return (
         <div
-            className="absolute bottom-0 bg-transparent flex justify-end flex-col z-[2] rounded-b-2xl w-full"
+            className="absolute bottom-0 left-0 bg-transparent flex justify-end flex-col z-[2] rounded-b-2xl w-full"
             onClick={onPlayPause}
         >
             <div
@@ -51,13 +51,7 @@ export function VideoControlsBottom({
                 </a>
                 <VideoDescription description={post.content} />
             </div>
-            <ProgressBar
-                className="group"
-                currentTime={currentTime}
-                duration={duration}
-                onSeek={onSeek}
-                onActive={onProgressBarActive}
-            />
+            <ProgressBar currentTime={currentTime} duration={duration} onSeek={onSeek} onActive={onProgressBarActive} />
         </div>
     );
 }

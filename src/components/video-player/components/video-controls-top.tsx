@@ -19,7 +19,6 @@ export function VideoControlsTop({
     return (
         <div className="absolute top-0 flex flex-row items-start w-full z-[2] bg-transparent rounded-t-2xl">
             <VolumeBar
-                className="opacity-0 group-hover:opacity-100 transition-opacity"
                 volume={volume}
                 onVolumeChange={onVolumeChange}
                 isMuted={isMuted}

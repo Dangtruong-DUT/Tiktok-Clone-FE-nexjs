@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 export function useVideoPlayer(videoRef: React.RefObject<HTMLVideoElement | null>) {
     const [isPlaying, setIsPlaying] = useState(true);
-    const [isMuted, setIsMuted] = useState(false);
+    const [isMuted, setIsMuted] = useState(true);
     const [volume, setVolume] = useState(0.5);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
@@ -18,6 +18,9 @@ export function useVideoPlayer(videoRef: React.RefObject<HTMLVideoElement | null
 
         video.addEventListener("timeupdate", updateTime);
         video.addEventListener("loadedmetadata", updateDuration);
+        if (video.readyState >= 1 && video.duration) {
+            setDuration(video.duration);
+        }
 
         return () => {
             video.removeEventListener("timeupdate", updateTime);

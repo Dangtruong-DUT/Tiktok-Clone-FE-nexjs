@@ -139,32 +139,16 @@
 }
 
 @layer utilities {
-    @keyframes slide-in {
-        0% {
-            opacity: 0;
-            width: 0;
-        }
-        100% {
-            opacity: 1;
-            width: min(336px, 70vw);
-        }
-    }
-    @keyframes slide-out {
-        0% {
-            opacity: 1;
-            width: min(336px, 70vw);
-        }
-        100% {
-            opacity: 0;
-            width: 0;
-        }
-    }
     .animate-slide-out {
         animation: slide-out 400ms ease forwards;
     }
 
     .animate-slide-in {
         animation: slide-in 400ms ease forwards;
+    }
+
+    .animate-popup {
+        animation: popup 500ms ease-out forwards;
     }
 }
 
@@ -204,18 +188,39 @@ html *::-webkit-scrollbar-track {
 @keyframes popup {
     0% {
         opacity: 0;
-        transform: scale(0.5) translate(-50%, -50%);
+        transform: scale(0.5);
     }
     40% {
         opacity: 0.3;
-        transform: scale(1) translate(-50%, -50%);
+        transform: scale(1);
     }
-    70% {
+    60% {
         opacity: 0.5;
-        transform: scale(1.2) translate(-50%, -50%);
+        transform: scale(1.5);
     }
     100% {
         opacity: 0;
-        transform: scale(1.3) translate(-50%, -50%);
+        transform: scale(1.7);
+    }
+}
+
+@keyframes slide-in {
+    0% {
+        opacity: 0;
+        width: 0;
+    }
+    100% {
+        opacity: 1;
+        width: min(336px, 70vw);
+    }
+}
+@keyframes slide-out {
+    0% {
+        opacity: 1;
+        width: min(336px, 70vw);
+    }
+    100% {
+        opacity: 0;
+        width: 0;
     }
 }

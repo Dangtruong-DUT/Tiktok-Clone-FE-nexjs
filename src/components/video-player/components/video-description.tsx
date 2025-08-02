@@ -22,11 +22,11 @@ function VideoDescription({ description, className }: VideoDescriptionProps) {
     }, [description]);
 
     return (
-        <div className="relative w-4/5">
+        <div className="relative w-full flex flex-row items-end justify-center">
             <div
                 ref={textRef}
                 className={cn(
-                    "text-sm leading-[18px] font-normal text-white whitespace-pre-wrap overflow-hidden",
+                    "text-sm leading-[18px] font-normal text-white whitespace-pre-wrap overflow-hidden w-4/5",
                     "[-webkit-box-orient:vertical] [display:-webkit-box]",
                     expanded ? "[-webkit-line-clamp:unset]" : "[-webkit-line-clamp:1]",
                     className
@@ -38,9 +38,9 @@ function VideoDescription({ description, className }: VideoDescriptionProps) {
             {canExpand && (
                 <button
                     onClick={() => setExpanded(!expanded)}
-                    className="absolute bottom-0 right-0 transform translate-x-[-12px] translate-y-[-50%] text-sm font-semibold px-1.5 py-0.5 text-white"
+                    className=" text-sm font-semibold px-1.5 py-0.5 text-white"
                 >
-                    {expanded ? "Less" : "More"}
+                    {expanded ? "less" : "more"}
                 </button>
             )}
         </div>

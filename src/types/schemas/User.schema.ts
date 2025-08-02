@@ -8,8 +8,6 @@ export interface UserType {
     date_of_birth: string;
     updated_at: string;
     created_at: string;
-    email_verify_token: string;
-    forgot_password_token: string;
     verify: UserVerifyStatus;
     bio: string;
     location: string;

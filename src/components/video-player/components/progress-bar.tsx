@@ -12,7 +12,7 @@ interface ProgressBarProps {
 const formatTime = (time: number): string => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+    return `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
 };
 
 function ProgressBar({ currentTime, duration, className, onActive, onSeek }: ProgressBarProps) {
@@ -25,8 +25,9 @@ function ProgressBar({ currentTime, duration, className, onActive, onSeek }: Pro
         if (!slider) return currentTime;
 
         const rect = slider.getBoundingClientRect();
-        const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+        const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
         const offsetX = Math.min(Math.max(clientX - rect.left, 0), rect.width);
+
         return (offsetX / rect.width) * duration;
     };
 
@@ -57,26 +58,23 @@ function ProgressBar({ currentTime, duration, className, onActive, onSeek }: Pro
         onSeek(newTime);
     };
 
-    const progressPercentage = isDragging
-        ? (dragTime / duration) * 100
-        : (currentTime / duration) * 100;
-
+    const progressPercentage = isDragging ? (dragTime / duration) * 100 : (currentTime / duration) * 100;
     return (
         <div
-            className={cn(
-                "relative h-6 w-full select-none",
-                className
-            )}
+            className={cn("absolute bottom-0 h-6 w-full select-none group", className)}
             onMouseMove={handleMove}
             onMouseUp={handleEnd}
             onMouseLeave={handleEnd}
             onTouchMove={handleMove}
             onTouchEnd={handleEnd}
         >
+            {/* Nút kéo */}
             <div
                 className={cn(
-                    "block absolute opacity-0 top-1/2 w-3 aspect-square z-[6] bg-white shadow-[0_0_1px_1px_rgba(0,0,0,0.3)] rounded-full -translate-x-1/2 translate-y-2 cursor-grab transition-opacity duration-100 ease-in-out",
-                    "before:content-[''] before:absolute before:-top-[9px] before:-left-[9px] before:-right-[9px] before:-bottom-[9px] before:bg-transparent before:z-[7]",
+                    "block absolute opacity-0 top-1/2 -translate-x-1/2 w-3 aspect-square z-[6] bg-white shadow-[0_0_1px_1px_rgba(0,0,0,0.3)] rounded-full",
+                    "  cursor-grab transition-opacity duration-100 ease-in-out",
+                    "before:content-[''] before:absolute before:-top-[9px] before:-left-[9px] before:-right-[9px] before:-bottom-[9px]",
+                    "before:bg-transparent before:z-[7]",
                     "group-hover:opacity-100",
                     isDragging && "cursor-grabbing opacity-100"
                 )}
@@ -84,27 +82,34 @@ function ProgressBar({ currentTime, duration, className, onActive, onSeek }: Pro
                 onMouseDown={handleStart}
                 onTouchStart={handleStart}
             />
+
+            {/* Hiển thị thời gian */}
             <div
                 className={cn(
-                    "absolute z-[1] top-0 left-1/2 -translate-x-1/2 -translate-y-[200%] bg-transparent text-white h-[30px] tracking-normal whitespace-nowrap text-shadow-[0_0_1px_rgba(0,0,0,0.3)] text-center text-[32px] font-bold origin-bottom-left transition-all duration-200 ease-in-out",
+                    "absolute z-[1] top-0 left-1/2 -translate-x-1/2 -translate-y-[200%] bg-transparent text-white",
+                    "h-[30px] text-shadow-[0_0_1px_rgba(0,0,0,0.3)] text-center text-[32px] font-bold",
+                    "tracking-normal whitespace-nowrap origin-bottom-left transition-all duration-200 ease-in-out",
                     isDragging ? "visible opacity-100 scale-100" : "invisible opacity-0 scale-80"
                 )}
             >
                 {formatTime(isDragging ? dragTime : currentTime)} / {formatTime(duration)}
             </div>
+
+            {/* Thanh tiến độ */}
             <div className="relative flex items-end h-full rounded-bl-2xl rounded-br-2xl overflow-hidden">
                 <div
                     ref={progressBarRef}
                     className={cn(
-                        "flex-shrink-0 block relative w-full left-0 bg-white/20 cursor-pointer select-none transition-all duration-200",
+                        "flex-shrink-0 block relative w-full left-0 bg-white/20 cursor-pointer select-none",
+                        "transition-all duration-200",
                         "group-hover:h-2.5",
-                        isDragging ? "h-2.5" : "h-1.5"
+                        isDragging ? "h-1.5" : "h-1"
                     )}
                     onMouseDown={handleTrackClick}
                     onTouchStart={handleTrackClick}
                 >
                     <div
-                        className="block absolute h-full bg-[--primary-cl] rounded-[5px]"
+                        className="block absolute h-full bg-brand rounded-[5px]"
                         style={{ width: `${progressPercentage}%` }}
                     />
                 </div>

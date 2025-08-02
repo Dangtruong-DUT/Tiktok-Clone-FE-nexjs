@@ -12,7 +12,6 @@ import SearchDrawerContent from "@/app/[locale]/(public)/(home)/_components/side
 import DrawerSidebar from "@/app/[locale]/(public)/(home)/_components/sidebar/components/drawer/drawer";
 import SettingsMenuDrawerContent from "@/app/[locale]/(public)/(home)/_components/sidebar/components/drawer/settings-menu-drawer-content";
 import { MoreHorizontalIcon, UserRound } from "lucide-react";
-import { HiOutlineUsers } from "react-icons/hi2";
 import { useTranslations } from "next-intl";
 
 export interface SidebarProps {
@@ -53,13 +52,7 @@ export default function Sidebar({ className }: SidebarProps) {
     }, [isOpenSettings, setIsOpenDrawer, setIsOpenSettings]);
 
     return (
-        <div
-            className={cn(
-                "relative h-screen transition-all duration-400 ease-in-out px-4",
-                { "w-18": isOpenDrawer, "w-60": !isOpenDrawer },
-                className
-            )}
-        >
+        <div className={cn("relative h-screen transition-all duration-400 ease-in-out px-4", "w-60", className)}>
             <DrawerSidebar isOpen={isOpenSearch} setIsOpenDrawer={toggleSearchDrawer}>
                 <SearchDrawerContent searchValue={searchValue} setSearchValue={setSearchValue} />
             </DrawerSidebar>
