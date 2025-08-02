@@ -2,7 +2,6 @@
 
 import React, { memo, useRef, useEffect, useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
-import ProgressBar from "./ProgressBar";
 import VolumeBar from "@/components/video-player/volume-bar";
 import VideoDescription from "@/components/video-player/video-description";
 import { FaCirclePause, FaCirclePlay } from "react-icons/fa6";
@@ -10,6 +9,7 @@ import { HiSpeakerWave } from "react-icons/hi2";
 import { FaVolumeMute } from "react-icons/fa";
 import { timeAgo } from "@/utils/formating/formatTime";
 import { useLocale } from "next-intl";
+import ProgressBar from "@/components/video-player/progress-bar";
 
 interface VideoSource {
     file_url: string;

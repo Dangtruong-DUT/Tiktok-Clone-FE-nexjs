@@ -53,3 +53,10 @@ export const LogoutBody = z
     .strict();
 
 export type LogoutBodyType = z.TypeOf<typeof LogoutBody>;
+
+export const forgotPasswordBody = z
+    .object({
+        email: z.string().email(),
+    })
+    .strict();
+export type ForgotPasswordBodyType = z.TypeOf<typeof forgotPasswordBody>;

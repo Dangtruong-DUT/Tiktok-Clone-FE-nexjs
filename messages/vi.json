@@ -15,7 +15,7 @@
         "forgotPassword": "Quên mật khẩu?",
         "email": {
             "title": "Đăng nhập",
-            "subtitle": "Đăng nhập",
+            "submit": "Đăng nhập",
             "emailPlaceholder": "Email",
             "passwordPlaceholder": "Mật khẩu",
             "forgotPassword": "Quên mật khẩu?"
@@ -27,7 +27,7 @@
         "goBack": "Quay lại",
         "email": {
             "title": "Đăng ký",
-            "subtitle": "Đăng ký",
+            "submit": "Đăng ký",
             "namePlaceholder": "Họ và tên",
             "emailPlaceholder": "Email",
             "passwordPlaceholder": "Mật khẩu",
@@ -35,6 +35,11 @@
             "dateOfBirthLabel": "Ngày sinh của bạn là khi nào?",
             "dateOfBirthDescription": "Ngày sinh của bạn sẽ không được hiển thị công khai."
         }
+    },
+    "forgotPasswordPage": {
+        "title": "Đặt lại mật khẩu",
+        "emailPlaceholder": "Email của bạn",
+        "submit": "Gửi"
     },
     "HomePage": {
         "menu": {

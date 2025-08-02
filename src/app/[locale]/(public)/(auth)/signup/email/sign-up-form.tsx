@@ -100,7 +100,7 @@ export default function SignUpForm() {
                 />
 
                 <Button type="submit" className="primary-button w-full">
-                    {t("subtitle")}
+                    {t("submit")}
                 </Button>
             </form>
         </Form>

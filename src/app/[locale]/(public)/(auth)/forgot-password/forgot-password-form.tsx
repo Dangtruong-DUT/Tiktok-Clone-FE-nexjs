@@ -8,21 +8,19 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "@/component
 import { Input } from "@/components/ui/input";
 
 import { useTranslations } from "next-intl";
-import { LoginBody, LoginBodyType } from "@/utils/validations/auth.schema";
-import { Link } from "@/i18n/navigation";
+import { forgotPasswordBody, ForgotPasswordBodyType } from "@/utils/validations/auth.schema";
 
-export function LoginForm() {
-    const t = useTranslations("LoginPage.email");
+export default function ForgotPasswordForm() {
+    const t = useTranslations("forgotPasswordPage");
 
-    const form = useForm<LoginBodyType>({
-        resolver: zodResolver(LoginBody),
+    const form = useForm<ForgotPasswordBodyType>({
+        resolver: zodResolver(forgotPasswordBody),
         defaultValues: {
             email: "",
-            password: "",
         },
     });
 
-    const onSubmit = async (data: LoginBodyType) => {
+    const onSubmit = async (data: ForgotPasswordBodyType) => {
         toast.error("This feature is not implemented yet.");
         console.log("Form submitted with data:", data);
     };
@@ -41,21 +39,7 @@ export function LoginForm() {
                         </FormItem>
                     )}
                 />
-                <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormControl>
-                                <Input placeholder={t("passwordPlaceholder")} {...field} className="brand-input" />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <Link href="/forgot-password" className="text-xs text-neutral-500  hover:underline">
-                    {t("forgotPassword")}
-                </Link>
+
                 <Button type="submit" className="primary-button w-full" disabled={false}>
                     {t("submit")}
                 </Button>

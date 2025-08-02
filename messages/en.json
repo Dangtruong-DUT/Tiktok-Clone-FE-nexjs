@@ -15,7 +15,7 @@
         "forgotPassword": "Forgot password?",
         "email": {
             "title": "Log in",
-            "subtitle": "Log in",
+            "submit": "Log in",
             "emailPlaceholder": "Email",
             "passwordPlaceholder": "Password",
             "forgotPassword": "Forgot password?"
@@ -28,7 +28,7 @@
         "goBack": "Go back",
         "email": {
             "title": "Sign up",
-            "subtitle": "Sign up",
+            "submit": "Sign up",
             "namePlaceholder": "Full name",
             "emailPlaceholder": "Email",
             "passwordPlaceholder": "Password",
@@ -36,6 +36,11 @@
             "dateOfBirthLabel": "When’s your birthday?",
             "dateOfBirthDescription": "Your birthday won't be shown publicly."
         }
+    },
+    "forgotPasswordPage": {
+        "title": "Reset password",
+        "emailPlaceholder": "Your email",
+        "submit": "Submit"
     },
     "HomePage": {
         "menu": {
