@@ -42,6 +42,12 @@
         "emailPlaceholder": "Your email",
         "submit": "Submit"
     },
+    "resetPasswordPage": {
+        "title": "Reset password",
+        "confirmPasswordPlaceholder": "Confirm new password",
+        "newPasswordPlaceholder": "New password",
+        "submit": "Reset password"
+    },
     "HomePage": {
         "menu": {
             "forYou": "For You",

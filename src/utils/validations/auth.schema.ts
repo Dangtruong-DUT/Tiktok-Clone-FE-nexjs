@@ -60,3 +60,20 @@ export const forgotPasswordBody = z
     })
     .strict();
 export type ForgotPasswordBodyType = z.TypeOf<typeof forgotPasswordBody>;
+
+export const resetPasswordBody = z
+    .object({
+        password: z.string().min(6).max(100),
+        confirm_password: z.string().min(6).max(100),
+    })
+    .strict()
+    .superRefine(({ confirm_password, password }, ctx) => {
+        if (confirm_password !== password) {
+            ctx.addIssue({
+                code: "custom",
+                message: "Passwords do not match",
+                path: ["confirm_password"],
+            });
+        }
+    });
+export type ResetPasswordBodyType = z.TypeOf<typeof resetPasswordBody>;

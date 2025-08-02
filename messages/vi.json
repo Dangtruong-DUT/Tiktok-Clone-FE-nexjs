@@ -41,6 +41,12 @@
         "emailPlaceholder": "Email của bạn",
         "submit": "Gửi"
     },
+    "resetPasswordPage": {
+        "title": "Đặt lại mật khẩu",
+        "confirmPasswordPlaceholder": "Xác nhận mật khẩu mới",
+        "newPasswordPlaceholder": "Mật khẩu mới",
+        "submit": "Đặt lại mật khẩu"
+    },
     "HomePage": {
         "menu": {
             "forYou": "Dành cho bạn",
