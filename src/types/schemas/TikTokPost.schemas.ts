@@ -3,7 +3,7 @@ import { HashtagType } from "@/types/schemas/Hashtag.schemas";
 import { Media } from "@/types/schemas/Media.schema";
 
 export type TikTokPostType = {
-    _id?: string;
+    _id: string;
     user_id: string;
     type: PosterType;
     audience: Audience;

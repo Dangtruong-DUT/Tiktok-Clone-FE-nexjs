@@ -1,5 +1,5 @@
 import React from "react";
-import { FaCirclePause, FaCirclePlay } from "react-icons/fa6";
+import { FaCirclePause } from "react-icons/fa6";
 import { HiSpeakerWave } from "react-icons/hi2";
 import { FaPlayCircle, FaVolumeMute } from "react-icons/fa";
 
