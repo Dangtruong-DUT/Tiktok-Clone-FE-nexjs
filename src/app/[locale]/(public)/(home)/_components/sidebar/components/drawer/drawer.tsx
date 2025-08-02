@@ -34,7 +34,7 @@ export default function DrawerSidebar({
     isOpen,
     setIsOpenDrawer,
     drawerWidth = "20rem",
-    leftOffset = "72px",
+    leftOffset = "4.5rem",
     zIndex = 99,
     padding = "pt-6 px-2 pb-0",
 }: DrawerSidebarProps) {

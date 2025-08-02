@@ -71,7 +71,13 @@ export default function Sidebar({ className }: SidebarProps) {
                     toggleSearchDrawer={toggleSearchDrawer}
                 />
 
-                <div className={cn("flex-shrink-0 flex-1 overflow-hidden overflow-y-auto scrollbar-hidden")}>
+                <div
+                    className={cn(
+                        "flex-shrink-0 flex-1 overflow-hidden overflow-y-auto scrollbar-hidden",
+                        { "w-full": !isOpenDrawer },
+                        { "w-10": isOpenDrawer }
+                    )}
+                >
                     <NavItems />
                     <div className="flex flex-col gap-[0.5rem]">
                         <button className="flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent">
