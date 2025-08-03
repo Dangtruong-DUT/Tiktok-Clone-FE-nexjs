@@ -1,37 +1,27 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import lottie, { AnimationItem } from "lottie-web";
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
+import type { LottiePlayer, AnimationItem } from "lottie-web";
+import { cn } from "@/lib/utils";
 
-interface LottieProps<T extends Record<string, unknown>> {
-    getAnimationData: () => Promise<T>;
-    id: string;
+export type LottieProps = {
+    path: string;
     loop?: boolean;
     autoplay?: boolean;
     className?: string;
-}
+};
 
-export default function LazyLottie<T extends Record<string, unknown>>({
-    getAnimationData,
-    id,
-    loop = true,
-    autoplay = true,
-    className,
-}: LottieProps<T>) {
+export default function LazyLottie({ path, loop = false, autoplay = true, className }: LottieProps) {
     const containerRef = useRef<HTMLDivElement>(null);
+    const [lottie, setLottie] = useState<LottiePlayer | null>(null);
     const animationRef = useRef<AnimationItem | null>(null);
 
-    const { data } = useQuery({
-        queryKey: [id],
-        queryFn: getAnimationData,
-        staleTime: Infinity,
-        refetchOnWindowFocus: false,
-        enabled: typeof window !== "undefined",
-    });
+    useEffect(() => {
+        import("lottie-web").then((Lottie) => setLottie(Lottie.default));
+    }, []);
 
     useEffect(() => {
-        if (data && containerRef.current) {
+        if (lottie && containerRef.current) {
             if (animationRef.current) {
                 animationRef.current.destroy();
             }
@@ -41,13 +31,14 @@ export default function LazyLottie<T extends Record<string, unknown>>({
                 renderer: "svg",
                 loop,
                 autoplay,
-                animationData: data,
+                path,
             });
-        }
 
-        return () => {
-            animationRef.current?.destroy();
-        };
-    }, [data, loop, autoplay]);
-    return <div ref={containerRef} className={className} />;
+            return () => {
+                animationRef.current?.destroy();
+            };
+        }
+    }, [lottie, path, loop, autoplay]);
+
+    return <div ref={containerRef} className={cn("relative", " [&>svg]:max-w-none [&svg]:size-full! ", className)} />;
 }

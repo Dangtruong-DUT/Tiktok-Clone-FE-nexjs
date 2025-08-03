@@ -1,5 +1,4 @@
 import React from "react";
-import { HiSpeakerWave } from "react-icons/hi2";
 import MaterialSymbolsPlayCircleRounded from "@/components/icons/MaterialSymbolsPlayCircleRounded";
 import MaterialSymbolsPauseCircle from "@/components/icons/MaterialSymbolsPauseCircle";
 import MaterialSymbolsNoSoundRounded from "@/components/icons/MaterialSymbolsNoSoundRounded";

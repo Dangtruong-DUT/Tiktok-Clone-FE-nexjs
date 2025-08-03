@@ -29,11 +29,11 @@ function NavigatorVideo({ handleClickPrevBtn, handleClickNextBtn, isDisabledUp, 
     }, [handleClickPrevBtn, handleClickNextBtn, isDisabledUp, isDisabledDown]);
 
     return (
-        <div className="flex flex-col items-center justify-center h-full w-12 gap-4 text-[3rem]">
+        <div className="flex flex-col items-center justify-center h-full w-12 gap-4 ">
             <Button
                 variant="secondary"
                 className={cn(
-                    "aspect-square w-[1em] h-[1em] text-[clamp(2rem,3vw+1rem,3rem)] rounded-full cursor-pointer",
+                    " aspect-square size-[1em]  text-[clamp(2rem,3vw+1rem,3rem)] rounded-full cursor-pointer",
                     {
                         "opacity-50 cursor-not-allowed user-select-none ": isDisabledUp,
                     }
@@ -42,22 +42,19 @@ function NavigatorVideo({ handleClickPrevBtn, handleClickNextBtn, isDisabledUp, 
                 disabled={isDisabledUp}
                 aria-label="Previous video"
             >
-                <HiOutlineChevronUp className="w-[1em] h-[1em] cursor-inherit" />
+                <HiOutlineChevronUp className="size-[0.5em] cursor-inherit" />
             </Button>
 
             <Button
                 variant="secondary"
-                className={cn(
-                    "aspect-square w-[1em] h-[1em] text-[clamp(2rem,3vw+1rem,3rem)] rounded-full cursor-pointer",
-                    {
-                        "opacity-50 cursor-not-allowed user-select-none": isDisabledDown,
-                    }
-                )}
+                className={cn("aspect-square size-[1em] text-[clamp(2rem,3vw+1rem,3rem)] rounded-full cursor-pointer", {
+                    "opacity-50 cursor-not-allowed user-select-none": isDisabledDown,
+                })}
                 onClick={handleClickNextBtn}
                 disabled={isDisabledDown}
                 aria-label="Next video"
             >
-                <HiOutlineChevronDown className="w-[1em] h-[1em] cursor-inherit" />
+                <HiOutlineChevronDown className="size-[0.5em] cursor-inherit" />
             </Button>
         </div>
     );

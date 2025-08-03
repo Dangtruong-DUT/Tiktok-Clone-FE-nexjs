@@ -5,7 +5,7 @@ import NavigationVideo from "@/app/[locale]/(public)/(home)/(foryou)/navigation-
 import VideoPlayer from "@/components/video-player";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
 import { UserType } from "@/types/schemas/User.schema";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const mockVideoPost: TikTokPostType = {
     _id: "12345",
@@ -61,21 +61,38 @@ const postList: { post: TikTokPostType; user: UserType }[] = Array(10).fill({ po
 
 export default function VideoScrollWrapper() {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const handleScrollToIndex = (type: "UP" | "DOWN") => {
-        let newIndex = currentIndex;
+    const handleScrollToIndex = useCallback(
+        (direction: "UP" | "DOWN") => {
+            const delta = direction === "UP" ? 1 : -1;
+            const newIndex = currentIndex + delta;
 
-        if (type === "UP" && currentIndex < postList.length - 1) {
-            newIndex += 1;
-        } else if (type === "DOWN" && currentIndex > 0) {
-            newIndex -= 1;
-        }
+            if (newIndex < 0 || newIndex >= postList.length || newIndex === currentIndex) return;
 
-        const element = document.querySelector(`[data-scroll-index="${newIndex}"]`);
-        if (element) {
-            element.scrollIntoView({ behavior: "smooth", block: "start" });
-            setCurrentIndex(newIndex);
-        }
-    };
+            const target = document.querySelector<HTMLElement>(`[data-scroll-index="${newIndex}"]`);
+            if (target) {
+                target.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        },
+        [currentIndex]
+    );
+
+    useEffect(() => {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    const index = Number(entry.target.getAttribute("data-scroll-index"));
+                    setCurrentIndex(index);
+                }
+            });
+        });
+
+        const elements = document.querySelectorAll("[data-scroll-index]");
+        elements.forEach((element) => observer.observe(element));
+
+        return () => {
+            elements.forEach((element) => observer.unobserve(element));
+        };
+    }, []);
 
     return (
         <>
@@ -86,7 +103,7 @@ export default function VideoScrollWrapper() {
                         data-scroll-index={index}
                         className="px-4 lg:ps-[3rem] lg:pe-[15rem]  py-4 min-h-screen snap-start snap-always "
                     >
-                        <div className="flex flex-row items-end justify-center gap-2 mx-auto">
+                        <div className="flex flex-row items-end justify-center space-x-4 mx-auto">
                             <VideoPlayer post={item.post} author={item.user} className="sm:max-w-[400px]" />
                             <ActionBar post={item.post} author={item.user} className="mt-4" />
                         </div>
