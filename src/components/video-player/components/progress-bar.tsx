@@ -61,7 +61,7 @@ function ProgressBar({ currentTime, duration, className, onActive, onSeek }: Pro
     const progressPercentage = isDragging ? (dragTime / duration) * 100 : (currentTime / duration) * 100;
     return (
         <div
-            className={cn("absolute bottom-0 h-6 w-full select-none group", className)}
+            className={cn("absolute bottom-0 h-6 w-full select-none group/progress", className)}
             onMouseMove={handleMove}
             onMouseUp={handleEnd}
             onMouseLeave={handleEnd}
@@ -72,10 +72,10 @@ function ProgressBar({ currentTime, duration, className, onActive, onSeek }: Pro
             <div
                 className={cn(
                     "block absolute opacity-0 top-1/2 -translate-x-1/2 w-3 aspect-square z-[6] bg-white shadow-[0_0_1px_1px_rgba(0,0,0,0.3)] rounded-full",
-                    "  cursor-grab transition-opacity duration-100 ease-in-out",
+                    " translate-y-0.5 cursor-grab transition-opacity duration-100 ease-in-out",
                     "before:content-[''] before:absolute before:-top-[9px] before:-left-[9px] before:-right-[9px] before:-bottom-[9px]",
                     "before:bg-transparent before:z-[7]",
-                    "group-hover:opacity-100",
+                    "group-hover/progress:opacity-100",
                     isDragging && "cursor-grabbing opacity-100"
                 )}
                 style={{ left: `${progressPercentage}%` }}
@@ -87,7 +87,7 @@ function ProgressBar({ currentTime, duration, className, onActive, onSeek }: Pro
             <div
                 className={cn(
                     "absolute z-[1] top-0 left-1/2 -translate-x-1/2 -translate-y-[200%] bg-transparent text-white",
-                    "h-[30px] text-shadow-[0_0_1px_rgba(0,0,0,0.3)] text-center text-[32px] font-bold",
+                    "  h-[30px] text-shadow-[0_0_1px_rgba(0,0,0,0.3)] text-center text-[32px] font-bold",
                     "tracking-normal whitespace-nowrap origin-bottom-left transition-all duration-200 ease-in-out",
                     isDragging ? "visible opacity-100 scale-100" : "invisible opacity-0 scale-80"
                 )}
@@ -101,9 +101,8 @@ function ProgressBar({ currentTime, duration, className, onActive, onSeek }: Pro
                     ref={progressBarRef}
                     className={cn(
                         "flex-shrink-0 block relative w-full left-0 bg-white/20 cursor-pointer select-none",
-                        "transition-all duration-200",
-                        "group-hover:h-2.5",
-                        isDragging ? "h-1.5" : "h-1"
+                        "transition-all duration-200 group-hover/progress:h-1.5 ease-in-out",
+                        isDragging ? "h-1.3" : "h-1"
                     )}
                     onMouseDown={handleTrackClick}
                     onTouchStart={handleTrackClick}

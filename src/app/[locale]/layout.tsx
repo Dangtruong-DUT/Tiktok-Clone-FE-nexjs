@@ -7,6 +7,7 @@ import { LocalesType } from "@/i18n/config";
 import { tiktokDisplayFont, tiktokFont } from "@/config/font";
 import { ThemeProvider } from "@/provider/theme-provider";
 import { Toaster } from "sonner";
+import { AppProvider } from "@/provider/app-provider";
 
 export const metadata: Metadata = {
     title: "Tiktok",
@@ -34,10 +35,12 @@ export default async function LocaleLayout({
         <html lang={locale} suppressHydrationWarning>
             <body className={`${tiktokDisplayFont.variable} ${tiktokFont.variable} antialiased`}>
                 <NextIntlClientProvider>
-                    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-                        {children}
-                        <Toaster />
-                    </ThemeProvider>
+                    <AppProvider>
+                        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+                            {children}
+                            <Toaster />
+                        </ThemeProvider>
+                    </AppProvider>
                 </NextIntlClientProvider>
             </body>
         </html>

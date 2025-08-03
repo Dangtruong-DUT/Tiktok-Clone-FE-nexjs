@@ -1,10 +1,11 @@
 "use client";
 
+import ActionBar from "@/app/[locale]/(public)/(home)/(foryou)/action-video-bar";
 import NavigationVideo from "@/app/[locale]/(public)/(home)/(foryou)/navigation-video";
 import VideoPlayer from "@/components/video-player";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
 import { UserType } from "@/types/schemas/User.schema";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 const mockVideoPost: TikTokPostType = {
     _id: "12345",
@@ -50,6 +51,10 @@ const mockUser: UserType = {
     avatar: "http://localhost:3000/avatar.jpg",
     cover_photo: "http://localhost:3000/cover.jpg",
     name: "Mock User",
+    following_count: 100,
+    followers_count: 200,
+    is_followed: false,
+    isOwner: false,
 };
 
 const postList: { post: TikTokPostType; user: UserType }[] = Array(10).fill({ post: mockVideoPost, user: mockUser });
@@ -79,9 +84,12 @@ export default function VideoScrollWrapper() {
                     <article
                         key={String(item.post._id + index)}
                         data-scroll-index={index}
-                        className="px-4 lg:ps-[3rem] lg:pe-[15rem]  py-4 min-h-screen snap-start snap-always"
+                        className="px-4 lg:ps-[3rem] lg:pe-[15rem]  py-4 min-h-screen snap-start snap-always "
                     >
-                        <VideoPlayer post={item.post} author={item.user} className="sm:max-w-[400px] mx-auto" />
+                        <div className="flex flex-row items-end justify-center gap-2 mx-auto">
+                            <VideoPlayer post={item.post} author={item.user} className="sm:max-w-[400px]" />
+                            <ActionBar post={item.post} author={item.user} className="mt-4" />
+                        </div>
                     </article>
                 ))}
             </div>
