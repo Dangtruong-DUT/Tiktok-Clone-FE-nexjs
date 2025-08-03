@@ -4,7 +4,7 @@ import React, { startTransition, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Check, MessageCircleMore, Plus } from "lucide-react";
+import { Check, Plus } from "lucide-react";
 import { FaBookmark, FaHeart, FaShare } from "react-icons/fa6";
 import LikedIcon from "@/components/lottie-icons/liked-icon";
 import BookmarkIcon from "@/components/lottie-icons/bookmark-icon";

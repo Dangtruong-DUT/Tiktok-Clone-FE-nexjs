@@ -69,7 +69,7 @@ export default function VideoPlayer({ className, post, author }: VideoPlayerProp
             {/* Video Element */}
             <video
                 onClick={handlePlayPause}
-                className="w-full aspect-[9/16] rounded-2xl object-cover"
+                className="w-full aspect-[9/16] rounded-2xl object-cover bg-accent"
                 ref={videoRef}
                 playsInline
                 loop
