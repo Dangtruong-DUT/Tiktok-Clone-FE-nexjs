@@ -77,22 +77,32 @@ export default function VideoScrollWrapper() {
     );
 
     useEffect(() => {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    const index = Number(entry.target.getAttribute("data-scroll-index"));
-                    setCurrentIndex(index);
-                }
-            });
-        });
+        const observer = new IntersectionObserver(
+            (entries) => {
+                for (const entry of entries) {
+                    if (entry.isIntersecting) {
+                        const indexAttr = entry.target.getAttribute("data-scroll-index");
+                        if (indexAttr === null) continue;
 
-        const elements = document.querySelectorAll("[data-scroll-index]");
-        elements.forEach((element) => observer.observe(element));
+                        const index = Number(indexAttr);
+                        if (!Number.isNaN(index) && index !== currentIndex) {
+                            setCurrentIndex(index);
+                        }
+                    }
+                }
+            },
+            {
+                threshold: 0.9,
+            }
+        );
+
+        const elements = document.querySelectorAll<HTMLElement>("[data-scroll-index]");
+        elements.forEach((el) => observer.observe(el));
 
         return () => {
-            elements.forEach((element) => observer.unobserve(element));
+            observer.disconnect();
         };
-    }, []);
+    }, [currentIndex]);
 
     return (
         <>
@@ -110,12 +120,19 @@ export default function VideoScrollWrapper() {
                     </article>
                 ))}
             </div>
-            <NavigationVideo
-                handleClickNextBtn={() => handleScrollToIndex("UP")}
-                handleClickPrevBtn={() => handleScrollToIndex("DOWN")}
-                isDisabledDown={currentIndex === postList.length - 1}
-                isDisabledUp={currentIndex === 0}
-            />
+            <aside>
+                <NavigationVideo
+                    handleClickNextBtn={() => handleScrollToIndex("UP")}
+                    handleClickPrevBtn={() => handleScrollToIndex("DOWN")}
+                    isDisabledDown={currentIndex === postList.length - 1}
+                    isDisabledUp={currentIndex === 0}
+                />
+                <section>
+                    <header>comment</header>
+                    <div>comment section here</div>
+                    <footer>footer</footer>
+                </section>
+            </aside>
         </>
     );
 }

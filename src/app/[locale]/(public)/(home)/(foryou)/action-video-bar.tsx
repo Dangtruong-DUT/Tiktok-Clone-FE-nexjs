@@ -11,6 +11,7 @@ import BookmarkIcon from "@/components/lottie-icons/bookmark-icon";
 import { formatCash } from "@/utils/formatting/formatNumber";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
 import { UserType } from "@/types/schemas/User.schema";
+import { AiFillMessage } from "react-icons/ai";
 
 interface ActionBarProps {
     post: TikTokPostType;
@@ -55,7 +56,7 @@ export default function ActionBar({ post, author, className }: ActionBarProps) {
         startTransition(() => setter((prev) => !prev));
 
     return (
-        <section className={cn("flex flex-col items-center gap-6 py-6 relative", className)}>
+        <section className={cn("flex flex-col items-center gap-3  relative", className)}>
             {/* Avatar & Follow */}
             <div className="flex flex-col items-center text-5xl">
                 <Avatar className="w-[1em] h-[1em]">
@@ -95,7 +96,7 @@ export default function ActionBar({ post, author, className }: ActionBarProps) {
                 />
 
                 <ActionButton
-                    icon={<MessageCircleMore className="size-[0.5em]" />}
+                    icon={<AiFillMessage className="size-[0.5em]" />}
                     count={post.comment_count}
                     label="Comment"
                     onClick={() => {}}
