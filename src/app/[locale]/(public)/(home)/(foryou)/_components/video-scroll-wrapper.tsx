@@ -9,12 +9,12 @@ export default function VideoScrollWrapper() {
     const { postList } = useVideosProvider();
     return (
         <>
-            <div className=" max-h-screen w-full  overflow-y-auto  snap-y snap-mandatory scrollbar-hidden">
+            <div className=" max-h-screen w-full  overflow-y-auto  snap-y snap-mandatory scrollbar-hidden @container">
                 {postList.map((item, index) => (
                     <article
                         key={String(item.post._id + index)}
                         {...{ [keyDataScroll]: index }}
-                        className="px-4 lg:ps-[3rem] lg:pe-[15rem]  py-4 min-h-screen snap-start snap-always "
+                        className="px-4 @5xl:ps-[3rem] @5xl:pe-[15rem]  py-4 min-h-screen snap-start snap-always "
                     >
                         <div className="flex flex-row items-end justify-center space-x-4 mx-auto">
                             <VideoPlayer post={item.post} author={item.user} className="sm:max-w-[400px]" />
@@ -23,14 +23,7 @@ export default function VideoScrollWrapper() {
                     </article>
                 ))}
             </div>
-            <aside>
-                <NavigationVideo />
-                <section>
-                    <header>comment</header>
-                    <div>comment section here</div>
-                    <footer>footer</footer>
-                </section>
-            </aside>
+            <NavigationVideo className="pe-3" />
         </>
     );
 }

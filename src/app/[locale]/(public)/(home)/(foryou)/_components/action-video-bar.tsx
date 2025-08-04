@@ -12,6 +12,7 @@ import { formatCash } from "@/utils/formatting/formatNumber";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
 import { UserType } from "@/types/schemas/User.schema";
 import { AiFillMessage } from "react-icons/ai";
+import { usePathname, useRouter } from "@/i18n/navigation";
 
 interface ActionBarProps {
     post: TikTokPostType;
@@ -35,14 +36,14 @@ function ActionButton({ icon, count, label, onClick, className }: ActionButtonPr
                 onClick={onClick}
                 className={cn(
                     "text-5xl size-[1em] rounded-full flex items-center justify-center",
-                    "transition-all duration-200 text-white/90 hover:bg-white/10 active:bg-white/20",
+                    "transition-all duration-200",
                     className
                 )}
                 size="icon"
             >
                 {icon}
             </Button>
-            <span className="text-white text-xs font-bold text-center">{count ? formatCash.format(count) : label}</span>
+            <span className=" text-xs font-bold text-center">{count ? formatCash.format(count) : label}</span>
         </div>
     );
 }
@@ -54,6 +55,18 @@ export default function ActionBar({ post, author, className }: ActionBarProps) {
 
     const toggle = (setter: React.Dispatch<React.SetStateAction<boolean>>) =>
         startTransition(() => setter((prev) => !prev));
+
+    const pathname = usePathname();
+    const router = useRouter();
+    const videoDetailPath = `@${author.username}/video/${post._id}`;
+
+    const handleToggleOpenComment = () => {
+        if (pathname.includes(videoDetailPath)) {
+            router.back();
+        } else {
+            router.push(videoDetailPath);
+        }
+    };
 
     return (
         <section className={cn("flex flex-col items-center gap-3  relative", className)}>
@@ -99,7 +112,7 @@ export default function ActionBar({ post, author, className }: ActionBarProps) {
                     icon={<AiFillMessage className="size-[0.5em]" />}
                     count={post.comment_count}
                     label="Comment"
-                    onClick={() => {}}
+                    onClick={handleToggleOpenComment}
                 />
                 <ActionButton
                     icon={

@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { memo, useEffect } from "react";
 import { HiOutlineChevronDown, HiOutlineChevronUp } from "react-icons/hi2";
 
-function NavigatorVideo() {
+function NavigatorVideo({ className }: { className?: string }) {
     const { handleScrollToIndex, currentIndex, postLength } = useVideosProvider();
     const isDisabledUp = currentIndex <= 0;
     const isDisabledDown = currentIndex >= postLength - 1;
@@ -27,7 +27,7 @@ function NavigatorVideo() {
     }, [handleScrollToIndex, currentIndex, postLength, isDisabledUp, isDisabledDown]);
 
     return (
-        <div className="flex flex-col items-center justify-center h-full w-12 gap-4 ">
+        <div className={cn("flex flex-col items-center justify-center h-full w-12 gap-4 ", className)}>
             <Button
                 variant="secondary"
                 className={cn(

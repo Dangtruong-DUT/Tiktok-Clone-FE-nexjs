@@ -38,7 +38,7 @@ export default function LazyLottie({ path, loop = false, autoplay = true, classN
                 animationRef.current?.destroy();
             };
         }
-    }, [lottie, path, loop, autoplay]);
+    }, [lottie, path, loop, autoplay, containerRef, animationRef]);
 
     return <div ref={containerRef} className={cn("relative", " [&>svg]:max-w-none [&svg]:size-full! ", className)} />;
 }

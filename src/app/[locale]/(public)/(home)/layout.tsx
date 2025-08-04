@@ -7,9 +7,11 @@ import { use } from "react";
 export default function HomeLayout({
     children,
     params,
+    videoComments,
 }: {
     children: React.ReactNode;
     params: Promise<{ locale: LocalesType }>;
+    videoComments: React.ReactNode;
 }) {
     const { locale } = use(params);
 
@@ -21,6 +23,7 @@ export default function HomeLayout({
                 <Sidebar />
             </SidebarProvider>
             <main className="flex-1">{children}</main>
+            <aside className="  max-h-screen">{videoComments}</aside>
         </div>
     );
 }

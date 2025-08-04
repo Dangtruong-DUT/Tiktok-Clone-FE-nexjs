@@ -188,6 +188,7 @@ html *::-webkit-scrollbar-track {
 @keyframes popup {
     0% {
         opacity: 0;
+        visibility: visible;
         transform: scale(0.5);
     }
     50% {
@@ -211,16 +212,17 @@ html *::-webkit-scrollbar-track {
     }
     100% {
         opacity: 1;
-        width: min(336px, 70vw);
+        width: min(--target-width, 70vw);
     }
 }
 @keyframes slide-out {
     0% {
         opacity: 1;
-        width: min(336px, 70vw);
+        width: min(--target-width, 70vw);
     }
     100% {
         opacity: 0;
+        visibility: hidden;
         width: 0;
     }
 }

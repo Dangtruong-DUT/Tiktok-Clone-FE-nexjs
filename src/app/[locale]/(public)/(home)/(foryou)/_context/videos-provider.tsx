@@ -4,16 +4,17 @@ import { postList as postListMock } from "@/app/[locale]/(public)/(home)/(foryou
 import useScrollIndexObserver, { ScrollType } from "@/hooks/ui/useScrollIndexObserver";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
 import { UserType } from "@/types/schemas/User.schema";
-import React from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 interface VideosProviderContextProps {
     currentIndex: number;
     postLength: number;
     postList: { post: TikTokPostType; user: UserType }[];
     handleScrollToIndex: (type: ScrollType) => void;
+    visiblePostId: string | null;
 }
 
-const VideosProviderContext = React.createContext<VideosProviderContextProps | undefined>(undefined);
+const VideosProviderContext = createContext<VideosProviderContextProps | undefined>(undefined);
 
 export function useVideosProvider() {
     const context = React.useContext(VideosProviderContext);
@@ -26,6 +27,8 @@ export function useVideosProvider() {
 export const keyDataScroll = "data-scroll-index";
 
 export function VideosProvider({ children }: { children: React.ReactNode }) {
+    const [visiblePostId, setVisiblePostId] = useState<string | null>(null);
+    const [isOpenComment, setIsOpenComment] = useState<boolean>(false);
     const { currentIndex, handleScrollToIndex } = useScrollIndexObserver({
         keyDataScroll,
         initialIndex: 0,
@@ -33,8 +36,25 @@ export function VideosProvider({ children }: { children: React.ReactNode }) {
     });
     const postList: { post: TikTokPostType; user: UserType }[] = postListMock;
 
+    useEffect(() => {
+        const currentPost = postList[currentIndex];
+        if (currentPost) {
+            setVisiblePostId(currentPost.post._id);
+        } else {
+            setVisiblePostId(null);
+        }
+    }, [currentIndex, postList]);
+
     return (
-        <VideosProviderContext value={{ currentIndex, postList, handleScrollToIndex, postLength: postList.length }}>
+        <VideosProviderContext
+            value={{
+                currentIndex,
+                postList,
+                handleScrollToIndex,
+                postLength: postList.length,
+                visiblePostId,
+            }}
+        >
             {children}
         </VideosProviderContext>
     );
