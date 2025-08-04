@@ -1,4 +1,4 @@
-export interface Comment {
+export interface CommentType {
     id: string;
     postId: string;
     parentId: string | null;
@@ -8,7 +8,8 @@ export interface Comment {
         avatar: string;
         username: string;
     };
+    reply_count: number;
     content: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string;
+    updatedAt: string;
 }

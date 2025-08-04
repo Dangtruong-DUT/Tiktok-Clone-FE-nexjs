@@ -1,13 +1,12 @@
-import CommentsMain from "@/app/[locale]/(public)/(home)/@videoComments/(.)[username]/video/[id]/comments-main";
+import CommentList from "@/app/[locale]/(public)/(home)/@videoComments/(.)[username]/video/[id]/comment-list";
 import CommentsWrapper from "@/app/[locale]/(public)/(home)/@videoComments/(.)[username]/video/[id]/wrapper";
 import { AtSign, Smile } from "lucide-react";
 
-export default async function CommentsSection() {
-    console.log("CommentsSection rendered");
+export default async function CommentsPage() {
     return (
         <CommentsWrapper>
             <div className="flex-1">
-                <CommentsMain />
+                <CommentList />
             </div>
             <footer className=" flex pe-3 h-11.5 gap-4">
                 <div className="flex-1  rounded-lg flex items-center justify-between gap-0.5 px-4 border bg-input">
