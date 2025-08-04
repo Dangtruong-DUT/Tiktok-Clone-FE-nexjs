@@ -1,7 +1,9 @@
-interface CommentsMainProps {
-    postId: string;
-}
+"use client";
 
-export default function CommentsMain({ postId }: CommentsMainProps) {
-    return <div className="size-full">Comments Main Section for Post ID: {postId}</div>;
+import { useParams } from "next/navigation";
+
+export default function CommentsMain() {
+    const { id } = useParams();
+
+    return <div className="size-full">Comments Main Section for Post ID: {id}</div>;
 }

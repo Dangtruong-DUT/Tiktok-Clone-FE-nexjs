@@ -1,29 +1,25 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
+import { useAppContext } from "@/provider/app-provider";
 import { X } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 
 export default function CommentsWrapper({ children }: { children: React.ReactNode }) {
-    const [isVisible, setIsVisible] = useState(true);
-    const router = useRouter();
+    const { isOpenVideoComments, setIsOpenVideoComments } = useAppContext();
 
     const handleCloseComments = useCallback(() => {
-        setIsVisible(false);
-        setTimeout(() => {
-            router.back();
-        }, 300);
-    }, [router]);
+        setIsOpenVideoComments(false);
+    }, [setIsOpenVideoComments]);
 
     return (
         <section
             className={cn(
-                "flex-1 min-h-screen flex flex-col  py-3 pl-3  max-w-96   bg-sidebar transition-transform duration-300  border-l ",
+                "flex-1 min-h-screen flex flex-col py-3 pl-3 max-w-96 bg-sidebar border-l transition-transform duration-300",
                 {
-                    "animate-slide-in w-96": isVisible,
-                    "animate-slide-out": !isVisible,
+                    "translate-x-0": isOpenVideoComments,
+                    "translate-x-full pointer-events-none": !isOpenVideoComments,
                 }
             )}
             style={

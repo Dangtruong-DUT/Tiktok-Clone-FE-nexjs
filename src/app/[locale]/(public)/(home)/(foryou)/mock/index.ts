@@ -51,7 +51,19 @@ const mockUser: UserType = {
     isOwner: false,
 };
 
-export const postList: { post: TikTokPostType; user: UserType }[] = Array(10).fill({
-    post: mockVideoPost,
-    user: mockUser,
-});
+export const postList: { post: TikTokPostType; user: UserType }[] = Array(10)
+    .fill({
+        post: mockVideoPost,
+        user: mockUser,
+    })
+    .map((item, index) => ({
+        post: {
+            ...item.post,
+            _id: `${item.post._id}-${index}`,
+        },
+        user: {
+            ...item.user,
+            _id: `${item.user._id}-${index}`,
+            username: `${item.user.username}-${index}`,
+        },
+    }));

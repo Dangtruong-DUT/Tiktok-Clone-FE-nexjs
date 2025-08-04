@@ -2,8 +2,11 @@
 
 import { postList as postListMock } from "@/app/[locale]/(public)/(home)/(foryou)/mock";
 import useScrollIndexObserver, { ScrollType } from "@/hooks/ui/useScrollIndexObserver";
+import { useRouter } from "@/i18n/navigation";
+import { useAppContext } from "@/provider/app-provider";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
 import { UserType } from "@/types/schemas/User.schema";
+import { usePathname } from "next/navigation";
 import React, { createContext, useEffect, useState } from "react";
 
 interface VideosProviderContextProps {
@@ -28,7 +31,6 @@ export const keyDataScroll = "data-scroll-index";
 
 export function VideosProvider({ children }: { children: React.ReactNode }) {
     const [visiblePostId, setVisiblePostId] = useState<string | null>(null);
-    const [isOpenComment, setIsOpenComment] = useState<boolean>(false);
     const { currentIndex, handleScrollToIndex } = useScrollIndexObserver({
         keyDataScroll,
         initialIndex: 0,
@@ -44,6 +46,22 @@ export function VideosProvider({ children }: { children: React.ReactNode }) {
             setVisiblePostId(null);
         }
     }, [currentIndex, postList]);
+
+    const router = useRouter();
+    const pathname = usePathname();
+    const { isOpenVideoComments } = useAppContext();
+
+    useEffect(() => {
+        const currentPost = postList[currentIndex];
+        if (isOpenVideoComments) {
+            const newUrl = `/@${currentPost.user.username}/video/${currentPost.post._id}`;
+            if (pathname.includes("video")) {
+                router.replace(newUrl);
+            } else {
+                router.push(newUrl);
+            }
+        }
+    }, [isOpenVideoComments, currentIndex, postList, router, pathname]);
 
     return (
         <VideosProviderContext

@@ -12,7 +12,7 @@ import { formatCash } from "@/utils/formatting/formatNumber";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
 import { UserType } from "@/types/schemas/User.schema";
 import { AiFillMessage } from "react-icons/ai";
-import { usePathname, useRouter } from "@/i18n/navigation";
+import { useAppContext } from "@/provider/app-provider";
 
 interface ActionBarProps {
     post: TikTokPostType;
@@ -49,6 +49,7 @@ function ActionButton({ icon, count, label, onClick, className }: ActionButtonPr
 }
 
 export default function ActionBar({ post, author, className }: ActionBarProps) {
+    const { isOpenVideoComments, setIsOpenVideoComments } = useAppContext();
     const [liked, setLiked] = useState(post.is_liked);
     const [saved, setSaved] = useState(post.is_bookmarked);
     const [following, setFollowing] = useState(false);
@@ -56,15 +57,11 @@ export default function ActionBar({ post, author, className }: ActionBarProps) {
     const toggle = (setter: React.Dispatch<React.SetStateAction<boolean>>) =>
         startTransition(() => setter((prev) => !prev));
 
-    const pathname = usePathname();
-    const router = useRouter();
-    const videoDetailPath = `@${author.username}/video/${post._id}`;
-
     const handleToggleOpenComment = () => {
-        if (pathname.includes(videoDetailPath)) {
-            router.back();
+        if (isOpenVideoComments) {
+            setIsOpenVideoComments(false);
         } else {
-            router.push(videoDetailPath);
+            setIsOpenVideoComments(true);
         }
     };
 
