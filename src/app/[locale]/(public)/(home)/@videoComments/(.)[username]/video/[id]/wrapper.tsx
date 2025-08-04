@@ -6,7 +6,7 @@ import { useAppContext } from "@/provider/app-provider";
 import { X } from "lucide-react";
 import { useCallback } from "react";
 
-export default function CommentsWrapper({ children }: { children: React.ReactNode }) {
+export default function CommentsWrapper({ children, className }: { children: React.ReactNode; className?: string }) {
     const { isOpenVideoComments, setIsOpenVideoComments } = useAppContext();
 
     const handleCloseComments = useCallback(() => {
@@ -15,13 +15,10 @@ export default function CommentsWrapper({ children }: { children: React.ReactNod
 
     return (
         <section
-            className={cn(
-                "flex-1 min-h-screen flex flex-col py-3 pl-3 max-w-96 bg-sidebar border-l transition-transform duration-300",
-                {
-                    "translate-x-0": isOpenVideoComments,
-                    "translate-x-full pointer-events-none": !isOpenVideoComments,
-                }
-            )}
+            className={cn(className, {
+                "translate-x-0": isOpenVideoComments,
+                "translate-x-full pointer-events-none": !isOpenVideoComments,
+            })}
             style={
                 {
                     "--target-width": "24rem",

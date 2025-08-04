@@ -23,7 +23,7 @@ export default function HomeLayout({
                 <Sidebar />
             </SidebarProvider>
             <main className="flex-1">{children}</main>
-            <aside className="  max-h-screen">{videoComments}</aside>
+            <aside>{videoComments}</aside>
         </div>
     );
 }
