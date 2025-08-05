@@ -160,7 +160,7 @@
 }
 
 .primary-button {
-    @apply h-11 rounded-xs bg-brand mt-4 text-base font-bold hover:bg-brand/90 text-white 
+    @apply h-11 rounded-xs bg-brand  text-base font-bold hover:bg-brand/90 text-white 
            disabled:bg-neutral-300! disabled:text-neutral-500!;
 }
 

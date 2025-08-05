@@ -4,7 +4,7 @@ import { timeAgo } from "@/utils/formatting/formatTime";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
 import { UserType } from "@/types/schemas/User.schema";
 import ProgressBar from "./progress-bar";
-import VideoDescription from "./video-description";
+import VideoDescription from "@/components/video-player/components/video-description";
 
 interface VideoControlsBottomProps {
     post: TikTokPostType;

@@ -1,6 +1,5 @@
 import React, { memo, useRef, useState, TouchEvent, MouseEvent } from "react";
 import { cn } from "@/lib/utils";
-import { formatSecondsToTime } from "@/utils/formatting/formatTime";
 
 interface ProgressBarProps {
     currentTime: number;
@@ -56,7 +55,7 @@ function ProgressBar({ currentTime, duration, className, onActive, onSeek }: Pro
     const progressPercentage = isDragging ? (dragTime / duration) * 100 : (currentTime / duration) * 100;
     return (
         <div
-            className={cn("absolute bottom-0 h-6 w-full select-none group/progress", className)}
+            className={cn("relative  h-6 w-full select-none group/progress", className)}
             onMouseMove={handleMove}
             onMouseUp={handleEnd}
             onMouseLeave={handleEnd}
@@ -78,32 +77,22 @@ function ProgressBar({ currentTime, duration, className, onActive, onSeek }: Pro
                 onTouchStart={handleStart}
             />
 
-            {/* Hiển thị thời gian */}
-            <div
-                className={cn(
-                    "absolute z-[1] top-0 left-1/2 -translate-x-1/2 -translate-y-[200%] bg-transparent text-white",
-                    "  h-[30px] text-shadow-[0_0_1px_rgba(0,0,0,0.3)] text-center text-[32px] font-bold",
-                    "tracking-normal whitespace-nowrap origin-bottom-left transition-all duration-200 ease-in-out",
-                    isDragging ? "visible opacity-100 scale-100" : "invisible opacity-0 scale-80"
-                )}
-            >
-                {formatSecondsToTime(isDragging ? dragTime : currentTime)} / {formatSecondsToTime(duration)}
-            </div>
-
             {/* Thanh tiến độ */}
-            <div className="relative flex items-end h-full rounded-bl-2xl rounded-br-2xl overflow-hidden">
+            <div className="relative flex items-end h-full">
                 <div
                     ref={progressBarRef}
                     className={cn(
-                        "flex-shrink-0 block relative w-full left-0 bg-white/20 cursor-pointer select-none",
-                        "transition-all duration-200 group-hover/progress:h-1.5 ease-in-out",
+                        "flex-shrink-0 block relative w-full left-0 bg-white/10 cursor-pointer select-none",
+                        "transition-all duration-200 group-hover/progress:h-1.5 group-hover:bg-white/20 ease-in-out",
                         isDragging ? "h-1.3" : "h-1"
                     )}
                     onMouseDown={handleTrackClick}
                     onTouchStart={handleTrackClick}
                 >
                     <div
-                        className="block absolute h-full bg-brand rounded-[5px]"
+                        className={cn("block absolute h-full bg-white/50 group-hover:bg-white", {
+                            "bg-white": isDragging,
+                        })}
                         style={{ width: `${progressPercentage}%` }}
                     />
                 </div>

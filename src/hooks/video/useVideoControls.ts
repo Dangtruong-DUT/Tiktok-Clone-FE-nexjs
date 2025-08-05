@@ -15,25 +15,19 @@ export function useVideoControls({ videoRef, isPlaying, setIsPlaying, setIsMuted
     const { show: showPlayPauseIcon, trigger: triggerPlayPauseIcon } = useTemporaryIcon(500);
     const { show: showMutedIcon, trigger: triggerMutedIcon } = useTemporaryIcon(500);
 
-    const handlePlayPause = useCallback(
-        (event: React.MouseEvent<HTMLVideoElement | HTMLDivElement>) => {
-            if (event.target !== videoRef.current) {
-                return;
+    const handlePlayPause = useCallback(() => {
+        if (videoRef.current) {
+            if (videoRef.current.paused) {
+                videoRef.current.play().catch((error) => {
+                    console.error("Error attempting to play video:", error);
+                });
+            } else {
+                videoRef.current.pause();
             }
-            if (videoRef.current) {
-                if (videoRef.current.paused) {
-                    videoRef.current.play().catch((error) => {
-                        console.error("Error attempting to play video:", error);
-                    });
-                } else {
-                    videoRef.current.pause();
-                }
-                setIsPlaying(!isPlaying);
-                triggerPlayPauseIcon();
-            }
-        },
-        [videoRef, isPlaying, setIsPlaying, triggerPlayPauseIcon]
-    );
+            setIsPlaying(!isPlaying);
+            triggerPlayPauseIcon();
+        }
+    }, [videoRef, isPlaying, setIsPlaying, triggerPlayPauseIcon]);
 
     const handleSeek = useCallback(
         (time: number) => {

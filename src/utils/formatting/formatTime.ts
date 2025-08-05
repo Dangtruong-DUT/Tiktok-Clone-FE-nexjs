@@ -19,3 +19,11 @@ export function timeAgo({ locale, date }: { locale: LocalesType; date: string })
         return "";
     }
 }
+
+export function formatSecondsToTime(time: number): string {
+    const minutes = Math.floor(time / 60).toString();
+    const seconds = Math.floor(time % 60)
+        .toString()
+        .padStart(2, "0");
+    return `${minutes}:${seconds}`;
+}

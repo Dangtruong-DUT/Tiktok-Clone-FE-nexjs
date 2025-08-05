@@ -5,7 +5,6 @@ import { FormControl, FormField, FormItem, Form } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { CommentBody, CommentBodyType } from "@/utils/validations/comment.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AtSign } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
