@@ -16,7 +16,7 @@ export default function CommentsWrapper({ children, className }: { children: Rea
     return (
         <section
             className={cn(className, {
-                "translate-x-0": isOpenVideoComments,
+                "translate-x-0 ml-4": isOpenVideoComments,
                 "translate-x-full pointer-events-none": !isOpenVideoComments,
             })}
             style={
@@ -29,7 +29,7 @@ export default function CommentsWrapper({ children, className }: { children: Rea
                 <h4 className="text-base font-semibold">Comments</h4>
                 <Button
                     variant="secondary"
-                    className="size-7 aspect-square rounded-full shadow-xs"
+                    className="size-7 aspect-square rounded-full shadow-xs cursor-pointer"
                     onClick={handleCloseComments}
                 >
                     <X />

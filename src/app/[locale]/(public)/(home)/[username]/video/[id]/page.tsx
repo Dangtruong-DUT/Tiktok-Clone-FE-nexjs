@@ -4,6 +4,7 @@ import { UserType } from "@/types/schemas/User.schema";
 import { postList as postListMock } from "@/app/[locale]/(public)/(home)/(foryou)/mock";
 import VideoDescription from "@/app/[locale]/(public)/(home)/[username]/video/[id]/video-description";
 import CommentSection from "@/app/[locale]/(public)/(home)/[username]/video/[id]/comment-section";
+import SuggestedVideos from "@/app/[locale]/(public)/(home)/[username]/video/[id]/suggested-videos";
 
 export default function VideoDetailPage() {
     const postList: { post: TikTokPostType; user: UserType }[] = postListMock;
@@ -24,7 +25,9 @@ export default function VideoDetailPage() {
                 />
                 <CommentSection postId={currentPost.post._id} />
             </div>
-            <div className="w-83  flex grow-0 shrink-0 base-[332px]">suggested videos</div>
+            <div className="w-83 flex grow-0 shrink-0 base-[332px]">
+                <SuggestedVideos postList={postList} />
+            </div>
         </div>
     );
 }

@@ -12,6 +12,7 @@ import { VideoOverlayIcons } from "./components/video-overlay-icons";
 import Image from "next/image";
 import { VideoControlsBottom } from "@/components/video-player-v2/components/video-controls-bottom";
 import ActionBar from "@/components/video-player-v2/components/action-video-bar";
+import useThumbnailGenerator from "@/hooks/ui/generateVideoThumbnail";
 
 interface VideoPlayerProps {
     className?: string;
@@ -23,6 +24,8 @@ export default function VideoPlayer({ className, post, author }: VideoPlayerProp
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const [isHovered, setIsHovered] = useState(false);
     const [isProgressBarActive, setIsProgressBarActive] = useState(false);
+
+    const thumbnailUrl = useThumbnailGenerator(post.medias[0].url);
 
     const locale = useLocale();
 
@@ -54,7 +57,12 @@ export default function VideoPlayer({ className, post, author }: VideoPlayerProp
             onMouseLeave={() => setIsHovered(false)}
         >
             <div className="absolute inset-0 blur-md opacity-30 transform: scale(11)">
-                <Image src={author.avatar} alt={author.username} className="object-cover w-full h-full" layout="fill" />
+                <Image
+                    src={thumbnailUrl || "/images/desktop-wallpaper-tiktok.jpg"}
+                    alt={author.username}
+                    className="object-cover w-full h-full"
+                    layout="fill"
+                />
             </div>
             <VideoOverlayIcons
                 showPlayPauseIcon={showPlayPauseIcon}

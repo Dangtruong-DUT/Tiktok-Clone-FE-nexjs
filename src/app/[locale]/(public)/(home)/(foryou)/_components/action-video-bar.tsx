@@ -35,7 +35,7 @@ function ActionButton({ icon, count, label, onClick, className }: ActionButtonPr
                 variant="secondary"
                 onClick={onClick}
                 className={cn(
-                    "text-5xl size-[1em] rounded-full flex items-center justify-center",
+                    "text-5xl size-[1em] rounded-full flex items-center justify-center cursor-pointer ",
                     "transition-all duration-200",
                     className
                 )}

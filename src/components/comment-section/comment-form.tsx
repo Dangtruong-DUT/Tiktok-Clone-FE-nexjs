@@ -36,7 +36,7 @@ export default function CommentForm({
         <Form {...form}>
             <div className={cn("flex  gap-4", className)}>
                 <div className="flex-1  rounded-lg flex items-center justify-between gap-0.5 px-4 border bg-input">
-                    <form method="POST" onSubmit={form.handleSubmit(onSubmit)}>
+                    <form method="POST" onSubmit={form.handleSubmit(onSubmit)} className="w-full">
                         <FormField
                             control={form.control}
                             name="content"
@@ -62,7 +62,10 @@ export default function CommentForm({
                     </form>
                     <EmojiPiker onEmojiSelect={handleEmojiSelect} className="[&>svg]:size-5.5! cursor-pointer" />
                 </div>
-                <button type="submit" className="text-right disabled:text-muted-foreground text-brand font-semibold">
+                <button
+                    type="submit"
+                    className="text-right disabled:text-muted-foreground text-brand font-semibold cursor-pointer"
+                >
                     Post
                 </button>
             </div>
