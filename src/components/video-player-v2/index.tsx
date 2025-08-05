@@ -13,6 +13,7 @@ import Image from "next/image";
 import { VideoControlsBottom } from "@/components/video-player-v2/components/video-controls-bottom";
 import ActionBar from "@/components/video-player-v2/components/action-video-bar";
 import useThumbnailGenerator from "@/hooks/ui/generateVideoThumbnail";
+import NavigationVideo from "@/components/video-player-v2/components/navigation-video";
 
 interface VideoPlayerProps {
     className?: string;
@@ -80,7 +81,11 @@ export default function VideoPlayer({ className, post, author }: VideoPlayerProp
             >
                 <source src={post.medias[0].url} type="video/mp4" />
             </video>
-            <ActionBar author={author} post={post} className="absolute bottom-20 right-5" />
+            <div className=" absolute bottom-20 right-5 flex flex-col items-center">
+                <NavigationVideo />
+                <ActionBar author={author} post={post} />
+            </div>
+
             <VideoControlsBottom
                 post={post}
                 locale={locale}

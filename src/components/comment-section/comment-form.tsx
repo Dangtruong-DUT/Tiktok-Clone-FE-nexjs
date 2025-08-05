@@ -46,7 +46,6 @@ export default function CommentForm({
                                         <input
                                             type="text"
                                             autoComplete="off"
-                                            autoFocus
                                             spellCheck="false"
                                             placeholder={placeholder}
                                             {...field}
