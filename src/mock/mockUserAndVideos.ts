@@ -1,7 +1,7 @@
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
 import { UserType } from "@/types/schemas/User.schema";
 
-const mockVideoPost: TikTokPostType = {
+export const mockVideoPost: TikTokPostType = {
     _id: "12345",
     user_id: "67890",
     type: 0,
@@ -30,7 +30,7 @@ const mockVideoPost: TikTokPostType = {
     user_views: 150,
 };
 
-const mockUser: UserType = {
+export const mockUser: UserType = {
     _id: "67890",
     username: "mockuser",
     email: "mockuser@example.com",
@@ -47,6 +47,7 @@ const mockUser: UserType = {
     name: "Mock User",
     following_count: 100,
     followers_count: 200,
+    likes_count: 300,
     is_followed: false,
     isOwner: false,
 };

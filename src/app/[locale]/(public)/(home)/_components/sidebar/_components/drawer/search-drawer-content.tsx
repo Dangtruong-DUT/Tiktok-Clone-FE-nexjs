@@ -2,7 +2,7 @@ import React, { useCallback, useRef, useState } from "react";
 import { X, Search as SearchIcon, Loader2 } from "lucide-react";
 import useDebounce from "@/hooks/shared/useDebounce";
 import DialogHeader from "@/components/dialog-header";
-import { useDrawerSidebar } from "@/app/[locale]/(public)/(home)/_components/sidebar/components/drawer/drawer";
+import { useDrawerSidebar } from "@/app/[locale]/(public)/(home)/_components/sidebar/_components/drawer/drawer";
 
 type SearchDrawerContentProps = {
     searchValue: string;

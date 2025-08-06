@@ -1,4 +1,4 @@
-import { SidebarProvider } from "@/app/[locale]/(public)/(home)/_components/sidebar/context/sidebar.context";
+import { SidebarProvider } from "@/app/[locale]/(public)/(home)/_components/sidebar/_context/sidebar.context";
 import Sidebar from "@/app/[locale]/(public)/(home)/_components/sidebar/sidebar";
 import { LocalesType } from "@/i18n/config";
 import { setRequestLocale } from "next-intl/server";

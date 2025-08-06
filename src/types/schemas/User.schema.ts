@@ -17,6 +17,7 @@ export interface UserType {
     cover_photo: string;
     following_count: number;
     followers_count: number;
+    likes_count: number;
     is_followed: boolean;
     isOwner: boolean;
 }
