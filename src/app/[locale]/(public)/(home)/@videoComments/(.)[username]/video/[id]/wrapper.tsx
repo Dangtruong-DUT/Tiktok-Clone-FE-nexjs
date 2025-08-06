@@ -17,7 +17,7 @@ export default function CommentsWrapper({ children, className }: { children: Rea
         <section
             className={cn(className, {
                 "translate-x-0 ml-4": isOpenVideoComments,
-                "translate-x-full pointer-events-none": !isOpenVideoComments,
+                "translate-x-full pointer-events-none hidden": !isOpenVideoComments,
             })}
             style={
                 {
