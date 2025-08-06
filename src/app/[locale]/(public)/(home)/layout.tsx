@@ -22,7 +22,7 @@ export default function HomeLayout({
             <SidebarProvider>
                 <Sidebar />
             </SidebarProvider>
-            <main className="flex-1">{children}</main>
+            <main className="flex-1 h-screen overflow-auto">{children}</main>
             <aside>{videoComments}</aside>
         </div>
     );
