@@ -92,6 +92,7 @@ export default function VideoPlayer({ className, post, author }: VideoPlayerProp
                 playsInline
                 loop={true}
                 muted={isMuted}
+                autoPlay={true}
                 key={displayPost._id}
             >
                 <source src={displayPost.medias[0].url} type="video/mp4" />

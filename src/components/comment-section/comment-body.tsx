@@ -3,6 +3,7 @@
 import CommentForm from "@/components/comment-section/comment-form";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
 import { CommentType } from "@/types/schemas/comment.schemas";
 import { timeAgo } from "@/utils/formatting/formatTime";
 import { X } from "lucide-react";
@@ -20,15 +21,19 @@ export function CommentBody({ comment }: CommentBodyProps) {
     return (
         <div className=" mb-2 space-y-4">
             <div className="flex  items-start gap-3">
-                <Avatar className="w-10 h-10">
-                    <AvatarImage src={comment.user.avatar} alt={comment.user.username} />
-                    <AvatarFallback className="bg-gray-300 text-gray-700">
-                        {comment.user.username.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                </Avatar>
-                <div>
-                    <div className=" text-sm">{comment.user.username}</div>
-                    <div>{comment.content}</div>
+                <Link href={`/@${comment.user.username}`}>
+                    <Avatar className="size-10">
+                        <AvatarImage src={comment.user.avatar} alt={comment.user.username} />
+                        <AvatarFallback className="bg-gray-300 text-gray-700">
+                            {comment.user.username.charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                    </Avatar>
+                </Link>
+                <div className="flex flex-col w-full">
+                    <Link href={`/@${comment.user.username}`}>
+                        <span className=" text-sm hover:underline ">{comment.user.username}</span>
+                    </Link>
+                    <span className="text-sm">{comment.content}</span>
                     <div className="text-sm text-muted-foreground font-semibold flex items-center gap-6">
                         <span>{timeAgo({ locale, date: comment.createdAt })}</span>
                         <span

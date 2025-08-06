@@ -33,7 +33,7 @@ function ActionButton({ icon, count, label, onClick, className }: ActionButtonPr
                 onClick={onClick}
                 className={cn(
                     "text-5xl size-[1em] rounded-full flex items-center justify-center",
-                    "transition-all duration-200 text-white! hover:bg-transparent!",
+                    "transition-all duration-200 text-white! hover:bg-transparent! cursor-pointer",
                     className
                 )}
                 size="icon"
