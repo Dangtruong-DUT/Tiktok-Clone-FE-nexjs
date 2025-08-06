@@ -9,7 +9,7 @@ interface UseVideoRouterNavigationProps {
     autoPlayNext?: boolean;
 }
 
-export function useVideoRouterNavigation({ onVideoEnd, autoPlayNext = true }: UseVideoRouterNavigationProps = {}) {
+export function useVideoRouterNavigation({ onVideoEnd }: UseVideoRouterNavigationProps = {}) {
     const router = useRouter();
     const { playlist, currentIndex, isFirstVideo, isLastVideo, currentVideo } = useVideoPlaylist();
 
@@ -36,11 +36,8 @@ export function useVideoRouterNavigation({ onVideoEnd, autoPlayNext = true }: Us
     );
 
     const handleVideoEnd = useCallback(() => {
-        if (autoPlayNext && !isLastVideo) {
-            navigateToVideo(currentIndex + 1);
-        }
         onVideoEnd?.();
-    }, [autoPlayNext, isLastVideo, currentIndex, navigateToVideo, onVideoEnd]);
+    }, [onVideoEnd]);
 
     const handleNext = useCallback(() => {
         if (!isLastVideo) {

@@ -21,8 +21,8 @@ export default function NavigationVideo({ className }: NavigationVideoProps) {
                 onClick={handlePrevious}
                 className={cn(
                     "rounded-t-full cursor-pointer bg-black/15 py-5 pb-7 text-white [&>svg]:size-6",
-                    "hover:bg-accent/80",
-                    "disabled:bg-black/10 disabled:text-white/50 disabled:cursor-not-allowed disabled:hover:bg-black/10"
+                    "hover:bg-black/10",
+                    "disabled:bg-black/10 disabled:text-white/50 disabled:cursor-not-allowed disabled:hover:bg-black/10 [&>svg]:size-6!"
                 )}
             >
                 <ChevronUp />
@@ -35,7 +35,7 @@ export default function NavigationVideo({ className }: NavigationVideoProps) {
                 className={cn(
                     "rounded-b-full cursor-pointer bg-black/15 py-5 pt-7 text-white [&>svg]:size-6",
                     "hover:bg-accent/15 ",
-                    "disabled:bg-black/10 disabled:text-white/50 disabled:cursor-not-allowed disabled:hover:bg-black/10"
+                    "disabled:bg-black/10 disabled:text-white/50 disabled:cursor-not-allowed disabled:hover:bg-black/10 [&>svg]:size-6!"
                 )}
             >
                 <ChevronDown />

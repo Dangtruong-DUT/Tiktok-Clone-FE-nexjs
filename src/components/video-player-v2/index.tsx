@@ -90,9 +90,9 @@ export default function VideoPlayer({ className, post, author }: VideoPlayerProp
                 className=" absolute block  top-0 left-0 w-full h-full"
                 ref={videoRef}
                 playsInline
-                loop={false}
+                loop={true}
                 muted={isMuted}
-                key={displayPost._id} // Force re-render when video changes
+                key={displayPost._id}
             >
                 <source src={displayPost.medias[0].url} type="video/mp4" />
             </video>
