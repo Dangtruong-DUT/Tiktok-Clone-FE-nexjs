@@ -1,7 +1,7 @@
 "client";
 
-import { HOME_MENU_ITEMS } from "@/app/[locale]/(public)/(home)/_components/sidebar/constants/menu-items-config";
-import useSidebar from "@/app/[locale]/(public)/(home)/_components/sidebar/context/sidebar.context";
+import { HOME_MENU_ITEMS } from "@/app/[locale]/(public)/(home)/_components/sidebar/_config/menu-items-sibar.config";
+import useSidebar from "@/app/[locale]/(public)/(home)/_components/sidebar/_context/sidebar.context";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";

@@ -188,7 +188,6 @@ html *::-webkit-scrollbar-track {
 @keyframes popup {
     0% {
         opacity: 0;
-        visibility: visible;
         transform: scale(0.5);
     }
     50% {
@@ -222,7 +221,6 @@ html *::-webkit-scrollbar-track {
     }
     100% {
         opacity: 0;
-        visibility: hidden;
         width: 0;
     }
 }
