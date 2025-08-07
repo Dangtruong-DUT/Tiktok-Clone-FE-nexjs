@@ -7,9 +7,10 @@ interface ShowMoreProps {
     text: string;
     maxHeight?: number;
     className?: string;
+    textClassName?: string;
 }
 
-const ShowMore: React.FC<ShowMoreProps> = ({ text, maxHeight = 100, className }) => {
+const ShowMore: React.FC<ShowMoreProps> = ({ text, maxHeight = 100, className, textClassName }) => {
     const [expanded, setExpanded] = useState(false);
     const [showButton, setShowButton] = useState(false);
     const contentRef = useRef<HTMLDivElement>(null);
@@ -29,6 +30,7 @@ const ShowMore: React.FC<ShowMoreProps> = ({ text, maxHeight = 100, className })
                     overflow: "hidden",
                     transition: "max-height 0.3s ease",
                 }}
+                className={cn("text-sm", textClassName)}
             >
                 {text}
             </div>
@@ -36,7 +38,7 @@ const ShowMore: React.FC<ShowMoreProps> = ({ text, maxHeight = 100, className })
             {showButton && (
                 <button
                     onClick={() => setExpanded(!expanded)}
-                    className="mt-2 text-sm hover:underline cursor-pointer text-accent-foreground "
+                    className="mt-2 text-sm hover:underline cursor-pointer text-muted-foreground "
                 >
                     {expanded ? "less" : "more"}
                 </button>

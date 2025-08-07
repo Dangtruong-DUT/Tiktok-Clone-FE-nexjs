@@ -1,6 +1,6 @@
-import CommentList from "@/app/[locale]/(public)/(home)/@videoComments/(.)[username]/video/[id]/comment-list";
 import CommentsWrapper from "@/app/[locale]/(public)/(home)/@videoComments/(.)[username]/video/[id]/wrapper";
 import CommentForm from "@/components/comment-section/comment-form";
+import CommentList from "@/components/comment-section/comment-list";
 
 export default async function CommentsPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;

@@ -1,5 +1,5 @@
-import CommentList from "@/app/[locale]/(public)/(home)/@videoComments/(.)[username]/video/[id]/comment-list";
 import CommentForm from "@/components/comment-section/comment-form";
+import CommentList from "@/components/comment-section/comment-list";
 import { cn } from "@/lib/utils";
 
 type CommentSectionProps = {
