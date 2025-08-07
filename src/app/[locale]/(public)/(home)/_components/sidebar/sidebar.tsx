@@ -13,6 +13,7 @@ import DrawerSidebar from "@/app/[locale]/(public)/(home)/_components/sidebar/co
 import SettingsMenuDrawerContent from "@/app/[locale]/(public)/(home)/_components/sidebar/components/drawer/settings-menu-drawer-content";
 import { MoreHorizontalIcon, UserRound } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 export interface SidebarProps {
     className?: string;
@@ -80,14 +81,17 @@ export default function Sidebar({ className }: SidebarProps) {
                 >
                     <NavItems />
                     <div className="flex flex-col gap-[0.5rem]">
-                        <button className="flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent">
+                        <Link
+                            href="/@dangtruong"
+                            className="flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent"
+                        >
                             <UserRound size={24} className="transition-colors duration-200 text-foreground" />
                             {!isOpenDrawer && (
                                 <h2 className={cn("text-base font-medium transition-colors duration-200")}>
                                     {t("profile")}
                                 </h2>
                             )}
-                        </button>
+                        </Link>
                         <button
                             className="flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent"
                             onClick={toggleSettingsDrawer}

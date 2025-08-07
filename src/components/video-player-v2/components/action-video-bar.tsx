@@ -1,6 +1,6 @@
 "use client";
 
-import React, { startTransition, useState } from "react";
+import React, { startTransition, useCallback, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { FaBookmark, FaHeart, FaShare } from "react-icons/fa6";
@@ -33,14 +33,16 @@ function ActionButton({ icon, count, label, onClick, className }: ActionButtonPr
                 onClick={onClick}
                 className={cn(
                     "text-5xl size-[1em] rounded-full flex items-center justify-center",
-                    "transition-all duration-200",
+                    "transition-all duration-200 text-white! hover:bg-transparent! cursor-pointer",
                     className
                 )}
                 size="icon"
             >
                 {icon}
             </Button>
-            <span className=" text-sm font-bold text-center">{count ? formatCash.format(count) : label}</span>
+            <span className=" text-sm font-bold text-center text-white">
+                {count ? formatCash.format(count) : label}
+            </span>
         </div>
     );
 }
@@ -52,12 +54,12 @@ export default function ActionBar({ post, className }: ActionBarProps) {
     const toggle = (setter: React.Dispatch<React.SetStateAction<boolean>>) =>
         startTransition(() => setter((prev) => !prev));
 
-    const handleOpenComment = () => {
+    const handleOpenComment = useCallback(() => {
         window.scrollTo({
             top: 500,
             behavior: "smooth",
         });
-    };
+    }, []);
 
     return (
         <section className={cn("flex flex-col items-center relative", className)}>

@@ -1,10 +1,11 @@
+"'use client';";
 import { ButtonFollow } from "@/app/[locale]/(public)/(home)/[username]/video/[id]/button-follow";
 import ShowMore from "@/components/show-more";
 import { AvatarFallback, AvatarImage, Avatar } from "@/components/ui/avatar";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { timeAgo } from "@/utils/formatting/formatTime";
-import { getLocale } from "next-intl/server";
+import { useLocale } from "next-intl";
 
 type VideoDescriptionProps = {
     userAvatar: string;
@@ -17,7 +18,7 @@ type VideoDescriptionProps = {
     className?: string;
 };
 
-export default async function VideoDescription({
+export default function VideoDescription({
     userAvatar,
     userName,
     userBio,
@@ -27,7 +28,7 @@ export default async function VideoDescription({
     postContent,
     className,
 }: VideoDescriptionProps) {
-    const locale = await getLocale();
+    const locale = useLocale();
     return (
         <div className={cn("p-4", className)}>
             <div className="flex items-center pb-4">

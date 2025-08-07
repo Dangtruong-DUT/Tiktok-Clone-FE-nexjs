@@ -14,7 +14,7 @@ const mockVideoPost: TikTokPostType = {
     updated_at: new Date().toISOString(),
     medias: [
         {
-            url: "http://localhost:3000/video.mp4",
+            url: "http://localhost:3000/videos/video1.mp4",
             type: 0,
         },
     ],
@@ -60,6 +60,15 @@ export const postList: { post: TikTokPostType; user: UserType }[] = Array(10)
         post: {
             ...item.post,
             _id: `${item.post._id}-${index}`,
+            medias: [
+                {
+                    url:
+                        index % 2 == 0
+                            ? "http://localhost:3000/videos/video1.mp4"
+                            : "http://localhost:3000/videos/video2.mp4",
+                    type: 0,
+                },
+            ],
         },
         user: {
             ...item.user,
