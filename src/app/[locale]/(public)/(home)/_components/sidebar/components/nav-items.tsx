@@ -36,7 +36,12 @@ export default function NavItems() {
                             )}
                         />
                         {!isOpenDrawer && (
-                            <h2 className={cn("text-base font-medium transition-colors duration-200")}>
+                            <h2
+                                className={cn(
+                                    "text-base font-medium transition-colors duration-200",
+                                    isActive ? "text-brand" : "text-foreground"
+                                )}
+                            >
                                 {t(item.titleKey)}
                             </h2>
                         )}

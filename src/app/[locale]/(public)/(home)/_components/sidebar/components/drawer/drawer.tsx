@@ -34,7 +34,7 @@ export default function DrawerSidebar({
     isOpen,
     setIsOpenDrawer,
     drawerWidth = "20rem",
-    leftOffset = "72px",
+    leftOffset = "4.5rem",
     zIndex = 99,
     padding = "pt-6 px-2 pb-0",
 }: DrawerSidebarProps) {
@@ -59,14 +59,17 @@ export default function DrawerSidebar({
         <DrawerSidebarContext.Provider value={{ isOpen, toggleDrawer: handleClose }}>
             <div
                 className={cn(
-                    "absolute top-0 bottom-0 transition-transform duration-300",
+                    "absolute top-0 bottom-0 transition-transform duration-300 --",
                     isOpen ? "animate-slide-in" : "animate-slide-out"
                 )}
-                style={{
-                    left: leftOffset,
-                    zIndex: Number(zIndex),
-                    width: drawerWidth,
-                }}
+                style={
+                    {
+                        left: leftOffset,
+                        zIndex: Number(zIndex),
+                        width: drawerWidth,
+                        "--target-width": drawerWidth,
+                    } as React.CSSProperties
+                }
             >
                 {/* Overlay */}
                 <div
