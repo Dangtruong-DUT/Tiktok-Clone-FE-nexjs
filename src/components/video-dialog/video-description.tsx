@@ -34,7 +34,7 @@ export default function VideoDescription({ post, user, className }: VideoDescrip
     }, [linkToVideo]);
     return (
         <div className={cn("p-4 border-b", className)}>
-            <div className="mb-4 bg-card rounded-lg p-4">
+            <div className="mb-4 bg-muted rounded-lg p-4 ">
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                         <Link href={`/@${user.username}`}>
@@ -111,7 +111,7 @@ export default function VideoDescription({ post, user, className }: VideoDescrip
                 </div>
             </div>
 
-            <div className=" bg-muted rounded-lg flex items-center justify-between">
+            <div className=" bg-muted rounded-lg flex items-center justify-between border border-border">
                 <span className="pl-2 text-sm text-muted-foreground truncate flex-1 mr-2">{linkToVideo}</span>
                 <button
                     className="text-sm font-semibold shrink-0 py-2 px-4 cursor-pointer bg-card hover:bg-card/70 rounded-e-lg"

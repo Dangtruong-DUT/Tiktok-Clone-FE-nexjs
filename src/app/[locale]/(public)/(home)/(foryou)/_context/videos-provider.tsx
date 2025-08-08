@@ -48,11 +48,11 @@ export function VideosProvider({ children }: { children: React.ReactNode }) {
 
     const router = useRouter();
     const pathname = usePathname();
-    const { isOpenVideoComments } = useAppContext();
+    const { openModalVideoDetailType } = useAppContext();
 
     useEffect(() => {
         const currentPost = postList[currentIndex];
-        if (isOpenVideoComments) {
+        if (openModalVideoDetailType === "comments" && currentPost) {
             const newUrl = `/@${currentPost.user.username}/video/${currentPost.post._id}`;
             if (pathname.includes("video")) {
                 router.replace(newUrl);
@@ -60,7 +60,7 @@ export function VideosProvider({ children }: { children: React.ReactNode }) {
                 router.push(newUrl);
             }
         }
-    }, [isOpenVideoComments, currentIndex, postList, router, pathname]);
+    }, [openModalVideoDetailType, currentIndex, postList, router, pathname]);
 
     return (
         <VideosProviderContext

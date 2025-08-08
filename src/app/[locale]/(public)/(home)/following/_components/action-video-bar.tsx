@@ -49,7 +49,7 @@ function ActionButton({ icon, count, label, onClick, className }: ActionButtonPr
 }
 
 export default function ActionBar({ post, author, className }: ActionBarProps) {
-    const { isOpenVideoComments, setIsOpenVideoComments } = useAppContext();
+    const { openModalVideoDetailType, setOpenModalVideoDetailType } = useAppContext();
     const [liked, setLiked] = useState(post.is_liked);
     const [saved, setSaved] = useState(post.is_bookmarked);
     const [following, setFollowing] = useState(false);
@@ -58,10 +58,10 @@ export default function ActionBar({ post, author, className }: ActionBarProps) {
         startTransition(() => setter((prev) => !prev));
 
     const handleToggleOpenComment = () => {
-        if (isOpenVideoComments) {
-            setIsOpenVideoComments(false);
+        if (openModalVideoDetailType === "comments") {
+            setOpenModalVideoDetailType(null);
         } else {
-            setIsOpenVideoComments(true);
+            setOpenModalVideoDetailType("comments");
         }
     };
 

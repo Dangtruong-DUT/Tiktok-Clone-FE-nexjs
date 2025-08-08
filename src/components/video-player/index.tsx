@@ -2,26 +2,15 @@
 
 import React, { useRef, useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
-import VolumeBar from "@/components/video-player/volume-bar";
-import VideoDescription from "@/components/video-player/video-description";
-import { FaCirclePause, FaCirclePlay } from "react-icons/fa6";
-import { HiSpeakerWave } from "react-icons/hi2";
-import { FaVolumeMute } from "react-icons/fa";
-import { timeAgo } from "@/utils/formating/formatTime";
 import { useLocale } from "next-intl";
-import ProgressBar from "@/components/video-player/progress-bar";
-
-interface VideoSource {
-    file_url: string;
-    type: string;
-    author: string;
-    user: {
-        nickname: string;
-    };
-    description: string;
-    created_at: string;
-}
-
+import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
+import { UserType } from "@/types/schemas/User.schema";
+import { useVideoPlayer } from "@/hooks/video/useVideoPlayer";
+import { useVideoAutoPlay } from "@/hooks/video/useVideoAutoPlay";
+import { useVideoControls } from "@/hooks/video/useVideoControls";
+import { VideoControlsTop } from "@/components/video-player/components/video-controls-top";
+import { VideoOverlayIcons } from "@/components/video-player/components/video-overlay-icons";
+import { VideoControlsBottom } from "@/components/video-player/components/video-controls-bottom";
 interface VideoPlayerProps {
     className?: string;
     post: TikTokPostType;

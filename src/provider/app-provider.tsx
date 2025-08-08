@@ -1,18 +1,19 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
+
+export type OpenModalVideoDetailType = "comments" | "modalVideoDetail" | null;
 
 interface AppContextProps {
-    isOpenVideoComments: boolean;
-    setIsOpenVideoComments: (isOpen: boolean) => void;
+    openModalVideoDetailType: OpenModalVideoDetailType;
+    setOpenModalVideoDetailType: (type: OpenModalVideoDetailType) => void;
 }
 
 const AppContext = createContext<AppContextProps | undefined>(undefined);
 
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "sonner";
-import { usePathname } from "@/i18n/navigation";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -23,10 +24,10 @@ const queryClient = new QueryClient({
     },
 });
 export function AppProvider({ children }: { children: React.ReactNode }) {
-    const [isOpenVideoComments, setIsOpenVideoComments] = useState<boolean>(false);
+    const [openModalVideoDetailType, setOpenModalVideoDetailType] = useState<OpenModalVideoDetailType>(null);
 
     return (
-        <AppContext value={{ isOpenVideoComments, setIsOpenVideoComments }}>
+        <AppContext value={{ openModalVideoDetailType, setOpenModalVideoDetailType }}>
             <QueryClientProvider client={queryClient}>
                 {children}
                 <Toaster />

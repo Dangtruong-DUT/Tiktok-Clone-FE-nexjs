@@ -7,11 +7,11 @@ import { use } from "react";
 export default function HomeLayout({
     children,
     params,
-    videoComments,
+    modal,
 }: {
     children: React.ReactNode;
     params: Promise<{ locale: LocalesType }>;
-    videoComments: React.ReactNode;
+    modal: React.ReactNode;
 }) {
     const { locale } = use(params);
 
@@ -23,7 +23,7 @@ export default function HomeLayout({
                 <Sidebar />
             </SidebarProvider>
             <main className="flex-1 h-screen overflow-auto">{children}</main>
-            <aside>{videoComments}</aside>
+            <aside>{modal}</aside>
         </div>
     );
 }
