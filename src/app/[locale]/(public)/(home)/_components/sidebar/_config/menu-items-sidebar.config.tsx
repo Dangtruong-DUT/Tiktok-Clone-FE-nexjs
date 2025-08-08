@@ -21,7 +21,7 @@ import {
 } from "react-icons/hi2";
 
 import { IconType } from "react-icons";
-const config = {
+export const sidebarConfig = {
     routes: {
         home: "/",
         explore: "/explore",
@@ -29,14 +29,15 @@ const config = {
         upload: "/upload",
         activity: "/activity",
         messages: "/messages",
-        live: "/live",
-        profile: "/profile",
     },
-};
-interface MenuItemConfig {
+} as const;
+
+export type routesValuesType = (typeof sidebarConfig.routes)[keyof typeof sidebarConfig.routes];
+
+export interface MenuItemConfig {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     titleKey: any;
-    to: string;
+    to: routesValuesType;
     Icon: IconType;
     ActiveIcon?: IconType;
 }
@@ -44,37 +45,37 @@ interface MenuItemConfig {
 export const HOME_MENU_ITEMS: MenuItemConfig[] = [
     {
         titleKey: "HomePage.menu.forYou",
-        to: config.routes.home,
+        to: sidebarConfig.routes.home,
         Icon: AiOutlineHome,
         ActiveIcon: AiFillHome,
     },
     {
         titleKey: "HomePage.menu.explore",
-        to: config.routes.explore,
+        to: sidebarConfig.routes.explore,
         Icon: AiOutlineCompass,
         ActiveIcon: AiFillCompass,
     },
     {
         titleKey: "HomePage.menu.following",
-        to: config.routes.following,
+        to: sidebarConfig.routes.following,
         Icon: HiOutlineUsers,
         ActiveIcon: HiUsers,
     },
     {
         titleKey: "HomePage.menu.upload",
-        to: config.routes.upload,
+        to: sidebarConfig.routes.upload,
         Icon: AiOutlineCloudUpload,
         ActiveIcon: HiCloudArrowUp,
     },
     {
         titleKey: "HomePage.menu.activity",
-        to: config.routes.activity,
+        to: sidebarConfig.routes.activity,
         Icon: AiOutlineBell,
         ActiveIcon: AiFillBell,
     },
     {
         titleKey: "HomePage.menu.messages",
-        to: config.routes.messages,
+        to: sidebarConfig.routes.messages,
         Icon: AiOutlineMessage,
         ActiveIcon: AiFillMessage,
     },

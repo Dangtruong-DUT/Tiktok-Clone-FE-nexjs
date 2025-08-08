@@ -7,6 +7,7 @@ import SidebarFooter from "@/app/[locale]/(public)/(home)/_components/sidebar/_c
 
 import NavItems from "@/app/[locale]/(public)/(home)/_components/sidebar/_components/nav-items";
 import useSidebar from "@/app/[locale]/(public)/(home)/_components/sidebar/_context/sidebar.context";
+import { SidebarActiveType } from "@/app/[locale]/(public)/(home)/_components/sidebar/_types/sidebar.types";
 import { useCallback, useEffect, useState } from "react";
 import SearchDrawerContent from "@/app/[locale]/(public)/(home)/_components/sidebar/_components/drawer/search-drawer-content";
 import DrawerSidebar from "@/app/[locale]/(public)/(home)/_components/sidebar/_components/drawer/drawer";
@@ -14,13 +15,14 @@ import SettingsMenuDrawerContent from "@/app/[locale]/(public)/(home)/_component
 import { MoreHorizontalIcon, UserRound } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { FaRegUser, FaUser } from "react-icons/fa6";
 
 export interface SidebarProps {
     className?: string;
 }
 
 export default function Sidebar({ className }: SidebarProps) {
-    const { isOpenDrawer, setIsOpenDrawer } = useSidebar();
+    const { isOpenDrawer, setIsOpenDrawer, activeState, setActiveState, resetToRouteActive } = useSidebar();
     const [isOpenSearch, setIsOpenSearch] = useState<boolean>(false);
     const [isOpenSettings, setIsOpenSettings] = useState<boolean>(false);
     const [searchValue, setSearchValue] = useState<string>("");
@@ -37,20 +39,24 @@ export default function Sidebar({ className }: SidebarProps) {
     const toggleSearchDrawer = useCallback(() => {
         if (isOpenSearch) {
             setIsOpenDrawer(false);
+            resetToRouteActive();
         } else {
             setIsOpenDrawer(true);
+            setActiveState({ type: SidebarActiveType.SEARCH });
         }
         setIsOpenSearch((prev) => !prev);
-    }, [isOpenSearch, setIsOpenSearch, setIsOpenDrawer]);
+    }, [isOpenSearch, setIsOpenSearch, setIsOpenDrawer, setActiveState, resetToRouteActive]);
 
     const toggleSettingsDrawer = useCallback(() => {
         if (isOpenSettings) {
             setIsOpenDrawer(false);
+            resetToRouteActive();
         } else {
             setIsOpenDrawer(true);
+            setActiveState({ type: SidebarActiveType.MORE });
         }
         setIsOpenSettings((prev) => !prev);
-    }, [isOpenSettings, setIsOpenDrawer, setIsOpenSettings]);
+    }, [isOpenSettings, setIsOpenDrawer, setIsOpenSettings, setActiveState, resetToRouteActive]);
 
     return (
         <div className={cn("relative h-screen transition-all duration-400 ease-in-out px-4", "w-60", className)}>
@@ -83,22 +89,52 @@ export default function Sidebar({ className }: SidebarProps) {
                     <div className="flex flex-col gap-[0.5rem]">
                         <Link
                             href="/@dangtruong"
-                            className="flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent"
+                            className={cn(
+                                "flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent",
+                                activeState.type === SidebarActiveType.PROFILE && "bg-accent"
+                            )}
+                            onClick={() => setActiveState({ type: SidebarActiveType.PROFILE, route: "/@dangtruong" })}
                         >
-                            <UserRound size={24} className="transition-colors duration-200 text-foreground" />
+                            {activeState.type === SidebarActiveType.PROFILE ? (
+                                <FaUser size={22} className="transition-colors  text-brand" />
+                            ) : (
+                                <FaRegUser size={22} className="transition-colors  text-foreground" />
+                            )}
+
                             {!isOpenDrawer && (
-                                <h2 className={cn("text-base font-medium transition-colors duration-200")}>
+                                <h2
+                                    className={cn(
+                                        "text-base font-medium transition-colors duration-200",
+                                        activeState.type === SidebarActiveType.PROFILE
+                                            ? "text-brand"
+                                            : "text-foreground"
+                                    )}
+                                >
                                     {t("profile")}
                                 </h2>
                             )}
                         </Link>
                         <button
-                            className="flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent"
+                            className={cn(
+                                "flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent",
+                                activeState.type === SidebarActiveType.MORE && "bg-accent"
+                            )}
                             onClick={toggleSettingsDrawer}
                         >
-                            <MoreHorizontalIcon size={24} className="transition-colors duration-200 text-foreground" />
+                            <MoreHorizontalIcon
+                                size={24}
+                                className={cn(
+                                    "transition-colors duration-200",
+                                    activeState.type === SidebarActiveType.MORE ? "text-brand" : "text-foreground"
+                                )}
+                            />
                             {!isOpenDrawer && (
-                                <h2 className={cn("text-base font-medium transition-colors duration-200")}>
+                                <h2
+                                    className={cn(
+                                        "text-base font-medium transition-colors duration-200",
+                                        activeState.type === SidebarActiveType.MORE ? "text-brand" : "text-foreground"
+                                    )}
+                                >
                                     {t("more")}
                                 </h2>
                             )}

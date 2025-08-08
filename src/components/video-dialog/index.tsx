@@ -1,6 +1,6 @@
 "use client";
 
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import VideoPlayer from "@/components/video-player-v3";
 import CommentForm from "@/components/comment-section/comment-form";
 import CommentList from "@/components/comment-section/comment-list";

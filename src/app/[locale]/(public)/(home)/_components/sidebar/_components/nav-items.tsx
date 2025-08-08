@@ -1,23 +1,32 @@
-"client";
+"use client";
 
-import { HOME_MENU_ITEMS } from "@/app/[locale]/(public)/(home)/_components/sidebar/_config/menu-items-sibar.config";
+import {
+    HOME_MENU_ITEMS,
+    MenuItemConfig,
+} from "@/app/[locale]/(public)/(home)/_components/sidebar/_config/menu-items-sidebar.config";
 import useSidebar from "@/app/[locale]/(public)/(home)/_components/sidebar/_context/sidebar.context";
+import { routeToActiveType } from "@/app/[locale]/(public)/(home)/_components/sidebar/_types/sidebar.types";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
-import { usePathname } from "next/navigation";
+import { useCallback } from "react";
 
 export default function NavItems() {
-    const { isOpenDrawer } = useSidebar();
-    const pathname = usePathname();
-
+    const { isOpenDrawer, activeState, setActiveState } = useSidebar();
     const t = useTranslations();
+
+    const handleClickNavItem = useCallback(
+        (item: MenuItemConfig) => {
+            setActiveState({ type: routeToActiveType[item.to], route: item.to });
+        },
+        [setActiveState]
+    );
 
     return (
         <nav className="flex flex-col gap-[0.5rem] ">
             {HOME_MENU_ITEMS.map((item, index) => {
-                const isActive =
-                    (pathname.includes(item.to) && pathname !== "/en" && pathname !== "/vi") || item.to == "/";
+                const expectedActiveType = routeToActiveType[item.to];
+                const isActive = activeState.type === expectedActiveType;
                 const IconComponent = isActive && item.ActiveIcon ? item.ActiveIcon : item.Icon;
 
                 return (
@@ -27,6 +36,7 @@ export default function NavItems() {
                             "flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent"
                         )}
                         href={item.to}
+                        onClick={() => handleClickNavItem(item)}
                     >
                         <IconComponent
                             size={24}
