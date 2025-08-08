@@ -22,7 +22,7 @@ export default function VideoDetailDialog({ isVisible, handleClose, author, post
 
     return (
         <>
-            <Dialog modal open={isVisible} onOpenChange={handleClose}>
+            <Dialog open={isVisible} onOpenChange={handleClose}>
                 <DialogContent
                     className="w-[90vw]! h-[90vh]! flex flex-row p-0 max-w-none!  gap-0! rounded-sm overflow-hidden"
                     showCloseButton={false}

@@ -31,7 +31,7 @@ export default function VideoDetailContent() {
     }
 
     return (
-        <div className="flex min-h-screen mx-auto py-6">
+        <div className="flex min-h-screen mx-auto py-6 @container">
             <div className="grow-1">
                 <VideoPlayer
                     post={currentVideo.post}
@@ -48,9 +48,12 @@ export default function VideoDetailContent() {
                     postContent={currentVideo.post.content}
                     className="mb-4"
                 />
+                <div className=" @4xl:hidden">
+                    <SuggestedVideos postList={playlist} />
+                </div>
                 <CommentSection postId={currentVideo.post._id} />
             </div>
-            <div className="w-83 flex grow-0 shrink-0 base-[332px]">
+            <div className=" hidden w-83 @4xl:flex grow-0 shrink-0 base-[332px] ">
                 <SuggestedVideos postList={playlist} />
             </div>
         </div>

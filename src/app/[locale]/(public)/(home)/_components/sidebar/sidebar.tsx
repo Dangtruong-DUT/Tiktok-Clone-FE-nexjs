@@ -12,7 +12,7 @@ import { useCallback, useEffect, useState } from "react";
 import SearchDrawerContent from "@/app/[locale]/(public)/(home)/_components/sidebar/_components/drawer/search-drawer-content";
 import DrawerSidebar from "@/app/[locale]/(public)/(home)/_components/sidebar/_components/drawer/drawer";
 import SettingsMenuDrawerContent from "@/app/[locale]/(public)/(home)/_components/sidebar/_components/drawer/settings-menu-drawer-content";
-import { MoreHorizontalIcon, UserRound } from "lucide-react";
+import { MoreHorizontalIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { FaRegUser, FaUser } from "react-icons/fa6";

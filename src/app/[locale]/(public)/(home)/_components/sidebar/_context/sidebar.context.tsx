@@ -33,18 +33,19 @@ const getCurrentActiveStateFromPathname = (pathname: string): SidebarActiveState
 export function SidebarProvider({ children }: { children: React.ReactNode }) {
     const [isOpenDrawer, setIsOpenDrawer] = useState<boolean>(false);
     const [activeState, setActiveState] = useState<SidebarActiveState>({ type: SidebarActiveType.NONE });
-    const activeOldStateRef = useRef<SidebarActiveState>({ type: SidebarActiveType.NONE });
+    const activeOldStateRef = useRef<SidebarActiveState | null>(null);
     const pathname = usePathname();
 
     useEffect(() => {
-        if (pathname && activeState.type === SidebarActiveType.NONE) {
+        if (pathname && activeState.type === SidebarActiveType.NONE && activeOldStateRef.current === null) {
             setActiveState(getCurrentActiveStateFromPathname(pathname));
+            activeOldStateRef.current = { type: SidebarActiveType.NONE };
         }
     }, [pathname, activeState]);
 
     const resetToRouteActive = useCallback(() => {
         if (activeState.type) {
-            setActiveState(activeOldStateRef.current);
+            setActiveState(activeOldStateRef.current || { type: SidebarActiveType.NONE });
         }
     }, [activeState]);
 

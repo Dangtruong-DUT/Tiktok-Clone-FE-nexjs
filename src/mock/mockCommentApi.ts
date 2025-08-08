@@ -50,7 +50,7 @@ function generateComments(postId: string, parentId: string | null, count: number
     const comments: CommentType[] = [];
     for (let i = 0; i < count; i++) {
         const user = randomUser();
-        const id = `${parentId ? parentId + "-r" : "c"}${i}`;
+        const id = `${parentId ? parentId + "-r" : "c"}${i} ${Math.random().toString(36).substring(2, 9)}`;
         comments.push({
             id,
             postId,
