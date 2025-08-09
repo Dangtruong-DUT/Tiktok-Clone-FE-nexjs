@@ -8,19 +8,19 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "@/component
 import { Input } from "@/components/ui/input";
 
 import { useTranslations } from "next-intl";
-import { forgotPasswordBody, ForgotPasswordBodyType } from "@/utils/validations/auth.schema";
+import { forgotPasswordReqBody, ForgotPasswordReqBodyType } from "@/utils/validations/auth.schema";
 
 export default function ForgotPasswordForm() {
     const t = useTranslations("forgotPasswordPage");
 
-    const form = useForm<ForgotPasswordBodyType>({
-        resolver: zodResolver(forgotPasswordBody),
+    const form = useForm<ForgotPasswordReqBodyType>({
+        resolver: zodResolver(forgotPasswordReqBody),
         defaultValues: {
             email: "",
         },
     });
 
-    const onSubmit = async (data: ForgotPasswordBodyType) => {
+    const onSubmit = async (data: ForgotPasswordReqBodyType) => {
         toast.error("This feature is not implemented yet.");
         console.log("Form submitted with data:", data);
     };

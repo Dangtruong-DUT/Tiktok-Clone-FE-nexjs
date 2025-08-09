@@ -8,14 +8,14 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 
 import { useTranslations } from "next-intl";
-import { RegisterBody, RegisterBodyType } from "@/utils/validations/auth.schema";
 import DateTimePicker from "@/components/date-time-picker";
+import { RegisterReqBody, RegisterReqBodyType } from "@/utils/validations/auth.schema";
 
 export default function SignUpForm() {
     const t = useTranslations("SignUpPage.email");
 
-    const form = useForm<RegisterBodyType>({
-        resolver: zodResolver(RegisterBody),
+    const form = useForm<RegisterReqBodyType>({
+        resolver: zodResolver(RegisterReqBody),
         defaultValues: {
             email: "",
             password: "",
@@ -25,7 +25,7 @@ export default function SignUpForm() {
         },
     });
 
-    const onSubmit = async (data: RegisterBodyType) => {
+    const onSubmit = async (data: RegisterReqBodyType) => {
         toast.error("This feature is not implemented yet.");
         console.log("Form submitted with data:", data);
     };

@@ -1,15 +1,15 @@
 import z from "zod";
 
-export const LoginBody = z
+export const LoginReqBody = z
     .object({
         email: z.email(),
         password: z.string().min(6).max(100),
     })
     .strict();
 
-export type LoginBodyType = z.TypeOf<typeof LoginBody>;
+export type LoginReqBodyType = z.TypeOf<typeof LoginReqBody>;
 
-export const RegisterBody = z
+export const RegisterReqBody = z
     .object({
         name: z.string().min(1).max(50),
         email: z.email(),
@@ -28,15 +28,15 @@ export const RegisterBody = z
         }
     });
 
-export type RegisterBodyType = z.TypeOf<typeof RegisterBody>;
+export type RegisterReqBodyType = z.TypeOf<typeof RegisterReqBody>;
 
-export const RefreshTokenBody = z
+export const RefreshTokenReqBody = z
     .object({
         refreshToken: z.string(),
     })
     .strict();
 
-export type RefreshTokenBodyType = z.TypeOf<typeof RefreshTokenBody>;
+export type RefreshTokenReqBodyType = z.TypeOf<typeof RefreshTokenReqBody>;
 
 export const RefreshTokenRes = z.object({
     data: z.object({
@@ -46,22 +46,22 @@ export const RefreshTokenRes = z.object({
     message: z.string(),
 });
 
-export const LogoutBody = z
+export const LogoutReqBody = z
     .object({
         refreshToken: z.string(),
     })
     .strict();
 
-export type LogoutBodyType = z.TypeOf<typeof LogoutBody>;
+export type LogoutReqBodyType = z.TypeOf<typeof LogoutReqBody>;
 
-export const forgotPasswordBody = z
+export const forgotPasswordReqBody = z
     .object({
-        email: z.string().email(),
+        email: z.email(),
     })
     .strict();
-export type ForgotPasswordBodyType = z.TypeOf<typeof forgotPasswordBody>;
+export type ForgotPasswordReqBodyType = z.TypeOf<typeof forgotPasswordReqBody>;
 
-export const resetPasswordBody = z
+export const resetPasswordReqBody = z
     .object({
         password: z.string().min(6).max(100),
         confirm_password: z.string().min(6).max(100),
@@ -76,4 +76,4 @@ export const resetPasswordBody = z
             });
         }
     });
-export type ResetPasswordBodyType = z.TypeOf<typeof resetPasswordBody>;
+export type ResetPasswordReqBodyType = z.TypeOf<typeof resetPasswordReqBody>;

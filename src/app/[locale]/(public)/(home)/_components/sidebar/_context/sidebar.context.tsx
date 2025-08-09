@@ -34,14 +34,14 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
     const [isOpenDrawer, setIsOpenDrawer] = useState<boolean>(false);
     const [activeState, setActiveState] = useState<SidebarActiveState>({ type: SidebarActiveType.NONE });
     const activeOldStateRef = useRef<SidebarActiveState | null>(null);
+    const initialized = useRef(false);
     const pathname = usePathname();
 
-    useEffect(() => {
-        if (pathname && activeState.type === SidebarActiveType.NONE && activeOldStateRef.current === null) {
-            setActiveState(getCurrentActiveStateFromPathname(pathname));
-            activeOldStateRef.current = { type: SidebarActiveType.NONE };
-        }
-    }, [pathname, activeState]);
+    if (initialized.current === false) {
+        setActiveState(getCurrentActiveStateFromPathname(pathname));
+        activeOldStateRef.current = { type: SidebarActiveType.NONE };
+        initialized.current = true;
+    }
 
     const resetToRouteActive = useCallback(() => {
         if (activeState.type) {

@@ -8,21 +8,21 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "@/component
 import { Input } from "@/components/ui/input";
 
 import { useTranslations } from "next-intl";
-import { LoginBody, LoginBodyType } from "@/utils/validations/auth.schema";
+import { LoginReqBody, LoginReqBodyType } from "@/utils/validations/auth.schema";
 import { Link } from "@/i18n/navigation";
 
 export function LoginForm() {
     const t = useTranslations("LoginPage.email");
 
-    const form = useForm<LoginBodyType>({
-        resolver: zodResolver(LoginBody),
+    const form = useForm<LoginReqBodyType>({
+        resolver: zodResolver(LoginReqBody),
         defaultValues: {
             email: "",
             password: "",
         },
     });
 
-    const onSubmit = async (data: LoginBodyType) => {
+    const onSubmit = async (data: LoginReqBodyType) => {
         toast.error("This feature is not implemented yet.");
         console.log("Form submitted with data:", data);
     };
