@@ -1,13 +1,16 @@
+import { Role } from "@/constants/enum";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthState {
     refresh_token: string | null;
     access_token: string | null;
+    role: Role | null;
 }
 
 const initialState: AuthState = {
     refresh_token: null,
     access_token: null,
+    role: null,
 };
 
 const authSlice = createSlice({
@@ -18,13 +21,16 @@ const authSlice = createSlice({
             state.refresh_token = action.payload.refresh_token;
             state.access_token = action.payload.access_token;
         },
-        loggedOut: (state) => {
+        clearToken: (state) => {
             state.refresh_token = null;
             state.access_token = null;
+        },
+        setRole: (state, action: PayloadAction<Role | null>) => {
+            state.role = action.payload;
         },
     },
 });
 
-export const { tokenReceived, loggedOut } = authSlice.actions;
+export const { tokenReceived, clearToken, setRole } = authSlice.actions;
 const authReducer = authSlice.reducer;
 export default authReducer;

@@ -2,38 +2,45 @@ import { fetchBaseQuery, retry } from "@reduxjs/toolkit/query";
 import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { Mutex } from "async-mutex";
 import envConfig from "@/config/app.config";
-import { loggedOut, tokenReceived } from "@/store/features/authSlice";
-import { LoginResponseType } from "@/types/response/auth.type";
+import { clearToken, tokenReceived } from "@/store/features/authSlice";
+import { RefreshTokenRes } from "@/types/response/auth.type";
 import { API_ENDPOINT } from "@/config/endpoint.config";
 import { HTTP_STATUS } from "@/constants/http";
 
 // create a new mutex
 const mutex = new Mutex();
-const baseQuery = fetchBaseQuery({ baseUrl: envConfig.NEXT_PUBLIC_API_ENDPOINT });
+//backend server
+export const BackendBaseQuery = fetchBaseQuery({ baseUrl: envConfig.NEXT_PUBLIC_API_ENDPOINT });
+//proxy server manager auth for nextjs
+export const NextWithAuthBaseQuery = fetchBaseQuery({ baseUrl: "" });
 
 const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = retry(
     async (args, api, extraOptions) => {
         await mutex.waitForUnlock();
-        let result = await baseQuery(args, api, extraOptions);
+        let result = await BackendBaseQuery(args, api, extraOptions);
         if (result.error && result.error.status === HTTP_STATUS.UNAUTHORIZED) {
             if (!mutex.isLocked()) {
                 const release = await mutex.acquire();
                 try {
-                    const refreshResult = await baseQuery(API_ENDPOINT.API_REFRESH_TOKEN, api, extraOptions);
-                    const response = refreshResult.data as LoginResponseType;
+                    const refreshResult = await NextWithAuthBaseQuery(
+                        API_ENDPOINT.API_REFRESH_TOKEN,
+                        api,
+                        extraOptions
+                    );
+                    const response = refreshResult.data as RefreshTokenRes;
                     if (response) {
                         const { access_token, refresh_token } = response.data;
                         api.dispatch(tokenReceived({ access_token, refresh_token }));
-                        result = await baseQuery(args, api, extraOptions);
+                        result = await BackendBaseQuery(args, api, extraOptions);
                     } else {
-                        api.dispatch(loggedOut());
+                        api.dispatch(clearToken());
                     }
                 } finally {
                     release();
                 }
             } else {
                 await mutex.waitForUnlock();
-                result = await baseQuery(args, api, extraOptions);
+                result = await BackendBaseQuery(args, api, extraOptions);
             }
         }
         return result;

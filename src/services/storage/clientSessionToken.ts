@@ -8,6 +8,7 @@ class ClientSessionToken {
     private refresh_token: string | null = null;
 
     private constructor() {
+        if (!isClient) return;
         this.access_token = localStorage.getItem("access_token");
         this.refresh_token = localStorage.getItem("refresh_token");
     }
@@ -42,6 +43,7 @@ class ClientSessionToken {
     }
 
     public clearToken(): void {
+        if (!isClient) return;
         this.access_token = null;
         localStorage.removeItem("access_token");
         this.refresh_token = null;

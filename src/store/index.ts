@@ -1,6 +1,6 @@
 import { AuthApi } from "@/services/RTK/auth.services";
 import authReducer from "@/store/features/authSlice";
-import { rtkQueryAuthMiddleware } from "@/store/middleware";
+import { authMiddleware, rtkQueryLogger } from "@/store/middleware";
 import { configureStore } from "@reduxjs/toolkit";
 
 export const makeStore = () => {
@@ -9,7 +9,8 @@ export const makeStore = () => {
             [AuthApi.reducerPath]: AuthApi.reducer,
             auth: authReducer,
         },
-        middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(AuthApi.middleware, rtkQueryAuthMiddleware),
+        middleware: (getDefaultMiddleware) =>
+            getDefaultMiddleware().concat(AuthApi.middleware, authMiddleware, rtkQueryLogger),
     });
 };
 

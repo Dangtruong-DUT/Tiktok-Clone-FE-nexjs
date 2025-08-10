@@ -20,3 +20,11 @@ export type RegisterResponseType = ResType<
 >;
 
 export type LogoutResType = { message: string };
+
+export type RefreshTokenRes = ResType<
+    {
+        access_token: string;
+        refresh_token: string;
+    },
+    void
+>;

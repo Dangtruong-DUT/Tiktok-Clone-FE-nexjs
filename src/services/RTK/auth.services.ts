@@ -1,29 +1,28 @@
-import { API_ENDPOINT } from "@/config/endpoint.config";
-import baseQueryCustom from "@/services/RTK/client";
+import { NextWithAuthBaseQuery } from "@/services/RTK/client";
 import { LoginResponseType, LogoutResType, RegisterResponseType } from "@/types/response/auth.type";
 import { LoginReqBodyType, LogoutReqBodyType, RegisterReqBodyType } from "@/utils/validations/auth.schema";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 export const AuthApi = createApi({
-    baseQuery: baseQueryCustom,
+    baseQuery: NextWithAuthBaseQuery,
     endpoints: (builder) => ({
         login: builder.mutation<LoginResponseType, LoginReqBodyType>({
             query: (body) => ({
-                url: API_ENDPOINT.API_LOGIN,
+                url: "/api/auth/login",
                 method: "POST",
                 body,
             }),
         }),
         logout: builder.mutation<LogoutResType, LogoutReqBodyType>({
             query: (body) => ({
-                url: API_ENDPOINT.API_LOGOUT,
+                url: "/api/auth/logout",
                 method: "POST",
                 body,
             }),
         }),
         register: builder.mutation<RegisterResponseType, RegisterReqBodyType>({
             query: (body) => ({
-                url: API_ENDPOINT.API_REGISTER,
+                url: "/api/auth/register",
                 method: "POST",
                 body,
             }),
