@@ -23,7 +23,7 @@ export default function VideoScrollWrapper() {
                     </article>
                 ))}
             </div>
-            <NavigationVideo className="pe-3" />
+            <NavigationVideo className="me-4" />
         </>
     );
 }

@@ -27,7 +27,7 @@ function NavigatorVideo({ className }: { className?: string }) {
     }, [handleScrollToIndex, currentIndex, postLength, isDisabledUp, isDisabledDown]);
 
     return (
-        <div className={cn("flex flex-col items-center justify-center h-full w-12 gap-4 ", className)}>
+        <div className={cn("flex flex-col items-center justify-center h-full w-14 gap-4 ", className)}>
             <Button
                 variant="secondary"
                 className={cn(

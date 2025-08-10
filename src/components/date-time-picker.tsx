@@ -27,11 +27,12 @@ function getDaysInMonth(month: number, year: number) {
 
 type DateTimePickerProps = {
     className?: string;
+    inputClassName?: string;
     onChange?: (value: string) => void;
     value?: string;
 };
 
-export default function DateTimePicker({ className = "", onChange, value }: DateTimePickerProps) {
+export default function DateTimePicker({ className = "", inputClassName = "", onChange, value }: DateTimePickerProps) {
     const [selectedDay, setSelectedDay] = useState<string>();
     const [selectedMonth, setSelectedMonth] = useState<string>();
     const [selectedYear, setSelectedYear] = useState<string>();
@@ -72,7 +73,7 @@ export default function DateTimePicker({ className = "", onChange, value }: Date
     return (
         <div className={cn("flex items-center justify-between gap-4", className)}>
             <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-                <SelectTrigger className="flex-1 brand-input">
+                <SelectTrigger className={cn("flex-1 brand-input", inputClassName)}>
                     <SelectValue placeholder="Month" />
                 </SelectTrigger>
                 <SelectContent>
@@ -88,7 +89,7 @@ export default function DateTimePicker({ className = "", onChange, value }: Date
             </Select>
 
             <Select value={selectedDay} onValueChange={setSelectedDay}>
-                <SelectTrigger className="flex-1 brand-input">
+                <SelectTrigger className={cn("flex-1 brand-input", inputClassName)}>
                     <SelectValue placeholder="Day" />
                 </SelectTrigger>
                 <SelectContent>
@@ -101,7 +102,7 @@ export default function DateTimePicker({ className = "", onChange, value }: Date
             </Select>
 
             <Select value={selectedYear} onValueChange={setSelectedYear}>
-                <SelectTrigger className="flex-1 brand-input">
+                <SelectTrigger className={cn("flex-1 brand-input", inputClassName)}>
                     <SelectValue placeholder="Year" />
                 </SelectTrigger>
                 <SelectContent>
