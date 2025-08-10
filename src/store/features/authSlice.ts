@@ -21,16 +21,17 @@ const authSlice = createSlice({
             state.refresh_token = action.payload.refresh_token;
             state.access_token = action.payload.access_token;
         },
-        clearToken: (state) => {
-            state.refresh_token = null;
-            state.access_token = null;
-        },
         setRole: (state, action: PayloadAction<Role | null>) => {
             state.role = action.payload;
+        },
+        setLoggedOutAction: (state) => {
+            state.refresh_token = null;
+            state.access_token = null;
+            state.role = null;
         },
     },
 });
 
-export const { tokenReceived, clearToken, setRole } = authSlice.actions;
+export const { tokenReceived, setLoggedOutAction, setRole } = authSlice.actions;
 const authReducer = authSlice.reducer;
 export default authReducer;

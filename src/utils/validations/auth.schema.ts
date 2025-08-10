@@ -32,7 +32,7 @@ export type RegisterReqBodyType = z.TypeOf<typeof RegisterReqBody>;
 
 export const RefreshTokenReqBody = z
     .object({
-        refreshToken: z.string(),
+        refresh_token: z.string(),
     })
     .strict();
 

@@ -2,7 +2,7 @@ import { fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
 import { Mutex } from "async-mutex";
 import envConfig from "@/config/app.config";
-import { clearToken, setRole, tokenReceived } from "@/store/features/authSlice";
+import { setLoggedOutAction, tokenReceived } from "@/store/features/authSlice";
 import { RefreshTokenRes } from "@/types/response/auth.type";
 import { API_ENDPOINT } from "@/config/endpoint.config";
 import { HTTP_STATUS } from "@/constants/http";
@@ -33,8 +33,7 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
                         api.dispatch(tokenReceived({ access_token, refresh_token }));
                         result = await BackendBaseQuery(args, api, extraOptions);
                     } else {
-                        api.dispatch(clearToken());
-                        api.dispatch(setRole(null));
+                        api.dispatch(setLoggedOutAction());
                     }
                 } finally {
                     release();

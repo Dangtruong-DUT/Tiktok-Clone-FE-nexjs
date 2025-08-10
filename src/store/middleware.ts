@@ -1,7 +1,7 @@
 import { isHttpErrorWithMessage } from "@/helper/checkType";
 import clientSessionToken from "@/services/storage/clientSessionToken";
 import { storeApiType } from "@/store";
-import { clearToken, setRole } from "@/store/features/authSlice";
+import { setLoggedOutAction } from "@/store/features/authSlice";
 import { isRejectedWithValue, Middleware } from "@reduxjs/toolkit";
 import { toast } from "sonner";
 
@@ -25,7 +25,7 @@ function isExecuteMutation(action: unknown): action is {
     );
 }
 
-function isLogoutAction(action: unknown): action is {
+function isLogoutMutationAction(action: unknown): action is {
     type: string;
     meta: { arg: { endpointName: "logout" } };
 } {
@@ -52,19 +52,20 @@ function isTokenReceivedAction(
         "refresh_token" in action.payload
     );
 }
-function isClearTokenAction(action: unknown): action is { type: string } {
-    return typeof action === "object" && action !== null && "type" in action && action.type === "auth/clearToken";
+function isSetLoggedOutAction(action: unknown): action is { type: string } {
+    return (
+        typeof action === "object" && action !== null && "type" in action && action.type === "auth/setLoggedOutAction"
+    );
 }
 
 export const authMiddleware: Middleware = (storeAPI: storeApiType) => (next) => (action) => {
-    if (isLogoutAction(action)) {
-        storeAPI.dispatch(clearToken());
-        storeAPI.dispatch(setRole(null));
+    if (isLogoutMutationAction(action)) {
+        storeAPI.dispatch(setLoggedOutAction());
     } else if (isTokenReceivedAction(action)) {
         const { access_token, refresh_token } = action.payload;
         clientSessionToken.setAccessToken(access_token);
         clientSessionToken.setRefreshToken(refresh_token);
-    } else if (isClearTokenAction(action)) {
+    } else if (isSetLoggedOutAction(action)) {
         clientSessionToken.clearToken();
     }
     return next(action);

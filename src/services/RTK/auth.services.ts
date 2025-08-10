@@ -1,5 +1,5 @@
 import { NextWithAuthBaseQuery } from "@/services/RTK/client";
-import { LoginResponseType, LogoutResType, RegisterResponseType } from "@/types/response/auth.type";
+import { LoginResponseType, LogoutResType, RefreshTokenRes, RegisterResponseType } from "@/types/response/auth.type";
 import { LoginReqBodyType, RegisterReqBodyType } from "@/utils/validations/auth.schema";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
@@ -28,7 +28,13 @@ export const AuthApi = createApi({
                 body,
             }),
         }),
+        refreshToken: builder.mutation<RefreshTokenRes, void>({
+            query: () => ({
+                url: "/api/auth/refresh-token",
+                method: "POST",
+            }),
+        }),
     }),
 });
 
-export const { useLoginMutation, useLogoutMutation, useRegisterMutation } = AuthApi;
+export const { useLoginMutation, useLogoutMutation, useRegisterMutation, useRefreshTokenMutation } = AuthApi;
