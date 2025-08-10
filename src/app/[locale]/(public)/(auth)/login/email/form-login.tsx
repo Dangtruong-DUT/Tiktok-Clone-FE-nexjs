@@ -10,9 +10,9 @@ import { useTranslations } from "next-intl";
 import { LoginReqBody, LoginReqBodyType } from "@/utils/validations/auth.schema";
 import { Link, useRouter } from "@/i18n/navigation";
 import { useLoginMutation } from "@/services/RTK/auth.services";
-import { LoaderCircle } from "lucide-react";
+import { Loader } from "lucide-react";
 import { useAppDispatch } from "@/hooks/redux";
-import { tokenReceived } from "@/store/features/authSlice";
+import { setRole, tokenReceived } from "@/store/features/authSlice";
 import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
 import { toast } from "sonner";
 
@@ -34,12 +34,12 @@ export function LoginForm() {
     const onSubmit = async (data: LoginReqBodyType) => {
         try {
             const result = await loginMutate(data).unwrap();
-            const { access_token, refresh_token } = result.data;
+            const { access_token, refresh_token, user } = result.data;
             dispatch(tokenReceived({ access_token, refresh_token }));
+            const role = user.role;
+            dispatch(setRole(role));
             router.push("/");
-            toast.success(result.message, {
-                position: "top-center",
-            });
+            toast.success(result.message);
         } catch (error) {
             handleFormError<LoginReqBodyType>({
                 error,
@@ -82,9 +82,12 @@ export function LoginForm() {
                 <Link href="/forgot-password" className="text-xs text-neutral-500  hover:underline block pb-4">
                     {t("forgotPassword")}
                 </Link>
-                <Button type="submit" className="primary-button w-full" disabled={loginResult.isLoading}>
-                    {loginResult.isLoading && <LoaderCircle className="animate-spin" />}
-                    {t("submit")}
+                <Button
+                    type="submit"
+                    className="primary-button w-full flex items-center justify-center [&_svg]:size-5!"
+                    disabled={loginResult.isLoading}
+                >
+                    {loginResult.isLoading ? <Loader className="animate-spin font-semibold text-brand" /> : t("submit")}
                 </Button>
             </form>
         </Form>

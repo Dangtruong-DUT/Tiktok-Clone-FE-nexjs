@@ -40,7 +40,7 @@ export type RefreshTokenReqBodyType = z.TypeOf<typeof RefreshTokenReqBody>;
 
 export const LogoutReqBody = z
     .object({
-        refreshToken: z.string(),
+        refresh_token: z.string(),
     })
     .strict();
 

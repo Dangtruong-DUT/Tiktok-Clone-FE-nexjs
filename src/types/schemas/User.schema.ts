@@ -1,4 +1,4 @@
-import { UserVerifyStatus } from "@/constants/enum";
+import { Role, UserVerifyStatus } from "@/constants/enum";
 
 export interface UserType {
     _id: string;
@@ -20,4 +20,5 @@ export interface UserType {
     likes_count: number;
     is_followed: boolean;
     isOwner: boolean;
+    role: Role;
 }

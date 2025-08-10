@@ -16,6 +16,8 @@ import { MoreHorizontalIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { FaRegUser, FaUser } from "react-icons/fa6";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 export interface SidebarProps {
     className?: string;
@@ -26,6 +28,8 @@ export default function Sidebar({ className }: SidebarProps) {
     const [isOpenSearch, setIsOpenSearch] = useState<boolean>(false);
     const [isOpenSettings, setIsOpenSettings] = useState<boolean>(false);
     const [searchValue, setSearchValue] = useState<string>("");
+    const role = useSelector((state: RootState) => state.auth.role);
+    const isAuth = role !== null;
 
     const t = useTranslations("HomePage.menu");
 
@@ -85,7 +89,7 @@ export default function Sidebar({ className }: SidebarProps) {
                         { "w-10": isOpenDrawer }
                     )}
                 >
-                    <NavItems />
+                    <NavItems roleUser={role} />
                     <div className="flex flex-col gap-[0.5rem]">
                         <Link
                             href="/@dangtruong"
@@ -143,7 +147,7 @@ export default function Sidebar({ className }: SidebarProps) {
 
                     {!isOpenDrawer && (
                         <>
-                            <CallToAction />
+                            <CallToAction isAuth={isAuth} />
                             <SidebarFooter />
                         </>
                     )}

@@ -3,7 +3,6 @@ import envConfig from "@/config/app.config";
 import { HTTP_STATUS } from "@/constants/http";
 import { redirect } from "@/i18n/navigation";
 import { EntityError, HttpError } from "@/types/errors";
-import { ResType } from "@/types/response/response.type";
 import { getLocale } from "next-intl/server";
 
 export type CustomOptionsType = RequestInit & { baseUrl?: string };

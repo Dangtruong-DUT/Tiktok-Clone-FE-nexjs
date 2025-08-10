@@ -1,3 +1,4 @@
+import ClearTokenByServer from "@/app/[locale]/(public)/(auth)/login/clear-token-by-server";
 import MENU_ITEMS from "@/app/[locale]/(public)/(auth)/menu-items";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
@@ -25,6 +26,7 @@ export default async function LoginPage() {
                     );
                 })}
             </div>
+            <ClearTokenByServer />
         </div>
     );
 }

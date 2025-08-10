@@ -1,8 +1,8 @@
-import { fetchBaseQuery, retry } from "@reduxjs/toolkit/query";
-import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
+import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
 import { Mutex } from "async-mutex";
 import envConfig from "@/config/app.config";
-import { clearToken, tokenReceived } from "@/store/features/authSlice";
+import { clearToken, setRole, tokenReceived } from "@/store/features/authSlice";
 import { RefreshTokenRes } from "@/types/response/auth.type";
 import { API_ENDPOINT } from "@/config/endpoint.config";
 import { HTTP_STATUS } from "@/constants/http";
@@ -34,6 +34,7 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
                         result = await BackendBaseQuery(args, api, extraOptions);
                     } else {
                         api.dispatch(clearToken());
+                        api.dispatch(setRole(null));
                     }
                 } finally {
                     release();

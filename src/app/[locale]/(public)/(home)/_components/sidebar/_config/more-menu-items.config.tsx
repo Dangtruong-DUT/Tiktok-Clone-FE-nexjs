@@ -71,8 +71,8 @@ const MENU_ITEMS: MenuOption[] = [
     },
     {
         type: "item",
+        key: "logout",
         title: "menuMore.logout",
-        to: "/logout",
         for: ["user"],
     },
 ] as const;

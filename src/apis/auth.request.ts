@@ -11,7 +11,15 @@ import {
 const AuthRequestApi = {
     login: (body: LoginReqBodyType) => httpClient.post<LoginResponseType>(API_ENDPOINT.API_LOGIN, body),
     register: (body: RegisterReqBodyType) => httpClient.post<RegisterResponseType>(API_ENDPOINT.API_REGISTER, body),
-    logout: (body: LogoutReqBodyType) => httpClient.post<LogoutResType>(API_ENDPOINT.API_LOGOUT, body),
+    logout: (data: LogoutReqBodyType & { access_token: string }) => {
+        const { access_token, ...body } = data;
+        return httpClient.post<LogoutResType>(API_ENDPOINT.API_LOGOUT, body, {
+            headers: {
+                Authorization: `Bearer ${access_token}`,
+            },
+        });
+    },
+
     refreshToken: (body: RefreshTokenReqBodyType) =>
         httpClient.post<RefreshTokenRes>(API_ENDPOINT.API_REFRESH_TOKEN, body),
 };

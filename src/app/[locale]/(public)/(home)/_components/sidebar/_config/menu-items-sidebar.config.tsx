@@ -26,7 +26,7 @@ export const sidebarConfig = {
         home: "/",
         explore: "/explore",
         following: "/following",
-        upload: "/upload",
+        upload: "/tiktokstudio/upload",
         activity: "/activity",
         messages: "/messages",
     },
@@ -40,6 +40,8 @@ export interface MenuItemConfig {
     to: routesValuesType;
     Icon: IconType;
     ActiveIcon?: IconType;
+    requiredAuth?: boolean;
+    viewFor: "all" | "authenticated";
 }
 
 export const HOME_MENU_ITEMS: MenuItemConfig[] = [
@@ -48,35 +50,47 @@ export const HOME_MENU_ITEMS: MenuItemConfig[] = [
         to: sidebarConfig.routes.home,
         Icon: AiOutlineHome,
         ActiveIcon: AiFillHome,
+        requiredAuth: false,
+        viewFor: "all",
     },
     {
         titleKey: "HomePage.menu.explore",
         to: sidebarConfig.routes.explore,
         Icon: AiOutlineCompass,
         ActiveIcon: AiFillCompass,
+        requiredAuth: false,
+        viewFor: "all",
     },
     {
         titleKey: "HomePage.menu.following",
         to: sidebarConfig.routes.following,
         Icon: HiOutlineUsers,
         ActiveIcon: HiUsers,
+        requiredAuth: true,
+        viewFor: "all",
     },
     {
         titleKey: "HomePage.menu.upload",
         to: sidebarConfig.routes.upload,
         Icon: AiOutlineCloudUpload,
         ActiveIcon: HiCloudArrowUp,
+        requiredAuth: true,
+        viewFor: "all",
     },
     {
         titleKey: "HomePage.menu.activity",
         to: sidebarConfig.routes.activity,
         Icon: AiOutlineBell,
         ActiveIcon: AiFillBell,
+        requiredAuth: true,
+        viewFor: "authenticated",
     },
     {
         titleKey: "HomePage.menu.messages",
         to: sidebarConfig.routes.messages,
         Icon: AiOutlineMessage,
         ActiveIcon: AiFillMessage,
+        requiredAuth: true,
+        viewFor: "authenticated",
     },
 ];
