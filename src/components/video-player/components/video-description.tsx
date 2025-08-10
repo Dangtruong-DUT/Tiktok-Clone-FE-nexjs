@@ -27,7 +27,7 @@ function VideoDescription({ description, className }: VideoDescriptionProps) {
             <div
                 ref={textRef}
                 className={cn(
-                    "text-sm leading-[18px] font-normal text-white whitespace-pre-wrap overflow-hidden w-4/5",
+                    "text-sm leading-[18px] font-normal text-white whitespace-pre-wrap overflow-hidden flex-1",
                     "[-webkit-box-orient:vertical] [display:-webkit-box]",
                     expanded ? "[-webkit-line-clamp:unset]" : "[-webkit-line-clamp:1]",
                     className
@@ -39,7 +39,7 @@ function VideoDescription({ description, className }: VideoDescriptionProps) {
             {canExpand && (
                 <button
                     onClick={() => setExpanded(!expanded)}
-                    className=" text-sm font-semibold px-1.5 py-0.5 text-white"
+                    className="  text-sm font-semibold px-1.5 py-0.5 text-white hover:underline cursor-pointer"
                 >
                     {expanded ? "less" : "more"}
                 </button>

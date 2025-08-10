@@ -15,7 +15,7 @@ interface VideoControlsBottomProps {
     isProgressBarActive: boolean;
     onSeek: (time: number) => void;
     onProgressBarActive: (active: boolean) => void;
-    onPlayPause: (event: React.MouseEvent<HTMLDivElement>) => void;
+    onPlayPause?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 export function VideoControlsBottom({
@@ -27,13 +27,9 @@ export function VideoControlsBottom({
     isProgressBarActive,
     onSeek,
     onProgressBarActive,
-    onPlayPause,
 }: VideoControlsBottomProps) {
     return (
-        <div
-            className="absolute bottom-0 left-0 bg-transparent flex justify-end flex-col z-[2] rounded-b-2xl w-full"
-            onClick={onPlayPause}
-        >
+        <div className="absolute bottom-0 left-0  flex justify-end flex-col z-[5] rounded-b-2xl w-full  bg-black/2">
             <div
                 className={cn(
                     "flex-grow justify-start text-white px-3 pb-4 w-full relative transition-all duration-200 ease-out",

@@ -1,16 +1,9 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect } from "react";
 
-export type OpenModalVideoDetailType = "comments" | "modalVideoDetail" | null;
-
-interface AppContextProps {
-    openModalVideoDetailType: OpenModalVideoDetailType;
-    setOpenModalVideoDetailType: (type: OpenModalVideoDetailType) => void;
-}
-
-const AppContext = createContext<AppContextProps | undefined>(undefined);
+const AppContext = createContext(undefined);
 
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "sonner";
@@ -29,8 +22,6 @@ const queryClient = new QueryClient({
     },
 });
 export function AppProvider({ children }: { children: React.ReactNode }) {
-    const [openModalVideoDetailType, setOpenModalVideoDetailType] = useState<OpenModalVideoDetailType>(null);
-
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -47,7 +38,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }, [dispatch]);
 
     return (
-        <AppContext value={{ openModalVideoDetailType, setOpenModalVideoDetailType }}>
+        <AppContext value={undefined}>
             <QueryClientProvider client={queryClient}>
                 {children}
                 <Toaster />
@@ -56,11 +47,3 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         </AppContext>
     );
 }
-
-export const useAppContext = () => {
-    const context = useContext(AppContext);
-    if (!context) {
-        throw new Error("useAppContext must be used within an AppProvider");
-    }
-    return context;
-};

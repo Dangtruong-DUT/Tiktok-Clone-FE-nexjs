@@ -1,6 +1,6 @@
 "use client";
 
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import VideoPlayer from "@/components/video-player-v3";
 import CommentForm from "@/components/comment-section/comment-form";
 import CommentList from "@/components/comment-section/comment-list";
@@ -27,6 +27,7 @@ export default function VideoDetailDialog({ isVisible, handleClose, author, post
                     className="w-[90vw]! h-[90vh]! flex flex-row p-0 max-w-none!  gap-0! rounded-sm overflow-hidden"
                     showCloseButton={false}
                 >
+                    <DialogTitle className="hidden" />
                     <div className="flex-1 shrink-0 basis-[300px] bg-black h-full">
                         <VideoPlayer author={author} post={post} />
                     </div>

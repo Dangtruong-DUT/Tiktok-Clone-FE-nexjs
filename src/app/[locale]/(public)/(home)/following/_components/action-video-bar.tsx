@@ -12,7 +12,9 @@ import { formatCash } from "@/utils/formatting/formatNumber";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
 import { UserType } from "@/types/schemas/User.schema";
 import { AiFillMessage } from "react-icons/ai";
-import { useAppContext } from "@/provider/app-provider";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { usePathname, useRouter } from "@/i18n/navigation";
+import { closeModal, setOpenModal } from "@/store/features/modalSlide";
 
 interface ActionBarProps {
     post: TikTokPostType;
@@ -49,19 +51,29 @@ function ActionButton({ icon, count, label, onClick, className }: ActionButtonPr
 }
 
 export default function ActionBar({ post, author, className }: ActionBarProps) {
-    const { openModalVideoDetailType, setOpenModalVideoDetailType } = useAppContext();
+    const openModalVideoDetailType = useAppSelector((state) => state.modal.typeOpenModal);
+    const prevPathOpenModal = useAppSelector((state) => state.modal.prevPathnameOpenModal);
+    const dispatch = useAppDispatch();
+    const router = useRouter();
+
     const [liked, setLiked] = useState(post.is_liked);
     const [saved, setSaved] = useState(post.is_bookmarked);
     const [following, setFollowing] = useState(false);
+    const pathname = usePathname();
 
     const toggle = (setter: React.Dispatch<React.SetStateAction<boolean>>) =>
         startTransition(() => setter((prev) => !prev));
 
     const handleToggleOpenComment = () => {
-        if (openModalVideoDetailType === "comments") {
-            setOpenModalVideoDetailType(null);
+        if (openModalVideoDetailType === "commentsVideoDetail") {
+            dispatch(closeModal());
+            if (prevPathOpenModal) {
+                router.replace(prevPathOpenModal, { scroll: false });
+            } else {
+                router.replace("/");
+            }
         } else {
-            setOpenModalVideoDetailType("comments");
+            dispatch(setOpenModal({ prevPathname: pathname, type: "commentsVideoDetail" }));
         }
     };
 

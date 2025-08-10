@@ -1,8 +1,9 @@
 "use client";
 
 import CardVideoItem from "@/components/card-video-item";
-import { Link } from "@/i18n/navigation";
-import { useAppContext } from "@/provider/app-provider";
+import { useAppDispatch } from "@/hooks/redux";
+import { Link, usePathname } from "@/i18n/navigation";
+import { setOpenModal } from "@/store/features/modalSlide";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
 import { UserType } from "@/types/schemas/User.schema";
 import { useCallback } from "react";
@@ -15,11 +16,11 @@ interface VideoGridProps {
 }
 
 function VideoGrid({ videos }: VideoGridProps) {
-    const { setOpenModalVideoDetailType } = useAppContext();
-
+    const dispatch = useAppDispatch();
+    const pathname = usePathname();
     const handleVideoClick = useCallback(() => {
-        setOpenModalVideoDetailType("modalVideoDetail");
-    }, [setOpenModalVideoDetailType]);
+        dispatch(setOpenModal({ prevPathname: pathname, type: "modalVideoDetail" }));
+    }, [dispatch, pathname]);
 
     return (
         <div className="mt-6 w-full">

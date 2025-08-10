@@ -23,7 +23,7 @@ export default function HomeLayout({
                 <Sidebar />
             </SidebarProvider>
             <main className="flex-1 h-screen overflow-auto">{children}</main>
-            <aside>{modal}</aside>
+            {modal}
         </div>
     );
 }

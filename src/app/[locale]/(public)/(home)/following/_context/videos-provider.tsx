@@ -2,11 +2,11 @@
 import { postList as postListMock } from "@/mock/mockUserAndVideos";
 import useScrollIndexObserver, { ScrollType } from "@/hooks/ui/useScrollIndexObserver";
 import { useRouter } from "@/i18n/navigation";
-import { useAppContext } from "@/provider/app-provider";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
 import { UserType } from "@/types/schemas/User.schema";
 import { usePathname } from "next/navigation";
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useCallback, useEffect, useState } from "react";
+import { useAppSelector } from "@/hooks/redux";
 
 interface VideosProviderContextProps {
     currentIndex: number;
@@ -48,19 +48,26 @@ export function VideosProvider({ children }: { children: React.ReactNode }) {
 
     const router = useRouter();
     const pathname = usePathname();
-    const { openModalVideoDetailType } = useAppContext();
+    const openModalVideoDetailType = useAppSelector((state) => state.modal.typeOpenModal);
+
+    const handleUpdateNewPathForVideo = useCallback(() => {
+        const currentPost = postList[currentIndex];
+        if (!currentPost) return;
+        const newUrl = `/@${currentPost.user.username}/video/${currentPost.post._id}`;
+        if (pathname.includes("video")) {
+            router.replace(newUrl);
+        } else {
+            router.push(newUrl);
+        }
+    }, [currentIndex, postList, router, pathname]);
 
     useEffect(() => {
-        const currentPost = postList[currentIndex];
-        if (openModalVideoDetailType === "comments" && currentPost) {
-            const newUrl = `/@${currentPost.user.username}/video/${currentPost.post._id}`;
-            if (pathname.includes("video")) {
-                router.replace(newUrl);
-            } else {
-                router.push(newUrl);
-            }
+        if (openModalVideoDetailType === "commentsVideoDetail") {
+            handleUpdateNewPathForVideo();
+        } else if (pathname.includes("video") && openModalVideoDetailType === null) {
+            handleUpdateNewPathForVideo();
         }
-    }, [openModalVideoDetailType, currentIndex, postList, router, pathname]);
+    }, [openModalVideoDetailType, pathname, handleUpdateNewPathForVideo]);
 
     return (
         <VideosProviderContext

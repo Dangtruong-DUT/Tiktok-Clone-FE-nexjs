@@ -1,38 +1,35 @@
 "use client";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { usePathname, useRouter } from "@/i18n/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { closeModal } from "@/store/features/modalSlide";
+import { useCallback } from "react";
 
 export default function DialogWrapper({ children }: { children: React.ReactNode }) {
-    const [open, setOpen] = useState(false);
     const pathname = usePathname();
-    const prevPath = useRef<string | null>(null);
-
-    useEffect(() => {
-        if (pathname.includes("/login") || pathname.includes("/signup")) {
-            setOpen(true);
-        } else {
-            setOpen(false);
-            prevPath.current = pathname;
-        }
-    }, [pathname]);
+    const openModalType = useAppSelector((state) => state.modal.typeOpenModal);
+    const prevPathOpenModal = useAppSelector((state) => state.modal.prevPathnameOpenModal);
+    const dispatch = useAppDispatch();
+    const open = openModalType == "modalLogin" && (pathname.includes("/login") || pathname.includes("/signup"));
 
     const router = useRouter();
     const handleClose = useCallback(
         (open: boolean) => {
             if (!open) {
-                if (prevPath.current) {
-                    router.replace(prevPath.current);
+                if (prevPathOpenModal) {
+                    router.replace(prevPathOpenModal, { scroll: false });
                 } else {
                     router.replace("/");
                 }
+                dispatch(closeModal());
             }
         },
-        [router]
+        [router, prevPathOpenModal, dispatch]
     );
 
+    if (!open) return null;
     return (
-        <Dialog open={open} onOpenChange={handleClose}>
+        <Dialog open={true} onOpenChange={handleClose}>
             <DialogContent className="p-0! pt-4">
                 <DialogTitle className="hidden" />
                 {children}

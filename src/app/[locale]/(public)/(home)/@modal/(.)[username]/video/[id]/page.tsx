@@ -2,49 +2,44 @@
 
 import CommentsSection from "@/app/[locale]/(public)/(home)/@modal/(.)[username]/video/[id]/comments-section";
 import ModalVideoDetail from "@/app/[locale]/(public)/(home)/@modal/(.)[username]/video/[id]/modal";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { usePathname, useRouter } from "@/i18n/navigation";
-import { useAppContext } from "@/provider/app-provider";
+import { closeModal } from "@/store/features/modalSlide";
 import { useParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 
 export default function CommentsPage() {
-    const { openModalVideoDetailType, setOpenModalVideoDetailType } = useAppContext();
-    const [isVisible, setIsVisible] = useState<boolean>(openModalVideoDetailType !== null);
+    const typeOpenModal = useAppSelector((state) => state.modal.typeOpenModal);
+    const prevPathnameOpenDetailModal = useAppSelector((state) => state.modal.prevPathnameOpenModal);
+    const dispatch = useAppDispatch();
     const pathname = usePathname();
     const { id } = useParams<{ id: string }>();
-
     const router = useRouter();
 
-    const handleClosePage = useCallback(() => {
-        setOpenModalVideoDetailType(null);
-    }, [setOpenModalVideoDetailType]);
+    const isVideoPath = /\/@[^\/]+\/video\/[^\/]+$/.test(pathname);
 
-    useEffect(() => {
-        const isVideoPath = /@[^\/]+\/video\/[^\/]+$/.test(pathname);
-        if (openModalVideoDetailType === null) {
-            if (isVideoPath && isVisible) {
-                setTimeout(() => {
-                    router.back();
-                }, 300);
-            }
+    const handleClose = useCallback(() => {
+        dispatch(closeModal());
+        const pathname = prevPathnameOpenDetailModal;
+        if (pathname) {
+            router.push(pathname, { scroll: false });
+        } else {
+            router.replace("/");
         }
-        if (!isVideoPath && isVisible) {
-            setOpenModalVideoDetailType(null);
-        }
-    }, [openModalVideoDetailType, pathname, setIsVisible, setOpenModalVideoDetailType, router, isVisible]);
+    }, [router, dispatch, prevPathnameOpenDetailModal]);
 
     return (
         <>
-            {openModalVideoDetailType === "comments" && (
+            {typeOpenModal === "commentsVideoDetail" && isVideoPath && (
                 <CommentsSection
-                    isVisible={isVisible}
+                    isVisible={typeOpenModal === "commentsVideoDetail"}
                     className="flex-1 h-screen flex flex-col py-3 pl-3 w-96 bg-sidebar border-l transition-transform duration-300"
                     id={id}
-                    handleCloseComments={handleClosePage}
+                    handleCloseComments={handleClose}
                 />
             )}
-            {openModalVideoDetailType === "modalVideoDetail" && (
-                <ModalVideoDetail isVisible={isVisible} handleClose={handleClosePage} id={id} />
+            {typeOpenModal === "modalVideoDetail" && isVideoPath && (
+                <ModalVideoDetail isVisible={typeOpenModal === "modalVideoDetail"} handleClose={handleClose} id={id} />
             )}
         </>
     );
