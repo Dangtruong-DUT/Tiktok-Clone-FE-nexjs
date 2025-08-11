@@ -9,9 +9,19 @@ import { Input } from "@/components/ui/input";
 import { useTranslations } from "next-intl";
 import DateTimePicker from "@/components/date-time-picker";
 import { RegisterReqBody, RegisterReqBodyType } from "@/utils/validations/auth.schema";
+import { useRouter } from "@/i18n/navigation";
+import { useRegisterMutation } from "@/services/RTK/auth.services";
+import { Loader } from "lucide-react";
+import { useAppDispatch } from "@/hooks/redux";
+import { setRole, tokenReceived } from "@/store/features/authSlice";
+import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
 
 export function ModalSignUpForm() {
     const t = useTranslations("SignUpPage.email");
+    const router = useRouter();
+
+    const [registerMutate, registerResult] = useRegisterMutation();
+    const dispatch = useAppDispatch();
 
     const form = useForm<RegisterReqBodyType>({
         resolver: zodResolver(RegisterReqBody),
@@ -25,8 +35,20 @@ export function ModalSignUpForm() {
     });
 
     const onSubmit = async (data: RegisterReqBodyType) => {
-        toast.error("This feature is not implemented yet.");
-        console.log("Form submitted with data:", data);
+        try {
+            const result = await registerMutate(data).unwrap();
+            const { access_token, refresh_token, user } = result.data;
+            dispatch(tokenReceived({ access_token, refresh_token }));
+            const role = user.role;
+            dispatch(setRole(role));
+            router.push("/");
+            toast.success(result.message);
+        } catch (error) {
+            handleFormError<RegisterReqBodyType>({
+                error,
+                setFormError: form.setError,
+            });
+        }
     };
 
     return (
@@ -88,6 +110,7 @@ export function ModalSignUpForm() {
                                     placeholder={t("passwordPlaceholder")}
                                     {...field}
                                     className="brand-input bg-card! border-none!"
+                                    type="password"
                                 />
                             </FormControl>
                             <FormMessage />
@@ -104,6 +127,7 @@ export function ModalSignUpForm() {
                                     placeholder={t("confirmPasswordPlaceholder")}
                                     {...field}
                                     className="brand-input bg-card! border-none!"
+                                    type="password"
                                 />
                             </FormControl>
                             <FormMessage />
@@ -111,8 +135,16 @@ export function ModalSignUpForm() {
                     )}
                 />
 
-                <Button type="submit" className="primary-button w-full">
-                    {t("submit")}
+                <Button
+                    type="submit"
+                    className="primary-button w-full flex items-center justify-center [&_svg]:size-5!"
+                    disabled={registerResult.isLoading}
+                >
+                    {registerResult.isLoading ? (
+                        <Loader className="animate-spin font-semibold text-brand" />
+                    ) : (
+                        t("submit")
+                    )}
                 </Button>
             </form>
         </Form>
