@@ -5,6 +5,8 @@ import { redirect } from "@/i18n/navigation";
 import { EntityError, HttpError } from "@/types/errors";
 import { getLocale } from "next-intl/server";
 
+const isClient = typeof window !== "undefined";
+
 export type CustomOptionsType = RequestInit & { baseUrl?: string };
 
 type RequestPropsType = {
@@ -41,6 +43,8 @@ export async function clientRequest<response>({ method, url, options = {} }: Req
 
         return await response.json();
     } catch (error) {
+        if (isClient) throw error;
+
         if (error instanceof HttpError && error.status === HTTP_STATUS.UNAUTHORIZED) {
             const token = (options.headers as any)?.Authorization?.replace("Bearer ", "") || "";
             const locale = await getLocale();

@@ -12,6 +12,7 @@ import clientSessionToken from "@/services/storage/clientSessionToken";
 import { TokenPayload } from "@/types/jwt";
 import { decodeJwt } from "@/utils/jwt";
 import { setRole, tokenReceived } from "@/store/features/authSlice";
+import RefreshToken from "@/components/refresh-token";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -42,6 +43,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             <QueryClientProvider client={queryClient}>
                 {children}
                 <Toaster />
+                <RefreshToken />
                 <NextTopLoader showSpinner={false} color="var(--color-brand)" />
             </QueryClientProvider>
         </AppContext>

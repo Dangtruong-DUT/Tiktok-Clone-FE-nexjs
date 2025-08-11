@@ -31,8 +31,7 @@ function isLogoutMutationAction(action: unknown): action is {
 } {
     return (
         isExecuteMutation(action) &&
-        (action.type.includes("AuthApi/executeMutation/rejected") ||
-            action.type.includes("AuthApi/executeMutation/fulfilled")) &&
+        action.type.includes("AuthApi/executeMutation/fulfilled") &&
         action.meta.arg.endpointName === "logout"
     );
 }

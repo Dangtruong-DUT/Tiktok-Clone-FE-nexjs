@@ -20,13 +20,8 @@ const AuthRequestApi = {
         });
     },
 
-    refreshToken: (data: RefreshTokenReqBodyType & { access_token: string }) => {
-        const { access_token, ...body } = data;
-        return httpClient.post<RefreshTokenRes>(API_ENDPOINT.API_REFRESH_TOKEN, body, {
-            headers: {
-                Authorization: `Bearer ${access_token}`,
-            },
-        });
+    refreshToken: (body: RefreshTokenReqBodyType) => {
+        return httpClient.post<RefreshTokenRes>(API_ENDPOINT.API_REFRESH_TOKEN, body);
     },
 };
 

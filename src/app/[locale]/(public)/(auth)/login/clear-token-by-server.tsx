@@ -2,7 +2,7 @@
 
 import { SearchParamsLoader, useSearchParamsLoader } from "@/components/searchparams-loader";
 import { useAppDispatch } from "@/hooks/redux";
-import { clearToken as clearTokenAction, setRole } from "@/store/features/authSlice";
+import { setLoggedOutAction } from "@/store/features/authSlice";
 import { useEffect } from "react";
 
 export default function ClearTokenByServer() {
@@ -11,8 +11,7 @@ export default function ClearTokenByServer() {
     useEffect(() => {
         const clearToken = searchParams?.get("clearToken") === "true";
         if (clearToken) {
-            dispatch(clearTokenAction());
-            dispatch(setRole(null));
+            dispatch(setLoggedOutAction());
         }
     }, [searchParams, dispatch]);
     return <SearchParamsLoader onParamsReceived={setSearchParams} />;

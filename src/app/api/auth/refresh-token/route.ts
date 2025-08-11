@@ -8,18 +8,13 @@ import { NextResponse } from "next/server";
 
 export async function POST() {
     const cookieStore = await cookies();
-    const access_token = cookieStore.get("access_token")?.value;
     const refresh_token = cookieStore.get("refresh_token")?.value;
-    if (!access_token || !refresh_token) {
-        return NextResponse.json(
-            { message: "Missing access token and refresh token." },
-            { status: HTTP_STATUS.UNAUTHORIZED }
-        );
+    if (!refresh_token) {
+        return NextResponse.json({ message: "Missing refresh token." }, { status: HTTP_STATUS.UNAUTHORIZED });
     }
     try {
         const response = await AuthRequestApi.refreshToken({
             refresh_token,
-            access_token,
         });
 
         const { access_token: newAccessToken, refresh_token: newRefreshToken } = response.data;
