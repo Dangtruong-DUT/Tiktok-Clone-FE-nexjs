@@ -5,9 +5,9 @@ import { useParams } from "next/navigation";
 import VideoPlayer from "@/components/video-player-v2";
 import VideoDescription from "@/app/[locale]/(public)/(home)/[username]/video/[id]/video-description";
 import CommentSection from "@/app/[locale]/(public)/(home)/[username]/video/[id]/comment-section";
-import SuggestedVideos from "@/app/[locale]/(public)/(home)/[username]/video/[id]/suggested-videos";
 import { useVideoPlaylist } from "@/provider/video-playlist-provider";
 import LoadingIcon from "@/components/lottie-icons/loading";
+import SuggestedVideos from "@/app/[locale]/(public)/(home)/[username]/video/[id]/suggested-videos";
 
 export default function VideoDetailContent() {
     const params = useParams();

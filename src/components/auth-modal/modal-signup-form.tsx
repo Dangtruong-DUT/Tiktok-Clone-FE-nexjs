@@ -1,17 +1,16 @@
 "use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
 import { useTranslations } from "next-intl";
 import DateTimePicker from "@/components/date-time-picker";
 import { RegisterReqBody, RegisterReqBodyType } from "@/utils/validations/auth.schema";
 
-export default function SignUpForm() {
+export function ModalSignUpForm() {
     const t = useTranslations("SignUpPage.email");
 
     const form = useForm<RegisterReqBodyType>({
@@ -29,6 +28,7 @@ export default function SignUpForm() {
         toast.error("This feature is not implemented yet.");
         console.log("Form submitted with data:", data);
     };
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-2.25">

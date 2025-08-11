@@ -1,27 +1,27 @@
 "use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
+import { DialogClose } from "@/components/ui/dialog";
 import { useTranslations } from "next-intl";
 import { LoginReqBody, LoginReqBodyType } from "@/utils/validations/auth.schema";
-import { Link, useRouter } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { useLoginMutation } from "@/services/RTK/auth.services";
 import { Loader } from "lucide-react";
 import { useAppDispatch } from "@/hooks/redux";
 import { setRole, tokenReceived } from "@/store/features/authSlice";
 import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
 import { toast } from "sonner";
+import { useRef } from "react";
 
-export function LoginForm() {
+export function ModalLoginForm() {
     const t = useTranslations("LoginPage.email");
-    const router = useRouter();
-
-    const [loginMutate, loginResult] = useLoginMutation();
     const dispatch = useAppDispatch();
+    const [loginMutate, loginResult] = useLoginMutation();
+    const closeButtonRef = useRef<HTMLButtonElement>(null);
 
     const form = useForm<LoginReqBodyType>({
         resolver: zodResolver(LoginReqBody),
@@ -38,8 +38,9 @@ export function LoginForm() {
             dispatch(tokenReceived({ access_token, refresh_token }));
             const role = user.role;
             dispatch(setRole(role));
-            router.push("/");
             toast.success(result.message);
+            // Close modal after successful login
+            closeButtonRef.current?.click();
         } catch (error) {
             handleFormError<LoginReqBodyType>({
                 error,
@@ -47,6 +48,7 @@ export function LoginForm() {
             });
         }
     };
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-2.25">
@@ -93,6 +95,8 @@ export function LoginForm() {
                 >
                     {loginResult.isLoading ? <Loader className="animate-spin font-semibold text-brand" /> : t("submit")}
                 </Button>
+                {/* Hidden close button for programmatic closing */}
+                <DialogClose ref={closeButtonRef} className="hidden" />
             </form>
         </Form>
     );
