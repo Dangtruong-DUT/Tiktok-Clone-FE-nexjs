@@ -21,6 +21,10 @@
             "forgotPassword": "Quên mật khẩu?"
         }
     },
+    "OauthPage": {
+        "redirecting": "Đang chuyển hướng đến nhà cung cấp OAuth...",
+        "authenticationFailed": "Xác thực thất bại. Vui lòng thử lại."
+    },
     "SignUpPage": {
         "title": "Đăng ký TikTok",
         "description": "Tạo hồ sơ, theo dõi tài khoản khác, tạo video của riêng bạn và nhiều hơn nữa.",

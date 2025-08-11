@@ -8,7 +8,7 @@ const userPaths = [
     "/vi/tiktokstudio",
     "/en/tiktokstudio",
 ];
-const unauthenticatedPaths = ["/vi/login", "/en/login", "/vi/register", "/en/register"];
+const unauthenticatedPaths = ["/vi/login", "/en/login", "/vi/register", "/en/register", "/en/oauth", "/vi/oauth"];
 
 const protectedPaths = [...employeePaths, ...onlyAdminPaths, ...userPaths];
 

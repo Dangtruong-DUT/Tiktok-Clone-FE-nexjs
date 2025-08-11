@@ -10,7 +10,7 @@ import { TokenPayload } from "@/types/jwt";
 import { decodeJwt } from "@/utils/jwt";
 import { useCallback, useEffect, useRef } from "react";
 
-const EXCLUDE_PATHS = ["/login", "/register", "/logout", "/refresh-token"];
+const EXCLUDE_PATHS = ["/login", "/register", "/logout", "/refresh-token", "/oauth"];
 export default function RefreshToken() {
     const refreshTokenFromStore = useAppSelector((state: RootState) => state.auth.refresh_token);
     const accessTokenFromStore = useAppSelector((state: RootState) => state.auth.access_token);

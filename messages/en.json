@@ -21,7 +21,10 @@
             "forgotPassword": "Forgot password?"
         }
     },
-
+    "OauthPage": {
+        "redirecting": "Redirecting to OAuth provider...",
+        "authenticationFailed": "Authentication failed. Please try again."
+    },
     "SignUpPage": {
         "title": "Sign up for TikTok",
         "description": "Create a profile, follow other accounts, make your own videos, and more.",

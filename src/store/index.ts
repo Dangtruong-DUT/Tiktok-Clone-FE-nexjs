@@ -1,4 +1,5 @@
 import { AuthApi } from "@/services/RTK/auth.services";
+import { UserApi } from "@/services/RTK/user.services";
 import authReducer from "@/store/features/authSlice";
 import modalReducer from "@/store/features/modalSlide";
 import { authMiddleware, rtkQueryLogger } from "@/store/middleware";
@@ -8,11 +9,12 @@ export const makeStore = () => {
     return configureStore({
         reducer: {
             [AuthApi.reducerPath]: AuthApi.reducer,
+            [UserApi.reducerPath]: UserApi.reducer,
             auth: authReducer,
             modal: modalReducer,
         },
         middleware: (getDefaultMiddleware) =>
-            getDefaultMiddleware().concat(AuthApi.middleware, authMiddleware, rtkQueryLogger),
+            getDefaultMiddleware().concat(AuthApi.middleware, UserApi.middleware, authMiddleware, rtkQueryLogger),
     });
 };
 

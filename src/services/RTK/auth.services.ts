@@ -1,4 +1,5 @@
 import { NextWithAuthBaseQuery } from "@/services/RTK/client";
+import { SetCookieBodyType } from "@/types/auth";
 import { LoginResponseType, LogoutResType, RefreshTokenRes, RegisterResponseType } from "@/types/response/auth.type";
 import { LoginReqBodyType, RegisterReqBodyType } from "@/utils/validations/auth.schema";
 import { createApi } from "@reduxjs/toolkit/query/react";
@@ -34,7 +35,20 @@ export const AuthApi = createApi({
                 method: "POST",
             }),
         }),
+        setCookie: builder.mutation<void, SetCookieBodyType>({
+            query: (body) => ({
+                url: "/api/auth/token",
+                method: "POST",
+                body,
+            }),
+        }),
     }),
 });
 
-export const { useLoginMutation, useLogoutMutation, useRegisterMutation, useRefreshTokenMutation } = AuthApi;
+export const {
+    useLoginMutation,
+    useLogoutMutation,
+    useRegisterMutation,
+    useRefreshTokenMutation,
+    useSetCookieMutation,
+} = AuthApi;
