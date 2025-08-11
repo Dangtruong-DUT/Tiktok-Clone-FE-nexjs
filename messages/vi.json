@@ -43,13 +43,31 @@
     "forgotPasswordPage": {
         "title": "Đặt lại mật khẩu",
         "emailPlaceholder": "Email của bạn",
-        "submit": "Gửi"
+        "submit": "Gửi",
+        "backToHome": "Về trang chủ",
+        "emailSent": {
+            "title": "Kiểm tra email của bạn",
+            "description": "Chúng tôi đã gửi liên kết đặt lại mật khẩu đến",
+            "checkSpam": "Đừng quên kiểm tra thư mục spam của bạn.",
+            "sendAnotherEmail": "Gửi email khác",
+            "backToHome": "Về trang chủ"
+        }
     },
     "resetPasswordPage": {
         "title": "Đặt lại mật khẩu",
         "confirmPasswordPlaceholder": "Xác nhận mật khẩu mới",
         "newPasswordPlaceholder": "Mật khẩu mới",
-        "submit": "Đặt lại mật khẩu"
+        "submit": "Đặt lại mật khẩu",
+        "verifying": "Đang xác minh liên kết đặt lại...",
+        "invalidToken": "Liên kết đặt lại không hợp lệ hoặc đã hết hạn",
+        "invalidTokenDescription": "Liên kết đặt lại này không hợp lệ hoặc đã hết hạn. Vui lòng yêu cầu đặt lại mật khẩu mới.",
+        "requestNewReset": "Yêu cầu đặt lại mới",
+        "backToHome": "Về trang chủ",
+        "success": {
+            "title": "Đặt lại mật khẩu thành công!",
+            "description": "Mật khẩu của bạn đã được đặt lại thành công. Bây giờ bạn có thể đăng nhập bằng mật khẩu mới.",
+            "goToLogin": "Đi đến Đăng nhập"
+        }
     },
     "HomePage": {
         "menu": {

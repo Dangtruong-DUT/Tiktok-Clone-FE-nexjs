@@ -8,23 +8,51 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "@/component
 import { Input } from "@/components/ui/input";
 
 import { useTranslations } from "next-intl";
-import { resetPasswordBody, ResetPasswordBodyType } from "@/utils/validations/auth.schema";
+import { resetPasswordReqBody, ResetPasswordReqBodyType } from "@/utils/validations/auth.schema";
+import { useResetPasswordMutation } from "@/services/RTK/user.services";
+import { Loader } from "lucide-react";
+import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
+import { useState } from "react";
+import ResetPasswordSuccess from "./reset-password-success";
 
-export default function ResetPasswordForm() {
+interface ResetPasswordFormProps {
+    token: string;
+}
+
+export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     const t = useTranslations("resetPasswordPage");
+    const [resetSuccess, setResetSuccess] = useState(false);
 
-    const form = useForm<ResetPasswordBodyType>({
-        resolver: zodResolver(resetPasswordBody),
+    const [resetPasswordMutate, resetPasswordResult] = useResetPasswordMutation();
+
+    const form = useForm<ResetPasswordReqBodyType>({
+        resolver: zodResolver(resetPasswordReqBody),
         defaultValues: {
+            forgot_password_token: token,
             confirm_password: "",
             password: "",
         },
     });
 
-    const onSubmit = async (data: ResetPasswordBodyType) => {
-        toast.error("This feature is not implemented yet.");
-        console.log("Form submitted with data:", data);
+    const onSubmit = async (data: ResetPasswordReqBodyType) => {
+        try {
+            const result = await resetPasswordMutate(data).unwrap();
+            toast.success(result.message);
+            setResetSuccess(true);
+            form.reset();
+        } catch (error) {
+            handleFormError<ResetPasswordReqBodyType>({
+                error,
+                setFormError: form.setError,
+            });
+        }
     };
+
+    // Success screen after password reset
+    if (resetSuccess) {
+        return <ResetPasswordSuccess />;
+    }
+    // Original reset password form
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-2.25">
@@ -34,7 +62,12 @@ export default function ResetPasswordForm() {
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
-                                <Input placeholder={t("newPasswordPlaceholder")} {...field} className="brand-input " />
+                                <Input
+                                    placeholder={t("newPasswordPlaceholder")}
+                                    {...field}
+                                    className="brand-input"
+                                    type="password"
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -49,7 +82,8 @@ export default function ResetPasswordForm() {
                                 <Input
                                     placeholder={t("confirmPasswordPlaceholder")}
                                     {...field}
-                                    className="brand-input "
+                                    className="brand-input"
+                                    type="password"
                                 />
                             </FormControl>
                             <FormMessage />
@@ -57,8 +91,16 @@ export default function ResetPasswordForm() {
                     )}
                 />
 
-                <Button type="submit" className="primary-button w-full" disabled={false}>
-                    {t("submit")}
+                <Button
+                    type="submit"
+                    className="primary-button w-full flex items-center justify-center [&_svg]:size-5!"
+                    disabled={resetPasswordResult.isLoading}
+                >
+                    {resetPasswordResult.isLoading ? (
+                        <Loader className="animate-spin font-semibold text-brand" />
+                    ) : (
+                        t("submit")
+                    )}
                 </Button>
             </form>
         </Form>

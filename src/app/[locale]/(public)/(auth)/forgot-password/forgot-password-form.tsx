@@ -9,9 +9,19 @@ import { Input } from "@/components/ui/input";
 
 import { useTranslations } from "next-intl";
 import { forgotPasswordReqBody, ForgotPasswordReqBodyType } from "@/utils/validations/auth.schema";
+import { useForgotPasswordMutation } from "@/services/RTK/user.services";
+import { Loader, Home } from "lucide-react";
+import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
+import { useState } from "react";
+import { Link } from "@/i18n/navigation";
+import EmailSentConfirmation from "./email-sent-confirmation";
 
 export default function ForgotPasswordForm() {
     const t = useTranslations("forgotPasswordPage");
+    const [emailSent, setEmailSent] = useState(false);
+    const [sentEmail, setSentEmail] = useState("");
+
+    const [forgotPasswordMutate, forgotPasswordResult] = useForgotPasswordMutation();
 
     const form = useForm<ForgotPasswordReqBodyType>({
         resolver: zodResolver(forgotPasswordReqBody),
@@ -21,29 +31,57 @@ export default function ForgotPasswordForm() {
     });
 
     const onSubmit = async (data: ForgotPasswordReqBodyType) => {
-        toast.error("This feature is not implemented yet.");
-        console.log("Form submitted with data:", data);
+        try {
+            const result = await forgotPasswordMutate(data).unwrap();
+            toast.success(result.message);
+            setSentEmail(data.email);
+            setEmailSent(true);
+            form.reset();
+        } catch (error) {
+            handleFormError<ForgotPasswordReqBodyType>({
+                error,
+                setFormError: form.setError,
+            });
+        }
     };
-    return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-2.25">
-                <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormControl>
-                                <Input placeholder={t("emailPlaceholder")} {...field} className="brand-input " />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
 
-                <Button type="submit" className="primary-button w-full" disabled={false}>
-                    {t("submit")}
-                </Button>
-            </form>
-        </Form>
+    // Email confirmation screen
+    if (emailSent) {
+        return <EmailSentConfirmation sentEmail={sentEmail} onSendAnotherEmail={() => setEmailSent(false)} />;
+    }
+    // Original forgot password form
+    return (
+        <div className="space-y-4">
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-2.25">
+                    <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl>
+                                    <Input placeholder={t("emailPlaceholder")} {...field} className="brand-input " />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <Button
+                        type="submit"
+                        className="primary-button w-full flex items-center justify-center [&_svg]:size-5!"
+                        disabled={forgotPasswordResult.isLoading}
+                    >
+                        {forgotPasswordResult.isLoading ? (
+                            <Loader className="animate-spin font-semibold text-brand" />
+                        ) : (
+                            t("submit")
+                        )}
+                    </Button>
+                </form>
+            </Form>
+
+           
+        </div>
     );
 }

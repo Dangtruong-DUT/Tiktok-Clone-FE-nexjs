@@ -43,13 +43,31 @@
     "forgotPasswordPage": {
         "title": "Reset password",
         "emailPlaceholder": "Your email",
-        "submit": "Submit"
+        "submit": "Submit",
+        "backToHome": "Back to Home",
+        "emailSent": {
+            "title": "Check your email",
+            "description": "We've sent a password reset link to",
+            "checkSpam": "Don't forget to check your spam folder.",
+            "sendAnotherEmail": "Send another email",
+            "backToHome": "Back to Home"
+        }
     },
     "resetPasswordPage": {
         "title": "Reset password",
         "confirmPasswordPlaceholder": "Confirm new password",
         "newPasswordPlaceholder": "New password",
-        "submit": "Reset password"
+        "submit": "Reset password",
+        "verifying": "Verifying reset token...",
+        "invalidToken": "Invalid or expired reset link",
+        "invalidTokenDescription": "This reset link is invalid or has expired. Please request a new password reset.",
+        "requestNewReset": "Request new reset",
+        "backToHome": "Back to Home",
+        "success": {
+            "title": "Password reset successful!",
+            "description": "Your password has been successfully reset. You can now login with your new password.",
+            "goToLogin": "Go to Login"
+        }
     },
     "HomePage": {
         "menu": {

@@ -53,8 +53,17 @@ export const forgotPasswordReqBody = z
     .strict();
 export type ForgotPasswordReqBodyType = z.TypeOf<typeof forgotPasswordReqBody>;
 
+export const verifyForgotPasswordReqBody = z
+    .object({
+        forgot_password_token: z.string().min(10),
+    })
+    .strict();
+
+export type verifyForgotPasswordReqBodyType = z.TypeOf<typeof verifyForgotPasswordReqBody>;
+
 export const resetPasswordReqBody = z
     .object({
+        forgot_password_token: z.string().min(10),
         password: z.string().min(6).max(100),
         confirm_password: z.string().min(6).max(100),
     })
@@ -68,4 +77,5 @@ export const resetPasswordReqBody = z
             });
         }
     });
+
 export type ResetPasswordReqBodyType = z.TypeOf<typeof resetPasswordReqBody>;
