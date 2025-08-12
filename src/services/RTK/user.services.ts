@@ -1,17 +1,21 @@
 import { API_ENDPOINT } from "@/config/endpoint.config";
 import baseQueryWithReauth from "@/services/RTK/client";
-import { VerifyEmailResType } from "@/types/response/user.type";
+import { GetUserProfileResType, VerifyEmailResType } from "@/types/response/user.type";
 import {
     ForgotPasswordReqBodyType,
     ResetPasswordReqBodyType,
     verifyForgotPasswordReqBodyType,
 } from "@/utils/validations/auth.schema";
-import { VerifyEmailReqBodyType } from "@/utils/validations/user.schema";
+import { FollowUserReqBodyType, VerifyEmailReqBodyType } from "@/utils/validations/user.schema";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 export const UserApi = createApi({
     reducerPath: "UserApi",
     baseQuery: baseQueryWithReauth,
+    tagTypes: ["User"],
+    refetchOnMountOrArgChange: true,
+    keepUnusedDataFor: 60,
+    refetchOnReconnect: true,
     endpoints: (builder) => ({
         verify: builder.mutation<VerifyEmailResType, VerifyEmailReqBodyType>({
             query: (data) => ({
@@ -41,6 +45,41 @@ export const UserApi = createApi({
                 body: data,
             }),
         }),
+        getMe: builder.query<GetUserProfileResType, void>({
+            query: () => ({
+                url: API_ENDPOINT.API_GET_ME,
+                method: "GET",
+            }),
+            providesTags: (result) => (result ? [{ type: "User", username: result.data.username }] : []),
+        }),
+        getUserByUsername: builder.query<GetUserProfileResType, string>({
+            query: (username) => ({
+                url: `/users/${username}`,
+                method: "GET",
+            }),
+            providesTags: (result, error, username) => (result ? [{ type: "User", username }] : []),
+        }),
+        followUser: builder.mutation<{ message: string }, FollowUserReqBodyType>({
+            query: (body) => ({
+                url: `/users/follow`,
+                method: "POST",
+                body,
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: "User", id: arg.user_id },
+                { type: "User", id: "LIST" },
+            ],
+        }),
+        unfollowUser: builder.mutation<{ message: string }, string>({
+            query: (user_id) => ({
+                url: `/users/follow/${user_id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: (result, error, user_id) => [
+                { type: "User", id: user_id },
+                { type: "User", id: "LIST" },
+            ],
+        }),
     }),
 });
 
@@ -49,4 +88,8 @@ export const {
     useForgotPasswordMutation,
     useResetPasswordMutation,
     useVerifyForgotPasswordMutation,
+    useGetMeQuery,
+    useGetUserByUsernameQuery,
+    useFollowUserMutation,
+    useUnfollowUserMutation,
 } = UserApi;

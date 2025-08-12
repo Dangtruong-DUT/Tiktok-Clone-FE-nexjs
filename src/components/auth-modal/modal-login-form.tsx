@@ -11,15 +11,12 @@ import { LoginReqBody, LoginReqBodyType } from "@/utils/validations/auth.schema"
 import { Link } from "@/i18n/navigation";
 import { useLoginMutation } from "@/services/RTK/auth.services";
 import { Loader } from "lucide-react";
-import { useAppDispatch } from "@/hooks/redux";
-import { setRole, tokenReceived } from "@/store/features/authSlice";
 import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
 import { toast } from "sonner";
 import { useRef } from "react";
 
 export function ModalLoginForm() {
     const t = useTranslations("LoginPage.email");
-    const dispatch = useAppDispatch();
     const [loginMutate, loginResult] = useLoginMutation();
     const closeButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -34,12 +31,7 @@ export function ModalLoginForm() {
     const onSubmit = async (data: LoginReqBodyType) => {
         try {
             const result = await loginMutate(data).unwrap();
-            const { access_token, refresh_token, user } = result.data;
-            dispatch(tokenReceived({ access_token, refresh_token }));
-            const role = user.role;
-            dispatch(setRole(role));
             toast.success(result.message);
-            // Close modal after successful login
             closeButtonRef.current?.click();
         } catch (error) {
             handleFormError<LoginReqBodyType>({
@@ -90,7 +82,7 @@ export function ModalLoginForm() {
                 </Link>
                 <Button
                     type="submit"
-                    className="primary-button w-full flex items-center justify-center [&_svg]:size-5!"
+                    className="primary-button w-full flex items-center justify-center [&_svg]:size-5! cursor-pointer"
                     disabled={loginResult.isLoading}
                 >
                     {loginResult.isLoading ? <Loader className="animate-spin font-semibold text-brand" /> : t("submit")}

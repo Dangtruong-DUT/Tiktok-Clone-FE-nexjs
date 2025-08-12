@@ -11,7 +11,7 @@ import { useAppDispatch } from "@/hooks/redux";
 import clientSessionToken from "@/services/storage/clientSessionToken";
 import { TokenPayload } from "@/types/jwt";
 import { decodeJwt } from "@/utils/jwt";
-import { setRole, tokenReceived } from "@/store/features/authSlice";
+import { setRole, setUserProfile, tokenReceived } from "@/store/features/authSlice";
 import RefreshToken from "@/components/refresh-token";
 
 const queryClient = new QueryClient({
@@ -28,11 +28,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         const accessToken = clientSessionToken.getAccessToken();
         const refreshToken = clientSessionToken.getRefreshToken();
+        const userProfile = clientSessionToken.getUserProfile();
         if (!accessToken || !refreshToken) return;
         try {
             const { role } = decodeJwt<TokenPayload>(accessToken);
-            dispatch(setRole(role));
             dispatch(tokenReceived({ access_token: accessToken, refresh_token: refreshToken }));
+            dispatch(setRole(role));
+            dispatch(setUserProfile(userProfile));
         } catch (error) {
             console.error("Failed to decode JWT:", error);
         }

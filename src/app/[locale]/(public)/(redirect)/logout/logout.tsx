@@ -1,15 +1,13 @@
 "use client";
 
 import { SearchParamsLoader, useSearchParamsLoader } from "@/components/searchparams-loader";
-import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { useAppSelector } from "@/hooks/redux";
 import { useRouter } from "@/i18n/navigation";
 import { useLogoutMutation } from "@/services/RTK/auth.services";
-import { setLoggedOutAction } from "@/store/features/authSlice";
 import { useEffect } from "react";
 
 export default function Logout() {
     const router = useRouter();
-    const dispatch = useAppDispatch();
     const { searchParams, setSearchParams } = useSearchParamsLoader();
     const accessTokenFromStore = useAppSelector((state) => state.auth.access_token);
     const refreshTokenFromStore = useAppSelector((state) => state.auth.refresh_token);
@@ -23,7 +21,6 @@ export default function Logout() {
             } catch (error) {
                 console.error("Error logging out:", error);
             } finally {
-                dispatch(setLoggedOutAction());
                 router.push("/");
             }
         };
@@ -35,6 +32,6 @@ export default function Logout() {
         } else {
             router.push("/");
         }
-    }, [logoutMutate, accessToken, refreshToken, router, dispatch, accessTokenFromStore, refreshTokenFromStore]);
+    }, [logoutMutate, accessToken, refreshToken, router, accessTokenFromStore, refreshTokenFromStore]);
     return <SearchParamsLoader onParamsReceived={setSearchParams} />;
 }

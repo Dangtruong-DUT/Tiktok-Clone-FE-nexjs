@@ -12,8 +12,6 @@ import { RegisterReqBody, RegisterReqBodyType } from "@/utils/validations/auth.s
 import { useRouter } from "@/i18n/navigation";
 import { useRegisterMutation } from "@/services/RTK/auth.services";
 import { Loader } from "lucide-react";
-import { useAppDispatch } from "@/hooks/redux";
-import { setRole, tokenReceived } from "@/store/features/authSlice";
 import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
 
 export function ModalSignUpForm() {
@@ -21,7 +19,6 @@ export function ModalSignUpForm() {
     const router = useRouter();
 
     const [registerMutate, registerResult] = useRegisterMutation();
-    const dispatch = useAppDispatch();
 
     const form = useForm<RegisterReqBodyType>({
         resolver: zodResolver(RegisterReqBody),
@@ -37,10 +34,6 @@ export function ModalSignUpForm() {
     const onSubmit = async (data: RegisterReqBodyType) => {
         try {
             const result = await registerMutate(data).unwrap();
-            const { access_token, refresh_token, user } = result.data;
-            dispatch(tokenReceived({ access_token, refresh_token }));
-            const role = user.role;
-            dispatch(setRole(role));
             router.push("/");
             toast.success(result.message);
         } catch (error) {
@@ -137,7 +130,7 @@ export function ModalSignUpForm() {
 
                 <Button
                     type="submit"
-                    className="primary-button w-full flex items-center justify-center [&_svg]:size-5!"
+                    className="primary-button w-full flex items-center justify-center [&_svg]:size-5! cursor-pointer"
                     disabled={registerResult.isLoading}
                 >
                     {registerResult.isLoading ? (

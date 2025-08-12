@@ -14,10 +14,9 @@ import DrawerSidebar from "@/app/[locale]/(public)/(home)/_components/sidebar/_c
 import SettingsMenuDrawerContent from "@/app/[locale]/(public)/(home)/_components/sidebar/_components/drawer/settings-menu-drawer-content";
 import { MoreHorizontalIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
-import { FaRegUser, FaUser } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import ButtonGotoProfile from "@/app/[locale]/(public)/(home)/_components/sidebar/_components/button-goto-profile";
 
 export interface SidebarProps {
     className?: string;
@@ -91,33 +90,11 @@ export default function Sidebar({ className }: SidebarProps) {
                 >
                     <NavItems roleUser={role} />
                     <div className="flex flex-col gap-[0.5rem]">
-                        <Link
-                            href="/@dangtruong"
-                            className={cn(
-                                "flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent",
-                                activeState.type === SidebarActiveType.PROFILE && "bg-accent"
-                            )}
-                            onClick={() => setActiveState({ type: SidebarActiveType.PROFILE, route: "/@dangtruong" })}
-                        >
-                            {activeState.type === SidebarActiveType.PROFILE ? (
-                                <FaUser size={22} className="transition-colors  text-brand" />
-                            ) : (
-                                <FaRegUser size={22} className="transition-colors  text-foreground" />
-                            )}
-
-                            {!isOpenDrawer && (
-                                <h2
-                                    className={cn(
-                                        "text-base font-medium transition-colors duration-200",
-                                        activeState.type === SidebarActiveType.PROFILE
-                                            ? "text-brand"
-                                            : "text-foreground"
-                                    )}
-                                >
-                                    {t("profile")}
-                                </h2>
-                            )}
-                        </Link>
+                        <ButtonGotoProfile
+                            activeState={activeState}
+                            setActiveState={setActiveState}
+                            isOpenDrawer={isOpenDrawer}
+                        />
                         <button
                             className={cn(
                                 "flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent",

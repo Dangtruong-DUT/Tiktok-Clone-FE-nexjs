@@ -1,7 +1,6 @@
 import { useTranslations } from "next-intl";
 import { ModalLoginForm } from "../modal-login-form";
 import { ModalSignUpForm } from "../modal-signup-form";
-import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 
 type AuthMode = "login" | "signup" | "login-email" | "signup-email";

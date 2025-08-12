@@ -5,11 +5,23 @@ import envConfig from "@/config/app.config";
 import { setLoggedOutAction, tokenReceived } from "@/store/features/authSlice";
 import { RefreshTokenRes } from "@/types/response/auth.type";
 import { HTTP_STATUS } from "@/constants/http";
+import { RootState } from "@/store";
 
 // create a new mutex
 const mutex = new Mutex();
 //backend server
-export const BackendBaseQuery = fetchBaseQuery({ baseUrl: envConfig.NEXT_PUBLIC_API_ENDPOINT });
+export const BackendBaseQuery = fetchBaseQuery({
+    baseUrl: envConfig.NEXT_PUBLIC_API_ENDPOINT,
+    prepareHeaders: async (headers, api) => {
+        if (headers.has("authorization")) return headers;
+
+        const token = (api.getState() as RootState).auth.access_token;
+        if (token) {
+            headers.set("authorization", `Bearer ${token}`);
+        }
+        return headers;
+    },
+});
 //proxy server manager auth for nextjs
 export const NextWithAuthBaseQuery = fetchBaseQuery({ baseUrl: "" });
 

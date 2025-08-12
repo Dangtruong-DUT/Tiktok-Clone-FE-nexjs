@@ -8,4 +8,5 @@ export const API_ENDPOINT = {
     API_VERIFY_EMAIL: "/auth/verify-email",
     API_VERIFY_FORGOT_PASSWORD: "/auth/verify-forgot-password",
     API_RESET_PASSWORD: "/auth/reset-password",
+    API_GET_ME: "/users/me",
 } as const;

@@ -1,4 +1,5 @@
 import { ResType } from "@/types/response/response.type";
+import { UserType } from "@/types/schemas/User.schema";
 
 export type VerifyEmailResType = ResType<
     {
@@ -7,3 +8,5 @@ export type VerifyEmailResType = ResType<
     },
     void
 >;
+
+export type GetUserProfileResType = ResType<UserType, void>;

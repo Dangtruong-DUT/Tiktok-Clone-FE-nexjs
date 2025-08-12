@@ -11,8 +11,6 @@ import { LoginReqBody, LoginReqBodyType } from "@/utils/validations/auth.schema"
 import { Link, useRouter } from "@/i18n/navigation";
 import { useLoginMutation } from "@/services/RTK/auth.services";
 import { Loader } from "lucide-react";
-import { useAppDispatch } from "@/hooks/redux";
-import { setRole, tokenReceived } from "@/store/features/authSlice";
 import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
 import { toast } from "sonner";
 
@@ -21,7 +19,6 @@ export function LoginForm() {
     const router = useRouter();
 
     const [loginMutate, loginResult] = useLoginMutation();
-    const dispatch = useAppDispatch();
 
     const form = useForm<LoginReqBodyType>({
         resolver: zodResolver(LoginReqBody),
@@ -34,10 +31,6 @@ export function LoginForm() {
     const onSubmit = async (data: LoginReqBodyType) => {
         try {
             const result = await loginMutate(data).unwrap();
-            const { access_token, refresh_token, user } = result.data;
-            dispatch(tokenReceived({ access_token, refresh_token }));
-            const role = user.role;
-            dispatch(setRole(role));
             router.push("/");
             toast.success(result.message);
         } catch (error) {

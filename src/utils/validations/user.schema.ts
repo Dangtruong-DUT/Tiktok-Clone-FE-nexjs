@@ -5,3 +5,9 @@ export const VerifyEmailReqBody = z.object({
 });
 
 export type VerifyEmailReqBodyType = z.infer<typeof VerifyEmailReqBody>;
+
+export const followUserReqBody = z.object({
+    user_id: z.string().min(10),
+});
+
+export type FollowUserReqBodyType = z.infer<typeof followUserReqBody>;
