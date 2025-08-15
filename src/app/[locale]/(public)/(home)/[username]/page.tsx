@@ -1,4 +1,3 @@
-import nextRequestUserApi from "@/api/nextToBackend/user";
 import userRequestApi from "@/apis/user.request";
 import ProfileUser from "@/app/[locale]/(public)/(home)/[username]/_components/profile-user";
 import VideoContainer from "@/app/[locale]/(public)/(home)/[username]/_components/video-container";
