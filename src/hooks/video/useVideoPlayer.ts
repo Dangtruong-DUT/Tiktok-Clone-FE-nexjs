@@ -11,7 +11,7 @@ export function useVideoPlayer(
     options: UseVideoPlayerOptions = {}
 ) {
     const [isPlaying, setIsPlaying] = useState(true);
-    const [isMuted, setIsMuted] = useState(true);
+    const [isMuted, setIsMuted] = useState(false);
     const [volume, setVolume] = useState(0.5);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);

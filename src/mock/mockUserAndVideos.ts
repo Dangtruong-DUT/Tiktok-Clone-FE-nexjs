@@ -1,6 +1,29 @@
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
 import { UserType } from "@/types/schemas/User.schema";
 
+export const mockUser: UserType = {
+    _id: "67890",
+    username: "mockuser",
+    email: "mockuser@example.com",
+    password: "hashedpassword",
+    date_of_birth: "2000-01-01",
+    updated_at: new Date().toISOString(),
+    created_at: new Date().toISOString(),
+    verify: 0,
+    bio: "This is a mock user bio.",
+    location: "Mock City",
+    website: "http://mockuser.com",
+    avatar: "https://i.pravatar.cc/100?img=3",
+    cover_photo: "https://i.pravatar.cc/100?img=5",
+    name: "Mock User",
+    following_count: 100,
+    followers_count: 200,
+    likes_count: 300,
+    is_followed: false,
+    isOwner: false,
+    role: 0,
+};
+
 export const mockVideoPost: TikTokPostType = {
     _id: "12345",
     user_id: "67890",
@@ -28,28 +51,7 @@ export const mockVideoPost: TikTokPostType = {
     is_bookmarked: false,
     guest_views: 200,
     user_views: 150,
-};
-
-export const mockUser: UserType = {
-    _id: "67890",
-    username: "mockuser",
-    email: "mockuser@example.com",
-    password: "hashedpassword",
-    date_of_birth: "2000-01-01",
-    updated_at: new Date().toISOString(),
-    created_at: new Date().toISOString(),
-    verify: 0,
-    bio: "This is a mock user bio.",
-    location: "Mock City",
-    website: "http://mockuser.com",
-    avatar: "https://i.pravatar.cc/100?img=3",
-    cover_photo: "https://i.pravatar.cc/100?img=5",
-    name: "Mock User",
-    following_count: 100,
-    followers_count: 200,
-    likes_count: 300,
-    is_followed: false,
-    isOwner: false,
+    author: mockUser,
 };
 
 export const postList: { post: TikTokPostType; user: UserType }[] = Array(10)

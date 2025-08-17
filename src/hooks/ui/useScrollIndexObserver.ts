@@ -19,7 +19,7 @@ export default function useScrollIndexObserver({
             const delta = direction === "UP" ? -1 : 1;
             const newIndex = currentIndex + delta;
 
-            if (newIndex < 0 || newIndex >= listLength || newIndex === currentIndex) return;
+            if (newIndex < 0 || newIndex >= listLength) return;
 
             const target = document.querySelector<HTMLElement>(`[${keyDataScroll}="${newIndex}"]`);
             if (target) {
@@ -32,30 +32,28 @@ export default function useScrollIndexObserver({
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
-                for (const entry of entries) {
-                    if (entry.isIntersecting) {
-                        const indexAttr = entry.target.getAttribute(keyDataScroll);
-                        if (indexAttr === null) continue;
+                const visible = entries
+                    .filter((e) => e.isIntersecting)
+                    .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
+                if (visible) {
+                    const indexAttr = visible.target.getAttribute(keyDataScroll);
+                    if (indexAttr !== null) {
                         const index = Number(indexAttr);
-                        if (!Number.isNaN(index) && index !== currentIndex) {
-                            setCurrentIndex(index);
+                        if (!Number.isNaN(index)) {
+                            setCurrentIndex((prev) => (prev !== index ? index : prev));
                         }
                     }
                 }
             },
-            {
-                threshold: 0.9,
-            }
+            { threshold: 0.9 }
         );
 
-        const elements = document.querySelectorAll<HTMLElement>("[data-scroll-index]");
+        const elements = document.querySelectorAll<HTMLElement>(`[${keyDataScroll}]`);
         elements.forEach((el) => observer.observe(el));
 
-        return () => {
-            observer.disconnect();
-        };
-    }, [currentIndex, keyDataScroll]);
+        return () => observer.disconnect();
+    }, [keyDataScroll, listLength]);
 
     return {
         currentIndex,

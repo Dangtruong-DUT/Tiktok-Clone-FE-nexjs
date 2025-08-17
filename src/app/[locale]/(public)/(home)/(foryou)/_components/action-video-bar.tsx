@@ -10,7 +10,6 @@ import LikedIcon from "@/components/lottie-icons/liked-icon";
 import BookmarkIcon from "@/components/lottie-icons/bookmark-icon";
 import { formatCash } from "@/utils/formatting/formatNumber";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
-import { UserType } from "@/types/schemas/User.schema";
 import { AiFillMessage } from "react-icons/ai";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { usePathname, useRouter } from "@/i18n/navigation";
@@ -18,7 +17,6 @@ import { closeModal, setOpenModal } from "@/store/features/modalSlide";
 
 interface ActionBarProps {
     post: TikTokPostType;
-    author: UserType;
     className?: string;
 }
 
@@ -50,7 +48,8 @@ function ActionButton({ icon, count, label, onClick, className }: ActionButtonPr
     );
 }
 
-export default function ActionBar({ post, author, className }: ActionBarProps) {
+export default function ActionBar({ post, className }: ActionBarProps) {
+    const { author } = post;
     const openModalVideoDetailType = useAppSelector((state) => state.modal.typeOpenModal);
     const prevPathOpenModal = useAppSelector((state) => state.modal.prevPathnameOpenModal);
     const dispatch = useAppDispatch();

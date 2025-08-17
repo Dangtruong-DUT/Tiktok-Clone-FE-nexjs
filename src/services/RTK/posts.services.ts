@@ -15,12 +15,12 @@ export const PostApi = createApi({
             providesTags: (result, error, arg) => {
                 if (result) {
                     const final = [
-                        ...result.pages.flatMap((page) =>
-                            page.data.map(({ _id }) => ({
+                        ...result.pages.flatMap((page) => {
+                            return page.data.posts.map(({ _id }) => ({
                                 type: "Posts" as const,
                                 id: _id,
-                            }))
-                        ),
+                            }));
+                        }),
                         { type: "Posts" as const, id: `${arg}-LIST` }, // phân biệt LIST của friend và foryou
                     ];
                     return final;
