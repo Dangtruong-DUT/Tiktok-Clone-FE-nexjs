@@ -1,6 +1,5 @@
-import { API_ENDPOINT } from "@/config/endpoint.config";
 import baseQueryWithReauth from "@/services/RTK/client";
-import { GETForyouPostRes, GETFriendPostRes } from "@/types/response/post.type";
+import { GetListPostRes } from "@/types/response/post.type";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 export const PostApi = createApi({
@@ -11,35 +10,41 @@ export const PostApi = createApi({
     keepUnusedDataFor: 60,
     refetchOnReconnect: true,
     endpoints: (builder) => ({
-        getForyouPosts: builder.query<GETForyouPostRes, void>({
-            query: () => API_ENDPOINT.API_GET_FORYOU_POSTS,
-            providesTags: (result) => {
+        getListPost: builder.infiniteQuery<GetListPostRes, "friend" | "foryou", number>({
+            query: ({ pageParam, queryArg }) => `/posts/${queryArg}?page=${pageParam}&limit=10`,
+            providesTags: (result, error, arg) => {
                 if (result) {
                     const final = [
-                        ...result.data.map(({ _id }) => ({ type: "Posts" as const, id: _id })),
-                        { type: "Posts" as const, id: "LIST" },
+                        ...result.pages.flatMap((page) =>
+                            page.data.map(({ _id }) => ({
+                                type: "Posts" as const,
+                                id: _id,
+                            }))
+                        ),
+                        { type: "Posts" as const, id: `${arg}-LIST` }, // phân biệt LIST của friend và foryou
                     ];
                     return final;
                 }
-                const final = [{ type: "Posts" as const, id: "LIST" }];
-                return final;
+                return [{ type: "Posts" as const, id: `${arg}-LIST` }];
             },
-        }),
-        getFriendPosts: builder.query<GETFriendPostRes, void>({
-            query: () => API_ENDPOINT.API_GET_FRIEND_POSTS,
-            providesTags: (result) => {
-                if (result) {
-                    const final = [
-                        ...result.data.map(({ _id }) => ({ type: "Posts" as const, id: _id })),
-                        { type: "Posts" as const, id: "LIST" },
-                    ];
-                    return final;
-                }
-                const final = [{ type: "Posts" as const, id: "LIST" }];
-                return final;
+            infiniteQueryOptions: {
+                initialPageParam: 1,
+                maxPages: 5,
+                getNextPageParam: ({ meta }) => {
+                    if (!meta) return undefined;
+                    const { page, total_pages } = meta;
+                    if (page >= total_pages) return undefined;
+                    return page + 1;
+                },
+                getPreviousPageParam: ({ meta }) => {
+                    if (!meta) return undefined;
+                    const { page } = meta;
+                    if (page <= 1) return undefined;
+                    return page - 1;
+                },
             },
         }),
     }),
 });
 
-export const { useGetForyouPostsQuery, useGetFriendPostsQuery } = PostApi;
+export const { useGetListPostInfiniteQuery } = PostApi;

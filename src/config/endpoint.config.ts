@@ -9,6 +9,4 @@ export const API_ENDPOINT = {
     API_VERIFY_FORGOT_PASSWORD: "/auth/verify-forgot-password",
     API_RESET_PASSWORD: "/auth/reset-password",
     API_GET_ME: "/users/me",
-    API_GET_FORYOU_POSTS: "/posts/foryou",
-    API_GET_FRIEND_POSTS: "/posts/friend",
 } as const;

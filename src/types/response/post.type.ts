@@ -9,6 +9,4 @@ export type MetaDataListPost = {
 
 export type GetPostDetailRes = ResType<TikTokPostType, MetaDataListPost>;
 
-export type GETForyouPostRes = ResType<TikTokPostType[], MetaDataListPost>;
-
-export type GETFriendPostRes = ResType<TikTokPostType[], MetaDataListPost>;
+export type GetListPostRes = ResType<TikTokPostType[], MetaDataListPost>;
