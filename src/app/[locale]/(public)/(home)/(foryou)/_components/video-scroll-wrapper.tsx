@@ -10,7 +10,7 @@ import LoadingIcon from "@/components/lottie-icons/loading";
 import { keyDataScroll } from "@/app/[locale]/(public)/(home)/(foryou)/hooks/useHandleVideos";
 
 export default function VideoScrollWrapper() {
-    const { postList, fetchNextPage, isFetching, isLoading } = useVideosProvider();
+    const { postList, fetchNextPage, isFetching } = useVideosProvider();
     const sentinelScrollRef = useRef<HTMLDivElement>(null);
     const isInView = useInViewport(sentinelScrollRef);
 
@@ -37,9 +37,11 @@ export default function VideoScrollWrapper() {
                 ))}
                 {/* Sentinel để lắng nghe*/}
                 <div className="h-px bg-transparent" ref={sentinelScrollRef} />
-                <div>
-                    <LoadingIcon />
-                </div>
+                {isFetching && (
+                    <div className="px-4 @5xl:ps-[3rem] @5xl:pe-[15rem]  py-4  snap-start snap-always ">
+                        <LoadingIcon className="size-15 mx-auto" loop />
+                    </div>
+                )}
             </div>
             <NavigationVideo className="me-4" />
         </>

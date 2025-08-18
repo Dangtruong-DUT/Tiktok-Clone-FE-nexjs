@@ -127,7 +127,7 @@ export default function ActionBar({ post, className }: ActionBarProps) {
                         saved ? (
                             <BookmarkIcon className=" absolute size-[0.8em]!" />
                         ) : (
-                            <FaBookmark className="size-[0.5em]" />
+                            <FaBookmark className="size-[0.4em]" />
                         )
                     }
                     count={post.bookmarks_count}

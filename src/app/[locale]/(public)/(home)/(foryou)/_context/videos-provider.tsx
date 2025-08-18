@@ -31,6 +31,7 @@ interface VideosProviderContextProps {
     postLength: number;
     isLoading: boolean;
     isFetching: boolean;
+    hasNextPage: boolean;
 }
 
 const VideosProviderContext = createContext<VideosProviderContextProps | undefined>(undefined);
@@ -44,7 +45,7 @@ export function useVideosProvider() {
 }
 
 export function VideosProvider({ children }: { children: React.ReactNode }) {
-    const { fetchNextPage, isLoading, isFetching, data } = useGetListPostInfiniteQuery("foryou");
+    const { fetchNextPage, isLoading, isFetching, data, hasNextPage } = useGetListPostInfiniteQuery("foryou");
 
     const postList: TikTokPostType[] = useMemo(() => data?.pages.flatMap((page) => page.data.posts) || [], [data]);
 
@@ -58,6 +59,7 @@ export function VideosProvider({ children }: { children: React.ReactNode }) {
                 isLoading,
                 isFetching,
                 postLength: postList.length,
+                hasNextPage,
                 ...handleVideoObj,
             }}
         >
