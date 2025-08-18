@@ -12,30 +12,31 @@ import { useState } from "react";
 
 type CommentBodyProps = {
     comment: CommentType;
+    parent_id: string;
 };
 
-export function CommentBody({ comment }: CommentBodyProps) {
+export function CommentBody({ comment, parent_id }: CommentBodyProps) {
     const [isOpenFormReply, setIsOpenFormReply] = useState<boolean>(false);
     const locale = useLocale();
 
     return (
         <div className=" mb-2 space-y-4">
             <div className="flex  items-start gap-3">
-                <Link href={`/@${comment.user.username}`}>
+                <Link href={`/@${comment.author.username}`}>
                     <Avatar className="size-10">
-                        <AvatarImage src={comment.user.avatar} alt={comment.user.username} />
+                        <AvatarImage src={comment.author.avatar} alt={comment.author.username} />
                         <AvatarFallback className="bg-gray-300 text-gray-700">
-                            {comment.user.username.charAt(0).toUpperCase()}
+                            {comment.author.username.charAt(0).toUpperCase()}
                         </AvatarFallback>
                     </Avatar>
                 </Link>
                 <div className="flex flex-col w-full">
-                    <Link href={`/@${comment.user.username}`}>
-                        <span className=" text-sm hover:underline ">{comment.user.username}</span>
+                    <Link href={`/@${comment.author.username}`}>
+                        <span className=" text-sm hover:underline ">{comment.author.username}</span>
                     </Link>
                     <span className="text-sm">{comment.content}</span>
                     <div className="text-sm text-muted-foreground font-semibold flex items-center gap-6">
-                        <span>{timeAgo({ locale, date: comment.createdAt })}</span>
+                        <span>{timeAgo({ locale, date: comment.created_at })}</span>
                         <span
                             className="cursor-pointer"
                             role="button"
@@ -49,7 +50,7 @@ export function CommentBody({ comment }: CommentBodyProps) {
             </div>
             {isOpenFormReply && (
                 <div className="ml-10 flex gap-3 mb-3">
-                    <CommentForm postId={comment.id} placeholder="Add a reply..." />
+                    <CommentForm postId={parent_id} placeholder="Add a reply..." />
                     <Button variant="ghost" size="icon" aria-label="Close" onClick={() => setIsOpenFormReply(false)}>
                         <X />
                     </Button>

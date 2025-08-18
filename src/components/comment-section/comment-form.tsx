@@ -2,13 +2,21 @@
 
 import EmojiPiker from "@/components/emoji-picker";
 import { FormControl, FormField, FormItem, Form } from "@/components/ui/form";
+import { Audience, PosterType } from "@/constants/enum";
 import { cn } from "@/lib/utils";
-import { CommentBody, CommentBodyType } from "@/utils/validations/comment.schema";
+import { useCreateCommentMutation } from "@/services/RTK/posts.services";
+import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
+import { CreateCommentsReqBody, CreateCommentsReqBodyType } from "@/utils/validations/post.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
-type CommentFormProps = { className?: string; inputClassName?: string; postId: string; placeholder?: string };
+interface CommentFormProps {
+    className?: string;
+    inputClassName?: string;
+    postId: string;
+    placeholder?: string;
+}
 
 export default function CommentForm({
     className = "",
@@ -16,21 +24,39 @@ export default function CommentForm({
     placeholder = "Add a comment...",
     inputClassName = "",
 }: CommentFormProps) {
-    const form = useForm<CommentBodyType>({
-        resolver: zodResolver(CommentBody),
+    const [createCommentMutate, createCommentResult] = useCreateCommentMutation();
+
+    const form = useForm<CreateCommentsReqBodyType>({
+        resolver: zodResolver(CreateCommentsReqBody),
         defaultValues: {
             content: "",
-            post_id: postId,
+            audience: Audience.PUBLIC,
+            type: PosterType.COMMENT,
+            parent_id: postId,
         },
     });
 
-    const onSubmit = (data: CommentBodyType) => {
-        toast("You submitted the following values");
-    };
+    const onSubmit = useCallback(
+        async (data: CreateCommentsReqBodyType) => {
+            console.log(data);
+            if (createCommentResult.isLoading) return;
+            try {
+                await createCommentMutate(data).unwrap();
+            } catch (error) {
+                handleFormError<CreateCommentsReqBodyType>({
+                    error,
+                    setFormError: form.setError,
+                });
+            }
+        },
+        [createCommentMutate, createCommentResult.isLoading, form.setError]
+    );
 
     const handleEmojiSelect = (emoji: string) => {
         form.setValue("content", form.getValues("content") + emoji);
     };
+
+    const content = form.watch("content");
 
     return (
         <Form {...form}>
@@ -64,6 +90,7 @@ export default function CommentForm({
                 <button
                     type="submit"
                     className="text-right disabled:text-muted-foreground text-brand font-semibold cursor-pointer"
+                    disabled={createCommentResult.isLoading || !content}
                 >
                     Post
                 </button>
