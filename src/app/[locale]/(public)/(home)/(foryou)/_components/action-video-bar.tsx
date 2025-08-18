@@ -131,7 +131,7 @@ export default function ActionBar({ post, className }: ActionBarProps) {
 
                 <ActionButton
                     icon={<AiFillMessage className="size-[0.5em]" />}
-                    count={post.comment_count}
+                    count={post.comments_count}
                     label="Comment"
                     onClick={handleToggleOpenComment}
                 />

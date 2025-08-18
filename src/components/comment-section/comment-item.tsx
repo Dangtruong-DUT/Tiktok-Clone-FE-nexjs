@@ -13,10 +13,11 @@ interface ReplyListProps {
 
 export default function CommentItem({ comment }: ReplyListProps) {
     const [showReplies, setShowReplies] = useState<boolean>(false);
+    console.log(comment);
     return (
-        <div className="py-2 mb-6">
+        <div className="py-2 mb-1">
             <CommentBody comment={comment} parent_id={comment._id} />
-            {comment.comment_count > 0 && (
+            {comment.comments_count > 0 && (
                 <div className="flex items-center gap-2 mt-1 ms-10">
                     <div className="w-8 h-px bg-muted-foreground" />
                     <button
@@ -25,8 +26,8 @@ export default function CommentItem({ comment }: ReplyListProps) {
                     >
                         {showReplies
                             ? "Hide"
-                            : `View ${formatCash.format(comment.comment_count)} ${
-                                  comment.comment_count > 1 ? "replies" : "reply"
+                            : `View ${formatCash.format(comment.comments_count)} ${
+                                  comment.comments_count > 1 ? "replies" : "reply"
                               }`}
                     </button>
                     <ChevronDown className="text-muted-foreground size-3 font-semibold" />

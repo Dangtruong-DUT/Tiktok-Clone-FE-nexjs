@@ -23,7 +23,7 @@ export type TikTokPostType = {
     likes_count: number;
     bookmarks_count: number;
     repost_count: number;
-    comment_count: number;
+    comments_count: number;
     quote_post_count: number;
     is_liked: boolean;
     is_bookmarked: boolean;

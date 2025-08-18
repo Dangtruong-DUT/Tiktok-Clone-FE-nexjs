@@ -3,12 +3,12 @@ import z from "zod";
 
 export const MediaSchema = z.object({
     url: z.string(),
-    type: z.enum(MediaType),
+    type: z.union([z.literal(MediaType.IMAGE), z.literal(MediaType.VIDEO)]),
 });
 
 export const CreatePostReqBody = z.object({
-    type: z.enum(PosterType),
-    audience: z.enum(Audience),
+    type: z.union([z.literal(PosterType.POST), z.literal(PosterType.QUOTE_POST), z.literal(PosterType.RE_POST)]),
+    audience: z.union([z.literal(Audience.PUBLIC), z.literal(Audience.FRIENDS), z.literal(Audience.PRIVATE)]),
     content: z.string().max(500).optional(),
     parent_id: z.string().optional(),
     hashtags: z.array(z.string()).optional(),
@@ -20,7 +20,7 @@ export type CreatePostReqBodyType = z.infer<typeof CreatePostReqBody>;
 
 export const CreateCommentsReqBody = z.object({
     type: z.literal(PosterType.COMMENT),
-    audience: z.enum(Audience),
+    audience: z.union([z.literal(Audience.PUBLIC), z.literal(Audience.FRIENDS), z.literal(Audience.PRIVATE)]),
     content: z.string().max(500),
     parent_id: z.string(),
     hashtags: z.array(z.string()).optional(),

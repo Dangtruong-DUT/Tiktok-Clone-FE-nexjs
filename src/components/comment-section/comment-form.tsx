@@ -33,15 +33,18 @@ export default function CommentForm({
             audience: Audience.PUBLIC,
             type: PosterType.COMMENT,
             parent_id: postId,
+            hashtags: [],
+            medias: [],
+            mentions: [],
         },
     });
 
     const onSubmit = useCallback(
         async (data: CreateCommentsReqBodyType) => {
-            console.log(data);
             if (createCommentResult.isLoading) return;
             try {
                 await createCommentMutate(data).unwrap();
+                form.reset();
             } catch (error) {
                 handleFormError<CreateCommentsReqBodyType>({
                     error,
@@ -49,7 +52,7 @@ export default function CommentForm({
                 });
             }
         },
-        [createCommentMutate, createCommentResult.isLoading, form.setError]
+        [createCommentMutate, createCommentResult.isLoading, form]
     );
 
     const handleEmojiSelect = (emoji: string) => {
@@ -60,41 +63,39 @@ export default function CommentForm({
 
     return (
         <Form {...form}>
-            <div className={cn("flex  gap-4", className)}>
-                <div className="flex-1  rounded-lg flex items-center justify-between gap-0.5 px-4 border bg-input">
-                    <form method="POST" onSubmit={form.handleSubmit(onSubmit)} className="w-full">
-                        <FormField
-                            control={form.control}
-                            name="content"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <input
-                                            type="text"
-                                            autoComplete="off"
-                                            spellCheck="false"
-                                            placeholder={placeholder}
-                                            {...field}
-                                            className={cn(
-                                                "w-full bg-transparent border-none outline-none py-2 ",
-                                                inputClassName
-                                            )}
-                                        />
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
-                    </form>
+            <form method="POST" onSubmit={form.handleSubmit(onSubmit)} className={cn("flex gap-4", className)}>
+                <div className="flex-1 rounded-lg flex items-center justify-between gap-0.5 px-4 border bg-input">
+                    <FormField
+                        control={form.control}
+                        name="content"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl>
+                                    <input
+                                        type="text"
+                                        autoComplete="off"
+                                        spellCheck="false"
+                                        placeholder={placeholder}
+                                        {...field}
+                                        className={cn(
+                                            "w-full bg-transparent border-none outline-none py-2 ",
+                                            inputClassName
+                                        )}
+                                    />
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
                     <EmojiPiker onEmojiSelect={handleEmojiSelect} className="[&>svg]:size-5.5! cursor-pointer" />
                 </div>
                 <button
                     type="submit"
                     className="text-right disabled:text-muted-foreground text-brand font-semibold cursor-pointer"
-                    disabled={createCommentResult.isLoading || !content}
+                    disabled={createCommentResult.isLoading || !content || !form.formState.isValid}
                 >
                     Post
                 </button>
-            </div>
+            </form>
         </Form>
     );
 }
