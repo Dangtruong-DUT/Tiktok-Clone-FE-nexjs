@@ -2,15 +2,11 @@
 import { Settings, Share, Edit3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import useCurrentUserData from "@/hooks/data/useCurrentUserData";
-import {
-    useFollowUserMutation,
-    useGetUserByUsernameQuery,
-    useUnfollowUserMutation,
-} from "@/services/RTK/user.services";
-import { useState, useCallback, useEffect } from "react";
+import { useGetUserByUsernameQuery } from "@/services/RTK/user.services";
+import { useCallback } from "react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import useDebounce from "@/hooks/shared/useDebounce";
+import { useFollowUser } from "@/hooks/data/useUser";
 
 interface ProfileActionButtonsProps {
     username: string;
@@ -19,46 +15,12 @@ interface ProfileActionButtonsProps {
 
 export default function ProfileActionButtons({ userId, username }: ProfileActionButtonsProps) {
     const currentUser = useCurrentUserData();
-    const [followUser, { isLoading: isFollowLoading }] = useFollowUserMutation();
-    const [unfollowUser, { isLoading: isUnfollowLoading }] = useUnfollowUserMutation();
-    const [isFollowedState, setIsFollowedState] = useState(false);
-    const followStateValDebounce = useDebounce(isFollowedState, 300);
-    const isProcessing = isFollowLoading || isUnfollowLoading;
     const isCurrentUser = currentUser?._id === userId;
     const { data: userProfileRes } = useGetUserByUsernameQuery(username, { skip: isCurrentUser });
-
-    useEffect(() => {
-        if (userProfileRes) {
-            setIsFollowedState(userProfileRes.data.is_followed);
-        }
-    }, [userProfileRes]);
-
-    const handleFollowAction = useCallback(async () => {
-        if (isProcessing) return;
-
-        try {
-            if (!isFollowedState) {
-                await unfollowUser(userId).unwrap();
-            } else {
-                await followUser({
-                    user_id: userId,
-                }).unwrap();
-            }
-        } catch (error) {
-            setIsFollowedState((prev) => !prev);
-            console.error(error);
-        }
-    }, [isFollowedState, isProcessing, followUser, unfollowUser, userId]);
-
-    useEffect(() => {
-        if (followStateValDebounce !== isFollowedState) {
-            handleFollowAction();
-        }
-    }, [followStateValDebounce, isFollowedState, handleFollowAction]);
-
-    const handleFollow = () => {
-        setIsFollowedState((prev) => !prev);
-    };
+    const { isFollowedState, onToggleFollow } = useFollowUser({
+        userId,
+        initialFollowState: userProfileRes?.data.is_followed ?? false,
+    });
 
     const handleMessage = useCallback(() => {
         toast.info("Message feature coming soon!");
@@ -93,12 +55,12 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
         return (
             <div className="flex items-center">
                 <Button
-                    variant={!isFollowedState ? "outline" : "default"}
-                    className={cn("cursor-pointer", {
+                    variant={isFollowedState ? "outline" : "default"}
+                    className={cn("cursor-pointer px-8!", {
                         "primary-button h-10! rounded-md! text-base! font-medium!": !isFollowedState,
                         "h-10 font-medium rounded-md text-base ": isFollowedState,
                     })}
-                    onClick={handleFollow}
+                    onClick={onToggleFollow}
                 >
                     {isFollowedState ? "Following" : "Follow"}
                 </Button>

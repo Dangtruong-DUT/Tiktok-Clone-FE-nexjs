@@ -14,7 +14,9 @@ class ClientSessionToken {
         if (!isClient) return;
         this.access_token = localStorage.getItem("access_token");
         this.refresh_token = localStorage.getItem("refresh_token");
-        this.user_profile = JSON.parse(localStorage.getItem("user_profile") || "") as UserType | null;
+        this.user_profile = localStorage.getItem("user_profile")
+            ? (JSON.parse(localStorage.getItem("user_profile") || "") as UserType | null)
+            : null;
     }
 
     public static getInstance(): ClientSessionToken {

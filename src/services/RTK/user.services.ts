@@ -50,14 +50,14 @@ export const UserApi = createApi({
                 url: API_ENDPOINT.API_GET_ME,
                 method: "GET",
             }),
-            providesTags: (result) => (result ? [{ type: "User", username: result.data.username }] : []),
+            providesTags: (result) => (result ? [{ type: "User", id: result.data._id }] : []),
         }),
         getUserByUsername: builder.query<GetUserProfileResType, string>({
             query: (username) => ({
                 url: `/users/${username}`,
                 method: "GET",
             }),
-            providesTags: (result, error, username) => (result ? [{ type: "User", username }] : []),
+            providesTags: (result) => (result ? [{ type: "User", id: result.data._id }] : []),
         }),
         followUser: builder.mutation<{ message: string }, FollowUserReqBodyType>({
             query: (body) => ({

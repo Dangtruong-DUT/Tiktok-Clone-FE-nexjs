@@ -10,6 +10,38 @@ export const PostApi = createApi({
     keepUnusedDataFor: 60,
     refetchOnReconnect: true,
     endpoints: (builder) => ({
+        likePost: builder.mutation<{ message: string }, string>({
+            query: (post_id) => ({
+                url: `/posts/likes`,
+                method: "POST",
+                body: { post_id },
+            }),
+            invalidatesTags: (result, error, arg) => [{ type: "Posts" as const, id: arg }],
+        }),
+        unlikePost: builder.mutation<{ message: string }, string>({
+            query: (post_id) => ({
+                url: `/posts/${post_id}/likes`,
+                method: "DELETE",
+            }),
+            invalidatesTags: (result, error, arg) => [{ type: "Posts" as const, id: arg }],
+        }),
+        bookmarkPost: builder.mutation<{ message: string }, string>({
+            query: (post_id) => ({
+                url: `/posts/bookmarks`,
+                method: "POST",
+                body: {
+                    post_id,
+                },
+            }),
+            invalidatesTags: (result, error, arg) => [{ type: "Posts" as const, id: arg }],
+        }),
+        unBookmarkPost: builder.mutation<{ message: string }, string>({
+            query: (post_id) => ({
+                url: `/posts/${post_id}/bookmarks`,
+                method: "DELETE",
+            }),
+            invalidatesTags: (result, error, arg) => [{ type: "Posts" as const, id: arg }],
+        }),
         getListPost: builder.infiniteQuery<GetListPostRes, "friend" | "foryou", number>({
             query: ({ pageParam, queryArg }) => `/posts/${queryArg}?page=${pageParam}&limit=10`,
             providesTags: (result, error, arg) => {
@@ -47,4 +79,10 @@ export const PostApi = createApi({
     }),
 });
 
-export const { useGetListPostInfiniteQuery } = PostApi;
+export const {
+    useGetListPostInfiniteQuery,
+    useLikePostMutation,
+    useUnlikePostMutation,
+    useBookmarkPostMutation,
+    useUnBookmarkPostMutation,
+} = PostApi;
