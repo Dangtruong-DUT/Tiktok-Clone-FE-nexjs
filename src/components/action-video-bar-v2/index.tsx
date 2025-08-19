@@ -2,54 +2,26 @@
 
 import React, { useCallback, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { FaBookmark, FaHeart, FaShare } from "react-icons/fa6";
 import LikedIcon from "@/components/lottie-icons/liked-icon";
 import BookmarkIcon from "@/components/lottie-icons/bookmark-icon";
-import { formatCash } from "@/utils/formatting/formatNumber";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
 import { AiFillMessage } from "react-icons/ai";
 import { useBookmarkPost, useLikePost } from "@/hooks/data/useVideo";
 import { useGetPostDetailQuery } from "@/services/RTK/posts.services";
+import ActionButton from "@/components/action-video-bar-v2/action-button";
+import { useAppSelector } from "@/hooks/redux";
 
 interface ActionBarProps {
     post: TikTokPostType;
     className?: string;
 }
 
-interface ActionButtonProps {
-    icon: React.ReactNode;
-    count: number | null;
-    label: string;
-    onClick?: () => void;
-    className?: string;
-}
-
-function ActionButton({ icon, count, label, onClick, className }: ActionButtonProps) {
-    return (
-        <div className="flex flex-col items-center">
-            <Button
-                variant="ghost"
-                onClick={onClick}
-                className={cn(
-                    "text-5xl size-[1em] rounded-full flex items-center justify-center",
-                    "transition-all duration-200 text-white! hover:bg-transparent! cursor-pointer",
-                    className
-                )}
-                size="icon"
-            >
-                {icon}
-            </Button>
-            <span className=" text-xs font-semibold text-center text-white">
-                {count ? formatCash.format(count) : label}
-            </span>
-        </div>
-    );
-}
-
 export default function ActionBar({ post, className }: ActionBarProps) {
     const { data: postDetailRes } = useGetPostDetailQuery(post._id);
     const postDetail = postDetailRes?.data;
+
+    const role = useAppSelector((state) => state.auth.role);
 
     const [isOpenAnimatingLike, setIsOpenAnimatingLike] = useState<boolean>(false);
     const { isLikedState, toggleLikeState } = useLikePost({
@@ -100,6 +72,8 @@ export default function ActionBar({ post, className }: ActionBarProps) {
                 count={postDetail?.likes_count ?? post.likes_count}
                 label="Like"
                 onClick={toggleLikeState}
+                isAuth={role != null}
+                requiredAuth
             />
 
             <ActionButton
@@ -123,6 +97,7 @@ export default function ActionBar({ post, className }: ActionBarProps) {
                 count={postDetail?.bookmarks_count ?? post.bookmarks_count}
                 label="Save"
                 onClick={toggleBookmarkState}
+                requiredAuth
             />
 
             <ActionButton

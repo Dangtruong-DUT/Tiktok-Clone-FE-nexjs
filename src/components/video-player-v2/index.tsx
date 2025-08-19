@@ -11,9 +11,9 @@ import { useVideoRouterNavigation } from "@/hooks/video/useVideoRouterNavigation
 import { VideoOverlayIcons } from "./components/video-overlay-icons";
 import Image from "next/image";
 import { VideoControlsBottom } from "@/components/video-player-v2/components/video-controls-bottom";
-import ActionBar from "@/components/video-player-v2/components/action-video-bar";
 import useThumbnailGenerator from "@/hooks/ui/generateVideoThumbnail";
 import NavigationVideo from "@/components/video-player-v2/components/navigation-video";
+import ActionBar from "@/components/action-video-bar-v2";
 
 interface VideoPlayerProps {
     className?: string;

@@ -3,7 +3,7 @@ import { ScrollType } from "@/hooks/ui/useScrollIndexObserver";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
 import React, { createContext, useMemo } from "react";
 import { useGetListPostInfiniteQuery } from "@/services/RTK/posts.services";
-import { useHandleVideos } from "@/app/[locale]/(public)/(home)/(foryou)/hooks/useHandleVideos";
+import { useHandleVideos } from "@/app/[locale]/(public)/(home)/(foryou)/_hooks/useHandleVideos";
 import {
     BaseQueryFn,
     FetchArgs,
