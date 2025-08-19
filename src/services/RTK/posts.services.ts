@@ -3,6 +3,7 @@ import baseQueryWithReauth from "@/services/RTK/client";
 import { GetListCommentRes, GetListPostRes } from "@/types/response/post.type";
 import { CreateCommentsReqBodyType } from "@/utils/validations/post.schema";
 import { createApi } from "@reduxjs/toolkit/query/react";
+import _ from "lodash";
 
 export const PostApi = createApi({
     baseQuery: baseQueryWithReauth,
@@ -79,13 +80,17 @@ export const PostApi = createApi({
                 },
             },
         }),
-        createComment: builder.mutation<{ message: string }, CreateCommentsReqBodyType>({
-            query: (body) => ({
+        createComment: builder.mutation<{ message: string }, CreateCommentsReqBodyType & { post_id: string }>({
+            query: (payload) => ({
                 url: `/posts`,
                 method: "POST",
-                body,
+                body: _.omit(payload, "post_id"),
             }),
-            invalidatesTags: (result, error, arg) => [{ type: "Posts" as const, id: `${arg.parent_id}-COMMENT-LIST` }],
+            invalidatesTags: (result, error, arg) => [
+                { type: "Posts" as const, id: `${arg.parent_id}-COMMENT-LIST` },
+                { type: "Posts" as const, id: arg.post_id },
+                { type: "Posts" as const, id: `${arg.post_id}-COMMENT-LIST` },
+            ],
         }),
         getListPost: builder.infiniteQuery<GetListPostRes, "friend" | "foryou", number>({
             query: ({ pageParam, queryArg }) => `/posts/${queryArg}?page=${pageParam}&limit=10`,

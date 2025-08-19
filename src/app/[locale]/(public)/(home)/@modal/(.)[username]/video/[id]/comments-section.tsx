@@ -31,7 +31,7 @@ export default function CommentsSection({ id, className, handleCloseComments, is
                 <CommentList postId={id} />
             </div>
             <footer className=" pe-3 ">
-                <CommentForm postId={id} className="mt-3" />
+                <CommentForm postId={id} parentId={id} className="mt-3" />
             </footer>
         </section>
     );

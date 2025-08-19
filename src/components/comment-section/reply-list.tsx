@@ -51,7 +51,7 @@ export default function ReplyList({ parentId }: ReplyItemProps) {
                     <CommentBody key={reply._id} comment={reply} parent_id={parentId} />
                 ))}
                 {isFetching && (
-                    <div className="py-4">
+                    <div>
                         <LoadingIcon className="size-10 mx-auto" loop />
                     </div>
                 )}

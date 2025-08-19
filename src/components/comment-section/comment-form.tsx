@@ -15,14 +15,18 @@ interface CommentFormProps {
     className?: string;
     inputClassName?: string;
     postId: string;
+    parentId: string;
     placeholder?: string;
+    onClose?: () => void;
 }
 
 export default function CommentForm({
     className = "",
     postId,
+    parentId,
     placeholder = "Add a comment...",
     inputClassName = "",
+    onClose,
 }: CommentFormProps) {
     const [createCommentMutate, createCommentResult] = useCreateCommentMutation();
 
@@ -32,7 +36,7 @@ export default function CommentForm({
             content: "",
             audience: Audience.PUBLIC,
             type: PosterType.COMMENT,
-            parent_id: postId,
+            parent_id: parentId,
             hashtags: [],
             medias: [],
             mentions: [],
@@ -43,16 +47,18 @@ export default function CommentForm({
         async (data: CreateCommentsReqBodyType) => {
             if (createCommentResult.isLoading) return;
             try {
-                await createCommentMutate(data).unwrap();
+                await createCommentMutate({ ...data, post_id: postId }).unwrap();
                 form.reset();
+                onClose?.();
             } catch (error) {
                 handleFormError<CreateCommentsReqBodyType>({
                     error,
                     setFormError: form.setError,
                 });
+                console.log(error);
             }
         },
-        [createCommentMutate, createCommentResult.isLoading, form]
+        [createCommentMutate, createCommentResult.isLoading, form, onClose, postId]
     );
 
     const handleEmojiSelect = (emoji: string) => {

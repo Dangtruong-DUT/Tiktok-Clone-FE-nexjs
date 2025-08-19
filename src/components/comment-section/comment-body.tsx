@@ -1,6 +1,7 @@
 "use client";
 
 import CommentForm from "@/components/comment-section/comment-form";
+import { useRootCommentsContext } from "@/components/comment-section/comment-list";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
@@ -16,6 +17,7 @@ type CommentBodyProps = {
 };
 
 export function CommentBody({ comment, parent_id }: CommentBodyProps) {
+    const { parent_id: root_id } = useRootCommentsContext();
     const [isOpenFormReply, setIsOpenFormReply] = useState<boolean>(false);
     const locale = useLocale();
 
@@ -50,7 +52,12 @@ export function CommentBody({ comment, parent_id }: CommentBodyProps) {
             </div>
             {isOpenFormReply && (
                 <div className="ml-10 flex gap-3 mb-3">
-                    <CommentForm postId={parent_id} placeholder="Add a reply..." />
+                    <CommentForm
+                        postId={root_id}
+                        placeholder="Add a reply..."
+                        onClose={() => setIsOpenFormReply(false)}
+                        parentId={parent_id}
+                    />
                     <Button variant="ghost" size="icon" aria-label="Close" onClick={() => setIsOpenFormReply(false)}>
                         <X />
                     </Button>

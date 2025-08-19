@@ -13,7 +13,6 @@ interface ReplyListProps {
 
 export default function CommentItem({ comment }: ReplyListProps) {
     const [showReplies, setShowReplies] = useState<boolean>(false);
-    console.log(comment);
     return (
         <div className="py-2 mb-1">
             <CommentBody comment={comment} parent_id={comment._id} />
