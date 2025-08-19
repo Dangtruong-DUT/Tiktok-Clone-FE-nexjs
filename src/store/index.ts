@@ -33,3 +33,9 @@ export type RootState = ReturnType<AppStore["getState"]>;
 export type AppDispatch = AppStore["dispatch"];
 
 export type storeApiType = { dispatch: AppDispatch; getState: () => RootState };
+
+export function clearStore(dispatch: AppDispatch) {
+    dispatch(AuthApi.util.resetApiState());
+    dispatch(UserApi.util.resetApiState());
+    dispatch(PostApi.util.resetApiState());
+}

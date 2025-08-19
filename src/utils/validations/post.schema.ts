@@ -21,7 +21,7 @@ export type CreatePostReqBodyType = z.infer<typeof CreatePostReqBody>;
 export const CreateCommentsReqBody = z.object({
     type: z.literal(PosterType.COMMENT),
     audience: z.union([z.literal(Audience.PUBLIC), z.literal(Audience.FRIENDS), z.literal(Audience.PRIVATE)]),
-    content: z.string().max(500),
+    content: z.string().min(1).max(500),
     parent_id: z.string(),
     hashtags: z.array(z.string()).optional(),
     mentions: z.array(z.string()).optional(),

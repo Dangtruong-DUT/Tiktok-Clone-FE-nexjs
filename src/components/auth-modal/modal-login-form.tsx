@@ -1,45 +1,19 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { DialogClose } from "@/components/ui/dialog";
 import { useTranslations } from "next-intl";
-import { LoginReqBody, LoginReqBodyType } from "@/utils/validations/auth.schema";
 import { Link } from "@/i18n/navigation";
-import { useLoginMutation } from "@/services/RTK/auth.services";
 import { Loader } from "lucide-react";
-import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
-import { toast } from "sonner";
 import { useRef } from "react";
+import { useLoginWithEmail } from "@/hooks/data/useAuth";
 
 export function ModalLoginForm() {
     const t = useTranslations("LoginPage.email");
-    const [loginMutate, loginResult] = useLoginMutation();
     const closeButtonRef = useRef<HTMLButtonElement>(null);
-
-    const form = useForm<LoginReqBodyType>({
-        resolver: zodResolver(LoginReqBody),
-        defaultValues: {
-            email: "",
-            password: "",
-        },
-    });
-
-    const onSubmit = async (data: LoginReqBodyType) => {
-        try {
-            const result = await loginMutate(data).unwrap();
-            toast.success(result.message);
-            closeButtonRef.current?.click();
-        } catch (error) {
-            handleFormError<LoginReqBodyType>({
-                error,
-                setFormError: form.setError,
-            });
-        }
-    };
+    const { form, onSubmit, loginResult } = useLoginWithEmail();
 
     return (
         <Form {...form}>

@@ -1,8 +1,10 @@
 "use client";
 
+import { AuthModal } from "@/components/auth-modal";
 import EmojiPiker from "@/components/emoji-picker";
 import { FormControl, FormField, FormItem, Form } from "@/components/ui/form";
 import { Audience, PosterType } from "@/constants/enum";
+import { useAppSelector } from "@/hooks/redux";
 import { cn } from "@/lib/utils";
 import { useCreateCommentMutation } from "@/services/RTK/posts.services";
 import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
@@ -20,7 +22,7 @@ interface CommentFormProps {
     onClose?: () => void;
 }
 
-export default function CommentForm({
+function CommentForm({
     className = "",
     postId,
     parentId,
@@ -65,8 +67,6 @@ export default function CommentForm({
         form.setValue("content", form.getValues("content") + emoji);
     };
 
-    const content = form.watch("content");
-
     return (
         <Form {...form}>
             <form method="POST" onSubmit={form.handleSubmit(onSubmit)} className={cn("flex gap-4", className)}>
@@ -97,11 +97,27 @@ export default function CommentForm({
                 <button
                     type="submit"
                     className="text-right disabled:text-muted-foreground text-brand font-semibold cursor-pointer"
-                    disabled={createCommentResult.isLoading || !content || !form.formState.isValid}
+                    disabled={createCommentResult.isLoading || !form.formState.isValid}
                 >
                     Post
                 </button>
             </form>
         </Form>
     );
+}
+
+export default function CommentFormWrapper(props: CommentFormProps) {
+    const role = useAppSelector((state) => state.auth.role);
+    if (role == null) {
+        return (
+            <AuthModal>
+                <div className="relative">
+                    <CommentForm {...props} />
+                    <button className="absolute inset-0 bg-transparent" />
+                </div>
+            </AuthModal>
+        );
+    }
+
+    return <CommentForm {...props} />;
 }

@@ -1,11 +1,14 @@
 "use client";
 
+import { AuthModal } from "@/components/auth-modal";
 import CommentForm from "@/components/comment-section/comment-form";
 import { useRootCommentsContext } from "@/components/comment-section/comment-list";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useLikePost } from "@/hooks/data/useVideo";
+import { useAppSelector } from "@/hooks/redux";
 import { Link } from "@/i18n/navigation";
+import { cn } from "@/lib/utils";
 import { CommentType } from "@/types/schemas/comment.schemas";
 import { formatCash } from "@/utils/formatting/formatNumber";
 import { timeAgo } from "@/utils/formatting/formatTime";
@@ -19,6 +22,43 @@ type CommentBodyProps = {
     parent_id: string;
 };
 
+function LikeButton({
+    isAuth,
+    isLiked,
+    toggleLike,
+    className,
+    likesCount,
+}: {
+    isAuth: boolean;
+    isLiked: boolean;
+    toggleLike: () => void;
+    className?: string;
+    likesCount: number;
+}) {
+    const content = (
+        <span className={cn("flex space-x-1 font-light")}>
+            <button onClick={toggleLike} className="cursor-pointer">
+                {isLiked ? <FaHeart size={17} className="text-red-500" /> : <FaRegHeart size={17} />}
+            </button>
+            <strong>{formatCash.format(likesCount)}</strong>
+        </span>
+    );
+    return (
+        <div className={className}>
+            {isAuth ? (
+                content
+            ) : (
+                <AuthModal>
+                    <div className="relative">
+                        <button className="absolute inset-0" />
+                        {content}
+                    </div>
+                </AuthModal>
+            )}
+        </div>
+    );
+}
+
 export function CommentBody({ comment, parent_id }: CommentBodyProps) {
     const { parent_id: root_id } = useRootCommentsContext();
     const [isOpenFormReply, setIsOpenFormReply] = useState<boolean>(false);
@@ -27,6 +67,8 @@ export function CommentBody({ comment, parent_id }: CommentBodyProps) {
         postId: comment._id,
         initialLikeState: comment.is_liked,
     });
+
+    const role = useAppSelector((state) => state.auth.role);
     return (
         <div className=" mb-2 space-y-4">
             <div className="flex  items-start gap-3">
@@ -53,16 +95,13 @@ export function CommentBody({ comment, parent_id }: CommentBodyProps) {
                         >
                             Reply
                         </span>
-                        <span className="ml-auto flex space-x-1 font-light">
-                            <button onClick={toggleLikeState} className="cursor-pointer">
-                                {isLikedState ? (
-                                    <FaHeart size={17} className="text-red-500" />
-                                ) : (
-                                    <FaRegHeart size={17} />
-                                )}
-                            </button>
-                            <strong>{formatCash.format(comment.likes_count)}</strong>
-                        </span>
+                        <LikeButton
+                            isAuth={role !== null}
+                            isLiked={isLikedState}
+                            toggleLike={toggleLikeState}
+                            likesCount={comment.likes_count}
+                            className="ml-auto pr-2"
+                        />
                     </div>
                 </div>
             </div>
