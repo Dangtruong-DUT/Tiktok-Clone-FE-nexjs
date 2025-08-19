@@ -6,11 +6,12 @@ export async function generateVideoThumbnail(videoUrl: string): Promise<string> 
         video.src = videoUrl;
         video.crossOrigin = "anonymous";
         video.preload = "metadata";
+        video.preload = "auto";
         video.muted = true;
         video.playsInline = true;
 
-        video.addEventListener("loadeddata", () => {
-            video.currentTime = 1;
+        video.addEventListener("loadedmetadata", () => {
+            video.currentTime = video.duration / 2;
         });
 
         video.addEventListener("seeked", () => {

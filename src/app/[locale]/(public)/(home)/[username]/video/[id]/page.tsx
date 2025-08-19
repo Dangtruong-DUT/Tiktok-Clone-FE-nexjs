@@ -1,12 +1,12 @@
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
 import { UserType } from "@/types/schemas/User.schema";
-import { VideoPlaylistProvider } from "@/provider/video-playlist-provider";
-import VideoDetailContent from "@/app/[locale]/(public)/(home)/[username]/video/[id]/video-detail-content";
 import { Metadata, ResolvingMetadata } from "next";
 import { LocalesType } from "@/i18n/config";
 import { WrapperServerCallApi } from "@/utils/handleErrors/handleServerError";
 import PostRequestApi from "@/apis/posts.request";
 import { notFound } from "next/navigation";
+import { VideoPlaylistProvider } from "@/app/[locale]/(public)/(home)/[username]/video/[id]/_context/video-playlist-context";
+import VideoDetailContent from "@/app/[locale]/(public)/(home)/[username]/video/[id]/_components/video-detail-content";
 
 interface VideoDetailPageProps {
     params: Promise<{

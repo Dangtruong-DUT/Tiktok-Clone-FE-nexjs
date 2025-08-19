@@ -1,9 +1,9 @@
 "use client";
 
+import { useVideoRouterNavigation } from "@/app/[locale]/(public)/(home)/[username]/video/[id]/_hook/useVideoRouterNavigation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { useVideoRouterNavigation } from "@/hooks/video/useVideoRouterNavigation";
 
 type NavigationVideoProps = {
     className?: string;

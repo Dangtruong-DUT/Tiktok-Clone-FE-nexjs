@@ -1,8 +1,8 @@
 "use client";
 
+import { useVideoPlaylist } from "@/app/[locale]/(public)/(home)/[username]/video/[id]/_context/video-playlist-context";
+import { useVideoRouterNavigation } from "@/app/[locale]/(public)/(home)/[username]/video/[id]/_hook/useVideoRouterNavigation";
 import CardVideoItem from "@/components/card-video-item";
-import { useVideoPlaylist } from "@/provider/video-playlist-provider";
-import { useVideoRouterNavigation } from "@/hooks/video/useVideoRouterNavigation";
 
 export default function SuggestedVideos() {
     const { currentIndex, playlist } = useVideoPlaylist();

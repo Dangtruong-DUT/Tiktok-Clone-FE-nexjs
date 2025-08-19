@@ -1,4 +1,5 @@
 "'use client';";
+import { AuthModal } from "@/components/auth-modal";
 import ShowMore from "@/components/show-more";
 import { AvatarFallback, AvatarImage, Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,38 @@ type VideoDescriptionProps = {
     postContent: string;
     className?: string;
 };
+
+function FollowButton({
+    isFollowedState,
+    onToggleFollow,
+    isAuth,
+}: {
+    isFollowedState: boolean;
+    onToggleFollow: () => void;
+    isAuth: boolean;
+}) {
+    const content = (
+        <Button
+            className={cn(" h-9!  rounded-xs! font-semibold! cursor-pointer text-base!", {
+                "primary-button": !isFollowedState,
+                "bg-accent text-white hover:bg-accent/90 ": isFollowedState,
+            })}
+            onClick={onToggleFollow}
+        >
+            {isFollowedState ? "Following" : "Follow"}
+        </Button>
+    );
+    return isAuth ? (
+        content
+    ) : (
+        <AuthModal>
+            <div className="relative">
+                <button className="absolute inset-0" />
+                {content}
+            </div>
+        </AuthModal>
+    );
+}
 
 export default function VideoDescription({ author, createdAt, postContent, className }: VideoDescriptionProps) {
     const locale = useLocale();
@@ -37,22 +70,18 @@ export default function VideoDescription({ author, createdAt, postContent, class
                     </Avatar>
 
                     <div className="mr-12">
-                        <h3 className="text-lg font-semibold hover:underline">{author.name}</h3>
+                        <h3 className="text-lg font-semibold hover:underline">{author.username}</h3>
                         <p className="text-sm text-muted-foreground">
-                            {author.bio} · {timeAgo({ locale, date: createdAt })}
+                            {author.name} · {timeAgo({ locale, date: createdAt })}
                         </p>
                     </div>
                 </Link>
                 {!isCurrentUser && (
-                    <Button
-                        className={cn(" h-9!  rounded-xs! font-semibold! cursor-pointer text-base!", {
-                            "primary-button": !isFollowedState,
-                            "bg-accent text-white hover:bg-accent/90 ": isFollowedState,
-                        })}
-                        onClick={onToggleFollow}
-                    >
-                        {isFollowedState ? "Following" : "Follow"}
-                    </Button>
+                    <FollowButton
+                        isFollowedState={isFollowedState}
+                        onToggleFollow={onToggleFollow}
+                        isAuth={!!currentUser}
+                    />
                 )}
             </div>
             <ShowMore text={postContent} className="text-base" maxHeight={50} />

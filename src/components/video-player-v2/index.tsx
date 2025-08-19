@@ -7,13 +7,13 @@ import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
 import { useVideoPlayer } from "@/hooks/video/useVideoPlayer";
 import { useVideoControls } from "@/hooks/video/useVideoControls";
 import { useVideoAutoPlay } from "@/hooks/video/useVideoAutoPlay";
-import { useVideoRouterNavigation } from "@/hooks/video/useVideoRouterNavigation";
 import { VideoOverlayIcons } from "./components/video-overlay-icons";
 import Image from "next/image";
 import { VideoControlsBottom } from "@/components/video-player-v2/components/video-controls-bottom";
 import useThumbnailGenerator from "@/hooks/ui/generateVideoThumbnail";
-import NavigationVideo from "@/components/video-player-v2/components/navigation-video";
 import ActionBar from "@/components/action-video-bar-v2";
+import { useVideoRouterNavigation } from "@/app/[locale]/(public)/(home)/[username]/video/[id]/_hook/useVideoRouterNavigation";
+import NavigationVideo from "@/components/video-player-v2/components/navigation-video";
 
 interface VideoPlayerProps {
     className?: string;

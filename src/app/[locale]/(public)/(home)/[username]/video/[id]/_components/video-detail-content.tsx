@@ -3,11 +3,11 @@
 import { useEffect } from "react";
 import { useParams } from "next/navigation";
 import VideoPlayer from "@/components/video-player-v2";
-import VideoDescription from "@/app/[locale]/(public)/(home)/[username]/video/[id]/video-description";
-import CommentSection from "@/app/[locale]/(public)/(home)/[username]/video/[id]/comment-section";
-import { useVideoPlaylist } from "@/provider/video-playlist-provider";
 import LoadingIcon from "@/components/lottie-icons/loading";
-import SuggestedVideos from "@/app/[locale]/(public)/(home)/[username]/video/[id]/suggested-videos";
+import { useVideoPlaylist } from "@/app/[locale]/(public)/(home)/[username]/video/[id]/_context/video-playlist-context";
+import VideoDescription from "@/app/[locale]/(public)/(home)/[username]/video/[id]/_components/video-description";
+import SuggestedVideos from "@/app/[locale]/(public)/(home)/[username]/video/[id]/_components/suggested-videos";
+import CommentSection from "@/app/[locale]/(public)/(home)/[username]/video/[id]/_components/comment-section";
 
 export default function VideoDetailContent() {
     const params = useParams();

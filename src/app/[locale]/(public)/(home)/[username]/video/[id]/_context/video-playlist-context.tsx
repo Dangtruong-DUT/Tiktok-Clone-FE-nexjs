@@ -1,7 +1,16 @@
 "use client";
 
-import React, { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from "react";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
+import { useGetListPostInfiniteQuery } from "@/services/RTK/posts.services";
+import {
+    BaseQueryFn,
+    FetchArgs,
+    FetchBaseQueryError,
+    InfiniteQueryActionCreatorResult,
+    InfiniteQueryDefinition,
+} from "@reduxjs/toolkit/query";
+import { GetListPostRes } from "@/types/response/post.type";
 
 interface VideoPlaylistContextType {
     playlist: TikTokPostType[];
@@ -9,10 +18,24 @@ interface VideoPlaylistContextType {
     currentVideo: TikTokPostType | null;
     isFirstVideo: boolean;
     isLastVideo: boolean;
-    setPlaylist: (playlist: TikTokPostType[]) => void;
     nextVideo: () => void;
     previousVideo: () => void;
     playVideoById: (videoId: string) => void;
+    isLoading: boolean;
+    isFetching: boolean;
+    fetchNextPage: () => InfiniteQueryActionCreatorResult<
+        InfiniteQueryDefinition<
+            "friend" | "foryou",
+            number,
+            BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>,
+            "Posts",
+            GetListPostRes,
+            "postApi",
+            unknown
+        >
+    >;
+    postLength: number;
+    hasNextPage: boolean;
 }
 
 const VideoPlaylistContext = createContext<VideoPlaylistContextType | undefined>(undefined);
@@ -24,17 +47,23 @@ interface VideoPlaylistProviderProps {
 
 export function VideoPlaylistProvider({ children, video }: VideoPlaylistProviderProps) {
     const [playlist, setPlaylistState] = useState<TikTokPostType[]>([video]);
+    const { fetchNextPage, isLoading, isFetching, data, hasNextPage } = useGetListPostInfiniteQuery("foryou");
+    const postList: TikTokPostType[] = React.useMemo(
+        () => data?.pages.flatMap((page) => page.data.posts) || [],
+        [data]
+    );
+
+    useEffect(() => {
+        if (postList.length > 0) {
+            setPlaylistState([video, ...postList.filter((post) => post._id !== video._id)]);
+        }
+    }, [postList, video]);
+
     const [currentIndex, setCurrentIndexState] = useState<number>(0);
 
-    const currentVideo = playlist[currentIndex] || null;
+    const currentVideo = playlist[currentIndex] || video;
     const isFirstVideo = currentIndex === 0;
     const isLastVideo = currentIndex === playlist.length - 1;
-
-    const setPlaylist = useCallback((newPlaylist: TikTokPostType[]) => {
-        setPlaylistState(newPlaylist);
-        setCurrentIndexState(0);
-    }, []);
-
     const setCurrentIndex = useCallback(
         (index: number) => {
             if (index >= 0 && index < playlist.length) {
@@ -48,7 +77,7 @@ export function VideoPlaylistProvider({ children, video }: VideoPlaylistProvider
         if (!isLastVideo) {
             setCurrentIndexState((prev) => prev + 1);
         } else {
-            setCurrentIndexState(0);
+            setCurrentIndexState(-1);
         }
     }, [isLastVideo]);
 
@@ -61,26 +90,34 @@ export function VideoPlaylistProvider({ children, video }: VideoPlaylistProvider
     const playVideoById = useCallback(
         (videoId: string) => {
             const index = playlist.findIndex((item) => item._id === videoId);
-            if (index !== -1) {
+            if (index >= 0) {
                 setCurrentIndex(index);
             }
         },
         [playlist, setCurrentIndex]
     );
 
-    const value: VideoPlaylistContextType = {
-        playlist,
-        currentIndex,
-        currentVideo,
-        isFirstVideo,
-        isLastVideo,
-        setPlaylist,
-        nextVideo,
-        previousVideo,
-        playVideoById,
-    };
-
-    return <VideoPlaylistContext.Provider value={value}>{children}</VideoPlaylistContext.Provider>;
+    return (
+        <VideoPlaylistContext.Provider
+            value={{
+                playlist,
+                currentIndex,
+                currentVideo,
+                isFirstVideo,
+                isLastVideo,
+                nextVideo,
+                previousVideo,
+                playVideoById,
+                isLoading,
+                isFetching,
+                fetchNextPage,
+                postLength: playlist.length || 0,
+                hasNextPage,
+            }}
+        >
+            {children}
+        </VideoPlaylistContext.Provider>
+    );
 }
 
 export function useVideoPlaylist() {

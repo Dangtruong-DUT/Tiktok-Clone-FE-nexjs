@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback } from "react";
-import { useRouter } from "next/navigation";
-import { useVideoPlaylist } from "@/provider/video-playlist-provider";
+import { useVideoPlaylist } from "@/app/[locale]/(public)/(home)/[username]/video/[id]/_context/video-playlist-context";
+import { useRouter } from "@/i18n/navigation";
 
 interface UseVideoRouterNavigationProps {
     onVideoEnd?: () => void;
@@ -12,12 +12,11 @@ interface UseVideoRouterNavigationProps {
 export function useVideoRouterNavigation({ onVideoEnd }: UseVideoRouterNavigationProps = {}) {
     const router = useRouter();
     const { playlist, currentIndex, isFirstVideo, isLastVideo, currentVideo } = useVideoPlaylist();
-
     const navigateToVideo = useCallback(
         (targetIndex: number) => {
             if (targetIndex >= 0 && targetIndex < playlist.length) {
                 const targetVideo = playlist[targetIndex];
-                const newUrl = `/@${targetVideo.user.username}/video/${targetVideo.post._id}`;
+                const newUrl = `/@${targetVideo.author.username}/video/${targetVideo._id}`;
                 router.replace(newUrl);
             }
         },
@@ -26,9 +25,9 @@ export function useVideoRouterNavigation({ onVideoEnd }: UseVideoRouterNavigatio
 
     const navigateToVideoById = useCallback(
         (videoId: string) => {
-            const targetVideo = playlist.find((item) => item.post._id === videoId);
+            const targetVideo = playlist.find((item) => item._id === videoId);
             if (targetVideo) {
-                const newUrl = `/@${targetVideo.user.username}/video/${targetVideo.post._id}`;
+                const newUrl = `/@${targetVideo.author.username}/video/${targetVideo._id}`;
                 router.replace(newUrl);
             }
         },
