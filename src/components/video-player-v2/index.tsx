@@ -4,12 +4,10 @@ import React, { useRef, useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { useLocale } from "next-intl";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
-import { UserType } from "@/types/schemas/User.schema";
 import { useVideoPlayer } from "@/hooks/video/useVideoPlayer";
 import { useVideoControls } from "@/hooks/video/useVideoControls";
 import { useVideoAutoPlay } from "@/hooks/video/useVideoAutoPlay";
 import { useVideoRouterNavigation } from "@/hooks/video/useVideoRouterNavigation";
-import { useVideoPlaylist } from "@/provider/video-playlist-provider";
 import { VideoOverlayIcons } from "./components/video-overlay-icons";
 import Image from "next/image";
 import { VideoControlsBottom } from "@/components/video-player-v2/components/video-controls-bottom";
@@ -20,16 +18,16 @@ import NavigationVideo from "@/components/video-player-v2/components/navigation-
 interface VideoPlayerProps {
     className?: string;
     post: TikTokPostType;
-    author: UserType;
 }
 
-export default function VideoPlayer({ className, post, author }: VideoPlayerProps) {
+export default function VideoPlayer({ className, post }: VideoPlayerProps) {
+    const author = post.author;
+
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const [isHovered, setIsHovered] = useState(false);
     const [isProgressBarActive, setIsProgressBarActive] = useState(false);
 
-    const { currentVideo } = useVideoPlaylist();
-    const thumbnailUrl = useThumbnailGenerator(currentVideo?.post.medias[0].url || post.medias[0].url);
+    const thumbnailUrl = useThumbnailGenerator(post.medias[0].url);
     const locale = useLocale();
 
     const { handleVideoEnd } = useVideoRouterNavigation({
@@ -58,10 +56,6 @@ export default function VideoPlayer({ className, post, author }: VideoPlayerProp
         setIsProgressBarActive(active);
     }, []);
 
-    // Use current video data if available, fallback to props
-    const displayPost = currentVideo?.post || post;
-    const displayAuthor = currentVideo?.user || author;
-
     return (
         <section
             className={cn(
@@ -74,7 +68,7 @@ export default function VideoPlayer({ className, post, author }: VideoPlayerProp
             <div className="absolute inset-0 blur-md opacity-30 transform: scale(11)">
                 <Image
                     src={thumbnailUrl || "/images/desktop-wallpaper-tiktok.jpg"}
-                    alt={displayAuthor.username}
+                    alt={author.username}
                     className="object-cover w-full h-full"
                     layout="fill"
                 />
@@ -93,17 +87,17 @@ export default function VideoPlayer({ className, post, author }: VideoPlayerProp
                 loop={true}
                 muted={isMuted}
                 autoPlay={true}
-                key={displayPost._id}
+                key={post._id}
             >
-                <source src={displayPost.medias[0].url} type="video/mp4" />
+                <source src={post.medias[0].url} type="video/mp4" />
             </video>
             <div className=" absolute bottom-20 right-5 flex flex-col items-center">
                 <NavigationVideo />
-                <ActionBar author={displayAuthor} post={displayPost} />
+                <ActionBar post={post} />
             </div>
 
             <VideoControlsBottom
-                post={displayPost}
+                post={post}
                 locale={locale}
                 currentTime={currentTime}
                 duration={duration}

@@ -21,11 +21,11 @@ export async function generateVideoThumbnail(videoUrl: string): Promise<string> 
             if (!ctx) return reject("Cannot get canvas context");
 
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const imageUrl = canvas.toDataURL("image/jpeg");
+            const imageUrl = canvas.toDataURL("image/jpeg", 0.4);
             resolve(imageUrl);
         });
 
-        video.addEventListener("error", (e) => {
+        video.addEventListener("error", () => {
             reject("Video load error");
         });
     });

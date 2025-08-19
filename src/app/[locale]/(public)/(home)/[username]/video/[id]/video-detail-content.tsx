@@ -11,12 +11,12 @@ import SuggestedVideos from "@/app/[locale]/(public)/(home)/[username]/video/[id
 
 export default function VideoDetailContent() {
     const params = useParams();
-    const { currentVideo, playlist, playVideoById } = useVideoPlaylist();
+    const { currentVideo, playVideoById } = useVideoPlaylist();
 
     useEffect(() => {
         if (params.id && typeof params.id === "string") {
             const urlVideoId = params.id;
-            if (currentVideo && currentVideo.post._id !== urlVideoId) {
+            if (currentVideo && currentVideo._id !== urlVideoId) {
                 playVideoById(urlVideoId);
             }
         }
@@ -33,28 +33,20 @@ export default function VideoDetailContent() {
     return (
         <div className="flex min-h-screen mx-auto py-6 @container">
             <div className="grow-1">
-                <VideoPlayer
-                    post={currentVideo.post}
-                    author={currentVideo.user}
-                    className="max-h-[calc(100vh-3.5rem)]"
-                />
+                <VideoPlayer post={currentVideo} className="max-h-[calc(100vh-3.5rem)]" />
                 <VideoDescription
-                    userAvatar={currentVideo.user.avatar}
-                    userName={currentVideo.user.username}
-                    userBio={currentVideo.user.bio}
-                    isFollowing={currentVideo.user.is_followed}
-                    isOwner={currentVideo.user.isOwner}
-                    createdAt={currentVideo.post.created_at}
-                    postContent={currentVideo.post.content}
+                    author={currentVideo.author}
+                    createdAt={currentVideo.author.created_at}
+                    postContent={currentVideo.content}
                     className="mb-4"
                 />
                 <div className=" @4xl:hidden">
-                    <SuggestedVideos postList={playlist} />
+                    <SuggestedVideos />
                 </div>
-                <CommentSection postId={currentVideo.post._id} />
+                <CommentSection postId={currentVideo._id} username={currentVideo.author.username} />
             </div>
             <div className=" hidden w-83 @4xl:flex grow-0 shrink-0 base-[332px] ">
-                <SuggestedVideos postList={playlist} />
+                <SuggestedVideos />
             </div>
         </div>
     );

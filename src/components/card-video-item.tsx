@@ -8,7 +8,6 @@ import { IoLockClosedOutline } from "react-icons/io5";
 import Image from "next/image";
 import React from "react";
 import { CiHeart } from "react-icons/ci";
-import { UserType } from "@/types/schemas/User.schema";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { AvatarFallback } from "@radix-ui/react-avatar";
 import { Link } from "@/i18n/navigation";
@@ -17,15 +16,14 @@ import PlayingIcon from "@/components/lottie-icons/playing";
 
 export default function CardVideoItem({
     post,
-    author,
     isDescriptionVisible = true,
     isCurrentlyPlaying = false,
 }: {
     post: TikTokPostType;
-    author: UserType;
     isDescriptionVisible?: boolean;
     isCurrentlyPlaying?: boolean;
 }) {
+    const author = post.author;
     const thumbnailUrl = useThumbnailGenerator(post.medias[0].url);
 
     return (

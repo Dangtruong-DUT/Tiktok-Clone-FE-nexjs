@@ -1,15 +1,11 @@
 "use client";
 
 import CardVideoItem from "@/components/card-video-item";
-import { VideoPlaylistItem, useVideoPlaylist } from "@/provider/video-playlist-provider";
+import { useVideoPlaylist } from "@/provider/video-playlist-provider";
 import { useVideoRouterNavigation } from "@/hooks/video/useVideoRouterNavigation";
 
-type SuggestedVideosProps = {
-    postList: VideoPlaylistItem[];
-};
-
-export default function SuggestedVideos({ postList }: SuggestedVideosProps) {
-    const { currentIndex } = useVideoPlaylist();
+export default function SuggestedVideos() {
+    const { currentIndex, playlist } = useVideoPlaylist();
     const { navigateToVideoById } = useVideoRouterNavigation();
 
     const handleVideoClick = (videoId: string) => {
@@ -20,9 +16,9 @@ export default function SuggestedVideos({ postList }: SuggestedVideosProps) {
         <section className="w-full p-4">
             <h4 className="text-lg font-semibold">You may like</h4>
             <div className="md:grid @4xl:grid-cols-2 hidden grid-cols-[repeat(auto-fill,minmax(180px,1fr))]  gap-4 mt-4">
-                {postList.map(({ post, user }, index) => (
+                {playlist.map((post, index) => (
                     <div key={post._id} className="relative cursor-pointer" onClick={() => handleVideoClick(post._id)}>
-                        <CardVideoItem post={post} author={user} isCurrentlyPlaying={index === currentIndex} />
+                        <CardVideoItem post={post} isCurrentlyPlaying={index === currentIndex} />
                     </div>
                 ))}
             </div>

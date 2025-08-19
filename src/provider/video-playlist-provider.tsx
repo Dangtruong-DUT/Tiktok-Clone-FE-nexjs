@@ -2,20 +2,14 @@
 
 import React, { createContext, useContext, useState, useCallback, ReactNode } from "react";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
-import { UserType } from "@/types/schemas/User.schema";
-
-export interface VideoPlaylistItem {
-    post: TikTokPostType;
-    user: UserType;
-}
 
 interface VideoPlaylistContextType {
-    playlist: VideoPlaylistItem[];
+    playlist: TikTokPostType[];
     currentIndex: number;
-    currentVideo: VideoPlaylistItem | null;
+    currentVideo: TikTokPostType | null;
     isFirstVideo: boolean;
     isLastVideo: boolean;
-    setPlaylist: (playlist: VideoPlaylistItem[]) => void;
+    setPlaylist: (playlist: TikTokPostType[]) => void;
     nextVideo: () => void;
     previousVideo: () => void;
     playVideoById: (videoId: string) => void;
@@ -25,23 +19,18 @@ const VideoPlaylistContext = createContext<VideoPlaylistContextType | undefined>
 
 interface VideoPlaylistProviderProps {
     children: ReactNode;
-    initialPlaylist?: VideoPlaylistItem[];
-    initialIndex?: number;
+    video: TikTokPostType;
 }
 
-export function VideoPlaylistProvider({
-    children,
-    initialPlaylist = [],
-    initialIndex = 0,
-}: VideoPlaylistProviderProps) {
-    const [playlist, setPlaylistState] = useState<VideoPlaylistItem[]>(initialPlaylist);
-    const [currentIndex, setCurrentIndexState] = useState<number>(initialIndex);
+export function VideoPlaylistProvider({ children, video }: VideoPlaylistProviderProps) {
+    const [playlist, setPlaylistState] = useState<TikTokPostType[]>([video]);
+    const [currentIndex, setCurrentIndexState] = useState<number>(0);
 
     const currentVideo = playlist[currentIndex] || null;
     const isFirstVideo = currentIndex === 0;
     const isLastVideo = currentIndex === playlist.length - 1;
 
-    const setPlaylist = useCallback((newPlaylist: VideoPlaylistItem[]) => {
+    const setPlaylist = useCallback((newPlaylist: TikTokPostType[]) => {
         setPlaylistState(newPlaylist);
         setCurrentIndexState(0);
     }, []);
@@ -71,7 +60,7 @@ export function VideoPlaylistProvider({
 
     const playVideoById = useCallback(
         (videoId: string) => {
-            const index = playlist.findIndex((item) => item.post._id === videoId);
+            const index = playlist.findIndex((item) => item._id === videoId);
             if (index !== -1) {
                 setCurrentIndex(index);
             }

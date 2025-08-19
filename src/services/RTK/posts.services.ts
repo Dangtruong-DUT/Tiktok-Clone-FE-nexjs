@@ -1,6 +1,6 @@
 import { PosterType } from "@/constants/enum";
 import baseQueryWithReauth from "@/services/RTK/client";
-import { GetListCommentRes, GetListPostRes } from "@/types/response/post.type";
+import { GetListCommentRes, GetListPostRes, GetPostDetailRes } from "@/types/response/post.type";
 import { CreateCommentsReqBodyType } from "@/utils/validations/post.schema";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import _ from "lodash";
@@ -126,6 +126,10 @@ export const PostApi = createApi({
                 },
             },
         }),
+        getPostDetail: builder.query<GetPostDetailRes, string>({
+            query: (id) => `/posts/${id}`,
+            providesTags: (result, error, id) => [{ type: "Posts" as const, id }],
+        }),
     }),
 });
 
@@ -137,4 +141,5 @@ export const {
     useUnBookmarkPostMutation,
     useGetCommentsInfiniteQuery,
     useCreateCommentMutation,
+    useGetPostDetailQuery,
 } = PostApi;
