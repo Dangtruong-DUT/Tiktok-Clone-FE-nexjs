@@ -60,7 +60,7 @@ function LikeButton({
 }
 
 export function CommentBody({ comment, parent_id }: CommentBodyProps) {
-    const { parent_id: root_id } = useRootCommentsContext();
+    const { parent_id: root_id, username } = useRootCommentsContext();
     const [isOpenFormReply, setIsOpenFormReply] = useState<boolean>(false);
     const locale = useLocale();
     const { isLikedState, toggleLikeState } = useLikePost({
@@ -75,14 +75,19 @@ export function CommentBody({ comment, parent_id }: CommentBodyProps) {
                 <Link href={`/@${comment.author.username}`}>
                     <Avatar className="size-10">
                         <AvatarImage src={comment.author.avatar} alt={comment.author.username} />
-                        <AvatarFallback className="bg-gray-300 text-gray-700">
-                            {comment.author.username.charAt(0).toUpperCase()}
+                        <AvatarFallback className="bg-gray-300 text-gray-700 ">
+                            {comment.author.name.charAt(0).toUpperCase()}
                         </AvatarFallback>
                     </Avatar>
                 </Link>
                 <div className="flex flex-col w-full">
                     <Link href={`/@${comment.author.username}`}>
-                        <span className=" text-sm hover:underline ">{comment.author.username}</span>
+                        <span className=" text-sm hover:underline text-accent-foreground font-semibold">
+                            {comment.author.username}
+                        </span>
+                        {comment.author.username == username && (
+                            <span className="text-sm  text-brand font-semibold"> · Creator</span>
+                        )}
                     </Link>
                     <span className="text-sm">{comment.content}</span>
                     <div className="text-sm text-muted-foreground font-semibold flex items-center gap-6">

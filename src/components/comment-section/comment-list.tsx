@@ -13,6 +13,7 @@ import { useInViewport } from "@/hooks/ui/useInViewport";
 
 interface RootCommentsContextProps {
     parent_id: string;
+    username: string;
     hashNextPage: boolean;
     fetchNextPage: () => InfiniteQueryActionCreatorResult<
         InfiniteQueryDefinition<
@@ -28,8 +29,8 @@ interface RootCommentsContextProps {
 }
 const RootCommentsContext = createContext<RootCommentsContextProps | undefined>(undefined);
 
-type CommentListProps = { postId: string };
-export default function CommentList({ postId }: CommentListProps) {
+type CommentListProps = { postId: string; username: string };
+export default function CommentList({ postId, username }: CommentListProps) {
     const { data, fetchNextPage, hasNextPage, isFetching } = useGetCommentsInfiniteQuery(postId);
     const comments: CommentType[] = data?.pages.flatMap((page) => page.data.posts) || [];
 
@@ -48,6 +49,7 @@ export default function CommentList({ postId }: CommentListProps) {
                 parent_id: postId,
                 hashNextPage: hasNextPage,
                 fetchNextPage,
+                username: username,
             }}
         >
             <div className="pt-6">
