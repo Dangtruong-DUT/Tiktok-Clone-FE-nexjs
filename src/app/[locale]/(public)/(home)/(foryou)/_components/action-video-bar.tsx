@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -44,14 +44,24 @@ export default function ActionBar({ post, className }: ActionBarProps) {
         initialFollowState: fetchedAuthor?.is_followed ?? author.is_followed,
     });
 
+    const [isOpenAnimatingLike, setIsOpenAnimatingLike] = useState<boolean>(false);
     const { isLikedState, toggleLikeState } = useLikePost({
         postId: post._id,
         initialLikeState: post.is_liked,
+        onLiked: () => {
+            setIsOpenAnimatingLike(true);
+            setTimeout(() => setIsOpenAnimatingLike(false), 3000);
+        },
     });
 
+    const [isOpenAnimatingBookmark, setIsOpenAnimatingBookmark] = useState<boolean>(false);
     const { isBookmarkedState, toggleBookmarkState } = useBookmarkPost({
         postId: post._id,
         initialBookmarkState: post.is_bookmarked,
+        onBookmarked: () => {
+            setIsOpenAnimatingBookmark(true);
+            setTimeout(() => setIsOpenAnimatingBookmark(false), 3000);
+        },
     });
 
     const handleToggleOpenComment = useCallback(() => {
@@ -110,13 +120,16 @@ export default function ActionBar({ post, className }: ActionBarProps) {
                     </AuthModal>
                 )}
             </div>
-
             {/* Action Buttons */}
             <div className="flex flex-col items-center gap-6">
                 <ActionButton
                     icon={
                         isLikedState ? (
-                            <LikedIcon className="absolute size-[1.5em]! " />
+                            isOpenAnimatingLike ? (
+                                <LikedIcon className="absolute size-[1.5em]! " />
+                            ) : (
+                                <FaHeart className="size-[0.5em] text-red-500  " />
+                            )
                         ) : (
                             <FaHeart className="size-[0.5em]" />
                         )
@@ -138,9 +151,13 @@ export default function ActionBar({ post, className }: ActionBarProps) {
                 <ActionButton
                     icon={
                         isBookmarkedState ? (
-                            <BookmarkIcon className=" absolute size-[0.8em]!" />
+                            isOpenAnimatingBookmark ? (
+                                <BookmarkIcon className=" absolute size-[0.8em]!" />
+                            ) : (
+                                <FaBookmark className="size-[0.5em] text-yellow-500" />
+                            )
                         ) : (
-                            <FaBookmark className="size-[0.4em]" />
+                            <FaBookmark className="size-[0.5em]" />
                         )
                     }
                     count={post.bookmarks_count}

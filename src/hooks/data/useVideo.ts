@@ -12,8 +12,10 @@ import { useCallback, useEffect, useState } from "react";
 interface UseLikePostProps {
     postId: string;
     initialLikeState: boolean;
+    onLiked?: () => void;
+    onDisliked?: () => void;
 }
-export function useLikePost({ postId, initialLikeState }: UseLikePostProps) {
+export function useLikePost({ postId, initialLikeState, onLiked, onDisliked }: UseLikePostProps) {
     const [likePost, { isLoading: isLikeLoading }] = useLikePostMutation();
     const [unlikePost, { isLoading: isUnlikeLoading }] = useUnlikePostMutation();
     const [isLikedState, setIsLikedState] = useState(initialLikeState);
@@ -40,10 +42,15 @@ export function useLikePost({ postId, initialLikeState }: UseLikePostProps) {
 
     const toggleLikeState = useCallback(() => {
         setIsLikedState((prev) => {
+            if (prev == false) {
+                onLiked?.();
+            } else {
+                onDisliked?.();
+            }
             handleLikeAction(!prev);
             return !prev;
         });
-    }, [handleLikeAction]);
+    }, [handleLikeAction, onLiked, onDisliked]);
 
     return {
         isLikedState,
@@ -54,8 +61,10 @@ export function useLikePost({ postId, initialLikeState }: UseLikePostProps) {
 interface UseBookmarkPostProps {
     postId: string;
     initialBookmarkState: boolean;
+    onBookmarked?: () => void;
+    onUnBookmarked?: () => void;
 }
-export function useBookmarkPost({ postId, initialBookmarkState }: UseBookmarkPostProps) {
+export function useBookmarkPost({ postId, initialBookmarkState, onBookmarked, onUnBookmarked }: UseBookmarkPostProps) {
     const [bookmarkPost, { isLoading: isBookmarkLoading }] = useBookmarkPostMutation();
     const [unBookmarkPost, { isLoading: isUnBookmarkLoading }] = useUnBookmarkPostMutation();
     const [isBookmarkedState, setIsBookmarkedState] = useState(initialBookmarkState);
@@ -82,10 +91,15 @@ export function useBookmarkPost({ postId, initialBookmarkState }: UseBookmarkPos
 
     const toggleBookmarkState = useCallback(() => {
         setIsBookmarkedState((prev) => {
+            if (prev == false) {
+                onBookmarked?.();
+            } else {
+                onUnBookmarked?.();
+            }
             handleBookmarkAction(!prev);
             return !prev;
         });
-    }, [handleBookmarkAction]);
+    }, [handleBookmarkAction, onBookmarked, onUnBookmarked]);
 
     return {
         isBookmarkedState,
