@@ -98,6 +98,7 @@ export default function ActionBar({ post, className }: ActionBarProps) {
                 label="Save"
                 onClick={toggleBookmarkState}
                 requiredAuth
+                isAuth={role != null}
             />
 
             <ActionButton
