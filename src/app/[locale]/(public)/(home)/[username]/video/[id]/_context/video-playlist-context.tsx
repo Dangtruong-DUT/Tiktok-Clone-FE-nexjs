@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from "react";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
-import { useGetListPostInfiniteQuery } from "@/services/RTK/posts.services";
+import { useGetRelatedPostsInfiniteQuery } from "@/services/RTK/posts.services";
 import {
     BaseQueryFn,
     FetchArgs,
@@ -25,7 +25,7 @@ interface VideoPlaylistContextType {
     isFetching: boolean;
     fetchNextPage: () => InfiniteQueryActionCreatorResult<
         InfiniteQueryDefinition<
-            "friend" | "foryou",
+            string,
             number,
             BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>,
             "Posts",
@@ -47,7 +47,7 @@ interface VideoPlaylistProviderProps {
 
 export function VideoPlaylistProvider({ children, video }: VideoPlaylistProviderProps) {
     const [playlist, setPlaylistState] = useState<TikTokPostType[]>([video]);
-    const { fetchNextPage, isLoading, isFetching, data, hasNextPage } = useGetListPostInfiniteQuery("foryou");
+    const { fetchNextPage, isLoading, isFetching, data, hasNextPage } = useGetRelatedPostsInfiniteQuery(video._id);
     const postList: TikTokPostType[] = React.useMemo(
         () => data?.pages.flatMap((page) => page.data.posts) || [],
         [data]
@@ -55,7 +55,7 @@ export function VideoPlaylistProvider({ children, video }: VideoPlaylistProvider
 
     useEffect(() => {
         if (postList.length > 0) {
-            setPlaylistState([video, ...postList.filter((post) => post._id !== video._id)]);
+            setPlaylistState([video, ...postList]);
         }
     }, [postList, video]);
 

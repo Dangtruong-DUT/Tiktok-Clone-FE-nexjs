@@ -130,6 +130,41 @@ export const PostApi = createApi({
             query: (id) => `/posts/${id}`,
             providesTags: (result, error, id) => [{ type: "Posts" as const, id }],
         }),
+
+        getRelatedPosts: builder.infiniteQuery<GetListPostRes, string, number>({
+            query: ({ pageParam, queryArg }) => `/posts/${queryArg}/relations?page=${pageParam}&limit=10`,
+            providesTags: (result, error, arg) => {
+                if (result) {
+                    const final = [
+                        ...result.pages.flatMap((page) => {
+                            return page.data.posts.map(({ _id }) => ({
+                                type: "Posts" as const,
+                                id: _id,
+                            }));
+                        }),
+                        { type: "Posts" as const, id: `RELATED-${arg}-LIST` },
+                    ];
+                    return final;
+                }
+                return [{ type: "Posts" as const, id: `RELATED-${arg}-LIST` }];
+            },
+            infiniteQueryOptions: {
+                initialPageParam: 1,
+                maxPages: 5,
+                getNextPageParam: ({ meta }) => {
+                    if (!meta) return undefined;
+                    const { page, total_pages } = meta;
+                    if (page >= total_pages) return undefined;
+                    return page + 1;
+                },
+                getPreviousPageParam: ({ meta }) => {
+                    if (!meta) return undefined;
+                    const { page } = meta;
+                    if (page <= 1) return undefined;
+                    return page - 1;
+                },
+            },
+        }),
     }),
 });
 
@@ -142,4 +177,5 @@ export const {
     useGetCommentsInfiniteQuery,
     useCreateCommentMutation,
     useGetPostDetailQuery,
+    useGetRelatedPostsInfiniteQuery
 } = PostApi;

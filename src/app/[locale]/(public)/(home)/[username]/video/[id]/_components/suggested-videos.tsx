@@ -3,14 +3,26 @@
 import { useVideoPlaylist } from "@/app/[locale]/(public)/(home)/[username]/video/[id]/_context/video-playlist-context";
 import { useVideoRouterNavigation } from "@/app/[locale]/(public)/(home)/[username]/video/[id]/_hook/useVideoRouterNavigation";
 import CardVideoItem from "@/components/card-video-item";
+import { useInViewport } from "@/hooks/ui/useInViewport";
+import { useEffect, useRef } from "react";
+import LoadingIcon from "@/components/lottie-icons/loading";
 
 export default function SuggestedVideos() {
-    const { currentIndex, playlist } = useVideoPlaylist();
+    const { currentIndex, playlist, fetchNextPage, hasNextPage, isFetching } = useVideoPlaylist();
     const { navigateToVideoById } = useVideoRouterNavigation();
 
     const handleVideoClick = (videoId: string) => {
         navigateToVideoById(videoId);
     };
+
+    const sentinelScrollRef = useRef<HTMLDivElement>(null);
+    const isInView = useInViewport(sentinelScrollRef);
+
+    useEffect(() => {
+        if (isInView && hasNextPage) {
+            fetchNextPage();
+        }
+    }, [isInView, fetchNextPage, hasNextPage]);
 
     return (
         <section className="w-full p-4">
@@ -21,6 +33,13 @@ export default function SuggestedVideos() {
                         <CardVideoItem post={post} isCurrentlyPlaying={index === currentIndex} />
                     </div>
                 ))}
+                {/* Sentinel để lắng nghe*/}
+                <div className="h-px bg-transparent" ref={sentinelScrollRef} />
+                {isFetching && (
+                    <div className="pt-4 col-span-full">
+                        <LoadingIcon className="size-15 mx-auto" loop />
+                    </div>
+                )}
             </div>
         </section>
     );

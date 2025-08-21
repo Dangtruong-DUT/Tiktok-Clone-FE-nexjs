@@ -10,15 +10,15 @@ import { keyDataScroll } from "@/app/[locale]/(public)/(home)/(foryou)/_hooks/us
 import ActionBar from "@/components/action-video-bar-v1";
 
 export default function VideoScrollWrapper() {
-    const { postList, fetchNextPage, isFetching } = useVideosProvider();
+    const { postList, fetchNextPage, isFetching ,hasNextPage} = useVideosProvider();
     const sentinelScrollRef = useRef<HTMLDivElement>(null);
     const isInView = useInViewport(sentinelScrollRef);
 
     useEffect(() => {
-        if (isInView) {
+        if (isInView && hasNextPage) {
             fetchNextPage();
         }
-    }, [isInView, fetchNextPage]);
+    }, [isInView, fetchNextPage, hasNextPage    ]);
 
     return (
         <>

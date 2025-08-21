@@ -75,7 +75,7 @@ function CommentForm({
                         control={form.control}
                         name="content"
                         render={({ field }) => (
-                            <FormItem>
+                            <FormItem className="flex-1">
                                 <FormControl>
                                     <input
                                         type="text"
