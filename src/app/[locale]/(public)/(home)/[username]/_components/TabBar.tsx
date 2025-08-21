@@ -2,15 +2,15 @@
 
 import { memo, useRef, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
-import { ID_TAB_ITEMS, TabItemType } from "@/app/[locale]/(public)/(home)/[username]/_config/tab-items.config";
+import { TabItemType } from "@/app/[locale]/(public)/(home)/[username]/_config/tab-items.config";
+import { useVideosContext } from "@/app/[locale]/(public)/(home)/[username]/_context/videos.context";
 
 interface TabBarProps {
     tabs: TabItemType[];
-    activeTabID: ID_TAB_ITEMS;
-    onTabChange: (tabHeading: ID_TAB_ITEMS) => void;
 }
 
-function TabBar({ tabs, activeTabID, onTabChange }: TabBarProps) {
+function TabBar({ tabs }: TabBarProps) {
+    const { activeTabId, setActiveTabId } = useVideosContext();
     const underlineRef = useRef<HTMLDivElement>(null);
 
     const updateUnderline = useCallback((element: Element | null) => {
@@ -26,9 +26,9 @@ function TabBar({ tabs, activeTabID, onTabChange }: TabBarProps) {
     }, []);
 
     useEffect(() => {
-        const activeTabElement = document.querySelector(`[data-key="${activeTabID}"]`);
+        const activeTabElement = document.querySelector(`[data-key="${activeTabId}"]`);
         updateUnderline(activeTabElement);
-    }, [activeTabID, tabs, updateUnderline]);
+    }, [activeTabId, tabs, updateUnderline]);
 
     const handleMouseEnter = useCallback(
         (tab: TabItemType) => {
@@ -39,9 +39,9 @@ function TabBar({ tabs, activeTabID, onTabChange }: TabBarProps) {
     );
 
     const handleMouseLeave = useCallback(() => {
-        const activeTabElement = document.querySelector(`[data-key="${activeTabID}"]`);
+        const activeTabElement = document.querySelector(`[data-key="${activeTabId}"]`);
         updateUnderline(activeTabElement);
-    }, [activeTabID, updateUnderline]);
+    }, [activeTabId, updateUnderline]);
 
     return (
         <div className="flex flex-row relative">
@@ -54,10 +54,10 @@ function TabBar({ tabs, activeTabID, onTabChange }: TabBarProps) {
                             "font-semibold text-lg  flex items-center justify-center h-11 px-8 cursor-pointer text-center gap-1 text-muted-foreground   transition-colors duration-200 hover:text-gray-500",
                             "max-md:px-4 max-md:flex-grow",
                             {
-                                "text-foreground": tab.id === activeTabID,
+                                "text-foreground": tab.id === activeTabId,
                             }
                         )}
-                        onClick={() => onTabChange(tab.id)}
+                        onClick={() => setActiveTabId(tab.id)}
                         onMouseEnter={() => handleMouseEnter(tab)}
                         onMouseLeave={handleMouseLeave}
                     >

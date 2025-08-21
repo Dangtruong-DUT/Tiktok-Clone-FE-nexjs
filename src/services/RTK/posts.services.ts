@@ -9,8 +9,9 @@ export const PostApi = createApi({
     baseQuery: baseQueryWithReauth,
     tagTypes: ["Posts"],
     reducerPath: "postApi",
-    refetchOnMountOrArgChange: true,
+    refetchOnMountOrArgChange: false,
     keepUnusedDataFor: 60,
+    refetchOnFocus: false,
     refetchOnReconnect: true,
     endpoints: (builder) => ({
         likePost: builder.mutation<{ message: string }, string>({
@@ -111,7 +112,7 @@ export const PostApi = createApi({
             },
             infiniteQueryOptions: {
                 initialPageParam: 1,
-                maxPages: 5,
+                maxPages: 10,
                 getNextPageParam: ({ meta }) => {
                     if (!meta) return undefined;
                     const { page, total_pages } = meta;
@@ -150,7 +151,6 @@ export const PostApi = createApi({
             },
             infiniteQueryOptions: {
                 initialPageParam: 1,
-                maxPages: 5,
                 getNextPageParam: ({ meta }) => {
                     if (!meta) return undefined;
                     const { page, total_pages } = meta;
@@ -185,7 +185,6 @@ export const PostApi = createApi({
             },
             infiniteQueryOptions: {
                 initialPageParam: 1,
-                maxPages: 5,
                 getNextPageParam: ({ meta }) => {
                     if (!meta) return undefined;
                     const { page, total_pages } = meta;
@@ -219,7 +218,6 @@ export const PostApi = createApi({
             },
             infiniteQueryOptions: {
                 initialPageParam: 1,
-                maxPages: 5,
                 getNextPageParam: ({ meta }) => {
                     if (!meta) return undefined;
                     const { page, total_pages } = meta;
@@ -254,7 +252,6 @@ export const PostApi = createApi({
             },
             infiniteQueryOptions: {
                 initialPageParam: 1,
-                maxPages: 5,
                 getNextPageParam: ({ meta }) => {
                     if (!meta) return undefined;
                     const { page, total_pages } = meta;
