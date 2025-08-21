@@ -8,7 +8,6 @@ import envConfig from "@/config/app.config";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
-import { UserType } from "@/types/schemas/User.schema";
 import { formatCash } from "@/utils/formatting/formatNumber";
 import { timeAgo } from "@/utils/formatting/formatTime";
 import { useLocale } from "next-intl";
@@ -19,11 +18,11 @@ import { toast } from "sonner";
 
 type VideoDescriptionProps = {
     post: TikTokPostType;
-    user: UserType;
     className?: string;
 };
 
-export default function VideoDescription({ post, user, className }: VideoDescriptionProps) {
+export default function VideoDescription({ post, className }: VideoDescriptionProps) {
+    const user = post.author;
     const locale = useLocale();
     const linkToVideo = `${envConfig.NEXT_PUBLIC_URL}@${user.username}/video/${post._id}`;
     const copyLink = useCallback(() => {
@@ -91,7 +90,7 @@ export default function VideoDescription({ post, user, className }: VideoDescrip
                         >
                             <AiFillMessage />
                         </Button>
-                        <span className="text-sm font-semibold">{formatCash.format(post.comment_count)}</span>
+                        <span className="text-sm font-semibold">{formatCash.format(post.comments_count)}</span>
                     </div>
 
                     <div className="flex items-center gap-1">

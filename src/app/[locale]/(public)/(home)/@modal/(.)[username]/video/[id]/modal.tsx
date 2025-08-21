@@ -1,5 +1,7 @@
-import { mockUser, mockVideoPost } from "@/mock/mockUserAndVideos";
+"use client";
+
 import VideoDetailDialog from "@/components/video-dialog";
+import { useGetPostDetailQuery } from "@/services/RTK/posts.services";
 
 interface ModalVideoDetailProps {
     isVisible: boolean;
@@ -7,5 +9,7 @@ interface ModalVideoDetailProps {
     id: string;
 }
 export default function ModalVideoDetail({ isVisible, handleClose, id }: ModalVideoDetailProps) {
-    return <VideoDetailDialog isVisible={isVisible} handleClose={handleClose} author={mockUser} post={mockVideoPost} />;
+    const { data } = useGetPostDetailQuery(id);
+    const post = data?.data;
+    return <VideoDetailDialog isVisible={isVisible} handleClose={handleClose} post={post} />;
 }
