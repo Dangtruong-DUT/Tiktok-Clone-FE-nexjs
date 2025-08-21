@@ -1,7 +1,6 @@
 "use client";
 
 import { Audience } from "@/constants/enum";
-import useThumbnailGenerator from "@/hooks/ui/generateVideoThumbnail";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
 import { formatCash } from "@/utils/formatting/formatNumber";
 import { IoLockClosedOutline } from "react-icons/io5";
@@ -26,7 +25,6 @@ export default function CardVideoItem({
     isCurrentlyPlaying?: boolean;
 }) {
     const author = post.author;
-    const thumbnailUrl = useThumbnailGenerator(post.medias[0].url);
     const locale = useLocale();
     return (
         <article className="w-full gap-2 ">
@@ -45,7 +43,7 @@ export default function CardVideoItem({
                     )}
                 >
                     <Image
-                        src={thumbnailUrl}
+                        src={post.thumbnail_url || "/images/desktop-wallpaper-tiktok.jpg"}
                         alt="video thumbnail"
                         className="w-full h-full object-cover"
                         width={100}

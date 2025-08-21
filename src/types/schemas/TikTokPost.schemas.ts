@@ -30,4 +30,5 @@ export type TikTokPostType = {
     guest_views: number;
     user_views: number;
     author: UserType;
+    thumbnail_url: string;
 };

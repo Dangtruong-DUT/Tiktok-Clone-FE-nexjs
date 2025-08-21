@@ -10,7 +10,6 @@ import { useVideoAutoPlay } from "@/hooks/video/useVideoAutoPlay";
 import { VideoOverlayIcons } from "./components/video-overlay-icons";
 import Image from "next/image";
 import { VideoControlsBottom } from "@/components/video-player-v2/components/video-controls-bottom";
-import useThumbnailGenerator from "@/hooks/ui/generateVideoThumbnail";
 import ActionBar from "@/components/action-video-bar-v2";
 import { useVideoRouterNavigation } from "@/app/[locale]/(public)/(home)/[username]/video/[id]/_hook/useVideoRouterNavigation";
 import NavigationVideo from "@/components/video-player-v2/components/navigation-video";
@@ -27,7 +26,7 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
     const [isHovered, setIsHovered] = useState(false);
     const [isProgressBarActive, setIsProgressBarActive] = useState(false);
 
-    const thumbnailUrl = useThumbnailGenerator(post.medias[0].url);
+    const thumbnailUrl = post.thumbnail_url || "/images/desktop-wallpaper-tiktok.jpg";
     const locale = useLocale();
 
     const { handleVideoEnd } = useVideoRouterNavigation({

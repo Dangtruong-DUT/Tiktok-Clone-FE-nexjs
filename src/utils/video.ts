@@ -1,3 +1,9 @@
+/**
+ *
+ *  @deprecated This function is deprecated and will be removed in the future.
+ *  Please use thumbnail_url was provided in the TikTokPostType instead.
+ */
+
 export async function generateVideoThumbnail(videoUrl: string): Promise<string> {
     return new Promise((resolve, reject) => {
         const video = document.createElement("video");
