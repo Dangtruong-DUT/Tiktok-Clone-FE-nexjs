@@ -9,7 +9,7 @@ export default function StudioLayout({ children }: { children: React.ReactNode }
             <NavLinks />
             <div className="flex-1 flex flex-col">
                 <Header />
-                <main className="max-h-[100vh-4.25rem]">{children}</main>
+                <main className="max-h-[calc(100vh-4.25rem)] overflow-auto">{children}</main>
             </div>
         </div>
     );
