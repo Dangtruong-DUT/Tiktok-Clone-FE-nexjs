@@ -1,7 +1,8 @@
 import { Role } from "@/constants/enum";
-import { Home, Film, MessageSquareWarning } from "lucide-react";
+import { Home, FileArchive, MessageSquarePlus } from "lucide-react";
 
 interface NavItem {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     title: any;
     href: string;
     Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -18,13 +19,13 @@ export const navItems: NavItem[] = [
     {
         title: "posts",
         href: "/tiktokstudio/content",
-        Icon: Film,
+        Icon: FileArchive,
         role: [Role.USER, Role.ADMIN, Role.SUPER_ADMIN],
     },
     {
         title: "feedback",
         href: "/tiktokstudio/feedback",
-        Icon: MessageSquareWarning,
+        Icon: MessageSquarePlus,
         role: [Role.USER, Role.ADMIN, Role.SUPER_ADMIN],
     },
 ];

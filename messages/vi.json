@@ -1,4 +1,25 @@
 {
+    "StudioLayout": {
+        "upload": "Tải lên"
+    },
+    "TiktokStudio": {
+        "navigation": {
+            "home": "Trang chủ",
+            "posts": "Nội dung",
+            "feedback": "Phản hồi",
+            "back": "Quay lại Tiktok"
+        },
+        "upload": {
+            "selectVideo": "Chọn video để tải lên",
+            "dragAndDrop": "Hoặc kéo và thả tệp",
+            "mp4OrWebmOnly": "Chỉ hỗ trợ MP4 hoặc WebM",
+            "resolutionReq": "Độ phân giải 720x1280 hoặc cao hơn",
+            "maxFileSize": "Dung lượng tối đa 30 GB",
+            "maxDuration": "Thời lượng tối đa 60 phút",
+            "selectFile": "Chọn tệp",
+            "selectedFile": "Tệp đã chọn"
+        }
+    },
     "AuthLayout": {
         "noAccount": "Chưa có tài khoản?",
         "signUp": "Đăng ký",
