@@ -1,8 +1,6 @@
 const employeePaths = ["/vi/admin", "/en/admin"];
 const onlyAdminPaths = ["/vi/admin", "/en/admin"];
 const userPaths = [
-    "/vi/following",
-    "/en/following",
     "/vi/business-suite",
     "/en/business-suite",
     "/vi/tiktokstudio",

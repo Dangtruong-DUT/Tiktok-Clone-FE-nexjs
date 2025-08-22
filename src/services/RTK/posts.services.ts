@@ -266,6 +266,39 @@ export const PostApi = createApi({
                 },
             },
         }),
+        getUnfollowedPosts: builder.infiniteQuery<GetListPostRes, void, number>({
+            query: ({ pageParam }) => `/posts/not-following?page=${pageParam}&limit=10`,
+            providesTags: (result, error, arg) => {
+                if (result) {
+                    const final = [
+                        ...result.pages.flatMap((page) => {
+                            return page.data.posts.map(({ _id }) => ({
+                                type: "Posts" as const,
+                                id: _id,
+                            }));
+                        }),
+                        { type: "Posts" as const, id: `POST-UNFOLLOWED-LIST` },
+                    ];
+                    return final;
+                }
+                return [{ type: "Posts" as const, id: `POST-UNFOLLOWED-LIST` }];
+            },
+            infiniteQueryOptions: {
+                initialPageParam: 1,
+                getNextPageParam: ({ meta }) => {
+                    if (!meta) return undefined;
+                    const { page, total_pages } = meta;
+                    if (page >= total_pages) return undefined;
+                    return page + 1;
+                },
+                getPreviousPageParam: ({ meta }) => {
+                    if (!meta) return undefined;
+                    const { page } = meta;
+                    if (page <= 1) return undefined;
+                    return page - 1;
+                },
+            },
+        }),
     }),
 });
 
@@ -282,4 +315,5 @@ export const {
     useGetPostOfUserInfiniteQuery,
     useGetBookmarkedPostsOfUserInfiniteQuery,
     useGetLikedPostsOfUserInfiniteQuery,
+    useGetUnfollowedPostsInfiniteQuery,
 } = PostApi;
