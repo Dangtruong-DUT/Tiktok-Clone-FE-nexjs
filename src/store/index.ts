@@ -1,4 +1,5 @@
 import { AuthApi } from "@/services/RTK/auth.services";
+import { PostApi } from "@/services/RTK/posts.services";
 import { UserApi } from "@/services/RTK/user.services";
 import authReducer from "@/store/features/authSlice";
 import modalReducer from "@/store/features/modalSlide";
@@ -10,11 +11,18 @@ export const makeStore = () => {
         reducer: {
             [AuthApi.reducerPath]: AuthApi.reducer,
             [UserApi.reducerPath]: UserApi.reducer,
+            [PostApi.reducerPath]: PostApi.reducer,
             auth: authReducer,
             modal: modalReducer,
         },
         middleware: (getDefaultMiddleware) =>
-            getDefaultMiddleware().concat(AuthApi.middleware, UserApi.middleware, authMiddleware, rtkQueryLogger),
+            getDefaultMiddleware().concat(
+                AuthApi.middleware,
+                UserApi.middleware,
+                PostApi.middleware,
+                authMiddleware,
+                rtkQueryLogger
+            ),
     });
 };
 
@@ -25,3 +33,9 @@ export type RootState = ReturnType<AppStore["getState"]>;
 export type AppDispatch = AppStore["dispatch"];
 
 export type storeApiType = { dispatch: AppDispatch; getState: () => RootState };
+
+export function clearStore(dispatch: AppDispatch) {
+    dispatch(AuthApi.util.resetApiState());
+    dispatch(UserApi.util.resetApiState());
+    dispatch(PostApi.util.resetApiState());
+}

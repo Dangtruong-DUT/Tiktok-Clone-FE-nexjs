@@ -1,30 +1,79 @@
 "use client";
 
 import CommentItem from "@/components/comment-section/comment-item";
-import { fetchCommentsByPostId } from "@/mock/mockCommentApi";
+import { useGetCommentsInfiniteQuery } from "@/services/RTK/posts.services";
+import { GetListCommentRes } from "@/types/response/post.type";
 import { CommentType } from "@/types/schemas/comment.schemas";
-import { useEffect, useState } from "react";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { BaseQueryFn, FetchArgs, InfiniteQueryDefinition } from "@reduxjs/toolkit/query";
+import { InfiniteQueryActionCreatorResult } from "@reduxjs/toolkit/query";
+import { createContext, useContext, useEffect, useRef } from "react";
+import LoadingIcon from "@/components/lottie-icons/loading";
+import { useInViewport } from "@/hooks/ui/useInViewport";
 
-type CommentListProps = { postId: string };
+interface RootCommentsContextProps {
+    parent_id: string;
+    username: string;
+    hashNextPage: boolean;
+    fetchNextPage: () => InfiniteQueryActionCreatorResult<
+        InfiniteQueryDefinition<
+            string,
+            number,
+            BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>,
+            "Posts",
+            GetListCommentRes,
+            "postApi",
+            unknown
+        >
+    >;
+}
+const RootCommentsContext = createContext<RootCommentsContextProps | undefined>(undefined);
 
-export default function CommentList({ postId }: CommentListProps) {
-    const [page, setPage] = useState<number>(1);
-    const [comments, setComments] = useState<CommentType[]>([]);
+type CommentListProps = { postId: string; username: string };
+export default function CommentList({ postId, username }: CommentListProps) {
+    const { data, fetchNextPage, hasNextPage, isFetching } = useGetCommentsInfiniteQuery(postId);
+    const comments: CommentType[] = data?.pages.flatMap((page) => page.data.posts) || [];
+
+    const sentinelScrollRef = useRef<HTMLDivElement | null>(null);
+    const isSentinelInView = useInViewport(sentinelScrollRef);
 
     useEffect(() => {
-        if (!postId) return;
-        fetchCommentsByPostId(postId.toString(), page).then((data) => {
-            setComments((prev) => [...prev, ...data.comments]);
-        });
-    }, [postId, page]);
+        if (isSentinelInView && hasNextPage) {
+            fetchNextPage();
+        }
+    }, [isSentinelInView, hasNextPage, fetchNextPage]);
 
     return (
-        <div className="pt-6">
-            {comments.length > 0 ? (
-                comments.map((comment) => <CommentItem key={comment.id} comment={comment} />)
-            ) : (
-                <p className="text-gray-500 text-center">Be the first to comment!</p>
-            )}
-        </div>
+        <RootCommentsContext
+            value={{
+                parent_id: postId,
+                hashNextPage: hasNextPage,
+                fetchNextPage,
+                username: username,
+            }}
+        >
+            <div className="pt-6">
+                {comments.length > 0 ? (
+                    comments.map((comment) => <CommentItem key={comment._id} comment={comment} />)
+                ) : (
+                    <p className="text-gray-500 text-center">Be the first to comment!</p>
+                )}
+                {/* Sentinel để lắng nghe*/}
+                <div className="h-px bg-transparent" ref={sentinelScrollRef} />
+                {isFetching && (
+                    <div className="py-4">
+                        <LoadingIcon className="size-10 mx-auto" loop />
+                    </div>
+                )}
+            </div>
+        </RootCommentsContext>
     );
+}
+
+export function useRootCommentsContext() {
+    const context = useContext(RootCommentsContext);
+    if (!context) {
+        throw new Error("useRootCommentsContext must be used within a RootCommentsProvider");
+    }
+    return context;
 }

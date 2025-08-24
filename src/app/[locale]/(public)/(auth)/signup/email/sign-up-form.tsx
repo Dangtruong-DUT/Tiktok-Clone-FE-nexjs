@@ -1,49 +1,17 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
 import { useTranslations } from "next-intl";
 import DateTimePicker from "@/components/date-time-picker";
-import { RegisterReqBody, RegisterReqBodyType } from "@/utils/validations/auth.schema";
-import { useRouter } from "@/i18n/navigation";
-import { useRegisterMutation } from "@/services/RTK/auth.services";
 import { Loader } from "lucide-react";
-import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
+import { useRegisterWithEmail } from "@/hooks/data/useAuth";
 
 export default function SignUpForm() {
     const t = useTranslations("SignUpPage.email");
-    const router = useRouter();
+    const { form, onSubmit, registerResult } = useRegisterWithEmail();
 
-    const [registerMutate, registerResult] = useRegisterMutation();
-
-    const form = useForm<RegisterReqBodyType>({
-        resolver: zodResolver(RegisterReqBody),
-        defaultValues: {
-            email: "",
-            password: "",
-            confirm_password: "",
-            name: "",
-            date_of_birth: "",
-        },
-    });
-
-    const onSubmit = async (data: RegisterReqBodyType) => {
-        try {
-            const result = await registerMutate(data).unwrap();
-            router.push("/");
-            toast.success(result.message);
-        } catch (error) {
-            handleFormError<RegisterReqBodyType>({
-                error,
-                setFormError: form.setError,
-            });
-        }
-    };
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-2.25">

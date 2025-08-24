@@ -4,7 +4,6 @@ import React, { useRef, useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { useLocale } from "next-intl";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
-import { UserType } from "@/types/schemas/User.schema";
 import { useVideoPlayer } from "@/hooks/video/useVideoPlayer";
 import { useVideoAutoPlay } from "@/hooks/video/useVideoAutoPlay";
 import { useVideoControls } from "@/hooks/video/useVideoControls";
@@ -14,10 +13,9 @@ import { VideoControlsBottom } from "@/components/video-player/components/video-
 interface VideoPlayerProps {
     className?: string;
     post: TikTokPostType;
-    author: UserType;
 }
 
-export default function VideoPlayer({ className, post, author }: VideoPlayerProps) {
+export default function VideoPlayer({ className, post }: VideoPlayerProps) {
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const [isHovered, setIsHovered] = useState(false);
     const [isProgressBarActive, setIsProgressBarActive] = useState(false);
@@ -80,7 +78,7 @@ export default function VideoPlayer({ className, post, author }: VideoPlayerProp
             {/* Video Controls Bottom */}
             <VideoControlsBottom
                 post={post}
-                author={author}
+                author={post.author}
                 locale={locale}
                 currentTime={currentTime}
                 duration={duration}

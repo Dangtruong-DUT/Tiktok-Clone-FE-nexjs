@@ -78,7 +78,7 @@ export function isTokenReceivedAction(
     );
 }
 
-export function isGeMeMutationAction(action:unknown): action is {
+export function isGeMeMutationAction(action: unknown): action is {
     type: string;
     meta: { arg: { endpointName: "getMe" } };
     payload: { data: UserType | null };

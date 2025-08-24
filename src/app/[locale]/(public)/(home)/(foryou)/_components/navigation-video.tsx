@@ -2,21 +2,38 @@
 
 import { useVideosProvider } from "@/app/[locale]/(public)/(home)/(foryou)/_context/videos-provider";
 import { Button } from "@/components/ui/button";
+import { ScrollType } from "@/hooks/ui/useScrollIndexObserver";
 import { cn } from "@/lib/utils";
-import { memo, useEffect } from "react";
+import { memo, useCallback, useEffect } from "react";
 import { HiOutlineChevronDown, HiOutlineChevronUp } from "react-icons/hi2";
 
 function NavigatorVideo({ className }: { className?: string }) {
-    const { handleScrollToIndex, currentIndex, postLength } = useVideosProvider();
-    const isDisabledUp = currentIndex <= 0;
-    const isDisabledDown = currentIndex >= postLength - 1;
+    const { handleScrollToIndex, currentIndex, postLength, fetchNextPage, hasNextPage } = useVideosProvider();
+    const isFirstPost = currentIndex <= 0;
+    const isLastPost = currentIndex >= postLength - 1;
+
+    const handleScroll = useCallback(
+        (event: ScrollType) => {
+            if (event === "UP" && !isFirstPost) {
+                handleScrollToIndex("UP");
+            } else if (event === "DOWN") {
+                if (!isLastPost) {
+                    handleScrollToIndex("DOWN");
+                }
+                if (hasNextPage && isFirstPost) {
+                    fetchNextPage();
+                }
+            }
+        },
+        [handleScrollToIndex, isFirstPost, isLastPost, hasNextPage, fetchNextPage]
+    );
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.key === "ArrowUp" && !isDisabledUp) {
-                handleScrollToIndex("UP");
-            } else if (event.key === "ArrowDown" && !isDisabledDown) {
-                handleScrollToIndex("DOWN");
+            if (event.key === "ArrowUp") {
+                handleScroll("UP");
+            } else if (event.key === "ArrowDown") {
+                handleScroll("DOWN");
             }
         };
 
@@ -24,7 +41,7 @@ function NavigatorVideo({ className }: { className?: string }) {
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
         };
-    }, [handleScrollToIndex, currentIndex, postLength, isDisabledUp, isDisabledDown]);
+    }, [handleScrollToIndex, handleScroll, currentIndex, postLength]);
 
     return (
         <div className={cn("flex flex-col items-center justify-center h-full w-14 gap-4 ", className)}>
@@ -33,11 +50,10 @@ function NavigatorVideo({ className }: { className?: string }) {
                 className={cn(
                     " aspect-square size-[1em]  text-[clamp(2rem,3vw+1rem,3rem)] rounded-full cursor-pointer",
                     {
-                        "opacity-50 cursor-not-allowed user-select-none ": isDisabledUp,
+                        "opacity-50 cursor-not-allowed user-select-none ": isFirstPost,
                     }
                 )}
-                onClick={() => handleScrollToIndex("UP")}
-                disabled={isDisabledUp}
+                onClick={() => handleScroll("UP")}
                 aria-label="Previous video"
             >
                 <HiOutlineChevronUp className="size-[0.5em] cursor-inherit" />
@@ -46,10 +62,9 @@ function NavigatorVideo({ className }: { className?: string }) {
             <Button
                 variant="secondary"
                 className={cn("aspect-square size-[1em] text-[clamp(2rem,3vw+1rem,3rem)] rounded-full cursor-pointer", {
-                    "opacity-50 cursor-not-allowed user-select-none": isDisabledDown,
+                    "opacity-50 cursor-not-allowed user-select-none": isLastPost && !hasNextPage,
                 })}
-                onClick={() => handleScrollToIndex("DOWN")}
-                disabled={isDisabledDown}
+                onClick={() => handleScroll("DOWN")}
                 aria-label="Next video"
             >
                 <HiOutlineChevronDown className="size-[0.5em] cursor-inherit" />

@@ -13,7 +13,7 @@ export default function CommentsPage() {
     const prevPathnameOpenDetailModal = useAppSelector((state) => state.modal.prevPathnameOpenModal);
     const dispatch = useAppDispatch();
     const pathname = usePathname();
-    const { id } = useParams<{ id: string }>();
+    const { id, username } = useParams<{ id: string; username: string }>();
     const router = useRouter();
 
     const isVideoPath = /\/@[^\/]+\/video\/[^\/]+$/.test(pathname);
@@ -35,6 +35,7 @@ export default function CommentsPage() {
                     isVisible={typeOpenModal === "commentsVideoDetail"}
                     className="flex-1 h-screen flex flex-col py-3 pl-3 w-96 bg-sidebar border-l transition-transform duration-300"
                     id={id}
+                    username={username.replace("%40", "")}
                     handleCloseComments={handleClose}
                 />
             )}

@@ -1,19 +1,37 @@
 "use client";
-import { postList as postListMock } from "@/mock/mockUserAndVideos";
-import useScrollIndexObserver, { ScrollType } from "@/hooks/ui/useScrollIndexObserver";
-import { useRouter } from "@/i18n/navigation";
+import { ScrollType } from "@/hooks/ui/useScrollIndexObserver";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
-import { UserType } from "@/types/schemas/User.schema";
-import { usePathname } from "next/navigation";
-import React, { createContext, useCallback, useEffect, useState } from "react";
-import { useAppSelector } from "@/hooks/redux";
+import React, { createContext, useMemo } from "react";
+import { useGetListPostInfiniteQuery } from "@/services/RTK/posts.services";
+import { useHandleVideos } from "@/app/[locale]/(public)/(home)/(foryou)/hooks/useHandleVideos";
+import {
+    BaseQueryFn,
+    FetchArgs,
+    FetchBaseQueryError,
+    InfiniteQueryActionCreatorResult,
+    InfiniteQueryDefinition,
+} from "@reduxjs/toolkit/query";
+import { GetListPostRes } from "@/types/response/post.type";
 
 interface VideosProviderContextProps {
     currentIndex: number;
-    postLength: number;
-    postList: { post: TikTokPostType; user: UserType }[];
+    postList: TikTokPostType[];
     handleScrollToIndex: (type: ScrollType) => void;
-    visiblePostId: string | null;
+    fetchNextPage: () => InfiniteQueryActionCreatorResult<
+        InfiniteQueryDefinition<
+            "friend" | "foryou",
+            number,
+            BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>,
+            "Posts",
+            GetListPostRes,
+            "postApi",
+            unknown
+        >
+    >;
+    postLength: number;
+    isLoading: boolean;
+    isFetching: boolean;
+    hasNextPage: boolean;
 }
 
 const VideosProviderContext = createContext<VideosProviderContextProps | undefined>(undefined);
@@ -26,57 +44,23 @@ export function useVideosProvider() {
     return context;
 }
 
-export const keyDataScroll = "data-scroll-index";
-
 export function VideosProvider({ children }: { children: React.ReactNode }) {
-    const [visiblePostId, setVisiblePostId] = useState<string | null>(null);
-    const openModalVideoDetailType = useAppSelector((state) => state.modal.typeOpenModal);
-    const { currentIndex, handleScrollToIndex } = useScrollIndexObserver({
-        keyDataScroll,
-        initialIndex: 0,
-        listLength: postListMock.length,
-    });
-    const postList: { post: TikTokPostType; user: UserType }[] = postListMock;
+    const { fetchNextPage, isLoading, isFetching, data, hasNextPage } = useGetListPostInfiniteQuery("foryou");
 
-    useEffect(() => {
-        const currentPost = postList[currentIndex];
-        if (currentPost) {
-            setVisiblePostId(currentPost.post._id);
-        } else {
-            setVisiblePostId(null);
-        }
-    }, [currentIndex, postList]);
+    const postList: TikTokPostType[] = useMemo(() => data?.pages.flatMap((page) => page.data.posts) || [], [data]);
 
-    const router = useRouter();
-    const pathname = usePathname();
-
-    const handleUpdateNewPathForVideo = useCallback(() => {
-        const currentPost = postList[currentIndex];
-        if (!currentPost) return;
-        const newUrl = `/@${currentPost.user.username}/video/${currentPost.post._id}`;
-        if (pathname.includes("video")) {
-            router.replace(newUrl);
-        } else {
-            router.push(newUrl);
-        }
-    }, [currentIndex, postList, router, pathname]);
-
-    useEffect(() => {
-        if (openModalVideoDetailType === "commentsVideoDetail") {
-            handleUpdateNewPathForVideo();
-        } else if (pathname.includes("video") && openModalVideoDetailType === null) {
-            handleUpdateNewPathForVideo();
-        }
-    }, [openModalVideoDetailType, pathname, handleUpdateNewPathForVideo]);
+    const handleVideoObj = useHandleVideos(postList);
 
     return (
         <VideosProviderContext
             value={{
-                currentIndex,
                 postList,
-                handleScrollToIndex,
+                fetchNextPage,
+                isLoading,
+                isFetching,
                 postLength: postList.length,
-                visiblePostId,
+                hasNextPage,
+                ...handleVideoObj,
             }}
         >
             {children}

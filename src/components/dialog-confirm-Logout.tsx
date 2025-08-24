@@ -2,9 +2,7 @@
 import AppLoader from "@/components/app-loader";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useRouter } from "@/i18n/navigation";
-import { useLogoutMutation } from "@/services/RTK/auth.services";
-import { useCallback } from "react";
+import { useLogout } from "@/hooks/data/useAuth";
 
 interface DialogConfirmLogoutProps {
     isOpen: boolean;
@@ -12,19 +10,11 @@ interface DialogConfirmLogoutProps {
 }
 
 export default function DialogConfirmLogout({ isOpen, onOpenChange }: DialogConfirmLogoutProps) {
-    const [logoutMutate, logoutResult] = useLogoutMutation();
-    const router = useRouter();
-
-    const handleLogout = useCallback(async () => {
-        onOpenChange(false);
-        try {
-            await logoutMutate().unwrap();
-            router.replace("/");
-        } catch (error) {
-            console.error("Logout error:", error);
-        } finally {
-        }
-    }, [logoutMutate, router, onOpenChange]);
+    const { handleLogout, logoutResult } = useLogout({
+        onLogout: () => {
+            onOpenChange(false);
+        },
+    });
 
     return (
         <>

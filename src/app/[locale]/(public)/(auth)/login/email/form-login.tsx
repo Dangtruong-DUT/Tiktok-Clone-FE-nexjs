@@ -1,45 +1,16 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
 import { useTranslations } from "next-intl";
-import { LoginReqBody, LoginReqBodyType } from "@/utils/validations/auth.schema";
-import { Link, useRouter } from "@/i18n/navigation";
-import { useLoginMutation } from "@/services/RTK/auth.services";
+import { Link } from "@/i18n/navigation";
 import { Loader } from "lucide-react";
-import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
-import { toast } from "sonner";
+import { useLoginWithEmail } from "@/hooks/data/useAuth";
 
 export function LoginForm() {
     const t = useTranslations("LoginPage.email");
-    const router = useRouter();
-
-    const [loginMutate, loginResult] = useLoginMutation();
-
-    const form = useForm<LoginReqBodyType>({
-        resolver: zodResolver(LoginReqBody),
-        defaultValues: {
-            email: "",
-            password: "",
-        },
-    });
-
-    const onSubmit = async (data: LoginReqBodyType) => {
-        try {
-            const result = await loginMutate(data).unwrap();
-            router.push("/");
-            toast.success(result.message);
-        } catch (error) {
-            handleFormError<LoginReqBodyType>({
-                error,
-                setFormError: form.setError,
-            });
-        }
-    };
+    const { form, onSubmit, loginResult } = useLoginWithEmail();
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-2.25">
