@@ -1,15 +1,13 @@
-"use client";
-
 import NavLinks from "@/app/[locale]/tiktokstudio/_components/nav-links";
 import Header from "./_components/header";
 
 export default function StudioLayout({ children }: { children: React.ReactNode }) {
     return (
-        <div className=" min-h-screen bg-background flex">
+        <div className="h-screen bg-background flex">
             <NavLinks />
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col overflow-hidden">
                 <Header />
-                <main className="max-h-[calc(100vh-4.25rem)] overflow-auto">{children}</main>
+                <main className="flex-1 overflow-auto scrollbar-hidden">{children}</main>
             </div>
         </div>
     );

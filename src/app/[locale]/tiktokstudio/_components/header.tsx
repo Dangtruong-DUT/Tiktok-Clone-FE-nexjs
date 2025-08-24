@@ -24,7 +24,7 @@ export default function Header() {
                     </PopoverTrigger>
                     <PopoverContent className="w-48 p-2!" align="end">
                         <div className="flex flex-col gap-2">
-                            <Link href={`@${currentUser?.username}`} className="block w-full">
+                            <Link href={`/@${currentUser?.username}`} className="block w-full">
                                 <Button variant={"ghost"} className="justify-start w-full">
                                     <User />
                                     Profile

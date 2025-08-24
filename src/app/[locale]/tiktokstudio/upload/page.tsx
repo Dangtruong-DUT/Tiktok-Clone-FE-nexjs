@@ -1,132 +1,144 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { Video, File, MonitorPlay } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { MdAspectRatio } from "react-icons/md";
+import UploadVideo from "@/app/[locale]/tiktokstudio/upload/_components/upload-video";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { CreatePostReqBody, CreatePostReqBodyType } from "@/utils/validations/post.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Audience } from "@/constants/enum";
+import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
+import { Info } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default function UploadPage() {
-    const t = useTranslations("TiktokStudio.upload");
+    const form = useForm<CreatePostReqBodyType>({
+        resolver: zodResolver(CreatePostReqBody),
+        defaultValues: {
+            audience: Audience.PUBLIC,
+            content: "",
+            hashtags: [],
+            medias: [],
+            mentions: [],
+        },
+    });
+
     const [file, setFile] = useState<File | null>(null);
-    const [isDragActive, setIsDragActive] = useState(false);
-
-    const handleDrag = (e: React.DragEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (e.type === "dragenter" || e.type === "dragover") {
-            setIsDragActive(true);
-        } else if (e.type === "dragleave") {
-            setIsDragActive(false);
-        }
-    };
-
-    const handleDrop = (e: React.DragEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setIsDragActive(false);
-
-        const droppedFile = e.dataTransfer.files[0];
-        if (droppedFile && droppedFile.type.startsWith("video/")) {
-            setFile(droppedFile);
-        }
-    };
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            setFile(e.target.files[0]);
-        }
-    };
 
     return (
-        <div className="w-full mx-auto p-8">
-            <div className="border border-border rounded-lg p-6">
-                <div
-                    className={cn(
-                        "relative mb-8 flex min-h-[400px] flex-col items-center justify-center rounded-lg border border-dashed  bg-muted",
-                        isDragActive && "border-primary bg-primary/5"
-                    )}
-                    onDragEnter={handleDrag}
-                    onDragLeave={handleDrag}
-                    onDragOver={handleDrag}
-                    onDrop={handleDrop}
-                >
-                    <input
-                        type="file"
-                        accept="video/*"
-                        onChange={handleFileChange}
-                        className="absolute inset-0 cursor-pointer opacity-0"
-                    />
-
-                    <div className="mb-3">
-                        <Image
-                            src="/images/upload-page/upload.svg"
-                            alt="Upload video"
-                            className="mx-auto h-20 w-20"
-                            width={72}
-                            height={72}
-                        />
-                    </div>
-
-                    <h1 className="mb-1 text-2xl font-bold">Select video to upload</h1>
-                    <p className="mb-4 text-base text-muted-foreground">Or drag and drop it here</p>
-
-                    <Button className="mb-6 bg-[#FE2C55] font-semibold text-white hover:bg-[#FE2C55]/90">
-                        Select video
-                    </Button>
-                </div>
-
-                <div className="grid grid-cols-4 gap-3">
-                    <div className="flex items-start gap-3">
-                        <Video className="mt-1 size-6 " />
+        <div className="p-8">
+            <Form {...form}>
+                <form>
+                    <UploadVideo onFileSelect={setFile} file={file} className="mb-8" />
+                    <div className="grid grid-cols-[70%_30%] gap-4">
                         <div>
-                            <h3 className="font-semibold">Size and duration</h3>
-                            <p className="text-sm text-muted-foreground">
-                                Maximum size: 30 GB, video duration: 60 minutes.
-                            </p>
+                            <div className="mt-5 text-base font-bold">Detail</div>
+                            <div className="rounded-lg border border-border p-5 mt-[16px]">
+                                <FormField
+                                    control={form.control}
+                                    name="content"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-sm font-semibold">Description</FormLabel>
+                                            <FormControl>
+                                                <Textarea
+                                                    className="resize-none bg-accent"
+                                                    rows={5}
+                                                    placeholder="Share more about your video here ..."
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormDescription>0/4000</FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <div className="flex mt-7 mb-2 items-center gap-2 text-sm font-semibold">
+                                    Cover
+                                    <Tooltip>
+                                        <TooltipTrigger>
+                                            <Info size={14} className="text-muted-foreground" />
+                                        </TooltipTrigger>
+                                        <TooltipContent align="center" className="w-2xs">
+                                            <p>
+                                                Select a cover or upload one from your device. An engaging cover can
+                                                capture viewers interest effectively.
+                                            </p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </div>
+                                <div className="w-[132px] h-[176px] rounded-md overflow-hidden relative cursor-pointer">
+                                    <Image
+                                        src="/images/desktop-wallpaper-tiktok.jpg"
+                                        alt="Cover image"
+                                        className="mx-auto"
+                                        width={132}
+                                        height={176}
+                                    />
+                                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 block w-[90%]">
+                                        <div className=" px-8 py-1 text-xs rounded-xs bg-accent/50 text-white">
+                                            Edit cover
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="mt-5 text-base font-bold">Settings</div>
+                            <div className="rounded-lg border border-border p-5 mt-[16px]">
+                                <FormField
+                                    control={form.control}
+                                    name="audience"
+                                    render={({ field }) => (
+                                        <FormItem className="w-[280px]">
+                                            <FormLabel className="text-sm font-semibold">
+                                                Who can watch this video
+                                            </FormLabel>
+                                            <Select
+                                                onValueChange={field.onChange}
+                                                defaultValue={field.value.toString()}
+                                            >
+                                                <FormControl>
+                                                    <SelectTrigger className="w-full bg-accent">
+                                                        <SelectValue placeholder="Select an audience" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    <SelectItem value={Audience.PUBLIC.toString()}>Public</SelectItem>
+                                                    <SelectItem value={Audience.FRIENDS.toString()}>Friends</SelectItem>
+                                                    <SelectItem value={Audience.PRIVATE.toString()}>Private</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                            <div className="flex gap-4 mt-5">
+                                <Button
+                                    className="primary-button cursor-pointer h-9! rounded-lg! w-[200px]!"
+                                    type="submit"
+                                >
+                                    Post
+                                </Button>
+                                <Button
+                                    variant={"secondary"}
+                                    type="reset"
+                                    className="cursor-pointer h-9 rounded-lg w-[200px]"
+                                >
+                                    Discard
+                                </Button>
+                            </div>
+                        </div>
+                        <div>
+                            <h2>Preview</h2>
                         </div>
                     </div>
-
-                    <div className="flex items-start gap-3">
-                        <File className="mt-1 size-6 " />
-                        <div>
-                            <h3 className="font-semibold">File formats</h3>
-                            <p className="text-sm text-muted-foreground">
-                                Recommended: &quot;.mp4&quot;. Other major formats are supported.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="flex items-start gap-3">
-                        <MonitorPlay className="mt-1 size-6 " />
-                        <div>
-                            <h3 className="font-semibold">Video resolutions</h3>
-                            <p className="text-sm text-muted-foreground">
-                                High-resolution recommended: 1080p, 1440p, 4K.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="flex items-start gap-3">
-                        <MdAspectRatio className="mt-1 size-6 " />
-                        <div>
-                            <h3 className="font-semibold">Aspect ratios</h3>
-                            <p className="text-sm text-muted-foreground">
-                                Recommended: 16:9 for landscape, 9:16 for vertical.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                {file && (
-                    <div className="mt-6 rounded-lg border bg-card p-4">
-                        <h4 className="font-semibold">Selected file</h4>
-                        <p className="text-sm text-muted-foreground">{file.name}</p>
-                    </div>
-                )}
-            </div>
+                </form>
+            </Form>
         </div>
     );
 }

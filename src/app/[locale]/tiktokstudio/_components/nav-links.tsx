@@ -15,7 +15,7 @@ export default function NavLinks() {
     const pathname = usePathname();
     return (
         <>
-            <aside className="hidden w-62 flex-col border-r  lg:flex">
+            <aside className="hidden w-62 flex-col border-r  lg:flex max-h-screen overflow-hidden">
                 <div className="flex h-17 items-center px-5 border-b">
                     <Link href="/tiktokstudio" className="flex items-center">
                         <LogoBrand small={false} />
@@ -78,7 +78,7 @@ export default function NavLinks() {
             </aside>
 
             <TooltipProvider>
-                <aside className=" w-14 flex-col border-r bg-background sm:flex lg:hidden">
+                <aside className=" w-14 flex-col border-r bg-background sm:flex lg:hidden max-h-screen overflow-hidden">
                     <nav className="flex flex-col items-center gap-4 px-2 py-4">
                         <Link href="/tiktokstudio" className="flex h-8 w-8 items-center justify-center">
                             <LogoBrand small={true} />

@@ -169,9 +169,16 @@ body {
     caret-color: var(--color-brand);
 }
 
+html,
+body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
 html *::-webkit-scrollbar {
     border-radius: 0;
-    width: 8px;
+    width: 4px;
 }
 
 html *::-webkit-scrollbar-thumb {
