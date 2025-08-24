@@ -35,7 +35,7 @@ export default function ActionButton({
             >
                 {icon}
             </Button>
-            <span className="text-xs font-bold text-center">{count ? formatCash.format(count) : label}</span>
+            <span className="text-xs font-bold text-center text-white">{count ? formatCash.format(count) : label}</span>
         </div>
     );
 

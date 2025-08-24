@@ -19,7 +19,7 @@ export default async function AuthLayout({
 
     return (
         <div className="bg-white text-black ">
-            <Header classname="bg-black text-white" />
+            <Header classname="bg-white text-black" />
             <main className=" h-[calc(100vh-3.75rem-5.25rem-4rem-5rem)] overflow-auto">{children}</main>
             <div className="mb-4 h-[4rem]">
                 <p className="text-xs text-neutral-500 text-center max-w-sm mx-auto p-4" aria-live="polite">
