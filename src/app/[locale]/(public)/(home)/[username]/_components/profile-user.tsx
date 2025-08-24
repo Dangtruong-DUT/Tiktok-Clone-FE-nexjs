@@ -1,9 +1,9 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { UserVerifyStatus } from "@/constants/enum";
 import { cn } from "@/lib/utils";
-import { BadgeCheck } from "lucide-react";
 import { UserType } from "@/types/schemas/User.schema";
 import ProfileActionButtons from "@/app/[locale]/(public)/(home)/[username]/_components/profile-action-buttons";
+import { MdVerified } from "react-icons/md";
 
 interface ProfileUserProps {
     userData: UserType;
@@ -22,7 +22,6 @@ function ProfileUser({ userData, className }: ProfileUserProps) {
         following_count,
         likes_count,
     } = userData;
-
     return (
         <div className={cn("w-full flex flex-row items-center gap-7 lg:gap-7 max-lg:flex-col max-lg:gap-5", className)}>
             <Avatar className="w-53 h-53 max-md:w-24 max-md:h-24">
@@ -30,13 +29,15 @@ function ProfileUser({ userData, className }: ProfileUserProps) {
                 <AvatarFallback className="text-2xl font-bold">{name.charAt(0).toUpperCase()}</AvatarFallback>
             </Avatar>
 
-            <div className="w-full flex flex-col items-start gap-4 max-lg:items-center">
-                <div className="flex items-center">
-                    <h1 className="font-bold text-2xl leading-5 mr-3 overflow-hidden text-ellipsis text-left break-words">
+            <div className="w-full flex flex-col items-start gap-6 max-lg:items-center">
+                <div className="flex items-center gap-3">
+                    <h1 className=" font-bold text-2xl leading-6 text-left overflow-hidden text-ellipsis whitespace-nowrap max-w-82">
                         {name}
                     </h1>
-                    {verify === UserVerifyStatus.VERIFIED && <BadgeCheck size={16} className="mr-3 text-blue-500" />}
-                    <h2 className="font-semibold text-lg leading-6 text-ellipsis h-6 overflow-hidden max-w-96 whitespace-nowrap flex items-end">
+
+                    {verify === UserVerifyStatus.VERIFIED && <MdVerified size={24} className="text-blue-500" />}
+
+                    <h2 className=" max-w-96 font-semibold text-lg leading-6 text-right overflow-hidden text-ellipsis whitespace-nowrap">
                         {userUsername}
                     </h2>
                 </div>

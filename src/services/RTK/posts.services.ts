@@ -9,8 +9,9 @@ export const PostApi = createApi({
     baseQuery: baseQueryWithReauth,
     tagTypes: ["Posts"],
     reducerPath: "postApi",
-    refetchOnMountOrArgChange: true,
+    refetchOnMountOrArgChange: false,
     keepUnusedDataFor: 60,
+    refetchOnFocus: false,
     refetchOnReconnect: true,
     endpoints: (builder) => ({
         likePost: builder.mutation<{ message: string }, string>({
@@ -111,7 +112,7 @@ export const PostApi = createApi({
             },
             infiniteQueryOptions: {
                 initialPageParam: 1,
-                maxPages: 5,
+                maxPages: 10,
                 getNextPageParam: ({ meta }) => {
                     if (!meta) return undefined;
                     const { page, total_pages } = meta;
@@ -150,7 +151,140 @@ export const PostApi = createApi({
             },
             infiniteQueryOptions: {
                 initialPageParam: 1,
-                maxPages: 5,
+                getNextPageParam: ({ meta }) => {
+                    if (!meta) return undefined;
+                    const { page, total_pages } = meta;
+                    if (page >= total_pages) return undefined;
+                    return page + 1;
+                },
+                getPreviousPageParam: ({ meta }) => {
+                    if (!meta) return undefined;
+                    const { page } = meta;
+                    if (page <= 1) return undefined;
+                    return page - 1;
+                },
+            },
+        }),
+
+        getPostOfUser: builder.infiniteQuery<GetListPostRes, string, number>({
+            query: ({ pageParam, queryArg }) => `/users/${queryArg}/posts?page=${pageParam}&limit=10`,
+            providesTags: (result, error, arg) => {
+                if (result) {
+                    const final = [
+                        ...result.pages.flatMap((page) => {
+                            return page.data.posts.map(({ _id }) => ({
+                                type: "Posts" as const,
+                                id: _id,
+                            }));
+                        }),
+                        { type: "Posts" as const, id: `POST-OF-${arg}-LIST` },
+                    ];
+                    return final;
+                }
+                return [{ type: "Posts" as const, id: `POST-OF-${arg}-LIST` }];
+            },
+            infiniteQueryOptions: {
+                initialPageParam: 1,
+                getNextPageParam: ({ meta }) => {
+                    if (!meta) return undefined;
+                    const { page, total_pages } = meta;
+                    if (page >= total_pages) return undefined;
+                    return page + 1;
+                },
+                getPreviousPageParam: ({ meta }) => {
+                    if (!meta) return undefined;
+                    const { page } = meta;
+                    if (page <= 1) return undefined;
+                    return page - 1;
+                },
+            },
+        }),
+        getBookmarkedPostsOfUser: builder.infiniteQuery<GetListPostRes, string, number>({
+            query: ({ pageParam, queryArg }) => `/users/${queryArg}/bookmarks?page=${pageParam}&limit=10`,
+            providesTags: (result, error, arg) => {
+                if (result) {
+                    const final = [
+                        ...result.pages.flatMap((page) => {
+                            return page.data.posts.map(({ _id }) => ({
+                                type: "Posts" as const,
+                                id: _id,
+                            }));
+                        }),
+                        { type: "Posts" as const, id: `POST-BOOKMARKS-OF-${arg}-LIST` },
+                    ];
+                    return final;
+                }
+                return [{ type: "Posts" as const, id: `POST-BOOKMARKS-OF-${arg}-LIST` }];
+            },
+            infiniteQueryOptions: {
+                initialPageParam: 1,
+                getNextPageParam: ({ meta }) => {
+                    if (!meta) return undefined;
+                    const { page, total_pages } = meta;
+                    if (page >= total_pages) return undefined;
+                    return page + 1;
+                },
+                getPreviousPageParam: ({ meta }) => {
+                    if (!meta) return undefined;
+                    const { page } = meta;
+                    if (page <= 1) return undefined;
+                    return page - 1;
+                },
+            },
+        }),
+
+        getLikedPostsOfUser: builder.infiniteQuery<GetListPostRes, string, number>({
+            query: ({ pageParam, queryArg }) => `/users/${queryArg}/liked?page=${pageParam}&limit=10`,
+            providesTags: (result, error, arg) => {
+                if (result) {
+                    const final = [
+                        ...result.pages.flatMap((page) => {
+                            return page.data.posts.map(({ _id }) => ({
+                                type: "Posts" as const,
+                                id: _id,
+                            }));
+                        }),
+                        { type: "Posts" as const, id: `POST-LIKED-OF-${arg}-LIST` },
+                    ];
+                    return final;
+                }
+                return [{ type: "Posts" as const, id: `POST-LIKED-OF-${arg}-LIST` }];
+            },
+            infiniteQueryOptions: {
+                initialPageParam: 1,
+                getNextPageParam: ({ meta }) => {
+                    if (!meta) return undefined;
+                    const { page, total_pages } = meta;
+                    if (page >= total_pages) return undefined;
+                    return page + 1;
+                },
+                getPreviousPageParam: ({ meta }) => {
+                    if (!meta) return undefined;
+                    const { page } = meta;
+                    if (page <= 1) return undefined;
+                    return page - 1;
+                },
+            },
+        }),
+        getUnfollowedPosts: builder.infiniteQuery<GetListPostRes, void, number>({
+            query: ({ pageParam }) => `/posts/not-following?page=${pageParam}&limit=10`,
+            providesTags: (result, error, arg) => {
+                if (result) {
+                    const final = [
+                        ...result.pages.flatMap((page) => {
+                            return page.data.posts.map(({ _id }) => ({
+                                type: "Posts" as const,
+                                id: _id,
+                            }));
+                        }),
+                        { type: "Posts" as const, id: `POST-UNFOLLOWED-LIST` },
+                    ];
+                    return final;
+                }
+                return [{ type: "Posts" as const, id: `POST-UNFOLLOWED-LIST` }];
+            },
+            infiniteQueryOptions: {
+                initialPageParam: 1,
                 getNextPageParam: ({ meta }) => {
                     if (!meta) return undefined;
                     const { page, total_pages } = meta;
@@ -177,5 +311,9 @@ export const {
     useGetCommentsInfiniteQuery,
     useCreateCommentMutation,
     useGetPostDetailQuery,
-    useGetRelatedPostsInfiniteQuery
+    useGetRelatedPostsInfiniteQuery,
+    useGetPostOfUserInfiniteQuery,
+    useGetBookmarkedPostsOfUserInfiniteQuery,
+    useGetLikedPostsOfUserInfiniteQuery,
+    useGetUnfollowedPostsInfiniteQuery,
 } = PostApi;

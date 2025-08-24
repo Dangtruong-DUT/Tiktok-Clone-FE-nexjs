@@ -1,19 +1,26 @@
 "use client";
-import { postList as postListMock } from "@/mock/mockUserAndVideos";
-import useScrollIndexObserver, { ScrollType } from "@/hooks/ui/useScrollIndexObserver";
-import { useRouter } from "@/i18n/navigation";
+import { ScrollType } from "@/hooks/ui/useScrollIndexObserver";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
-import { UserType } from "@/types/schemas/User.schema";
-import { usePathname } from "next/navigation";
-import React, { createContext, useCallback, useEffect, useState } from "react";
+import React, { createContext, useMemo } from "react";
+import { useGetListPostInfiniteQuery, useGetUnfollowedPostsInfiniteQuery } from "@/services/RTK/posts.services";
+import { useHandleVideos } from "@/app/[locale]/(public)/(home)/following/_hooks/useHandleVideos";
 import { useAppSelector } from "@/hooks/redux";
 
+interface FeedState {
+    postList: TikTokPostType[];
+    fetchNextPage: () => void;
+    hasNextPage: boolean;
+    isLoading?: boolean;
+    isFetching?: boolean;
+}
+
 interface VideosProviderContextProps {
+    feeds: {
+        friend: FeedState;
+        unfollowed: FeedState;
+    };
     currentIndex: number;
-    postLength: number;
-    postList: { post: TikTokPostType; user: UserType }[];
     handleScrollToIndex: (type: ScrollType) => void;
-    visiblePostId: string | null;
 }
 
 const VideosProviderContext = createContext<VideosProviderContextProps | undefined>(undefined);
@@ -26,57 +33,55 @@ export function useVideosProvider() {
     return context;
 }
 
-export const keyDataScroll = "data-scroll-index";
-
 export function VideosProvider({ children }: { children: React.ReactNode }) {
-    const [visiblePostId, setVisiblePostId] = useState<string | null>(null);
-    const { currentIndex, handleScrollToIndex } = useScrollIndexObserver({
-        keyDataScroll,
-        initialIndex: 0,
-        listLength: postListMock.length,
+    const role = useAppSelector((state) => state.auth.role);
+    const {
+        fetchNextPage: fetchNextPageFriend,
+        isLoading,
+        isFetching,
+        data: dataFriend,
+        hasNextPage: hasNextPageFriend,
+    } = useGetListPostInfiniteQuery("friend", { skip: role == null });
+    const postList: TikTokPostType[] = useMemo(
+        () => dataFriend?.pages.flatMap((page) => page.data.posts) || [],
+        [dataFriend]
+    );
+
+    const {
+        data: dataUnfollowed,
+        fetchNextPage: fetchNextPageUnfollowed,
+        hasNextPage: hasNextPageUnfollowed,
+    } = useGetUnfollowedPostsInfiniteQuery(undefined, {
+        skip: postList.length > 0,
     });
-    const postList: { post: TikTokPostType; user: UserType }[] = postListMock;
 
-    useEffect(() => {
-        const currentPost = postList[currentIndex];
-        if (currentPost) {
-            setVisiblePostId(currentPost.post._id);
-        } else {
-            setVisiblePostId(null);
-        }
-    }, [currentIndex, postList]);
+    const postListUnfollowed: TikTokPostType[] = useMemo(
+        () => dataUnfollowed?.pages.flatMap((page) => page.data.posts) || [],
+        [dataUnfollowed]
+    );
 
-    const router = useRouter();
-    const pathname = usePathname();
-    const openModalVideoDetailType = useAppSelector((state) => state.modal.typeOpenModal);
+    const handleVideoObj = useHandleVideos(postList);
 
-    const handleUpdateNewPathForVideo = useCallback(() => {
-        const currentPost = postList[currentIndex];
-        if (!currentPost) return;
-        const newUrl = `/@${currentPost.user.username}/video/${currentPost.post._id}`;
-        if (pathname.includes("video")) {
-            router.replace(newUrl);
-        } else {
-            router.push(newUrl);
-        }
-    }, [currentIndex, postList, router, pathname]);
-
-    useEffect(() => {
-        if (openModalVideoDetailType === "commentsVideoDetail") {
-            handleUpdateNewPathForVideo();
-        } else if (pathname.includes("video") && openModalVideoDetailType === null) {
-            handleUpdateNewPathForVideo();
-        }
-    }, [openModalVideoDetailType, pathname, handleUpdateNewPathForVideo]);
-
+    const feeds = {
+        friend: {
+            postList,
+            fetchNextPage: fetchNextPageFriend,
+            hasNextPage: hasNextPageFriend,
+            isLoading,
+            isFetching,
+        },
+        unfollowed: {
+            postList: postListUnfollowed,
+            fetchNextPage: fetchNextPageUnfollowed,
+            hasNextPage: hasNextPageUnfollowed,
+        },
+    };
     return (
         <VideosProviderContext
             value={{
-                currentIndex,
-                postList,
-                handleScrollToIndex,
-                postLength: postList.length,
-                visiblePostId,
+                feeds,
+                currentIndex: handleVideoObj.currentIndex,
+                handleScrollToIndex: handleVideoObj.handleScrollToIndex,
             }}
         >
             {children}

@@ -4,27 +4,25 @@ import React, { useRef, useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { useLocale } from "next-intl";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
-import { UserType } from "@/types/schemas/User.schema";
 import { useVideoPlayer } from "@/hooks/video/useVideoPlayer";
 import { useVideoControls } from "@/hooks/video/useVideoControls";
 import { useVideoAutoPlay } from "@/hooks/video/useVideoAutoPlay";
 import { VideoOverlayIcons } from "./components/video-overlay-icons";
 import Image from "next/image";
 import { VideoControlsBottom } from "@/components/video-player-v3/components/video-controls-bottom";
-import useThumbnailGenerator from "@/hooks/ui/generateVideoThumbnail";
 
 interface VideoPlayerProps {
     className?: string;
     post: TikTokPostType;
-    author: UserType;
 }
 
-export default function VideoPlayer({ className, post, author }: VideoPlayerProps) {
+export default function VideoPlayer({ className, post }: VideoPlayerProps) {
+    const author = post.author;
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const [isHovered, setIsHovered] = useState(false);
     const [isProgressBarActive, setIsProgressBarActive] = useState(false);
 
-    const thumbnailUrl = useThumbnailGenerator(post.medias[0].url);
+    const thumbnailUrl = post.thumbnail_url || "/images/desktop-wallpaper-tiktok.jpg";
     const locale = useLocale();
 
     const { isPlaying, setIsPlaying, isMuted, setIsMuted, volume, setVolume, currentTime, duration } =

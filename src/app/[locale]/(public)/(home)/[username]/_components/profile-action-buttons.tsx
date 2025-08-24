@@ -5,8 +5,8 @@ import useCurrentUserData from "@/hooks/data/useCurrentUserData";
 import { useGetUserByUsernameQuery } from "@/services/RTK/user.services";
 import { useCallback } from "react";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
 import { useFollowUser } from "@/hooks/data/useUser";
+import ButtonFollow from "@/app/[locale]/(public)/(home)/[username]/_components/button-follow";
 
 interface ProfileActionButtonsProps {
     username: string;
@@ -54,17 +54,7 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
     } else {
         return (
             <div className="flex items-center">
-                <Button
-                    variant={isFollowedState ? "outline" : "default"}
-                    className={cn("cursor-pointer px-8!", {
-                        "primary-button h-10! rounded-md! text-base! font-medium!": !isFollowedState,
-                        "h-10 font-medium rounded-md text-base ": isFollowedState,
-                    })}
-                    onClick={onToggleFollow}
-                >
-                    {isFollowedState ? "Following" : "Follow"}
-                </Button>
-
+                <ButtonFollow isFollowed={isFollowedState} onToggleFollow={onToggleFollow} isAuth={!!currentUser} />
                 <Button
                     variant="outline"
                     className="ml-2 h-10 font-medium rounded-md text-base cursor-pointer"
@@ -72,7 +62,6 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
                 >
                     Message
                 </Button>
-
                 <Button variant="outline" className="ml-2 h-10 font-medium rounded-md text-base">
                     <Share size={19} />
                 </Button>

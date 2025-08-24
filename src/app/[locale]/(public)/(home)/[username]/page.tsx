@@ -1,6 +1,9 @@
 import userRequestApi from "@/apis/user.request";
 import ProfileUser from "@/app/[locale]/(public)/(home)/[username]/_components/profile-user";
-import VideoContainer from "@/app/[locale]/(public)/(home)/[username]/_components/video-container";
+import TabBar from "@/app/[locale]/(public)/(home)/[username]/_components/TabBar";
+import VideoGrid from "@/app/[locale]/(public)/(home)/[username]/_components/video-grid";
+import TAB_ITEMS from "@/app/[locale]/(public)/(home)/[username]/_config/tab-items.config";
+import VideosProvider from "@/app/[locale]/(public)/(home)/[username]/_context/videos.context";
 import { WrapperServerCallApi } from "@/utils/handleErrors/handleServerError";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
@@ -78,7 +81,10 @@ export default async function Profile({ params }: { params: Promise<{ username: 
     return (
         <div className="w-full  px-6 py-8">
             <ProfileUser userData={userData} className="mb-5" />
-            <VideoContainer />
+            <VideosProvider userId={userData._id}>
+                <TabBar tabs={TAB_ITEMS} />
+                <VideoGrid />
+            </VideosProvider>
         </div>
     );
 }

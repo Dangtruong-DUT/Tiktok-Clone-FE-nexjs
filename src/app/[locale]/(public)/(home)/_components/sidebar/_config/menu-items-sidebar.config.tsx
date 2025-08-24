@@ -53,14 +53,14 @@ export const HOME_MENU_ITEMS: MenuItemConfig[] = [
         requiredAuth: false,
         viewFor: "all",
     },
-    {
-        titleKey: "HomePage.menu.explore",
-        to: sidebarConfig.routes.explore,
-        Icon: AiOutlineCompass,
-        ActiveIcon: AiFillCompass,
-        requiredAuth: false,
-        viewFor: "all",
-    },
+    // {
+    //     titleKey: "HomePage.menu.explore",
+    //     to: sidebarConfig.routes.explore,
+    //     Icon: AiOutlineCompass,
+    //     ActiveIcon: AiFillCompass,
+    //     requiredAuth: false,
+    //     viewFor: "all",
+    // },
     {
         titleKey: "HomePage.menu.following",
         to: sidebarConfig.routes.following,
