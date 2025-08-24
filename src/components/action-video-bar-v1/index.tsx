@@ -16,9 +16,9 @@ import { closeModal, setOpenModal } from "@/store/features/modalSlide";
 import { useGetUserByUsernameQuery } from "@/services/RTK/user.services";
 import { useFollowUser } from "@/hooks/data/useUser";
 import { AuthModal } from "@/components/auth-modal";
-import ActionButton from "@/app/[locale]/(public)/(home)/(foryou)/_components/action-button";
 import { useBookmarkPost, useLikePost } from "@/hooks/data/useVideo";
 import useCurrentUserData from "@/hooks/data/useCurrentUserData";
+import ActionButton from "@/components/action-video-bar-v1/action-button";
 
 interface ActionBarProps {
     post: TikTokPostType;

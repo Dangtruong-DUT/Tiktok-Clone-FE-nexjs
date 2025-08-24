@@ -1,33 +1,31 @@
 "use client";
 
 import { Audience } from "@/constants/enum";
-import useThumbnailGenerator from "@/hooks/ui/generateVideoThumbnail";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
 import { formatCash } from "@/utils/formatting/formatNumber";
 import { IoLockClosedOutline } from "react-icons/io5";
 import Image from "next/image";
 import React from "react";
 import { CiHeart } from "react-icons/ci";
-import { UserType } from "@/types/schemas/User.schema";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { AvatarFallback } from "@radix-ui/react-avatar";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import PlayingIcon from "@/components/lottie-icons/playing";
+import { HiOutlinePlay } from "react-icons/hi2";
+import { FaRegHeart } from "react-icons/fa6";
+import { timeAgo } from "@/utils/formatting/formatTime";
+import { useLocale } from "next-intl";
 
 export default function CardVideoItem({
     post,
-    author,
     isDescriptionVisible = true,
     isCurrentlyPlaying = false,
 }: {
     post: TikTokPostType;
-    author: UserType;
     isDescriptionVisible?: boolean;
     isCurrentlyPlaying?: boolean;
 }) {
-    const thumbnailUrl = useThumbnailGenerator(post.medias[0].url);
-
+    const author = post.author;
+    const locale = useLocale();
     return (
         <article className="w-full gap-2 ">
             <div className={cn("relative inline-block w-full pt-[133.333%] overflow-hidden rounded-md group")}>
@@ -45,7 +43,7 @@ export default function CardVideoItem({
                     )}
                 >
                     <Image
-                        src={thumbnailUrl}
+                        src={post.thumbnail_url || "/images/desktop-wallpaper-tiktok.jpg"}
                         alt="video thumbnail"
                         className="w-full h-full object-cover"
                         width={100}
@@ -64,23 +62,45 @@ export default function CardVideoItem({
                     </video>
                 </div>
 
-                <div className="absolute bottom-0 left-0 w-full z-40 flex justify-between items-end px-3 pt-[67px] pb-[17px] h-[40%] bg-gradient-to-t from-[rgba(22,24,35,0.5)] via-transparent">
-                    <div className="flex items-center gap-1.5">
-                        <CiHeart className="text-white size-4.5" />
-                        <span className="text-white font-semibold text-sm">{formatCash.format(post.likes_count)}</span>
+                {!isDescriptionVisible && (
+                    <div className="absolute bottom-0 left-0 w-full z-40 flex justify-between items-end px-3 pt-[67px] pb-[17px] h-[40%] bg-gradient-to-t from-[rgba(22,24,35,0.5)] via-transparent">
+                        <div className="flex items-center gap-1.5">
+                            <CiHeart className="text-white size-4.5" />
+                            <span className="text-white font-semibold text-sm">
+                                {formatCash.format(post.likes_count)}
+                            </span>
+                        </div>
+                        {post.audience == Audience.PRIVATE ? (
+                            <IoLockClosedOutline className="text-white size-4.5" />
+                        ) : (
+                            <span className="flex gap-1">
+                                <HiOutlinePlay className="text-white size-4.5" />
+                                <strong className="text-xs">
+                                    {formatCash.format(post.user_views + post.guest_views)}
+                                </strong>
+                            </span>
+                        )}
                     </div>
-                    {post.audience !== Audience.PRIVATE && <IoLockClosedOutline className="text-white size-4.5" />}
-                </div>
+                )}
             </div>
 
             {isDescriptionVisible && (
-                <Link href={`/${author.username}`} className="flex items-center gap-2 mt-2 py-2 w-full">
-                    <Avatar className="size-6">
-                        <AvatarImage src={author.avatar} alt={author.username} />
-                        <AvatarFallback>{author.username.charAt(0).toUpperCase()}</AvatarFallback>
-                    </Avatar>
-                    <span className="text-base font-semibold truncate hover:underline">{author.username}</span>
-                </Link>
+                <div>
+                    <p className="text-sm line-clamp-2 mb-1">{post.content}</p>
+                    <Link
+                        href={`/${author.username}`}
+                        className="text-sm font-semibold hover:underline text-muted-foreground"
+                    >
+                        {author.username}
+                    </Link>
+                    <p className="text-muted-foreground flex text-sm gap-1.5">
+                        <span className="flex items-center gap-1">
+                            <FaRegHeart className="size-3.5" />
+                            {formatCash.format(post.likes_count)}
+                        </span>
+                        <span>·</span> <span>{timeAgo({ date: post.created_at, locale })}</span>
+                    </p>
+                </div>
             )}
         </article>
     );

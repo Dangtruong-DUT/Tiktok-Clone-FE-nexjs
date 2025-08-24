@@ -1,24 +1,24 @@
 "use client";
 
-import ActionBar from "@/app/[locale]/(public)/(home)/(foryou)/_components/action-video-bar";
 import NavigationVideo from "@/app/[locale]/(public)/(home)/(foryou)/_components/navigation-video";
 import { useVideosProvider } from "@/app/[locale]/(public)/(home)/(foryou)/_context/videos-provider";
 import VideoPlayer from "@/components/video-player";
 import { useInViewport } from "@/hooks/ui/useInViewport";
 import { useEffect, useRef } from "react";
 import LoadingIcon from "@/components/lottie-icons/loading";
-import { keyDataScroll } from "@/app/[locale]/(public)/(home)/(foryou)/hooks/useHandleVideos";
+import { keyDataScroll } from "@/app/[locale]/(public)/(home)/(foryou)/_hooks/useHandleVideos";
+import ActionBar from "@/components/action-video-bar-v1";
 
 export default function VideoScrollWrapper() {
-    const { postList, fetchNextPage, isFetching } = useVideosProvider();
+    const { postList, fetchNextPage, isFetching ,hasNextPage} = useVideosProvider();
     const sentinelScrollRef = useRef<HTMLDivElement>(null);
     const isInView = useInViewport(sentinelScrollRef);
 
     useEffect(() => {
-        if (isInView) {
+        if (isInView && hasNextPage) {
             fetchNextPage();
         }
-    }, [isInView, fetchNextPage]);
+    }, [isInView, fetchNextPage, hasNextPage    ]);
 
     return (
         <>
