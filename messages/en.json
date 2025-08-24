@@ -1,4 +1,25 @@
 {
+    "StudioLayout": {
+        "upload": "Upload"
+    },
+    "TiktokStudio": {
+        "navigation": {
+            "home": "Home",
+            "posts": "Content",
+            "feedback": "Feedback",
+            "back": "Back to TikTok"
+        },
+        "upload": {
+            "selectVideo": "Select video to upload",
+            "dragAndDrop": "Or drag and drop a file",
+            "mp4OrWebmOnly": "MP4 or WebM",
+            "resolutionReq": "720x1280 resolution or higher",
+            "maxFileSize": "Up to 30 GB",
+            "maxDuration": "Up to 60 minutes",
+            "selectFile": "Select file",
+            "selectedFile": "Selected file"
+        }
+    },
     "AuthLayout": {
         "noAccount": "Don’t have an account?",
         "signUp": "Sign up",
