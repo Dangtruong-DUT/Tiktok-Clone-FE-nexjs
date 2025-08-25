@@ -35,7 +35,7 @@ export default function DrawerSidebar({
     setIsOpenDrawer,
     drawerWidth = "20rem",
     leftOffset = "4.5rem",
-    zIndex = 99,
+    zIndex = 10,
     padding = "pt-6 px-2 pb-0",
 }: DrawerSidebarProps) {
     const [isVisible, setIsVisible] = useState(isOpen);
@@ -73,17 +73,14 @@ export default function DrawerSidebar({
             >
                 {/* Overlay */}
                 <div
-                    className="bg-transparent absolute top-0 bottom-0 left-0 z-[1]"
+                    className="bg-transparent absolute top-0 bottom-0 left-0"
                     style={{ width: `calc(100vw - ${leftOffset})` }}
                     onClick={handleClose}
                 />
 
                 {/* Content */}
                 <section
-                    className={cn(
-                        "relative z-[3] bg-background w-full h-full flex flex-col border-x border-border",
-                        padding
-                    )}
+                    className={cn("relative bg-background w-full h-full flex flex-col border-x border-border", padding)}
                 >
                     {children}
                 </section>

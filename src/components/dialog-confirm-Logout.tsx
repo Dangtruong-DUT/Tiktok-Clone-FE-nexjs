@@ -19,7 +19,7 @@ export default function DialogConfirmLogout({ isOpen, onOpenChange }: DialogConf
     return (
         <>
             <Dialog open={isOpen} onOpenChange={onOpenChange} modal>
-                <DialogContent className="max-w-sm! p-7 z-[9999]">
+                <DialogContent className="max-w-sm! p-7">
                     <DialogHeader>
                         <DialogTitle className="font-bold text-2xl text-center">
                             Are you sure you want to log out?

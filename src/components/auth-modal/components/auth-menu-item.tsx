@@ -22,7 +22,7 @@ export function AuthMenuItem({ item }: AuthMenuItemComponentProps) {
         </>
     );
 
-    const buttonClassName = "w-full bg-card! cursor-pointer relative h-11 border-none";
+    const buttonClassName = "w-full bg-card! cursor-pointer relative h-11";
 
     if (item.href) {
         return (
