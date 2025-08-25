@@ -46,6 +46,7 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
         useVideoControls({
             videoRef,
             isPlaying,
+            isMuted,
             setIsPlaying,
             setIsMuted,
             setVolume,

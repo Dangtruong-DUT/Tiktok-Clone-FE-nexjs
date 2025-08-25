@@ -6,12 +6,20 @@ import { useTemporaryIcon } from "@/hooks/ui/useTemporaryIcon";
 interface UseVideoControlsProps {
     videoRef: React.RefObject<HTMLVideoElement | null>;
     isPlaying: boolean;
+    isMuted: boolean;
     setIsPlaying: (playing: boolean) => void;
     setIsMuted: (muted: boolean) => void;
     setVolume: (volume: number) => void;
 }
 
-export function useVideoControls({ videoRef, isPlaying, setIsPlaying, setIsMuted, setVolume }: UseVideoControlsProps) {
+export function useVideoControls({
+    videoRef,
+    isPlaying,
+    isMuted,
+    setIsPlaying,
+    setIsMuted,
+    setVolume,
+}: UseVideoControlsProps) {
     const { show: showPlayPauseIcon, trigger: triggerPlayPauseIcon } = useTemporaryIcon(500);
     const { show: showMutedIcon, trigger: triggerMutedIcon } = useTemporaryIcon(500);
 
@@ -38,16 +46,13 @@ export function useVideoControls({ videoRef, isPlaying, setIsPlaying, setIsMuted
         [videoRef]
     );
 
-    const handleMuteToggle = useCallback(
-        (newMutedState: boolean) => {
-            setIsMuted(newMutedState);
-            triggerMutedIcon();
-            if (videoRef.current) {
-                videoRef.current.muted = newMutedState;
-            }
-        },
-        [videoRef, setIsMuted, triggerMutedIcon]
-    );
+    const handleMuteToggle = useCallback(() => {
+        setIsMuted(!isMuted);
+        triggerMutedIcon();
+        if (videoRef.current) {
+            videoRef.current.muted = !isMuted;
+        }
+    }, [videoRef, isMuted, setIsMuted, triggerMutedIcon]);
 
     const handleVolumeChange = useCallback(
         (newVolume: number) => {

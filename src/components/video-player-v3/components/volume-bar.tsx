@@ -9,17 +9,10 @@ interface VolumeBarProps {
     onVolumeChange: (volume: number) => void;
     isParentHovered?: boolean;
     isMuted: boolean;
-    onMuteToggle: (muted: boolean) => void;
+    onMuteToggle: () => void;
 }
 
-function VolumeBar({
-    className,
-    volume,
-    onVolumeChange,
-    isParentHovered = true,
-    isMuted,
-    onMuteToggle,
-}: VolumeBarProps) {
+function VolumeBar({ className, volume, onVolumeChange, isMuted, onMuteToggle }: VolumeBarProps) {
     const volumeRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [dragVolume, setDragVolume] = useState(volume);
@@ -53,10 +46,6 @@ function VolumeBar({
         setIsDragging(false);
     };
 
-    const handleMuteClick = () => {
-        onMuteToggle(!isMuted);
-    };
-
     const volumePercentage = (isDragging ? dragVolume : volume) * 100;
 
     return (
@@ -72,7 +61,7 @@ function VolumeBar({
                 className={cn(
                     "relative z-[10] transition-opacity duration-300 cursor-pointer text-white [&>svg]:size-6"
                 )}
-                onClick={handleMuteClick}
+                onClick={onMuteToggle}
             >
                 {isMuted || volume === 0 ? <FaVolumeMute /> : <HiSpeakerWave />}
             </button>

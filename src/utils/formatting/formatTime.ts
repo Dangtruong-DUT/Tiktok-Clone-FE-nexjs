@@ -27,3 +27,16 @@ export function formatSecondsToTime(time: number): string {
         .padStart(2, "0");
     return `${minutes}:${seconds}`;
 }
+
+export function timeToMMSSCS(time: number): string {
+    const minutes = Math.floor(time / 60)
+        .toString()
+        .padStart(2, "0");
+    const seconds = Math.floor(time % 60)
+        .toString()
+        .padStart(2, "0");
+    const centiseconds = Math.floor((time % 1) * 100)
+        .toString()
+        .padStart(2, "0");
+    return `${minutes}:${seconds}:${centiseconds}`;
+}

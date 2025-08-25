@@ -14,7 +14,7 @@ interface VideoControlsBottomProps {
     onSeek: (time: number) => void;
     onProgressBarActive: (active: boolean) => void;
     onPlayPause: () => void;
-    onMuteToggle: (value: boolean) => void;
+    onMuteToggle: () => void;
     isPlaying: boolean;
     isMuted: boolean;
     volume: number;

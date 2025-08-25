@@ -13,6 +13,7 @@ import Image from "next/image";
 import { Info } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import VideoPreview from "@/app/[locale]/tiktokstudio/upload/_components/video-preview";
 
 export default function UploadPage() {
     const form = useForm<CreatePostReqBodyType>({
@@ -134,7 +135,7 @@ export default function UploadPage() {
                             </div>
                         </div>
                         <div>
-                            <h2>Preview</h2>
+                            <VideoPreview content="xin chào" videoSrc="/videos/video1.mp4" />
                         </div>
                     </div>
                 </form>
