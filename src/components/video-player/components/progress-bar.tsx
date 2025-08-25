@@ -20,9 +20,11 @@ function ProgressBar({ currentTime, duration, className, onActive, onSeek }: Pro
         if (!slider) return currentTime;
 
         const rect = slider.getBoundingClientRect();
-        const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
-        const offsetX = Math.min(Math.max(clientX - rect.left, 0), rect.width);
+        if (!rect.width || !Number.isFinite(duration)) return currentTime;
 
+        const x = "touches" in e ? e.touches[0]?.clientX ?? 0 : (e as MouseEvent).clientX;
+
+        const offsetX = Math.min(Math.max(x - rect.left, 0), rect.width);
         return (offsetX / rect.width) * duration;
     };
 

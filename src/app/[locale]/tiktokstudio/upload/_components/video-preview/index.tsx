@@ -22,7 +22,7 @@ export default function VideoPreview({ videoSrc, content }: VideoPreviewProps) {
     const { isPlaying, setIsPlaying, isMuted, setIsMuted, currentTime, duration } = useVideoPlayer(videoRef);
     const currentUserData = useCurrentUserData();
 
-    const { handlePlayPause, handleMuteToggle } = useVideoControls({
+    const { handlePlayPause, handleMuteToggle, handleSeek } = useVideoControls({
         videoRef,
         isPlaying,
         isMuted,
@@ -30,6 +30,36 @@ export default function VideoPreview({ videoSrc, content }: VideoPreviewProps) {
         setIsMuted,
         setVolume: () => {},
     });
+
+    const progressBarRef = useRef<HTMLDivElement>(null);
+
+    const calculateTimeFromEvent = (
+        e: MouseEvent | TouchEvent | React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
+    ): number => {
+        const progressBar = progressBarRef.current;
+        if (!progressBar) return 0;
+
+        const rect = progressBar.getBoundingClientRect();
+        if (!rect.width || !Number.isFinite(duration)) return currentTime;
+
+        let x = 0;
+        if ("touches" in e) {
+            x = e.touches[0]?.clientX ?? 0;
+        } else if ("clientX" in e) {
+            x = e.clientX;
+        }
+        const offsetX = Math.min(Math.max(x - rect.left, 0), rect.width);
+        const newTime = (offsetX / rect.width) * duration;
+        return newTime;
+    };
+
+    const handleProgressBarClick = (
+        e: MouseEvent | TouchEvent | React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
+    ) => {
+        if ("preventDefault" in e) e.preventDefault();
+        const newTime = calculateTimeFromEvent(e);
+        handleSeek(newTime);
+    };
 
     return (
         <div className="w-[264px] h-[571px] bg-transparent relative border-2 rounded-[20px] border-border group">
@@ -93,41 +123,55 @@ export default function VideoPreview({ videoSrc, content }: VideoPreviewProps) {
                     </div>
                 </div>
                 <div className="absolute top-0 left-0 inset-0 z-2 opacity-0   group-hover:opacity-100 transition-opacity duration-300 w-full h-full  ">
-                    <div className="absolute bottom-6 h-[30px]  block w-full  bg-linear-to-b from-transparent to-black  ">
-                        <div className="px-4 text-white">
-                            <div></div>
-                            <div className="flex justify-between items-center">
-                                <div className="text-xs font-medium [&>svg]:size-[14px] flex items-center gap-2">
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <span onClick={handlePlayPause} className=" [&>svg]:size-[14px]   ">
-                                                {isPlaying ? <FaPause /> : <FaPlay />}
-                                            </span>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>{isPlaying ? "Pause" : "Play"}</p>
-                                        </TooltipContent>
-                                    </Tooltip>
+                    <div className="absolute inset-0" onClick={handlePlayPause} />
+                    <div className="absolute bottom-6 h-[30px]  block w-full  bg-linear-to-b from-transparent to-black  px-4 text-white space-y-2.5">
+                        <div
+                            className="relative h-[2px] w-full bg-white/50 cursor-pointer"
+                            ref={progressBarRef}
+                            onClick={(e) => handleProgressBarClick(e)}
+                            onTouchStart={(e) => handleProgressBarClick(e)}
+                        >
+                            <div
+                                className="absolute top-0 left-0 h-full bg-white"
+                                style={{ width: `${(currentTime / duration) * 100}%` }}
+                            />
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <div className="text-xs font-medium [&>svg]:size-[14px] flex items-center gap-2">
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <span
+                                            onClick={handlePlayPause}
+                                            className=" [&>svg]:size-[14px] cursor-pointer  "
+                                        >
+                                            {isPlaying ? <FaPause /> : <FaPlay />}
+                                        </span>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>{isPlaying ? "Pause" : "Play"}</p>
+                                    </TooltipContent>
+                                </Tooltip>
 
-                                    <span>
-                                        {timeToMMSSCS(currentTime)}/{timeToMMSSCS(duration)}
-                                    </span>
-                                </div>
-                                <div>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <span className=" [&>svg]:size-[14px]   " onClick={handleMuteToggle}>
-                                                {isMuted ? <ImVolumeMute2 /> : <AiFillMuted />}
-                                            </span>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>{isMuted ? "Unmute" : "Mute"}</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </div>
+                                <span>
+                                    {timeToMMSSCS(currentTime)}/{timeToMMSSCS(duration)}
+                                </span>
+                            </div>
+                            <div>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <span
+                                            className=" [&>svg]:size-[14px] cursor-pointer  "
+                                            onClick={handleMuteToggle}
+                                        >
+                                            {isMuted ? <ImVolumeMute2 /> : <AiFillMuted />}
+                                        </span>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>{isMuted ? "Unmute" : "Mute"}</p>
+                                    </TooltipContent>
+                                </Tooltip>
                             </div>
                         </div>
-
                         <div className="absolute block h-[205px]   w-full left-0 bottom-0 overflow-hidden  bg-linear-to-b from-transparent to-black z-[-1] " />
                     </div>
                 </div>
