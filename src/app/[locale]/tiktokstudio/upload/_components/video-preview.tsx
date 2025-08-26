@@ -11,13 +11,15 @@ import { AiFillMuted } from "react-icons/ai";
 import { FaPause, FaPlay } from "react-icons/fa6";
 import { ImVolumeMute2 } from "react-icons/im";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
 interface VideoPreviewProps {
-    videoSrc: string;
+    videoSrc: string | null;
     content: string;
+    className?: string;
 }
 
-export default function VideoPreview({ videoSrc, content }: VideoPreviewProps) {
+export default function VideoPreview({ videoSrc, content, className }: VideoPreviewProps) {
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const { isPlaying, setIsPlaying, isMuted, setIsMuted, currentTime, duration } = useVideoPlayer(videoRef);
     const currentUserData = useCurrentUserData();
@@ -62,7 +64,12 @@ export default function VideoPreview({ videoSrc, content }: VideoPreviewProps) {
     };
 
     return (
-        <div className="w-[264px] h-[571px] bg-transparent relative border-2 rounded-[20px] border-border group">
+        <div
+            className={cn(
+                "w-[264px] h-[571px] bg-transparent relative border-2 rounded-[22px] dark:border-white border-black group",
+                className
+            )}
+        >
             <div className="absolute block inset-0 w-full h-full bg-black rounded-[20px] z-1">
                 <Image
                     src={"/images/upload-page/bottom-video-player.png"}
@@ -74,16 +81,18 @@ export default function VideoPreview({ videoSrc, content }: VideoPreviewProps) {
             </div>
             <div className="absolute top-0 left-0 inset-0 z-2">
                 <div className="relative h-[511px] w-full">
-                    <video
-                        ref={videoRef}
-                        className="w-full  h-[511px]  object-cover rounded-t-[20px]"
-                        muted={isMuted}
-                        autoPlay
-                        loop
-                        playsInline
-                    >
-                        <source src="/videos/video1.mp4" type="video/mp4" />
-                    </video>
+                    {videoRef && (
+                        <video
+                            ref={videoRef}
+                            className="w-full  h-[511px]  object-cover rounded-t-[20px]"
+                            muted={isMuted}
+                            autoPlay
+                            loop
+                            playsInline
+                        >
+                            <source src={videoSrc ?? undefined} type="video/mp4" />
+                        </video>
+                    )}
                     <div className="absolute  top-1 left-0 flex flex-col items-center gap-1  w-full">
                         <Image
                             src={"/images/upload-page/status-bar-mobile.png"}
