@@ -1,7 +1,7 @@
 import { PosterType } from "@/constants/enum";
 import baseQueryWithReauth from "@/services/RTK/client";
 import { GetListCommentRes, GetListPostRes, GetPostDetailRes } from "@/types/response/post.type";
-import { CreateCommentsReqBodyType } from "@/utils/validations/post.schema";
+import { CreateCommentsReqBodyType, CreatePostReqBodyType } from "@/utils/validations/post.schema";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import _ from "lodash";
 
@@ -266,6 +266,13 @@ export const PostApi = createApi({
                 },
             },
         }),
+        createPost: builder.mutation<{ message: string }, CreatePostReqBodyType>({
+            query: (body) => ({
+                url: "/posts",
+                method: "POST",
+                body,
+            }),
+        }),
         getUnfollowedPosts: builder.infiniteQuery<GetListPostRes, void, number>({
             query: ({ pageParam }) => `/posts/not-following?page=${pageParam}&limit=10`,
             providesTags: (result, error, arg) => {
@@ -316,4 +323,5 @@ export const {
     useGetBookmarkedPostsOfUserInfiniteQuery,
     useGetLikedPostsOfUserInfiniteQuery,
     useGetUnfollowedPostsInfiniteQuery,
+    useCreatePostMutation,
 } = PostApi;
