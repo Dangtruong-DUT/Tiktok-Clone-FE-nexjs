@@ -6,7 +6,7 @@
         "navigation": {
             "home": "Home",
             "posts": "Content",
-            "feedback": "Feedback",
+            "settings": "Settings",
             "back": "Back to TikTok"
         },
         "upload": {

@@ -1,5 +1,5 @@
 import { Role } from "@/constants/enum";
-import { Home, FileArchive, MessageSquarePlus } from "lucide-react";
+import { Home, FileArchive, MessageSquarePlus, Settings, LayoutPanelLeft, BookUp } from "lucide-react";
 
 interface NavItem {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -13,19 +13,19 @@ export const navItems: NavItem[] = [
     {
         title: "home",
         href: "/tiktokstudio",
-        Icon: Home,
+        Icon: LayoutPanelLeft,
         role: [Role.USER, Role.ADMIN, Role.SUPER_ADMIN],
     },
     {
         title: "posts",
         href: "/tiktokstudio/content",
-        Icon: FileArchive,
+        Icon: BookUp,
         role: [Role.USER, Role.ADMIN, Role.SUPER_ADMIN],
     },
     {
-        title: "feedback",
-        href: "/tiktokstudio/feedback",
-        Icon: MessageSquarePlus,
+        title: "settings",
+        href: "/tiktokstudio/settings",
+        Icon: Settings,
         role: [Role.USER, Role.ADMIN, Role.SUPER_ADMIN],
     },
 ];

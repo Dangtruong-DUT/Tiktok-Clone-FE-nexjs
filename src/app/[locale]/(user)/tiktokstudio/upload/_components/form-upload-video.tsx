@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import UploadVideo from "@/app/[locale]/(user)/tiktokstudio/upload/_components/upload-video";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -20,11 +20,14 @@ import { useUploadImageMutation, useUploadVideoMutation } from "@/services/RTK/u
 import { useCreatePostMutation } from "@/services/RTK/posts.services";
 import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function FormUploadVideo() {
     const [uploadImage, uploadImageResult] = useUploadImageMutation();
     const [uploadVideo, uploadVideoResult] = useUploadVideoMutation();
     const [createPost, createPostResult] = useCreatePostMutation();
+
+    const router = useRouter();
 
     const isCreatePostLoading =
         createPostResult.isLoading || uploadVideoResult.isLoading || uploadImageResult.isLoading;
@@ -124,6 +127,7 @@ export default function FormUploadVideo() {
                 position: "top-center",
             });
             onReset();
+            router.push("/tiktokstudio/content");
         } catch (error) {
             console.error(error);
             handleFormError<CreatePostReqBodyType>({
