@@ -1,5 +1,6 @@
 import { AuthApi } from "@/services/RTK/auth.services";
 import { PostApi } from "@/services/RTK/posts.services";
+import { UploadApi } from "@/services/RTK/upload.services";
 import { UserApi } from "@/services/RTK/user.services";
 import authReducer from "@/store/features/authSlice";
 import modalReducer from "@/store/features/modalSlide";
@@ -9,6 +10,7 @@ import { configureStore } from "@reduxjs/toolkit";
 export const makeStore = () => {
     return configureStore({
         reducer: {
+            [UploadApi.reducerPath]: UploadApi.reducer,
             [AuthApi.reducerPath]: AuthApi.reducer,
             [UserApi.reducerPath]: UserApi.reducer,
             [PostApi.reducerPath]: PostApi.reducer,
@@ -17,6 +19,7 @@ export const makeStore = () => {
         },
         middleware: (getDefaultMiddleware) =>
             getDefaultMiddleware().concat(
+                UploadApi.middleware,
                 AuthApi.middleware,
                 UserApi.middleware,
                 PostApi.middleware,
@@ -38,4 +41,5 @@ export function clearStore(dispatch: AppDispatch) {
     dispatch(AuthApi.util.resetApiState());
     dispatch(UserApi.util.resetApiState());
     dispatch(PostApi.util.resetApiState());
+    dispatch(UploadApi.util.resetApiState());
 }

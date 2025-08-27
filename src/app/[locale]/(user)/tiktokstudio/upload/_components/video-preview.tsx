@@ -66,7 +66,7 @@ export default function VideoPreview({ videoSrc, content, className }: VideoPrev
     return (
         <div
             className={cn(
-                "w-[264px] h-[571px] bg-transparent relative border-2 rounded-[22px] dark:border-white border-black group",
+                "w-[264px] h-[571px] bg-transparent relative border-4 rounded-[22px] dark:border-gray-600 border-black group",
                 className
             )}
         >

@@ -76,7 +76,7 @@ export default function FormUploadVideo() {
 
     const content = form.watch("content");
 
-    const onsubmit = (data: CreatePostReqBodyType) => {};
+    const onsubmit = async (data: CreatePostReqBodyType) => {};
 
     const onReset = () => {
         setVideoFile(null);
