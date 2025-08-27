@@ -11,7 +11,7 @@ export function AuthModal({ children }: AuthModalProps) {
     return (
         <Dialog>
             <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent className="p-0! pt-4" showCloseButton={false}>
+            <DialogContent className="p-0! pt-4 overflow-hidden" showCloseButton={false}>
                 <DialogTitle className="hidden" />
                 <AuthModalContent />
             </DialogContent>

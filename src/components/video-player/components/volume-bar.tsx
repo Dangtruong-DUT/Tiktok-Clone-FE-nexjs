@@ -9,7 +9,7 @@ interface VolumeBarProps {
     onVolumeChange: (volume: number) => void;
     isParentHovered?: boolean;
     isMuted: boolean;
-    onMuteToggle: (muted: boolean) => void;
+    onMuteToggle: () => void;
 }
 
 function VolumeBar({
@@ -53,10 +53,6 @@ function VolumeBar({
         setIsDragging(false);
     };
 
-    const handleMuteClick = () => {
-        onMuteToggle(!isMuted);
-    };
-
     const volumePercentage = isDragging ? dragVolume * 100 : volume * 100;
 
     return (
@@ -70,7 +66,7 @@ function VolumeBar({
         >
             <div
                 className={cn("relative p-2 w-10 h-10 z-[6] transition-opacity duration-300 text-white cursor-pointer")}
-                onClick={handleMuteClick}
+                onClick={onMuteToggle}
             >
                 {/* Placeholder for sound icon */}
                 <div

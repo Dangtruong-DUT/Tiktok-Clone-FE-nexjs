@@ -22,7 +22,7 @@ export function ModalSignUpForm() {
                         <FormItem>
                             <FormLabel>{t("dateOfBirthLabel")}</FormLabel>
                             <FormControl>
-                                <DateTimePicker {...field} inputClassName="bg-card! border-none!" />
+                                <DateTimePicker {...field} inputClassName="bg-muted! border-none!" />
                             </FormControl>
                             <FormDescription>{t("dateOfBirthDescription")}</FormDescription>
                             <FormMessage />
@@ -38,7 +38,7 @@ export function ModalSignUpForm() {
                                 <Input
                                     placeholder={t("namePlaceholder")}
                                     {...field}
-                                    className="brand-input bg-card! border-none!"
+                                    className="brand-input bg-muted! border-none!"
                                 />
                             </FormControl>
                             <FormMessage />
@@ -54,7 +54,7 @@ export function ModalSignUpForm() {
                                 <Input
                                     placeholder={t("emailPlaceholder")}
                                     {...field}
-                                    className="brand-input bg-card! border-none!"
+                                    className="brand-input bg-muted! border-none!"
                                 />
                             </FormControl>
                             <FormMessage />
@@ -70,7 +70,7 @@ export function ModalSignUpForm() {
                                 <Input
                                     placeholder={t("passwordPlaceholder")}
                                     {...field}
-                                    className="brand-input bg-card! border-none!"
+                                    className="brand-input bg-muted! border-none!"
                                     type="password"
                                 />
                             </FormControl>
@@ -87,7 +87,7 @@ export function ModalSignUpForm() {
                                 <Input
                                     placeholder={t("confirmPasswordPlaceholder")}
                                     {...field}
-                                    className="brand-input bg-card! border-none!"
+                                    className="brand-input bg-muted! border-none!"
                                     type="password"
                                 />
                             </FormControl>

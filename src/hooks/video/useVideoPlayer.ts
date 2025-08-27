@@ -55,6 +55,36 @@ export function useVideoPlayer(
         };
     }, [videoRef, onVideoEnd]);
 
+    // Add an effect to sync video state with isPlaying state
+    useEffect(() => {
+        const video = videoRef.current;
+        if (!video) return;
+
+        const handlePlay = () => setIsPlaying(true);
+        const handlePause = () => setIsPlaying(false);
+
+        video.addEventListener("play", handlePlay);
+        video.addEventListener("pause", handlePause);
+
+        return () => {
+            video.removeEventListener("play", handlePlay);
+            video.removeEventListener("pause", handlePause);
+        };
+    }, [videoRef, setIsPlaying]);
+
+    // Add an effect to sync video state with isMuted state
+    useEffect(() => {
+        const video = videoRef.current;
+        if (!video) return;
+
+        const handleVolumeChange = () => setIsMuted(video.muted);
+        video.addEventListener("volumechange", handleVolumeChange);
+
+        return () => {
+            video.removeEventListener("volumechange", handleVolumeChange);
+        };
+    }, [videoRef, setIsMuted]);
+
     return {
         isPlaying,
         setIsPlaying,
@@ -64,6 +94,5 @@ export function useVideoPlayer(
         setVolume,
         currentTime,
         duration,
-        setCurrentTime,
     };
 }

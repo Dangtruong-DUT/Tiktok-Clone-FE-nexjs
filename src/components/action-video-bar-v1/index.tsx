@@ -98,7 +98,7 @@ export default function ActionBar({ post, className }: ActionBarProps) {
                             variant="secondary"
                             onClick={onToggleFollow}
                             className={cn(
-                                "relative mt-[-0.7rem] w-6 h-6 flex items-center justify-center rounded-full bg-brand hover:bg-brand/90",
+                                "relative mt-[-0.7rem] w-6 h-6 flex items-center text-white justify-center rounded-full bg-brand hover:bg-brand/90",
                                 "border border-brand/10 cursor-pointer",
                                 isFollowedState && "text-brand bg-accent hover:bg-accent/90"
                             )}
@@ -111,7 +111,7 @@ export default function ActionBar({ post, className }: ActionBarProps) {
                         <Button
                             variant="secondary"
                             className={cn(
-                                "relative mt-[-0.7rem] w-6 h-6 flex items-center justify-center rounded-full bg-brand hover:bg-brand/90",
+                                "relative mt-[-0.7rem] w-6 h-6 flex items-center text-white justify-center rounded-full bg-brand hover:bg-brand/90",
                                 "border border-brand/10 cursor-pointer"
                             )}
                         >

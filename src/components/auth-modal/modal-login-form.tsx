@@ -27,7 +27,7 @@ export function ModalLoginForm() {
                                 <Input
                                     placeholder={t("emailPlaceholder")}
                                     {...field}
-                                    className="brand-input bg-card! border-none! "
+                                    className="brand-input bg-muted! border-none! "
                                 />
                             </FormControl>
                             <FormMessage />
@@ -43,7 +43,7 @@ export function ModalLoginForm() {
                                 <Input
                                     placeholder={t("passwordPlaceholder")}
                                     {...field}
-                                    className="brand-input bg-card! border-none! "
+                                    className="brand-input bg-muted! border-none! "
                                     type="password"
                                 />
                             </FormControl>

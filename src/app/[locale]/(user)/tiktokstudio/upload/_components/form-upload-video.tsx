@@ -1,20 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import UploadVideo from "@/app/[locale]/tiktokstudio/upload/_components/upload-video";
+import UploadVideo from "@/app/[locale]/(user)/tiktokstudio/upload/_components/upload-video";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { CreatePostReqBody, CreatePostReqBodyType } from "@/utils/validations/post.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Audience } from "@/constants/enum";
+import { Audience, MediaType } from "@/constants/enum";
 import { Textarea } from "@/components/ui/textarea";
-import Image from "next/image";
 import { Info } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import VideoPreview from "@/app/[locale]/(user)/tiktokstudio/upload/_components/video-preview";
+import SelectThumbnailDialog from "@/app/[locale]/(user)/tiktokstudio/upload/_components/select-thumbnail-dialog";
 
-export default function UploadPage() {
+export default function FormUploadVideo() {
+    const [isInitialRender, setIsInitialRender] = useState(true);
+
     const form = useForm<CreatePostReqBodyType>({
         resolver: zodResolver(CreatePostReqBody),
         defaultValues: {
@@ -23,16 +26,43 @@ export default function UploadPage() {
             hashtags: [],
             medias: [],
             mentions: [],
+            thumbnail_url: "",
         },
     });
 
-    const [file, setFile] = useState<File | null>(null);
+    const [videoFile, setVideoFile] = useState<File | null>(null);
+    const [imageFile, setImageFile] = useState<File | null>(null);
+
+    const videoUrl = videoFile ? URL.createObjectURL(videoFile) : null;
+    const imageUrl = imageFile ? URL.createObjectURL(imageFile) : null;
+
+    useEffect(() => {
+        form.setValue("medias", videoUrl ? [{ type: MediaType.VIDEO, url: videoUrl }] : []);
+        form.setValue("thumbnail_url", imageUrl || "");
+    }, [videoUrl, imageUrl, form]);
+
+    const content = form.watch("content");
+
+    const onsubmit = (data: CreatePostReqBodyType) => {};
+
+    const onReset = () => {
+        setVideoFile(null);
+        setImageFile(null);
+        form.reset();
+    };
 
     return (
-        <div className="p-8">
-            <Form {...form}>
-                <form>
-                    <UploadVideo onFileSelect={setFile} file={file} className="mb-8" />
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onsubmit)} onReset={onReset} method="POST">
+                <UploadVideo
+                    onFileSelect={setVideoFile}
+                    file={videoFile}
+                    className="mb-8"
+                    onReset={onReset}
+                    setIsInitialRender={setIsInitialRender}
+                    isInitialRender={isInitialRender}
+                />
+                {!isInitialRender && (
                     <div className="grid grid-cols-[70%_30%] gap-4">
                         <div>
                             <div className="mt-5 text-base font-bold">Detail</div>
@@ -51,7 +81,7 @@ export default function UploadPage() {
                                                     {...field}
                                                 />
                                             </FormControl>
-                                            <FormDescription>0/4000</FormDescription>
+                                            <FormDescription>{content?.length ?? 0}/4000</FormDescription>
                                             <FormMessage />
                                         </FormItem>
                                     )}
@@ -60,7 +90,7 @@ export default function UploadPage() {
                                 <div className="flex mt-7 mb-2 items-center gap-2 text-sm font-semibold">
                                     Cover
                                     <Tooltip>
-                                        <TooltipTrigger>
+                                        <TooltipTrigger asChild>
                                             <Info size={14} className="text-muted-foreground" />
                                         </TooltipTrigger>
                                         <TooltipContent align="center" className="w-2xs">
@@ -71,24 +101,15 @@ export default function UploadPage() {
                                         </TooltipContent>
                                     </Tooltip>
                                 </div>
-                                <div className="w-[132px] h-[176px] rounded-md overflow-hidden relative cursor-pointer">
-                                    <Image
-                                        src="/images/desktop-wallpaper-tiktok.jpg"
-                                        alt="Cover image"
-                                        className="mx-auto"
-                                        width={132}
-                                        height={176}
-                                    />
-                                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 block w-[90%]">
-                                        <div className=" px-8 py-1 text-xs rounded-xs bg-accent/50 text-white">
-                                            Edit cover
-                                        </div>
-                                    </div>
-                                </div>
+                                <SelectThumbnailDialog
+                                    setCoverImage={setImageFile}
+                                    videoSrc={videoUrl}
+                                    imageSrc={imageUrl}
+                                />
                             </div>
 
                             <div className="mt-5 text-base font-bold">Settings</div>
-                            <div className="rounded-lg border border-border p-5 mt-[16px]">
+                            <div className="rounded-lg border border-border p-5 mt-[16px] ">
                                 <FormField
                                     control={form.control}
                                     name="audience"
@@ -102,7 +123,7 @@ export default function UploadPage() {
                                                 defaultValue={field.value.toString()}
                                             >
                                                 <FormControl>
-                                                    <SelectTrigger className="w-full bg-accent">
+                                                    <SelectTrigger className="w-full ">
                                                         <SelectValue placeholder="Select an audience" />
                                                     </SelectTrigger>
                                                 </FormControl>
@@ -117,9 +138,9 @@ export default function UploadPage() {
                                     )}
                                 />
                             </div>
-                            <div className="flex gap-4 mt-5">
+                            <div className="flex gap-4 mt-10">
                                 <Button
-                                    className="primary-button cursor-pointer h-9! rounded-lg! w-[200px]!"
+                                    className="primary-button cursor-pointer h-9! rounded-lg! w-[200px]! font-medium!"
                                     type="submit"
                                 >
                                     Post
@@ -127,18 +148,17 @@ export default function UploadPage() {
                                 <Button
                                     variant={"secondary"}
                                     type="reset"
-                                    className="cursor-pointer h-9 rounded-lg w-[200px]"
+                                    className="cursor-pointer h-9 rounded-lg w-[200px] font-base"
+                                    onClick={onReset}
                                 >
                                     Discard
                                 </Button>
                             </div>
                         </div>
-                        <div>
-                            <h2>Preview</h2>
-                        </div>
+                        <VideoPreview content={content ?? ""} videoSrc={videoUrl} className="mt-5 mx-auto" />
                     </div>
-                </form>
-            </Form>
-        </div>
+                )}
+            </form>
+        </Form>
     );
 }

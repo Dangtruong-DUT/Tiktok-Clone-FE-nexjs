@@ -1,5 +1,5 @@
-import ProgressBar from "@/components/video-player-v2/components/progress-bar";
-import VolumeBar from "@/components/video-player-v2/components/volume-bar";
+import ProgressBar from "@/components/video-player-v3/components/progress-bar";
+import VolumeBar from "@/components/video-player-v3/components/volume-bar";
 import { cn } from "@/lib/utils";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
 import { formatSecondsToTime } from "@/utils/formatting/formatTime";
@@ -14,7 +14,7 @@ interface VideoControlsBottomProps {
     onSeek: (time: number) => void;
     onProgressBarActive: (active: boolean) => void;
     onPlayPause: () => void;
-    onMuteToggle: (value: boolean) => void;
+    onMuteToggle: () => void;
     isPlaying: boolean;
     isMuted: boolean;
     volume: number;

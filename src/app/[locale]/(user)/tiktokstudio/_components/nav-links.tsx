@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import LogoBrand from "@/components/logo-brand";
-import { navItems } from "@/app/[locale]/tiktokstudio/_config/navItems";
+import { navItems } from "@/app/[locale]/(user)/tiktokstudio/_config/navItems";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Plus } from "lucide-react";
 

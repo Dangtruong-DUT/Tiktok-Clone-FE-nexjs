@@ -5,7 +5,7 @@ interface VideoControlsTopProps {
     volume: number;
     onVolumeChange: (volume: number) => void;
     isMuted: boolean;
-    onMuteToggle: (muted: boolean) => void;
+    onMuteToggle: () => void;
     isParentHovered: boolean;
 }
 

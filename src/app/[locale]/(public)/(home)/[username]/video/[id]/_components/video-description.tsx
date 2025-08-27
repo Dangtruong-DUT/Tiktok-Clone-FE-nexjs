@@ -30,9 +30,9 @@ function FollowButton({
 }) {
     const content = (
         <Button
+            variant={isFollowedState ? "outline" : "default"}
             className={cn(" h-9!  rounded-xs! font-semibold! cursor-pointer text-base!", {
                 "primary-button": !isFollowedState,
-                "bg-accent text-white hover:bg-accent/90 ": isFollowedState,
             })}
             onClick={onToggleFollow}
         >
@@ -61,7 +61,7 @@ export default function VideoDescription({ author, createdAt, postContent, class
         initialFollowState: userProfileRes?.data.is_followed ?? false,
     });
     return (
-        <div className={cn("p-4", className)}>
+        <div className={cn("p-4 rounded-lg bg-accent mt-4", className)}>
             <div className="flex items-center pb-4">
                 <Link href={`/@${author.username}`} className="flex items-center">
                     <Avatar className="w-12 h-12  mr-3">
