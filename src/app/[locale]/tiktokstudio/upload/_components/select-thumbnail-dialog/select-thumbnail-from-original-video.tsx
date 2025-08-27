@@ -3,16 +3,18 @@
 import { Button } from "@/components/ui/button";
 import useVideoFrames from "@/hooks/video/useVideoFrames";
 import Image from "next/image";
-import { useEffect, useRef, useState, TouchEvent, MouseEvent } from "react";
+import { useEffect, useRef, useState, TouchEvent, MouseEvent as ReactMouseEvent, MouseEvent } from "react";
 
 interface SelectThumbnailFromOriginalVideoProps {
     videoSrc: string | null;
     setCoverImage: (image: File) => void;
+    className?: string;
 }
 
 export default function SelectThumbnailFromOriginalVideo({
     videoSrc,
     setCoverImage,
+    className,
 }: SelectThumbnailFromOriginalVideoProps) {
     const frames = useVideoFrames(videoSrc, 10);
     const [selectedIndex, setSelectedIndex] = useState(0);
@@ -69,7 +71,8 @@ export default function SelectThumbnailFromOriginalVideo({
         setIsDragging(false);
     };
 
-    const onConfirm = () => {
+    const onConfirm = (e: ReactMouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
         if (!selectedFrame.image) return;
         fetch(selectedFrame.image)
             .then((res) => res.blob())
@@ -80,8 +83,8 @@ export default function SelectThumbnailFromOriginalVideo({
     };
 
     return (
-        <div>
-            <div className="flex flex-col items-center gap-4 py-4">
+        <div className={className}>
+            <div className="flex flex-col items-center gap-4 py-4 min-h-[346px]">
                 {selectedFrame.image && (
                     <Image
                         width={182}
@@ -91,7 +94,7 @@ export default function SelectThumbnailFromOriginalVideo({
                         className="rounded-xs bg-muted border-none"
                     />
                 )}
-                {!selectedFrame.image && <div className="rounded-xs bg-muted border-none w-[182px] h-[324px]" />}
+                {!selectedFrame.image && <div className="rounded-xs bg-amber-100 border-none w-[182px] h-[324px]" />}
 
                 <div
                     className="relative cursor-grab"
@@ -107,11 +110,14 @@ export default function SelectThumbnailFromOriginalVideo({
                         className="absolute block w-1 h-full rounded-full bg-cyan-500 top-0"
                         style={{ left: `${cursorX}px` }}
                     />
-                    <canvas width={384} height={64} className="rounded-xs bg-muted" ref={canvasRef} />
+                    <canvas width={384} height={64} className="rounded-xs bg-amber-100" ref={canvasRef} />
                 </div>
             </div>
-            <footer className=" flex items-center justify-end p-4 border-t  ">
-                <Button className="primary-button h-10! rounded-lg! cursor-pointer" onClick={onConfirm}>
+            <footer className=" flex items-center justify-end p-4 border-t  bg-background">
+                <Button
+                    className="primary-button h-10! rounded-lg! cursor-pointer text-sm! font-medium!"
+                    onClick={onConfirm}
+                >
                     Confirm
                 </Button>
             </footer>

@@ -1,10 +1,10 @@
 import SelectThumbnailFromOriginalVideo from "@/app/[locale]/tiktokstudio/upload/_components/select-thumbnail-dialog/select-thumbnail-from-original-video";
 import UploadThumbnailFromDevice from "@/app/[locale]/tiktokstudio/upload/_components/select-thumbnail-dialog/upload-thumbnail";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { BsFillImageFill } from "react-icons/bs";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 type SelectThumbnailMode = "UPLOAD" | "SELECT_FROM_VIDEO";
 
@@ -16,6 +16,11 @@ interface SelectThumbnailDialogProps {
 
 export default function SelectThumbnailDialog({ setCoverImage, videoSrc, imageSrc }: SelectThumbnailDialogProps) {
     const [mode, setMode] = useState<SelectThumbnailMode>("SELECT_FROM_VIDEO");
+    const buttonCloseRef = useRef<HTMLButtonElement>(null);
+    const handleSetCoverImage = (image: File) => {
+        setCoverImage(image);
+        buttonCloseRef.current?.click();
+    };
     return (
         <Dialog>
             <DialogTrigger asChild disabled={!videoSrc}>
@@ -24,7 +29,7 @@ export default function SelectThumbnailDialog({ setCoverImage, videoSrc, imageSr
                         <Image
                             src={imageSrc || "/images/desktop-wallpaper-tiktok.jpg"}
                             alt="Cover image"
-                            className="mx-auto"
+                            className="mx-auto object-cover w-[132px] h-[176px]"
                             width={132}
                             height={176}
                         />
@@ -43,29 +48,48 @@ export default function SelectThumbnailDialog({ setCoverImage, videoSrc, imageSr
                 <DialogHeader className="hidden">
                     <DialogTitle>select thumbnail dialog</DialogTitle>
                 </DialogHeader>
-                <ul className="flex gap-4 text-md font-semibold last:mr-auto border-b border-border">
+                <ul className="flex gap-6 text-base font-semibold ">
                     <li
                         onClick={() => setMode("SELECT_FROM_VIDEO")}
-                        className={cn("px-8 py-4 cursor-pointer", {
-                            "text-brand": mode === "SELECT_FROM_VIDEO",
-                        })}
+                        className={cn(
+                            "relative px-6 py-3 cursor-pointer transition-colors duration-200 hover:text-brand",
+                            {
+                                "text-brand border-b-2 border-brand": mode === "SELECT_FROM_VIDEO",
+                                "text-muted-foreground": mode !== "SELECT_FROM_VIDEO",
+                            }
+                        )}
                     >
                         Select cover
                     </li>
                     <li
                         onClick={() => setMode("UPLOAD")}
-                        className={cn("px-8 py-4  cursor-pointer", {
-                            "text-brand": mode === "UPLOAD",
-                        })}
+                        className={cn(
+                            "relative px-6 py-3 cursor-pointer transition-colors duration-200 hover:text-brand",
+                            {
+                                "text-brand border-b-2 border-brand": mode === "UPLOAD",
+                                "text-muted-foreground": mode !== "UPLOAD",
+                            }
+                        )}
                     >
                         Upload cover
                     </li>
                 </ul>
 
-                {mode === "SELECT_FROM_VIDEO" && (
-                    <SelectThumbnailFromOriginalVideo setCoverImage={setCoverImage} videoSrc={videoSrc!} />
-                )}
-                {mode === "UPLOAD" && <UploadThumbnailFromDevice />}
+                <SelectThumbnailFromOriginalVideo
+                    setCoverImage={handleSetCoverImage}
+                    videoSrc={videoSrc!}
+                    className={cn("bg-muted", {
+                        hidden: mode !== "SELECT_FROM_VIDEO",
+                    })}
+                />
+
+                <UploadThumbnailFromDevice
+                    setCoverImage={handleSetCoverImage}
+                    className={cn("bg-muted", {
+                        hidden: mode !== "UPLOAD",
+                    })}
+                />
+                <DialogClose className="hidden" ref={buttonCloseRef} />
             </DialogContent>
         </Dialog>
     );

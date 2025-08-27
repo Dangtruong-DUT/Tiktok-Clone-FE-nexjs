@@ -88,7 +88,7 @@ export default function FormUploadVideo() {
                                     </Tooltip>
                                 </div>
                                 <SelectThumbnailDialog
-                                    setCoverImage={() => {}}
+                                    setCoverImage={setImageFile}
                                     videoSrc={videoUrl}
                                     imageSrc={imageUrl}
                                 />
