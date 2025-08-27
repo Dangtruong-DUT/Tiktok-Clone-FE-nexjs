@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import useVideoFrames from "@/hooks/video/useVideoFrames";
+import { convertBase64ToFileToFile } from "@/utils/file";
 import Image from "next/image";
 import { useEffect, useRef, useState, TouchEvent, MouseEvent as ReactMouseEvent, MouseEvent } from "react";
 
@@ -71,15 +72,11 @@ export default function SelectThumbnailFromOriginalVideo({
         setIsDragging(false);
     };
 
-    const onConfirm = (e: ReactMouseEvent<HTMLButtonElement>) => {
+    const onConfirm = async (e: ReactMouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         if (!selectedFrame.image) return;
-        fetch(selectedFrame.image)
-            .then((res) => res.blob())
-            .then((blob) => {
-                const file = new File([blob], "thumbnail.png", { type: "image/png" });
-                setCoverImage(file);
-            });
+        const file = await convertBase64ToFileToFile(selectedFrame.image, "thumbnail.png");
+        if (file) setCoverImage(file);
     };
 
     return (
@@ -94,7 +91,7 @@ export default function SelectThumbnailFromOriginalVideo({
                         className="rounded-xs bg-muted border-none"
                     />
                 )}
-                {!selectedFrame.image && <div className="rounded-xs bg-amber-100 border-none w-[182px] h-[324px]" />}
+                {!selectedFrame.image && <div className="rounded-xs bg-amber-50 border-none w-[182px] h-[324px]" />}
 
                 <div
                     className="relative cursor-grab"
@@ -110,7 +107,7 @@ export default function SelectThumbnailFromOriginalVideo({
                         className="absolute block w-1 h-full rounded-full bg-cyan-500 top-0"
                         style={{ left: `${cursorX}px` }}
                     />
-                    <canvas width={384} height={64} className="rounded-xs bg-amber-100" ref={canvasRef} />
+                    <canvas width={384} height={64} className="rounded-xs bg-amber-50" ref={canvasRef} />
                 </div>
             </div>
             <footer className=" flex items-center justify-end p-4 border-t  bg-background">

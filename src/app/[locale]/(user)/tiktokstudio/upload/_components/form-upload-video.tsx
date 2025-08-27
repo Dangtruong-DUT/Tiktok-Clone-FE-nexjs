@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import UploadVideo from "@/app/[locale]/(user)/tiktokstudio/upload/_components/upload-video";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -14,6 +14,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import VideoPreview from "@/app/[locale]/(user)/tiktokstudio/upload/_components/video-preview";
 import SelectThumbnailDialog from "@/app/[locale]/(user)/tiktokstudio/upload/_components/select-thumbnail-dialog";
+import { generateTimeLineFrames } from "@/utils/video";
+import { convertBase64ToFileToFile } from "@/utils/file";
 
 export default function FormUploadVideo() {
     const [isInitialRender, setIsInitialRender] = useState(true);
@@ -30,16 +32,47 @@ export default function FormUploadVideo() {
         },
     });
 
-    const [videoFile, setVideoFile] = useState<File | null>(null);
-    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [videoUrl, setVideoUrl] = useState<string | null>(null);
+    const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
 
-    const videoUrl = videoFile ? URL.createObjectURL(videoFile) : null;
-    const imageUrl = imageFile ? URL.createObjectURL(imageFile) : null;
+    const [videoFile, setVideoFile] = useState<File | null>(null);
+    const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+
+    useEffect(() => {
+        if (!videoFile) {
+            setVideoUrl(null);
+            return;
+        }
+        const url = URL.createObjectURL(videoFile);
+        setVideoUrl(url);
+        return () => URL.revokeObjectURL(url);
+    }, [videoFile]);
+
+    useEffect(() => {
+        if (!thumbnailFile) {
+            setThumbnailUrl(null);
+            return;
+        }
+        const url = URL.createObjectURL(thumbnailFile);
+        setThumbnailUrl(url);
+        return () => URL.revokeObjectURL(url);
+    }, [thumbnailFile]);
+
+    useEffect(() => {
+        const fetchFrame = async () => {
+            if (videoUrl) {
+                const [frame] = await generateTimeLineFrames(videoUrl, 1);
+                const file = await convertBase64ToFileToFile(frame.image, "video_thumbnail.png");
+                if (file) setThumbnailFile(file);
+            }
+        };
+        fetchFrame();
+    }, [videoUrl]);
 
     useEffect(() => {
         form.setValue("medias", videoUrl ? [{ type: MediaType.VIDEO, url: videoUrl }] : []);
-        form.setValue("thumbnail_url", imageUrl || "");
-    }, [videoUrl, imageUrl, form]);
+        form.setValue("thumbnail_url", thumbnailUrl || "");
+    }, [form, videoUrl, thumbnailUrl]);
 
     const content = form.watch("content");
 
@@ -47,7 +80,7 @@ export default function FormUploadVideo() {
 
     const onReset = () => {
         setVideoFile(null);
-        setImageFile(null);
+        setThumbnailFile(null);
         form.reset();
     };
 
@@ -102,9 +135,9 @@ export default function FormUploadVideo() {
                                     </Tooltip>
                                 </div>
                                 <SelectThumbnailDialog
-                                    setCoverImage={setImageFile}
+                                    setCoverImage={setThumbnailFile}
                                     videoSrc={videoUrl}
-                                    imageSrc={imageUrl}
+                                    imageSrc={thumbnailUrl}
                                 />
                             </div>
 
