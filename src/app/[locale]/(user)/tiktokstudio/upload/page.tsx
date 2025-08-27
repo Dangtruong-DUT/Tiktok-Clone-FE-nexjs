@@ -1,4 +1,4 @@
-import FormUploadVideo from "@/app/[locale]/tiktokstudio/upload/_components/form-upload-video";
+import FormUploadVideo from "@/app/[locale]/(user)/tiktokstudio/upload/_components/form-upload-video";
 
 export default function UploadPage() {
     return (

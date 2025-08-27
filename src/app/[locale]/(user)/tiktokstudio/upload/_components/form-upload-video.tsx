@@ -1,19 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import UploadVideo from "@/app/[locale]/tiktokstudio/upload/_components/upload-video";
+import UploadVideo from "@/app/[locale]/(user)/tiktokstudio/upload/_components/upload-video";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { CreatePostReqBody, CreatePostReqBodyType } from "@/utils/validations/post.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Audience } from "@/constants/enum";
+import { Audience, MediaType } from "@/constants/enum";
 import { Textarea } from "@/components/ui/textarea";
 import { Info } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import VideoPreview from "@/app/[locale]/tiktokstudio/upload/_components/video-preview";
-import SelectThumbnailDialog from "@/app/[locale]/tiktokstudio/upload/_components/select-thumbnail-dialog";
+import VideoPreview from "@/app/[locale]/(user)/tiktokstudio/upload/_components/video-preview";
+import SelectThumbnailDialog from "@/app/[locale]/(user)/tiktokstudio/upload/_components/select-thumbnail-dialog";
 
 export default function FormUploadVideo() {
     const [isInitialRender, setIsInitialRender] = useState(true);
@@ -26,6 +26,7 @@ export default function FormUploadVideo() {
             hashtags: [],
             medias: [],
             mentions: [],
+            thumbnail_url: "",
         },
     });
 
@@ -36,15 +37,34 @@ export default function FormUploadVideo() {
 
     const imageUrl = imageFile ? URL.createObjectURL(imageFile) : null;
 
+    useEffect(() => {
+        if (videoUrl) {
+            form.setValue("medias", [{ type: MediaType.VIDEO, url: videoUrl }]);
+        } else {
+            form.setValue("medias", []);
+        }
+
+        form.setValue("thumbnail_url", imageUrl || "");
+    }, [videoUrl, imageUrl, form]);
+
     const content = form.watch("content");
+
+    const onsubmit = (data: CreatePostReqBodyType) => {};
+
+    const onReset = () => {
+        setVideoFile(null);
+        setImageFile(null);
+        form.reset();
+    };
 
     return (
         <Form {...form}>
-            <form>
+            <form onSubmit={form.handleSubmit(onsubmit)} onReset={onReset} method="POST">
                 <UploadVideo
                     onFileSelect={setVideoFile}
                     file={videoFile}
                     className="mb-8"
+                    onReset={onReset}
                     setIsInitialRender={setIsInitialRender}
                     isInitialRender={isInitialRender}
                 />
@@ -95,7 +115,7 @@ export default function FormUploadVideo() {
                             </div>
 
                             <div className="mt-5 text-base font-bold">Settings</div>
-                            <div className="rounded-lg border border-border p-5 mt-[16px]">
+                            <div className="rounded-lg border border-border p-5 mt-[16px] ">
                                 <FormField
                                     control={form.control}
                                     name="audience"
@@ -109,7 +129,7 @@ export default function FormUploadVideo() {
                                                 defaultValue={field.value.toString()}
                                             >
                                                 <FormControl>
-                                                    <SelectTrigger className="w-full bg-accent">
+                                                    <SelectTrigger className="w-full ">
                                                         <SelectValue placeholder="Select an audience" />
                                                     </SelectTrigger>
                                                 </FormControl>
@@ -126,7 +146,7 @@ export default function FormUploadVideo() {
                             </div>
                             <div className="flex gap-4 mt-10">
                                 <Button
-                                    className="primary-button cursor-pointer h-9! rounded-lg! w-[200px]!"
+                                    className="primary-button cursor-pointer h-9! rounded-lg! w-[200px]! font-medium!"
                                     type="submit"
                                 >
                                     Post
@@ -134,7 +154,8 @@ export default function FormUploadVideo() {
                                 <Button
                                     variant={"secondary"}
                                     type="reset"
-                                    className="cursor-pointer h-9 rounded-lg w-[200px]"
+                                    className="cursor-pointer h-9 rounded-lg w-[200px] font-base"
+                                    onClick={onReset}
                                 >
                                     Discard
                                 </Button>

@@ -13,6 +13,7 @@ export const CreatePostReqBody = z.object({
     hashtags: z.array(z.string()).optional(),
     mentions: z.array(z.string()).optional(),
     medias: z.array(MediaSchema),
+    thumbnail_url: z.string(),
 });
 
 export type CreatePostReqBodyType = z.infer<typeof CreatePostReqBody>;

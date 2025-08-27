@@ -1,7 +1,9 @@
 "use client";
 
-import FileInfo from "@/app/[locale]/tiktokstudio/upload/_components/upload-video/file-info";
-import UploadFile, { UploadFileRef } from "@/app/[locale]/tiktokstudio/upload/_components/upload-video/upload-file";
+import FileInfo from "@/app/[locale]/(user)/tiktokstudio/upload/_components/upload-video/file-info";
+import UploadFile, {
+    UploadFileRef,
+} from "@/app/[locale]/(user)/tiktokstudio/upload/_components/upload-video/upload-file";
 import { cn } from "@/lib/utils";
 import { useRef } from "react";
 
@@ -11,6 +13,7 @@ interface UploadVideoProps {
     className?: string;
     isInitialRender?: boolean;
     setIsInitialRender: (value: boolean) => void;
+    onReset: () => void;
 }
 
 export default function UploadVideo({
@@ -19,10 +22,12 @@ export default function UploadVideo({
     className,
     isInitialRender,
     setIsInitialRender,
+    onReset,
 }: UploadVideoProps) {
     const uploadFileRef = useRef<UploadFileRef>(null);
 
     const handleReplaceFile = () => {
+        onReset();
         uploadFileRef.current?.resetAndActive();
     };
 

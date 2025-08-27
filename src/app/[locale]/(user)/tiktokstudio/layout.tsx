@@ -1,4 +1,4 @@
-import NavLinks from "@/app/[locale]/tiktokstudio/_components/nav-links";
+import NavLinks from "@/app/[locale]/(user)/tiktokstudio/_components/nav-links";
 import Header from "./_components/header";
 
 export default function StudioLayout({ children }: { children: React.ReactNode }) {

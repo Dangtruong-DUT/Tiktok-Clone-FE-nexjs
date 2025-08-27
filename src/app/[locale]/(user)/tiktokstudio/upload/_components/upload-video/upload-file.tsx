@@ -3,7 +3,7 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import UploadGuideLine from "@/app/[locale]/tiktokstudio/upload/_components/upload-video/upload-guide-lines";
+import UploadGuideLine from "@/app/[locale]/(user)/tiktokstudio/upload/_components/upload-video/upload-guide-lines";
 import { cn } from "@/lib/utils";
 
 interface UploadFileProps {

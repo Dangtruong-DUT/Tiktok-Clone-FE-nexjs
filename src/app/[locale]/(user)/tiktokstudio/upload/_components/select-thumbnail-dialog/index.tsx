@@ -1,5 +1,5 @@
-import SelectThumbnailFromOriginalVideo from "@/app/[locale]/tiktokstudio/upload/_components/select-thumbnail-dialog/select-thumbnail-from-original-video";
-import UploadThumbnailFromDevice from "@/app/[locale]/tiktokstudio/upload/_components/select-thumbnail-dialog/upload-thumbnail";
+import SelectThumbnailFromOriginalVideo from "@/app/[locale]/(user)/tiktokstudio/upload/_components/select-thumbnail-dialog/select-thumbnail-from-original-video";
+import UploadThumbnailFromDevice from "@/app/[locale]/(user)/tiktokstudio/upload/_components/select-thumbnail-dialog/upload-thumbnail";
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
