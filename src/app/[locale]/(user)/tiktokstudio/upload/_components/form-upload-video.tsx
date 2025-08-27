@@ -1,23 +1,34 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import UploadVideo from "@/app/[locale]/(user)/tiktokstudio/upload/_components/upload-video";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { CreatePostReqBody, CreatePostReqBodyType } from "@/utils/validations/post.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Audience, MediaType } from "@/constants/enum";
+import { Audience, MediaType, PosterType } from "@/constants/enum";
 import { Textarea } from "@/components/ui/textarea";
-import { Info } from "lucide-react";
+import { Info, Loader } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import VideoPreview from "@/app/[locale]/(user)/tiktokstudio/upload/_components/video-preview";
 import SelectThumbnailDialog from "@/app/[locale]/(user)/tiktokstudio/upload/_components/select-thumbnail-dialog";
 import { generateTimeLineFrames } from "@/utils/video";
 import { convertBase64ToFileToFile } from "@/utils/file";
+import { useUploadImageMutation, useUploadVideoMutation } from "@/services/RTK/upload.services";
+import { useCreatePostMutation } from "@/services/RTK/posts.services";
+import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
+import { toast } from "sonner";
 
 export default function FormUploadVideo() {
+    const [uploadImage, uploadImageResult] = useUploadImageMutation();
+    const [uploadVideo, uploadVideoResult] = useUploadVideoMutation();
+    const [createPost, createPostResult] = useCreatePostMutation();
+
+    const isCreatePostLoading =
+        createPostResult.isLoading || uploadVideoResult.isLoading || uploadImageResult.isLoading;
+
     const [isInitialRender, setIsInitialRender] = useState(true);
 
     const form = useForm<CreatePostReqBodyType>({
@@ -29,6 +40,7 @@ export default function FormUploadVideo() {
             medias: [],
             mentions: [],
             thumbnail_url: "",
+            type: PosterType.POST,
         },
     });
 
@@ -74,16 +86,54 @@ export default function FormUploadVideo() {
         form.setValue("thumbnail_url", thumbnailUrl || "");
     }, [form, videoUrl, thumbnailUrl]);
 
-    const content = form.watch("content");
-
-    const onsubmit = async (data: CreatePostReqBodyType) => {};
-
     const onReset = () => {
         setVideoFile(null);
         setThumbnailFile(null);
         form.reset();
     };
 
+    const onsubmit = async (data: CreatePostReqBodyType) => {
+        console.log(data);
+        if (isCreatePostLoading) return;
+        try {
+            if (!videoFile || !thumbnailFile) return;
+
+            const formDataVideo = new FormData();
+            formDataVideo.append("file", videoFile);
+            const formDataThumbnail = new FormData();
+            formDataThumbnail.append("file", thumbnailFile);
+
+            const [videoResponse, imageResponse] = await Promise.all([
+                uploadVideo(formDataVideo).unwrap(),
+                uploadImage(formDataThumbnail).unwrap(),
+            ]);
+
+            const body: CreatePostReqBodyType = {
+                ...data,
+                medias: [
+                    {
+                        type: MediaType.VIDEO,
+                        url: videoResponse.data[0].url,
+                    },
+                ],
+                thumbnail_url: imageResponse.data[0].url,
+            };
+
+            const res = await createPost(body).unwrap();
+            toast.success(res.message, {
+                position: "top-center",
+            });
+            onReset();
+        } catch (error) {
+            console.error(error);
+            handleFormError<CreatePostReqBodyType>({
+                error,
+                setFormError: form.setError,
+            });
+        }
+    };
+
+    const content = form.watch("content");
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onsubmit)} onReset={onReset} method="POST">
@@ -152,7 +202,7 @@ export default function FormUploadVideo() {
                                                 Who can watch this video
                                             </FormLabel>
                                             <Select
-                                                onValueChange={field.onChange}
+                                                onValueChange={(value) => field.onChange(Number(value))}
                                                 defaultValue={field.value.toString()}
                                             >
                                                 <FormControl>
@@ -175,8 +225,9 @@ export default function FormUploadVideo() {
                                 <Button
                                     className="primary-button cursor-pointer h-9! rounded-lg! w-[200px]! font-medium!"
                                     type="submit"
+                                    disabled={isCreatePostLoading}
                                 >
-                                    Post
+                                    {isCreatePostLoading ? <Loader className="animate-spin text-brand" /> : "Post"}
                                 </Button>
                                 <Button
                                     variant={"secondary"}
