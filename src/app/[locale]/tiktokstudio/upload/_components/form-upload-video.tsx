@@ -76,7 +76,7 @@ export default function FormUploadVideo() {
                                 <div className="flex mt-7 mb-2 items-center gap-2 text-sm font-semibold">
                                     Cover
                                     <Tooltip>
-                                        <TooltipTrigger>
+                                        <TooltipTrigger asChild>
                                             <Info size={14} className="text-muted-foreground" />
                                         </TooltipTrigger>
                                         <TooltipContent align="center" className="w-2xs">
@@ -124,7 +124,7 @@ export default function FormUploadVideo() {
                                     )}
                                 />
                             </div>
-                            <div className="flex gap-4 mt-5">
+                            <div className="flex gap-4 mt-10">
                                 <Button
                                     className="primary-button cursor-pointer h-9! rounded-lg! w-[200px]!"
                                     type="submit"

@@ -69,6 +69,16 @@ export default function SelectThumbnailFromOriginalVideo({
         setIsDragging(false);
     };
 
+    const onConfirm = () => {
+        if (!selectedFrame.image) return;
+        fetch(selectedFrame.image)
+            .then((res) => res.blob())
+            .then((blob) => {
+                const file = new File([blob], "thumbnail.png", { type: "image/png" });
+                setCoverImage(file);
+            });
+    };
+
     return (
         <div>
             <div className="flex flex-col items-center gap-4 py-4">
@@ -101,7 +111,9 @@ export default function SelectThumbnailFromOriginalVideo({
                 </div>
             </div>
             <footer className=" flex items-center justify-end p-4 border-t  ">
-                <Button className="primary-button h-10! rounded-lg! ">Confirm</Button>
+                <Button className="primary-button h-10! rounded-lg! cursor-pointer" onClick={onConfirm}>
+                    Confirm
+                </Button>
             </footer>
         </div>
     );

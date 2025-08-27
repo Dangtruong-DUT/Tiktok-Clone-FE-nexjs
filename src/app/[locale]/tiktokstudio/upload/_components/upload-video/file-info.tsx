@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { MdOutlinePublishedWithChanges } from "react-icons/md";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface FileInfoProps {
     file: File | null;
@@ -27,12 +28,19 @@ export default function FileInfo({ file, onReplaceFile, className }: FileInfoPro
         >
             <div>
                 <div>
-                    <span className="font-bold text-base mr-2">{name}</span>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <span className="font-bold text-base mr-2">{name}</span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>{name}</p>
+                        </TooltipContent>
+                    </Tooltip>
                     <Badge variant={"outline"}>{type}</Badge>
                 </div>
-                <div className="mt-2 text-green-400">{<span>{(size / (1024 * 1024)).toFixed(2)} MB</span>}</div>
+                <div className="mt-2 text-green-400 text-sm">{<span>{(size / (1024 * 1024)).toFixed(2)} MB</span>}</div>
             </div>
-            <Button type="button" onClick={handleReplace} className="cursor-pointer">
+            <Button variant="secondary" type="button" onClick={handleReplace} className="cursor-pointer">
                 <MdOutlinePublishedWithChanges />
                 Replace
             </Button>

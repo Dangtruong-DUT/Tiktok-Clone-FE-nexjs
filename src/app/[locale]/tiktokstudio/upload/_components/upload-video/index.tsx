@@ -3,7 +3,7 @@
 import FileInfo from "@/app/[locale]/tiktokstudio/upload/_components/upload-video/file-info";
 import UploadFile, { UploadFileRef } from "@/app/[locale]/tiktokstudio/upload/_components/upload-video/upload-file";
 import { cn } from "@/lib/utils";
-import { Ref, useRef } from "react";
+import { useRef } from "react";
 
 interface UploadVideoProps {
     onFileSelect: (file: File | null) => void;

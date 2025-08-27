@@ -75,13 +75,13 @@ export default function VideoPreview({ videoSrc, content, className }: VideoPrev
                     src={"/images/upload-page/bottom-video-player.png"}
                     width={264}
                     height={34}
-                    className="absolute bottom-[20px] left-0 block w-full"
+                    className="absolute bottom-[20px] left-0 block"
                     alt="control bar mobile"
                 />
             </div>
             <div className="absolute top-0 left-0 inset-0 z-2">
                 <div className="relative h-[511px] w-full">
-                    {videoRef && (
+                    {videoSrc !== null && (
                         <video
                             ref={videoRef}
                             className="w-full  h-[511px]  object-cover rounded-t-[20px]"
@@ -98,14 +98,14 @@ export default function VideoPreview({ videoSrc, content, className }: VideoPrev
                             src={"/images/upload-page/status-bar-mobile.png"}
                             width={264}
                             height={32}
-                            className="inline-block w-full h-8"
+                            className="inline-block "
                             alt="status bar mobile"
                         />
                         <Image
                             src={"/images/upload-page/navigation-bar-mobile.png"}
                             width={264}
                             height={32}
-                            className="inline-block w-full h-8"
+                            className="inline-block "
                             alt="control bar mobile"
                         />
                     </div>
@@ -118,7 +118,7 @@ export default function VideoPreview({ videoSrc, content, className }: VideoPrev
                             src={"/images/upload-page/action-bar-tiktok.png"}
                             width={25}
                             height={174}
-                            className="inline-block w-[25px] h-[174px] mt-5"
+                            className="inline-block mt-5"
                             alt="action bar tiktok"
                         />
                     </div>
