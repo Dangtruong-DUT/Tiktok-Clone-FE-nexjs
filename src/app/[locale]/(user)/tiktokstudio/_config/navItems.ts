@@ -1,5 +1,5 @@
 import { Role } from "@/constants/enum";
-import { Home, FileArchive, MessageSquarePlus, Settings, LayoutPanelLeft, BookUp } from "lucide-react";
+import { Settings, LayoutPanelLeft, BookUp } from "lucide-react";
 
 interface NavItem {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

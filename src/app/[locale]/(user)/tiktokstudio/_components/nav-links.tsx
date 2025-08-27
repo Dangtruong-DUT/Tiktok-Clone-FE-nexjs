@@ -30,7 +30,11 @@ export default function NavLinks() {
                                 "select-none opacity-40 cursor-not-allowed": pathname === "/tiktokstudio/upload",
                             })}
                         >
-                            <Button className={cn("primary-button h-9! rounded-lg! w-full cursor-pointer ")}>
+                            <Button
+                                className={cn("primary-button h-9! rounded-lg! w-full cursor-pointer ", {
+                                    "select-none opacity-40 cursor-not-allowed": pathname === "/tiktokstudio/upload",
+                                })}
+                            >
                                 <Plus className="size-5" />
                                 <span>{t2("upload")}</span>
                             </Button>
