@@ -34,16 +34,10 @@ export default function FormUploadVideo() {
     const [imageFile, setImageFile] = useState<File | null>(null);
 
     const videoUrl = videoFile ? URL.createObjectURL(videoFile) : null;
-
     const imageUrl = imageFile ? URL.createObjectURL(imageFile) : null;
 
     useEffect(() => {
-        if (videoUrl) {
-            form.setValue("medias", [{ type: MediaType.VIDEO, url: videoUrl }]);
-        } else {
-            form.setValue("medias", []);
-        }
-
+        form.setValue("medias", videoUrl ? [{ type: MediaType.VIDEO, url: videoUrl }] : []);
         form.setValue("thumbnail_url", imageUrl || "");
     }, [videoUrl, imageUrl, form]);
 
