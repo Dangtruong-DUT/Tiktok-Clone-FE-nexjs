@@ -21,6 +21,8 @@ import { useCreatePostMutation } from "@/services/RTK/posts.services";
 import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { audienceStatusValues } from "@/constants/types";
+import { getAudienceNameFromEnum } from "@/helper/getNameFromStatus";
 
 export default function FormUploadVideo() {
     const [uploadImage, uploadImageResult] = useUploadImageMutation();
@@ -215,9 +217,11 @@ export default function FormUploadVideo() {
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
-                                                    <SelectItem value={Audience.PUBLIC.toString()}>Public</SelectItem>
-                                                    <SelectItem value={Audience.FRIENDS.toString()}>Friends</SelectItem>
-                                                    <SelectItem value={Audience.PRIVATE.toString()}>Private</SelectItem>
+                                                    {audienceStatusValues.map((status) => (
+                                                        <SelectItem key={status} value={status.toString()}>
+                                                            {getAudienceNameFromEnum(status)}
+                                                        </SelectItem>
+                                                    ))}
                                                 </SelectContent>
                                             </Select>
                                             <FormMessage />
