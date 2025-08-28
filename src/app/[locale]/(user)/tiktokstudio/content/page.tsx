@@ -3,7 +3,7 @@ import PostTableProvider from "@/app/[locale]/(user)/tiktokstudio/content/_conte
 
 export default function ContentPage() {
     return (
-        <div className="p-4">
+        <div className="p-4 sm:px-6">
             <PostTableProvider>
                 <TableContent />
             </PostTableProvider>

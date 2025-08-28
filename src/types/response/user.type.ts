@@ -10,3 +10,5 @@ export type VerifyEmailResType = ResType<
 >;
 
 export type GetUserProfileResType = ResType<UserType, void>;
+
+export type UpdateUserResType = ResType<UserType, void>;

@@ -1,12 +1,17 @@
 import { API_ENDPOINT } from "@/config/endpoint.config";
 import baseQueryWithReauth from "@/services/RTK/client";
-import { GetUserProfileResType, VerifyEmailResType } from "@/types/response/user.type";
+import { GetUserProfileResType, UpdateUserResType, VerifyEmailResType } from "@/types/response/user.type";
 import {
     ForgotPasswordReqBodyType,
     ResetPasswordReqBodyType,
     verifyForgotPasswordReqBodyType,
 } from "@/utils/validations/auth.schema";
-import { FollowUserReqBodyType, VerifyEmailReqBodyType } from "@/utils/validations/user.schema";
+import {
+    ChangePasswordBodyType,
+    FollowUserReqBodyType,
+    UpdateUserBodyType,
+    VerifyEmailReqBodyType,
+} from "@/utils/validations/user.schema";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 export const UserApi = createApi({
@@ -80,6 +85,21 @@ export const UserApi = createApi({
                 { type: "User", id: "LIST" },
             ],
         }),
+        changePassword: builder.mutation<{ message: string }, ChangePasswordBodyType>({
+            query: (data) => ({
+                url: `/users/change-password`,
+                method: "PUT",
+                body: data,
+            }),
+        }),
+        updateMe: builder.mutation<UpdateUserResType, UpdateUserBodyType>({
+            query: (data) => ({
+                url: `/users/me`,
+                method: "PATCH",
+                body: data,
+            }),
+            invalidatesTags: (result, error, arg) => (result ? [{ type: "User", id: result.data._id }] : []),
+        }),
     }),
 });
 
@@ -92,4 +112,6 @@ export const {
     useGetUserByUsernameQuery,
     useFollowUserMutation,
     useUnfollowUserMutation,
+    useChangePasswordMutation,
+    useUpdateMeMutation,
 } = UserApi;
