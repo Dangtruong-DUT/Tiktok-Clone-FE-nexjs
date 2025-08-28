@@ -20,6 +20,8 @@ import { columns } from "@/app/[locale]/(user)/tiktokstudio/content/_components/
 import { DataTable } from "@/components/ui/data-table";
 import AutoPagination from "@/components/auto-pagination";
 import { Input } from "@/components/ui/input";
+import AlertDialogDeleteDish from "@/app/[locale]/(user)/tiktokstudio/content/_components/alert-confirm-delete-post";
+import { usePostTableContext } from "@/app/[locale]/(user)/tiktokstudio/content/_context/content-table.context";
 
 export default function TableContent() {
     const currentUser = useCurrentUserData();
@@ -27,6 +29,8 @@ export default function TableContent() {
 
     // page param mặc định 1, nhưng TanStack dùng pageIndex (0-based)
     const page = searchParams?.get("page") ? Number(searchParams.get("page")) : 1;
+
+    const { setPostIdDelete, postIdDelete } = usePostTableContext();
 
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -81,7 +85,7 @@ export default function TableContent() {
     return (
         <div className="w-full">
             <SearchParamsLoader onParamsReceived={setSearchParams} />
-
+            <AlertDialogDeleteDish postIdDelete={postIdDelete} setPostIdDelete={setPostIdDelete} />
             <div className="flex items-center py-4">
                 <Input
                     placeholder="Search for post description"
@@ -94,10 +98,6 @@ export default function TableContent() {
             <DataTable columns={columns} table={table} />
 
             <div className="flex items-center justify-end space-x-2 py-4">
-                {/* <div className="text-xs text-muted-foreground py-4 flex-1">
-                    show <strong>{table.getPaginationRowModel().rows.length}</strong> in{" "}
-                    <strong>{queryData?.meta?.limit || 0}</strong> results
-                </div> */}
                 <div>
                     <AutoPagination
                         page={table.getState().pagination.pageIndex + 1}

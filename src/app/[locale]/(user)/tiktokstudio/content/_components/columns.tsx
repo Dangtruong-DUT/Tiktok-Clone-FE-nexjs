@@ -13,6 +13,7 @@ import { Link } from "@/i18n/navigation";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { formatCash } from "@/utils/formatting/formatNumber";
+import { usePostTableContext } from "@/app/[locale]/(user)/tiktokstudio/content/_context/content-table.context";
 
 export const columns: ColumnDef<TikTokPostType>[] = [
     {
@@ -77,44 +78,50 @@ export const columns: ColumnDef<TikTokPostType>[] = [
     },
     {
         header: "Actions",
-        cell: () => (
-            <div className="flex gap-2">
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="rounded-full text-muted-foreground cursor-pointer"
-                        >
-                            <PencilLine />
-                        </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p>Edit</p>
-                    </TooltipContent>
-                </Tooltip>
+        cell: function Actions({ row }) {
+            const post = row.original;
+            const { setPostIdDelete } = usePostTableContext();
 
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="rounded-full text-muted-foreground cursor-pointer"
-                        >
-                            <Ellipsis />
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent align="end" className="p-1! max-w-fit!">
-                        <Button
-                            variant="ghost"
-                            className=" cursor-pointer text-red-500 hover:text-red-600 w-full justify-start px-6!"
-                        >
-                            <Trash2 />
-                            <span>Delete</span>
-                        </Button>
-                    </PopoverContent>
-                </Popover>
-            </div>
-        ),
+            return (
+                <div className="flex gap-2">
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                className="rounded-full text-muted-foreground cursor-pointer"
+                            >
+                                <PencilLine />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Edit</p>
+                        </TooltipContent>
+                    </Tooltip>
+
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                className="rounded-full text-muted-foreground cursor-pointer"
+                            >
+                                <Ellipsis />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent align="end" className="p-1! max-w-fit!">
+                            <Button
+                                variant="ghost"
+                                className=" cursor-pointer text-red-500 hover:text-red-600 w-full justify-start px-6!"
+                                onClick={() => setPostIdDelete(post._id)}
+                            >
+                                <Trash2 />
+                                <span>Delete</span>
+                            </Button>
+                        </PopoverContent>
+                    </Popover>
+                </div>
+            );
+        },
     },
 ];
