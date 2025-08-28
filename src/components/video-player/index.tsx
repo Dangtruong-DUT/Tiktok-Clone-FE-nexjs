@@ -71,6 +71,7 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
                 ref={videoRef}
                 playsInline
                 loop
+                preload="metadata"
                 muted={isMuted}
             >
                 <source src={post.medias[0].url} type="video/mp4" />

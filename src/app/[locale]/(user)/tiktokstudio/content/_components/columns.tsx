@@ -40,7 +40,7 @@ export const columns: ColumnDef<TikTokPostType>[] = [
                     )}
                     <div className="flex flex-col gap-[7px]">
                         <Link href={`/@${author.username}/${_id}`} className="font-medium hover:underline">
-                            <span className="overflow-hidden text-ellipsis text-sm">{content}</span>
+                            <span className="truncate  text-sm inline-block max-w-[100px]">{content}</span>
                         </Link>
 
                         <span className="text-muted-foreground text-xs">{formatISOToDisplayDate(created_at)}</span>
@@ -101,13 +101,19 @@ export const columns: ColumnDef<TikTokPostType>[] = [
                 <div className="flex gap-2">
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <Button
-                                variant="outline"
-                                size="icon"
-                                className="rounded-full text-muted-foreground cursor-pointer"
+                            <Link
+                                href={`/tiktokstudio/upload/post/${post._id}?from=${encodeURIComponent(
+                                    "/tiktokstudio/content"
+                                )}`}
                             >
-                                <PencilLine />
-                            </Button>
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    className="rounded-full text-muted-foreground cursor-pointer"
+                                >
+                                    <PencilLine />
+                                </Button>
+                            </Link>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>Edit</p>

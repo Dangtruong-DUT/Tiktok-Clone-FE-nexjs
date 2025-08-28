@@ -340,7 +340,10 @@ export const PostApi = createApi({
                 method: "PATCH",
                 body,
             }),
-            invalidatesTags: (result, error, arg) => [{ type: "Posts" as const, id: arg.post_id }],
+            invalidatesTags: (result, error, arg) => {
+                console.log("Invalidating post with ID:", arg.body);
+                return [{ type: "Posts" as const, id: arg.post_id }];
+            },
         }),
     }),
 });

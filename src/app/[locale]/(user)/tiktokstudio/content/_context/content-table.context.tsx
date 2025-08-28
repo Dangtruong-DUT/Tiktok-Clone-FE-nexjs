@@ -31,7 +31,7 @@ function PostTableProvider({ children }: { children: React.ReactNode }) {
 
     const changeAudienceStatus = async ({ status, postId }: { status: Audience; postId: string }) => {
         try {
-            await updatePost({ post_id: postId, body: { audience: status } });
+            await updatePost({ post_id: postId, body: { audience: status } }).unwrap();
         } catch (error) {
             console.error("Failed to update post audience:", error);
         }

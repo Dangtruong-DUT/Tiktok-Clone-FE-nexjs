@@ -1,7 +1,9 @@
+import FormUpdatePost from "@/app/[locale]/(user)/tiktokstudio/upload/post/[id]/_components/form-update-post";
+
 export default function UpdatePostPage() {
     return (
-        <div>
-            <h1>Update Post</h1>
+        <div className="p-4">
+            <FormUpdatePost />
         </div>
     );
 }

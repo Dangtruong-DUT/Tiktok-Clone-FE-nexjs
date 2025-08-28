@@ -81,18 +81,17 @@ export default function VideoPreview({ videoSrc, content, className }: VideoPrev
             </div>
             <div className="absolute top-0 left-0 inset-0 z-2">
                 <div className="relative h-[511px] w-full">
-                    {videoSrc !== null && (
-                        <video
-                            ref={videoRef}
-                            className="w-full  h-[511px]  object-cover rounded-t-[20px]"
-                            muted={isMuted}
-                            autoPlay
-                            loop
-                            playsInline
-                        >
-                            <source src={videoSrc ?? undefined} type="video/mp4" />
-                        </video>
-                    )}
+                    <video
+                        ref={videoRef}
+                        className="w-full  h-[511px]  object-cover rounded-t-[20px]"
+                        muted={isMuted}
+                        autoPlay
+                        loop
+                        preload="metadata"
+                        playsInline
+                        src={videoSrc ?? undefined}
+                    />
+
                     <div className="absolute  top-1 left-0 flex flex-col items-center gap-1  w-full">
                         <Image
                             src={"/images/upload-page/status-bar-mobile.png"}

@@ -3,7 +3,7 @@ import z from "zod";
 
 export const MediaSchema = z.object({
     url: z.string(),
-    type: z.union([z.literal(MediaType.IMAGE), z.literal(MediaType.VIDEO)]),
+    type: z.union([z.literal(MediaType.IMAGE), z.literal(MediaType.VIDEO), z.literal(MediaType.HLS_VIDEO)]),
 });
 
 export const CreatePostReqBody = z.object({
