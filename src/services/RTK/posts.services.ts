@@ -323,6 +323,12 @@ export const PostApi = createApi({
                 },
             },
         }),
+        deletePost: builder.mutation<{ message: string }, string>({
+            query: (id) => ({
+                url: `/posts/${id}`,
+                method: "DELETE",
+            }),
+        }),
     }),
 });
 
@@ -342,4 +348,5 @@ export const {
     useGetUnfollowedPostsInfiniteQuery,
     useCreatePostMutation,
     useGetPostOfUserPagingQuery,
+    useDeletePostMutation,
 } = PostApi;
