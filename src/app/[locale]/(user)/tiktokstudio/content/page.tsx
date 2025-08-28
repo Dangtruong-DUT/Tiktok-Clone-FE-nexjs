@@ -1,7 +1,9 @@
+import TableContent from "@/app/[locale]/(user)/tiktokstudio/content/_components/table-content";
+
 export default function ContentPage() {
     return (
-        <div>
-            <h1>Content Page</h1>
+        <div className="p-4">
+            <TableContent />
         </div>
     );
 }

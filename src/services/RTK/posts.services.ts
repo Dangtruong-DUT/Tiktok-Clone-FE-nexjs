@@ -199,6 +199,23 @@ export const PostApi = createApi({
                 },
             },
         }),
+        getPostOfUserPaging: builder.query<GetListPostRes, { userId: string; page: number }>({
+            query: ({ userId, page }) => `/users/${userId}/posts?page=${page}&limit=10`,
+            providesTags: (result, error, arg) => {
+                if (result) {
+                    const final = [
+                        ...result.data.posts.map(({ _id }) => ({
+                            type: "Posts" as const,
+                            id: _id,
+                        })),
+                        { type: "Posts" as const, id: `POST-OF-CONTENT-LIST` },
+                    ];
+
+                    return final;
+                }
+                return [{ type: "Posts" as const, id: `POST-OF-CONTENT-LIST` }];
+            },
+        }),
         getBookmarkedPostsOfUser: builder.infiniteQuery<GetListPostRes, string, number>({
             query: ({ pageParam, queryArg }) => `/users/${queryArg}/bookmarks?page=${pageParam}&limit=10`,
             providesTags: (result, error, arg) => {
@@ -324,4 +341,5 @@ export const {
     useGetLikedPostsOfUserInfiniteQuery,
     useGetUnfollowedPostsInfiniteQuery,
     useCreatePostMutation,
+    useGetPostOfUserPagingQuery,
 } = PostApi;

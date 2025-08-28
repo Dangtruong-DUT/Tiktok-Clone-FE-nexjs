@@ -31,9 +31,13 @@ export default function NavLinks() {
                             })}
                         >
                             <Button
-                                className={cn("primary-button h-9! rounded-lg! w-full cursor-pointer ", {
-                                    "select-none opacity-40 cursor-not-allowed": pathname === "/tiktokstudio/upload",
-                                })}
+                                className={cn(
+                                    " h-9 font-medium text-sm rounded-lg gap-1! w-full cursor-pointer bg-brand text-white hover:bg-brand/90 transition-colors",
+                                    {
+                                        "select-none opacity-40 cursor-not-allowed":
+                                            pathname === "/tiktokstudio/upload",
+                                    }
+                                )}
                             >
                                 <Plus className="size-5" />
                                 <span>{t2("upload")}</span>
@@ -50,13 +54,13 @@ export default function NavLinks() {
                                             className={cn(
                                                 "w-full text-sm font-medium transition-colors flex justify-start gap-2",
                                                 {
-                                                    " text-brand": isActive,
+                                                    "  border-2 border-border bg-muted ": isActive,
                                                 }
                                             )}
                                         >
                                             <item.Icon
                                                 className={cn("h-5 w-5", {
-                                                    "text-brand": isActive,
+                                                    "": isActive,
                                                 })}
                                             />
                                             {t(item.title)}

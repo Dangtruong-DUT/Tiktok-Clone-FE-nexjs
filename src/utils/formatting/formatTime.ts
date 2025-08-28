@@ -40,3 +40,19 @@ export function timeToMMSSCS(time: number): string {
         .padStart(2, "0");
     return `${minutes}:${seconds}:${centiseconds}`;
 }
+
+export function formatISOToDisplayDate(data: string): string {
+    try {
+        const date = new Date(data);
+        return new Intl.DateTimeFormat("en-GB", {
+            day: "2-digit",
+            month: "short",
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+        }).format(date);
+    } catch (error) {
+        console.log("Error in formatISOToDisplayDate function:", error);
+        return "Invalid date";
+    }
+}

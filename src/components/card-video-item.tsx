@@ -30,7 +30,7 @@ export default function CardVideoItem({
         <article className="w-full gap-2 ">
             <div className={cn("relative inline-block w-full pt-[133.333%] overflow-hidden rounded-md group")}>
                 {isCurrentlyPlaying && (
-                    <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/30 backdrop-blur-sm">
+                    <div className="absolute inset-0 z-5 flex flex-col items-center justify-center bg-black/30 backdrop-blur-sm">
                         <PlayingIcon className="h-5.5 text-white" loop={true} />
                         <span className="text-white text-[13px] font-semibold mt-2">Now Playing</span>
                     </div>
@@ -38,7 +38,7 @@ export default function CardVideoItem({
 
                 <div
                     className={cn(
-                        "absolute inset-0 z-20 transition-opacity duration-300",
+                        "absolute inset-0 z-2 transition-opacity duration-300",
                         isCurrentlyPlaying ? "blur-sm brightness-75" : "group-hover:opacity-0"
                     )}
                 >
@@ -53,8 +53,8 @@ export default function CardVideoItem({
 
                 <div
                     className={cn(
-                        "absolute inset-0 opacity-0 transition-opacity duration-300 z-10",
-                        !isCurrentlyPlaying && "group-hover:opacity-100 group-hover:z-30"
+                        "absolute inset-0 opacity-0 transition-opacity duration-300 z-1",
+                        !isCurrentlyPlaying && "group-hover:opacity-100 group-hover:z-2"
                     )}
                 >
                     <video autoPlay muted playsInline loop className="w-full h-full object-cover">
@@ -63,7 +63,7 @@ export default function CardVideoItem({
                 </div>
 
                 {!isDescriptionVisible && (
-                    <div className="absolute bottom-0 left-0 w-full z-40 flex justify-between items-end px-3 pt-[67px] pb-[17px] h-[40%] bg-gradient-to-t from-[rgba(22,24,35,0.5)] via-transparent">
+                    <div className="absolute bottom-0 left-0 w-full z-4 flex justify-between items-end px-3 pt-[67px] pb-[17px] h-[40%] bg-gradient-to-t from-[rgba(22,24,35,0.5)] via-transparent">
                         <div className="flex items-center gap-1.5">
                             <CiHeart className="text-white size-4.5" />
                             <span className="text-white font-semibold text-sm">
