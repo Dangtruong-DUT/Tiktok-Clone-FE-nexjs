@@ -31,7 +31,9 @@ const RootCommentsContext = createContext<RootCommentsContextProps | undefined>(
 
 type CommentListProps = { postId: string; username: string };
 export default function CommentList({ postId, username }: CommentListProps) {
-    const { data, fetchNextPage, hasNextPage, isFetching } = useGetCommentsInfiniteQuery(postId);
+    const { data, fetchNextPage, hasNextPage, isFetching } = useGetCommentsInfiniteQuery(postId, {
+        pollingInterval: 10000,
+    });
     const comments: CommentType[] = data?.pages.flatMap((page) => page.data.posts) || [];
 
     const sentinelScrollRef = useRef<HTMLDivElement | null>(null);
