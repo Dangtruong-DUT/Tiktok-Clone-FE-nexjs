@@ -14,6 +14,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { formatCash } from "@/utils/formatting/formatNumber";
 import { usePostTableContext } from "@/app/[locale]/(user)/tiktokstudio/content/_context/content-table.context";
+import { BsFillImageFill } from "react-icons/bs";
 
 export const columns: ColumnDef<TikTokPostType>[] = [
     {
@@ -23,13 +24,20 @@ export const columns: ColumnDef<TikTokPostType>[] = [
             const { thumbnail_url, content, created_at, author, _id } = row.original;
             return (
                 <div className="flex gap-4 items-center">
-                    <Image
-                        src={thumbnail_url}
-                        width={60}
-                        height={80}
-                        alt=""
-                        className="object-cover w-[60px] h-[80px] rounded-md"
-                    />
+                    {thumbnail_url && (
+                        <Image
+                            src={thumbnail_url}
+                            width={60}
+                            height={80}
+                            alt=""
+                            className="object-cover w-[60px] h-[80px] rounded-md"
+                        />
+                    )}
+                    {!thumbnail_url && (
+                        <div className="w-[60px] h-[80px] flex items-center justify-center bg-card rounded-md border">
+                            <BsFillImageFill />
+                        </div>
+                    )}
                     <div className="flex flex-col gap-[7px]">
                         <Link href={`/@${author.username}/${_id}`} className="font-medium hover:underline">
                             <span className="overflow-hidden text-ellipsis text-sm">{content}</span>
@@ -44,9 +52,16 @@ export const columns: ColumnDef<TikTokPostType>[] = [
     {
         accessorKey: "audience",
         header: "Privacy",
-        cell: ({ row }) => {
+        cell: function PrivacySelect({ row }) {
+            const originalRow = row.original;
+            const { changeAudienceStatus } = usePostTableContext();
+
+            const onChangeStatus = (status: string) => {
+                changeAudienceStatus({ status: Number(status), postId: originalRow._id });
+            };
+
             return (
-                <Select value={row.getValue("audience")?.toString()} onValueChange={() => {}}>
+                <Select value={row.getValue("audience")?.toString()} onValueChange={onChangeStatus}>
                     <SelectTrigger className="w-[140px]">
                         <SelectValue placeholder="Select Privacy" />
                     </SelectTrigger>

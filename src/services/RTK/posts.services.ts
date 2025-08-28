@@ -362,4 +362,5 @@ export const {
     useCreatePostMutation,
     useGetPostOfUserPagingQuery,
     useDeletePostMutation,
+    useUpdatePostMutation,
 } = PostApi;
