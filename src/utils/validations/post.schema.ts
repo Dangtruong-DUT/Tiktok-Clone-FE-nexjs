@@ -31,3 +31,16 @@ export const CreateCommentsReqBody = z
     .strict();
 
 export type CreateCommentsReqBodyType = z.infer<typeof CreateCommentsReqBody>;
+
+export const UpdatePostReqBody = z.object({
+    audience: z
+        .union([z.literal(Audience.PUBLIC), z.literal(Audience.FRIENDS), z.literal(Audience.PRIVATE)])
+        .optional(),
+    content: z.string().min(0).max(4000).optional(),
+    hashtags: z.array(z.string()).optional(),
+    mentions: z.array(z.string()).optional(),
+    medias: z.array(MediaSchema).optional(),
+    thumbnail_url: z.string().optional(),
+});
+
+export type UpdatePostReqBodyType = z.infer<typeof UpdatePostReqBody>;

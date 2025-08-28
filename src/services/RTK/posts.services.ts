@@ -1,7 +1,11 @@
 import { PosterType } from "@/constants/enum";
 import baseQueryWithReauth from "@/services/RTK/client";
 import { GetListCommentRes, GetListPostRes, GetPostDetailRes } from "@/types/response/post.type";
-import { CreateCommentsReqBodyType, CreatePostReqBodyType } from "@/utils/validations/post.schema";
+import {
+    CreateCommentsReqBodyType,
+    CreatePostReqBodyType,
+    UpdatePostReqBodyType,
+} from "@/utils/validations/post.schema";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import _ from "lodash";
 
@@ -329,6 +333,14 @@ export const PostApi = createApi({
                 method: "DELETE",
             }),
             invalidatesTags: (result, error, arg) => [{ type: "Posts" as const, id: arg }],
+        }),
+        updatePost: builder.mutation<{ message: string }, { post_id: string; body: UpdatePostReqBodyType }>({
+            query: ({ post_id, body }) => ({
+                url: `/posts/${post_id}`,
+                method: "PATCH",
+                body,
+            }),
+            invalidatesTags: (result, error, arg) => [{ type: "Posts" as const, id: arg.post_id }],
         }),
     }),
 });
