@@ -29,7 +29,7 @@ function ProfileUser({ userData, className }: ProfileUserProps) {
                 <AvatarFallback className="text-2xl font-bold">{name.charAt(0).toUpperCase()}</AvatarFallback>
             </Avatar>
 
-            <div className="w-full flex flex-col items-start gap-6 max-lg:items-center">
+            <div className="w-full flex flex-col items-start gap-3 max-lg:items-center">
                 <div className="flex items-center gap-3">
                     <h1 className=" font-bold text-2xl leading-6 text-left overflow-hidden text-ellipsis whitespace-nowrap max-w-82">
                         {name}

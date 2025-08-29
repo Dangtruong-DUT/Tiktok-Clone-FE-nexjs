@@ -64,6 +64,10 @@ export default function EditProfileDialog() {
         }
     }
 
+    const onReset = () => {
+        form.reset();
+    };
+
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
@@ -82,7 +86,7 @@ export default function EditProfileDialog() {
                     <DialogTitle className="text-xl font-semibold">Edit profile</DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="px-8 py-4">
+                    <form onSubmit={form.handleSubmit(onSubmit)} onReset={onReset} className="px-8 py-4">
                         <FormField
                             control={form.control}
                             name="username"
@@ -141,12 +145,7 @@ export default function EditProfileDialog() {
                             )}
                         />
                         <div className="flex justify-end gap-3 pt-4 border-t">
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => setOpen(false)}
-                                className="h-8 px-8 w-[96px] text-sm font-semibold"
-                            >
+                            <Button type="reset" variant="outline" className="h-8 px-8 w-[96px] text-sm font-semibold">
                                 Cancel
                             </Button>
                             <Button
