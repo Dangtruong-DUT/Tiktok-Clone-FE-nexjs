@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { useFollowUser } from "@/hooks/data/useUser";
 import ButtonFollow from "@/app/[locale]/(public)/(home)/[username]/_components/button-follow";
 import { Link } from "@/i18n/navigation";
+import EditProfileDialog from "@/app/[locale]/(public)/(home)/[username]/_components/edit-profile-dialog";
 
 interface ProfileActionButtonsProps {
     username: string;
@@ -30,16 +31,7 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
     if (isCurrentUser) {
         return (
             <div className="flex items-center">
-                <Button
-                    variant="default"
-                    className="primary-button h-10! rounded-md! text-base! font-medium! cursor-pointer "
-                >
-                    <span className="flex justify-center items-center mr-1 max-lg:flex max-md:mr-0">
-                        <Edit3 size={19} />
-                    </span>
-                    <span className="max-md:hidden">Edit Profile</span>
-                </Button>
-
+                <EditProfileDialog />
                 <Link href="/tiktokstudio/settings">
                     <Button variant="outline" className="ml-2 h-10 font-medium rounded-md text-base cursor-pointer">
                         <span className="flex justify-center  items-center mr-1 max-lg:flex max-md:mr-0">
