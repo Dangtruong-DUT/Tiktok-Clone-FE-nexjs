@@ -45,7 +45,7 @@ export default function SearchDrawerContent({ searchValue, setSearchValue }: Sea
     );
 
     const handleOnEnterOnSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") {
+        if (e.key === "Enter" && searchValue) {
             e.preventDefault();
             router.push(`/search?q=${searchValue}`);
         }
