@@ -7,6 +7,7 @@ import { useCallback } from "react";
 import { toast } from "sonner";
 import { useFollowUser } from "@/hooks/data/useUser";
 import ButtonFollow from "@/app/[locale]/(public)/(home)/[username]/_components/button-follow";
+import { Link } from "@/i18n/navigation";
 
 interface ProfileActionButtonsProps {
     username: string;
@@ -39,12 +40,14 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
                     <span className="max-md:hidden">Edit Profile</span>
                 </Button>
 
-                <Button variant="outline" className="ml-2 h-10 font-medium rounded-md text-base cursor-pointer">
-                    <span className="flex justify-center  items-center mr-1 max-lg:flex max-md:mr-0">
-                        <Settings size={19} />
-                    </span>
-                    <span className="max-md:hidden">Settings</span>
-                </Button>
+                <Link href="/tiktokstudio/settings">
+                    <Button variant="outline" className="ml-2 h-10 font-medium rounded-md text-base cursor-pointer">
+                        <span className="flex justify-center  items-center mr-1 max-lg:flex max-md:mr-0">
+                            <Settings size={19} />
+                        </span>
+                        <span className="max-md:hidden">Settings</span>
+                    </Button>
+                </Link>
 
                 <Button variant="outline" className="ml-2  h-10 font-medium rounded-md text-base">
                     <Share size={19} />

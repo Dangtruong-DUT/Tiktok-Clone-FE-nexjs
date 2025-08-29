@@ -1,5 +1,6 @@
 import { AuthApi } from "@/services/RTK/auth.services";
 import { PostApi } from "@/services/RTK/posts.services";
+import { SearchApi } from "@/services/RTK/search.services";
 import { UploadApi } from "@/services/RTK/upload.services";
 import { UserApi } from "@/services/RTK/user.services";
 import authReducer from "@/store/features/authSlice";
@@ -10,6 +11,7 @@ import { configureStore } from "@reduxjs/toolkit";
 export const makeStore = () => {
     return configureStore({
         reducer: {
+            [SearchApi.reducerPath]: SearchApi.reducer,
             [UploadApi.reducerPath]: UploadApi.reducer,
             [AuthApi.reducerPath]: AuthApi.reducer,
             [UserApi.reducerPath]: UserApi.reducer,
@@ -19,6 +21,7 @@ export const makeStore = () => {
         },
         middleware: (getDefaultMiddleware) =>
             getDefaultMiddleware().concat(
+                SearchApi.middleware,
                 UploadApi.middleware,
                 AuthApi.middleware,
                 UserApi.middleware,

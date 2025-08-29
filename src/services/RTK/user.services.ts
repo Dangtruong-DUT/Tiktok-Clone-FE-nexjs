@@ -18,8 +18,9 @@ export const UserApi = createApi({
     reducerPath: "UserApi",
     baseQuery: baseQueryWithReauth,
     tagTypes: ["User"],
-    refetchOnMountOrArgChange: true,
+    refetchOnMountOrArgChange: false,
     keepUnusedDataFor: 60,
+    refetchOnFocus: false,
     refetchOnReconnect: true,
     endpoints: (builder) => ({
         verify: builder.mutation<VerifyEmailResType, VerifyEmailReqBodyType>({

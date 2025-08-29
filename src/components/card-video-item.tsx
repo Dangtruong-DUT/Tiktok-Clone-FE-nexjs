@@ -75,7 +75,7 @@ export default function CardVideoItem({
                         ) : (
                             <span className="flex gap-1">
                                 <HiOutlinePlay className="text-white size-4.5" />
-                                <strong className="text-xs">
+                                <strong className="text-xs text-white">
                                     {formatCash.format(post.user_views + post.guest_views)}
                                 </strong>
                             </span>
