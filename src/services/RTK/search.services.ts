@@ -10,25 +10,9 @@ export const SearchApi = createApi({
     keepUnusedDataFor: 60,
     refetchOnFocus: false,
     refetchOnReconnect: true,
-    tagTypes: ["Posts", "Users"],
     endpoints: (builder) => ({
         searchPosts: builder.infiniteQuery<GetListPostRes, { q: string }, number>({
             query: ({ pageParam, queryArg }) => `/search?page=${pageParam}&limit=10&q=${queryArg.q}`,
-            providesTags: (result, error, arg) => {
-                if (result) {
-                    const final = [
-                        ...result.pages.flatMap((page) => {
-                            return page.data.posts.map(({ _id }) => ({
-                                type: "Posts" as const,
-                                id: _id,
-                            }));
-                        }),
-                        { type: "Posts" as const, id: `POST-SEARCH-LIST-${arg.q}` },
-                    ];
-                    return final;
-                }
-                return [{ type: "Posts" as const, id: `POST-SEARCH-LIST-${arg.q}` }];
-            },
             infiniteQueryOptions: {
                 initialPageParam: 1,
                 getNextPageParam: ({ meta }) => {
@@ -48,21 +32,6 @@ export const SearchApi = createApi({
 
         searchUsers: builder.infiniteQuery<GetListUserResType, { q: string }, number>({
             query: ({ pageParam, queryArg }) => `/search/users?page=${pageParam}&limit=10&q=${queryArg.q}`,
-            providesTags: (result, error, arg) => {
-                if (result) {
-                    const final = [
-                        ...result.pages.flatMap((page) => {
-                            return page.data.map(({ _id }) => ({
-                                type: "Users" as const,
-                                id: _id,
-                            }));
-                        }),
-                        { type: "Users" as const, id: `USER-SEARCH-LIST-${arg.q}` },
-                    ];
-                    return final;
-                }
-                return [{ type: "Users" as const, id: `USER-SEARCH-LIST-${arg.q}` }];
-            },
             infiniteQueryOptions: {
                 initialPageParam: 1,
                 getNextPageParam: ({ meta }) => {
@@ -79,7 +48,10 @@ export const SearchApi = createApi({
                 },
             },
         }),
+        searchUsersGet: builder.query<GetListUserResType, { q: string }>({
+            query: ({ q }) => `/search/users?q=${q}`,
+        }),
     }),
 });
 
-export const { useSearchPostsInfiniteQuery, useSearchUsersInfiniteQuery } = SearchApi;
+export const { useSearchPostsInfiniteQuery, useSearchUsersInfiniteQuery, useSearchUsersGetQuery } = SearchApi;
