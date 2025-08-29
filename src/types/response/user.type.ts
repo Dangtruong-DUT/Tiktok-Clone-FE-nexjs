@@ -12,3 +12,11 @@ export type VerifyEmailResType = ResType<
 export type GetUserProfileResType = ResType<UserType, void>;
 
 export type UpdateUserResType = ResType<UserType, void>;
+
+export type MetaPagination = {
+    total_pages: number;
+    page: number;
+    limit: number;
+};
+
+export type GetListUserResType = ResType<UserType[], MetaPagination>;

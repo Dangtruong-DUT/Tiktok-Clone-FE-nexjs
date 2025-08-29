@@ -17,7 +17,7 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 export const UserApi = createApi({
     reducerPath: "UserApi",
     baseQuery: baseQueryWithReauth,
-    tagTypes: ["User"],
+    tagTypes: ["Users"],
     refetchOnMountOrArgChange: false,
     keepUnusedDataFor: 60,
     refetchOnFocus: false,
@@ -56,14 +56,14 @@ export const UserApi = createApi({
                 url: API_ENDPOINT.API_GET_ME,
                 method: "GET",
             }),
-            providesTags: (result) => (result ? [{ type: "User", id: result.data._id }] : []),
+            providesTags: (result) => (result ? [{ type: "Users", id: result.data._id }] : []),
         }),
         getUserByUsername: builder.query<GetUserProfileResType, string>({
             query: (username) => ({
                 url: `/users/${username}`,
                 method: "GET",
             }),
-            providesTags: (result) => (result ? [{ type: "User", id: result.data._id }] : []),
+            providesTags: (result) => (result ? [{ type: "Users", id: result.data._id }] : []),
         }),
         followUser: builder.mutation<{ message: string }, FollowUserReqBodyType>({
             query: (body) => ({
@@ -72,8 +72,8 @@ export const UserApi = createApi({
                 body,
             }),
             invalidatesTags: (result, error, arg) => [
-                { type: "User", id: arg.user_id },
-                { type: "User", id: "LIST" },
+                { type: "Users", id: arg.user_id },
+                { type: "Users", id: "LIST" },
             ],
         }),
         unfollowUser: builder.mutation<{ message: string }, string>({
@@ -82,8 +82,8 @@ export const UserApi = createApi({
                 method: "DELETE",
             }),
             invalidatesTags: (result, error, user_id) => [
-                { type: "User", id: user_id },
-                { type: "User", id: "LIST" },
+                { type: "Users", id: user_id },
+                { type: "Users", id: "LIST" },
             ],
         }),
         changePassword: builder.mutation<{ message: string }, ChangePasswordBodyType>({
@@ -99,7 +99,7 @@ export const UserApi = createApi({
                 method: "PATCH",
                 body: data,
             }),
-            invalidatesTags: (result, error, arg) => (result ? [{ type: "User", id: result.data._id }] : []),
+            invalidatesTags: (result, error, arg) => (result ? [{ type: "Users", id: result.data._id }] : []),
         }),
     }),
 });
