@@ -15,13 +15,16 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { formatCash } from "@/utils/formatting/formatNumber";
 import { usePostTableContext } from "@/app/[locale]/(user)/tiktokstudio/content/_context/content-table.context";
 import { BsFillImageFill } from "react-icons/bs";
+import VideoDetailDialog from "@/components/post-detail-modal";
+import { useState } from "react";
 
 export const columns: ColumnDef<TikTokPostType>[] = [
     {
         accessorKey: "content",
         header: "Content (Created on)",
-        cell: ({ row }) => {
-            const { thumbnail_url, content, created_at, author, _id } = row.original;
+        cell: function Content({ row }) {
+            const [isModalDetailOpen, setIsModalDetailOpen] = useState<boolean>(false);
+            const { thumbnail_url, content, created_at } = row.original;
             return (
                 <div className="flex gap-4 items-center">
                     {thumbnail_url && (
@@ -39,12 +42,20 @@ export const columns: ColumnDef<TikTokPostType>[] = [
                         </div>
                     )}
                     <div className="flex flex-col gap-[7px]">
-                        <Link href={`/@${author.username}/${_id}`} className="font-medium hover:underline">
-                            <span className="truncate  text-sm inline-block max-w-[100px]">{content}</span>
-                        </Link>
+                        <span
+                            className="truncate font-medium text-sm inline-block max-w-[100px] hover:underline cursor-pointer"
+                            onClick={() => setIsModalDetailOpen(true)}
+                        >
+                            {content}
+                        </span>
 
                         <span className="text-muted-foreground text-xs">{formatISOToDisplayDate(created_at)}</span>
                     </div>
+                    <VideoDetailDialog
+                        isVisible={isModalDetailOpen}
+                        handleClose={() => setIsModalDetailOpen(false)}
+                        post={row.original}
+                    />
                 </div>
             );
         },

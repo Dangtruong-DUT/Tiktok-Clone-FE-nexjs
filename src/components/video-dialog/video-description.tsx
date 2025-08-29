@@ -123,11 +123,13 @@ export default function VideoDescription({ post, className }: VideoDescriptionPr
                             </span>
                         </div>
                     </div>
-                    <FollowButton
-                        isFollowedState={isFollowedState}
-                        onToggleFollow={onToggleFollow}
-                        isAuth={!!currentUser}
-                    />
+                    {!isCurrentUser && (
+                        <FollowButton
+                            isFollowedState={isFollowedState}
+                            onToggleFollow={onToggleFollow}
+                            isAuth={!!currentUser}
+                        />
+                    )}
                 </div>
 
                 <ShowMore text={post.content} maxHeight={60} />
