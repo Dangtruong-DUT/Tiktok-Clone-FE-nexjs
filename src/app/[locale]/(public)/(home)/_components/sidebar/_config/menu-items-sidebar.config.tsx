@@ -85,12 +85,12 @@ export const HOME_MENU_ITEMS: MenuItemConfig[] = [
     //     requiredAuth: true,
     //     viewFor: "authenticated",
     // },
-    {
-        titleKey: "HomePage.menu.messages",
-        to: sidebarConfig.routes.messages,
-        Icon: AiOutlineMessage,
-        ActiveIcon: AiFillMessage,
-        requiredAuth: true,
-        viewFor: "authenticated",
-    },
+    // {
+    //     titleKey: "HomePage.menu.messages",
+    //     to: sidebarConfig.routes.messages,
+    //     Icon: AiOutlineMessage,
+    //     ActiveIcon: AiFillMessage,
+    //     requiredAuth: true,
+    //     viewFor: "authenticated",
+    // },
 ];

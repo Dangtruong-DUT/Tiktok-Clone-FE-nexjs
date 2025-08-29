@@ -56,6 +56,7 @@ export default function EditProfileDialog() {
             } else {
                 router.refresh();
             }
+            setOpen(false);
         } catch (error) {
             handleFormError<UpdateUserBodyType>({
                 error,
