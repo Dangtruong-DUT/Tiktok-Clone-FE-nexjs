@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Edit3 } from "lucide-react";
+import { Edit3, Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useUpdateMeMutation } from "@/services/RTK/user.services";
@@ -13,11 +13,15 @@ import { UpdateUserBody, UpdateUserBodyType } from "@/utils/validations/user.sch
 import { useEffect, useState } from "react";
 import useCurrentUserData from "@/hooks/data/useCurrentUserData";
 import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
+import envConfig from "@/config/app.config";
+import { usePathname, useRouter } from "@/i18n/navigation";
 
 export default function EditProfileDialog() {
     const [open, setOpen] = useState(false);
+    const pathname = usePathname();
+    const router = useRouter();
     const currentUser = useCurrentUserData();
-    const [updateProfile] = useUpdateMeMutation();
+    const [updateProfile, updateProfileResult] = useUpdateMeMutation();
 
     const form = useForm<UpdateUserBodyType>({
         resolver: zodResolver(UpdateUserBody),
@@ -41,9 +45,17 @@ export default function EditProfileDialog() {
     }, [currentUser, form]);
 
     async function onSubmit(values: UpdateUserBodyType) {
+        if (updateProfileResult.isLoading || !currentUser) return;
         try {
+            const oldUsername = currentUser.username;
+
             await updateProfile(values).unwrap();
-            setOpen(false);
+            if (typeof pathname === "string" && typeof values?.username === "string") {
+                const newURL = pathname.replace(oldUsername, values.username);
+                router.replace(newURL);
+            } else {
+                router.refresh();
+            }
         } catch (error) {
             handleFormError<UpdateUserBodyType>({
                 error,
@@ -65,23 +77,29 @@ export default function EditProfileDialog() {
                     <span className="max-md:hidden">Edit profile</span>
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                    <DialogTitle>Edit profile</DialogTitle>
+            <DialogContent className="sm:max-w-[600px] p-0 max-h-[90vh] overflow-y-auto">
+                <DialogHeader className="px-8 py-4 border-b">
+                    <DialogTitle className="text-xl font-semibold">Edit profile</DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="px-8 py-4">
                         <FormField
                             control={form.control}
                             name="username"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Username</FormLabel>
+                                <FormItem className="mb-6">
+                                    <FormLabel className="text-base font-semibold">Username</FormLabel>
                                     <FormControl>
-                                        <Input {...field} placeholder="Username" />
+                                        <Input {...field} placeholder="Username" className="h-11 text-base" />
                                     </FormControl>
-                                    <p className="text-sm text-muted-foreground">www.tiktok.com/@{field.value}</p>
                                     <FormMessage />
+                                    <p className="text-sm text-muted-foreground mt-1">
+                                        {envConfig.NEXT_PUBLIC_URL}@{field.value}
+                                    </p>
+                                    <p className="text-sm text-muted-foreground mt-1">
+                                        Usernames can only contain letters, numbers, underscores and periods. Changing
+                                        your username will also change your profile link.
+                                    </p>
                                 </FormItem>
                             )}
                         />
@@ -89,12 +107,15 @@ export default function EditProfileDialog() {
                             control={form.control}
                             name="name"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Name</FormLabel>
+                                <FormItem className="mb-6">
+                                    <FormLabel className="text-base font-semibold">Name</FormLabel>
                                     <FormControl>
-                                        <Input {...field} placeholder="Name" />
+                                        <Input {...field} placeholder="Name" className="h-11 text-base" />
                                     </FormControl>
                                     <FormMessage />
+                                    <p className="text-sm text-muted-foreground mt-1">
+                                        Your nickname can only be changed once every 7 days.
+                                    </p>
                                 </FormItem>
                             )}
                         />
@@ -102,23 +123,39 @@ export default function EditProfileDialog() {
                             control={form.control}
                             name="bio"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Bio</FormLabel>
+                                <FormItem className="mb-6">
+                                    <FormLabel className="text-base font-semibold">Bio</FormLabel>
                                     <FormControl>
-                                        <Textarea {...field} placeholder="Bio" className="resize-none" maxLength={80} />
+                                        <Textarea
+                                            {...field}
+                                            placeholder="Bio"
+                                            className="resize-none min-h-[120px] text-base"
+                                            maxLength={80}
+                                        />
                                     </FormControl>
-                                    <div className="text-sm text-muted-foreground text-right">
+                                    <FormMessage />
+                                    <div className="text-sm text-muted-foreground text-right mt-1">
                                         {field.value?.length || 0}/80
                                     </div>
-                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
-                        <div className="flex justify-end gap-2 pt-4">
-                            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                        <div className="flex justify-end gap-3 pt-4 border-t">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => setOpen(false)}
+                                className="h-8 px-8 w-[96px] text-sm font-semibold"
+                            >
                                 Cancel
                             </Button>
-                            <Button type="submit">Save</Button>
+                            <Button
+                                type="submit"
+                                className="h-8  w-[96px] px-8 text-sm font-semibold bg-brand hover:bg-brand/90 text-white"
+                                disabled={updateProfileResult.isLoading}
+                            >
+                                {updateProfileResult.isLoading ? <Loader className="animate-spin" /> : "Save"}
+                            </Button>
                         </div>
                     </form>
                 </Form>
