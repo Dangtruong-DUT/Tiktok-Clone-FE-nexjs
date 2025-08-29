@@ -1,5 +1,5 @@
 import baseQueryWithReauth from "@/services/RTK/client";
-import { GetListPostRes } from "@/types/response/post.type";
+import { SearchPostRes } from "@/types/response/post.type";
 import { GetListUserResType } from "@/types/response/user.type";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
@@ -11,7 +11,7 @@ export const SearchApi = createApi({
     refetchOnFocus: false,
     refetchOnReconnect: true,
     endpoints: (builder) => ({
-        searchPosts: builder.infiniteQuery<GetListPostRes, { q: string }, number>({
+        searchPosts: builder.infiniteQuery<SearchPostRes, { q: string }, number>({
             query: ({ pageParam, queryArg }) => `/search?page=${pageParam}&limit=10&q=${queryArg.q}`,
             infiniteQueryOptions: {
                 initialPageParam: 1,

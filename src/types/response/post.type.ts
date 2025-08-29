@@ -28,3 +28,5 @@ export type GetListCommentRes = ResType<
     },
     MetaDataListComment
 >;
+
+export type SearchPostRes = ResType<TikTokPostType[], MetaDataListPost>;
