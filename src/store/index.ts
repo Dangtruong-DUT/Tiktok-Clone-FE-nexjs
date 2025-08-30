@@ -11,20 +11,20 @@ import { configureStore } from "@reduxjs/toolkit";
 export const makeStore = () => {
     return configureStore({
         reducer: {
+            [UserApi.reducerPath]: UserApi.reducer,
             [SearchApi.reducerPath]: SearchApi.reducer,
             [UploadApi.reducerPath]: UploadApi.reducer,
             [AuthApi.reducerPath]: AuthApi.reducer,
-            [UserApi.reducerPath]: UserApi.reducer,
             [PostApi.reducerPath]: PostApi.reducer,
             auth: authReducer,
             modal: modalReducer,
         },
         middleware: (getDefaultMiddleware) =>
             getDefaultMiddleware().concat(
+                UserApi.middleware,
                 SearchApi.middleware,
                 UploadApi.middleware,
                 AuthApi.middleware,
-                UserApi.middleware,
                 PostApi.middleware,
                 authMiddleware,
                 rtkQueryLogger
@@ -41,8 +41,8 @@ export type AppDispatch = AppStore["dispatch"];
 export type storeApiType = { dispatch: AppDispatch; getState: () => RootState };
 
 export function clearStore(dispatch: AppDispatch) {
-    dispatch(AuthApi.util.resetApiState());
     dispatch(UserApi.util.resetApiState());
+    dispatch(AuthApi.util.resetApiState());
     dispatch(PostApi.util.resetApiState());
     dispatch(UploadApi.util.resetApiState());
 }

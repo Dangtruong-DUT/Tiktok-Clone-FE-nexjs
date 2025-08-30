@@ -16,4 +16,7 @@ export interface UserIndicatorsData {
     Indicator: UserIndicatorItem[];
 }
 
-export type UserIndicatorsResponse = ResType<UserIndicatorsData, void>;
+export type UserIndicatorsResponse = {
+    message: string;
+    data: UserIndicatorsData;
+};

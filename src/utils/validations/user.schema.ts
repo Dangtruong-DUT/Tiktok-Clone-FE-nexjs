@@ -45,8 +45,8 @@ export const UpdateUserBody = z.object({
 export type UpdateUserBodyType = z.TypeOf<typeof UpdateUserBody>;
 
 export const GetUserIndicatorQueryParams = z.object({
-    fromDate: z.coerce.date(),
-    toDate: z.coerce.date(),
+    fromDate: z.string().min(10).max(30),
+    toDate: z.string().min(10).max(30),
 });
 
 export type GetUserIndicatorQueryParamsType = z.TypeOf<typeof GetUserIndicatorQueryParams>;

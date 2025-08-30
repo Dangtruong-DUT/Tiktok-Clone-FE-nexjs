@@ -35,11 +35,9 @@ export const authMiddleware: Middleware = (storeAPI: storeApiType) => (next) => 
 
     if (isLoginMutationAction(action)) {
         const { user, access_token, refresh_token } = action.payload.data;
-        const role = user.role;
         storeAPI.dispatch(tokenReceived({ access_token, refresh_token }));
-        storeAPI.dispatch(setRole(role));
+        storeAPI.dispatch(setRole(user.role));
         storeAPI.dispatch(setUserProfile(user));
-
         return next(action);
     }
 

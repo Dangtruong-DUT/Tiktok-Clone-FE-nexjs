@@ -20,7 +20,7 @@ import queryString from "query-string";
 export const UserApi = createApi({
     reducerPath: "UserApi",
     baseQuery: baseQueryWithReauth,
-    tagTypes: ["Users"],
+    tagTypes: ["Users", "UserIndicators"],
     refetchOnMountOrArgChange: false,
     keepUnusedDataFor: 60,
     refetchOnFocus: false,
@@ -104,21 +104,30 @@ export const UserApi = createApi({
             }),
             invalidatesTags: (result, error, arg) => (result ? [{ type: "Users", id: result.data._id }] : []),
         }),
-        getUserIndicator: builder.query<UserIndicatorsResponse, GetUserIndicatorQueryParamsType>({
+        getUserIndicator: builder.query<UserIndicatorsResponse, GetUserIndicatorQueryParamsType | void>({
             query: (params) => {
                 const query = params
                     ? `?${queryString.stringify({
-                          fromDate: params.fromDate ? params.fromDate.toISOString() : undefined,
-                          toDate: params.toDate ? params.toDate.toISOString() : undefined,
+                          fromDate: params.fromDate,
+                          toDate: params.toDate,
                       })}`
                     : "";
 
                 return {
-                    url: `/users/me/indicator${query}`,
+                    url: `/users/me/indicators${query}`,
                     method: "GET",
                 };
             },
-            providesTags: (result, error, arg) => (result ? [{ type: "Users", id: "USER_INDICATOR" }] : []),
+            providesTags: (result, error, arg) => {
+                return result
+                    ? [
+                          {
+                              type: "UserIndicators",
+                              id: `USER_INDICATOR-${arg?.fromDate || "none"}-${arg?.toDate || "none"}`,
+                          },
+                      ]
+                    : [];
+            },
         }),
     }),
 });
