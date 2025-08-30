@@ -14,7 +14,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import VideoPreview from "@/app/[locale]/(user)/tiktokstudio/upload/_components/video-preview";
 import SelectThumbnailDialog from "@/app/[locale]/(user)/tiktokstudio/upload/_components/select-thumbnail-dialog";
-import { generateTimeLineFrames } from "@/utils/video";
 import { convertBase64ToFileToFile } from "@/utils/file";
 import { useUploadImageMutation, useUploadVideoMutation } from "@/services/RTK/upload.services";
 import { useCreatePostMutation } from "@/services/RTK/posts.services";
@@ -23,6 +22,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { audienceStatusValues } from "@/constants/types";
 import { getAudienceNameFromEnum } from "@/helper/getNameFromStatus";
+import useVideoFrames from "@/hooks/video/useVideoFrames";
 
 export default function FormUploadVideo() {
     const [uploadImage, uploadImageResult] = useUploadImageMutation();
@@ -50,6 +50,9 @@ export default function FormUploadVideo() {
     });
 
     const [videoUrl, setVideoUrl] = useState<string | null>(null);
+
+    const videoFrames = useVideoFrames(videoUrl, 10);
+
     const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
 
     const [videoFile, setVideoFile] = useState<File | null>(null);
@@ -77,14 +80,13 @@ export default function FormUploadVideo() {
 
     useEffect(() => {
         const fetchFrame = async () => {
-            if (videoUrl) {
-                const [frame] = await generateTimeLineFrames(videoUrl, 1);
-                const file = await convertBase64ToFileToFile(frame.image, "video_thumbnail.png");
+            if (videoUrl && videoFrames.length > 0) {
+                const file = await convertBase64ToFileToFile(videoFrames[0].image, "video_thumbnail.png");
                 if (file) setThumbnailFile(file);
             }
         };
         fetchFrame();
-    }, [videoUrl]);
+    }, [videoUrl, videoFrames]);
 
     useEffect(() => {
         form.setValue("medias", videoUrl ? [{ type: MediaType.VIDEO, url: videoUrl }] : []);
@@ -194,6 +196,7 @@ export default function FormUploadVideo() {
                                     setCoverImage={setThumbnailFile}
                                     videoSrc={videoUrl}
                                     imageSrc={thumbnailUrl}
+                                    videoFrames={videoFrames}
                                 />
                             </div>
 

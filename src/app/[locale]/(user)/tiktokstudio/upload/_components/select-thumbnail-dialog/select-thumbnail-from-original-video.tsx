@@ -1,51 +1,50 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import useVideoFrames from "@/hooks/video/useVideoFrames";
 import { convertBase64ToFileToFile } from "@/utils/file";
+import { TimelineFrameType } from "@/utils/video";
 import Image from "next/image";
 import { useEffect, useRef, useState, TouchEvent, MouseEvent as ReactMouseEvent, MouseEvent } from "react";
 
 interface SelectThumbnailFromOriginalVideoProps {
-    videoSrc: string | null;
     setCoverImage: (image: File) => void;
     className?: string;
+    videoFrames: TimelineFrameType[];
 }
 
 export default function SelectThumbnailFromOriginalVideo({
-    videoSrc,
     setCoverImage,
     className,
+    videoFrames,
 }: SelectThumbnailFromOriginalVideoProps) {
-    const frames = useVideoFrames(videoSrc, 10);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [cursorX, setCursorX] = useState(0);
     const [isDragging, setIsDragging] = useState(false);
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    const selectedFrame = frames[selectedIndex] ?? { time: 0, image: "" };
+    const selectedFrame = videoFrames[selectedIndex] ?? { time: 0, image: "" };
 
     useEffect(() => {
-        if (!canvasRef.current || frames.length === 0) return;
+        if (!canvasRef.current || videoFrames.length === 0) return;
         const ctx = canvasRef.current.getContext("2d");
         if (!ctx) return;
 
-        const thumbnailWidth = canvasRef.current.width / frames.length;
+        const thumbnailWidth = canvasRef.current.width / videoFrames.length;
         const thumbnailHeight = canvasRef.current.height;
 
         ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
-        frames.forEach((frame, index) => {
+        videoFrames.forEach((frame, index) => {
             const img = new window.Image();
             img.src = frame.image;
             img.onload = () => {
                 ctx.drawImage(img, index * thumbnailWidth, 0, thumbnailWidth, thumbnailHeight);
             };
         });
-    }, [frames]);
+    }, [videoFrames]);
 
     const calculateFrameSelected = (e: MouseEvent | TouchEvent) => {
-        if (!canvasRef.current || frames.length === 0) return;
+        if (!canvasRef.current || videoFrames.length === 0) return;
         const rect = canvasRef.current.getBoundingClientRect();
         const x = "touches" in e ? e.touches[0].clientX : e.clientX;
         const offsetX = Math.min(Math.max(x - rect.left, 0), rect.width);

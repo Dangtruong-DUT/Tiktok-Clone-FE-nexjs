@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { BsFillImageFill } from "react-icons/bs";
 import { useRef, useState } from "react";
+import { TimelineFrameType } from "@/utils/video";
 
 type SelectThumbnailMode = "UPLOAD" | "SELECT_FROM_VIDEO";
 
@@ -12,9 +13,10 @@ interface SelectThumbnailDialogProps {
     setCoverImage: (image: File) => void;
     videoSrc: string | null;
     imageSrc: string | null;
+    videoFrames: TimelineFrameType[];
 }
 
-export default function SelectThumbnailDialog({ setCoverImage, videoSrc, imageSrc }: SelectThumbnailDialogProps) {
+export default function SelectThumbnailDialog({ setCoverImage, videoSrc, imageSrc, videoFrames }: SelectThumbnailDialogProps) {
     const [mode, setMode] = useState<SelectThumbnailMode>("SELECT_FROM_VIDEO");
     const buttonCloseRef = useRef<HTMLButtonElement>(null);
     const handleSetCoverImage = (image: File) => {
@@ -77,10 +79,10 @@ export default function SelectThumbnailDialog({ setCoverImage, videoSrc, imageSr
 
                 <SelectThumbnailFromOriginalVideo
                     setCoverImage={handleSetCoverImage}
-                    videoSrc={videoSrc!}
                     className={cn("bg-muted", {
                         hidden: mode !== "SELECT_FROM_VIDEO",
                     })}
+                    videoFrames={videoFrames}
                 />
 
                 <UploadThumbnailFromDevice

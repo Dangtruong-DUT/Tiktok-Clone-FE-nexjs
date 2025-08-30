@@ -22,6 +22,7 @@ import { getAudienceNameFromEnum } from "@/helper/getNameFromStatus";
 import { SearchParamsLoader, useSearchParamsLoader } from "@/components/searchparams-loader";
 import { useRouter } from "@/i18n/navigation";
 import { useParams } from "next/navigation";
+import useVideoFrames from "@/hooks/video/useVideoFrames";
 
 export default function FormUpdatePost() {
     const { id } = useParams<{ id: string }>();
@@ -47,6 +48,9 @@ export default function FormUpdatePost() {
     });
 
     const [videoUrl, setVideoUrl] = useState<string | null>(null);
+
+    const videoFrames = useVideoFrames(videoUrl, 10);
+
     const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
     const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
 
@@ -169,6 +173,7 @@ export default function FormUpdatePost() {
                                 setCoverImage={setThumbnailFile}
                                 videoSrc={videoUrl}
                                 imageSrc={thumbnailUrl}
+                                videoFrames={videoFrames}
                             />
                         </div>
 
