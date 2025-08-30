@@ -1,15 +1,9 @@
 import {
     // Outline icons từ Ant Design Icons
     AiOutlineHome,
-    AiOutlineCompass,
     AiOutlineCloudUpload,
-    AiOutlineBell,
-    AiOutlineMessage,
     // Filled icons từ Ant Design Icons
     AiFillHome,
-    AiFillCompass,
-    AiFillBell,
-    AiFillMessage,
 } from "react-icons/ai";
 
 import {
@@ -27,8 +21,6 @@ export const sidebarConfig = {
         explore: "/explore",
         following: "/following",
         upload: "/tiktokstudio/upload",
-        activity: "/activity",
-        messages: "/messages",
     },
 } as const;
 
@@ -53,14 +45,6 @@ export const HOME_MENU_ITEMS: MenuItemConfig[] = [
         requiredAuth: false,
         viewFor: "all",
     },
-    // {
-    //     titleKey: "HomePage.menu.explore",
-    //     to: sidebarConfig.routes.explore,
-    //     Icon: AiOutlineCompass,
-    //     ActiveIcon: AiFillCompass,
-    //     requiredAuth: false,
-    //     viewFor: "all",
-    // },
     {
         titleKey: "HomePage.menu.following",
         to: sidebarConfig.routes.following,
@@ -77,20 +61,4 @@ export const HOME_MENU_ITEMS: MenuItemConfig[] = [
         requiredAuth: true,
         viewFor: "all",
     },
-    // {
-    //     titleKey: "HomePage.menu.activity",
-    //     to: sidebarConfig.routes.activity,
-    //     Icon: AiOutlineBell,
-    //     ActiveIcon: AiFillBell,
-    //     requiredAuth: true,
-    //     viewFor: "authenticated",
-    // },
-    // {
-    //     titleKey: "HomePage.menu.messages",
-    //     to: sidebarConfig.routes.messages,
-    //     Icon: AiOutlineMessage,
-    //     ActiveIcon: AiFillMessage,
-    //     requiredAuth: true,
-    //     viewFor: "authenticated",
-    // },
 ];

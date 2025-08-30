@@ -27,7 +27,5 @@ export const routeToActiveType: Record<routesValuesType, SidebarActiveType> = {
     "/": SidebarActiveType.HOME,
     "/explore": SidebarActiveType.EXPLORE,
     "/following": SidebarActiveType.FOLLOWING,
-    "/upload": SidebarActiveType.UPLOAD,
-    "/activity": SidebarActiveType.ACTIVITY,
-    "/messages": SidebarActiveType.MESSAGES,
+    "/tiktokstudio/upload": SidebarActiveType.UPLOAD,
 };

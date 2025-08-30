@@ -66,7 +66,7 @@ const MENU_ITEMS: MenuOption[] = [
     {
         type: "item",
         title: "menuMore.settings",
-        to: "/settings",
+        to: "/tiktokstudio/settings",
         for: ["user"],
     },
     {
