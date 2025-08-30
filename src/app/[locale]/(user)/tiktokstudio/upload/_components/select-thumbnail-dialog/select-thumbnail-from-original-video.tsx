@@ -51,8 +51,8 @@ export default function SelectThumbnailFromOriginalVideo({
 
         setCursorX(offsetX);
 
-        const index = Math.floor(offsetX / (rect.width / frames.length));
-        if (index >= 0 && index < frames.length) {
+        const index = Math.floor(offsetX / (rect.width / videoFrames.length));
+        if (index >= 0 && index < videoFrames.length) {
             setSelectedIndex(index);
         }
     };
