@@ -31,7 +31,7 @@ export default function UserInfo() {
 
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <span className="inline-block text-sm  max-w-[400px] truncate text-muted-foreground">
+                            <span className="inline-block text-sm  max-w-[250px] truncate text-muted-foreground">
                                 {userData?.bio}
                             </span>
                         </TooltipTrigger>
