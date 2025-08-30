@@ -1,5 +1,6 @@
 import { API_ENDPOINT } from "@/config/endpoint.config";
 import baseQueryWithReauth from "@/services/RTK/client";
+import { UserIndicatorsResponse } from "@/types/response/stats.type";
 import { GetUserProfileResType, UpdateUserResType, VerifyEmailResType } from "@/types/response/user.type";
 import {
     ForgotPasswordReqBodyType,
@@ -9,10 +10,12 @@ import {
 import {
     ChangePasswordBodyType,
     FollowUserReqBodyType,
+    GetUserIndicatorQueryParamsType,
     UpdateUserBodyType,
     VerifyEmailReqBodyType,
 } from "@/utils/validations/user.schema";
 import { createApi } from "@reduxjs/toolkit/query/react";
+import queryString from "query-string";
 
 export const UserApi = createApi({
     reducerPath: "UserApi",
@@ -101,6 +104,22 @@ export const UserApi = createApi({
             }),
             invalidatesTags: (result, error, arg) => (result ? [{ type: "Users", id: result.data._id }] : []),
         }),
+        getUserIndicator: builder.query<UserIndicatorsResponse, GetUserIndicatorQueryParamsType>({
+            query: (params) => {
+                const query = params
+                    ? `?${queryString.stringify({
+                          fromDate: params.fromDate ? params.fromDate.toISOString() : undefined,
+                          toDate: params.toDate ? params.toDate.toISOString() : undefined,
+                      })}`
+                    : "";
+
+                return {
+                    url: `/users/me/indicator${query}`,
+                    method: "GET",
+                };
+            },
+            providesTags: (result, error, arg) => (result ? [{ type: "Users", id: "USER_INDICATOR" }] : []),
+        }),
     }),
 });
 
@@ -115,4 +134,5 @@ export const {
     useUnfollowUserMutation,
     useChangePasswordMutation,
     useUpdateMeMutation,
+    useGetUserIndicatorQuery,
 } = UserApi;

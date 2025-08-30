@@ -43,3 +43,10 @@ export const UpdateUserBody = z.object({
 });
 
 export type UpdateUserBodyType = z.TypeOf<typeof UpdateUserBody>;
+
+export const GetUserIndicatorQueryParams = z.object({
+    fromDate: z.coerce.date(),
+    toDate: z.coerce.date(),
+});
+
+export type GetUserIndicatorQueryParamsType = z.TypeOf<typeof GetUserIndicatorQueryParams>;
