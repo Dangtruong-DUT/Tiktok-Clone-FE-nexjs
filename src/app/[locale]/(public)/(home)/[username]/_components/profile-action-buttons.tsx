@@ -11,6 +11,7 @@ import { Link } from "@/i18n/navigation";
 import EditProfileDialog from "@/app/[locale]/(public)/(home)/[username]/_components/edit-profile-dialog";
 import { useAppContext } from "@/provider/app-provider";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAppSelector } from "@/hooks/redux";
 
 interface ProfileActionButtonsProps {
     username: string;
@@ -19,6 +20,7 @@ interface ProfileActionButtonsProps {
 
 export default function ProfileActionButtons({ userId, username }: ProfileActionButtonsProps) {
     const { authStatus } = useAppContext();
+    const role = useAppSelector((state) => state.auth.role);
     const currentUser = useCurrentUserData();
     const isCurrentUser = currentUser?._id === userId;
     const { data: userProfileRes } = useGetUserByUsernameQuery(username, { skip: isCurrentUser });
@@ -31,7 +33,7 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
         toast.info("Message feature coming soon!");
     }, []);
 
-    if (authStatus === "loading" || currentUser == null) {
+    if (authStatus === "loading" || (role != null && currentUser == null)) {
         return (
             <div className="flex items-center">
                 <Skeleton className="w-[122px]  h-10 font-medium rounded-md " />

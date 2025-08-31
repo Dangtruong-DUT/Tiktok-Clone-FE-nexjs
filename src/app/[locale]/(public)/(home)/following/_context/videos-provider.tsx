@@ -37,8 +37,8 @@ export function VideosProvider({ children }: { children: React.ReactNode }) {
     const role = useAppSelector((state) => state.auth.role);
     const {
         fetchNextPage: fetchNextPageFriend,
-        isLoading,
-        isFetching,
+        isLoading: isLoadingFriend,
+        isFetching: isFetchingFriend,
         data: dataFriend,
         hasNextPage: hasNextPageFriend,
     } = useGetListPostInfiniteQuery("friend", { skip: role == null });
@@ -51,6 +51,8 @@ export function VideosProvider({ children }: { children: React.ReactNode }) {
         data: dataUnfollowed,
         fetchNextPage: fetchNextPageUnfollowed,
         hasNextPage: hasNextPageUnfollowed,
+        isLoading: isLoadingUnfollowed,
+        isFetching: isFetchingUnfollowed,
     } = useGetUnfollowedPostsInfiniteQuery(undefined, {
         skip: postList.length > 0,
     });
@@ -67,15 +69,18 @@ export function VideosProvider({ children }: { children: React.ReactNode }) {
             postList,
             fetchNextPage: fetchNextPageFriend,
             hasNextPage: hasNextPageFriend,
-            isLoading,
-            isFetching,
+            isLoading: isLoadingFriend,
+            isFetching: isFetchingFriend,
         },
         unfollowed: {
             postList: postListUnfollowed,
             fetchNextPage: fetchNextPageUnfollowed,
             hasNextPage: hasNextPageUnfollowed,
+            isLoading: isLoadingUnfollowed,
+            isFetching: isFetchingUnfollowed,
         },
-    };
+    } satisfies Record<string, FeedState>;
+
     return (
         <VideosProviderContext
             value={{
