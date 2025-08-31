@@ -6,12 +6,14 @@ import { useAppDispatch } from "@/hooks/redux";
 import { useInViewport } from "@/hooks/ui/useInViewport";
 import { Link, usePathname } from "@/i18n/navigation";
 import { setOpenModal } from "@/store/features/modalSlide";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import LoadingIcon from "@/components/lottie-icons/loading";
 import { CiGrid41 } from "react-icons/ci";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function VideoGrid() {
-    const { postList, hasNextPage, fetchNextPage, isFetching } = useVideosContext();
+    const [showSkeleton, setShowSkeleton] = useState<boolean>(true);
+    const { postList, hasNextPage, fetchNextPage, isFetching, isLoading } = useVideosContext();
     const dispatch = useAppDispatch();
     const pathname = usePathname();
     const handleVideoClick = useCallback(() => {
@@ -26,6 +28,16 @@ function VideoGrid() {
             fetchNextPage();
         }
     }, [isInView, fetchNextPage, hasNextPage]);
+
+    useEffect(() => {
+        if (!isLoading) {
+            const timeout = setTimeout(() => setShowSkeleton(false), 200);
+            return () => clearTimeout(timeout);
+        } else {
+            setShowSkeleton(true);
+        }
+    }, [isLoading]);
+
     return (
         <div className="mt-6 w-full">
             {postList.length > 0 && (
@@ -47,7 +59,7 @@ function VideoGrid() {
                     )}
                 </div>
             )}
-            {postList.length === 0 && !isFetching && (
+            {postList.length === 0 && !showSkeleton && (
                 <div className="mx-auto flex flex-col justify-center items-center min-h-[490px]">
                     <div className="flex justify-center items-center size-[92px] rounded-full bg-muted">
                         <CiGrid41 size={44} />
@@ -56,9 +68,14 @@ function VideoGrid() {
                     <p className="text-base mt-2 text-muted-foreground">This user has not published any videos.</p>
                 </div>
             )}
-            {postList.length === 0 && isFetching && (
-                <div className="mx-auto flex flex-col justify-center items-center min-h-[490px]">
-                    <LoadingIcon className="size-15 mx-auto" loop />
+            {postList.length === 0 && showSkeleton && (
+                <div className="grid gap-6 gap-x-4 grid-cols-[repeat(auto-fill,minmax(240px,1fr))] w-full  md:grid-cols-[repeat(auto-fill,minmax(180px,1fr))]">
+                    {Array.from({ length: 12 }, (_, index) => (
+                        <Skeleton
+                            key={index}
+                            className=" inline-block w-full pt-[133.333%] overflow-hidden rounded-md"
+                        />
+                    ))}
                 </div>
             )}
         </div>

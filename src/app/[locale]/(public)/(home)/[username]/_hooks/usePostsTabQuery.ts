@@ -47,7 +47,7 @@ export default function usePostsTabQuery({ activeTabId, userId }: UsePostsTabQue
             case "liked":
                 return likedQuery;
             default:
-                return { hasNextPage: false, fetchNextPage: () => {}, isFetching: false };
+                return { hasNextPage: false, fetchNextPage: () => {}, isFetching: false, isLoading: false };
         }
     };
 
@@ -58,5 +58,6 @@ export default function usePostsTabQuery({ activeTabId, userId }: UsePostsTabQue
         hasNextPage: currentQuery.hasNextPage,
         fetchNextPage: currentQuery.fetchNextPage,
         isFetching: currentQuery.isFetching,
+        isLoading: currentQuery.isLoading,
     };
 }
