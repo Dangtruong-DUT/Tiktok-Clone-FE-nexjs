@@ -23,17 +23,20 @@ import { SearchParamsLoader, useSearchParamsLoader } from "@/components/searchpa
 import { useRouter } from "@/i18n/navigation";
 import { useParams } from "next/navigation";
 import useVideoFrames from "@/hooks/video/useVideoFrames";
+import LoadingIcon from "@/components/lottie-icons/loading";
+import useCurrentUserData from "@/hooks/data/useCurrentUserData";
 
 export default function FormUpdatePost() {
     const { id } = useParams<{ id: string }>();
     const [uploadImageMutate, uploadImageResult] = useUploadImageMutation();
     const [updatePostMutate, createPostResult] = useUpdatePostMutation();
     const { searchParams, setSearchParams } = useSearchParamsLoader();
+    const currentUser = useCurrentUserData();
     const redirectFrom = searchParams?.get("from");
-
-    const { data } = useGetPostDetailQuery(id, { skip: !id });
-    const post = data?.data;
     const router = useRouter();
+
+    const { data, isLoading, error } = useGetPostDetailQuery(id, { skip: !id });
+    const post = data?.data;
 
     const form = useForm<UpdatePostReqBodyType>({
         resolver: zodResolver(UpdatePostReqBody),
@@ -127,10 +130,21 @@ export default function FormUpdatePost() {
         }
     };
     const content = form.watch("content");
+
+    const hashPermission = currentUser?._id == post?.user_id;
+
+    if (isLoading || error || !currentUser || !hashPermission) {
+        return (
+            <div className="h-[calc(100vh-4.25rem)] flex items-center justify-center">
+                <LoadingIcon className="size-15 mx-auto" loop />
+            </div>
+        );
+    }
+
     return (
         <Form {...form}>
             <SearchParamsLoader onParamsReceived={setSearchParams} />
-            <form onSubmit={form.handleSubmit(onsubmit)} onReset={onReset} method="POST">
+            <form onSubmit={form.handleSubmit(onsubmit)} onReset={onReset} method="POST" className="relative">
                 <div className="grid grid-cols-[70%_30%] gap-4">
                     <div>
                         <div className="mt-5 text-base font-bold">Detail</div>
