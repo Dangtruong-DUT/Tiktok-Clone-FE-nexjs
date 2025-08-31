@@ -53,7 +53,7 @@ function FollowButton({
     );
 }
 
-export default function CardVideoItem({ post }: { post: TikTokPostType }) {
+export default function CardVideoItem({ post, className }: { post: TikTokPostType; className?: string }) {
     const author = post.author;
     const currentUser = useCurrentUserData();
     const isCurrentUser = currentUser?._id === author._id;
@@ -64,13 +64,15 @@ export default function CardVideoItem({ post }: { post: TikTokPostType }) {
     });
 
     return (
-        <article className="relative inline-block w-full pt-[133.333%] max-h-[302px] max-w-[226px] overflow-hidden rounded-md group">
+        <article
+            className={cn("relative inline-block w-full pt-[133.333%] overflow-hidden rounded-md group", className)}
+        >
             <Link href={`@${author.username}`}>
                 <div className={cn("absolute inset-0 z-20 transition-opacity duration-300", "group-hover:opacity-0")}>
                     <Image
                         src={post.thumbnail_url || "/images/desktop-wallpaper-tiktok.jpg"}
                         alt="video thumbnail"
-                        className=" absolute block  w-full h-full object-cover"
+                        className="  block  w-full h-full object-cover"
                         width={100}
                         height={100}
                     />
@@ -82,7 +84,7 @@ export default function CardVideoItem({ post }: { post: TikTokPostType }) {
                         "group-hover:opacity-100 group-hover:z-30"
                     )}
                 >
-                    <video autoPlay muted playsInline loop className="absolute block w-full h-full object-cover">
+                    <video autoPlay muted playsInline loop className=" block w-full h-full object-cover">
                         <source src={post.medias[0].url} />
                     </video>
                 </div>
