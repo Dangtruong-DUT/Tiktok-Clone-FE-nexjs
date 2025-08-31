@@ -3,64 +3,24 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useCallback } from "react";
 
-export function useConfirmNavigation(shouldConfirm: boolean = true) {
+export function useConfirmNavigation({ shouldConfirm = true }: { shouldConfirm: boolean }) {
     const router = useRouter();
     const [showModal, setShowModal] = useState(false);
     const [navigationType, setNavigationType] = useState<"push" | "replace" | "back" | null>(null);
     const nextUrlRef = useRef<string | null>(null);
     const isNavigatingRef = useRef(false);
-
-    // Override router methods để intercept navigation
-    const originalPush = useRef(router.push);
-    const originalReplace = useRef(router.replace);
-    const originalBack = useRef(router.back);
+    const hasSetupHistoryRef = useRef(false);
 
     const confirmNavigation = useCallback(
         (type: "push" | "replace" | "back", url?: string) => {
-            if (!shouldConfirm || isNavigatingRef.current) {
-                return false; // Không cần confirm hoặc đang navigate
-            }
-
+            if (!shouldConfirm || isNavigatingRef.current) return false;
             setNavigationType(type);
             nextUrlRef.current = url || null;
             setShowModal(true);
-            return true; // Đã intercept
+            return true;
         },
         [shouldConfirm]
     );
-
-    // Wrapper cho router methods
-    const push = useCallback(
-        (url: string) => {
-            if (!confirmNavigation("push", url)) {
-                originalPush.current(url);
-            }
-        },
-        [confirmNavigation]
-    );
-
-    const replace = useCallback(
-        (url: string) => {
-            if (!confirmNavigation("replace", url)) {
-                originalReplace.current(url);
-            }
-        },
-        [confirmNavigation]
-    );
-
-    const back = useCallback(() => {
-        if (!confirmNavigation("back")) {
-            originalBack.current();
-        }
-    }, [confirmNavigation]);
-
-    // Override router object
-    const enhancedRouter = {
-        ...router,
-        push,
-        replace,
-        back,
-    };
 
     const stayHere = useCallback(() => {
         setShowModal(false);
@@ -69,58 +29,86 @@ export function useConfirmNavigation(shouldConfirm: boolean = true) {
     }, []);
 
     const leavePage = useCallback(() => {
-        isNavigatingRef.current = true;
-
-        if (navigationType === "push" && nextUrlRef.current) {
-            originalPush.current(nextUrlRef.current);
-        } else if (navigationType === "replace" && nextUrlRef.current) {
-            originalReplace.current(nextUrlRef.current);
-        } else if (navigationType === "back") {
-            originalBack.current();
-        }
-
         setShowModal(false);
+        isNavigatingRef.current = true;
+        if (navigationType === "push" && nextUrlRef.current) {
+            router.push(nextUrlRef.current);
+        } else if (navigationType === "replace" && nextUrlRef.current) {
+            router.replace(nextUrlRef.current);
+        } else if (navigationType === "back") {
+            window.history.go(-2);
+        }
         setNavigationType(null);
         nextUrlRef.current = null;
-
-        // Reset flag sau khi navigate
-        setTimeout(() => {
-            isNavigatingRef.current = false;
-        }, 100);
-    }, [navigationType]);
+        isNavigatingRef.current = false;
+    }, [navigationType, router]);
 
     useEffect(() => {
-        // Handle browser back/forward buttons
+        if (!shouldConfirm) return;
+
         const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-            if (shouldConfirm) {
+            if (shouldConfirm && !isNavigatingRef.current) {
                 e.preventDefault();
                 e.returnValue = "";
-                return "";
             }
         };
-
         const handlePopState = (e: PopStateEvent) => {
-            if (shouldConfirm && !isNavigatingRef.current) {
-                // Push lại state hiện tại để "cancel" việc back
-                window.history.pushState(null, "", window.location.href);
+            if (!isNavigatingRef.current) {
+                e.preventDefault();
+                history.pushState(null, "", window.location.href);
                 confirmNavigation("back");
             }
         };
 
-        // Add một state để track
-        window.history.pushState(null, "", window.location.href);
+        const handleClick = (e: MouseEvent) => {
+            if (isNavigatingRef.current) return;
+
+            const target = e.target as HTMLElement;
+            const anchor = target.closest("a");
+
+            if (anchor && anchor.href && !anchor.href.startsWith("mailto:") && !anchor.href.startsWith("tel:")) {
+                const isInternalLink = anchor.href.startsWith(window.location.origin) || anchor.href.startsWith("/");
+
+                if (isInternalLink) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    let relativeUrl = anchor.href;
+                    if (anchor.href.startsWith(window.location.origin)) {
+                        relativeUrl = anchor.href.replace(window.location.origin, "");
+                    }
+
+                    if (relativeUrl === window.location.pathname + window.location.search) {
+                        return;
+                    }
+
+                    if (!confirmNavigation("push", relativeUrl)) {
+                        setShowModal(false);
+                        isNavigatingRef.current = true;
+                        router.push(relativeUrl);
+                        isNavigatingRef.current = false;
+                    }
+                }
+            }
+        };
+
+        if (!hasSetupHistoryRef.current) {
+            history.pushState(null, "", window.location.href);
+            hasSetupHistoryRef.current = true;
+        }
 
         window.addEventListener("beforeunload", handleBeforeUnload);
         window.addEventListener("popstate", handlePopState);
+        document.addEventListener("click", handleClick, true);
 
         return () => {
             window.removeEventListener("beforeunload", handleBeforeUnload);
             window.removeEventListener("popstate", handlePopState);
+            document.removeEventListener("click", handleClick, true);
         };
-    }, [shouldConfirm, confirmNavigation]);
+    }, [shouldConfirm, confirmNavigation, router, setShowModal]);
 
     return {
-        router: enhancedRouter,
         showModal,
         stayHere,
         leavePage,

@@ -25,6 +25,8 @@ import { useParams } from "next/navigation";
 import useVideoFrames from "@/hooks/video/useVideoFrames";
 import LoadingIcon from "@/components/lottie-icons/loading";
 import useCurrentUserData from "@/hooks/data/useCurrentUserData";
+import { useConfirmNavigation } from "@/hooks/shared/useConfirmNavigation";
+import AlertDialogExitPage from "@/app/[locale]/(user)/tiktokstudio/upload/_components/alert-confirm-leave-page";
 
 export default function FormUpdatePost() {
     const { id } = useParams<{ id: string }>();
@@ -37,6 +39,13 @@ export default function FormUpdatePost() {
 
     const { data, isLoading, error } = useGetPostDetailQuery(id, { skip: !id });
     const post = data?.data;
+    const {
+        showModal: isOpenModalConfirmExit,
+        stayHere,
+        leavePage,
+    } = useConfirmNavigation({
+        shouldConfirm: post !== undefined,
+    });
 
     const form = useForm<UpdatePostReqBodyType>({
         resolver: zodResolver(UpdatePostReqBody),
@@ -143,6 +152,7 @@ export default function FormUpdatePost() {
 
     return (
         <Form {...form}>
+            <AlertDialogExitPage isOpen={isOpenModalConfirmExit} onCancel={stayHere} onConfirm={leavePage} />
             <SearchParamsLoader onParamsReceived={setSearchParams} />
             <form onSubmit={form.handleSubmit(onsubmit)} onReset={onReset} method="POST" className="relative">
                 <div className="grid grid-cols-[70%_30%] gap-4">
