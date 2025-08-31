@@ -1,13 +1,14 @@
 "use client";
 
 import LoadingIcon from "@/components/lottie-icons/loading";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useInViewport } from "@/hooks/ui/useInViewport";
 import CardVideoItem from "@/components/card-video-item";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useAppDispatch } from "@/hooks/redux";
 import { setOpenModal } from "@/store/features/modalSlide";
+import VideoItemSkeleton from "@/app/[locale]/(public)/(home)/search/_components/video-item-skeleton";
 
 interface PostsContainerProps {
     fetchNextPage: () => void;
@@ -28,6 +29,7 @@ export default function PostsContainer({
     const isInViewport = useInViewport(sentinelForPostsResultScrollRef);
     const dispatch = useAppDispatch();
     const pathname = usePathname();
+    const [isShowSkeleton, setShowSkeleton] = useState(isLoading);
 
     const handleVideoClick = useCallback(() => {
         dispatch(setOpenModal({ prevPathname: pathname, type: "modalVideoDetail" }));
@@ -38,6 +40,25 @@ export default function PostsContainer({
             fetchNextPage();
         }
     }, [hasNextPage, isInViewport, fetchNextPage]);
+
+    useEffect(() => {
+        if (!isLoading) {
+            const timeout = setTimeout(() => setShowSkeleton(false), 300);
+            return () => clearTimeout(timeout);
+        } else {
+            setShowSkeleton(true);
+        }
+    }, [isLoading]);
+
+    if (isShowSkeleton) {
+        return (
+            <div className="mx-auto p-4 max-w-184  overflow-y-auto   scrollbar-hidden grid  gap-6 grid-cols-[repeat(auto-fill,minmax(240px,1fr))]  md:grid-cols-[repeat(auto-fill,minmax(180px,1fr))]  w-full">
+                {Array.from({ length: 12 }).map((_, index) => (
+                    <VideoItemSkeleton key={index} />
+                ))}
+            </div>
+        );
+    }
 
     return (
         <div>

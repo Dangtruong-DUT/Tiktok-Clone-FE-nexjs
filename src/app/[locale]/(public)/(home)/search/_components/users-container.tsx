@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MdVerified } from "react-icons/md";
 import { UserVerifyStatus } from "@/constants/enum";
 import LoadingIcon from "@/components/lottie-icons/loading";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useInViewport } from "@/hooks/ui/useInViewport";
 import AccountItemSkeleton from "@/app/[locale]/(public)/(home)/search/_components/account-item-skeleton";
 
@@ -28,6 +28,7 @@ export default function UsersContainer({
 }: UsersContainerProps) {
     const sentinelForUserResultScrollRef = useRef<HTMLDivElement>(null);
     const isInViewport = useInViewport(sentinelForUserResultScrollRef);
+    const [isShowSkeleton, setShowSkeleton] = useState(isLoading);
 
     useEffect(() => {
         if (hasNextPage && isInViewport) {
@@ -35,7 +36,16 @@ export default function UsersContainer({
         }
     }, [hasNextPage, isInViewport, fetchNextPage]);
 
-    if (isLoading) {
+    useEffect(() => {
+        if (!isLoading) {
+            const timeout = setTimeout(() => setShowSkeleton(false), 300);
+            return () => clearTimeout(timeout);
+        } else {
+            setShowSkeleton(true);
+        }
+    }, [isLoading]);
+
+    if (isShowSkeleton) {
         return (
             <div className="flex flex-col overflow-y-auto scrollbar-hidden mt-2">
                 {Array.from({ length: 3 }).map((_, index) => (
