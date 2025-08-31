@@ -64,6 +64,7 @@ function FollowButton({
 
 export default function VideoDescription({ post, className }: VideoDescriptionProps) {
     const user = post.author;
+    const locale = useLocale();
     const currentUser = useCurrentUserData();
     const isCurrentUser = currentUser?._id === user._id;
     const { data: userProfileRes } = useGetUserByUsernameQuery(user.username, { skip: isCurrentUser });
@@ -71,8 +72,7 @@ export default function VideoDescription({ post, className }: VideoDescriptionPr
         userId: user._id,
         initialFollowState: userProfileRes?.data.is_followed ?? false,
     });
-    const locale = useLocale();
-    const linkToVideo = `${envConfig.NEXT_PUBLIC_URL}@${user.username}/video/${post._id}`;
+    const linkToVideo = `${envConfig.NEXT_PUBLIC_URL}${locale}/@${user.username}/video/${post._id}`;
 
     const role = useAppSelector((state) => state.auth.role);
     const { data: postDetailRes } = useGetPostDetailQuery(post._id);
