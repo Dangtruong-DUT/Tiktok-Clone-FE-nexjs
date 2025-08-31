@@ -9,15 +9,23 @@ import { UserVerifyStatus } from "@/constants/enum";
 import LoadingIcon from "@/components/lottie-icons/loading";
 import { useEffect, useRef } from "react";
 import { useInViewport } from "@/hooks/ui/useInViewport";
+import AccountItemSkeleton from "@/app/[locale]/(public)/(home)/search/_components/account-item-skeleton";
 
 interface UsersContainerProps {
     fetchNextPage: () => void;
     hasNextPage: boolean;
     data: UserType[];
     isFetching: boolean;
+    isLoading: boolean;
 }
 
-export default function UsersContainer({ fetchNextPage, hasNextPage, data, isFetching }: UsersContainerProps) {
+export default function UsersContainer({
+    fetchNextPage,
+    hasNextPage,
+    data,
+    isFetching,
+    isLoading,
+}: UsersContainerProps) {
     const sentinelForUserResultScrollRef = useRef<HTMLDivElement>(null);
     const isInViewport = useInViewport(sentinelForUserResultScrollRef);
 
@@ -26,6 +34,16 @@ export default function UsersContainer({ fetchNextPage, hasNextPage, data, isFet
             fetchNextPage();
         }
     }, [hasNextPage, isInViewport, fetchNextPage]);
+
+    if (isLoading) {
+        return (
+            <div className="flex flex-col overflow-y-auto scrollbar-hidden mt-2">
+                {Array.from({ length: 3 }).map((_, index) => (
+                    <AccountItemSkeleton key={index} />
+                ))}
+            </div>
+        );
+    }
 
     return (
         <ul className="flex flex-col overflow-y-auto scrollbar-hidden mt-2">

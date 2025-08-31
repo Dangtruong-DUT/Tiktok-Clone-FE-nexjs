@@ -14,9 +14,16 @@ interface PostsContainerProps {
     hasNextPage: boolean;
     data: TikTokPostType[];
     isFetching: boolean;
+    isLoading: boolean;
 }
 
-export default function PostsContainer({ fetchNextPage, hasNextPage, data, isFetching }: PostsContainerProps) {
+export default function PostsContainer({
+    fetchNextPage,
+    hasNextPage,
+    data,
+    isFetching,
+    isLoading,
+}: PostsContainerProps) {
     const sentinelForPostsResultScrollRef = useRef<HTMLDivElement>(null);
     const isInViewport = useInViewport(sentinelForPostsResultScrollRef);
     const dispatch = useAppDispatch();
