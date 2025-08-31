@@ -23,6 +23,8 @@ import { audienceStatusValues } from "@/constants/types";
 import { getAudienceNameFromEnum } from "@/helper/getNameFromStatus";
 import useVideoFrames from "@/hooks/video/useVideoFrames";
 import { useRouter } from "@/i18n/navigation";
+import { useConfirmNavigation } from "@/hooks/shared/useConfirmNavigation";
+import AlertDialogExitPage from "@/app/[locale]/(user)/tiktokstudio/upload/_components/alert-confirm-leave-page";
 
 export default function FormUploadVideo() {
     const [uploadImage, uploadImageResult] = useUploadImageMutation();
@@ -50,6 +52,14 @@ export default function FormUploadVideo() {
     });
 
     const [videoUrl, setVideoUrl] = useState<string | null>(null);
+
+    const {
+        showModal: isOpenModalConfirmExit,
+        stayHere,
+        leavePage,
+    } = useConfirmNavigation({
+        shouldConfirm: videoUrl != null,
+    });
 
     const videoFrames = useVideoFrames(videoUrl, 10);
 
@@ -145,6 +155,7 @@ export default function FormUploadVideo() {
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onsubmit)} onReset={onReset} method="POST">
+                <AlertDialogExitPage isOpen={isOpenModalConfirmExit} onCancel={stayHere} onConfirm={leavePage} />
                 <UploadVideo
                     onFileSelect={setVideoFile}
                     file={videoFile}
