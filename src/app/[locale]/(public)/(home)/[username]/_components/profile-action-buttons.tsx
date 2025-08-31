@@ -1,5 +1,5 @@
 "use client";
-import { Settings, Share, Edit3 } from "lucide-react";
+import { Settings, Share } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import useCurrentUserData from "@/hooks/data/useCurrentUserData";
 import { useGetUserByUsernameQuery } from "@/services/RTK/user.services";
