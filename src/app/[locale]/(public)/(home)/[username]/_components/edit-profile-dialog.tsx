@@ -15,11 +15,14 @@ import useCurrentUserData from "@/hooks/data/useCurrentUserData";
 import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
 import envConfig from "@/config/app.config";
 import { usePathname, useRouter } from "@/i18n/navigation";
+import { clearStore } from "@/store";
+import { useAppDispatch } from "@/hooks/redux";
 
 export default function EditProfileDialog() {
     const [open, setOpen] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
+    const dispatch = useAppDispatch();
     const currentUser = useCurrentUserData();
     const [updateProfile, updateProfileResult] = useUpdateMeMutation();
 
@@ -56,6 +59,7 @@ export default function EditProfileDialog() {
             } else {
                 router.refresh();
             }
+            clearStore(dispatch);
             setOpen(false);
         } catch (error) {
             handleFormError<UpdateUserBodyType>({
