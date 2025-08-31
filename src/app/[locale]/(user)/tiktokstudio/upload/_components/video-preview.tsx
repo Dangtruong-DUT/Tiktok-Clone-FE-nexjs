@@ -83,7 +83,7 @@ export default function VideoPreview({ videoSrc, content, className }: VideoPrev
                 <div className="relative h-[511px] w-full">
                     <video
                         ref={videoRef}
-                        className="w-full  h-[511px]  object-cover rounded-t-[20px]"
+                        className={cn("w-full  h-[511px]  object-cover rounded-t-[20px]")}
                         muted={isMuted}
                         autoPlay
                         loop

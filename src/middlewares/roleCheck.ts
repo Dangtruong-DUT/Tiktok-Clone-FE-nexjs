@@ -19,7 +19,7 @@ export function handleRoleAccess(access_token: string, pathname: string, request
         return NextResponse.redirect(new URL("/", request.url));
     }
 
-    if (isUserPath && role !== Role.USER) {
+    if (isUserPath && role !== Role.USER && role !== Role.ADMIN && role !== Role.SUPER_ADMIN) {
         return NextResponse.redirect(new URL("/", request.url));
     }
 

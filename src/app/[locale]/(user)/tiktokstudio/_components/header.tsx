@@ -1,5 +1,7 @@
 "use client";
 
+import { ModeToggle } from "@/components/dark-mode-toggle";
+import SelectLanguage from "@/components/select-language";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -14,7 +16,9 @@ export default function Header() {
 
     return (
         <header className=" flex h-17 items-center justify-between border-b bg-background px-8">
-            <div className="ml-auto">
+            <div className="ml-auto flex items-center gap-4">
+                <SelectLanguage />
+                <ModeToggle />
                 <Popover>
                     <PopoverTrigger>
                         <Avatar className="cursor-pointer size-9 shrink-0">

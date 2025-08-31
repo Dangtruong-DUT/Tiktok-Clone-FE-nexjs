@@ -19,10 +19,10 @@ import { useUploadImageMutation, useUploadVideoMutation } from "@/services/RTK/u
 import { useCreatePostMutation } from "@/services/RTK/posts.services";
 import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { audienceStatusValues } from "@/constants/types";
 import { getAudienceNameFromEnum } from "@/helper/getNameFromStatus";
 import useVideoFrames from "@/hooks/video/useVideoFrames";
+import { useRouter } from "@/i18n/navigation";
 
 export default function FormUploadVideo() {
     const [uploadImage, uploadImageResult] = useUploadImageMutation();

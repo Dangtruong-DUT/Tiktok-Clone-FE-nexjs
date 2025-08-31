@@ -39,7 +39,7 @@ export default function Header({ tabActive, setTabActive }: HeaderProps) {
     };
     return (
         <header
-            className="h-[50px] sticky top-0 z-5 left-0 dark:bg-neutral-900 white:bg-white pt-2 border-b border-border -mt-4"
+            className="h-[50px] sticky top-0 z-5 left-0 dark:bg-neutral-900 bg-white pt-2 border-b border-border -mt-4"
             ref={containerRef}
         >
             <ul className="flex w-full h-full items-center justify-start gap-2">
