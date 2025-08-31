@@ -29,11 +29,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
             description: "tiktok clone",
             locale,
             type: "website",
-            url: `${envConfig.NEXT_PUBLIC_URL}/${locale}`,
+            url: `${envConfig.NEXT_PUBLIC_URL}${locale}`,
             siteName: "TaplamIT - Tiktok Clone",
             images: [
                 {
-                    url: `${envConfig.NEXT_PUBLIC_URL}/desktop-wallpaper-tiktok.png`,
+                    url: `${envConfig.NEXT_PUBLIC_URL}desktop-wallpaper-tiktok.png`,
                     width: 1200,
                     height: 630,
                     alt: "TaplamIT - Tiktok Clone",
