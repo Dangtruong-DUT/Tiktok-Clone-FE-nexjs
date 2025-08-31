@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { setIsMute } from "@/store/features/videoSlice";
+import { useCallback, useEffect, useState } from "react";
 
 interface UseVideoPlayerOptions {
     onVideoEnd?: () => void;
@@ -11,7 +13,15 @@ export function useVideoPlayer(
     options: UseVideoPlayerOptions = {}
 ) {
     const [isPlaying, setIsPlaying] = useState(true);
-    const [isMuted, setIsMuted] = useState(false);
+    const isMuted = useAppSelector((state) => state.video.isMuted);
+    const dispatch = useAppDispatch();
+    const setIsMuted = useCallback(
+        (value: boolean) => {
+            dispatch(setIsMute(value));
+        },
+        [dispatch]
+    );
+
     const [volume, setVolume] = useState(0.5);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);

@@ -5,6 +5,7 @@ import { UploadApi } from "@/services/RTK/upload.services";
 import { UserApi } from "@/services/RTK/user.services";
 import authReducer from "@/store/features/authSlice";
 import modalReducer from "@/store/features/modalSlide";
+import videoReducer from "@/store/features/videoSlice";
 import { authMiddleware, rtkQueryLogger } from "@/store/middleware";
 import { configureStore } from "@reduxjs/toolkit";
 
@@ -18,6 +19,7 @@ export const makeStore = () => {
             [PostApi.reducerPath]: PostApi.reducer,
             auth: authReducer,
             modal: modalReducer,
+            video: videoReducer,
         },
         middleware: (getDefaultMiddleware) =>
             getDefaultMiddleware().concat(
