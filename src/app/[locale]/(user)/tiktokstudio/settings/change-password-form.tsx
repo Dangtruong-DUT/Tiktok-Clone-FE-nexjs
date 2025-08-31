@@ -57,7 +57,7 @@ export default function ChangePasswordForm() {
             >
                 <Card className="overflow-hidden" x-chunk="dashboard-07-chunk-4">
                     <CardHeader>
-                        <CardTitle>Change Password</CardTitle>
+                        <CardTitle className="font-bold">Change Password</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="grid gap-6">
@@ -67,8 +67,18 @@ export default function ChangePasswordForm() {
                                 render={({ field }) => (
                                     <FormItem>
                                         <div className="grid gap-3">
-                                            <Label htmlFor="oldPassword">Old Password</Label>
-                                            <Input id="oldPassword" type="password" className="w-full" {...field} />
+                                            <Label
+                                                htmlFor="oldPassword"
+                                                className="font-semibold text-muted-foreground"
+                                            >
+                                                Old Password
+                                            </Label>
+                                            <Input
+                                                id="oldPassword"
+                                                type="password"
+                                                className="brand-input bg-muted! border-none!"
+                                                {...field}
+                                            />
                                             <FormMessage />
                                         </div>
                                     </FormItem>
@@ -80,8 +90,15 @@ export default function ChangePasswordForm() {
                                 render={({ field }) => (
                                     <FormItem>
                                         <div className="grid gap-3">
-                                            <Label htmlFor="password">New Password</Label>
-                                            <Input id="password" type="password" className="w-full" {...field} />
+                                            <Label htmlFor="password" className="font-semibold text-muted-foreground">
+                                                New Password
+                                            </Label>
+                                            <Input
+                                                id="password"
+                                                type="password"
+                                                className="brand-input bg-muted! border-none!"
+                                                {...field}
+                                            />
                                             <FormMessage />
                                         </div>
                                     </FormItem>
@@ -93,22 +110,32 @@ export default function ChangePasswordForm() {
                                 render={({ field }) => (
                                     <FormItem>
                                         <div className="grid gap-3">
-                                            <Label htmlFor="confirmPassword">Confirm Password</Label>
-                                            <Input id="confirmPassword" type="password" className="w-full" {...field} />
+                                            <Label
+                                                htmlFor="confirmPassword"
+                                                className="font-semibold text-muted-foreground"
+                                            >
+                                                Confirm Password
+                                            </Label>
+                                            <Input
+                                                id="confirmPassword"
+                                                type="password"
+                                                className="brand-input bg-muted! border-none!"
+                                                {...field}
+                                            />
                                             <FormMessage />
                                         </div>
                                     </FormItem>
                                 )}
                             />
                             <div className=" items-center gap-2 md:ml-auto flex">
-                                <Button variant="outline" size="sm" type="reset" className="min-w-[70px]">
+                                <Button variant="outline" size="sm" type="reset" className="min-w-[90px]">
                                     Cancel
                                 </Button>
                                 <Button
                                     size="sm"
                                     type="submit"
                                     disabled={changePasswordResult.isLoading}
-                                    className="min-w-[70px]"
+                                    className="bg-brand hover:bg-brand/90 w-[90px] flex items-center justify-center [&_svg]:size-5! cursor-pointer"
                                 >
                                     {changePasswordResult.isLoading ? <Loader className="animate-spin" /> : "Save"}
                                 </Button>

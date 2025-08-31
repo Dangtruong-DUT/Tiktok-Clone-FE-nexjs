@@ -103,7 +103,7 @@ export default function UpdateProfileForm() {
             >
                 <Card x-chunk="dashboard-07-chunk-0">
                     <CardHeader>
-                        <CardTitle>Update Profile</CardTitle>
+                        <CardTitle className="font-bold">Update Profile</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="grid gap-6">
@@ -149,10 +149,15 @@ export default function UpdateProfileForm() {
                                 render={({ field }) => (
                                     <FormItem>
                                         <div className="grid gap-3">
-                                            <Label htmlFor="name" className="sr-only">
+                                            <Label htmlFor="name" className="font-semibold text-muted-foreground">
                                                 Full Name
                                             </Label>
-                                            <Input id="name" type="text" className="w-full" {...field} />
+                                            <Input
+                                                id="name"
+                                                type="text"
+                                                className="brand-input bg-muted! border-none!"
+                                                {...field}
+                                            />
                                             <FormMessage />
                                         </div>
                                     </FormItem>
@@ -160,10 +165,15 @@ export default function UpdateProfileForm() {
                             />
 
                             <div className=" items-center gap-2 md:ml-auto flex">
-                                <Button variant="outline" size="sm" type="reset" className="min-w-[70px]">
+                                <Button variant="outline" size="sm" type="reset" className="min-w-[90px]">
                                     Cancel
                                 </Button>
-                                <Button size="sm" type="submit" disabled={isLoading} className="min-w-[70px]">
+                                <Button
+                                    size="sm"
+                                    type="submit"
+                                    disabled={isLoading}
+                                    className="bg-brand hover:bg-brand/90 w-[90px] flex items-center justify-center [&_svg]:size-5! cursor-pointer"
+                                >
                                     {isLoading ? <Loader className="animate-spin" /> : "Save"}
                                 </Button>
                             </div>

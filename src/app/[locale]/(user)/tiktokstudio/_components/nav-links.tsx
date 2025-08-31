@@ -31,7 +31,7 @@ export default function NavLinks() {
                         <Link
                             href="/tiktokstudio/upload"
                             className={cn("mb-4 mt-5", {
-                                "select-none opacity-40 cursor-not-allowed": pathname === "/tiktokstudio/upload",
+                                "select-none opacity-40 cursor-not-allowed": pathname.includes("/tiktokstudio/upload"),
                             })}
                         >
                             <Button
@@ -39,7 +39,7 @@ export default function NavLinks() {
                                     " h-9 font-medium text-sm rounded-lg gap-1! w-full cursor-pointer bg-brand text-white hover:bg-brand/90 transition-colors",
                                     {
                                         "select-none opacity-40 cursor-not-allowed":
-                                            pathname === "/tiktokstudio/upload",
+                                            pathname.includes("/tiktokstudio/upload"),
                                     }
                                 )}
                             >
@@ -102,7 +102,7 @@ export default function NavLinks() {
                                     href="/tiktokstudio/upload"
                                     className={cn("mb-4 mt-5", {
                                         "select-none opacity-40 cursor-not-allowed":
-                                            pathname === "/tiktokstudio/upload",
+                                            pathname.includes("/tiktokstudio/upload"),
                                     })}
                                 >
                                     <Button
@@ -110,7 +110,7 @@ export default function NavLinks() {
                                             "  font-medium text-sm rounded-lg gap-1! cursor-pointer bg-brand text-white hover:bg-brand/90 transition-colors h-9 w-9",
                                             {
                                                 "select-none opacity-40 cursor-not-allowed":
-                                                    pathname === "/tiktokstudio/upload",
+                                                    pathname.includes("/tiktokstudio/upload"),
                                             }
                                         )}
                                     >
