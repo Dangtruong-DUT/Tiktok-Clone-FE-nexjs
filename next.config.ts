@@ -3,7 +3,7 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
     images: {
-        domains: ["ttl.edu.vn", "i.pravatar.cc", "localhost"],
+        domains: ["ttl.edu.vn", "i.pravatar.cc", "localhost", "api.taplamit.tech"],
     },
 };
 
