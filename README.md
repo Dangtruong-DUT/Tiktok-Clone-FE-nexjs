@@ -2,8 +2,8 @@
 
 A TikTok-inspired video-sharing platform built with Next.js, TypeScript, and Tailwind CSS.
 
- <!-- Place your project screenshot or demo GIF below -->
- <!-- ![Project Demo](path/to/demo.png) -->
+<img width="1820" height="926" alt="image" src="https://github.com/user-attachments/assets/57c05bee-7c21-4625-ab35-9a3c32284a63" />
+
 
 ## Features
 
