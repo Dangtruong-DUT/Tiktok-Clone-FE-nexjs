@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
             siteName: "TaplamIT - Tiktok Clone",
             images: [
                 {
-                    url: `${envConfig.NEXT_PUBLIC_URL}desktop-wallpaper-tiktok.png`,
+                    url: `/desktop-wallpaper-tiktok.png`,
                     width: 1200,
                     height: 630,
                     alt: "TaplamIT - Tiktok Clone",
