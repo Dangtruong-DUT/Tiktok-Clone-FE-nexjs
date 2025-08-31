@@ -9,6 +9,8 @@ import { useFollowUser } from "@/hooks/data/useUser";
 import ButtonFollow from "@/app/[locale]/(public)/(home)/[username]/_components/button-follow";
 import { Link } from "@/i18n/navigation";
 import EditProfileDialog from "@/app/[locale]/(public)/(home)/[username]/_components/edit-profile-dialog";
+import { useAppContext } from "@/provider/app-provider";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ProfileActionButtonsProps {
     username: string;
@@ -16,6 +18,7 @@ interface ProfileActionButtonsProps {
 }
 
 export default function ProfileActionButtons({ userId, username }: ProfileActionButtonsProps) {
+    const { authStatus } = useAppContext();
     const currentUser = useCurrentUserData();
     const isCurrentUser = currentUser?._id === userId;
     const { data: userProfileRes } = useGetUserByUsernameQuery(username, { skip: isCurrentUser });
@@ -27,6 +30,16 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
     const handleMessage = useCallback(() => {
         toast.info("Message feature coming soon!");
     }, []);
+
+    if (authStatus === "loading" || currentUser == null) {
+        return (
+            <div className="flex items-center">
+                <Skeleton className="w-[122px]  h-10 font-medium rounded-md " />
+                <Skeleton className="ml-2 w-[122px]  h-10 font-medium rounded-md" />
+                <Skeleton className="ml-2 w-10  h-10 font-medium rounded-md" />
+            </div>
+        );
+    }
 
     if (isCurrentUser) {
         return (

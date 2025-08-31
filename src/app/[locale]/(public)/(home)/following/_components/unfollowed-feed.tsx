@@ -14,13 +14,7 @@ interface UnfollowedFeedProps {
     isFetching: boolean;
 }
 
-export default function UnfollowedFeed({
-    posts,
-    fetchNextPage,
-    hasNextPage,
-    isLoading,
-    isFetching,
-}: UnfollowedFeedProps) {
+export default function UnfollowedFeed({ posts, fetchNextPage, hasNextPage, isFetching }: UnfollowedFeedProps) {
     const sentinelScrollRef = useRef<HTMLDivElement>(null);
     const isInView = useInViewport(sentinelScrollRef);
 
