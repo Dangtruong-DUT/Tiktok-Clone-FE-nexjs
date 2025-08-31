@@ -17,12 +17,15 @@ import { useTranslations } from "next-intl";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import ButtonGotoProfile from "@/app/[locale]/(public)/(home)/_components/sidebar/_components/button-goto-profile";
+import { useAppContext } from "@/provider/app-provider";
+import SidebarSkeleton from "@/app/[locale]/(public)/(home)/_components/sidebar/_components/sidebar-skeleton";
 
 export interface SidebarProps {
     className?: string;
 }
 
 export default function Sidebar({ className }: SidebarProps) {
+    const { authStatus } = useAppContext();
     const { isOpenDrawer, setIsOpenDrawer, activeState, setActiveState, resetToRouteActive } = useSidebar();
     const [isOpenSearch, setIsOpenSearch] = useState<boolean>(false);
     const [isOpenSettings, setIsOpenSettings] = useState<boolean>(false);
@@ -60,6 +63,10 @@ export default function Sidebar({ className }: SidebarProps) {
         }
         setIsOpenSettings((prev) => !prev);
     }, [isOpenSettings, setIsOpenDrawer, setIsOpenSettings, setActiveState, resetToRouteActive]);
+
+    if (authStatus === "loading") {
+        return <SidebarSkeleton />;
+    }
 
     return (
         <div className={cn("relative h-screen transition-all duration-400 ease-in-out px-4", "w-60", className)}>
