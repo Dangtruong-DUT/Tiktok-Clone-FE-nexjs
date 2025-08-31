@@ -50,7 +50,7 @@ export default function OauthGooglePage() {
 
     return (
         <div className="m-auto flex flex-col items-center">
-            <h1 className="text-center font-semibold text-3xl">Oauth Redirecting...</h1>
+            <h1 className="text-center font-semibold text-xl">Oauth Redirecting...</h1>
             <Loading loop className="size-18" />
             <SearchParamsLoader onParamsReceived={setSearchParams} />
         </div>
