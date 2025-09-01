@@ -33,7 +33,7 @@ export default function ResetPasswordSuccess() {
                     <div className="bg-green-50 border border-green-200 rounded-lg p-4 mx-4">
                         <div className="flex items-center justify-center space-x-2 text-green-700">
                             <CheckCircle className="w-4 h-4" />
-                            <span className="text-sm font-medium">Password successfully updated</span>
+                            <span className="text-sm font-medium">{t("success.passwordUpdated")}</span>
                         </div>
                     </div>
                 </div>
@@ -60,8 +60,8 @@ export default function ResetPasswordSuccess() {
                         isAnimated ? "opacity-100" : "opacity-0"
                     }`}
                 >
-                    <p>You can now sign in with your new password</p>
-                    <p className="text-gray-400">This window will redirect automatically in a few seconds</p>
+                    <p>{t("success.signInMessage")}</p>
+                    <p className="text-gray-400">{t("success.redirectMessage")}</p>
                 </div>
             </div>
         </div>

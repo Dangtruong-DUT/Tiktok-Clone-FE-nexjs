@@ -20,6 +20,10 @@
             "selectedFile": "Tệp đã chọn"
         }
     },
+    "menuItems": {
+        "useEmail": "Sử dụng email",
+        "continueWithGoogle": "Tiếp tục với Google"
+    },
     "AuthLayout": {
         "noAccount": "Chưa có tài khoản?",
         "signUp": "Đăng ký",
@@ -87,7 +91,10 @@
         "success": {
             "title": "Đặt lại mật khẩu thành công!",
             "description": "Mật khẩu của bạn đã được đặt lại thành công. Bây giờ bạn có thể đăng nhập bằng mật khẩu mới.",
-            "goToLogin": "Đi đến Đăng nhập"
+            "goToLogin": "Đi đến Đăng nhập",
+            "passwordUpdated": "Mật khẩu đã được cập nhật thành công",
+            "signInMessage": "Bây giờ bạn có thể đăng nhập bằng mật khẩu mới",
+            "redirectMessage": "Cửa sổ này sẽ tự động chuyển hướng sau vài giây"
         }
     },
     "HomePage": {
@@ -110,6 +117,25 @@
     },
     "header": {
         "help": "Phản hồi và Trợ giúp"
+    },
+    "datePicker": {
+        "month": "Tháng",
+        "day": "Ngày",
+        "year": "Năm",
+        "months": {
+            "1": "Tháng 1",
+            "2": "Tháng 2",
+            "3": "Tháng 3",
+            "4": "Tháng 4",
+            "5": "Tháng 5",
+            "6": "Tháng 6",
+            "7": "Tháng 7",
+            "8": "Tháng 8",
+            "9": "Tháng 9",
+            "10": "Tháng 10",
+            "11": "Tháng 11",
+            "12": "Tháng 12"
+        }
     },
     "menuMore": {
         "title": "Thêm",

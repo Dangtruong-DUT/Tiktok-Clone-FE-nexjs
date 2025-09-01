@@ -20,6 +20,10 @@
             "selectedFile": "Selected file"
         }
     },
+    "menuItems": {
+        "useEmail": "Use email",
+        "continueWithGoogle": "Continue with Google"
+    },
     "AuthLayout": {
         "noAccount": "Don’t have an account?",
         "signUp": "Sign up",
@@ -87,7 +91,10 @@
         "success": {
             "title": "Password reset successful!",
             "description": "Your password has been successfully reset. You can now login with your new password.",
-            "goToLogin": "Go to Login"
+            "goToLogin": "Go to Login",
+            "passwordUpdated": "Password successfully updated",
+            "signInMessage": "You can now sign in with your new password",
+            "redirectMessage": "This window will redirect automatically in a few seconds"
         }
     },
     "HomePage": {
@@ -110,6 +117,25 @@
     },
     "header": {
         "help": "Feedback and Help"
+    },
+    "datePicker": {
+        "month": "Month",
+        "day": "Day",
+        "year": "Year",
+        "months": {
+            "1": "January",
+            "2": "February",
+            "3": "March",
+            "4": "April",
+            "5": "May",
+            "6": "June",
+            "7": "July",
+            "8": "August",
+            "9": "September",
+            "10": "October",
+            "11": "November",
+            "12": "December"
+        }
     },
     "menuMore": {
         "title": "More",
