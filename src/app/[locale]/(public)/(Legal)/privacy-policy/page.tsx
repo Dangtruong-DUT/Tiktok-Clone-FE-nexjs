@@ -214,10 +214,10 @@ export default async function PrivacyPolicyPage() {
                         <p className="mt-4 text-gray-700 dark:text-gray-300 leading-7">
                             {t("privacyPolicy.sections.contact.description")}{" "}
                             <a
-                                href={`mailto:${t("privacyPolicy.sections.contact.email")}`}
+                                href={`mailto:${BRAND_CONFIG.CONTACT_EMAIL}`}
                                 className="text-brand hover:underline font-medium transition-colors duration-200"
                             >
-                                {t("privacyPolicy.sections.contact.email")}
+                                {BRAND_CONFIG.CONTACT_EMAIL}
                             </a>
                             .
                         </p>
