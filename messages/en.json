@@ -1,4 +1,171 @@
 {
+    "Legal": {
+        "termsOfService": {
+            "title": "Terms of Service",
+            "sections": {
+                "acceptance": {
+                    "title": "1. Acceptance of Terms",
+                    "description": "Welcome to {appName}! These Terms of Service ('Terms') govern your access to and use of our platform, including the website, mobile application, and other services (collectively, the 'Service') provided by {companyName}. By accessing or using our Service, you agree to be bound by these Terms and our Privacy Policy."
+                },
+                "eligibility": {
+                    "title": "2. Eligibility",
+                    "description": "You must be at least 13 years old (or the minimum legal age required in your country to use services without parental consent). If you are under 18, you confirm that you have permission from a parent or legal guardian to use the Service."
+                },
+                "account": {
+                    "title": "3. Your Account",
+                    "description": {
+                        "creation": "To fully use the features of {appName}, you may need to register for an account. You can create an account directly or through a third-party service like Google (Google OAuth).",
+                        "oauth": "If you choose to create an account using Google, you authorize us to access and use certain information from your Google account, such as your name, email address, and profile picture, to create and manage your {appName} account. Your data usage will comply with our Privacy Policy.",
+                        "responsibility": "You are entirely responsible for all activities that occur under your account and must keep your password secure. You agree to notify us immediately of any unauthorized use of your account."
+                    }
+                },
+                "userContent": {
+                    "title": "4. User-Generated Content",
+                    "description": {
+                        "ownership": "You retain all ownership rights to the content (including videos, comments, audio, text, and images) that you post to the Service ('Your Content').",
+                        "license": "By submitting Your Content, you grant {companyName} a non-exclusive, transferable, sub-licensable, royalty-free, and worldwide license to use, copy, modify, create derivative works, distribute, publicly perform, and display Your Content in connection with operating, promoting, and improving the Service. This license allows us to do things like format your video for mobile viewing or display it in different parts of the application.",
+                        "responsibility": "You represent and warrant that you own or have all necessary rights, licenses, consents, and permissions to grant us the license to use Your Content, and that it does not infringe any copyright, trademark, privacy, or other rights of any third party."
+                    }
+                },
+                "prohibited": {
+                    "title": "5. Prohibited Activities and Community Guidelines",
+                    "description": "You agree not to engage in any of the following activities:",
+                    "items": {
+                        "1": "Post content that is illegal, violent, hateful, pornographic, or discriminatory.",
+                        "2": "Bully, harass, intimidate, or impersonate others.",
+                        "3": "Violate others' intellectual property rights, including copyright and trademarks.",
+                        "4": "Post misleading or fake information that could cause harm.",
+                        "5": "Use the Service for spam or unauthorized commercial activities.",
+                        "6": "Upload viruses, malware, or other malicious code.",
+                        "7": "Attempt to gain unauthorized access to systems, other users' accounts, or scrape data without our permission."
+                    }
+                },
+                "moderation": {
+                    "title": "6. Content Moderation",
+                    "description": "We have the right, but not the obligation, to review, filter, or remove content that violates these Terms or applicable law. We may use both automated systems and human moderators to monitor content on the platform to protect our community and Service. Repeated violations may result in account suspension or termination."
+                },
+                "intellectual": {
+                    "title": "7. Intellectual Property and Copyright",
+                    "description": {
+                        "ownership": "All rights, title, and interest in the Service (excluding Your Content), including all related intellectual property rights, are and will remain the exclusive property of {companyName}.",
+                        "dmca": "We respect others' intellectual property rights and expect users to do the same. If you believe your content has been copied in a way that constitutes copyright infringement, please provide us with detailed information through our contact email."
+                    }
+                },
+                "termination": {
+                    "title": "8. Termination",
+                    "description": "We have the right to suspend or terminate your access to the Service at any time, with or without cause, if you violate these Terms. You may delete your account at any time by following the instructions in the app settings."
+                },
+                "disclaimer": {
+                    "title": "9. Disclaimer",
+                    "description": "The Service is provided 'as is' and 'as available' without any warranties, either express or implied. We do not guarantee that the Service will be uninterrupted, secure, or error-free."
+                },
+                "liability": {
+                    "title": "10. Limitation of Liability",
+                    "description": "To the maximum extent permitted by law, {companyName} will not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly, arising from your use of the Service."
+                },
+                "governing": {
+                    "title": "11. Governing Law",
+                    "description": "These Terms will be governed by and construed in accordance with the laws of {jurisdiction}, without regard to conflict of law principles."
+                },
+                "changes": {
+                    "title": "12. Changes to These Terms",
+                    "description": "We may modify these Terms from time to time. If we make material changes, we will notify you by posting the updated version on this page and/or through other communication channels. Your continued use of the Service after the changes become effective means you agree to the modified Terms."
+                },
+                "contact": {
+                    "title": "13. Contact Us",
+                    "description": "If you have any questions about these Terms, please contact us at",
+                    "email": "{email}"
+                }
+            }
+        },
+        "meta": {
+            "lastUpdated": "Last updated: {date}",
+            "contactUs": "Contact us"
+        },
+        "privacyPolicy": {
+            "title": "Privacy Policy",
+            "sections": {
+                "introduction": {
+                    "title": "1. Introduction",
+                    "description": "Welcome to {appName}. {companyName} ('we', 'our', or 'us') is committed to protecting your privacy. This Privacy Policy explains how we collect, use, share, and protect your personal information."
+                },
+                "dataCollection": {
+                    "title": "2. Information We Collect",
+                    "description": "We collect information in various ways to provide and improve our Service.",
+                    "userProvided": {
+                        "title": "a. Information You Provide to Us",
+                        "items": {
+                            "1": "Account Information: When you create an account, you provide us with a username, password, email address, and date of birth.",
+                            "2": "User Content: We collect content you create on the Service, including videos, images, comments, direct messages, and related metadata (time and location of creation).",
+                            "3": "Contact Information: If you contact us, we collect information you provide in that process."
+                        }
+                    },
+                    "thirdParty": {
+                        "title": "b. Information from Third Parties",
+                        "description": "If you choose to register or log in using a third-party account (like Google), we receive certain information from that provider, such as your name, email address, profile picture, and account ID, subject to your privacy settings on that service."
+                    },
+                    "automatic": {
+                        "title": "c. Information We Collect Automatically",
+                        "items": {
+                            "1": "Usage Data: We collect information about how you interact with the Service, such as videos you watch, content you like, users you follow, and searches you make.",
+                            "2": "Device and Technical Information: We collect your IP address, device type, operating system, unique device identifiers, browser type, and language settings.",
+                            "3": "Location Data: We may collect approximate location information from your IP address or more precise location data from your device's GPS if you allow it.",
+                            "4": "Cookies and Similar Technologies: We use cookies to operate and provide the Service, remember your preferences, and analyze performance."
+                        }
+                    }
+                },
+                "dataUse": {
+                    "title": "3. How We Use Your Information",
+                    "description": "We use the information we collect for the following purposes:",
+                    "items": {
+                        "1": "Provide, maintain, and improve our Service.",
+                        "2": "Personalize your experience, such as suggesting videos and content we think you'll like (e.g., on your 'For You' page).",
+                        "3": "Enable you to interact with other users.",
+                        "4": "Communicate with you, including sending service notifications and marketing communications (which you can opt out of).",
+                        "5": "Ensure platform safety and security, detect and prevent fraud, spam, and abuse.",
+                        "6": "Perform analytics to understand how users interact with our Service and improve our product."
+                    }
+                },
+                "dataSharing": {
+                    "title": "4. How We Share Information",
+                    "description": "We do not sell your personal information. We may share information in the following circumstances:",
+                    "items": {
+                        "1": "With Other Users: Your profile information and publicly posted content will be visible to other users.",
+                        "2": "With Service Providers: We share information with partners who help us operate the Service, such as cloud storage providers, data analytics, and customer service.",
+                        "3": "For Legal Reasons: We may disclose your information if required by law or to protect the rights, property, and safety of {companyName}, our users, or the public.",
+                        "4": "In Business Transfers: If we're involved in a merger, acquisition, or sale of assets, your information may be transferred."
+                    }
+                },
+                "dataRetention": {
+                    "title": "5. Data Storage and Deletion",
+                    "description": "We store your information as long as your account is active or as needed to provide you with the Service. You can delete your account at any time through your app settings. After you delete your account, we will take steps to delete your information, though some information may be retained in backups or for legal purposes."
+                },
+                "userRights": {
+                    "title": "6. Your Rights and Choices",
+                    "description": "You have the following rights regarding your personal information:",
+                    "items": {
+                        "1": "Access and Edit: You can view and edit your profile information through your account settings.",
+                        "2": "Delete: You have the right to request deletion of your account and personal data.",
+                        "3": "Notification Management: You can manage push notifications and emails in your settings.",
+                        "4": "Cookie Control: Most web browsers let you control cookies through their settings."
+                    }
+                },
+                "childrenPrivacy": {
+                    "title": "7. Children's Privacy",
+                    "description": "Our Service is not intended for children under 13 (or the minimum age in your region). We do not knowingly collect personal information from children. If you discover that a child has provided us with personal information without parental consent, please contact us so we can delete that information."
+                },
+                "changes": {
+                    "title": "8. Changes to This Policy",
+                    "description": "We may update this Privacy Policy from time to time. When we make significant changes, we will notify you by updating the 'Last Updated' date at the top of this page and/or through in-app notification."
+                },
+                "contact": {
+                    "title": "9. Contact Us",
+                    "description": "If you have any questions or concerns about this Privacy Policy, please contact us at",
+                    "email": "privacy@tiktok.com"
+                }
+            }
+        }
+    },
     "StudioLayout": {
         "upload": "Upload"
     },
