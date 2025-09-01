@@ -176,15 +176,116 @@
             "settings": "Cài đặt",
             "back": "Quay lại Tiktok"
         },
+        "content": {
+            "table": {
+                "columns": {
+                    "content": "Nội dung",
+                    "privacy": "Quyền riêng tư",
+                    "views": "Lượt xem",
+                    "comments": "Bình luận",
+                    "actions": "Thao tác"
+                },
+                "actions": {
+                    "edit": "Chỉnh sửa",
+                    "delete": "Xóa"
+                }
+            },
+            "search": {
+                "placeholder": "Tìm kiếm..."
+            }
+        },
+        "dashboard": {
+            "recentPosts": {
+                "title": "Bài đăng gần đây",
+                "createdAt": "Đăng vào {date}",
+                "metrics": {
+                    "views": "Lượt xem",
+                    "likes": "Lượt thích",
+                    "comments": "Bình luận"
+                }
+            }
+        },
+        "header": {
+            "profile": "Hồ sơ",
+            "logout": "Đăng xuất"
+        },
+        "settings": {
+            "page": {
+                "title": "Cài đặt",
+                "userBadge": "Người dùng"
+            },
+            "updateProfile": {
+                "title": "Cập nhật hồ sơ",
+                "upload": "Tải lên",
+                "defaultUser": "USER",
+                "fullNameLabel": "Họ và tên",
+                "cancel": "Hủy",
+                "save": "Lưu"
+            },
+            "changePassword": {
+                "title": "Đổi mật khẩu",
+                "oldPassword": "Mật khẩu cũ",
+                "newPassword": "Mật khẩu mới",
+                "confirmPassword": "Xác nhận mật khẩu",
+                "cancel": "Hủy",
+                "save": "Lưu"
+            }
+        },
         "upload": {
             "selectVideo": "Chọn video để tải lên",
             "dragAndDrop": "Hoặc kéo và thả tệp",
             "mp4OrWebmOnly": "Chỉ hỗ trợ MP4 hoặc WebM",
+            "guidelines": {
+                "sizeAndDuration": {
+                    "title": "Kích thước và thời lượng",
+                    "description": "Kích thước tối đa: 30 GB, thời lượng video: 60 phút."
+                },
+                "fileFormats": {
+                    "title": "Định dạng tệp",
+                    "description": "Khuyến nghị: '.mp4'. Các định dạng chính khác được hỗ trợ."
+                },
+                "videoResolutions": {
+                    "title": "Độ phân giải video",
+                    "description": "Khuyến nghị độ phân giải cao: 1080p, 1440p, 4K."
+                },
+                "aspectRatios": {
+                    "title": "Tỷ lệ khung hình",
+                    "description": "Khuyến nghị: 16:9 cho ngang, 9:16 cho dọc."
+                }
+            },
+            "tooltips": {
+                "play": "Phát",
+                "pause": "Tạm dừng",
+                "mute": "Tắt tiếng",
+                "unmute": "Bật tiếng"
+            },
             "resolutionReq": "Độ phân giải 720x1280 hoặc cao hơn",
             "maxFileSize": "Dung lượng tối đa 30 GB",
             "maxDuration": "Thời lượng tối đa 60 phút",
             "selectFile": "Chọn tệp",
-            "selectedFile": "Tệp đã chọn"
+            "selectedFile": "Tệp đã chọn",
+            "detail": {
+                "title": "Chi tiết",
+                "description": {
+                    "label": "Mô tả",
+                    "placeholder": "Chia sẻ thêm về video của bạn tại đây ..."
+                },
+                "cover": {
+                    "label": "Ảnh bìa",
+                    "tooltip": "Chọn một ảnh bìa hoặc tải lên từ thiết bị của bạn. Một ảnh bìa thu hút có thể gây ấn tượng với người xem hiệu quả."
+                }
+            },
+            "settings": {
+                "title": "Cài đặt",
+                "audience": {
+                    "label": "Ai có thể xem video này",
+                    "placeholder": "Chọn đối tượng xem"
+                }
+            },
+            "buttons": {
+                "post": "Đăng",
+                "discard": "Hủy"
+            }
         }
     },
     "menuItems": {

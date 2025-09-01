@@ -11,11 +11,13 @@ import Image from "next/image";
 import { useState } from "react";
 import { BsFillImageFill } from "react-icons/bs";
 import { FaChevronRight, FaCommentDots, FaHeart, FaPlay } from "react-icons/fa6";
+import { useTranslations } from "next-intl";
 
 interface RecentPostProps {
     classNames?: string;
 }
 export default function RecentPosts({ classNames }: RecentPostProps) {
+    const t = useTranslations("TiktokStudio.dashboard.recentPosts");
     const router = useRouter();
     const currentUser = useCurrentUserData();
     const { data } = useGetPostOfUserPagingQuery(
@@ -55,6 +57,7 @@ export default function RecentPosts({ classNames }: RecentPostProps) {
 }
 
 function VideoItem({ post }: { post: TikTokPostType }) {
+    const t = useTranslations("TiktokStudio.dashboard.recentPosts");
     const [isModalDetailOpen, setIsModalDetailOpen] = useState(false);
 
     return (
@@ -79,7 +82,9 @@ function VideoItem({ post }: { post: TikTokPostType }) {
                     )}
                     <div className="flex flex-col gap-[7px]">
                         <span className="truncate font-medium text-sm inline-block max-w-[100px]">{post.content}</span>
-                        <span className="text-muted-foreground text-xs">{formatISOToDisplayDate(post.created_at)}</span>
+                        <span className="text-muted-foreground text-xs">
+                            {t("createdAt", { date: formatISOToDisplayDate(post.created_at) })}
+                        </span>
                     </div>
                 </div>
                 <div className="flex gap-4 text-xs text-secondary-foreground">

@@ -10,21 +10,24 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
+import { useTranslations } from "next-intl";
 
 import { useEffect, useState } from "react";
 
 import { SearchParamsLoader, useSearchParamsLoader } from "@/components/searchparams-loader";
 import { useGetPostOfUserPagingQuery } from "@/services/RTK/posts.services";
 import useCurrentUserData from "@/hooks/data/useCurrentUserData";
-import { columns } from "@/app/[locale]/(user)/tiktokstudio/content/_components/columns";
 import { DataTable } from "@/components/ui/data-table";
 import AutoPagination from "@/components/auto-pagination";
 import { Input } from "@/components/ui/input";
 import AlertDialogDeleteDish from "@/app/[locale]/(user)/tiktokstudio/content/_components/alert-confirm-delete-post";
 import { usePostTableContext } from "@/app/[locale]/(user)/tiktokstudio/content/_context/content-table.context";
+import { useColumns } from "@/app/[locale]/(user)/tiktokstudio/content/_components/columns";
 
 export default function TableContent() {
+    const t = useTranslations("TiktokStudio.content");
     const currentUser = useCurrentUserData();
+    const columns = useColumns();
     const { searchParams, setSearchParams } = useSearchParamsLoader();
 
     // page param mặc định 1, nhưng TanStack dùng pageIndex (0-based)
@@ -88,7 +91,7 @@ export default function TableContent() {
             <AlertDialogDeleteDish postIdDelete={postIdDelete} setPostIdDelete={setPostIdDelete} />
             <div className="flex items-center py-4">
                 <Input
-                    placeholder="Search for post description"
+                    placeholder={t("search.placeholder")}
                     value={(table.getColumn("content")?.getFilterValue() as string) ?? ""}
                     onChange={(event) => table.getColumn("content")?.setFilterValue(event.target.value)}
                     className="max-w-sm ml-auto"

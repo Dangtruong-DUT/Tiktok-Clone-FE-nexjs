@@ -176,15 +176,116 @@
             "settings": "Settings",
             "back": "Back to TikTok"
         },
+        "content": {
+            "table": {
+                "columns": {
+                    "content": "Content",
+                    "privacy": "Privacy",
+                    "views": "Views",
+                    "comments": "Comments",
+                    "actions": "Actions"
+                },
+                "actions": {
+                    "edit": "Edit",
+                    "delete": "Delete"
+                }
+            },
+            "search": {
+                "placeholder": "Search..."
+            }
+        },
+        "dashboard": {
+            "recentPosts": {
+                "title": "Recent posts",
+                "createdAt": "Posted on {date}",
+                "metrics": {
+                    "views": "Views",
+                    "likes": "Likes",
+                    "comments": "Comments"
+                }
+            }
+        },
+        "header": {
+            "profile": "Profile",
+            "logout": "Logout"
+        },
+        "settings": {
+            "page": {
+                "title": "Settings",
+                "userBadge": "User"
+            },
+            "updateProfile": {
+                "title": "Update Profile",
+                "upload": "Upload",
+                "defaultUser": "USER",
+                "fullNameLabel": "Full Name",
+                "cancel": "Cancel",
+                "save": "Save"
+            },
+            "changePassword": {
+                "title": "Change Password",
+                "oldPassword": "Old Password",
+                "newPassword": "New Password",
+                "confirmPassword": "Confirm Password",
+                "cancel": "Cancel",
+                "save": "Save"
+            }
+        },
         "upload": {
             "selectVideo": "Select video to upload",
             "dragAndDrop": "Or drag and drop a file",
             "mp4OrWebmOnly": "MP4 or WebM",
+            "guidelines": {
+                "sizeAndDuration": {
+                    "title": "Size and duration",
+                    "description": "Maximum size: 30 GB, video duration: 60 minutes."
+                },
+                "fileFormats": {
+                    "title": "File formats",
+                    "description": "Recommended: '.mp4'. Other major formats are supported."
+                },
+                "videoResolutions": {
+                    "title": "Video resolutions",
+                    "description": "High-resolution recommended: 1080p, 1440p, 4K."
+                },
+                "aspectRatios": {
+                    "title": "Aspect ratios",
+                    "description": "Recommended: 16:9 for landscape, 9:16 for vertical."
+                }
+            },
+            "tooltips": {
+                "play": "Play",
+                "pause": "Pause",
+                "mute": "Mute",
+                "unmute": "Unmute"
+            },
             "resolutionReq": "720x1280 resolution or higher",
             "maxFileSize": "Up to 30 GB",
             "maxDuration": "Up to 60 minutes",
             "selectFile": "Select file",
-            "selectedFile": "Selected file"
+            "selectedFile": "Selected file",
+            "detail": {
+                "title": "Detail",
+                "description": {
+                    "label": "Description",
+                    "placeholder": "Share more about your video here ..."
+                },
+                "cover": {
+                    "label": "Cover",
+                    "tooltip": "Select a cover or upload one from your device. An engaging cover can capture viewers interest effectively."
+                }
+            },
+            "settings": {
+                "title": "Settings",
+                "audience": {
+                    "label": "Who can watch this video",
+                    "placeholder": "Select an audience"
+                }
+            },
+            "buttons": {
+                "post": "Post",
+                "discard": "Discard"
+            }
         }
     },
     "menuItems": {

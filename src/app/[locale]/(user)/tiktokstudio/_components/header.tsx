@@ -2,6 +2,7 @@
 
 import { ModeToggle } from "@/components/dark-mode-toggle";
 import SelectLanguage from "@/components/select-language";
+import { useTranslations } from "next-intl";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -11,6 +12,7 @@ import { Link } from "@/i18n/navigation";
 import { Loader, LogOut, User } from "lucide-react";
 
 export default function Header() {
+    const t = useTranslations("TiktokStudio.header");
     const currentUser = useCurrentUserData();
     const { handleLogout, logoutResult } = useLogout();
 
@@ -31,12 +33,12 @@ export default function Header() {
                             <Link href={`/@${currentUser?.username}`} className="block w-full">
                                 <Button variant={"ghost"} className="justify-start w-full">
                                     <User />
-                                    Profile
+                                    {t("profile")}
                                 </Button>
                             </Link>
                             <Button variant={"ghost"} className="justify-start" onClick={handleLogout}>
                                 {logoutResult.isLoading ? <Loader className="animate-spin" /> : <LogOut />}
-                                Logout
+                                {t("logout")}
                             </Button>
                         </div>
                     </PopoverContent>

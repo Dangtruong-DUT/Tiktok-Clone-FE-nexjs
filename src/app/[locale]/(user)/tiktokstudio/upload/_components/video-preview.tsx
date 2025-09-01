@@ -9,6 +9,7 @@ import Image from "next/image";
 import { useRef } from "react";
 import { AiFillMuted } from "react-icons/ai";
 import { FaPause, FaPlay } from "react-icons/fa6";
+import { useTranslations } from "next-intl";
 import { ImVolumeMute2 } from "react-icons/im";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
@@ -22,6 +23,7 @@ interface VideoPreviewProps {
 export default function VideoPreview({ videoSrc, content, className }: VideoPreviewProps) {
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const { isPlaying, setIsPlaying, isMuted, setIsMuted, currentTime, duration } = useVideoPlayer(videoRef);
+    const t = useTranslations("TiktokStudio.upload");
     const currentUserData = useCurrentUserData();
 
     const { handlePlayPause, handleMuteToggle, handleSeek } = useVideoControls({
@@ -156,7 +158,7 @@ export default function VideoPreview({ videoSrc, content, className }: VideoPrev
                                         </span>
                                     </TooltipTrigger>
                                     <TooltipContent>
-                                        <p>{isPlaying ? "Pause" : "Play"}</p>
+                                        <p>{isPlaying ? t("tooltips.pause") : t("tooltips.play")}</p>
                                     </TooltipContent>
                                 </Tooltip>
 
@@ -175,7 +177,7 @@ export default function VideoPreview({ videoSrc, content, className }: VideoPrev
                                         </span>
                                     </TooltipTrigger>
                                     <TooltipContent>
-                                        <p>{isMuted ? "Unmute" : "Mute"}</p>
+                                        <p>{isMuted ? t("tooltips.unmute") : t("tooltips.mute")}</p>
                                     </TooltipContent>
                                 </Tooltip>
                             </div>

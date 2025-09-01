@@ -1,5 +1,6 @@
 "use client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,6 +16,7 @@ import { useChangePasswordMutation } from "@/services/RTK/user.services";
 import { Loader } from "lucide-react";
 
 export default function ChangePasswordForm() {
+    const t = useTranslations("TiktokStudio.settings");
     const [changePasswordMutate, changePasswordResult] = useChangePasswordMutation();
 
     const form = useForm<ChangePasswordBodyType>({
@@ -57,7 +59,7 @@ export default function ChangePasswordForm() {
             >
                 <Card className="overflow-hidden" x-chunk="dashboard-07-chunk-4">
                     <CardHeader>
-                        <CardTitle className="font-bold">Change Password</CardTitle>
+                        <CardTitle className="font-bold">{t("changePassword.title")}</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="grid gap-6">
@@ -71,7 +73,7 @@ export default function ChangePasswordForm() {
                                                 htmlFor="oldPassword"
                                                 className="font-semibold text-muted-foreground"
                                             >
-                                                Old Password
+                                                {t("changePassword.oldPassword")}
                                             </Label>
                                             <Input
                                                 id="oldPassword"
@@ -91,7 +93,7 @@ export default function ChangePasswordForm() {
                                     <FormItem>
                                         <div className="grid gap-3">
                                             <Label htmlFor="password" className="font-semibold text-muted-foreground">
-                                                New Password
+                                                {t("changePassword.newPassword")}
                                             </Label>
                                             <Input
                                                 id="password"
@@ -114,7 +116,7 @@ export default function ChangePasswordForm() {
                                                 htmlFor="confirmPassword"
                                                 className="font-semibold text-muted-foreground"
                                             >
-                                                Confirm Password
+                                                {t("changePassword.confirmPassword")}
                                             </Label>
                                             <Input
                                                 id="confirmPassword"
@@ -129,7 +131,7 @@ export default function ChangePasswordForm() {
                             />
                             <div className=" items-center gap-2 md:ml-auto flex">
                                 <Button variant="outline" size="sm" type="reset" className="min-w-[90px]">
-                                    Cancel
+                                    {t("changePassword.cancel")}
                                 </Button>
                                 <Button
                                     size="sm"
@@ -137,7 +139,11 @@ export default function ChangePasswordForm() {
                                     disabled={changePasswordResult.isLoading}
                                     className="bg-brand hover:bg-brand/90 w-[90px] flex items-center justify-center [&_svg]:size-5! cursor-pointer"
                                 >
-                                    {changePasswordResult.isLoading ? <Loader className="animate-spin" /> : "Save"}
+                                    {changePasswordResult.isLoading ? (
+                                        <Loader className="animate-spin" />
+                                    ) : (
+                                        t("changePassword.save")
+                                    )}
                                 </Button>
                             </div>
                         </div>
