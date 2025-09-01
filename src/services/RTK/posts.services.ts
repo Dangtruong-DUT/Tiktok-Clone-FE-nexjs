@@ -293,6 +293,7 @@ export const PostApi = createApi({
                 method: "POST",
                 body,
             }),
+            invalidatesTags: (result, error, arg) => [{ type: "Posts" as const, id: `POST-OF-CONTENT-LIST` }],
         }),
         getUnfollowedPosts: builder.infiniteQuery<GetListPostRes, void, number>({
             query: ({ pageParam }) => `/posts/not-following?page=${pageParam}&limit=10`,
