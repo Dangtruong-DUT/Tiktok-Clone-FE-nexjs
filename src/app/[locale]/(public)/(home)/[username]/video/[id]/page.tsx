@@ -7,6 +7,7 @@ import PostRequestApi from "@/apis/posts.request";
 import { notFound } from "next/navigation";
 import { VideoPlaylistProvider } from "@/app/[locale]/(public)/(home)/[username]/video/[id]/_context/video-playlist-context";
 import VideoDetailContent from "@/app/[locale]/(public)/(home)/[username]/video/[id]/_components/video-detail-content";
+import envConfig from "@/config/app.config";
 
 interface VideoDetailPageProps {
     params: Promise<{
@@ -47,7 +48,7 @@ export async function generateMetadata({ params }: VideoDetailPageProps, parent:
 
     const pageDescription = postContent || `Watch ${displayName}'s video on TikTok.`;
 
-    const canonicalUrl = `${process.env.NEXT_PUBLIC_URL}/${locale}/%40${cleanUsername}/video/${id}`;
+    const canonicalUrl = `${envConfig.NEXT_PUBLIC_URL}${locale}/${cleanUsername}/video/${id}`;
 
     return {
         title: pageTitle,
@@ -64,8 +65,8 @@ export async function generateMetadata({ params }: VideoDetailPageProps, parent:
         alternates: {
             canonical: canonicalUrl,
             languages: {
-                "en-US": `/en/%40${cleanUsername}/video/${id}`,
-                "vi-VN": `/vi/%40${cleanUsername}/video/${id}`,
+                "en-US": `${envConfig.NEXT_PUBLIC_URL}en/@${cleanUsername}/video/${id}`,
+                "vi-VN": `${envConfig.NEXT_PUBLIC_URL}vi/@${cleanUsername}/video/${id}`,
             },
         },
         twitter: {

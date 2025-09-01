@@ -1,6 +1,39 @@
 import { BRAND_CONFIG } from "@/config/brand.config";
 import { getTranslations } from "next-intl/server";
+import { Metadata } from "next";
+import { LocalesType } from "@/i18n/config";
+import envConfig from "@/config/app.config";
 import React from "react";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: LocalesType }> }): Promise<Metadata> {
+    const { locale } = await params;
+    const t = await getTranslations("Legal");
+
+    return {
+        title: t("privacyPolicy.title"),
+        description: t("privacyPolicy.sections.introduction.description", {
+            appName: BRAND_CONFIG.APP_NAME,
+            companyName: BRAND_CONFIG.COMPANY_NAME,
+        }),
+        openGraph: {
+            title: t("privacyPolicy.title"),
+            description: t("privacyPolicy.sections.introduction.description", {
+                appName: BRAND_CONFIG.APP_NAME,
+                companyName: BRAND_CONFIG.COMPANY_NAME,
+            }),
+            type: "website",
+            url: `${envConfig.NEXT_PUBLIC_URL}${locale}/privacy-policy`,
+            siteName: BRAND_CONFIG.APP_NAME,
+        },
+        alternates: {
+            canonical: `${envConfig.NEXT_PUBLIC_URL}${locale}/privacy-policy`,
+            languages: {
+                "en-US": `${envConfig.NEXT_PUBLIC_URL}en/privacy-policy`,
+                "vi-VN": `${envConfig.NEXT_PUBLIC_URL}vi/privacy-policy`,
+            },
+        },
+    };
+}
 
 type TranslationKeyMap = {
     "privacyPolicy.sections.dataCollection.userProvided.items": string[];

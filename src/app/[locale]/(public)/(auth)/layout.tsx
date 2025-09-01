@@ -7,7 +7,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Metadata, ResolvingMetadata } from "next";
 
 export async function generateMetadata(
-    { params }: { params: { locale: LocalesType } },
+    { params }: { params: Promise<{ locale: LocalesType }> },
     parent: ResolvingMetadata
 ): Promise<Metadata> {
     const t = await getTranslations("SignUpPage");

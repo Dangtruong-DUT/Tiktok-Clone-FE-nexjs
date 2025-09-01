@@ -4,6 +4,7 @@ import TabBar from "@/app/[locale]/(public)/(home)/[username]/_components/TabBar
 import VideoGrid from "@/app/[locale]/(public)/(home)/[username]/_components/video-grid";
 import TAB_ITEMS from "@/app/[locale]/(public)/(home)/[username]/_config/tab-items.config";
 import VideosProvider from "@/app/[locale]/(public)/(home)/[username]/_context/videos.context";
+import envConfig from "@/config/app.config";
 import { WrapperServerCallApi } from "@/utils/handleErrors/handleServerError";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
@@ -39,15 +40,15 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
             title: user?.name ? `${user.name} (@${user.username})` : "TikTok Profile",
             description: user?.bio || `Check out ${user?.name || user?.username}'s profile on TikTok`,
             type: "profile",
-            url: `${process.env.NEXT_PUBLIC_URL}/${locale}/${username}`,
+            url: `${process.env.NEXT_PUBLIC_URL}${locale}/@${username}`,
             siteName: "TikTok Clone",
             locale,
         },
         alternates: {
-            canonical: `${process.env.NEXT_PUBLIC_URL}/${locale}/${username}`,
+            canonical: `${envConfig.NEXT_PUBLIC_URL}${locale}/@${username}`,
             languages: {
-                "en-US": "/en",
-                "vi-VN": "/vi",
+                "en-US": `${envConfig.NEXT_PUBLIC_URL}en/@${username}`,
+                "vi-VN": `${envConfig.NEXT_PUBLIC_URL}vi/@${username}`,
             },
         },
         twitter: {

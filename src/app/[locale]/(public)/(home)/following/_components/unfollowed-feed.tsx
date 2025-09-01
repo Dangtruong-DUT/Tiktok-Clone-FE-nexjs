@@ -26,7 +26,7 @@ export default function UnfollowedFeed({ posts, fetchNextPage, hasNextPage, isFe
 
     return (
         <>
-            <div className="mx-auto p-4 max-w-184  overflow-y-auto   scrollbar-hidden grid  gap-6 grid-cols-[repeat(auto-fill,minmax(226px,1fr))] w-full  md:grid-cols-[repeat(auto-fill,minmax(180px,1fr))]">
+            <div className="mx-auto p-4 max-w-184  overflow-y-auto   scrollbar-hidden grid  gap-6 grid-cols-[repeat(auto-fill,minmax(226px,1fr))] w-full  md:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] items-start">
                 {posts.map((post) => (
                     <CardVideoItem key={post._id} post={post} />
                 ))}

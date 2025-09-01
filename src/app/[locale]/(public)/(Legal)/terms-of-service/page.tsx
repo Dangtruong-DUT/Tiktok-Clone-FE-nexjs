@@ -1,6 +1,42 @@
 import { BRAND_CONFIG } from "@/config/brand.config";
 import { getTranslations } from "next-intl/server";
+import { Metadata } from "next";
+import { LocalesType } from "@/i18n/config";
+import envConfig from "@/config/app.config";
 import React from "react";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: LocalesType }> }): Promise<Metadata> {
+    const { locale } = await params;
+    const t = (await getTranslations("Legal")) as unknown as {
+        <K extends keyof ParamsMap>(key: K, params: ParamsMap[K]): string;
+        (key: string): string;
+    };
+
+    const title = "Terms of Service - TikTok";
+    const description = t("termsOfService.sections.acceptance.description", {
+        appName: BRAND_CONFIG.APP_NAME,
+        companyName: BRAND_CONFIG.COMPANY_NAME,
+    });
+
+    return {
+        title,
+        description,
+        openGraph: {
+            title,
+            description,
+            type: "website",
+            url: `${envConfig.NEXT_PUBLIC_URL}${locale}/terms-of-service`,
+            siteName: BRAND_CONFIG.APP_NAME,
+        },
+        alternates: {
+            canonical: `${envConfig.NEXT_PUBLIC_URL}${locale}/terms-of-service`,
+            languages: {
+                "en-US": `${envConfig.NEXT_PUBLIC_URL}en/terms-of-service`,
+                "vi-VN": `${envConfig.NEXT_PUBLIC_URL}vi/terms-of-service`,
+            },
+        },
+    };
+}
 
 type ParamsMap = {
     "meta.lastUpdated": { date: string };
