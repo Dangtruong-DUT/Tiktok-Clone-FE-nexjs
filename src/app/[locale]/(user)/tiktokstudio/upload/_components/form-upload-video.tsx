@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import UploadVideo from "@/app/[locale]/(user)/tiktokstudio/upload/_components/upload-video";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -27,6 +28,7 @@ import { useConfirmNavigation } from "@/hooks/shared/useConfirmNavigation";
 import AlertDialogExitPage from "@/app/[locale]/(user)/tiktokstudio/upload/_components/alert-confirm-leave-page";
 
 export default function FormUploadVideo() {
+    const t = useTranslations("TiktokStudio.upload");
     const [uploadImage, uploadImageResult] = useUploadImageMutation();
     const [uploadVideo, uploadVideoResult] = useUploadVideoMutation();
     const [createPost, createPostResult] = useCreatePostMutation();
@@ -167,19 +169,21 @@ export default function FormUploadVideo() {
                 {!isInitialRender && (
                     <div className="grid grid-cols-[70%_30%] gap-4">
                         <div>
-                            <div className="mt-5 text-base font-bold">Detail</div>
+                            <div className="mt-5 text-base font-bold">{t("detail.title")}</div>
                             <div className="rounded-lg border border-border p-5 mt-[16px]">
                                 <FormField
                                     control={form.control}
                                     name="content"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel className="text-sm font-semibold">Description</FormLabel>
+                                            <FormLabel className="text-sm font-semibold">
+                                                {t("detail.description.label")}
+                                            </FormLabel>
                                             <FormControl>
                                                 <Textarea
                                                     className="resize-none bg-accent"
                                                     rows={5}
-                                                    placeholder="Share more about your video here ..."
+                                                    placeholder={t("detail.description.placeholder")}
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -190,16 +194,13 @@ export default function FormUploadVideo() {
                                 />
 
                                 <div className="flex mt-7 mb-2 items-center gap-2 text-sm font-semibold">
-                                    Cover
+                                    {t("detail.cover.label")}
                                     <Tooltip>
                                         <TooltipTrigger asChild>
                                             <Info size={14} className="text-muted-foreground" />
                                         </TooltipTrigger>
                                         <TooltipContent align="center" className="w-2xs">
-                                            <p>
-                                                Select a cover or upload one from your device. An engaging cover can
-                                                capture viewers interest effectively.
-                                            </p>
+                                            <p>{t("detail.cover.tooltip")}</p>
                                         </TooltipContent>
                                     </Tooltip>
                                 </div>
@@ -211,7 +212,7 @@ export default function FormUploadVideo() {
                                 />
                             </div>
 
-                            <div className="mt-5 text-base font-bold">Settings</div>
+                            <div className="mt-5 text-base font-bold">{t("settings.title")}</div>
                             <div className="rounded-lg border border-border p-5 mt-[16px] ">
                                 <FormField
                                     control={form.control}
@@ -219,7 +220,7 @@ export default function FormUploadVideo() {
                                     render={({ field }) => (
                                         <FormItem className="w-[280px]">
                                             <FormLabel className="text-sm font-semibold">
-                                                Who can watch this video
+                                                {t("settings.audience.label")}
                                             </FormLabel>
                                             <Select
                                                 onValueChange={(value) => field.onChange(Number(value))}
@@ -227,7 +228,7 @@ export default function FormUploadVideo() {
                                             >
                                                 <FormControl>
                                                     <SelectTrigger className="w-full ">
-                                                        <SelectValue placeholder="Select an audience" />
+                                                        <SelectValue placeholder={t("settings.audience.placeholder")} />
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
@@ -249,7 +250,11 @@ export default function FormUploadVideo() {
                                     type="submit"
                                     disabled={isCreatePostLoading}
                                 >
-                                    {isCreatePostLoading ? <Loader className="animate-spin text-brand" /> : "Post"}
+                                    {isCreatePostLoading ? (
+                                        <Loader className="animate-spin text-brand" />
+                                    ) : (
+                                        t("buttons.post")
+                                    )}
                                 </Button>
                                 <Button
                                     variant={"secondary"}
@@ -257,7 +262,7 @@ export default function FormUploadVideo() {
                                     className="cursor-pointer h-9 rounded-lg w-[200px] font-base"
                                     onClick={onReset}
                                 >
-                                    Discard
+                                    {t("buttons.discard")}
                                 </Button>
                             </div>
                         </div>

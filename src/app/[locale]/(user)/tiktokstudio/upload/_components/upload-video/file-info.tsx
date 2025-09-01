@@ -3,6 +3,7 @@ import { MdOutlinePublishedWithChanges } from "react-icons/md";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useTranslations } from "next-intl";
 
 interface FileInfoProps {
     file: File | null;
@@ -10,6 +11,7 @@ interface FileInfoProps {
     className?: string;
 }
 export default function FileInfo({ file, onReplaceFile, className }: FileInfoProps) {
+    const t = useTranslations("TiktokStudio.upload.fileInfo");
     if (!file) return null;
 
     const { name, size, type } = file;
@@ -38,11 +40,13 @@ export default function FileInfo({ file, onReplaceFile, className }: FileInfoPro
                     </Tooltip>
                     <Badge variant={"outline"}>{type}</Badge>
                 </div>
-                <div className="mt-2 text-green-400 text-sm">{<span>{(size / (1024 * 1024)).toFixed(2)} MB</span>}</div>
+                <div className="mt-2 text-green-400 text-sm">
+                    {<span>{t("size", { size: (size / (1024 * 1024)).toFixed(2) })}</span>}
+                </div>
             </div>
             <Button variant="secondary" type="button" onClick={handleReplace} className="cursor-pointer">
                 <MdOutlinePublishedWithChanges />
-                Replace
+                {t("replace")}
             </Button>
         </div>
     );

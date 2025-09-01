@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MdVerified } from "react-icons/md";
 import { UserVerifyStatus } from "@/constants/enum";
 import { useSearchUsersGetQuery } from "@/services/RTK/search.services";
+import { useTranslations } from "next-intl";
 
 type SearchDrawerContentProps = {
     searchValue: string;
@@ -19,6 +20,7 @@ type SearchDrawerContentProps = {
 export default function SearchDrawerContent({ searchValue, setSearchValue }: SearchDrawerContentProps) {
     const { toggleDrawer } = useDrawerSidebar();
     const router = useRouter();
+    const t = useTranslations("HomePage.sidebar.search");
     const debounceValue = useDebounce(searchValue, 500);
     const { data, isLoading: showLoading } = useSearchUsersGetQuery(
         { q: debounceValue as string },
@@ -53,7 +55,7 @@ export default function SearchDrawerContent({ searchValue, setSearchValue }: Sea
 
     return (
         <div className="w-full">
-            <DialogHeader title="Search" onClose={toggleDrawer} />
+            <DialogHeader title={t("title")} onClose={toggleDrawer} />
 
             <div className="mt-6 flex items-center flex-row h-[42px] rounded-[92px] px-4 py-2.5 bg-input overflow-hidden relative hover:outline-1 hover:outline-border focus-within:outline-1 focus-within:outline-border">
                 <SearchIcon size={16} className="text-muted-foreground mr-3 flex-shrink-0" />
@@ -62,7 +64,7 @@ export default function SearchDrawerContent({ searchValue, setSearchValue }: Sea
                     ref={inputRef}
                     className="bg-transparent flex-grow text-foreground font-normal text-sm leading-6 placeholder:text-muted-foreground placeholder:text-ellipsis outline-none "
                     type="text"
-                    placeholder="Search"
+                    placeholder={t("placeholder")}
                     spellCheck={false}
                     value={searchValue}
                     onChange={handleSetSearchValue}
@@ -89,7 +91,7 @@ export default function SearchDrawerContent({ searchValue, setSearchValue }: Sea
                 {debounceValue && searchResults.length > 0 && (
                     <>
                         <h4 className="h-[30px] px-3 py-1.5 text-sm leading-[1.29] font-semibold text-muted-foreground mb-2">
-                            Account
+                            {t("accounts")}
                         </h4>
                         <ul tabIndex={-1} className="space-y-1">
                             {searchResults.map((user) => (
@@ -123,7 +125,7 @@ export default function SearchDrawerContent({ searchValue, setSearchValue }: Sea
                         </ul>
                         <Link href={`/search?q=${searchValue}`} className="inline-block w-full">
                             <span className="inline-block max-w-full text-base font-semibold truncate mt-4">
-                                View all results for &quot;{searchValue}&quot;
+                                {t("viewAllResults", { query: searchValue })}
                             </span>
                         </Link>
                     </>

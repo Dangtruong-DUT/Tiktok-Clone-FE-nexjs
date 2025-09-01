@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import UploadGuideLine from "@/app/[locale]/(user)/tiktokstudio/upload/_components/upload-video/upload-guide-lines";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface UploadFileProps {
     onFileSelect: (file: File | null) => void;
@@ -19,6 +20,7 @@ export interface UploadFileRef {
 
 const UploadFile = forwardRef<UploadFileRef, UploadFileProps>(
     ({ onFileSelect, className, isInitialRender, setIsInitialRender }, ref) => {
+        const t = useTranslations("TiktokStudio.upload");
         const [isDragActive, setIsDragActive] = useState(false);
         const inputRef = useRef<HTMLInputElement>(null);
 
@@ -103,13 +105,13 @@ const UploadFile = forwardRef<UploadFileRef, UploadFileProps>(
                             "items-start": !isInitialRender,
                         })}
                     >
-                        <h1 className="mb-1 text-2xl font-bold">Select video to upload</h1>
-                        <p className="mb-4 text-base text-muted-foreground">Or drag and drop it here</p>
+                        <h1 className="mb-1 text-2xl font-bold">{t("selectVideo")}</h1>
+                        <p className="mb-4 text-base text-muted-foreground">{t("dragAndDrop")}</p>
                     </div>
 
                     {isInitialRender && (
                         <Button className="mb-6 bg-[#FE2C55] font-semibold text-white hover:bg-[#FE2C55]/90">
-                            Select video
+                            {t("selectVideo")}
                         </Button>
                     )}
                 </div>

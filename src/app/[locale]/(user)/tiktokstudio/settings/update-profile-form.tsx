@@ -1,6 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,6 +19,7 @@ import { useUploadImageMutation } from "@/services/RTK/upload.services";
 import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
 
 export default function UpdateProfileForm() {
+    const t = useTranslations("TiktokStudio.settings");
     const [fileImage, setFileImage] = useState<File | null>(null);
     const avatarPreviewRef = useRef<HTMLInputElement>(null);
 
@@ -103,7 +105,7 @@ export default function UpdateProfileForm() {
             >
                 <Card x-chunk="dashboard-07-chunk-0">
                     <CardHeader>
-                        <CardTitle className="font-bold">Update Profile</CardTitle>
+                        <CardTitle className="font-bold">{t("updateProfile.title")}</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="grid gap-6">
@@ -116,7 +118,7 @@ export default function UpdateProfileForm() {
                                             <Avatar className="aspect-square w-[100px] h-[100px] rounded-md object-cover">
                                                 <AvatarImage src={avatarSrc} />
                                                 <AvatarFallback className="rounded-none">
-                                                    {user?.name.split(" ").at(-1) || "USER"}
+                                                    {user?.name.split(" ").at(-1) || t("updateProfile.defaultUser")}
                                                 </AvatarFallback>
                                             </Avatar>
 
@@ -135,7 +137,7 @@ export default function UpdateProfileForm() {
                                                 }}
                                             >
                                                 <Upload className="h-4 w-4 text-muted-foreground" />
-                                                <span className="sr-only">Upload</span>
+                                                <span className="sr-only">{t("updateProfile.upload")}</span>
                                             </button>
                                         </div>
                                         <FormMessage />
@@ -150,7 +152,7 @@ export default function UpdateProfileForm() {
                                     <FormItem>
                                         <div className="grid gap-3">
                                             <Label htmlFor="name" className="font-semibold text-muted-foreground">
-                                                Full Name
+                                                {t("updateProfile.fullNameLabel")}
                                             </Label>
                                             <Input
                                                 id="name"
@@ -166,7 +168,7 @@ export default function UpdateProfileForm() {
 
                             <div className=" items-center gap-2 md:ml-auto flex">
                                 <Button variant="outline" size="sm" type="reset" className="min-w-[90px]">
-                                    Cancel
+                                    {t("updateProfile.cancel")}
                                 </Button>
                                 <Button
                                     size="sm"
@@ -174,7 +176,7 @@ export default function UpdateProfileForm() {
                                     disabled={isLoading}
                                     className="bg-brand hover:bg-brand/90 w-[90px] flex items-center justify-center [&_svg]:size-5! cursor-pointer"
                                 >
-                                    {isLoading ? <Loader className="animate-spin" /> : "Save"}
+                                    {isLoading ? <Loader className="animate-spin" /> : t("updateProfile.save")}
                                 </Button>
                             </div>
                         </div>

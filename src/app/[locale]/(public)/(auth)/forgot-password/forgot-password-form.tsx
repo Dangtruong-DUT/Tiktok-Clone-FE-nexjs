@@ -10,10 +10,9 @@ import { Input } from "@/components/ui/input";
 import { useTranslations } from "next-intl";
 import { forgotPasswordReqBody, ForgotPasswordReqBodyType } from "@/utils/validations/auth.schema";
 import { useForgotPasswordMutation } from "@/services/RTK/user.services";
-import { Loader, Home } from "lucide-react";
+import { Loader } from "lucide-react";
 import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
 import { useState } from "react";
-import { Link } from "@/i18n/navigation";
 import EmailSentConfirmation from "./email-sent-confirmation";
 
 export default function ForgotPasswordForm() {
@@ -80,8 +79,6 @@ export default function ForgotPasswordForm() {
                     </Button>
                 </form>
             </Form>
-
-           
         </div>
     );
 }

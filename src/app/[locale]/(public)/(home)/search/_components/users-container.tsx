@@ -10,6 +10,7 @@ import LoadingIcon from "@/components/lottie-icons/loading";
 import { useEffect, useRef, useState } from "react";
 import { useInViewport } from "@/hooks/ui/useInViewport";
 import AccountItemSkeleton from "@/app/[locale]/(public)/(home)/search/_components/account-item-skeleton";
+import { useTranslations } from "next-intl";
 
 interface UsersContainerProps {
     fetchNextPage: () => void;
@@ -26,6 +27,7 @@ export default function UsersContainer({
     isFetching,
     isLoading,
 }: UsersContainerProps) {
+    const t = useTranslations("HomePage.search.userList");
     const sentinelForUserResultScrollRef = useRef<HTMLDivElement>(null);
     const isInViewport = useInViewport(sentinelForUserResultScrollRef);
     const [isShowSkeleton, setShowSkeleton] = useState(isLoading);
@@ -80,7 +82,7 @@ export default function UsersContainer({
                                 <div className="flex items-center gap-1 text-sm text-muted-foreground ">
                                     <span className="  truncate max-w-[177px]">{user.name}</span>
                                     <span>·</span>
-                                    <span>{user.followers_count} Followers</span>
+                                    <span>{t("followers", { count: user.followers_count })}</span>
                                 </div>
                             </div>
                         </Button>

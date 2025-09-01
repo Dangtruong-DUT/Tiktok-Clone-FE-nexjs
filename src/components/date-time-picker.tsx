@@ -1,23 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 
-const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-];
+const monthIndexes = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
 
 const years = Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i);
 
@@ -33,6 +22,7 @@ type DateTimePickerProps = {
 };
 
 export default function DateTimePicker({ className = "", inputClassName = "", onChange, value }: DateTimePickerProps) {
+    const t = useTranslations("datePicker");
     const [selectedDay, setSelectedDay] = useState<string>();
     const [selectedMonth, setSelectedMonth] = useState<string>();
     const [selectedYear, setSelectedYear] = useState<string>();
@@ -74,14 +64,14 @@ export default function DateTimePicker({ className = "", inputClassName = "", on
         <div className={cn("flex items-center justify-between gap-4", className)}>
             <Select value={selectedMonth} onValueChange={setSelectedMonth}>
                 <SelectTrigger className={cn("flex-1 brand-input", inputClassName)}>
-                    <SelectValue placeholder="Month" />
+                    <SelectValue placeholder={t("month")} />
                 </SelectTrigger>
                 <SelectContent>
-                    {months.map((month, index) => {
-                        const value = (index + 1).toString().padStart(2, "0");
+                    {monthIndexes.map((index) => {
+                        const value = index.padStart(2, "0");
                         return (
                             <SelectItem key={value} value={value}>
-                                {month}
+                                {t(`months.${index}` as any)}
                             </SelectItem>
                         );
                     })}
@@ -90,7 +80,7 @@ export default function DateTimePicker({ className = "", inputClassName = "", on
 
             <Select value={selectedDay} onValueChange={setSelectedDay}>
                 <SelectTrigger className={cn("flex-1 brand-input", inputClassName)}>
-                    <SelectValue placeholder="Day" />
+                    <SelectValue placeholder={t("day")} />
                 </SelectTrigger>
                 <SelectContent>
                     {daysInMonth.map((day) => (
@@ -103,7 +93,7 @@ export default function DateTimePicker({ className = "", inputClassName = "", on
 
             <Select value={selectedYear} onValueChange={setSelectedYear}>
                 <SelectTrigger className={cn("flex-1 brand-input", inputClassName)}>
-                    <SelectValue placeholder="Year" />
+                    <SelectValue placeholder={t("year")} />
                 </SelectTrigger>
                 <SelectContent>
                     {years.map((year) => {

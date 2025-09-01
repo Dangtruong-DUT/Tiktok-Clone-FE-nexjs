@@ -1,12 +1,12 @@
 "use client";
 
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
-
 import { Card, CardContent } from "@/components/ui/card";
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { useState, useMemo } from "react";
 import { useGetUserIndicatorQuery } from "@/services/RTK/user.services";
 import { UserIndicatorsData } from "@/types/response/stats.type";
+import { useTranslations } from "next-intl";
 import _ from "lodash";
 import { cn } from "@/lib/utils";
 import { formatCash } from "@/utils/formatting/formatNumber";
@@ -14,24 +14,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 export const description = "An interactive line chart";
 
-const chartConfig = {
-    users_view: {
-        label: "User Views",
-        color: "var(--chart-2)",
-    },
-    guests_view: {
-        label: "Guest Views",
-        color: "var(--chart-2)",
-    },
-    likes_count: {
-        label: "Likes",
-        color: "var(--chart-2)",
-    },
-    comments_count: {
-        label: "Comments",
-        color: "var(--chart-2)",
-    },
-} satisfies ChartConfig;
+export const chartConfigKeys = ["users_view", "guests_view", "likes_count", "comments_count"] as const;
+type ChartKeys = (typeof chartConfigKeys)[number];
 
 const getFromAndLastDate = (days: number) => {
     const to = new Date();
@@ -40,18 +24,45 @@ const getFromAndLastDate = (days: number) => {
     return { from: from.toISOString(), to: to.toISOString() };
 };
 
-const daysSelection = [
-    { value: "7", label: "Last 7 Days" },
-    { value: "28", label: "Last 28 Days" },
-    { value: "60", label: "Last 60 Days" },
-    { value: "365", label: "Last 365 Days" },
-] as const;
-
-type daysSelectionType = (typeof daysSelection)[number]["value"];
+const timeRanges = ["7", "28", "60", "365"] as const;
+type DaysSelectionType = (typeof timeRanges)[number];
 
 export default function DirectorLineChart() {
-    const [selectedDays, setSelectedDays] = useState<daysSelectionType>("7");
-    const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>("users_view");
+    const t = useTranslations("TiktokStudio.dashboard.directorChart");
+
+    const chartConfig = useMemo(
+        () => ({
+            users_view: {
+                label: t("metrics.userViews"),
+                color: "var(--chart-2)",
+            },
+            guests_view: {
+                label: t("metrics.guestViews"),
+                color: "var(--chart-2)",
+            },
+            likes_count: {
+                label: t("metrics.likes"),
+                color: "var(--chart-2)",
+            },
+            comments_count: {
+                label: t("metrics.comments"),
+                color: "var(--chart-2)",
+            },
+        }),
+        [t]
+    );
+
+    const daysSelection = useMemo(
+        () =>
+            timeRanges.map((value) => ({
+                value,
+                label: t(`timeRanges.last${value}Days`),
+            })),
+        [t]
+    );
+
+    const [selectedDays, setSelectedDays] = useState<DaysSelectionType>("7");
+    const [activeChart, setActiveChart] = useState<ChartKeys>("users_view");
 
     // Memoize rangeDay so query args stay stable unless selectedDays changes
     const rangeDay = useMemo(() => getFromAndLastDate(Number(selectedDays)), [selectedDays]);
@@ -65,11 +76,11 @@ export default function DirectorLineChart() {
     return (
         <div>
             <div className="text-base font-bold flex justify-between items-center">
-                <span>Key Metrics</span>
+                <span>{t("keyMetrics")}</span>
 
-                <Select value={selectedDays} onValueChange={(value) => setSelectedDays(value as daysSelectionType)}>
+                <Select value={selectedDays} onValueChange={(value) => setSelectedDays(value as DaysSelectionType)}>
                     <SelectTrigger className="w-[180px] font-semibold">
-                        <SelectValue placeholder="" />
+                        <SelectValue placeholder={t("selectTimeRange")} />
                     </SelectTrigger>
                     <SelectContent>
                         {daysSelection.map((day) => (

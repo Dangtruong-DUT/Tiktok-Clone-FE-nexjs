@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
-import LINKS_FOR_COMPANY from "@/constants/Links/Company";
-import LINKS_FOR_PROGRAM from "@/constants/Links/Program";
-import LINKS_FOR_TERM_POLICY from "@/constants/Links/Term&Policy";
 import { LinkItem } from "@/constants/Links/types";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 export interface LinkCategory {
@@ -11,16 +10,21 @@ export interface LinkCategory {
 }
 
 export default function SidebarFooter() {
+    const t = useTranslations("HomePage.sidebar.footer");
+
     return (
         <footer className="px-2 pt-2 pb-[75px]">
-            <div className="mt-5">
-                <ListLink title={"Company"} items={LINKS_FOR_COMPANY} />
-                <ListLink title={"Program"} items={LINKS_FOR_PROGRAM} />
-                <ListLink title={"Terms & Policies"} items={LINKS_FOR_TERM_POLICY} />
+            <div className="mt-5 flex flex-col gap-4">
+                <Link href="/privacy-policy" className="text-muted-foreground text-sm hover:underline font-semibold">
+                    {t("privacyPolicy")}
+                </Link>
+                <Link href="/terms-of-service" className="text-muted-foreground text-sm hover:underline font-semibold">
+                    {t("termsOfService")}
+                </Link>
             </div>
 
             <div className="mt-6 pt-4">
-                <p className="text-xs text-muted-foreground leading-relaxed">© 2025 TikTok.</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">{t("copyright")}</p>
             </div>
         </footer>
     );
@@ -31,7 +35,7 @@ interface ListLinkProps {
     items?: LinkItem[];
 }
 
-function ListLink({ title, items = [] }: ListLinkProps) {
+export function ListLink({ title, items = [] }: ListLinkProps) {
     const [isDisplayLinks, setDisplayLinks] = useState<boolean>(false);
 
     const handleDisplayListLink = () => {

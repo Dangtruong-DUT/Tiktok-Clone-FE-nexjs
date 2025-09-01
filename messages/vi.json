@@ -1,24 +1,343 @@
 {
+    "Legal": {
+        "termsOfService": {
+            "title": "Điều khoản Dịch vụ",
+            "sections": {
+                "acceptance": {
+                    "title": "1. Chấp nhận Điều khoản",
+                    "description": "Chào mừng bạn đến với {appName}! Các Điều khoản Dịch vụ này ('Điều khoản') điều chỉnh việc bạn truy cập và sử dụng nền tảng của chúng tôi, bao gồm trang web, ứng dụng di động và các dịch vụ khác (gọi chung là 'Dịch vụ') được cung cấp bởi {companyName}. Bằng cách truy cập hoặc sử dụng Dịch vụ của chúng tôi, bạn đồng ý bị ràng buộc bởi các Điều khoản này và Chính sách Quyền riêng tư của chúng tôi."
+                },
+                "eligibility": {
+                    "title": "2. Điều kiện Sử dụng",
+                    "description": "Bạn phải từ 13 tuổi trở lên (hoặc độ tuổi tối thiểu theo quy định pháp luật tại quốc gia của bạn để sử dụng các dịch vụ không cần sự đồng ý của phụ huynh). Nếu bạn dưới 18 tuổi, bạn xác nhận rằng bạn đã có sự cho phép của cha mẹ hoặc người giám hộ hợp pháp để sử dụng Dịch vụ."
+                },
+                "account": {
+                    "title": "3. Tài khoản của bạn",
+                    "description": {
+                        "creation": "Để sử dụng đầy đủ các tính năng của {appName}, bạn có thể cần phải đăng ký một tài khoản. Bạn có thể tạo tài khoản trực tiếp hoặc thông qua dịch vụ của bên thứ ba như Google (Google OAuth).",
+                        "oauth": "Nếu bạn chọn tạo tài khoản bằng Google, bạn cho phép chúng tôi truy cập và sử dụng một số thông tin từ tài khoản Google của bạn, chẳng hạn như tên, địa chỉ email và ảnh đại diện, để tạo và quản lý tài khoản {appName} của bạn. Việc sử dụng dữ liệu của bạn sẽ tuân thủ Chính sách Quyền riêng tư của chúng tôi.",
+                        "responsibility": "Bạn hoàn toàn chịu trách nhiệm về mọi hoạt động diễn ra trên tài khoản của mình và phải bảo mật mật khẩu. Bạn đồng ý thông báo ngay cho chúng tôi về bất kỳ hành vi sử dụng trái phép nào đối với tài khoản của bạn."
+                    }
+                },
+                "userContent": {
+                    "title": "4. Nội dung do Người dùng Tạo",
+                    "description": {
+                        "ownership": "Bạn giữ mọi quyền sở hữu đối với nội dung (bao gồm video, bình luận, âm thanh, văn bản và hình ảnh) mà bạn đăng tải lên Dịch vụ ('Nội dung của bạn').",
+                        "license": "Bằng cách gửi Nội dung của bạn, bạn cấp cho {companyName} một giấy phép không độc quyền, có thể chuyển nhượng, có thể cấp phép lại, miễn phí bản quyền và trên toàn thế giới để sử dụng, sao chép, sửa đổi, tạo các tác phẩm phái sinh, phân phối, trình diễn công khai, và hiển thị Nội dung của bạn liên quan đến việc vận hành, quảng bá và cải thiện Dịch vụ. Giấy phép này cho phép chúng tôi thực hiện các hành động như định dạng lại video của bạn để xem trên di động hoặc hiển thị nó trên các phần khác nhau của ứng dụng.",
+                        "responsibility": "Bạn tuyên bố và đảm bảo rằng bạn sở hữu hoặc có tất cả các quyền, giấy phép, sự đồng ý và quyền hạn cần thiết để cấp phép cho chúng tôi sử dụng Nội dung của bạn, và nội dung đó không vi phạm bản quyền, nhãn hiệu thương mại, quyền riêng tư hoặc bất kỳ quyền nào khác của bất kỳ bên thứ ba nào."
+                    }
+                },
+                "prohibited": {
+                    "title": "5. Các hoạt động bị cấm và Quy tắc Cộng đồng",
+                    "description": "Bạn đồng ý không tham gia vào bất kỳ hoạt động nào sau đây:",
+                    "items": {
+                        "1": "Đăng tải nội dung bất hợp pháp, bạo lực, thù địch, khiêu dâm, hoặc phân biệt đối xử.",
+                        "2": "Bắt nạt, quấy rối, đe dọa hoặc mạo danh người khác.",
+                        "3": "Vi phạm quyền sở hữu trí tuệ của người khác, bao gồm bản quyền và nhãn hiệu thương mại.",
+                        "4": "Đăng tải thông tin sai lệch hoặc tin giả có thể gây hại.",
+                        "5": "Sử dụng Dịch vụ cho mục đích spam hoặc các hoạt động thương mại trái phép.",
+                        "6": "Tải lên vi-rút, phần mềm độc hại hoặc mã độc khác.",
+                        "7": "Cố gắng truy cập trái phép vào hệ thống, tài khoản của người dùng khác, hoặc sử dụng các công cụ tự động để thu thập dữ liệu (scraping) mà không có sự cho phép của chúng tôi."
+                    }
+                },
+                "moderation": {
+                    "title": "6. Kiểm duyệt Nội dung",
+                    "description": "Chúng tôi có quyền, nhưng không có nghĩa vụ, xem xét, lọc, hoặc gỡ bỏ nội dung vi phạm các Điều khoản này hoặc pháp luật hiện hành. Chúng tôi có thể sử dụng cả hệ thống tự động và người kiểm duyệt để giám sát nội dung trên nền tảng nhằm bảo vệ cộng đồng và Dịch vụ của chúng tôi. Việc vi phạm nhiều lần có thể dẫn đến việc đình chỉ hoặc chấm dứt tài khoản của bạn."
+                },
+                "intellectual": {
+                    "title": "7. Sở hữu Trí tuệ và Bản quyền",
+                    "description": {
+                        "ownership": "Tất cả các quyền, tiêu đề và lợi ích đối với Dịch vụ (không bao gồm Nội dung của bạn), bao gồm tất cả các quyền sở hữu trí tuệ liên quan, là và sẽ vẫn là tài sản độc quyền của {companyName}.",
+                        "dmca": "Chúng tôi tôn trọng quyền sở hữu trí tuệ của người khác và mong muốn người dùng cũng làm như vậy. Nếu bạn tin rằng nội dung của mình đã bị sao chép theo cách cấu thành hành vi vi phạm bản quyền, vui lòng cung cấp cho chúng tôi thông tin chi tiết qua email liên hệ của chúng tôi."
+                    }
+                },
+                "termination": {
+                    "title": "8. Chấm dứt",
+                    "description": "Chúng tôi có quyền đình chỉ hoặc chấm dứt quyền truy cập của bạn vào Dịch vụ bất cứ lúc nào, với hoặc không có lý do, nếu bạn vi phạm các Điều khoản này. Bạn có thể xóa tài khoản của mình bất cứ lúc nào bằng cách làm theo hướng dẫn trong phần cài đặt của ứng dụng."
+                },
+                "disclaimer": {
+                    "title": "9. Tuyên bố Miễn trừ Trách nhiệm",
+                    "description": "Dịch vụ được cung cấp 'nguyên trạng' ('as is') và 'như có sẵn' ('as available') mà không có bất kỳ bảo đảm nào, dù rõ ràng hay ngụ ý. Chúng tôi không đảm bảo rằng Dịch vụ sẽ không bị gián đoạn, an toàn hoặc không có lỗi."
+                },
+                "liability": {
+                    "title": "10. Giới hạn Trách nhiệm",
+                    "description": "Trong phạm vi tối đa được pháp luật cho phép, {companyName} sẽ không chịu trách nhiệm pháp lý đối với bất kỳ thiệt hại gián tiếp, ngẫu nhiên, đặc biệt, do hậu quả hoặc trừng phạt nào, hoặc bất kỳ tổn thất nào về lợi nhuận hoặc doanh thu, dù phát sinh trực tiếp hay gián tiếp, phát sinh từ việc bạn sử dụng Dịch vụ."
+                },
+                "governing": {
+                    "title": "11. Luật điều chỉnh",
+                    "description": "Các Điều khoản này sẽ được điều chỉnh và giải thích theo luật pháp của {jurisdiction}, không tính đến các nguyên tắc xung đột pháp luật."
+                },
+                "changes": {
+                    "title": "12. Thay đổi đối với Điều khoản này",
+                    "description": "Chúng tôi có thể sửa đổi các Điều khoản này theo thời gian. Nếu chúng tôi thực hiện các thay đổi quan trọng, chúng tôi sẽ thông báo cho bạn bằng cách đăng phiên bản cập nhật trên trang này và/hoặc qua các phương tiện liên lạc khác. Việc bạn tiếp tục sử dụng Dịch vụ sau khi các thay đổi có hiệu lực có nghĩa là bạn đồng ý với các Điều khoản đã sửa đổi."
+                },
+                "contact": {
+                    "title": "13. Liên hệ với chúng tôi",
+                    "description": "Nếu bạn có bất kỳ câu hỏi nào về các Điều khoản này, vui lòng liên hệ với chúng tôi tại",
+                    "email": "{email}"
+                }
+            }
+        },
+        "meta": {
+            "lastUpdated": "Cập nhật lần cuối: {date}",
+            "contactUs": "Liên hệ với chúng tôi"
+        },
+        "privacyPolicy": {
+            "title": "Chính sách Quyền riêng tư",
+            "sections": {
+                "introduction": {
+                    "title": "1. Giới thiệu",
+                    "description": "Chào mừng đến với {appName}. {companyName} ('chúng tôi') cam kết bảo vệ quyền riêng tư của bạn. Chính sách Quyền riêng tư này giải thích cách chúng tôi thu thập, sử dụng, chia sẻ và bảo vệ thông tin cá nhân của bạn."
+                },
+                "dataCollection": {
+                    "title": "2. Thông tin chúng tôi thu thập",
+                    "description": "Chúng tôi thu thập thông tin theo nhiều cách khác nhau để cung cấp và cải thiện Dịch vụ.",
+                    "userProvided": {
+                        "title": "a. Thông tin bạn cung cấp cho chúng tôi",
+                        "items": {
+                            "1": "Thông tin tài khoản: Khi bạn tạo tài khoản, bạn cung cấp cho chúng tôi tên người dùng, mật khẩu, địa chỉ email, và ngày sinh.",
+                            "2": "Nội dung người dùng: Chúng tôi thu thập nội dung bạn tạo ra trên Dịch vụ, bao gồm video, hình ảnh, bình luận, tin nhắn trực tiếp, và siêu dữ liệu liên quan (thời gian và địa điểm tạo).",
+                            "3": "Thông tin liên lạc: Nếu bạn liên hệ với chúng tôi, chúng tôi sẽ thu thập thông tin bạn cung cấp trong quá trình đó."
+                        }
+                    },
+                    "thirdParty": {
+                        "title": "b. Thông tin từ các bên thứ ba",
+                        "description": "Nếu bạn chọn đăng ký hoặc đăng nhập bằng tài khoản của bên thứ ba (như Google), chúng tôi sẽ nhận được một số thông tin từ nhà cung cấp đó, chẳng hạn như tên, địa chỉ email, ảnh đại diện và ID tài khoản của bạn, tuân theo cài đặt quyền riêng tư của bạn trên dịch vụ đó."
+                    },
+                    "automatic": {
+                        "title": "c. Thông tin chúng tôi thu thập tự động",
+                        "items": {
+                            "1": "Dữ liệu sử dụng: Chúng tôi thu thập thông tin về cách bạn tương tác với Dịch vụ, chẳng hạn như video bạn xem, nội dung bạn thích, người dùng bạn theo dõi, và các tìm kiếm bạn thực hiện.",
+                            "2": "Thông tin thiết bị và kỹ thuật: Chúng tôi thu thập địa chỉ IP, loại thiết bị, hệ điều hành, mã nhận dạng thiết bị duy nhất, loại trình duyệt, và cài đặt ngôn ngữ.",
+                            "3": "Dữ liệu vị trí: Chúng tôi có thể thu thập thông tin về vị trí gần đúng của bạn từ địa chỉ IP hoặc thông tin vị trí chính xác hơn từ GPS của thiết bị nếu bạn cho phép.",
+                            "4": "Cookies và công nghệ tương tự: Chúng tôi sử dụng cookies để vận hành và cung cấp Dịch vụ, ghi nhớ tùy chọn của bạn, và phân tích hiệu suất."
+                        }
+                    }
+                },
+                "dataUse": {
+                    "title": "3. Cách chúng tôi sử dụng thông tin của bạn",
+                    "description": "Chúng tôi sử dụng thông tin thu thập được cho các mục đích sau:",
+                    "items": {
+                        "1": "Cung cấp, duy trì và cải thiện Dịch vụ của chúng tôi.",
+                        "2": "Cá nhân hóa trải nghiệm của bạn, chẳng hạn như đề xuất video và nội dung mà chúng tôi nghĩ bạn sẽ thích (ví dụ: trên trang 'Dành cho bạn').",
+                        "3": "Cho phép bạn tương tác với những người dùng khác.",
+                        "4": "Giao tiếp với bạn, bao gồm gửi thông báo về dịch vụ và các thông tin tiếp thị (bạn có thể từ chối).",
+                        "5": "Đảm bảo an toàn và bảo mật cho nền tảng, phát hiện và ngăn chặn gian lận, spam và lạm dụng.",
+                        "6": "Thực hiện phân tích để hiểu cách người dùng sử dụng Dịch vụ và cải thiện sản phẩm."
+                    }
+                },
+                "dataSharing": {
+                    "title": "4. Cách chúng tôi chia sẻ thông tin",
+                    "description": "Chúng tôi không bán thông tin cá nhân của bạn. Chúng tôi có thể chia sẻ thông tin trong các trường hợp sau:",
+                    "items": {
+                        "1": "Với những người dùng khác: Thông tin hồ sơ và nội dung bạn đăng tải công khai sẽ được hiển thị cho những người dùng khác.",
+                        "2": "Với các nhà cung cấp dịch vụ: Chúng tôi chia sẻ thông tin với các đối tác giúp chúng tôi vận hành Dịch vụ, chẳng hạn như nhà cung cấp dịch vụ lưu trữ đám mây, phân tích dữ liệu và dịch vụ khách hàng.",
+                        "3": "Vì lý do pháp lý: Chúng tôi có thể tiết lộ thông tin của bạn nếu được yêu cầu bởi pháp luật hoặc để bảo vệ quyền, tài sản, và sự an toàn của {companyName}, người dùng của chúng tôi, hoặc công chúng.",
+                        "4": "Trong trường hợp chuyển giao kinh doanh: Nếu chúng tôi tham gia vào một vụ sáp nhập, mua lại hoặc bán tài sản, thông tin của bạn có thể được chuyển giao."
+                    }
+                },
+                "dataRetention": {
+                    "title": "5. Lưu trữ và Xóa dữ liệu",
+                    "description": "Chúng tôi lưu trữ thông tin của bạn miễn là tài khoản của bạn còn hoạt động hoặc khi cần thiết để cung cấp Dịch vụ cho bạn. Bạn có thể xóa tài khoản của mình bất cứ lúc nào thông qua cài đặt ứng dụng. Sau khi bạn xóa tài khoản, chúng tôi sẽ thực hiện các bước để xóa thông tin của bạn, tuy nhiên, một số thông tin có thể được lưu giữ trong các bản sao lưu hoặc vì lý do pháp lý."
+                },
+                "userRights": {
+                    "title": "6. Quyền và Lựa chọn của bạn",
+                    "description": "Bạn có các quyền sau đối với thông tin cá nhân của mình:",
+                    "items": {
+                        "1": "Truy cập và Chỉnh sửa: Bạn có thể xem và chỉnh sửa thông tin hồ sơ của mình thông qua cài đặt tài khoản.",
+                        "2": "Xóa: Bạn có quyền yêu cầu xóa tài khoản và dữ liệu cá nhân của mình.",
+                        "3": "Quản lý thông báo: Bạn có thể quản lý các thông báo đẩy và email trong phần cài đặt.",
+                        "4": "Kiểm soát Cookie: Hầu hết các trình duyệt web cho phép bạn kiểm soát cookies thông qua cài đặt."
+                    }
+                },
+                "childrenPrivacy": {
+                    "title": "7. Quyền riêng tư của trẻ em",
+                    "description": "Dịch vụ của chúng tôi không dành cho trẻ em dưới 13 tuổi (hoặc độ tuổi tối thiểu theo luật định tại khu vực của bạn). Chúng tôi không cố ý thu thập thông tin cá nhân từ trẻ em. Nếu bạn phát hiện ra rằng một đứa trẻ đã cung cấp cho chúng tôi thông tin cá nhân mà không có sự đồng ý của cha mẹ, vui lòng liên hệ với chúng tôi để chúng tôi có thể xóa thông tin đó."
+                },
+                "changes": {
+                    "title": "8. Thay đổi đối với Chính sách này",
+                    "description": "Chúng tôi có thể cập nhật Chính sách Quyền riêng tư này theo thời gian. Khi chúng tôi thực hiện các thay đổi quan trọng, chúng tôi sẽ thông báo cho bạn bằng cách cập nhật ngày 'Cập nhật lần cuối' ở đầu trang này và/hoặc thông báo trong ứng dụng."
+                },
+                "contact": {
+                    "title": "9. Liên hệ với chúng tôi",
+                    "description": "Nếu bạn có bất kỳ câu hỏi hoặc thắc mắc nào về Chính sách Quyền riêng tư này, vui lòng liên hệ với chúng tôi tại",
+                    "email": "privacy@tiktok.com"
+                }
+            }
+        }
+    },
     "StudioLayout": {
         "upload": "Tải lên"
     },
     "TiktokStudio": {
+        "footer": {
+            "copyright": "Bản quyền © 2025 TikTok",
+            "privacyPolicy": "Chính sách quyền riêng tư",
+            "termsOfService": "Điều khoản dịch vụ"
+        },
         "navigation": {
             "home": "Trang chủ",
             "posts": "Nội dung",
             "settings": "Cài đặt",
             "back": "Quay lại Tiktok"
         },
+        "content": {
+            "table": {
+                "columns": {
+                    "content": "Nội dung",
+                    "privacy": "Quyền riêng tư",
+                    "views": "Lượt xem",
+                    "comments": "Bình luận",
+                    "actions": "Thao tác"
+                },
+                "actions": {
+                    "edit": "Chỉnh sửa",
+                    "delete": "Xóa"
+                }
+            },
+            "search": {
+                "placeholder": "Tìm kiếm..."
+            }
+        },
+        "dashboard": {
+            "knowledgeForYou": {
+                "title": "Kiến thức dành cho bạn"
+            },
+            "userInfo": {
+                "likes": "{count} Lượt thích",
+                "followers": "{count} Người theo dõi",
+                "following": "{count} Đang theo dõi"
+            },
+            "recentPosts": {
+                "title": "Bài đăng gần đây",
+                "createdAt": "Đăng vào {date}",
+                "metrics": {
+                    "views": "Lượt xem",
+                    "likes": "Lượt thích",
+                    "comments": "Bình luận"
+                }
+            },
+            "directorChart": {
+                "keyMetrics": "Chỉ số quan trọng",
+                "selectTimeRange": "Chọn khoảng thời gian",
+                "interactStats": "Thống kê tương tác",
+                "metrics": {
+                    "userViews": "Lượt xem từ người dùng",
+                    "guestViews": "Lượt xem từ khách",
+                    "likes": "Lượt thích",
+                    "comments": "Bình luận",
+                    "views": "Lượt xem"
+                },
+                "timeRanges": {
+                    "last7Days": "7 ngày qua",
+                    "last28Days": "28 ngày qua",
+                    "last60Days": "60 ngày qua",
+                    "last365Days": "365 ngày qua"
+                }
+            }
+        },
+        "header": {
+            "profile": "Hồ sơ",
+            "logout": "Đăng xuất"
+        },
+        "settings": {
+            "page": {
+                "title": "Cài đặt",
+                "userBadge": "Người dùng"
+            },
+            "updateProfile": {
+                "title": "Cập nhật hồ sơ",
+                "upload": "Tải lên",
+                "defaultUser": "USER",
+                "fullNameLabel": "Họ và tên",
+                "cancel": "Hủy",
+                "save": "Lưu"
+            },
+            "changePassword": {
+                "title": "Đổi mật khẩu",
+                "oldPassword": "Mật khẩu cũ",
+                "newPassword": "Mật khẩu mới",
+                "confirmPassword": "Xác nhận mật khẩu",
+                "cancel": "Hủy",
+                "save": "Lưu"
+            }
+        },
         "upload": {
             "selectVideo": "Chọn video để tải lên",
             "dragAndDrop": "Hoặc kéo và thả tệp",
             "mp4OrWebmOnly": "Chỉ hỗ trợ MP4 hoặc WebM",
+            "fileInfo": {
+                "size": "{size} MB",
+                "replace": "Thay thế"
+            },
+            "exitDialog": {
+                "title": "Bạn có chắc chắn muốn thoát?",
+                "description": "Các chỉnh sửa của bạn sẽ không được lưu.",
+                "exit": "Thoát",
+                "backToEdits": "Quay lại chỉnh sửa"
+            },
+            "selectThumbnail": {
+                "title": "Chọn ảnh thumbnail",
+                "edit": "Chỉnh sửa",
+                "selectCover": "Chọn ảnh bìa",
+                "uploadCover": "Tải lên ảnh bìa"
+            },
+            "guidelines": {
+                "sizeAndDuration": {
+                    "title": "Kích thước và thời lượng",
+                    "description": "Kích thước tối đa: 30 GB, thời lượng video: 60 phút."
+                },
+                "fileFormats": {
+                    "title": "Định dạng tệp",
+                    "description": "Khuyến nghị: '.mp4'. Các định dạng chính khác được hỗ trợ."
+                },
+                "videoResolutions": {
+                    "title": "Độ phân giải video",
+                    "description": "Khuyến nghị độ phân giải cao: 1080p, 1440p, 4K."
+                },
+                "aspectRatios": {
+                    "title": "Tỷ lệ khung hình",
+                    "description": "Khuyến nghị: 16:9 cho ngang, 9:16 cho dọc."
+                }
+            },
+            "tooltips": {
+                "play": "Phát",
+                "pause": "Tạm dừng",
+                "mute": "Tắt tiếng",
+                "unmute": "Bật tiếng"
+            },
             "resolutionReq": "Độ phân giải 720x1280 hoặc cao hơn",
             "maxFileSize": "Dung lượng tối đa 30 GB",
             "maxDuration": "Thời lượng tối đa 60 phút",
             "selectFile": "Chọn tệp",
-            "selectedFile": "Tệp đã chọn"
+            "selectedFile": "Tệp đã chọn",
+            "detail": {
+                "title": "Chi tiết",
+                "description": {
+                    "label": "Mô tả",
+                    "placeholder": "Chia sẻ thêm về video của bạn tại đây..."
+                },
+                "cover": {
+                    "label": "Ảnh bìa",
+                    "tooltip": "Chọn một ảnh bìa hoặc tải lên từ thiết bị của bạn. Một ảnh bìa thu hút có thể gây ấn tượng với người xem hiệu quả."
+                }
+            },
+            "settings": {
+                "title": "Cài đặt",
+                "audience": {
+                    "label": "Ai có thể xem video này",
+                    "placeholder": "Chọn đối tượng xem"
+                }
+            },
+            "buttons": {
+                "post": "Đăng",
+                "discard": "Hủy"
+            }
         }
+    },
+    "menuItems": {
+        "useEmail": "Sử dụng email",
+        "continueWithGoogle": "Tiếp tục với Google"
     },
     "AuthLayout": {
         "noAccount": "Chưa có tài khoản?",
@@ -76,6 +395,7 @@
     },
     "resetPasswordPage": {
         "title": "Đặt lại mật khẩu",
+        "description": "Trang đặt lại mật khẩu.",
         "confirmPasswordPlaceholder": "Xác nhận mật khẩu mới",
         "newPasswordPlaceholder": "Mật khẩu mới",
         "submit": "Đặt lại mật khẩu",
@@ -87,7 +407,50 @@
         "success": {
             "title": "Đặt lại mật khẩu thành công!",
             "description": "Mật khẩu của bạn đã được đặt lại thành công. Bây giờ bạn có thể đăng nhập bằng mật khẩu mới.",
-            "goToLogin": "Đi đến Đăng nhập"
+            "goToLogin": "Đi đến Đăng nhập",
+            "passwordUpdated": "Mật khẩu đã được cập nhật thành công",
+            "signInMessage": "Bây giờ bạn có thể đăng nhập bằng mật khẩu mới",
+            "redirectMessage": "Cửa sổ này sẽ tự động chuyển hướng sau vài giây"
+        }
+    },
+    "ProfilePage": {
+        "stats": {
+            "following": "Đang theo dõi",
+            "followers": "Người theo dõi",
+            "likes": "Thích"
+        },
+        "actions": {
+            "follow": "Theo dõi",
+            "following": "Đang theo dõi",
+            "message": "Nhắn tin",
+            "editProfile": "Sửa hồ sơ",
+            "settings": "Cài đặt"
+        },
+        "editProfileDialog": {
+            "title": "Sửa hồ sơ",
+            "username": {
+                "label": "Tên người dùng",
+                "placeholder": "Tên người dùng",
+                "profileUrl": "{url}@{username}",
+                "hint": "Tên người dùng chỉ có thể chứa chữ cái, số, dấu gạch dưới và dấu chấm. Thay đổi tên người dùng cũng sẽ thay đổi đường dẫn hồ sơ của bạn."
+            },
+            "name": {
+                "label": "Tên",
+                "placeholder": "Tên",
+                "hint": "Biệt danh của bạn chỉ có thể thay đổi 7 ngày một lần."
+            },
+            "bio": {
+                "label": "Tiểu sử",
+                "placeholder": "Tiểu sử"
+            },
+            "buttons": {
+                "cancel": "Hủy",
+                "save": "Lưu"
+            }
+        },
+        "noContent": {
+            "title": "Không có nội dung",
+            "description": "Người dùng này chưa đăng tải video nào."
         }
     },
     "HomePage": {
@@ -101,6 +464,39 @@
             "messages": "Tin nhắn",
             "more": "Thêm",
             "profile": "Hồ sơ"
+        },
+        "sidebar": {
+            "footer": {
+                "company": "Công ty",
+                "program": "Chương trình",
+                "termsAndPolicies": "Điều khoản & Chính sách",
+                "privacyPolicy": "Chính sách bảo mật",
+                "termsOfService": "Điều khoản dịch vụ",
+                "copyright": "© 2025 TikTok."
+            },
+            "search": {
+                "title": "Tìm kiếm",
+                "placeholder": "Tìm tài khoản và video",
+                "accounts": "Tài khoản",
+                "viewAllResults": "Xem tất cả kết quả cho \"{query}\"",
+                "searchPlaceholder": "Tìm kiếm"
+            },
+            "auth": {
+                "login": "Đăng nhập"
+            }
+        },
+        "search": {
+            "noResults": {
+                "title": "Không tìm thấy kết quả",
+                "description": "Hãy thử tìm kiếm với từ khóa khác."
+            },
+            "tabs": {
+                "users": "Người dùng",
+                "videos": "Video"
+            },
+            "userList": {
+                "followers": "{count} Người theo dõi"
+            }
         }
     },
     "SwitchLanguage": {
@@ -110,6 +506,25 @@
     },
     "header": {
         "help": "Phản hồi và Trợ giúp"
+    },
+    "datePicker": {
+        "month": "Tháng",
+        "day": "Ngày",
+        "year": "Năm",
+        "months": {
+            "1": "Tháng 1",
+            "2": "Tháng 2",
+            "3": "Tháng 3",
+            "4": "Tháng 4",
+            "5": "Tháng 5",
+            "6": "Tháng 6",
+            "7": "Tháng 7",
+            "8": "Tháng 8",
+            "9": "Tháng 9",
+            "10": "Tháng 10",
+            "11": "Tháng 11",
+            "12": "Tháng 12"
+        }
     },
     "menuMore": {
         "title": "Thêm",

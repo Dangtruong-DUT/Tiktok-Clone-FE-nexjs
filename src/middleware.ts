@@ -15,7 +15,6 @@ export function middleware(request: NextRequest) {
     response.headers.set(HEADER_NAME, defaultLocale);
 
     const { pathname } = request.nextUrl;
-    console.log("Middleware passed for path:", pathname);
 
     const { access_token, refresh_token } = getTokens(request);
     const isAccessTokenValid = !!access_token;

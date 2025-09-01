@@ -1,8 +1,26 @@
 import ClearTokenByServer from "@/app/[locale]/(public)/(auth)/login/clear-token-by-server";
-import MENU_ITEMS from "@/app/[locale]/(public)/(auth)/menu-items";
-import { Button } from "@/components/ui/button";
-import { Link } from "@/i18n/navigation";
+import { MenuItemsList } from "@/app/[locale]/(public)/(auth)/menu-items";
 import { getTranslations } from "next-intl/server";
+import { Metadata } from "next";
+import { LocalesType } from "@/i18n/config";
+import envConfig from "@/config/app.config";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: LocalesType }> }): Promise<Metadata> {
+    const { locale } = await params;
+    const t = await getTranslations("LoginPage");
+
+    return {
+        title: t("title"),
+        description: t("description"),
+        alternates: {
+            canonical: `${envConfig.NEXT_PUBLIC_URL}${locale}/login`,
+            languages: {
+                "en-US": `${envConfig.NEXT_PUBLIC_URL}en/login`,
+                "vi-VN": `${envConfig.NEXT_PUBLIC_URL}vi/login`,
+            },
+        },
+    };
+}
 
 export default async function LoginPage() {
     const t = await getTranslations("LoginPage");
@@ -10,22 +28,7 @@ export default async function LoginPage() {
         <div>
             <h1 className="text-2xl font-bold text-center mb-4 mt-16">{t("title")}</h1>
             <p className="text-center text-base text-neutral-500 mb-5">{t("description")}</p>
-            <div className="grid gap-2">
-                {MENU_ITEMS.map((item) => {
-                    if (!item.for.includes("login")) return null;
-                    return (
-                        <Link key={item.title} href={item.href}>
-                            <Button
-                                className="w-full cursor-pointer relative h-11 border border-neutral-300! bg-white! text-black hover:bg-neutral-100! hover:text-black"
-                                variant="outline"
-                            >
-                                <span className="absolute left-4">{item.icon}</span>
-                                <span className="text-center text-base">{item.title}</span>
-                            </Button>
-                        </Link>
-                    );
-                })}
-            </div>
+            <MenuItemsList type="login" />
             <ClearTokenByServer />
         </div>
     );

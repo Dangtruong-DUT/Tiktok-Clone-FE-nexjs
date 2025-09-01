@@ -17,7 +17,6 @@ export default function EmojiPiker({ className, onEmojiSelect }: EmojiPikerProps
 
     const handleEmojiSelectInternal = useCallback(
         ({ emoji }: { emoji: string }) => {
-            setIsOpen(false);
             onEmojiSelect?.(emoji);
         },
         [onEmojiSelect]

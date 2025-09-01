@@ -48,11 +48,9 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         }
     };
 
-    // Success screen after password reset
     if (resetSuccess) {
         return <ResetPasswordSuccess />;
     }
-    // Original reset password form
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-2.25">
