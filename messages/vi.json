@@ -200,23 +200,6 @@
             }
         },
         "dashboard": {
-            "directorChart": {
-                "keyMetrics": "Chỉ số quan trọng",
-                "selectTimeRange": "Chọn khoảng thời gian",
-                "metrics": {
-                    "userViews": "Lượt xem từ người dùng",
-                    "guestViews": "Lượt xem từ khách",
-                    "likes": "Lượt thích",
-                    "comments": "Bình luận",
-                    "views": "Lượt xem"
-                },
-                "timeRanges": {
-                    "last7Days": "7 ngày qua",
-                    "last28Days": "28 ngày qua",
-                    "last60Days": "60 ngày qua",
-                    "last365Days": "365 ngày qua"
-                }
-            },
             "knowledgeForYou": {
                 "title": "Kiến thức dành cho bạn"
             },
@@ -486,6 +469,8 @@
                 "company": "Công ty",
                 "program": "Chương trình",
                 "termsAndPolicies": "Điều khoản & Chính sách",
+                "privacyPolicy": "Chính sách bảo mật",
+                "termsOfService": "Điều khoản dịch vụ",
                 "copyright": "© 2025 TikTok."
             },
             "search": {

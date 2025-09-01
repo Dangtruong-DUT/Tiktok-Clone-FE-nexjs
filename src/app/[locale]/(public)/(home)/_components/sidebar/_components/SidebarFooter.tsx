@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
-import LINKS_FOR_COMPANY from "@/constants/Links/Company";
-import LINKS_FOR_PROGRAM from "@/constants/Links/Program";
-import LINKS_FOR_TERM_POLICY from "@/constants/Links/Term&Policy";
 import { LinkItem } from "@/constants/Links/types";
+import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
@@ -17,9 +15,12 @@ export default function SidebarFooter() {
     return (
         <footer className="px-2 pt-2 pb-[75px]">
             <div className="mt-5">
-                <ListLink title={t("company")} items={LINKS_FOR_COMPANY} />
-                <ListLink title={t("program")} items={LINKS_FOR_PROGRAM} />
-                <ListLink title={t("termsAndPolicies")} items={LINKS_FOR_TERM_POLICY} />
+                <Link href="/privacy-policy" className="text-muted-foreground text-xs">
+                    {t("privacyPolicy")}
+                </Link>
+                <Link href="/terms-of-service" className="text-muted-foreground text-xs">
+                    {t("termsOfService")}
+                </Link>
             </div>
 
             <div className="mt-6 pt-4">
