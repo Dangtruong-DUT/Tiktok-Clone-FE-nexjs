@@ -22,6 +22,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
             description: "The requested user profile could not be found.",
         };
     }
+
     const cleanUsername = username.replace(/^%40/, "");
 
     const res = await WrapperServerCallApi({
@@ -29,7 +30,6 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
     });
 
     const user = res?.data;
-
     const previousImages = (await parent).openGraph?.images || [];
 
     return {
@@ -40,15 +40,15 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
             title: user?.name ? `${user.name} (@${user.username})` : "TikTok Profile",
             description: user?.bio || `Check out ${user?.name || user?.username}'s profile on TikTok`,
             type: "profile",
-            url: `${process.env.NEXT_PUBLIC_URL}${locale}/@${username}`,
+            url: `${process.env.NEXT_PUBLIC_URL}${locale}/@${cleanUsername}`,
             siteName: "TikTok Clone",
             locale,
         },
         alternates: {
-            canonical: `${envConfig.NEXT_PUBLIC_URL}${locale}/@${username}`,
+            canonical: `${envConfig.NEXT_PUBLIC_URL}${locale}/@${cleanUsername}`,
             languages: {
-                "en-US": `${envConfig.NEXT_PUBLIC_URL}en/@${username}`,
-                "vi-VN": `${envConfig.NEXT_PUBLIC_URL}vi/@${username}`,
+                "en-US": `${envConfig.NEXT_PUBLIC_URL}en/@${cleanUsername}`,
+                "vi-VN": `${envConfig.NEXT_PUBLIC_URL}vi/@${cleanUsername}`,
             },
         },
         twitter: {
@@ -80,7 +80,7 @@ export default async function Profile({ params }: { params: Promise<{ username: 
     }
 
     return (
-        <div className="w-full  px-6 py-8">
+        <div className="w-full px-6 py-8">
             <ProfileUser userData={userData} className="mb-5" />
             <VideosProvider userId={userData._id}>
                 <TabBar tabs={TAB_ITEMS} />
