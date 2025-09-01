@@ -108,6 +108,34 @@
             "messages": "Tin nhắn",
             "more": "Thêm",
             "profile": "Hồ sơ"
+        },
+        "sidebar": {
+            "footer": {
+                "company": "Công ty",
+                "program": "Chương trình",
+                "termsAndPolicies": "Điều khoản & Chính sách",
+                "copyright": "© 2025 TikTok."
+            },
+            "search": {
+                "title": "Tìm kiếm",
+                "placeholder": "Tìm tài khoản và video",
+                "accounts": "Tài khoản",
+                "viewAllResults": "Xem tất cả kết quả cho \"{query}\"",
+                "searchPlaceholder": "Tìm kiếm"
+            },
+            "auth": {
+                "login": "Đăng nhập"
+            }
+        },
+        "search": {
+            "noResults": {
+                "title": "Không tìm thấy kết quả",
+                "description": "Hãy thử tìm kiếm với từ khóa khác."
+            },
+            "tabs": {
+                "users": "Người dùng",
+                "videos": "Video"
+            }
         }
     },
     "SwitchLanguage": {

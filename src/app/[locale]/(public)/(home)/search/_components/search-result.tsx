@@ -4,12 +4,14 @@ import Header from "@/app/[locale]/(public)/(home)/search/_components/tabbar-hea
 import { TabbarItemsId } from "@/app/[locale]/(public)/(home)/search/_config/tabbar-items";
 import { SearchParamsLoader, useSearchParamsLoader } from "@/components/searchparams-loader";
 import { useSearchPostsInfiniteQuery, useSearchUsersInfiniteQuery } from "@/services/RTK/search.services";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import UsersContainer from "@/app/[locale]/(public)/(home)/search/_components/users-container";
 import PostsContainer from "@/app/[locale]/(public)/(home)/search/_components/posts-container";
 import { MdSearchOff } from "react-icons/md";
 
 export default function SearchResults() {
+    const t = useTranslations("HomePage.search");
     const [tabActive, setTabActive] = useState<TabbarItemsId>("USERS");
     const { setSearchParams, searchParams } = useSearchParamsLoader();
     const query = searchParams?.get("q") || "";
@@ -63,8 +65,8 @@ export default function SearchResults() {
                         <div className="flex justify-center items-center size-[92px] rounded-full bg-muted">
                             <MdSearchOff size={44} />
                         </div>
-                        <p className="text-2xl font-bold mt-6">No results found</p>
-                        <p className="text-base mt-2 text-muted-foreground">Try searching with a different keyword.</p>
+                        <p className="text-2xl font-bold mt-6">{t("noResults.title")}</p>
+                        <p className="text-base mt-2 text-muted-foreground">{t("noResults.description")}</p>
                     </div>
                 )}
             </div>

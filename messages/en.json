@@ -108,6 +108,34 @@
             "messages": "Messages",
             "more": "More",
             "profile": "Profile"
+        },
+        "sidebar": {
+            "footer": {
+                "company": "Company",
+                "program": "Program",
+                "termsAndPolicies": "Terms & Policies",
+                "copyright": "© 2025 TikTok."
+            },
+            "search": {
+                "title": "Search",
+                "placeholder": "Search accounts and videos",
+                "accounts": "Account",
+                "viewAllResults": "View all results for \"{query}\"",
+                "searchPlaceholder": "Search"
+            },
+            "auth": {
+                "login": "Log in"
+            }
+        },
+        "search": {
+            "noResults": {
+                "title": "No results found",
+                "description": "Try searching with a different keyword."
+            },
+            "tabs": {
+                "users": "Users",
+                "videos": "Videos"
+            }
         }
     },
     "SwitchLanguage": {

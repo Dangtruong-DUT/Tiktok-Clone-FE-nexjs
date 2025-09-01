@@ -3,6 +3,7 @@ import LINKS_FOR_COMPANY from "@/constants/Links/Company";
 import LINKS_FOR_PROGRAM from "@/constants/Links/Program";
 import LINKS_FOR_TERM_POLICY from "@/constants/Links/Term&Policy";
 import { LinkItem } from "@/constants/Links/types";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 export interface LinkCategory {
@@ -11,16 +12,18 @@ export interface LinkCategory {
 }
 
 export default function SidebarFooter() {
+    const t = useTranslations("HomePage.sidebar.footer");
+
     return (
         <footer className="px-2 pt-2 pb-[75px]">
             <div className="mt-5">
-                <ListLink title={"Company"} items={LINKS_FOR_COMPANY} />
-                <ListLink title={"Program"} items={LINKS_FOR_PROGRAM} />
-                <ListLink title={"Terms & Policies"} items={LINKS_FOR_TERM_POLICY} />
+                <ListLink title={t("company")} items={LINKS_FOR_COMPANY} />
+                <ListLink title={t("program")} items={LINKS_FOR_PROGRAM} />
+                <ListLink title={t("termsAndPolicies")} items={LINKS_FOR_TERM_POLICY} />
             </div>
 
             <div className="mt-6 pt-4">
-                <p className="text-xs text-muted-foreground leading-relaxed">© 2025 TikTok.</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">{t("copyright")}</p>
             </div>
         </footer>
     );

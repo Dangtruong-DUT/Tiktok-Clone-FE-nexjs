@@ -2,6 +2,7 @@ import { Search } from "lucide-react";
 import LogoBrand from "@/components/logo-brand";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface SidebarHeaderProps {
     isOpenSearch: boolean;
@@ -10,6 +11,7 @@ interface SidebarHeaderProps {
 }
 
 export default function SidebarHeader({ isOpenSearch, toggleSearchDrawer, searchValue }: SidebarHeaderProps) {
+    const t = useTranslations("HomePage.sidebar.search");
     return (
         <header
             className={cn("w-full flex flex-col items-stretch mb-3 gap-4 transition-all duration-200 ease-out", {
@@ -56,7 +58,7 @@ export default function SidebarHeader({ isOpenSearch, toggleSearchDrawer, search
                                 }
                             )}
                         >
-                            {searchValue || "search"}
+                            {searchValue || t("searchPlaceholder")}
                         </div>
                     )}
                 </div>
