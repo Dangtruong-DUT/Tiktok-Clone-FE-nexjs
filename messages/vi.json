@@ -206,7 +206,7 @@
             "userInfo": {
                 "likes": "{count} Lượt thích",
                 "followers": "{count} Người theo dõi",
-                "following": "Đang theo dõi {count}"
+                "following": "{count} Đang theo dõi"
             },
             "recentPosts": {
                 "title": "Bài đăng gần đây",

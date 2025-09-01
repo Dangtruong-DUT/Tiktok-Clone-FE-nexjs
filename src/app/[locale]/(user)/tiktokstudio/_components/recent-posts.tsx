@@ -18,6 +18,7 @@ interface RecentPostProps {
 }
 export default function RecentPosts({ classNames }: RecentPostProps) {
     const router = useRouter();
+    const t = useTranslations("TiktokStudio.dashboard.recentPosts");
     const currentUser = useCurrentUserData();
     const { data } = useGetPostOfUserPagingQuery(
         {
@@ -39,7 +40,7 @@ export default function RecentPosts({ classNames }: RecentPostProps) {
         <div className={classNames}>
             <div className="text-base font-bold flex justify-between items-center">
                 <span className="flex items-center gap-2 cursor-pointer" onClick={handleRecentPostClick}>
-                    Recent posts <FaChevronRight />
+                    {t("title")} <FaChevronRight />
                 </span>
             </div>
             <div className="bg-card border rounded-lg border-border  mt-4">
