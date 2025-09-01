@@ -235,6 +235,22 @@
             "selectVideo": "Chọn video để tải lên",
             "dragAndDrop": "Hoặc kéo và thả tệp",
             "mp4OrWebmOnly": "Chỉ hỗ trợ MP4 hoặc WebM",
+            "fileInfo": {
+                "size": "{size} MB",
+                "replace": "Thay thế"
+            },
+            "exitDialog": {
+                "title": "Bạn có chắc chắn muốn thoát?",
+                "description": "Các chỉnh sửa của bạn sẽ không được lưu.",
+                "exit": "Thoát",
+                "backToEdits": "Quay lại chỉnh sửa"
+            },
+            "selectThumbnail": {
+                "title": "Chọn ảnh thumbnail",
+                "edit": "Chỉnh sửa ảnh bìa",
+                "selectCover": "Chọn ảnh bìa",
+                "uploadCover": "Tải lên ảnh bìa"
+            },
             "guidelines": {
                 "sizeAndDuration": {
                     "title": "Kích thước và thời lượng",

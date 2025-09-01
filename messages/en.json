@@ -235,6 +235,22 @@
             "selectVideo": "Select video to upload",
             "dragAndDrop": "Or drag and drop a file",
             "mp4OrWebmOnly": "MP4 or WebM",
+            "fileInfo": {
+                "size": "{size} MB",
+                "replace": "Replace"
+            },
+            "exitDialog": {
+                "title": "Are you sure you want to exit?",
+                "description": "Your edits will not be saved.",
+                "exit": "Exit",
+                "backToEdits": "Back to edits"
+            },
+            "selectThumbnail": {
+                "title": "Select thumbnail",
+                "edit": "Edit cover",
+                "selectCover": "Select cover",
+                "uploadCover": "Upload cover"
+            },
             "guidelines": {
                 "sizeAndDuration": {
                     "title": "Size and duration",

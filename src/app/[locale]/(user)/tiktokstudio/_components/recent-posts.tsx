@@ -17,7 +17,6 @@ interface RecentPostProps {
     classNames?: string;
 }
 export default function RecentPosts({ classNames }: RecentPostProps) {
-    const t = useTranslations("TiktokStudio.dashboard.recentPosts");
     const router = useRouter();
     const currentUser = useCurrentUserData();
     const { data } = useGetPostOfUserPagingQuery(

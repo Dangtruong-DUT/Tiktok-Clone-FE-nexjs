@@ -6,6 +6,7 @@ import Image from "next/image";
 import { BsFillImageFill } from "react-icons/bs";
 import { useRef, useState } from "react";
 import { TimelineFrameType } from "@/utils/video";
+import { useTranslations } from "next-intl";
 
 type SelectThumbnailMode = "UPLOAD" | "SELECT_FROM_VIDEO";
 
@@ -16,7 +17,13 @@ interface SelectThumbnailDialogProps {
     videoFrames: TimelineFrameType[];
 }
 
-export default function SelectThumbnailDialog({ setCoverImage, videoSrc, imageSrc, videoFrames }: SelectThumbnailDialogProps) {
+export default function SelectThumbnailDialog({
+    setCoverImage,
+    videoSrc,
+    imageSrc,
+    videoFrames,
+}: SelectThumbnailDialogProps) {
+    const t = useTranslations("TiktokStudio.upload.selectThumbnail");
     const [mode, setMode] = useState<SelectThumbnailMode>("SELECT_FROM_VIDEO");
     const buttonCloseRef = useRef<HTMLButtonElement>(null);
     const handleSetCoverImage = (image: File) => {
@@ -42,13 +49,13 @@ export default function SelectThumbnailDialog({ setCoverImage, videoSrc, imageSr
                         </div>
                     )}
                     <div className="absolute bottom-2 left-1/2 -translate-x-1/2 block w-[90%]">
-                        <div className=" px-6 py-1 text-xs rounded-xs bg-accent/50 text-white">Edit cover</div>
+                        <div className=" px-6 py-1 text-xs rounded-xs bg-accent/50 text-white">{t("edit")}</div>
                     </div>
                 </div>
             </DialogTrigger>
             <DialogContent className=" p-0! gap-0! overflow-hidden">
                 <DialogHeader className="hidden">
-                    <DialogTitle>select thumbnail dialog</DialogTitle>
+                    <DialogTitle>{t("title")}</DialogTitle>
                 </DialogHeader>
                 <ul className="flex gap-6 text-base font-semibold ">
                     <li
@@ -61,7 +68,7 @@ export default function SelectThumbnailDialog({ setCoverImage, videoSrc, imageSr
                             }
                         )}
                     >
-                        Select cover
+                        {t("selectCover")}
                     </li>
                     <li
                         onClick={() => setMode("UPLOAD")}
@@ -73,7 +80,7 @@ export default function SelectThumbnailDialog({ setCoverImage, videoSrc, imageSr
                             }
                         )}
                     >
-                        Upload cover
+                        {t("uploadCover")}
                     </li>
                 </ul>
 

@@ -8,6 +8,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useTranslations } from "next-intl";
 
 export default function AlertDialogExitPage({
     isOpen,
@@ -18,6 +19,7 @@ export default function AlertDialogExitPage({
     onCancel: () => void;
     onConfirm: () => void;
 }) {
+    const t = useTranslations("TiktokStudio.upload.exitDialog");
     return (
         <AlertDialog
             open={isOpen}
@@ -29,13 +31,13 @@ export default function AlertDialogExitPage({
         >
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Are you sure you want to exit?</AlertDialogTitle>
-                    <AlertDialogDescription>Your edits will not be saved.</AlertDialogDescription>
+                    <AlertDialogTitle>{t("title")}</AlertDialogTitle>
+                    <AlertDialogDescription>{t("description")}</AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel onClick={onConfirm}>Exit</AlertDialogCancel>
+                    <AlertDialogCancel onClick={onConfirm}>{t("exit")}</AlertDialogCancel>
                     <AlertDialogAction onClick={onCancel} className="bg-red-500 text-white">
-                        Back to edits
+                        {t("backToEdits")}
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
