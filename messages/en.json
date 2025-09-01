@@ -1,83 +1,5 @@
 {
     "Legal": {
-        "termsOfService": {
-            "title": "Terms of Service",
-            "sections": {
-                "acceptance": {
-                    "title": "1. Acceptance of Terms",
-                    "description": "Welcome to {appName}! These Terms of Service ('Terms') govern your access to and use of our platform, including the website, mobile application, and other services (collectively, the 'Service') provided by {companyName}. By accessing or using our Service, you agree to be bound by these Terms and our Privacy Policy."
-                },
-                "eligibility": {
-                    "title": "2. Eligibility",
-                    "description": "You must be at least 13 years old (or the minimum legal age required in your country to use services without parental consent). If you are under 18, you confirm that you have permission from a parent or legal guardian to use the Service."
-                },
-                "account": {
-                    "title": "3. Your Account",
-                    "description": {
-                        "creation": "To fully use the features of {appName}, you may need to register for an account. You can create an account directly or through a third-party service like Google (Google OAuth).",
-                        "oauth": "If you choose to create an account using Google, you authorize us to access and use certain information from your Google account, such as your name, email address, and profile picture, to create and manage your {appName} account. Your data usage will comply with our Privacy Policy.",
-                        "responsibility": "You are entirely responsible for all activities that occur under your account and must keep your password secure. You agree to notify us immediately of any unauthorized use of your account."
-                    }
-                },
-                "userContent": {
-                    "title": "4. User-Generated Content",
-                    "description": {
-                        "ownership": "You retain all ownership rights to the content (including videos, comments, audio, text, and images) that you post to the Service ('Your Content').",
-                        "license": "By submitting Your Content, you grant {companyName} a non-exclusive, transferable, sub-licensable, royalty-free, and worldwide license to use, copy, modify, create derivative works, distribute, publicly perform, and display Your Content in connection with operating, promoting, and improving the Service. This license allows us to do things like format your video for mobile viewing or display it in different parts of the application.",
-                        "responsibility": "You represent and warrant that you own or have all necessary rights, licenses, consents, and permissions to grant us the license to use Your Content, and that it does not infringe any copyright, trademark, privacy, or other rights of any third party."
-                    }
-                },
-                "prohibited": {
-                    "title": "5. Prohibited Activities and Community Guidelines",
-                    "description": "You agree not to engage in any of the following activities:",
-                    "items": {
-                        "1": "Post content that is illegal, violent, hateful, pornographic, or discriminatory.",
-                        "2": "Bully, harass, intimidate, or impersonate others.",
-                        "3": "Violate others' intellectual property rights, including copyright and trademarks.",
-                        "4": "Post misleading or fake information that could cause harm.",
-                        "5": "Use the Service for spam or unauthorized commercial activities.",
-                        "6": "Upload viruses, malware, or other malicious code.",
-                        "7": "Attempt to gain unauthorized access to systems, other users' accounts, or scrape data without our permission."
-                    }
-                },
-                "moderation": {
-                    "title": "6. Content Moderation",
-                    "description": "We have the right, but not the obligation, to review, filter, or remove content that violates these Terms or applicable law. We may use both automated systems and human moderators to monitor content on the platform to protect our community and Service. Repeated violations may result in account suspension or termination."
-                },
-                "intellectual": {
-                    "title": "7. Intellectual Property and Copyright",
-                    "description": {
-                        "ownership": "All rights, title, and interest in the Service (excluding Your Content), including all related intellectual property rights, are and will remain the exclusive property of {companyName}.",
-                        "dmca": "We respect others' intellectual property rights and expect users to do the same. If you believe your content has been copied in a way that constitutes copyright infringement, please provide us with detailed information through our contact email."
-                    }
-                },
-                "termination": {
-                    "title": "8. Termination",
-                    "description": "We have the right to suspend or terminate your access to the Service at any time, with or without cause, if you violate these Terms. You may delete your account at any time by following the instructions in the app settings."
-                },
-                "disclaimer": {
-                    "title": "9. Disclaimer",
-                    "description": "The Service is provided 'as is' and 'as available' without any warranties, either express or implied. We do not guarantee that the Service will be uninterrupted, secure, or error-free."
-                },
-                "liability": {
-                    "title": "10. Limitation of Liability",
-                    "description": "To the maximum extent permitted by law, {companyName} will not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly, arising from your use of the Service."
-                },
-                "governing": {
-                    "title": "11. Governing Law",
-                    "description": "These Terms will be governed by and construed in accordance with the laws of {jurisdiction}, without regard to conflict of law principles."
-                },
-                "changes": {
-                    "title": "12. Changes to These Terms",
-                    "description": "We may modify these Terms from time to time. If we make material changes, we will notify you by posting the updated version on this page and/or through other communication channels. Your continued use of the Service after the changes become effective means you agree to the modified Terms."
-                },
-                "contact": {
-                    "title": "13. Contact Us",
-                    "description": "If you have any questions about these Terms, please contact us at",
-                    "email": "{email}"
-                }
-            }
-        },
         "meta": {
             "lastUpdated": "Last updated: {date}",
             "contactUs": "Contact us"
@@ -129,12 +51,12 @@
                 "dataSharing": {
                     "title": "4. How We Share Information",
                     "description": "We do not sell your personal information. We may share information in the following circumstances:",
-                    "items": {
-                        "1": "With Other Users: Your profile information and publicly posted content will be visible to other users.",
-                        "2": "With Service Providers: We share information with partners who help us operate the Service, such as cloud storage providers, data analytics, and customer service.",
-                        "3": "For Legal Reasons: We may disclose your information if required by law or to protect the rights, property, and safety of {companyName}, our users, or the public.",
-                        "4": "In Business Transfers: If we're involved in a merger, acquisition, or sale of assets, your information may be transferred."
-                    }
+                    "items": [
+                        "With Other Users: Your profile information and publicly posted content will be visible to other users.",
+                        "With Service Providers: We share information with partners who help us operate the Service, such as cloud storage providers, data analytics, and customer service.",
+                        "For Legal Reasons: We may disclose your information if required by law or to protect the rights, property, and safety of {companyName}, our users, or the public.",
+                        "In Business Transfers: If we're involved in a merger, acquisition, or sale of assets, your information may be transferred."
+                    ]
                 },
                 "dataRetention": {
                     "title": "5. Data Storage and Deletion",
@@ -143,12 +65,12 @@
                 "userRights": {
                     "title": "6. Your Rights and Choices",
                     "description": "You have the following rights regarding your personal information:",
-                    "items": {
-                        "1": "Access and Edit: You can view and edit your profile information through your account settings.",
-                        "2": "Delete: You have the right to request deletion of your account and personal data.",
-                        "3": "Notification Management: You can manage push notifications and emails in your settings.",
-                        "4": "Cookie Control: Most web browsers let you control cookies through their settings."
-                    }
+                    "items": [
+                        "Access and Edit: You can view and edit your profile information through your account settings.",
+                        "Delete: You have the right to request deletion of your account and personal data.",
+                        "Notification Management: You can manage push notifications and emails in your settings.",
+                        "Cookie Control: Most web browsers let you control cookies through their settings."
+                    ]
                 },
                 "childrenPrivacy": {
                     "title": "7. Children's Privacy",
@@ -170,9 +92,14 @@
         "upload": "Upload"
     },
     "TiktokStudio": {
+        "footer": {
+            "copyright": "Copyright © 2025 TikTok",
+            "privacyPolicy": "Privacy Policy",
+            "termsOfService": "Terms of Service"
+        },
         "navigation": {
             "home": "Home",
-            "posts": "Content",
+            "posts": "Posts",
             "settings": "Settings",
             "back": "Back to TikTok"
         },
@@ -195,13 +122,39 @@
             }
         },
         "dashboard": {
+            "knowledgeForYou": {
+                "title": "Knowledge for you"
+            },
+            "userInfo": {
+                "likes": "{count} Likes",
+                "followers": "{count} Followers",
+                "following": "{count} Following"
+            },
             "recentPosts": {
-                "title": "Recent posts",
+                "title": "Recent Posts",
                 "createdAt": "Posted on {date}",
                 "metrics": {
                     "views": "Views",
                     "likes": "Likes",
                     "comments": "Comments"
+                }
+            },
+            "directorChart": {
+                "keyMetrics": "Key Metrics",
+                "selectTimeRange": "Select Time Range",
+                "interactStats": "Interaction Statistics",
+                "metrics": {
+                    "userViews": "User Views",
+                    "guestViews": "Guest Views",
+                    "likes": "Likes",
+                    "comments": "Comments",
+                    "views": "Views"
+                },
+                "timeRanges": {
+                    "last7Days": "Last 7 Days",
+                    "last28Days": "Last 28 Days",
+                    "last60Days": "Last 60 Days",
+                    "last365Days": "Last 365 Days"
                 }
             }
         },
@@ -232,41 +185,41 @@
             }
         },
         "upload": {
-            "selectVideo": "Select video to upload",
-            "dragAndDrop": "Or drag and drop a file",
-            "mp4OrWebmOnly": "MP4 or WebM",
+            "selectVideo": "Select Video to Upload",
+            "dragAndDrop": "Or drag and drop files",
+            "mp4OrWebmOnly": "Only MP4 or WebM supported",
             "fileInfo": {
                 "size": "{size} MB",
                 "replace": "Replace"
             },
             "exitDialog": {
                 "title": "Are you sure you want to exit?",
-                "description": "Your edits will not be saved.",
+                "description": "Your changes will not be saved.",
                 "exit": "Exit",
-                "backToEdits": "Back to edits"
+                "backToEdits": "Back to Edits"
             },
             "selectThumbnail": {
-                "title": "Select thumbnail",
-                "edit": "Edit cover",
-                "selectCover": "Select cover",
-                "uploadCover": "Upload cover"
+                "title": "Select Thumbnail",
+                "edit": "Edit",
+                "selectCover": "Select Cover",
+                "uploadCover": "Upload Cover"
             },
             "guidelines": {
                 "sizeAndDuration": {
-                    "title": "Size and duration",
-                    "description": "Maximum size: 30 GB, video duration: 60 minutes."
+                    "title": "Size and Duration",
+                    "description": "Maximum size: 30 GB, video length: 60 minutes."
                 },
                 "fileFormats": {
-                    "title": "File formats",
-                    "description": "Recommended: '.mp4'. Other major formats are supported."
+                    "title": "File Formats",
+                    "description": "Recommended: '.mp4'. Other main formats are supported."
                 },
                 "videoResolutions": {
-                    "title": "Video resolutions",
-                    "description": "High-resolution recommended: 1080p, 1440p, 4K."
+                    "title": "Video Resolutions",
+                    "description": "High resolution recommended: 1080p, 1440p, 4K."
                 },
                 "aspectRatios": {
-                    "title": "Aspect ratios",
-                    "description": "Recommended: 16:9 for landscape, 9:16 for vertical."
+                    "title": "Aspect Ratios",
+                    "description": "Recommended: 16:9 for landscape, 9:16 for portrait."
                 }
             },
             "tooltips": {
@@ -275,27 +228,27 @@
                 "mute": "Mute",
                 "unmute": "Unmute"
             },
-            "resolutionReq": "720x1280 resolution or higher",
-            "maxFileSize": "Up to 30 GB",
-            "maxDuration": "Up to 60 minutes",
-            "selectFile": "Select file",
-            "selectedFile": "Selected file",
+            "resolutionReq": "Resolution 720x1280 or higher",
+            "maxFileSize": "Maximum size 30 GB",
+            "maxDuration": "Maximum duration 60 minutes",
+            "selectFile": "Select File",
+            "selectedFile": "Selected File",
             "detail": {
-                "title": "Detail",
+                "title": "Details",
                 "description": {
                     "label": "Description",
-                    "placeholder": "Share more about your video here ..."
+                    "placeholder": "Share more about your video here..."
                 },
                 "cover": {
                     "label": "Cover",
-                    "tooltip": "Select a cover or upload one from your device. An engaging cover can capture viewers interest effectively."
+                    "tooltip": "Select a cover image or upload from your device. An attractive cover can make a strong impression on viewers."
                 }
             },
             "settings": {
                 "title": "Settings",
                 "audience": {
-                    "label": "Who can watch this video",
-                    "placeholder": "Select an audience"
+                    "label": "Who can view this video",
+                    "placeholder": "Select audience"
                 }
             },
             "buttons": {

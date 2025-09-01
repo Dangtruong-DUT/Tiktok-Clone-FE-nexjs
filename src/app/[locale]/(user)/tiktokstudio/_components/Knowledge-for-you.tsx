@@ -1,12 +1,15 @@
 import Image from "next/image";
 import { FaChevronRight } from "react-icons/fa6";
+import { useTranslations } from "next-intl";
 
 export default function KnowledgeForYou() {
+    const t = useTranslations("TiktokStudio.dashboard.knowledgeForYou");
+
     return (
         <div className="min-w-[336px]">
             <div className="text-base font-bold flex justify-between items-center">
                 <span className="flex items-center gap-2 cursor-pointer">
-                    Knowledge for you
+                    {t("title")}
                     <FaChevronRight />
                 </span>
             </div>

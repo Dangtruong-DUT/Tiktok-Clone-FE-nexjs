@@ -5,9 +5,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import useCurrentUserData from "@/hooks/data/useCurrentUserData";
 import { Link } from "@/i18n/navigation";
 import { MdOutlineShortcut } from "react-icons/md";
+import { useTranslations } from "next-intl";
 
 export default function UserInfo() {
     const userData = useCurrentUserData();
+    const t = useTranslations("TiktokStudio.dashboard.userInfo");
     return (
         <div className="flex items-center gap-4  border rounded-lg p-5 bg-card ">
             <Link href={`/@${userData?.username}`} className=" relative">
@@ -41,11 +43,11 @@ export default function UserInfo() {
                     </Tooltip>
                 </p>
                 <p className="text-sm ">
-                    <span>Likes {userData?.likes_count ?? 0}</span>
+                    <span>{t("likes", { count: userData?.likes_count ?? 0 })}</span>
                     <span> · </span>
-                    <span>Followers {userData?.followers_count ?? 0}</span>
+                    <span>{t("followers", { count: userData?.followers_count ?? 0 })}</span>
                     <span> · </span>
-                    <span>Following {userData?.following_count ?? 0}</span>
+                    <span>{t("following", { count: userData?.following_count ?? 0 })}</span>
                 </p>
             </div>
         </div>

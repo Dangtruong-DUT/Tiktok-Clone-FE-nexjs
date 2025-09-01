@@ -170,6 +170,11 @@
         "upload": "Tải lên"
     },
     "TiktokStudio": {
+        "footer": {
+            "copyright": "Bản quyền © 2025 TikTok",
+            "privacyPolicy": "Chính sách quyền riêng tư",
+            "termsOfService": "Điều khoản dịch vụ"
+        },
         "navigation": {
             "home": "Trang chủ",
             "posts": "Nội dung",
@@ -195,6 +200,14 @@
             }
         },
         "dashboard": {
+            "knowledgeForYou": {
+                "title": "Kiến thức dành cho bạn"
+            },
+            "userInfo": {
+                "likes": "{count} Lượt thích",
+                "followers": "{count} Người theo dõi",
+                "following": "Đang theo dõi {count}"
+            },
             "recentPosts": {
                 "title": "Bài đăng gần đây",
                 "createdAt": "Đăng vào {date}",
@@ -202,6 +215,24 @@
                     "views": "Lượt xem",
                     "likes": "Lượt thích",
                     "comments": "Bình luận"
+                }
+            },
+            "directorChart": {
+                "keyMetrics": "Chỉ số quan trọng",
+                "selectTimeRange": "Chọn khoảng thời gian",
+                "interactStats": "Thống kê tương tác",
+                "metrics": {
+                    "userViews": "Lượt xem từ người dùng",
+                    "guestViews": "Lượt xem từ khách",
+                    "likes": "Lượt thích",
+                    "comments": "Bình luận",
+                    "views": "Lượt xem"
+                },
+                "timeRanges": {
+                    "last7Days": "7 ngày qua",
+                    "last28Days": "28 ngày qua",
+                    "last60Days": "60 ngày qua",
+                    "last365Days": "365 ngày qua"
                 }
             }
         },
@@ -247,7 +278,7 @@
             },
             "selectThumbnail": {
                 "title": "Chọn ảnh thumbnail",
-                "edit": "Chỉnh sửa ảnh bìa",
+                "edit": "Chỉnh sửa",
                 "selectCover": "Chọn ảnh bìa",
                 "uploadCover": "Tải lên ảnh bìa"
             },
@@ -284,7 +315,7 @@
                 "title": "Chi tiết",
                 "description": {
                     "label": "Mô tả",
-                    "placeholder": "Chia sẻ thêm về video của bạn tại đây ..."
+                    "placeholder": "Chia sẻ thêm về video của bạn tại đây..."
                 },
                 "cover": {
                     "label": "Ảnh bìa",
