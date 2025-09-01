@@ -25,12 +25,20 @@ export default async function AuthLayout({
                 <p className="text-xs text-neutral-500 text-center max-w-sm mx-auto p-4" aria-live="polite">
                     {t.rich("notice", {
                         terms: (chunks) => (
-                            <Link href="/terms" target="_blank" className="font-semibold text-black hover:underline">
+                            <Link
+                                href="/terms-of-service"
+                                target="_blank"
+                                className="font-semibold text-black hover:underline"
+                            >
                                 {chunks}
                             </Link>
                         ),
                         privacy: (chunks) => (
-                            <Link href="/privacy" target="_blank" className="font-semibold text-black hover:underline">
+                            <Link
+                                href="/privacy-policy"
+                                target="_blank"
+                                className="font-semibold text-black hover:underline"
+                            >
                                 {chunks}
                             </Link>
                         ),

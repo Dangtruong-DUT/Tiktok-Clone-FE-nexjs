@@ -10,7 +10,7 @@ export function LegalNotice() {
                 {tAuth.rich("notice", {
                     terms: (chunks) => (
                         <Link
-                            href="/terms"
+                            href="/terms-of-service"
                             target="_blank"
                             className="font-semibold hover:underline text-card-foreground"
                         >
@@ -19,7 +19,7 @@ export function LegalNotice() {
                     ),
                     privacy: (chunks) => (
                         <Link
-                            href="/privacy"
+                            href="/privacy-policy"
                             target="_blank"
                             className="font-semibold hover:underline text-card-foreground"
                         >
