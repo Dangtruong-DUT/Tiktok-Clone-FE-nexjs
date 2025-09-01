@@ -14,11 +14,11 @@ export default function SidebarFooter() {
 
     return (
         <footer className="px-2 pt-2 pb-[75px]">
-            <div className="mt-5">
-                <Link href="/privacy-policy" className="text-muted-foreground text-xs">
+            <div className="mt-5 flex flex-col gap-4">
+                <Link href="/privacy-policy" className="text-muted-foreground text-sm hover:underline font-semibold">
                     {t("privacyPolicy")}
                 </Link>
-                <Link href="/terms-of-service" className="text-muted-foreground text-xs">
+                <Link href="/terms-of-service" className="text-muted-foreground text-sm hover:underline font-semibold">
                     {t("termsOfService")}
                 </Link>
             </div>
@@ -35,7 +35,7 @@ interface ListLinkProps {
     items?: LinkItem[];
 }
 
-function ListLink({ title, items = [] }: ListLinkProps) {
+export function ListLink({ title, items = [] }: ListLinkProps) {
     const [isDisplayLinks, setDisplayLinks] = useState<boolean>(false);
 
     const handleDisplayListLink = () => {
