@@ -64,7 +64,7 @@ export default async function PrivacyPolicyPage() {
         (key: string): string;
     };
     return (
-        <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 mx-auto">
+        <div className="flex flex-col min-h-screen  transition-colors duration-300 mx-auto">
             <section
                 className="relative py-24 px-4 md:px-6 lg:px-8 bg-center bg-cover"
                 style={{ backgroundImage: "url('/images/Knowledge for you.png')" }}
