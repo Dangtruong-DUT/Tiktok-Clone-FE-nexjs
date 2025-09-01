@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { DialogClose } from "@/components/ui/dialog";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -40,11 +41,11 @@ export function ModalLoginForm() {
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
-                                <Input
+                                <PasswordInput
                                     placeholder={t("passwordPlaceholder")}
                                     {...field}
                                     className="brand-input bg-muted! border-none! "
-                                    type="password"
+                                    containerClassName="flex-1"
                                 />
                             </FormControl>
                             <FormMessage />

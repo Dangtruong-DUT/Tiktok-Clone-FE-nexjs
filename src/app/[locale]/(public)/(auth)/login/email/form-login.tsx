@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -32,11 +33,10 @@ export function LoginForm() {
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
-                                <Input
+                                <PasswordInput
                                     placeholder={t("passwordPlaceholder")}
                                     {...field}
                                     className="brand-input"
-                                    type="password"
                                 />
                             </FormControl>
                             <FormMessage />
