@@ -19,24 +19,24 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
     return {
         title: {
-            template: "%s | TaplamIT - Tiktok Clone",
-            default: "TaplamIT - Tiktok Clone",
+            template: "%s | Tiktok",
+            default: "Tiktok",
         },
-        description: "tiktok clone",
+        description: "tiktok",
         authors: [{ name: "TaplamIT", url: "https://taplamit.com" }],
         openGraph: {
-            title: "TaplamIT - Tiktok Clone",
-            description: "tiktok clone",
+            title: "Tiktok",
+            description: "tiktok",
             locale,
             type: "website",
-            url: `${envConfig.NEXT_PUBLIC_URL}/${locale}`,
-            siteName: "TaplamIT - Tiktok Clone",
+            url: `${envConfig.NEXT_PUBLIC_URL}${locale}`,
+            siteName: "Tiktok",
             images: [
                 {
-                    url: `${envConfig.NEXT_PUBLIC_URL}/desktop-wallpaper-tiktok.png`,
+                    url: "https://api.taplamit.tech/api/v1/static/images/72e81f3e59013ce9726567704.jpg",
                     width: 1200,
                     height: 630,
-                    alt: "TaplamIT - Tiktok Clone",
+                    alt: "TaplamIT - Tiktok",
                 },
             ],
         },
