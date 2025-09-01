@@ -24,6 +24,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
             type: "website",
             url: `${envConfig.NEXT_PUBLIC_URL}${locale}/privacy-policy`,
             siteName: BRAND_CONFIG.APP_NAME,
+            images: [
+                {
+                    url: "https://api.taplamit.tech/api/v1/static/images/72e81f3e59013ce9726567704.jpg",
+                    width: 1200,
+                    height: 630,
+                    alt: "TaplamIT - Tiktok",
+                },
+            ],
         },
         alternates: {
             canonical: `${envConfig.NEXT_PUBLIC_URL}${locale}/privacy-policy`,

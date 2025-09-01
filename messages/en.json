@@ -1,8 +1,86 @@
 {
     "Legal": {
+        "termsOfService": {
+            "title": "Terms of Service",
+            "sections": {
+                "acceptance": {
+                    "title": "1. Acceptance of Terms",
+                    "description": "Welcome to {appName}! These Terms of Service ('Terms') govern your access to and use of our platform, including our website, mobile application, and other services (collectively referred to as the 'Services') provided by {companyName}. By accessing or using our Services, you agree to be bound by these Terms and our Privacy Policy."
+                },
+                "eligibility": {
+                    "title": "2. Eligibility",
+                    "description": "You must be at least 13 years old (or the minimum age required by the laws of your country to use the services without parental consent). If you are under 18, you confirm that you have permission from your parent or legal guardian to use the Services."
+                },
+                "account": {
+                    "title": "3. Your Account",
+                    "description": {
+                        "creation": "To use all features of {appName}, you may need to register an account. You can create an account directly or through a third-party service such as Google (Google OAuth).",
+                        "oauth": "If you choose to create an account using Google, you allow us to access and use certain information from your Google account, such as your name, email address, and profile picture, to create and manage your {appName} account. The use of your data will comply with our Privacy Policy.",
+                        "responsibility": "You are fully responsible for all activities that occur under your account and must keep your password secure. You agree to notify us immediately of any unauthorized use of your account."
+                    }
+                },
+                "userContent": {
+                    "title": "4. User-Generated Content",
+                    "description": {
+                        "ownership": "You retain all ownership rights to the content (including videos, comments, audio, text, and images) you upload to the Services ('Your Content').",
+                        "license": "By submitting Your Content, you grant {companyName} a non-exclusive, transferable, sublicensable, royalty-free, worldwide license to use, copy, modify, create derivative works from, distribute, publicly perform, and display Your Content in connection with the operation, promotion, and improvement of the Services. This license allows us to perform actions such as reformatting your video for mobile viewing or displaying it in different parts of the app.",
+                        "responsibility": "You represent and warrant that you own or have all the rights, licenses, consents, and permissions necessary to grant us the license to use Your Content, and that such content does not infringe any copyright, trademark, privacy, or other rights of any third party."
+                    }
+                },
+                "prohibited": {
+                    "title": "5. Prohibited Activities and Community Guidelines",
+                    "description": "You agree not to engage in any of the following activities:",
+                    "items": {
+                        "1": "Posting illegal, violent, hateful, pornographic, or discriminatory content.",
+                        "2": "Bullying, harassing, threatening, or impersonating others.",
+                        "3": "Infringing on others' intellectual property rights, including copyright and trademarks.",
+                        "4": "Posting misinformation or fake news that may cause harm.",
+                        "5": "Using the Services for spam or unauthorized commercial activities.",
+                        "6": "Uploading viruses, malware, or other malicious code.",
+                        "7": "Attempting to gain unauthorized access to systems, other users' accounts, or using automated tools to collect data (scraping) without our permission."
+                    }
+                },
+                "moderation": {
+                    "title": "6. Content Moderation",
+                    "description": "We reserve the right, but are not obligated, to review, filter, or remove content that violates these Terms or applicable laws. We may use both automated systems and human moderators to monitor content on the platform to protect our community and Services. Repeated violations may result in suspension or termination of your account."
+                },
+                "intellectual": {
+                    "title": "7. Intellectual Property and Copyright",
+                    "description": {
+                        "ownership": "All rights, titles, and interests in and to the Services (excluding Your Content), including all related intellectual property rights, are and will remain the exclusive property of {companyName}.",
+                        "dmca": "We respect the intellectual property rights of others and expect our users to do the same. If you believe your content has been copied in a way that constitutes copyright infringement, please provide us with detailed information via our contact email."
+                    }
+                },
+                "termination": {
+                    "title": "8. Termination",
+                    "description": "We may suspend or terminate your access to the Services at any time, with or without cause, if you violate these Terms. You may delete your account at any time by following the instructions in the app settings."
+                },
+                "disclaimer": {
+                    "title": "9. Disclaimer of Warranties",
+                    "description": "The Services are provided 'as is' and 'as available' without any warranties, express or implied. We do not guarantee that the Services will be uninterrupted, secure, or error-free."
+                },
+                "liability": {
+                    "title": "10. Limitation of Liability",
+                    "description": "To the maximum extent permitted by law, {companyName} shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly, arising from your use of the Services."
+                },
+                "governing": {
+                    "title": "11. Governing Law",
+                    "description": "These Terms shall be governed by and construed in accordance with the laws of {jurisdiction}, without regard to its conflict of law principles."
+                },
+                "changes": {
+                    "title": "12. Changes to These Terms",
+                    "description": "We may modify these Terms from time to time. If we make material changes, we will notify you by posting the updated version on this page and/or through other communication methods. Your continued use of the Services after the changes become effective means you accept the revised Terms."
+                },
+                "contact": {
+                    "title": "13. Contact Us",
+                    "description": "If you have any questions about these Terms, please contact us at",
+                    "email": "{email}"
+                }
+            }
+        },
         "meta": {
             "lastUpdated": "Last updated: {date}",
-            "contactUs": "Contact us"
+            "contactUs": "Contact Us"
         },
         "privacyPolicy": {
             "title": "Privacy Policy",

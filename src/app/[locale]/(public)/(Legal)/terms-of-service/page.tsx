@@ -7,16 +7,13 @@ import React from "react";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: LocalesType }> }): Promise<Metadata> {
     const { locale } = await params;
-    const t = (await getTranslations("Legal")) as unknown as {
+    const t = (await getTranslations("Legal.termsOfService")) as unknown as {
         <K extends keyof ParamsMap>(key: K, params: ParamsMap[K]): string;
         (key: string): string;
     };
 
-    const title = "Terms of Service - TikTok";
-    const description = t("termsOfService.sections.acceptance.description", {
-        appName: BRAND_CONFIG.APP_NAME,
-        companyName: BRAND_CONFIG.COMPANY_NAME,
-    });
+    const title = t("title");
+    const description = "terms of service for TikTok";
 
     return {
         title,
@@ -27,6 +24,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
             type: "website",
             url: `${envConfig.NEXT_PUBLIC_URL}${locale}/terms-of-service`,
             siteName: BRAND_CONFIG.APP_NAME,
+            images: [
+                {
+                    url: "https://api.taplamit.tech/api/v1/static/images/72e81f3e59013ce9726567704.jpg",
+                    width: 1200,
+                    height: 630,
+                    alt: "TaplamIT - Tiktok",
+                },
+            ],
         },
         alternates: {
             canonical: `${envConfig.NEXT_PUBLIC_URL}${locale}/terms-of-service`,
