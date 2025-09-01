@@ -10,12 +10,14 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import LoadingIcon from "@/components/lottie-icons/loading";
 import { CiGrid41 } from "react-icons/ci";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslations } from "next-intl";
 
 function VideoGrid() {
     const [showSkeleton, setShowSkeleton] = useState<boolean>(true);
     const { postList, hasNextPage, fetchNextPage, isFetching, isLoading } = useVideosContext();
     const dispatch = useAppDispatch();
     const pathname = usePathname();
+    const t = useTranslations("ProfilePage.noContent");
     const handleVideoClick = useCallback(() => {
         dispatch(setOpenModal({ prevPathname: pathname, type: "modalVideoDetail" }));
     }, [dispatch, pathname]);
@@ -64,8 +66,8 @@ function VideoGrid() {
                     <div className="flex justify-center items-center size-[92px] rounded-full bg-muted">
                         <CiGrid41 size={44} />
                     </div>
-                    <p className="text-2xl font-bold mt-6">No content </p>
-                    <p className="text-base mt-2 text-muted-foreground">This user has not published any videos.</p>
+                    <p className="text-2xl font-bold mt-6">{t("title")}</p>
+                    <p className="text-base mt-2 text-muted-foreground">{t("description")}</p>
                 </div>
             )}
             {postList.length === 0 && showSkeleton && (

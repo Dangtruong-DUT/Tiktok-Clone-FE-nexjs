@@ -1,6 +1,7 @@
 import { AuthModal } from "@/components/auth-modal";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface ButtonFollowProps {
     isFollowed: boolean;
@@ -10,6 +11,7 @@ interface ButtonFollowProps {
 }
 
 export default function ButtonFollow({ isFollowed, onToggleFollow, className, isAuth }: ButtonFollowProps) {
+    const t = useTranslations("ProfilePage.actions");
     const content = (
         <Button
             variant={isFollowed ? "outline" : "default"}
@@ -20,7 +22,7 @@ export default function ButtonFollow({ isFollowed, onToggleFollow, className, is
             })}
             onClick={onToggleFollow}
         >
-            {isFollowed ? "Following" : "Follow"}
+            {isFollowed ? t("following") : t("follow")}
         </Button>
     );
 

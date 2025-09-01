@@ -4,13 +4,15 @@ import { cn } from "@/lib/utils";
 import { UserType } from "@/types/schemas/User.schema";
 import ProfileActionButtons from "@/app/[locale]/(public)/(home)/[username]/_components/profile-action-buttons";
 import { MdVerified } from "react-icons/md";
+import { getTranslations } from "next-intl/server";
 
 interface ProfileUserProps {
     userData: UserType;
     className?: string;
 }
 
-function ProfileUser({ userData, className }: ProfileUserProps) {
+async function ProfileUser({ userData, className }: ProfileUserProps) {
+    const t = await getTranslations("ProfilePage.stats");
     const {
         _id,
         username: userUsername,
@@ -47,19 +49,19 @@ function ProfileUser({ userData, className }: ProfileUserProps) {
                         <div className="cursor-pointer">
                             <strong className="font-bold text-lg leading-6">{following_count}</strong>
                             <span className="text-muted-foreground font-normal text-base leading-5 inline-block ml-1.5 cursor-pointer hover:underline">
-                                Following
+                                {t("following")}
                             </span>
                         </div>
                         <div className="cursor-pointer">
                             <strong className="font-bold  text-lg leading-6">{followers_count}</strong>
                             <span className="text-muted-foreground font-normal text-base leading-5 inline-block ml-1.5 cursor-pointer hover:underline">
-                                Followers
+                                {t("followers")}
                             </span>
                         </div>
                         <div className=" cursor-pointer">
                             <strong className="font-bold  text-lg leading-6">{likes_count}</strong>
                             <span className="text-muted-foreground font-normal text-base leading-5 inline-block ml-1.5 cursor-pointer hover:underline">
-                                Likes
+                                {t("likes")}
                             </span>
                         </div>
                     </div>

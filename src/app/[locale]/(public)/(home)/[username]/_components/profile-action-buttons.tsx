@@ -12,6 +12,7 @@ import EditProfileDialog from "@/app/[locale]/(public)/(home)/[username]/_compon
 import { useAppContext } from "@/provider/app-provider";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAppSelector } from "@/hooks/redux";
+import { useTranslations } from "next-intl";
 
 interface ProfileActionButtonsProps {
     username: string;
@@ -23,6 +24,7 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
     const role = useAppSelector((state) => state.auth.role);
     const currentUser = useCurrentUserData();
     const isCurrentUser = currentUser?._id === userId;
+    const t = useTranslations("ProfilePage.actions");
     const { data: userProfileRes } = useGetUserByUsernameQuery(username, { skip: isCurrentUser });
     const { isFollowedState, onToggleFollow } = useFollowUser({
         userId,
@@ -52,7 +54,7 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
                         <span className="flex justify-center  items-center mr-1 max-lg:flex max-md:mr-0">
                             <Settings size={19} />
                         </span>
-                        <span className="max-md:hidden">Settings</span>
+                        <span className="max-md:hidden">{t("settings")}</span>
                     </Button>
                 </Link>
 
@@ -70,7 +72,7 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
                     className="ml-2 h-10 font-medium rounded-md text-base cursor-pointer"
                     onClick={handleMessage}
                 >
-                    Message
+                    {t("message")}
                 </Button>
                 <Button variant="outline" className="ml-2 h-10 font-medium rounded-md text-base">
                     <Share size={19} />

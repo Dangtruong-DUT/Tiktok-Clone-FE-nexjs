@@ -17,6 +17,7 @@ import envConfig from "@/config/app.config";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { clearStore } from "@/store";
 import { useAppDispatch } from "@/hooks/redux";
+import { useTranslations } from "next-intl";
 
 export default function EditProfileDialog() {
     const [open, setOpen] = useState(false);
@@ -24,6 +25,8 @@ export default function EditProfileDialog() {
     const router = useRouter();
     const dispatch = useAppDispatch();
     const currentUser = useCurrentUserData();
+    const t = useTranslations("ProfilePage.editProfileDialog");
+    const ta = useTranslations("ProfilePage.actions");
     const [updateProfile, updateProfileResult] = useUpdateMeMutation();
 
     const form = useForm<UpdateUserBodyType>({
@@ -83,12 +86,12 @@ export default function EditProfileDialog() {
                     <span className="flex justify-center items-center mr-1">
                         <Edit3 size={19} />
                     </span>
-                    <span className="max-md:hidden">Edit profile</span>
+                    <span className="max-md:hidden">{ta("editProfile")}</span>
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px] p-0 max-h-[90vh] overflow-y-auto">
                 <DialogHeader className="px-8 py-4 border-b">
-                    <DialogTitle className="text-xl font-semibold">Edit profile</DialogTitle>
+                    <DialogTitle className="text-xl font-semibold">{t("title")}</DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} onReset={onReset} className="px-8 py-4">
@@ -97,18 +100,22 @@ export default function EditProfileDialog() {
                             name="username"
                             render={({ field }) => (
                                 <FormItem className="mb-6">
-                                    <FormLabel className="text-base font-semibold">Username</FormLabel>
+                                    <FormLabel className="text-base font-semibold">{t("username.label")}</FormLabel>
                                     <FormControl>
-                                        <Input {...field} placeholder="Username" className="h-11 text-base" />
+                                        <Input
+                                            {...field}
+                                            placeholder={t("username.placeholder")}
+                                            className="h-11 text-base"
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                     <p className="text-sm text-muted-foreground mt-1">
-                                        {envConfig.NEXT_PUBLIC_URL}@{field.value}
+                                        {t("username.profileUrl", {
+                                            url: envConfig.NEXT_PUBLIC_URL,
+                                            username: field.value?.toString() ?? "",
+                                        })}
                                     </p>
-                                    <p className="text-sm text-muted-foreground mt-1">
-                                        Usernames can only contain letters, numbers, underscores and periods. Changing
-                                        your username will also change your profile link.
-                                    </p>
+                                    <p className="text-sm text-muted-foreground mt-1">{t("username.hint")}</p>
                                 </FormItem>
                             )}
                         />
@@ -117,14 +124,16 @@ export default function EditProfileDialog() {
                             name="name"
                             render={({ field }) => (
                                 <FormItem className="mb-6">
-                                    <FormLabel className="text-base font-semibold">Name</FormLabel>
+                                    <FormLabel className="text-base font-semibold">{t("name.label")}</FormLabel>
                                     <FormControl>
-                                        <Input {...field} placeholder="Name" className="h-11 text-base" />
+                                        <Input
+                                            {...field}
+                                            placeholder={t("name.placeholder")}
+                                            className="h-11 text-base"
+                                        />
                                     </FormControl>
                                     <FormMessage />
-                                    <p className="text-sm text-muted-foreground mt-1">
-                                        Your nickname can only be changed once every 7 days.
-                                    </p>
+                                    <p className="text-sm text-muted-foreground mt-1">{t("name.hint")}</p>
                                 </FormItem>
                             )}
                         />
@@ -133,11 +142,11 @@ export default function EditProfileDialog() {
                             name="bio"
                             render={({ field }) => (
                                 <FormItem className="mb-6">
-                                    <FormLabel className="text-base font-semibold">Bio</FormLabel>
+                                    <FormLabel className="text-base font-semibold">{t("bio.label")}</FormLabel>
                                     <FormControl>
                                         <Textarea
                                             {...field}
-                                            placeholder="Bio"
+                                            placeholder={t("bio.placeholder")}
                                             className="resize-none min-h-[120px] text-base"
                                             maxLength={80}
                                         />
@@ -151,14 +160,18 @@ export default function EditProfileDialog() {
                         />
                         <div className="flex justify-end gap-3 pt-4 border-t">
                             <Button type="reset" variant="outline" className="h-8 px-8 w-[96px] text-sm font-semibold">
-                                Cancel
+                                {t("buttons.cancel")}
                             </Button>
                             <Button
                                 type="submit"
                                 className="h-8  w-[96px] px-8 text-sm font-semibold bg-brand hover:bg-brand/90 text-white"
                                 disabled={updateProfileResult.isLoading}
                             >
-                                {updateProfileResult.isLoading ? <Loader className="animate-spin" /> : "Save"}
+                                {updateProfileResult.isLoading ? (
+                                    <Loader className="animate-spin" />
+                                ) : (
+                                    t("buttons.save")
+                                )}
                             </Button>
                         </div>
                     </form>

@@ -97,6 +97,46 @@
             "redirectMessage": "This window will redirect automatically in a few seconds"
         }
     },
+    "ProfilePage": {
+        "stats": {
+            "following": "Following",
+            "followers": "Followers",
+            "likes": "Likes"
+        },
+        "actions": {
+            "follow": "Follow",
+            "following": "Following",
+            "message": "Message",
+            "editProfile": "Edit profile",
+            "settings": "Settings"
+        },
+        "editProfileDialog": {
+            "title": "Edit profile",
+            "username": {
+                "label": "Username",
+                "placeholder": "Username",
+                "profileUrl": "{url}@{username}",
+                "hint": "Usernames can only contain letters, numbers, underscores and periods. Changing your username will also change your profile link."
+            },
+            "name": {
+                "label": "Name",
+                "placeholder": "Name",
+                "hint": "Your nickname can only be changed once every 7 days."
+            },
+            "bio": {
+                "label": "Bio",
+                "placeholder": "Bio"
+            },
+            "buttons": {
+                "cancel": "Cancel",
+                "save": "Save"
+            }
+        },
+        "noContent": {
+            "title": "No content",
+            "description": "This user has not published any videos."
+        }
+    },
     "HomePage": {
         "menu": {
             "forYou": "For You",
@@ -135,6 +175,9 @@
             "tabs": {
                 "users": "Users",
                 "videos": "Videos"
+            },
+            "userList": {
+                "followers": "{count} Followers"
             }
         }
     },

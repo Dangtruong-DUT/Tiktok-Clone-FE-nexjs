@@ -97,6 +97,46 @@
             "redirectMessage": "Cửa sổ này sẽ tự động chuyển hướng sau vài giây"
         }
     },
+    "ProfilePage": {
+        "stats": {
+            "following": "Đang theo dõi",
+            "followers": "Người theo dõi",
+            "likes": "Thích"
+        },
+        "actions": {
+            "follow": "Theo dõi",
+            "following": "Đang theo dõi",
+            "message": "Nhắn tin",
+            "editProfile": "Sửa hồ sơ",
+            "settings": "Cài đặt"
+        },
+        "editProfileDialog": {
+            "title": "Sửa hồ sơ",
+            "username": {
+                "label": "Tên người dùng",
+                "placeholder": "Tên người dùng",
+                "profileUrl": "{url}@{username}",
+                "hint": "Tên người dùng chỉ có thể chứa chữ cái, số, dấu gạch dưới và dấu chấm. Thay đổi tên người dùng cũng sẽ thay đổi đường dẫn hồ sơ của bạn."
+            },
+            "name": {
+                "label": "Tên",
+                "placeholder": "Tên",
+                "hint": "Biệt danh của bạn chỉ có thể thay đổi 7 ngày một lần."
+            },
+            "bio": {
+                "label": "Tiểu sử",
+                "placeholder": "Tiểu sử"
+            },
+            "buttons": {
+                "cancel": "Hủy",
+                "save": "Lưu"
+            }
+        },
+        "noContent": {
+            "title": "Không có nội dung",
+            "description": "Người dùng này chưa đăng tải video nào."
+        }
+    },
     "HomePage": {
         "menu": {
             "forYou": "Dành cho bạn",
@@ -135,6 +175,9 @@
             "tabs": {
                 "users": "Người dùng",
                 "videos": "Video"
+            },
+            "userList": {
+                "followers": "{count} Người theo dõi"
             }
         }
     },
