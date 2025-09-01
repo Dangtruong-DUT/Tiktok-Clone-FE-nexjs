@@ -31,7 +31,7 @@ export default function UnfollowedFeed({ posts, fetchNextPage, hasNextPage, isFe
                     <CardVideoItem key={post._id} post={post} className="" />
                 ))}
                 {isFetching && (
-                    <div className="px-4 py-4  col-span-full">
+                    <div className="px-4 py-4 col-span-full flex justify-center items-center">
                         <LoadingIcon className="size-15 mx-auto" loop />
                     </div>
                 )}
