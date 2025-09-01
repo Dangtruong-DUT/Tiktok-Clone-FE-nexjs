@@ -9,11 +9,11 @@ export async function generateMetadata({
     searchParams,
 }: {
     params: Promise<{ locale: LocalesType }>;
-    searchParams: { q?: string };
+    searchParams: Promise<{ q?: string }>;
 }): Promise<Metadata> {
     const { locale } = await params;
     const t = await getTranslations("HomePage.sidebar.search");
-    const query = searchParams.q;
+    const query = (await searchParams).q;
 
     return {
         title: query ? `${query} - TikTok Search` : t("title"),
