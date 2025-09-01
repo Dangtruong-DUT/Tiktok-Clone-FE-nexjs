@@ -35,7 +35,7 @@ export default async function PrivacyPolicyPage() {
                     </h1>
                     <div className="mt-4">
                         <p className="text-sm text-white font-medium drop-shadow">
-                            {t("meta.lastUpdated", { date: "Ngày 1 tháng 9 năm 2025" })}
+                            {t("meta.lastUpdated", { date: "September 1, 2025" })}
                         </p>
                     </div>
                 </div>

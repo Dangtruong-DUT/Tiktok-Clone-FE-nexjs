@@ -33,7 +33,7 @@ export default async function TermsOfServicePage() {
                         {t("termsOfService.title")}
                     </h1>
                     <p className="text-sm text-white font-medium drop-shadow mt-4">
-                        {t("meta.lastUpdated", { date: "Ngày 1 tháng 9 năm 2025" })}
+                        {t("meta.lastUpdated", { date: "September 1, 2025" })}
                     </p>
                 </div>
             </section>
