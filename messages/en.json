@@ -304,6 +304,7 @@
     },
     "forgotPasswordPage": {
         "title": "Reset password",
+        "description": "Page reset password.",
         "emailPlaceholder": "Your email",
         "submit": "Submit",
         "backToHome": "Back to Home",

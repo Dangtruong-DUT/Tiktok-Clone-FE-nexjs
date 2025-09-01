@@ -395,6 +395,7 @@
     },
     "resetPasswordPage": {
         "title": "Đặt lại mật khẩu",
+        "description": "Trang đặt lại mật khẩu.",
         "confirmPasswordPlaceholder": "Xác nhận mật khẩu mới",
         "newPasswordPlaceholder": "Mật khẩu mới",
         "submit": "Đặt lại mật khẩu",

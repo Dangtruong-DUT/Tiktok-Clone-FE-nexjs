@@ -1,26 +1,23 @@
-"use client";
+import { getTranslations } from "next-intl/server";
+import { Metadata } from "next";
+import { LocalesType } from "@/i18n/config";
+import ResetPasswordMain from "@/app/[locale]/(public)/(auth)/reset-password/reset-password-main";
 
-import ResetPasswordForm from "@/app/[locale]/(public)/(auth)/reset-password/reset-password-form";
-import VerifyResetToken from "@/app/[locale]/(public)/(auth)/reset-password/verify-reset-token";
-import { useTranslations } from "next-intl";
-import { useState } from "react";
+export async function generateMetadata({ params: { locale } }: { params: { locale: LocalesType } }): Promise<Metadata> {
+    const t = await getTranslations("resetPasswordPage");
 
-export default function ResetPasswordPage() {
-    const [verifiedToken, setVerifiedToken] = useState<string | null>(null);
-    const t = useTranslations("resetPasswordPage");
-
-    const handleTokenVerified = (token: string) => {
-        setVerifiedToken(token);
+    return {
+        title: t("title"),
+        alternates: {
+            canonical: `${process.env.NEXT_PUBLIC_URL}/${locale}/reset-password`,
+            languages: {
+                "en-US": "/en",
+                "vi-VN": "/vi",
+            },
+        },
     };
+}
 
-    if (!verifiedToken) {
-        return <VerifyResetToken onTokenVerified={handleTokenVerified} />;
-    }
-
-    return (
-        <div className="w-full max-w-sm mx-auto px-4">
-            <h1 className="text-3xl my-4 font-bold text-center mt-16">{t("title")}</h1>
-            <ResetPasswordForm token={verifiedToken} />
-        </div>
-    );
+export default async function ResetPasswordPage() {
+    return <ResetPasswordMain />;
 }

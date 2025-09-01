@@ -1,5 +1,31 @@
 import ForgotPasswordForm from "@/app/[locale]/(public)/(auth)/forgot-password/forgot-password-form";
 import { getTranslations } from "next-intl/server";
+import { Metadata } from "next";
+import { LocalesType } from "@/i18n/config";
+
+export async function generateMetadata({ params: { locale } }: { params: { locale: LocalesType } }): Promise<Metadata> {
+    const t = await getTranslations("forgotPasswordPage");
+
+    return {
+        title: t("title"),
+        description: "Reset your TikTok account password securely",
+        openGraph: {
+            title: t("title"),
+            description: "Reset your TikTok account password securely",
+        },
+        alternates: {
+            canonical: `/auth/forgot-password`,
+            languages: {
+                "en-US": `/en-US/auth/forgot-password`,
+                "vi-VN": `/vi-VN/auth/forgot-password`,
+            },
+        },
+        robots: {
+            index: false,
+            follow: true,
+        },
+    };
+}
 
 export default async function ForgotPasswordPage() {
     const t = await getTranslations("forgotPasswordPage");
