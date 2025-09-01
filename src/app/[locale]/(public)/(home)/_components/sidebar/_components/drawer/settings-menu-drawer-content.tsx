@@ -20,7 +20,6 @@ export default function SettingsMenuDrawerContent() {
 
     const onChange = useCallback(
         async (item: MenuOption) => {
-            console.log("Selected item:", item);
             if (item.type === "item" && item.key === "language") {
                 return changeLanguage(item.value as string);
             } else if (item.type === "item" && item.key === "theme") {

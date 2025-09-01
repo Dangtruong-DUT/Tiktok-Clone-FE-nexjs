@@ -48,7 +48,6 @@ export default function UpdateProfileForm() {
 
     const handleSubmit = useCallback(
         async (data: UpdateUserBodyType) => {
-            console.log(data);
             if (isLoading) return;
 
             try {

@@ -112,7 +112,6 @@ export default function FormUploadVideo() {
     };
 
     const onsubmit = async (data: CreatePostReqBodyType) => {
-        console.log(data);
         if (isCreatePostLoading) return;
         try {
             if (!videoFile || !thumbnailFile) return;
