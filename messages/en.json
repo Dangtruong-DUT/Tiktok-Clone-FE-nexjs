@@ -122,6 +122,23 @@
             }
         },
         "dashboard": {
+            "directorChart": {
+                "keyMetrics": "Key Metrics",
+                "selectTimeRange": "Select time range",
+                "metrics": {
+                    "userViews": "User Views",
+                    "guestViews": "Guest Views",
+                    "likes": "Likes",
+                    "comments": "Comments",
+                    "views": "Views"
+                },
+                "timeRanges": {
+                    "last7Days": "Last 7 Days",
+                    "last28Days": "Last 28 Days",
+                    "last60Days": "Last 60 Days",
+                    "last365Days": "Last 365 Days"
+                }
+            },
             "knowledgeForYou": {
                 "title": "Knowledge for you"
             },
