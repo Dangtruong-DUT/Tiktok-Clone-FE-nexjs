@@ -18,7 +18,10 @@ export default async function Header({ classname }: HeaderProps) {
                 <LogoBrand className="h-10" />
                 <span className="sr-only">tiktok</span>
             </Link>
-            <Link href="/help" className="text-sm font-semibold hover:text-neutral-800 flex items-center gap-2">
+            <Link
+                href="mailto:ndtrg281@gmail.com"
+                className="text-sm font-semibold hover:text-neutral-800 flex items-center gap-2"
+            >
                 <MessageCircleQuestionMark />
                 <span className="hover:underline">{t("help")}</span>
             </Link>
