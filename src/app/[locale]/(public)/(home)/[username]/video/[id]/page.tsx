@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: VideoDetailPageProps, parent:
     const parentMeta = await parent;
     const previousImages = parentMeta.openGraph?.images || [];
 
-    const videoThumb = "/images/desktop-wallpaper-tiktok.jpg";
+    const videoThumb = post?.thumbnail_url;
 
     const displayName = user?.name || user?.username || cleanUsername;
     const postContent = post?.content?.trim().slice(0, 20) || "";
@@ -59,7 +59,7 @@ export async function generateMetadata({ params }: VideoDetailPageProps, parent:
             url: canonicalUrl,
             siteName: "TikTok Clone",
             locale,
-            images: [videoThumb || user?.avatar || "/images/desktop-wallpaper-tiktok.jpg", ...previousImages],
+            images: [(videoThumb || user?.avatar) ?? "", ...previousImages],
         },
         alternates: {
             canonical: canonicalUrl,
@@ -72,7 +72,7 @@ export async function generateMetadata({ params }: VideoDetailPageProps, parent:
             card: "player",
             title: pageTitle,
             description: pageDescription,
-            images: [videoThumb || user?.avatar || "/images/desktop-wallpaper-tiktok.jpg"],
+            images: [(videoThumb || user?.avatar) ?? "", ...previousImages],
         },
     };
 }
