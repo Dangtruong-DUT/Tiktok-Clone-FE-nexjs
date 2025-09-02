@@ -24,7 +24,11 @@ export default function Header() {
                 <Popover>
                     <PopoverTrigger>
                         <Avatar className="cursor-pointer size-9 shrink-0">
-                            <AvatarImage src={currentUser?.avatar} alt={currentUser?.username} />
+                            <AvatarImage
+                                src={currentUser?.avatar}
+                                alt={currentUser?.username}
+                                className="shrink-0 object-cover"
+                            />
                             <AvatarFallback>{currentUser?.name.charAt(0).toUpperCase() || "US"}</AvatarFallback>
                         </Avatar>
                     </PopoverTrigger>

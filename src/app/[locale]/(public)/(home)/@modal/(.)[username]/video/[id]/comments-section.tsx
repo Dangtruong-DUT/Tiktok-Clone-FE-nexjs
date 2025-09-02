@@ -18,13 +18,18 @@ export default function CommentsSection({
     id,
     className,
     handleCloseComments,
-    isVisible,
     username,
+    isVisible,
 }: CommentsSectionProps) {
-    if (!isVisible) return null;
     return (
-        <section className={cn("flex-1 min-h-screen flex flex-col py-3 pl-3 max-w-96 bg-sidebar border-l", className)}>
-            <header className="flex justify-between items-center pe-3 ">
+        <section
+            className={cn(
+                "flex-1 min-h-screen flex flex-col py-3 pl-3 bg-sidebar border-l transition-all duration-300",
+                className,
+                isVisible ? "w-96 max-w-92 pl-3 py-3 opacity-100" : "w-0 max-w-0 p-0 opacity-0"
+            )}
+        >
+            <header className="flex justify-between items-center pe-3 h-[28px] ">
                 <h4 className="text-base font-semibold">Comments</h4>
                 <Button
                     variant="secondary"
@@ -34,10 +39,10 @@ export default function CommentsSection({
                     <X />
                 </Button>
             </header>
-            <div className="flex-1 overflow-y-scroll ">
+            <div className="h-[calc(100vh-28px-53px-24px)] ">
                 <CommentList postId={id} username={username} />
             </div>
-            <footer className=" pe-3 ">
+            <footer className=" pe-3 h-[53px] ">
                 <CommentForm postId={id} parentId={id} className="mt-3" />
             </footer>
         </section>

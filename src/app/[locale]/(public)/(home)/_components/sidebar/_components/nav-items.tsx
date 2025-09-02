@@ -39,7 +39,7 @@ export default function NavItems({ roleUser }: NavItemsProps) {
 
                 return (
                     <Link
-                        key={index}
+                        key={item.titleKey + index}
                         className={cn(
                             "flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent"
                         )}

@@ -50,7 +50,7 @@ export default function ButtonGotoProfile({ isOpenDrawer, activeState, setActive
                 onClick={() => setActiveState({ type: SidebarActiveType.PROFILE, route: `/@${user.username}` })}
             >
                 <Avatar className="size-6 shrink-0">
-                    <AvatarImage src={user?.avatar} alt={user.username} />
+                    <AvatarImage src={user?.avatar} alt={user.username} className="shrink-0 object-cover" />
                     <AvatarFallback className="text-center">{user.name.charAt(0).toUpperCase()}</AvatarFallback>
                 </Avatar>
 

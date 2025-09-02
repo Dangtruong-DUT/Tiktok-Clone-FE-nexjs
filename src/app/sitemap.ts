@@ -1,7 +1,8 @@
+import envConfig from "@/config/app.config";
 import { locales } from "@/i18n/config";
 import type { MetadataRoute } from "next";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+const baseUrl = envConfig.NEXT_PUBLIC_URL || "http://localhost:3000";
 
 const staticRoutes: MetadataRoute.Sitemap = [
     // Main app routes
@@ -102,7 +103,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const localeStaticRoutes = locales.flatMap((locale) =>
         staticRoutes.map((route) => ({
             ...route,
-            url: `${baseUrl}/${locale}${route.url}`,
+            url: `${baseUrl}${locale}${route.url}`,
         }))
     );
 

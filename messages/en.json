@@ -414,6 +414,7 @@
         }
     },
     "ProfilePage": {
+        "bio": "No bio yet.",
         "stats": {
             "following": "Following",
             "followers": "Followers",
@@ -464,6 +465,9 @@
             "messages": "Messages",
             "more": "More",
             "profile": "Profile"
+        },
+        "unfollowedFeed": {
+            "noContent": "No posts found"
         },
         "sidebar": {
             "footer": {

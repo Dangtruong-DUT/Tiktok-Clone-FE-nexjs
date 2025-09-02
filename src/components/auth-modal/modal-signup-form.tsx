@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { useTranslations } from "next-intl";
 import DateTimePicker from "@/components/date-time-picker";
 import { Loader } from "lucide-react";
@@ -67,11 +68,11 @@ export function ModalSignUpForm() {
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
-                                <Input
+                                <PasswordInput
                                     placeholder={t("passwordPlaceholder")}
                                     {...field}
                                     className="brand-input bg-muted! border-none!"
-                                    type="password"
+                                    containerClassName="flex-1"
                                 />
                             </FormControl>
                             <FormMessage />
@@ -84,11 +85,11 @@ export function ModalSignUpForm() {
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
-                                <Input
+                                <PasswordInput
                                     placeholder={t("confirmPasswordPlaceholder")}
                                     {...field}
                                     className="brand-input bg-muted! border-none!"
-                                    type="password"
+                                    containerClassName="flex-1"
                                 />
                             </FormControl>
                             <FormMessage />

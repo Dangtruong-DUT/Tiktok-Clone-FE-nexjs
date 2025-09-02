@@ -64,7 +64,7 @@ export default async function PrivacyPolicyPage() {
         (key: string): string;
     };
     return (
-        <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 mx-auto">
+        <div className="flex flex-col min-h-screen  transition-colors duration-300 mx-auto">
             <section
                 className="relative py-24 px-4 md:px-6 lg:px-8 bg-center bg-cover"
                 style={{ backgroundImage: "url('/images/Knowledge for you.png')" }}
@@ -214,10 +214,10 @@ export default async function PrivacyPolicyPage() {
                         <p className="mt-4 text-gray-700 dark:text-gray-300 leading-7">
                             {t("privacyPolicy.sections.contact.description")}{" "}
                             <a
-                                href={`mailto:${t("privacyPolicy.sections.contact.email")}`}
+                                href={`mailto:${BRAND_CONFIG.CONTACT_EMAIL}`}
                                 className="text-brand hover:underline font-medium transition-colors duration-200"
                             >
-                                {t("privacyPolicy.sections.contact.email")}
+                                {BRAND_CONFIG.CONTACT_EMAIL}
                             </a>
                             .
                         </p>

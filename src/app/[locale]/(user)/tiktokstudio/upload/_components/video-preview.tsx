@@ -6,7 +6,7 @@ import { useVideoPlayer } from "@/hooks/video/useVideoPlayer";
 import { useVideoControls } from "@/hooks/video/useVideoControls";
 import { timeToMMSSCS } from "@/utils/formatting/formatTime";
 import Image from "next/image";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { AiFillMuted } from "react-icons/ai";
 import { FaPause, FaPlay } from "react-icons/fa6";
 import { useTranslations } from "next-intl";
@@ -65,6 +65,12 @@ export default function VideoPreview({ videoSrc, content, className }: VideoPrev
         handleSeek(newTime);
     };
 
+    useEffect(() => {
+        if (videoRef.current && videoSrc === null) {
+            videoRef.current.srcObject = null;
+        }
+    }, [videoSrc]);
+
     return (
         <div
             className={cn(
@@ -112,7 +118,11 @@ export default function VideoPreview({ videoSrc, content, className }: VideoPrev
                     </div>
                     <div className="absolute right-1 bottom-9 flex flex-col items-center w-9 ">
                         <Avatar className="size-8 border-1 border-white ">
-                            <AvatarImage src={currentUserData?.avatar} alt={currentUserData?.username} />
+                            <AvatarImage
+                                src={currentUserData?.avatar}
+                                alt={currentUserData?.username}
+                                className="shrink-0 object-cover"
+                            />
                             <AvatarFallback>{currentUserData?.name.charAt(0).toUpperCase()}</AvatarFallback>
                         </Avatar>
                         <Image

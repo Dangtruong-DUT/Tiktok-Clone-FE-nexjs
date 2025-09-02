@@ -8,8 +8,8 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { BaseQueryFn, FetchArgs, InfiniteQueryDefinition } from "@reduxjs/toolkit/query";
 import { InfiniteQueryActionCreatorResult } from "@reduxjs/toolkit/query";
 import { createContext, useContext, useEffect, useRef } from "react";
-import LoadingIcon from "@/components/lottie-icons/loading";
 import { useInViewport } from "@/hooks/ui/useInViewport";
+import AccountItemSkeleton from "@/components/comment-section/account-item-skeleton";
 
 interface RootCommentsContextProps {
     parent_id: string;
@@ -31,7 +31,7 @@ const RootCommentsContext = createContext<RootCommentsContextProps | undefined>(
 
 type CommentListProps = { postId: string; username: string };
 export default function CommentList({ postId, username }: CommentListProps) {
-    const { data, fetchNextPage, hasNextPage, isFetching } = useGetCommentsInfiniteQuery(postId, {
+    const { data, fetchNextPage, hasNextPage, isLoading } = useGetCommentsInfiniteQuery(postId, {
         pollingInterval: 10000,
     });
     const comments: CommentType[] = data?.pages.flatMap((page) => page.data.posts) || [];
@@ -54,17 +54,21 @@ export default function CommentList({ postId, username }: CommentListProps) {
                 username: username,
             }}
         >
-            <div className="pt-6">
-                {comments.length > 0 ? (
-                    comments.map((comment) => <CommentItem key={comment._id} comment={comment} />)
-                ) : (
+            <div className=" pt-6 overflow-y-auto scrollbar-hidden max-h-full">
+                {comments.length > 0 &&
+                    !isLoading &&
+                    comments.map((comment) => <CommentItem key={comment._id} comment={comment} />)}
+
+                {comments.length === 0 && !isLoading && (
                     <p className="text-gray-500 text-center">Be the first to comment!</p>
                 )}
                 {/* Sentinel để lắng nghe*/}
                 <div className="h-px bg-transparent" ref={sentinelScrollRef} />
-                {isFetching && (
-                    <div className="py-4">
-                        <LoadingIcon className="size-10 mx-auto" loop />
+                {isLoading && (
+                    <div className="space-y-4  ">
+                        {Array.from({ length: 20 }).map((_, index) => (
+                            <AccountItemSkeleton key={index} />
+                        ))}
                     </div>
                 )}
             </div>

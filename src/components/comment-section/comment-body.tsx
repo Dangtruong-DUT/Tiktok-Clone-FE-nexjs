@@ -73,8 +73,12 @@ export function CommentBody({ comment, parent_id }: CommentBodyProps) {
         <div className=" mb-2 space-y-4">
             <div className="flex  items-start gap-3">
                 <Link href={`/@${comment.author.username}`}>
-                    <Avatar className="size-10">
-                        <AvatarImage src={comment.author.avatar} alt={comment.author.username} />
+                    <Avatar className="size-10 shrink-0">
+                        <AvatarImage
+                            src={comment.author.avatar}
+                            alt={comment.author.username}
+                            className="shrink-0 object-cover"
+                        />
                         <AvatarFallback className="bg-gray-300 text-gray-700 ">
                             {comment.author.name.charAt(0).toUpperCase()}
                         </AvatarFallback>

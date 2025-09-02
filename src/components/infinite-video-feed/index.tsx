@@ -38,14 +38,14 @@ export default function InfiniteVideoFeed({
 
     return (
         <>
-            <div className=" max-h-screen w-full  overflow-y-auto  snap-y snap-mandatory scrollbar-hidden @container">
+            <div className=" max-h-screen w-full  overflow-y-auto  snap-y snap-mandatory scrollbar-hidden @container transition-all duration-300">
                 {isLoading && <VideoWithActionSkeleton className="snap-start snap-always" />}
                 {!isLoading &&
                     posts.map((post, index) => (
                         <article
                             key={String(post._id + index)}
                             {...{ [keyDataScroll]: index }}
-                            className="px-4 @5xl:ps-[3rem] @5xl:pe-[15rem]  py-4 min-h-screen snap-start snap-always "
+                            className="px-4 @5xl:ps-[3rem] @5xl:pe-[15rem]  py-4 min-h-screen snap-start snap-always  transition-all duration-300"
                         >
                             <div className="flex flex-row items-end justify-center space-x-4 mx-auto">
                                 <VideoPlayer post={post} className="sm:max-w-[400px]" />
@@ -55,7 +55,7 @@ export default function InfiniteVideoFeed({
                     ))}
                 {/* Sentinel để lắng nghe*/}
                 <div className="h-px bg-transparent" ref={sentinelScrollRef} />
-                {isFetching && (
+                {!isLoading && isFetching && (
                     <div className="px-4 @5xl:ps-[3rem] @5xl:pe-[15rem]  py-4  snap-start snap-always ">
                         <LoadingIcon className="size-15 mx-auto" loop />
                     </div>

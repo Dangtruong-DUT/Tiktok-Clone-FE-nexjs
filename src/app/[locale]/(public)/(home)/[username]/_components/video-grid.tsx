@@ -44,10 +44,10 @@ function VideoGrid() {
         <div className="mt-6 w-full">
             {postList.length > 0 && (
                 <div className="grid gap-6 gap-x-4 grid-cols-[repeat(auto-fill,minmax(240px,1fr))] w-full  md:grid-cols-[repeat(auto-fill,minmax(180px,1fr))]">
-                    {postList.map((video, index) => {
+                    {postList.map((video) => {
                         const videoLink = `/@${video.author.username}/video/${video._id}`;
                         return (
-                            <Link key={index} href={videoLink} className="w-full" onClick={handleVideoClick}>
+                            <Link key={video._id} href={videoLink} className="w-full" onClick={handleVideoClick}>
                                 <CardVideoItem post={video} isDescriptionVisible={false} />
                             </Link>
                         );

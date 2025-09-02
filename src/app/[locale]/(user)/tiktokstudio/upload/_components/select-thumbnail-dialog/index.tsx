@@ -49,7 +49,9 @@ export default function SelectThumbnailDialog({
                         </div>
                     )}
                     <div className="absolute bottom-2 left-1/2 -translate-x-1/2 block w-[90%]">
-                        <div className=" px-6 py-1 text-xs rounded-xs bg-accent/50 text-white">{t("edit")}</div>
+                        <div className=" px-6 py-1 text-xs rounded-xs bg-accent/50 text-white text-center">
+                            {t("edit")}
+                        </div>
                     </div>
                 </div>
             </DialogTrigger>

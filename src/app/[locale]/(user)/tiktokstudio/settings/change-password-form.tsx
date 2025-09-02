@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 
 import { useForm } from "react-hook-form";
@@ -75,9 +75,8 @@ export default function ChangePasswordForm() {
                                             >
                                                 {t("changePassword.oldPassword")}
                                             </Label>
-                                            <Input
+                                            <PasswordInput
                                                 id="oldPassword"
-                                                type="password"
                                                 className="brand-input bg-muted! border-none!"
                                                 {...field}
                                             />
@@ -95,9 +94,8 @@ export default function ChangePasswordForm() {
                                             <Label htmlFor="password" className="font-semibold text-muted-foreground">
                                                 {t("changePassword.newPassword")}
                                             </Label>
-                                            <Input
+                                            <PasswordInput
                                                 id="password"
-                                                type="password"
                                                 className="brand-input bg-muted! border-none!"
                                                 {...field}
                                             />
@@ -118,9 +116,8 @@ export default function ChangePasswordForm() {
                                             >
                                                 {t("changePassword.confirmPassword")}
                                             </Label>
-                                            <Input
+                                            <PasswordInput
                                                 id="confirmPassword"
-                                                type="password"
                                                 className="brand-input bg-muted! border-none!"
                                                 {...field}
                                             />
@@ -137,7 +134,7 @@ export default function ChangePasswordForm() {
                                     size="sm"
                                     type="submit"
                                     disabled={changePasswordResult.isLoading}
-                                    className="bg-brand hover:bg-brand/90 w-[90px] flex items-center justify-center [&_svg]:size-5! cursor-pointer"
+                                    className="bg-brand hover:bg-brand/90 w-[90px] flex items-center justify-center [&_svg]:size-5! cursor-pointer text-white"
                                 >
                                     {changePasswordResult.isLoading ? (
                                         <Loader className="animate-spin" />

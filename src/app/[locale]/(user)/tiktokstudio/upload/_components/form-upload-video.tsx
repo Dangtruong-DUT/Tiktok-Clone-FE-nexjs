@@ -106,13 +106,13 @@ export default function FormUploadVideo() {
     }, [form, videoUrl, thumbnailUrl]);
 
     const onReset = () => {
+        if (isCreatePostLoading) return;
         setVideoFile(null);
         setThumbnailFile(null);
         form.reset();
     };
 
     const onsubmit = async (data: CreatePostReqBodyType) => {
-        console.log(data);
         if (isCreatePostLoading) return;
         try {
             if (!videoFile || !thumbnailFile) return;
@@ -259,8 +259,9 @@ export default function FormUploadVideo() {
                                 <Button
                                     variant={"secondary"}
                                     type="reset"
-                                    className="cursor-pointer h-9 rounded-lg w-[200px] font-base"
+                                    className="cursor-pointer h-9 rounded-lg w-[200px] font-base "
                                     onClick={onReset}
+                                    disabled={isCreatePostLoading}
                                 >
                                     {t("buttons.discard")}
                                 </Button>

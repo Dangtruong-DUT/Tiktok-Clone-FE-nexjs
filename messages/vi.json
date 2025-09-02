@@ -419,6 +419,7 @@
             "followers": "Người theo dõi",
             "likes": "Thích"
         },
+        "bio": "Hiện chưa có mô tả.",
         "actions": {
             "follow": "Theo dõi",
             "following": "Đang theo dõi",
@@ -464,6 +465,9 @@
             "messages": "Tin nhắn",
             "more": "Thêm",
             "profile": "Hồ sơ"
+        },
+        "unfollowedFeed": {
+            "noContent": "Không có bài viết nào"
         },
         "sidebar": {
             "footer": {

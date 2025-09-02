@@ -48,7 +48,6 @@ export default function UpdateProfileForm() {
 
     const handleSubmit = useCallback(
         async (data: UpdateUserBodyType) => {
-            console.log(data);
             if (isLoading) return;
 
             try {
@@ -116,7 +115,7 @@ export default function UpdateProfileForm() {
                                     <FormItem>
                                         <div className="flex gap-2 items-start justify-start">
                                             <Avatar className="aspect-square w-[100px] h-[100px] rounded-md object-cover">
-                                                <AvatarImage src={avatarSrc} />
+                                                <AvatarImage src={avatarSrc} className="shrink-0 object-cover" />
                                                 <AvatarFallback className="rounded-none">
                                                     {user?.name.split(" ").at(-1) || t("updateProfile.defaultUser")}
                                                 </AvatarFallback>
@@ -174,7 +173,7 @@ export default function UpdateProfileForm() {
                                     size="sm"
                                     type="submit"
                                     disabled={isLoading}
-                                    className="bg-brand hover:bg-brand/90 w-[90px] flex items-center justify-center [&_svg]:size-5! cursor-pointer"
+                                    className="bg-brand hover:bg-brand/90 w-[90px] flex items-center justify-center [&_svg]:size-5! cursor-pointer text-white"
                                 >
                                     {isLoading ? <Loader className="animate-spin" /> : t("updateProfile.save")}
                                 </Button>

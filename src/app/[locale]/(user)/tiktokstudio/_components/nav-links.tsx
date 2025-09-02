@@ -49,10 +49,10 @@ export default function NavLinks() {
                         </Link>
                         <nav className="space-y-2 ">
                             <h2 className="text-sm font-semibold">Manage</h2>
-                            {navItems.map((item, index) => {
+                            {navItems.map((item) => {
                                 const isActive = pathname === item.href;
                                 return (
-                                    <Link key={index} href={item.href} className="block">
+                                    <Link key={item.href} href={item.href} className="block">
                                         <Button
                                             variant="ghost"
                                             className={cn(

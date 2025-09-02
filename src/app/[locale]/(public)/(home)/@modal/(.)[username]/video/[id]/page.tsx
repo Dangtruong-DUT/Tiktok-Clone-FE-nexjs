@@ -30,18 +30,18 @@ export default function CommentsPage() {
 
     return (
         <>
-            {typeOpenModal === "commentsVideoDetail" && isVideoPath && (
-                <CommentsSection
-                    isVisible={typeOpenModal === "commentsVideoDetail"}
-                    className="flex-1 h-screen flex flex-col py-3 pl-3 w-96 bg-sidebar border-l transition-transform duration-300"
-                    id={id}
-                    username={username.replace("%40", "")}
-                    handleCloseComments={handleClose}
-                />
-            )}
-            {typeOpenModal === "modalVideoDetail" && isVideoPath && (
-                <ModalVideoDetail isVisible={typeOpenModal === "modalVideoDetail"} handleClose={handleClose} id={id} />
-            )}
+            <CommentsSection
+                isVisible={typeOpenModal === "commentsVideoDetail" && isVideoPath}
+                id={id}
+                username={username.replace("%40", "")}
+                handleCloseComments={handleClose}
+            />
+
+            <ModalVideoDetail
+                isVisible={typeOpenModal === "modalVideoDetail" && isVideoPath}
+                handleClose={handleClose}
+                id={id}
+            />
         </>
     );
 }

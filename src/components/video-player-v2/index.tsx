@@ -91,7 +91,7 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
             >
                 <source src={post.medias[0].url} type="video/mp4" />
             </video>
-            <div className=" absolute bottom-20 right-5 flex flex-col items-center">
+            <div className=" absolute bottom-20 right-5 flex flex-col items-center w-[57px]">
                 <NavigationVideo />
                 <ActionBar post={post} />
             </div>

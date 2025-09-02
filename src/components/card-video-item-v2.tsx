@@ -53,7 +53,7 @@ function FollowButton({
     );
 }
 
-export default function CardVideoItem({ post }: { post: TikTokPostType }) {
+export default function CardVideoItem({ post, className }: { post: TikTokPostType; className?: string }) {
     const author = post.author;
     const currentUser = useCurrentUserData();
     const isCurrentUser = currentUser?._id === author._id;
@@ -64,13 +64,18 @@ export default function CardVideoItem({ post }: { post: TikTokPostType }) {
     });
 
     return (
-        <article className="relative inline-block w-full pt-[133.333%] overflow-hidden rounded-md group">
+        <article
+            className={cn(
+                "relative inline-block w-full pt-[133.333%] aspect-[3/4] overflow-hidden rounded-md group",
+                className
+            )}
+        >
             <Link href={`@${author.username}`}>
                 <div className={cn("absolute inset-0 z-20 transition-opacity duration-300", "group-hover:opacity-0")}>
                     <Image
                         src={post.thumbnail_url || "/images/desktop-wallpaper-tiktok.jpg"}
                         alt="video thumbnail"
-                        className="w-full h-full object-cover"
+                        className="  block  w-full h-full object-cover"
                         width={100}
                         height={100}
                     />
@@ -82,7 +87,7 @@ export default function CardVideoItem({ post }: { post: TikTokPostType }) {
                         "group-hover:opacity-100 group-hover:z-30"
                     )}
                 >
-                    <video autoPlay muted playsInline loop className="w-full h-full object-cover">
+                    <video autoPlay muted playsInline loop className=" block w-full h-full object-cover">
                         <source src={post.medias[0].url} />
                     </video>
                 </div>
@@ -90,7 +95,7 @@ export default function CardVideoItem({ post }: { post: TikTokPostType }) {
 
             <div className="absolute bottom-0 left-0 w-full z-40 px-3 pb-[17px] h-[60%] bg-gradient-to-t from-[rgba(22,24,35,0.6)] via-transparent flex flex-col justify-center items-center">
                 <Avatar className="size-12 shrink-0">
-                    <AvatarImage src={author.avatar} alt={author.name} />
+                    <AvatarImage src={author.avatar} alt={author.name} className="shrink-0 object-cover" />
                     <AvatarFallback>{author.name.charAt(0).toUpperCase()}</AvatarFallback>
                 </Avatar>
 

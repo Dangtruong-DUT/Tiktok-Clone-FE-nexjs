@@ -66,8 +66,8 @@ export default function UsersContainer({
                             variant={"ghost"}
                             className="space-x-2 w-full justify-start py-[9px] min-h-[97px] rounded-none!"
                         >
-                            <Avatar className="size-15">
-                                <AvatarImage src={user.avatar} />
+                            <Avatar className="size-15 shrink-0">
+                                <AvatarImage src={user.avatar} className="shrink-0 object-cover" />
                                 <AvatarFallback>{user.name.charAt(0).toUpperCase()}</AvatarFallback>
                             </Avatar>
                             <div className="flex flex-col items-start text-left overflow-hidden ">

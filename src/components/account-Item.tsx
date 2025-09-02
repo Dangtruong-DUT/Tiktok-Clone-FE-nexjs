@@ -26,8 +26,8 @@ export default function AccountItem({
         >
             <div className="flex items-center space-x-3">
                 <div className="relative">
-                    <Avatar>
-                        <AvatarImage src={avatar_url} />
+                    <Avatar className="shrink-0">
+                        <AvatarImage src={avatar_url} className="shrink-0 object-cover" />
                         <AvatarFallback>{name.substring(0, 2).toUpperCase()}</AvatarFallback>
                     </Avatar>
                 </div>

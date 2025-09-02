@@ -11,5 +11,6 @@ interface ModalVideoDetailProps {
 export default function ModalVideoDetail({ isVisible, handleClose, id }: ModalVideoDetailProps) {
     const { data } = useGetPostDetailQuery(id);
     const post = data?.data;
+    if (!isVisible) return null;
     return <VideoDetailDialog isVisible={isVisible} handleClose={handleClose} post={post} />;
 }
