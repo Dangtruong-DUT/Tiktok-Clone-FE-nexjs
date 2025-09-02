@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: VideoDetailPageProps, parent:
 
     const pageDescription = postContent || `Watch ${displayName}'s video on TikTok.`;
 
-    const canonicalUrl = `${envConfig.NEXT_PUBLIC_URL}${locale}/${cleanUsername}/video/${id}`;
+    const canonicalUrl = `${envConfig.NEXT_PUBLIC_URL}${locale}/@${cleanUsername}/video/${id}`;
 
     return {
         title: pageTitle,
