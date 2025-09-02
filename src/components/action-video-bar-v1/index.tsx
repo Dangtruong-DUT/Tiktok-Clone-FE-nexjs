@@ -82,10 +82,11 @@ export default function ActionBar({ post, className }: ActionBarProps) {
             {/* Avatar & Follow */}
             <div className="flex flex-col items-center text-5xl">
                 <Link href={`/@${fetchedAuthor?.username ?? author.username}`}>
-                    <Avatar className="w-[1em] h-[1em]">
+                    <Avatar className="w-[1em] h-[1em] shrink-0">
                         <AvatarImage
                             src={fetchedAuthor?.avatar ?? author.avatar}
                             alt={fetchedAuthor?.avatar ?? author.username}
+                            className="shrink-0 object-cover"
                         />
                         <AvatarFallback className="text-sm font-medium">
                             {(fetchedAuthor?.name ?? author.name).substring(0, 2).toUpperCase()}
