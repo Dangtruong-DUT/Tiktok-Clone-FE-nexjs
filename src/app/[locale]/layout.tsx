@@ -9,6 +9,7 @@ import { ThemeProvider } from "@/provider/theme-provider";
 import { AppProvider } from "@/provider/app-provider";
 import StoreProvider from "@/provider/store-provider";
 import envConfig from "@/config/app.config";
+import BannerKiNiem80NamVietNamFixed from "@/components/banner-ki-niem-2-9-fixed";
 
 export function generateStaticParams() {
     return routing.locales.map((locale) => ({ locale }));
@@ -83,6 +84,7 @@ export default async function LocaleLayout({
                                 disableTransitionOnChange
                             >
                                 {children}
+                                <BannerKiNiem80NamVietNamFixed />
                             </ThemeProvider>
                         </AppProvider>
                     </StoreProvider>

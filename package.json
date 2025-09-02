@@ -29,6 +29,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
+    "framer-motion": "^12.23.12",
     "frimousse": "^0.3.0",
     "javascript-time-ago": "^2.5.11",
     "jsonwebtoken": "^9.0.2",
