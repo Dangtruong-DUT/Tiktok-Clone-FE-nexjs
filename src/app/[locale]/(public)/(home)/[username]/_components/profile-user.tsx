@@ -68,7 +68,7 @@ async function ProfileUser({ userData, className }: ProfileUserProps) {
                 </div>
 
                 <div className="flex items-center">
-                    <p className="text-left text-muted-foreground font-normal text-base leading-5 whitespace-pre-line max-w-96 max-lg:text-center">
+                    <p className="text-left  font-normal text-base leading-5 whitespace-pre-line max-w-96 max-lg:text-center">
                         {bio || t("bio")}
                     </p>
                 </div>
