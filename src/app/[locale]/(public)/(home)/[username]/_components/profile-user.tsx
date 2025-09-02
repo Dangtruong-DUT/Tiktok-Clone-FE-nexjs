@@ -12,7 +12,7 @@ interface ProfileUserProps {
 }
 
 async function ProfileUser({ userData, className }: ProfileUserProps) {
-    const t = await getTranslations("ProfilePage.stats");
+    const t = await getTranslations("ProfilePage");
     const {
         _id,
         username: userUsername,
@@ -49,30 +49,29 @@ async function ProfileUser({ userData, className }: ProfileUserProps) {
                         <div className="cursor-pointer">
                             <strong className="font-bold text-lg leading-6">{following_count}</strong>
                             <span className="text-muted-foreground font-normal text-base leading-5 inline-block ml-1.5 cursor-pointer hover:underline">
-                                {t("following")}
+                                {t("stats.following")}
                             </span>
                         </div>
                         <div className="cursor-pointer">
                             <strong className="font-bold  text-lg leading-6">{followers_count}</strong>
                             <span className="text-muted-foreground font-normal text-base leading-5 inline-block ml-1.5 cursor-pointer hover:underline">
-                                {t("followers")}
+                                {t("stats.followers")}
                             </span>
                         </div>
                         <div className=" cursor-pointer">
                             <strong className="font-bold  text-lg leading-6">{likes_count}</strong>
                             <span className="text-muted-foreground font-normal text-base leading-5 inline-block ml-1.5 cursor-pointer hover:underline">
-                                {t("likes")}
+                                {t("stats.likes")}
                             </span>
                         </div>
                     </div>
                 </div>
-                {bio && (
-                    <div className="flex items-center">
-                        <p className="text-left text-muted-foreground font-normal text-base leading-5 whitespace-pre-line max-w-96 max-lg:text-center">
-                            {bio}
-                        </p>
-                    </div>
-                )}
+
+                <div className="flex items-center">
+                    <p className="text-left text-muted-foreground font-normal text-base leading-5 whitespace-pre-line max-w-96 max-lg:text-center">
+                        {bio || t("bio")}
+                    </p>
+                </div>
             </div>
         </div>
     );

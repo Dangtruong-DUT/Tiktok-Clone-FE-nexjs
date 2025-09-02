@@ -419,6 +419,7 @@
             "followers": "Người theo dõi",
             "likes": "Thích"
         },
+        "bio": "Hiện chưa có mô tả.",
         "actions": {
             "follow": "Theo dõi",
             "following": "Đang theo dõi",

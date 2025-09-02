@@ -414,6 +414,7 @@
         }
     },
     "ProfilePage": {
+        "bio": "No bio yet.",
         "stats": {
             "following": "Following",
             "followers": "Followers",
