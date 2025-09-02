@@ -134,7 +134,7 @@ export default function ChangePasswordForm() {
                                     size="sm"
                                     type="submit"
                                     disabled={changePasswordResult.isLoading}
-                                    className="bg-brand hover:bg-brand/90 w-[90px] flex items-center justify-center [&_svg]:size-5! cursor-pointer"
+                                    className="bg-brand hover:bg-brand/90 w-[90px] flex items-center justify-center [&_svg]:size-5! cursor-pointer text-white"
                                 >
                                     {changePasswordResult.isLoading ? (
                                         <Loader className="animate-spin" />

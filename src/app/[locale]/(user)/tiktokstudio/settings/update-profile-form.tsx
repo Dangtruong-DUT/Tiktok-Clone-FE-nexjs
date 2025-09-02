@@ -173,7 +173,7 @@ export default function UpdateProfileForm() {
                                     size="sm"
                                     type="submit"
                                     disabled={isLoading}
-                                    className="bg-brand hover:bg-brand/90 w-[90px] flex items-center justify-center [&_svg]:size-5! cursor-pointer"
+                                    className="bg-brand hover:bg-brand/90 w-[90px] flex items-center justify-center [&_svg]:size-5! cursor-pointer text-white"
                                 >
                                     {isLoading ? <Loader className="animate-spin" /> : t("updateProfile.save")}
                                 </Button>
