@@ -19,6 +19,8 @@ import { AuthModal } from "@/components/auth-modal";
 import { useBookmarkPost, useLikePost } from "@/hooks/data/useVideo";
 import useCurrentUserData from "@/hooks/data/useCurrentUserData";
 import ActionButton from "@/components/action-video-bar-v1/action-button";
+import { ShareMenuDialog } from "@/components/share-menu-dialog";
+import envConfig from "@/config/app.config";
 
 interface ActionBarProps {
     post: TikTokPostType;
@@ -76,6 +78,8 @@ export default function ActionBar({ post, className }: ActionBarProps) {
             dispatch(setOpenModal({ prevPathname: pathname, type: "commentsVideoDetail" }));
         }
     }, [openModalVideoDetailType, dispatch, pathname, router, prevPathOpenModal]);
+
+    const videoUrl = `${envConfig.NEXT_PUBLIC_URL}@${author.username}/video/${post._id}`;
 
     return (
         <section className={cn("flex flex-col items-center gap-3  relative", className)}>
@@ -166,13 +170,13 @@ export default function ActionBar({ post, className }: ActionBarProps) {
                     isAuth={!!currentUser}
                     requiredAuth
                 />
-
-                <ActionButton
-                    icon={<FaShare className="size-[0.5em]" />}
-                    count={post.quote_post_count + post.repost_count}
-                    label="Share"
-                    onClick={() => {}}
-                />
+                <ShareMenuDialog url={videoUrl}>
+                    <ActionButton
+                        icon={<FaShare className="size-[0.5em]" />}
+                        count={post.quote_post_count + post.repost_count}
+                        label="Share"
+                    />
+                </ShareMenuDialog>
             </div>
         </section>
     );

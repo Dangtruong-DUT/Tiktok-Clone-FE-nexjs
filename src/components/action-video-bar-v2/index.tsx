@@ -11,6 +11,8 @@ import { useBookmarkPost, useLikePost } from "@/hooks/data/useVideo";
 import { useGetPostDetailQuery } from "@/services/RTK/posts.services";
 import ActionButton from "@/components/action-video-bar-v2/action-button";
 import { useAppSelector } from "@/hooks/redux";
+import envConfig from "@/config/app.config";
+import { ShareMenuDialog } from "@/components/share-menu-dialog";
 
 interface ActionBarProps {
     post: TikTokPostType;
@@ -54,6 +56,8 @@ export default function ActionBar({ post, className }: ActionBarProps) {
         if (postDetail) return postDetail.quote_post_count + postDetail.repost_count;
         return post.quote_post_count + post.repost_count;
     }, [postDetail, post]);
+
+    const videoUrl = `${envConfig.NEXT_PUBLIC_URL}@${post.author.username}/video/${post._id}`;
 
     return (
         <section className={cn("flex flex-col items-center relative", className)}>
@@ -101,12 +105,9 @@ export default function ActionBar({ post, className }: ActionBarProps) {
                 isAuth={role != null}
             />
 
-            <ActionButton
-                icon={<FaShare className="size-[0.5em]" />}
-                count={shares_count}
-                label="Share"
-                onClick={() => {}}
-            />
+            <ShareMenuDialog url={videoUrl}>
+                <ActionButton icon={<FaShare className="size-[0.5em]" />} count={shares_count} label="Share" />
+            </ShareMenuDialog>
         </section>
     );
 }
