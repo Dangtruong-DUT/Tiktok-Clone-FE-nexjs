@@ -19,6 +19,7 @@ interface CommentFormProps {
     postId: string;
     parentId: string;
     placeholder?: string;
+    popoverEmojiClassName?: string;
     onClose?: () => void;
 }
 
@@ -28,6 +29,7 @@ function CommentForm({
     parentId,
     placeholder = "Add a comment...",
     inputClassName = "",
+    popoverEmojiClassName,
     onClose,
 }: CommentFormProps) {
     const [createCommentMutate, createCommentResult] = useCreateCommentMutation();
@@ -92,7 +94,11 @@ function CommentForm({
                             </FormItem>
                         )}
                     />
-                    <EmojiPiker onEmojiSelect={handleEmojiSelect} className="[&>svg]:size-5.5! cursor-pointer" />
+                    <EmojiPiker
+                        onEmojiSelect={handleEmojiSelect}
+                        className="[&>svg]:size-5.5! cursor-pointer"
+                        popoverClassName={popoverEmojiClassName}
+                    />
                 </div>
                 <button
                     type="submit"

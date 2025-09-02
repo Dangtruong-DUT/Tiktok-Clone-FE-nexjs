@@ -95,6 +95,7 @@ function DialogVideoContent({ post }: DialogContentProps) {
                                         parentId={post._id}
                                         placeholder="Add comment..."
                                         className="w-full"
+                                        popoverEmojiClassName="   absolute! z-[1000]! pointer-events-auto bottom-[calc(100%+40px)]! left-1/2! -translate-x-1/2!"
                                     />
                                 </div>
                             </>
