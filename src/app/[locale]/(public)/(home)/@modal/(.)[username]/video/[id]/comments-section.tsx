@@ -18,12 +18,17 @@ export default function CommentsSection({
     id,
     className,
     handleCloseComments,
-    isVisible,
     username,
+    isVisible,
 }: CommentsSectionProps) {
-    if (!isVisible) return null;
     return (
-        <section className={cn("flex-1 min-h-screen flex flex-col py-3 pl-3 max-w-96 bg-sidebar border-l", className)}>
+        <section
+            className={cn(
+                "flex-1 min-h-screen flex flex-col py-3 pl-3 bg-sidebar border-l transition-all duration-300",
+                className,
+                isVisible ? "w-96 max-w-92 pl-3 py-3 opacity-100" : "w-0 max-w-0 p-0 opacity-0"
+            )}
+        >
             <header className="flex justify-between items-center pe-3 ">
                 <h4 className="text-base font-semibold">Comments</h4>
                 <Button

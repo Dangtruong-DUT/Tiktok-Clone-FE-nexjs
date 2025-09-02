@@ -59,7 +59,7 @@ export default function DrawerSidebar({
         <DrawerSidebarContext.Provider value={{ isOpen, toggleDrawer: handleClose }}>
             <div
                 className={cn(
-                    "absolute top-0 bottom-0 transition-transform duration-300 --",
+                    "absolute top-0 bottom-0 transition-[width]  ease-in-out duration-300 ",
                     isOpen ? "animate-slide-in" : "animate-slide-out"
                 )}
                 style={

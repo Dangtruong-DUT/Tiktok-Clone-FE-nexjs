@@ -45,7 +45,7 @@ export default function InfiniteVideoFeed({
                         <article
                             key={String(post._id + index)}
                             {...{ [keyDataScroll]: index }}
-                            className="px-4 @5xl:ps-[3rem] @5xl:pe-[15rem]  py-4 min-h-screen snap-start snap-always "
+                            className="px-4 @5xl:ps-[3rem] @5xl:pe-[15rem]  py-4 min-h-screen snap-start snap-always transition-transform duration-400"
                         >
                             <div className="flex flex-row items-end justify-center space-x-4 mx-auto">
                                 <VideoPlayer post={post} className="sm:max-w-[400px]" />
