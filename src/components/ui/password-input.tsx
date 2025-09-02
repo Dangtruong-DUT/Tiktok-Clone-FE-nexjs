@@ -24,7 +24,7 @@ export function PasswordInput({ className, containerClassName, ...props }: Passw
             <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 transition-colors flex items-center justify-center"
                 tabIndex={-1}
             >
                 {showPassword ? <IoEyeOffOutline size={20} /> : <IoEyeOutline size={20} />}

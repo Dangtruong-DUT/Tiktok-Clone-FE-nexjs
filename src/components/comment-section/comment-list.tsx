@@ -8,7 +8,6 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { BaseQueryFn, FetchArgs, InfiniteQueryDefinition } from "@reduxjs/toolkit/query";
 import { InfiniteQueryActionCreatorResult } from "@reduxjs/toolkit/query";
 import { createContext, useContext, useEffect, useRef } from "react";
-import LoadingIcon from "@/components/lottie-icons/loading";
 import { useInViewport } from "@/hooks/ui/useInViewport";
 import AccountItemSkeleton from "@/components/comment-section/account-item-skeleton";
 
@@ -55,7 +54,7 @@ export default function CommentList({ postId, username }: CommentListProps) {
                 username: username,
             }}
         >
-            <div className="pt-6">
+            <div className=" pt-6 overflow-y-auto scrollbar-hidden max-h-full">
                 {comments.length > 0 &&
                     !isLoading &&
                     comments.map((comment) => <CommentItem key={comment._id} comment={comment} />)}
@@ -66,8 +65,8 @@ export default function CommentList({ postId, username }: CommentListProps) {
                 {/* Sentinel để lắng nghe*/}
                 <div className="h-px bg-transparent" ref={sentinelScrollRef} />
                 {isLoading && (
-                    <div className="space-y-4">
-                        {Array.from({ length: 10 }).map((_, index) => (
+                    <div className="space-y-4  ">
+                        {Array.from({ length: 20 }).map((_, index) => (
                             <AccountItemSkeleton key={index} />
                         ))}
                     </div>
