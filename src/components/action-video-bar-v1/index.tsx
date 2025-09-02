@@ -21,6 +21,7 @@ import useCurrentUserData from "@/hooks/data/useCurrentUserData";
 import ActionButton from "@/components/action-video-bar-v1/action-button";
 import { ShareMenuDialog } from "@/components/share-menu-dialog";
 import envConfig from "@/config/app.config";
+import { useLocale } from "use-intl";
 
 interface ActionBarProps {
     post: TikTokPostType;
@@ -79,7 +80,8 @@ export default function ActionBar({ post, className }: ActionBarProps) {
         }
     }, [openModalVideoDetailType, dispatch, pathname, router, prevPathOpenModal]);
 
-    const videoUrl = `${envConfig.NEXT_PUBLIC_URL}@${author.username}/video/${post._id}`;
+    const local = useLocale();
+    const videoUrl = `${envConfig.NEXT_PUBLIC_URL}${local}/@${author.username}/video/${post._id}`;
 
     return (
         <section className={cn("flex flex-col items-center gap-3  relative", className)}>

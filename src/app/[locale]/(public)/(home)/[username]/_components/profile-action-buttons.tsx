@@ -12,7 +12,9 @@ import EditProfileDialog from "@/app/[locale]/(public)/(home)/[username]/_compon
 import { useAppContext } from "@/provider/app-provider";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAppSelector } from "@/hooks/redux";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { ShareMenuDialog } from "@/components/share-menu-dialog";
+import envConfig from "@/config/app.config";
 
 interface ProfileActionButtonsProps {
     username: string;
@@ -34,6 +36,8 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
     const handleMessage = useCallback(() => {
         toast.info("Message feature coming soon!");
     }, []);
+    const local = useLocale();
+    const ProfileUserUrl = `${envConfig.NEXT_PUBLIC_URL}${local}/@${username}`;
 
     if (authStatus === "loading" || (role != null && currentUser == null)) {
         return (
@@ -57,10 +61,11 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
                         <span className="max-md:hidden">{t("settings")}</span>
                     </Button>
                 </Link>
-
-                <Button variant="outline" className="ml-2  h-10 font-medium rounded-md text-base">
-                    <Share size={19} />
-                </Button>
+                <ShareMenuDialog url={ProfileUserUrl}>
+                    <Button variant="outline" className="ml-2  h-10 font-medium rounded-md text-base">
+                        <Share size={19} />
+                    </Button>
+                </ShareMenuDialog>
             </div>
         );
     } else {
@@ -74,9 +79,11 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
                 >
                     {t("message")}
                 </Button>
-                <Button variant="outline" className="ml-2 h-10 font-medium rounded-md text-base">
-                    <Share size={19} />
-                </Button>
+                <ShareMenuDialog url={ProfileUserUrl}>
+                    <Button variant="outline" className="ml-2 h-10 font-medium rounded-md text-base">
+                        <Share size={19} />
+                    </Button>
+                </ShareMenuDialog>
             </div>
         );
     }

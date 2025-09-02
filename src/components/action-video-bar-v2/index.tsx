@@ -13,6 +13,7 @@ import ActionButton from "@/components/action-video-bar-v2/action-button";
 import { useAppSelector } from "@/hooks/redux";
 import envConfig from "@/config/app.config";
 import { ShareMenuDialog } from "@/components/share-menu-dialog";
+import { useLocale } from "use-intl";
 
 interface ActionBarProps {
     post: TikTokPostType;
@@ -57,7 +58,8 @@ export default function ActionBar({ post, className }: ActionBarProps) {
         return post.quote_post_count + post.repost_count;
     }, [postDetail, post]);
 
-    const videoUrl = `${envConfig.NEXT_PUBLIC_URL}@${post.author.username}/video/${post._id}`;
+    const local = useLocale();
+    const videoUrl = `${envConfig.NEXT_PUBLIC_URL}${local}/@${post.author.username}/video/${post._id}`;
 
     return (
         <section className={cn("flex flex-col items-center relative", className)}>
