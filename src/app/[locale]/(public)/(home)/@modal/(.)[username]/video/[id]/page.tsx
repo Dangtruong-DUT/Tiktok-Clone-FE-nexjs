@@ -28,8 +28,6 @@ export default function CommentsPage() {
         }
     }, [router, dispatch, prevPathnameOpenDetailModal]);
 
-    console.log(typeOpenModal === "commentsVideoDetail" && isVideoPath);
-
     return (
         <>
             <CommentsSection
