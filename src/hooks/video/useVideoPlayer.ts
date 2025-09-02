@@ -1,7 +1,7 @@
 "use client";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { setIsMute } from "@/store/features/videoSlice";
+import { setIsMute, setVolume as setVolumeToStore } from "@/store/features/videoSlice";
 import { useCallback, useEffect, useState } from "react";
 
 interface UseVideoPlayerOptions {
@@ -21,8 +21,13 @@ export function useVideoPlayer(
         },
         [dispatch]
     );
-
-    const [volume, setVolume] = useState(0.5);
+    const volume = useAppSelector((state) => state.video.volume);
+    const setVolume = useCallback(
+        (value: number) => {
+            dispatch(setVolumeToStore(value));
+        },
+        [dispatch]
+    );
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
 
