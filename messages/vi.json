@@ -243,10 +243,12 @@
         "settings": {
             "page": {
                 "title": "Cài đặt",
+                "description": "Quản lý cài đặt tài khoản và tùy chọn bảo mật",
                 "userBadge": "Người dùng"
             },
             "updateProfile": {
                 "title": "Cập nhật hồ sơ",
+                "description": "Cập nhật thông tin cá nhân và ảnh đại diện của bạn",
                 "upload": "Tải lên",
                 "defaultUser": "USER",
                 "fullNameLabel": "Họ và tên",
@@ -255,6 +257,7 @@
             },
             "changePassword": {
                 "title": "Đổi mật khẩu",
+                "description": "Giữ tài khoản của bạn an toàn bằng cách cập nhật mật khẩu thường xuyên",
                 "oldPassword": "Mật khẩu cũ",
                 "newPassword": "Mật khẩu mới",
                 "confirmPassword": "Xác nhận mật khẩu",

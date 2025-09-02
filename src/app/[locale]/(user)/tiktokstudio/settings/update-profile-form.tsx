@@ -1,11 +1,10 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader, Upload } from "lucide-react";
+import { Loader, Upload, UserIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
@@ -102,11 +101,17 @@ export default function UpdateProfileForm() {
                 method="POST"
                 onReset={onReset}
             >
-                <Card x-chunk="dashboard-07-chunk-0">
-                    <CardHeader>
-                        <CardTitle className="font-bold">{t("updateProfile.title")}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
+                <div>
+                    <div className="flex items-center gap-2 mb-6">
+                        <div className="p-2 rounded-full bg-brand/10">
+                            <UserIcon className="w-5 h-5 text-brand" />
+                        </div>
+                        <div>
+                            <h3 className="font-semibold">{t("updateProfile.title")}</h3>
+                            <p className="text-sm text-muted-foreground">{t("updateProfile.description")}</p>
+                        </div>
+                    </div>
+                    <div className="space-y-6">
                         <div className="grid gap-6">
                             <FormField
                                 control={form.control}
@@ -179,8 +184,8 @@ export default function UpdateProfileForm() {
                                 </Button>
                             </div>
                         </div>
-                    </CardContent>
-                </Card>
+                    </div>
+                </div>
             </form>
         </Form>
     );

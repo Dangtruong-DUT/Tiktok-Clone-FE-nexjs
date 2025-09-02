@@ -243,10 +243,12 @@
         "settings": {
             "page": {
                 "title": "Settings",
+                "description": "Manage your account settings and security preferences",
                 "userBadge": "User"
             },
             "updateProfile": {
                 "title": "Update Profile",
+                "description": "Update your personal information and profile picture",
                 "upload": "Upload",
                 "defaultUser": "USER",
                 "fullNameLabel": "Full Name",
@@ -255,6 +257,7 @@
             },
             "changePassword": {
                 "title": "Change Password",
+                "description": "Keep your account secure by updating your password regularly",
                 "oldPassword": "Old Password",
                 "newPassword": "New Password",
                 "confirmPassword": "Confirm Password",

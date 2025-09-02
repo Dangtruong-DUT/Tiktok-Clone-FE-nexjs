@@ -1,9 +1,9 @@
 "use client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
+import { LockIcon } from "lucide-react";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -57,11 +57,17 @@ export default function ChangePasswordForm() {
                 onReset={onReset}
                 method="POST"
             >
-                <Card className="overflow-hidden" x-chunk="dashboard-07-chunk-4">
-                    <CardHeader>
-                        <CardTitle className="font-bold">{t("changePassword.title")}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
+                <div>
+                    <div className="flex items-center gap-2 mb-6">
+                        <div className="p-2 rounded-full bg-brand/10">
+                            <LockIcon className="w-5 h-5 text-brand" />
+                        </div>
+                        <div>
+                            <h3 className="font-semibold">{t("changePassword.title")}</h3>
+                            <p className="text-sm text-muted-foreground">{t("changePassword.description")}</p>
+                        </div>
+                    </div>
+                    <div className="space-y-6">
                         <div className="grid gap-6">
                             <FormField
                                 control={form.control}
@@ -144,8 +150,8 @@ export default function ChangePasswordForm() {
                                 </Button>
                             </div>
                         </div>
-                    </CardContent>
-                </Card>
+                    </div>
+                </div>
             </form>
         </Form>
     );
