@@ -65,7 +65,7 @@ export default function VideoDescription({ author, createdAt, postContent, class
             <div className="flex items-center pb-4">
                 <Link href={`/@${author.username}`} className="flex items-center">
                     <Avatar className="w-12 h-12  mr-3">
-                        <AvatarImage src={author.avatar} alt={author.name} />
+                        <AvatarImage src={author.avatar} alt={author.name} className="shrink-0 object-cover" />
                         <AvatarFallback>{author.name.charAt(0).toUpperCase()}</AvatarFallback>
                     </Avatar>
 

@@ -115,7 +115,7 @@ export default function UpdateProfileForm() {
                                     <FormItem>
                                         <div className="flex gap-2 items-start justify-start">
                                             <Avatar className="aspect-square w-[100px] h-[100px] rounded-md object-cover">
-                                                <AvatarImage src={avatarSrc} />
+                                                <AvatarImage src={avatarSrc} className="shrink-0 object-cover" />
                                                 <AvatarFallback className="rounded-none">
                                                     {user?.name.split(" ").at(-1) || t("updateProfile.defaultUser")}
                                                 </AvatarFallback>

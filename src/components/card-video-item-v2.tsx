@@ -92,7 +92,7 @@ export default function CardVideoItem({ post, className }: { post: TikTokPostTyp
 
             <div className="absolute bottom-0 left-0 w-full z-40 px-3 pb-[17px] h-[60%] bg-gradient-to-t from-[rgba(22,24,35,0.6)] via-transparent flex flex-col justify-center items-center">
                 <Avatar className="size-12 shrink-0">
-                    <AvatarImage src={author.avatar} alt={author.name} />
+                    <AvatarImage src={author.avatar} alt={author.name} className="shrink-0 object-cover" />
                     <AvatarFallback>{author.name.charAt(0).toUpperCase()}</AvatarFallback>
                 </Avatar>
 

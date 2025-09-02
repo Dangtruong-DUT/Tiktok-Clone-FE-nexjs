@@ -101,8 +101,8 @@ export default function SearchDrawerContent({ searchValue, setSearchValue }: Sea
                                             variant={"ghost"}
                                             className="space-x-2 w-full justify-start py-[9px] min-h-[58px]"
                                         >
-                                            <Avatar className="size-10">
-                                                <AvatarImage src={user.avatar} />
+                                            <Avatar className="size-10 shrink-0">
+                                                <AvatarImage src={user.avatar} className="shrink-0 object-cover" />
                                                 <AvatarFallback>{user.name.charAt(0).toUpperCase()}</AvatarFallback>
                                             </Avatar>
                                             <div className="flex flex-col items-start text-left overflow-hidden ">

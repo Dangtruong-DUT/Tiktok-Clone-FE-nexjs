@@ -110,7 +110,7 @@ export default function VideoDescription({ post, className }: VideoDescriptionPr
                     <div className="flex items-center gap-3">
                         <Link href={`/@${user.username}`}>
                             <Avatar className="size-12">
-                                <AvatarImage src={user.avatar} alt={user.username} />
+                                <AvatarImage src={user.avatar} alt={user.username} className="shrink-0 object-cover" />
                                 <AvatarFallback>{user.username.charAt(0).toUpperCase()}</AvatarFallback>
                             </Avatar>
                         </Link>

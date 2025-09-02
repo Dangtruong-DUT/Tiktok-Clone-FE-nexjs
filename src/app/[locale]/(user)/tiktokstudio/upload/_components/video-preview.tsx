@@ -112,7 +112,11 @@ export default function VideoPreview({ videoSrc, content, className }: VideoPrev
                     </div>
                     <div className="absolute right-1 bottom-9 flex flex-col items-center w-9 ">
                         <Avatar className="size-8 border-1 border-white ">
-                            <AvatarImage src={currentUserData?.avatar} alt={currentUserData?.username} />
+                            <AvatarImage
+                                src={currentUserData?.avatar}
+                                alt={currentUserData?.username}
+                                className="shrink-0 object-cover"
+                            />
                             <AvatarFallback>{currentUserData?.name.charAt(0).toUpperCase()}</AvatarFallback>
                         </Avatar>
                         <Image

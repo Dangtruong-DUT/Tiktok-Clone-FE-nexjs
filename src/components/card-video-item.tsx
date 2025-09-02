@@ -57,9 +57,14 @@ export default function CardVideoItem({
                         !isCurrentlyPlaying && "group-hover:opacity-100 group-hover:z-2"
                     )}
                 >
-                    <video autoPlay muted playsInline loop className="w-full h-full object-cover">
-                        <source src={post.medias[0].url} />
-                    </video>
+                    <video
+                        autoPlay
+                        muted
+                        playsInline
+                        loop
+                        className="w-full h-full object-cover"
+                        src={post.medias[0].url}
+                    />
                 </div>
 
                 {!isDescriptionVisible && (
