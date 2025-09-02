@@ -89,7 +89,7 @@ function DialogVideoContent({ post }: DialogContentProps) {
                                     <CommentList postId={post._id} username={author?.username} />
                                 </div>
 
-                                <div className="p-4 border-t sticky z-4 bottom-0 left-0 bg-background">
+                                <div className="p-4 border-t sticky bottom-0 left-0 bg-background">
                                     <CommentForm
                                         postId={post._id}
                                         parentId={post._id}

@@ -466,6 +466,9 @@
             "more": "Thêm",
             "profile": "Hồ sơ"
         },
+        "unfollowedFeed": {
+            "noContent": "Không có bài viết nào"
+        },
         "sidebar": {
             "footer": {
                 "company": "Công ty",

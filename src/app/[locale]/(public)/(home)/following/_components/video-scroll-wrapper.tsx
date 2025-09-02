@@ -10,16 +10,16 @@ export default function VideoScrollWrapper() {
     const { authStatus } = useAppContext();
 
     const { feeds } = useVideosProvider();
-    const isFriendViewMode = feeds.friend.postList.length > 0 || feeds.friend.isLoading || authStatus === "loading";
+    const isFriendViewMode = feeds.friend.postList.length > 0 || feeds.friend.isLoading;
 
     return (
         <>
-            {isFriendViewMode && (
+            {isFriendViewMode && authStatus == "ready" && (
                 <InfiniteVideoFeed
                     posts={feeds.friend.postList}
                     fetchNextPage={feeds.friend.fetchNextPage}
                     hasNextPage={feeds.friend.hasNextPage}
-                    isLoading={feeds.friend.isLoading || authStatus === "loading"}
+                    isLoading={feeds.friend.isLoading ?? true}
                     isFetching={feeds.friend.isFetching ?? true}
                     NavigationVideo={NavigationVideo}
                 />

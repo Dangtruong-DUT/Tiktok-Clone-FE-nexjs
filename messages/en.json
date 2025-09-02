@@ -466,6 +466,9 @@
             "more": "More",
             "profile": "Profile"
         },
+        "unfollowedFeed": {
+            "noContent": "No posts found"
+        },
         "sidebar": {
             "footer": {
                 "company": "Company",

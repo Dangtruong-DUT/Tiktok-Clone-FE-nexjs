@@ -65,7 +65,10 @@ export default function CardVideoItem({ post, className }: { post: TikTokPostTyp
 
     return (
         <article
-            className={cn("relative inline-block w-full pt-[133.333%] overflow-hidden rounded-md group", className)}
+            className={cn(
+                "relative inline-block w-full pt-[133.333%] aspect-[3/4] overflow-hidden rounded-md group",
+                className
+            )}
         >
             <Link href={`@${author.username}`}>
                 <div className={cn("absolute inset-0 z-20 transition-opacity duration-300", "group-hover:opacity-0")}>
