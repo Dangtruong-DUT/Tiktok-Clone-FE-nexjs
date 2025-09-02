@@ -15,9 +15,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { formatCash } from "@/utils/formatting/formatNumber";
 import { usePostTableContext } from "@/app/[locale]/(user)/tiktokstudio/content/_context/content-table.context";
 import { BsFillImageFill } from "react-icons/bs";
-import VideoDetailDialog from "@/components/post-detail-modal";
 import { useMemo, useState } from "react";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
+import VideoDetailDialog from "@/components/video-dialog";
 
 export function useColumns(): ColumnDef<TikTokPostType>[] {
     const t = useTranslations("TiktokStudio.content.table");

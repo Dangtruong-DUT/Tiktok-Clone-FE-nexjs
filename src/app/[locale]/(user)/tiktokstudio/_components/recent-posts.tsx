@@ -1,6 +1,5 @@
 "use client";
 
-import VideoDetailDialog from "@/components/post-detail-modal";
 import useCurrentUserData from "@/hooks/data/useCurrentUserData";
 import { useRouter } from "@/i18n/navigation";
 import { useGetPostOfUserPagingQuery } from "@/services/RTK/posts.services";
@@ -12,6 +11,7 @@ import { useState } from "react";
 import { BsFillImageFill } from "react-icons/bs";
 import { FaChevronRight, FaCommentDots, FaHeart, FaPlay } from "react-icons/fa6";
 import { useTranslations } from "next-intl";
+import VideoDetailDialog from "@/components/video-dialog";
 
 interface RecentPostProps {
     classNames?: string;
