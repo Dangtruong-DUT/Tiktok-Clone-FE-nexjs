@@ -212,12 +212,12 @@ export const PostApi = createApi({
                             type: "Posts" as const,
                             id: _id,
                         })),
-                        { type: "Posts" as const, id: `POST-OF-CONTENT-LIST` },
+                        { type: "Posts" as const, id: `POST-OF-CONTENT-OF-CURRENT-USER-LIST` },
                     ];
 
                     return final;
                 }
-                return [{ type: "Posts" as const, id: `POST-OF-CONTENT-LIST` }];
+                return [{ type: "Posts" as const, id: `POST-OF-CONTENT-OF-CURRENT-USER-LIST` }];
             },
         }),
         getBookmarkedPostsOfUser: builder.infiniteQuery<GetListPostRes, string, number>({
@@ -293,7 +293,10 @@ export const PostApi = createApi({
                 method: "POST",
                 body,
             }),
-            invalidatesTags: (result, error, arg) => [{ type: "Posts" as const, id: `POST-OF-CONTENT-LIST` }],
+            invalidatesTags: (result, error, arg) =>
+                result
+                    ? [{ type: "Posts" as const, id: `POST-OF-CONTENT-OF-CURRENT-USER-LIST` }]
+                    : [],
         }),
         getUnfollowedPosts: builder.infiniteQuery<GetListPostRes, void, number>({
             query: ({ pageParam }) => `/posts/not-following?page=${pageParam}&limit=10`,

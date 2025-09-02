@@ -27,8 +27,8 @@ export default function CardVideoItem({
     const author = post.author;
     const locale = useLocale();
     return (
-        <article className="w-full gap-2 ">
-            <div className={cn("relative inline-block w-full pt-[133.333%] overflow-hidden rounded-md group")}>
+        <article className="w-full">
+            <div className={cn("relative block w-full pt-[133.333%] aspect-[3/4] overflow-hidden rounded-md group")}>
                 {isCurrentlyPlaying && (
                     <div className="absolute inset-0 z-5 flex flex-col items-center justify-center bg-black/30 backdrop-blur-sm">
                         <PlayingIcon className="h-5.5 text-white" loop={true} />
@@ -90,7 +90,7 @@ export default function CardVideoItem({
             </div>
 
             {isDescriptionVisible && (
-                <div>
+                <div className="mt-2">
                     <p className="text-sm line-clamp-2 mb-1">{post.content}</p>
                     <Link
                         href={`/${author.username}`}

@@ -10,6 +10,7 @@ import { InfiniteQueryActionCreatorResult } from "@reduxjs/toolkit/query";
 import { createContext, useContext, useEffect, useRef } from "react";
 import LoadingIcon from "@/components/lottie-icons/loading";
 import { useInViewport } from "@/hooks/ui/useInViewport";
+import AccountItemSkeleton from "@/components/comment-section/account-item-skeleton";
 
 interface RootCommentsContextProps {
     parent_id: string;
@@ -55,16 +56,20 @@ export default function CommentList({ postId, username }: CommentListProps) {
             }}
         >
             <div className="pt-6">
-                {comments.length > 0 ? (
-                    comments.map((comment) => <CommentItem key={comment._id} comment={comment} />)
-                ) : (
+                {comments.length > 0 &&
+                    !isLoading &&
+                    comments.map((comment) => <CommentItem key={comment._id} comment={comment} />)}
+
+                {comments.length === 0 && !isLoading && (
                     <p className="text-gray-500 text-center">Be the first to comment!</p>
                 )}
                 {/* Sentinel để lắng nghe*/}
                 <div className="h-px bg-transparent" ref={sentinelScrollRef} />
                 {isLoading && (
-                    <div className="py-4">
-                        <LoadingIcon className="size-10 mx-auto" loop />
+                    <div className="space-y-4">
+                        {Array.from({ length: 10 }).map((_, index) => (
+                            <AccountItemSkeleton key={index} />
+                        ))}
                     </div>
                 )}
             </div>
