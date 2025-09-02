@@ -59,8 +59,8 @@ export default function DrawerSidebar({
         <DrawerSidebarContext.Provider value={{ isOpen, toggleDrawer: handleClose }}>
             <div
                 className={cn(
-                    "absolute top-0 bottom-0 transition-[width]  ease-in-out duration-300 ",
-                    isOpen ? "animate-slide-in" : "animate-slide-out"
+                    "absolute top-0 bottom-0 transition-all  ease-in-out duration-300 ",
+                    isOpen ? "animate-slide-in opacity-100" : "animate-slide-out opacity-0"
                 )}
                 style={
                     {

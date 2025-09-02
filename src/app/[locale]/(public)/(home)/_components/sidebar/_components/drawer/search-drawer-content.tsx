@@ -57,7 +57,7 @@ export default function SearchDrawerContent({ searchValue, setSearchValue }: Sea
         <div className="w-full">
             <DialogHeader title={t("title")} onClose={toggleDrawer} />
 
-            <div className="mt-6 flex items-center flex-row h-[42px] rounded-[92px] px-4 py-2.5 bg-input overflow-hidden relative hover:outline-1 hover:outline-border focus-within:outline-1 focus-within:outline-border">
+            <div className="mt-4 flex items-center flex-row h-[42px] rounded-[92px] px-4 py-2.5 bg-input overflow-hidden relative hover:outline-1 hover:outline-border focus-within:outline-1 focus-within:outline-border">
                 <SearchIcon size={16} className="text-muted-foreground mr-3 flex-shrink-0" />
 
                 <input
