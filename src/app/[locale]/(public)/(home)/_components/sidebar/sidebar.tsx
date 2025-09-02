@@ -76,7 +76,7 @@ export default function Sidebar({ className }: SidebarProps) {
             <DrawerSidebar isOpen={isOpenSettings} setIsOpenDrawer={toggleSettingsDrawer}>
                 <SettingsMenuDrawerContent />
             </DrawerSidebar>
-            <aside
+            <div
                 className={cn(
                     "flex flex-col w-full py-5 px-0 pb-[26px] h-full flex-shrink-0",
                     "transition-all duration-400 ease-in-out"
@@ -96,7 +96,7 @@ export default function Sidebar({ className }: SidebarProps) {
                     )}
                 >
                     <NavItems roleUser={role} />
-                    <div className="flex flex-col gap-[0.5rem]">
+                    <aside className="flex flex-col gap-[0.5rem]">
                         <ButtonGotoProfile
                             activeState={activeState}
                             setActiveState={setActiveState}
@@ -127,7 +127,7 @@ export default function Sidebar({ className }: SidebarProps) {
                                 </h2>
                             )}
                         </button>
-                    </div>
+                    </aside>
 
                     {!isOpenDrawer && (
                         <>
@@ -136,7 +136,7 @@ export default function Sidebar({ className }: SidebarProps) {
                         </>
                     )}
                 </div>
-            </aside>
+            </div>
         </div>
     );
 }

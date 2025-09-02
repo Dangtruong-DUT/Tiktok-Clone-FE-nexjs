@@ -11,6 +11,7 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import { useTranslations } from "next-intl";
+import LoadingIcon from "@/components/lottie-icons/loading";
 
 import { useEffect, useState } from "react";
 
@@ -23,6 +24,7 @@ import { Input } from "@/components/ui/input";
 import AlertDialogDeleteDish from "@/app/[locale]/(user)/tiktokstudio/content/_components/alert-confirm-delete-post";
 import { usePostTableContext } from "@/app/[locale]/(user)/tiktokstudio/content/_context/content-table.context";
 import { useColumns } from "@/app/[locale]/(user)/tiktokstudio/content/_components/columns";
+import TableSkeleton from "@/app/[locale]/(user)/tiktokstudio/content/_components/table-skeleton";
 
 export default function TableContent() {
     const t = useTranslations("TiktokStudio.content");
@@ -44,7 +46,7 @@ export default function TableContent() {
         pageSize: 10,
     });
 
-    const { data: queryData } = useGetPostOfUserPagingQuery(
+    const { data: queryData, isLoading: isLoadingPosts } = useGetPostOfUserPagingQuery(
         {
             page: pagination.pageIndex + 1,
             userId: currentUser?._id || "",
@@ -86,7 +88,7 @@ export default function TableContent() {
     }, [page]);
 
     return (
-        <div className="w-full">
+        <div className="w-full relative">
             <SearchParamsLoader onParamsReceived={setSearchParams} />
             <AlertDialogDeleteDish postIdDelete={postIdDelete} setPostIdDelete={setPostIdDelete} />
             <div className="flex items-center py-4">
@@ -97,9 +99,7 @@ export default function TableContent() {
                     className="max-w-sm ml-auto"
                 />
             </div>
-
-            <DataTable columns={columns} table={table} />
-
+            {isLoadingPosts ? <TableSkeleton /> : <DataTable columns={columns} table={table} />}
             <div className="flex items-center justify-end space-x-2 py-4">
                 <div>
                     <AutoPagination

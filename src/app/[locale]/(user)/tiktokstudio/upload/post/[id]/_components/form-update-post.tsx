@@ -132,6 +132,7 @@ export default function FormUpdatePost() {
     };
 
     const onCancel = () => {
+        if (isCreatePostLoading) return;
         if (redirectFrom) {
             router.push(redirectFrom);
         } else {
@@ -246,6 +247,7 @@ export default function FormUpdatePost() {
                                 type="button"
                                 className="cursor-pointer h-9 rounded-lg w-[200px] font-base"
                                 onClick={onCancel}
+                                disabled={isCreatePostLoading}
                             >
                                 Cancel
                             </Button>

@@ -6,7 +6,7 @@ import { useVideoPlayer } from "@/hooks/video/useVideoPlayer";
 import { useVideoControls } from "@/hooks/video/useVideoControls";
 import { timeToMMSSCS } from "@/utils/formatting/formatTime";
 import Image from "next/image";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { AiFillMuted } from "react-icons/ai";
 import { FaPause, FaPlay } from "react-icons/fa6";
 import { useTranslations } from "next-intl";
@@ -64,6 +64,12 @@ export default function VideoPreview({ videoSrc, content, className }: VideoPrev
         const newTime = calculateTimeFromEvent(e);
         handleSeek(newTime);
     };
+
+    useEffect(() => {
+        if (videoRef.current && videoSrc === null) {
+            videoRef.current.srcObject = null;
+        }
+    }, [videoSrc]);
 
     return (
         <div
