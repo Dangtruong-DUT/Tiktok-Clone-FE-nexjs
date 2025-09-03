@@ -135,6 +135,7 @@ export default function ChangePasswordForm() {
                             <div className=" items-center gap-2 md:ml-auto flex">
                                 <Button variant="outline" size="sm" type="reset" className="min-w-[90px]">
                                     {t("changePassword.cancel")}
+                                    
                                 </Button>
                                 <Button
                                     size="sm"

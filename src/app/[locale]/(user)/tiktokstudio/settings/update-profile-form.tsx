@@ -16,11 +16,13 @@ import useCurrentUserData from "@/hooks/data/useCurrentUserData";
 import { useUpdateMeMutation } from "@/services/RTK/user.services";
 import { useUploadImageMutation } from "@/services/RTK/upload.services";
 import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
+import PhotoEditorDialog from "@/app/[locale]/(user)/tiktokstudio/settings/photo-editor-dialog";
 
 export default function UpdateProfileForm() {
     const t = useTranslations("TiktokStudio.settings");
     const [fileImage, setFileImage] = useState<File | null>(null);
     const avatarPreviewRef = useRef<HTMLInputElement>(null);
+    const [isPhotoEditorVisible, setIsPhotoEditorVisible] = useState<boolean>(false);
 
     const [updateProfileMutateAsync, { isLoading: isUpdatingProfile }] = useUpdateMeMutation();
     const [uploadImageMutateAsync, { isLoading: isUploadingAvatar }] = useUploadImageMutation();
@@ -88,12 +90,23 @@ export default function UpdateProfileForm() {
         (e: ChangeEvent<HTMLInputElement>) => {
             const selectedFile = e.target.files?.[0] || null;
             setFileImage(selectedFile);
+
+            if (selectedFile) {
+                setIsPhotoEditorVisible(true);
+            }
+            e.target.value = "";
             form.setValue("avatar", selectedFile ? URL.createObjectURL(selectedFile) : "");
         },
         [form]
     );
     return (
         <Form {...form}>
+            <PhotoEditorDialog
+                setVisible={setIsPhotoEditorVisible}
+                isVisible={isPhotoEditorVisible}
+                photoUrl={avatarSrc!}
+                onConfirm={setFileImage}
+            />
             <form
                 noValidate
                 className="grid auto-rows-max items-start gap-4 md:gap-8"
