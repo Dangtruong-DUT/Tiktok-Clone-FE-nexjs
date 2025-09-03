@@ -432,6 +432,10 @@
         },
         "editProfileDialog": {
             "title": "Sửa hồ sơ",
+            "avatar": {
+                "label": "Ảnh đại diện",
+                "placeholder": "Chọn ảnh đại diện"
+            },
             "username": {
                 "label": "Tên người dùng",
                 "placeholder": "Tên người dùng",

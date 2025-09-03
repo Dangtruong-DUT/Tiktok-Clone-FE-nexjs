@@ -450,6 +450,10 @@
             "buttons": {
                 "cancel": "Cancel",
                 "save": "Save"
+            },
+            "avatar": {
+                "label": "Avatar",
+                "placeholder": "Select an avatar"
             }
         },
         "noContent": {

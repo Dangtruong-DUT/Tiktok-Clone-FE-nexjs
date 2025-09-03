@@ -1,10 +1,10 @@
 "use client";
 
-import Slider from "@/app/[locale]/(user)/tiktokstudio/settings/photo-editor-dialog/slider";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
+import Slider from "@/components/photo-editor-dialog/slider";
 
 interface PhotoEditorProps {
     photoUrl?: string;
@@ -191,13 +191,11 @@ export default function PhotoEditorDialog({ photoUrl, isVisible, setVisible, onC
                 const cropWidth = 360 / scale;
                 const cropHeight = 360 / scale;
 
-                // Chuyển đổi sang hệ tọa độ ảnh gốc
                 const sourceX = cropStartX * displayRatio;
                 const sourceY = cropStartY * displayRatio;
                 const sourceWidth = cropWidth * displayRatio;
                 const sourceHeight = cropHeight * displayRatio;
 
-                // Clamp để đảm bảo không vượt quá kích thước ảnh gốc
                 const clampedSourceX = Math.max(0, Math.min(naturalWidth - sourceWidth, sourceX));
                 const clampedSourceY = Math.max(0, Math.min(naturalHeight - sourceHeight, sourceY));
                 const clampedSourceWidth = Math.min(sourceWidth, naturalWidth - clampedSourceX);
@@ -205,7 +203,6 @@ export default function PhotoEditorDialog({ photoUrl, isVisible, setVisible, onC
 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                // Vẽ phần được crop vào canvas
                 ctx.drawImage(
                     img,
                     clampedSourceX,

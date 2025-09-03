@@ -16,7 +16,7 @@ import useCurrentUserData from "@/hooks/data/useCurrentUserData";
 import { useUpdateMeMutation } from "@/services/RTK/user.services";
 import { useUploadImageMutation } from "@/services/RTK/upload.services";
 import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
-import PhotoEditorDialog from "@/app/[locale]/(user)/tiktokstudio/settings/photo-editor-dialog";
+import PhotoEditorDialog from "@/components/photo-editor-dialog";
 
 export default function UpdateProfileForm() {
     const t = useTranslations("TiktokStudio.settings");
@@ -86,6 +86,7 @@ export default function UpdateProfileForm() {
         form.reset();
         setFileImage(null);
     }, [form]);
+
     const handleChangeAvatar = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
             const selectedFile = e.target.files?.[0] || null;
@@ -99,6 +100,7 @@ export default function UpdateProfileForm() {
         },
         [form]
     );
+
     return (
         <Form {...form}>
             <PhotoEditorDialog
