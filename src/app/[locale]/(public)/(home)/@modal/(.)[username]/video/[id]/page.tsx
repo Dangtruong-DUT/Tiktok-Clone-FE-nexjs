@@ -21,14 +21,16 @@ export default function CommentsPage() {
 
     const handleClose = useCallback(() => {
         setIsClosing(true);
-        dispatch(closeModal());
         const pathname = prevPathnameOpenDetailModal;
+        dispatch(closeModal());
         if (pathname) {
             router.push(pathname, { scroll: false });
         } else {
             router.replace("/");
         }
-        setIsClosing(false);
+        setTimeout(() => {
+            setIsClosing(false);
+        }, 300);
     }, [router, dispatch, prevPathnameOpenDetailModal]);
 
     return (
