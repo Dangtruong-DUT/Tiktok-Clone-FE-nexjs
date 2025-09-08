@@ -16,9 +16,10 @@ interface VideoDetailDialogProps {
     isVisible: boolean;
     handleClose: () => void;
     post?: TikTokPostType;
+    isLoading?: boolean;
 }
 
-export default function VideoDetailDialog({ isVisible, handleClose, post }: VideoDetailDialogProps) {
+export default function VideoDetailDialog({ isVisible, handleClose, post, isLoading = false }: VideoDetailDialogProps) {
     return (
         <>
             <Dialog open={isVisible} onOpenChange={handleClose}>
@@ -27,8 +28,8 @@ export default function VideoDetailDialog({ isVisible, handleClose, post }: Vide
                     showCloseButton={false}
                 >
                     <DialogTitle className="hidden" />
-                    {post && <DialogVideoContent post={post} />}
-                    {!post && <LoadingIcon className="size-15 m-auto" loop />}
+                    {post && !isLoading && <DialogVideoContent post={post} />}
+                    {isLoading && <LoadingIcon className="size-15 m-auto" loop />}
                 </DialogContent>
             </Dialog>
         </>

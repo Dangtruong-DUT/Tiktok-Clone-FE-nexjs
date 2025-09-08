@@ -106,6 +106,8 @@ function VideoItem({ post }: { post: TikTokPostType }) {
                 isVisible={isModalDetailOpen}
                 handleClose={() => setIsModalDetailOpen(false)}
                 post={post}
+                isLoading={!post}
+                key={post._id}
             />
         </>
     );

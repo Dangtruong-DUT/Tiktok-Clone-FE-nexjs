@@ -62,6 +62,8 @@ export function useColumns(): ColumnDef<TikTokPostType>[] {
                                 isVisible={isModalDetailOpen}
                                 handleClose={() => setIsModalDetailOpen(false)}
                                 post={row.original}
+                                isLoading={!row.original}
+                                key={row.original._id}
                             />
                         </div>
                     );
