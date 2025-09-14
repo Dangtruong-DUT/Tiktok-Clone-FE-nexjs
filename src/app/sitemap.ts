@@ -59,7 +59,7 @@ const staticRoutes: MetadataRoute.Sitemap = [
 
     // Auth routes
     {
-        url: "/auth/login",
+        url: "/login",
         lastModified: new Date(),
         changeFrequency: "monthly" as const,
         priority: 0.5,
