@@ -33,7 +33,7 @@ export default function VideoDetailContent() {
     return (
         <div className="flex min-h-screen mx-auto py-6 @container">
             <div className="grow-1">
-                <VideoPlayer post={currentVideo} className="max-h-[calc(100vh-3.5rem)]" />
+                <VideoPlayer post={currentVideo} key={currentVideo._id} className="max-h-[calc(100vh-3.5rem)]" />
                 <VideoDescription
                     author={currentVideo.author}
                     createdAt={currentVideo.author.created_at}
