@@ -84,7 +84,6 @@ export default async function LocaleLayout({
                                 disableTransitionOnChange
                             >
                                 {children}
-                                <BannerKiNiem80NamVietNamFixed />
                             </ThemeProvider>
                         </AppProvider>
                     </StoreProvider>
