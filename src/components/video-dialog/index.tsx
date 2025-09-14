@@ -20,9 +20,15 @@ interface VideoDetailDialogProps {
 }
 
 export default function VideoDetailDialog({ isVisible, handleClose, post, isLoading = false }: VideoDetailDialogProps) {
+    const onClose = useCallback(
+        (open: boolean) => {
+            if (open == false) handleClose();
+        },
+        [handleClose]
+    );
     return (
         <>
-            <Dialog open={isVisible} onOpenChange={handleClose}>
+            <Dialog open={isVisible} onOpenChange={(value) => onClose(value)}>
                 <DialogContent
                     className="w-[90vw]! h-[90vh]! flex flex-row p-0 max-w-none!  gap-0! rounded-sm overflow-hidden"
                     showCloseButton={false}
