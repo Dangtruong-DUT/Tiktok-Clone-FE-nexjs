@@ -36,8 +36,12 @@ const staticRoutes: MetadataRoute.Sitemap = [
         changeFrequency: "daily" as const,
         priority: 0.7,
     },
-
-    // TikTok Studio routes
+    {
+        url: "/following",
+        lastModified: new Date(),
+        changeFrequency: "daily" as const,
+        priority: 0.7,
+    },
     {
         url: "/tiktokstudio",
         lastModified: new Date(),
