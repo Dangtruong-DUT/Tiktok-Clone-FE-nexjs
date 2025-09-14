@@ -62,6 +62,7 @@ export default function CardVideoItem({
                         muted
                         playsInline
                         loop
+                        preload="metadata"
                         className="w-full h-full object-cover"
                         src={post.medias[0].url}
                     />

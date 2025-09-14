@@ -87,7 +87,14 @@ export default function CardVideoItem({ post, className }: { post: TikTokPostTyp
                         "group-hover:opacity-100 group-hover:z-30"
                     )}
                 >
-                    <video autoPlay muted playsInline loop className=" block w-full h-full object-cover">
+                    <video
+                        autoPlay
+                        muted
+                        playsInline
+                        loop
+                        preload="metadata"
+                        className=" block w-full h-full object-cover"
+                    >
                         <source src={post.medias[0].url} />
                     </video>
                 </div>

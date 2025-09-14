@@ -84,6 +84,7 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
                 className=" absolute block  top-0 left-0 w-full h-full"
                 ref={videoRef}
                 playsInline
+                preload="metadata"
                 loop={true}
                 muted={isMuted}
                 autoPlay={true}

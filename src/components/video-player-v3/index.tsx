@@ -77,6 +77,7 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
                 ref={videoRef}
                 playsInline
                 loop={true}
+                preload="metadata"
                 muted={isMuted}
                 autoPlay={true}
                 key={displayPost._id}
