@@ -17,7 +17,6 @@ export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     const { access_token, refresh_token } = getTokens(request);
-    const isAccessTokenValid = !!access_token;
     const isAuthenticated = !!refresh_token;
 
     const isPrivatePath = isPathIncluded(protectedPaths, pathname);
@@ -45,8 +44,8 @@ export function middleware(request: NextRequest) {
     }
 
     // Authenticated + access token valid => Check role access
-    if (isAccessTokenValid && isAuthenticated) {
-        const NextResponse = handleRoleAccess(access_token!, pathname, request);
+    if (isAuthenticated && isAuthenticated) {
+        const NextResponse = handleRoleAccess(refresh_token!, pathname, request);
         if (NextResponse) {
             return NextResponse;
         }

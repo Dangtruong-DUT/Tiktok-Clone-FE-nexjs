@@ -4,8 +4,8 @@ import { TokenPayload } from "@/types/jwt";
 import { decodeJwt } from "@/utils/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
-export function handleRoleAccess(access_token: string, pathname: string, request: NextRequest): NextResponse | null {
-    const { role } = decodeJwt<TokenPayload>(access_token);
+export function handleRoleAccess(refresh_token: string, pathname: string, request: NextRequest): NextResponse | null {
+    const { role } = decodeJwt<TokenPayload>(refresh_token);
 
     const isEmployeePath = isPathIncluded(employeePaths, pathname);
     const isUserPath = isPathIncluded(userPaths, pathname);
