@@ -1,3 +1,4 @@
+import { isProduction } from "@/config/app.config";
 import { AuthApi } from "@/services/RTK/auth.services";
 import { PostApi } from "@/services/RTK/posts.services";
 import { SearchApi } from "@/services/RTK/search.services";
@@ -11,6 +12,7 @@ import { configureStore } from "@reduxjs/toolkit";
 
 export const makeStore = () => {
     return configureStore({
+        devTools: isProduction ? false : true,
         reducer: {
             [UserApi.reducerPath]: UserApi.reducer,
             [SearchApi.reducerPath]: SearchApi.reducer,
