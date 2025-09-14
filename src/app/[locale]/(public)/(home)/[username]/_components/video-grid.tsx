@@ -17,10 +17,12 @@ function VideoGrid() {
     const { postList, hasNextPage, fetchNextPage, isFetching, isLoading } = useVideosContext();
     const dispatch = useAppDispatch();
     const pathname = usePathname();
+    const pathnameRef = useRef(pathname);
+
     const t = useTranslations("ProfilePage.noContent");
     const handleVideoClick = useCallback(() => {
-        dispatch(setOpenModal({ prevPathname: pathname, type: "modalVideoDetail" }));
-    }, [dispatch, pathname]);
+        dispatch(setOpenModal({ prevPathname: pathnameRef.current, type: "modalVideoDetail" }));
+    }, [dispatch, pathnameRef]);
 
     const sentinelScrollRef = useRef<HTMLDivElement>(null);
     const isInView = useInViewport(sentinelScrollRef);

@@ -10,7 +10,6 @@ import videoReducer from "@/store/features/videoSlice";
 import { authMiddleware, rtkQueryLogger } from "@/store/middleware";
 import { configureStore } from "@reduxjs/toolkit";
 
-console.log("isProduction", isProduction);
 
 export const makeStore = () => {
     return configureStore({

@@ -11,7 +11,7 @@ import BookmarkIcon from "@/components/lottie-icons/bookmark-icon";
 import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
 import { AiFillMessage } from "react-icons/ai";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { Link, usePathname, useRouter } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 import { closeModal, setOpenModal } from "@/store/features/modalSlide";
 import { useGetUserByUsernameQuery } from "@/services/RTK/user.services";
 import { useFollowUser } from "@/hooks/data/useUser";
@@ -36,9 +36,7 @@ export default function ActionBar({ post, className }: ActionBarProps) {
     const { data: userData } = useGetUserByUsernameQuery(author.username);
     const fetchedAuthor = userData?.data;
     const openModalVideoDetailType = useAppSelector((state) => state.modal.typeOpenModal);
-    const prevPathOpenModal = useAppSelector((state) => state.modal.prevPathnameOpenModal);
     const dispatch = useAppDispatch();
-    const router = useRouter();
 
     const pathname = usePathname();
 
@@ -70,15 +68,10 @@ export default function ActionBar({ post, className }: ActionBarProps) {
     const handleToggleOpenComment = useCallback(() => {
         if (openModalVideoDetailType === "commentsVideoDetail") {
             dispatch(closeModal());
-            if (prevPathOpenModal) {
-                router.replace(prevPathOpenModal, { scroll: false });
-            } else {
-                router.replace("/");
-            }
         } else {
             dispatch(setOpenModal({ prevPathname: pathname, type: "commentsVideoDetail" }));
         }
-    }, [openModalVideoDetailType, dispatch, pathname, router, prevPathOpenModal]);
+    }, [openModalVideoDetailType, dispatch, pathname]);
 
     const local = useLocale();
     const videoUrl = `${envConfig.NEXT_PUBLIC_URL}${local}/@${author.username}/video/${post._id}`;
