@@ -20,6 +20,7 @@ import { useAppDispatch } from "@/hooks/redux";
 import { useTranslations } from "next-intl";
 import PhotoEditorDialog from "@/components/photo-editor-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useUploadImageMutation } from "@/services/RTK/upload.services";
 
 export default function EditProfileDialog() {
     const [open, setOpen] = useState(false);
@@ -29,7 +30,10 @@ export default function EditProfileDialog() {
     const currentUser = useCurrentUserData();
     const t = useTranslations("ProfilePage.editProfileDialog");
     const ta = useTranslations("ProfilePage.actions");
-    const [updateProfile, updateProfileResult] = useUpdateMeMutation();
+    const [updateProfile, { isLoading: isUpdatingProfile }] = useUpdateMeMutation();
+    const [uploadImageMutateAsync, { isLoading: isUploadingAvatar }] = useUploadImageMutation();
+
+    const isLoading = isUploadingAvatar || isUpdatingProfile;
 
     const [fileImage, setFileImage] = useState<File | null>(null);
     const avatarPreviewRef = useRef<HTMLInputElement>(null);
@@ -57,8 +61,17 @@ export default function EditProfileDialog() {
     }, [currentUser, form]);
 
     async function onSubmit(values: UpdateUserBodyType) {
-        if (updateProfileResult.isLoading || !currentUser) return;
+        if (isLoading || !currentUser) return;
         try {
+            if (fileImage) {
+                const formData = new FormData();
+                formData.append("file", fileImage);
+                const uploadResponse = await uploadImageMutateAsync(formData).unwrap();
+                values.avatar = uploadResponse.data[0].url;
+            } else {
+                values.avatar = currentUser?.avatar || undefined;
+            }
+
             const oldUsername = currentUser.username;
 
             await updateProfile(values).unwrap();
@@ -233,13 +246,9 @@ export default function EditProfileDialog() {
                             <Button
                                 type="submit"
                                 className="h-8  w-[96px] px-8 text-sm font-semibold bg-brand hover:bg-brand/90 text-white"
-                                disabled={updateProfileResult.isLoading}
+                                disabled={isLoading}
                             >
-                                {updateProfileResult.isLoading ? (
-                                    <Loader className="animate-spin" />
-                                ) : (
-                                    t("buttons.save")
-                                )}
+                                {isLoading ? <Loader className="animate-spin" /> : t("buttons.save")}
                             </Button>
                         </div>
                     </form>
