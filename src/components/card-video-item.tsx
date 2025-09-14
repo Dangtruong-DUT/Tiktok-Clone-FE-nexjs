@@ -94,7 +94,7 @@ export default function CardVideoItem({
                     <p className="text-sm line-clamp-2 mb-1">{post.content}</p>
                     <Link
                         href={`/${author.username}`}
-                        className="text-sm font-semibold hover:underline text-muted-foreground"
+                        className="text-sm font-semibold hover:underline text-muted-foreground truncate block max-w-[90%] "
                     >
                         {author.username}
                     </Link>

@@ -94,20 +94,21 @@ export default function CardVideoItem({ post, className }: { post: TikTokPostTyp
             </Link>
 
             <div className="absolute bottom-0 left-0 w-full z-40 px-3 pb-[17px] h-[60%] bg-gradient-to-t from-[rgba(22,24,35,0.6)] via-transparent flex flex-col justify-center items-center">
-                <Avatar className="size-12 shrink-0">
-                    <AvatarImage src={author.avatar} alt={author.name} className="shrink-0 object-cover" />
-                    <AvatarFallback>{author.name.charAt(0).toUpperCase()}</AvatarFallback>
-                </Avatar>
+                <Link href={`@${author.username}`} className="  flex flex-col justify-center w-full text-center">
+                    <Avatar className="size-12 shrink-0 mx-auto">
+                        <AvatarImage src={author.avatar} alt={author.name} className="shrink-0 object-cover" />
+                        <AvatarFallback>{author.name.charAt(0).toUpperCase()}</AvatarFallback>
+                    </Avatar>
 
-                <Link href={`@${author.username}`}>
-                    <h4 className="text-lg text-white font-bold mt-2">{author.username}</h4>
+                    <h4 className="text-lg text-white font-bold mt-2 truncate  text-center">{author.username}</h4>
+
+                    <div className="mb-2 flex items-center gap-1  justify-center">
+                        <h5 className="text-sm text-white font-semibold truncate max-w-[90%]">{author.name}</h5>
+                        {author.verify === UserVerifyStatus.VERIFIED && (
+                            <MdVerified size={16} className="text-blue-500" />
+                        )}
+                    </div>
                 </Link>
-
-                <div className="mb-2 flex items-center gap-1">
-                    <h5 className="text-sm text-white font-semibold">{author.name}</h5>
-                    {author.verify === UserVerifyStatus.VERIFIED && <MdVerified size={16} className="text-blue-500" />}
-                </div>
-
                 {!isCurrentUser && (
                     <FollowButton
                         isFollowedState={isFollowedState}
