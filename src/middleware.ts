@@ -7,10 +7,8 @@ import { isPathIncluded, protectedPaths, unauthenticatedPaths } from "@/middlewa
 
 export function middleware(request: NextRequest) {
     const defaultLocale = (request.headers.get(HEADER_NAME) || "en") as (typeof locales)[number];
-    const handleI18nRouting = createMiddleware({
-        locales,
-        defaultLocale,
-    });
+    const handleI18nRouting = createMiddleware({ locales, defaultLocale });
+
     const response = handleI18nRouting(request);
     response.headers.set(HEADER_NAME, defaultLocale);
 
@@ -26,29 +24,28 @@ export function middleware(request: NextRequest) {
         return response;
     }
 
-    // Handle refresh token
     const refreshRedirect = handleInvalidAccessToken(access_token, refresh_token, pathname, request, defaultLocale);
-    if (refreshRedirect != null) return refreshRedirect;
+    if (refreshRedirect) return refreshRedirect;
 
-    // Not authenticated trying to access private
     if (isPrivatePath && !isAuthenticated) {
         const url = new URL(`/${defaultLocale}/login`, request.url);
         url.searchParams.set("clearToken", "true");
+        url.searchParams.set("redirect", pathname);
         return NextResponse.redirect(url);
     }
 
-    // Authenticated trying to access login/register
     if (isUnAuthPath && isAuthenticated) {
-        const url = new URL("/", request.url);
-        return NextResponse.redirect(url);
+        const redirectFrom = request.nextUrl.searchParams.get("redirect");
+        if (redirectFrom) {
+            const url = new URL(redirectFrom, request.url);
+            return NextResponse.redirect(url);
+        }
+        return NextResponse.redirect(new URL("/", request.url));
     }
 
-    // Authenticated + access token valid => Check role access
-    if (isAuthenticated && isAuthenticated) {
-        const NextResponse = handleRoleAccess(refresh_token!, pathname, request);
-        if (NextResponse) {
-            return NextResponse;
-        }
+    if (isAuthenticated) {
+        const roleRedirect = handleRoleAccess(refresh_token!, pathname, request);
+        if (roleRedirect) return roleRedirect;
     }
 
     return response;
