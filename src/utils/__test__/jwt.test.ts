@@ -8,4 +8,9 @@ describe("decodeJwt", () => {
         const decoded = jwt.decode(token);
         expect(decodeJwt(token)).toEqual(decoded);
     });
+
+    it("should return empty object for invalid token", () => {
+        const decoded = decodeJwt("invalid.token.here");
+        expect(decoded).toEqual({});
+    });
 });

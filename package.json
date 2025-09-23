@@ -7,8 +7,8 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "test": "vitest",
-        "coverage": "vitest run --coverage"
+        "test": "cross-env  NODE_ENV=test vitest",
+        "coverage": "vitest run  --coverage"
     },
     "dependencies": {
         "@hookform/resolvers": "^5.2.1",
@@ -65,9 +65,11 @@
         "@testing-library/react": "^16.3.0",
         "@types/jsonwebtoken": "^9.0.10",
         "@types/node": "^20",
-        "@types/react": "^19",
-        "@types/react-dom": "^19",
+        "@types/react": "^19.1.13",
+        "@types/react-dom": "^19.1.9",
         "@vitejs/plugin-react": "^5.0.3",
+        "@vitest/coverage-v8": "^3.2.4",
+        "cross-env": "^10.0.0",
         "eslint": "^9",
         "eslint-config-next": "15.4.4",
         "jsdom": "^27.0.0",
