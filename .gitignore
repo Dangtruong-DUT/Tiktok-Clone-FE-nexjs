@@ -45,3 +45,5 @@ coverage/
 next-env.d.ts
 
 /.vscode/*
+*storybook.log
+storybook-static

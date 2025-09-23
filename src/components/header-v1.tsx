@@ -1,5 +1,3 @@
-"use server";
-
 import LogoBrand from "@/components/logo-brand";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
