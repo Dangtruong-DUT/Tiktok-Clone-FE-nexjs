@@ -30,7 +30,7 @@ services:
         XDEBUG_IDE_KEY: ${XDEBUG_IDE_KEY:-DOCKER}
         XDEBUG_LOG: ${XDEBUG_LOG:-/dev/stdout}
         XDEBUG_LOG_LEVEL: ${XDEBUG_LOG_LEVEL:-0}
-        DOCKER_ENV:  ${DOCKER_ENV:-development}
+        DOCKER_ENV: ${DOCKER_ENV:-development}
     restart: unless-stopped
     env_file:
       - .env
@@ -46,6 +46,30 @@ services:
     depends_on:
       postgres:
         condition: service_started
+
+  workspace:
+    container_name: ${CONTAINER_PREFIX:-chat_app}_workspace
+    # For the workspace service, we will also create a custom image to install and setup all the necessary stuff.
+    build:
+      context: .
+      dockerfile: ./docker/development/workspace/Dockerfile
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+        XDEBUG_ENABLED: ${XDEBUG_ENABLED:-true}
+        XDEBUG_MODE: develop,coverage,debug,profile
+        XDEBUG_HOST: ${XDEBUG_HOST:-host.docker.internal}
+        XDEBUG_IDE_KEY: ${XDEBUG_IDE_KEY:-DOCKER}
+        XDEBUG_LOG: /dev/stdout
+        XDEBUG_LOG_LEVEL: 0
+    tty: true # Enables an interactive terminal
+    stdin_open: true # Keeps standard input open for 'docker exec'
+    env_file:
+      - .env
+    volumes:
+      - ./:/var/www
+    networks:
+      - laravel-development
 
   postgres:
     container_name: ${CONTAINER_PREFIX:-chat_app}_postgres
@@ -74,4 +98,3 @@ networks:
 
 volumes:
   postgres-data-development:
-
