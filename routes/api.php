@@ -12,10 +12,27 @@ use Illuminate\Support\Facades\Route;
 | group. Enjoy building your API!
 */
 
-
 /**
  * public routes
  */
-Route::group(['prefix' => 'auth', 'as' => 'auth.'], function () {
-    Route::post('login', [AuthController::class, 'login'])->name('login');
+
+// auth routes
+Route::prefix('auth')->controller(AuthController::class)
+->name('auth.')
+->group(function() {
+    Route::post('/login', 'login')->name('login');
+});
+
+/**
+ * protected routes
+ */
+Route::middleware('auth:api')->group(function () {
+    // auth routes
+    Route::prefix('auth')->controller(AuthController::class)
+    ->name('auth.')
+    ->group(function() {
+        Route::post('/logout', 'logout')->name('logout');
+        Route::post('/refresh', 'refresh')->name('refresh');
+        Route::get('/me', 'me')->name('me');
+    });
 });
