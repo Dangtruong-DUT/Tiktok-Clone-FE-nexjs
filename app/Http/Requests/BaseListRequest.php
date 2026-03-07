@@ -17,13 +17,15 @@ abstract class BaseListRequest extends BaseRequest
     /**
     * set common rules
     */
-    protected function setCommonRules(): void
+    protected function defineBaseRules(): void
     {
-        $this->commonRules = [
-            'keyword' => [self::STRING, self::MAX.':'.'100'],
+        parent::defineBaseRules();
+
+        $this->sharedRules = array_merge($this->sharedRules, [
+            'keyword' => [self::STRING, self::MAX . ':' . '100'],
             'created_date_from' => [self::DATE_FORMAT . ':' . DateTimeInterface::ATOM],
             'created_date_to' => [self::DATE_FORMAT . ':' . DateTimeInterface::ATOM],
-        ];
+        ]);
     }
 
     /**

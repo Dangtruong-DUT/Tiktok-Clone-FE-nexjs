@@ -4,13 +4,14 @@ namespace App\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
-use UserRepository;
+use App\Repositories\UserRepository;
 
 class UserId implements ValidationRule
 {
-    protected $userRepository;
+    protected UserRepository $userRepository;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->userRepository = app()->make(UserRepository::class);
     }
 

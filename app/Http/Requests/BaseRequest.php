@@ -85,9 +85,10 @@ abstract class BaseRequest extends BaseFormRequest
     protected const REGEX_PHONE_VN = 'regex:/^[0-9]{10}$/';
 
     /**
-     * common rules
+     * shared rules
      */
-    protected array $commonRules;
+    protected array $sharedRules = [];
+
 
     /**
      * @var array cast rules
@@ -107,53 +108,39 @@ abstract class BaseRequest extends BaseFormRequest
                 $value = null;
             }
         });
-
-        // Also update invoke the request input modification so other methods see the change
-        foreach ($validationData as $key => $value) {
-            if ($this->input($key) === 'null') {
-                $this->merge([$key => null]);
-            }
-        }
+        $this->merge($validationData);
 
         if ($this->has('order_by')) {
-            $validationData['order_by'] = $this->castValueOfOrderBy($this->get('order_by'));
-        }
-
-        if ($this->has('attachments')) {
-            // $validationData['attachments'] = $this->castValueOfAttachments($this->get('attachments'));
+            $validationData['order_by'] = $this->castValueOfOrderBy($this->input('order_by'));
         }
 
         return $validationData;
     }
 
     /**
-     * merge common rules
+     * merge base rules
      *
      * @param array $rules
      * @return array
      */
-    protected function mergeCommonRules(array $rules): array
+    protected function applyBaseRules(array $rules): array
     {
-        // If you store it in the constructor, the contents of the Request will not be available, so store it here.
-        $this->setCommonRules();
+        $this->defineBaseRules();
 
         $mergedRules = [];
         foreach ($rules as $name => $value) {
             $leafName = '';
             if (str_contains($name, '*')) {
-                // if the item is nested, use the last item as the common target (hoge.*.fuga)
-                $leafName = strstr($name, '.*.');
+                $leafName = substr(strstr($name, '.*.'), 3);
             }
             if (is_array($value)) {
-                // set common rules for all items
-                $default = [self::BAIL];
-                // if the array, merge the array
-                if ($this->existsCommonRules($name)) {
-                    $mergedRules[$name] = array_merge($default, $value, $this->findCommonRules($name));
-                } elseif ($leafName !== '' && $this->existsCommonRules($leafName)) {
-                    $mergedRules[$name] = array_merge($default, $value, $this->findCommonRules($leafName));
+                $defaultRule = [self::BAIL];
+                if ($this->hasBaseRule($name)) {
+                    $mergedRules[$name] = array_merge($defaultRule, $value, $this->getBaseRule($name));
+                } elseif ($leafName !== '' && $this->hasBaseRule($leafName)) {
+                    $mergedRules[$name] = array_merge($defaultRule, $value, $this->getBaseRule($leafName));
                 } else {
-                    $mergedRules[$name] = array_merge($default, $value);
+                    $mergedRules[$name] = array_merge($defaultRule, $value);
                 }
             }
         }
@@ -161,14 +148,13 @@ abstract class BaseRequest extends BaseFormRequest
     }
 
     /**
-     * Summary of castValueOfOrderBy
+     * cast column and direction column in database field
      * @param array $orderBy
      * @return array
      */
     private function castValueOfOrderBy(array $orderBy): array
     {
         return array_map(function ($item) {
-            // cast column and direction column in database field
             return $item;
         }, $orderBy);
     }
@@ -179,9 +165,9 @@ abstract class BaseRequest extends BaseFormRequest
      * @param string $name
      * @return bool
      */
-    private function existsCommonRules(string $name): bool
+    private function hasBaseRule(string $name): bool
     {
-        return array_key_exists($name, $this->commonRules);
+        return array_key_exists($name, $this->sharedRules);
     }
 
     /**
@@ -190,22 +176,24 @@ abstract class BaseRequest extends BaseFormRequest
      * @param string $name
      * @return array
      */
-    private function findCommonRules(string $name): array
+    private function getBaseRule(string $name): array
     {
-        if (array_key_exists($name, $this->commonRules)) {
-            return $this->commonRules[$name];
+        if (array_key_exists($name, $this->sharedRules)) {
+            return $this->sharedRules[$name];
         }
         return [];
     }
 
+
     /**
-     * set common rules
-     * @param void
+     * define base rules
+     * If you store common rules in the constructor, the contents of the Request will not be available.
+     *
      * @return void
      */
-    protected function setCommonRules(): void
+    protected function defineBaseRules(): void
     {
-        $this->commonRules = [
+        $this->sharedRules = [
             'email' => [self::EMAIL, self::MAX.':'.'100'],
             'password' => [self::STRING, self::MIN.':'.'8'],
             'user_id' => [self::INTEGER, new UserId()],
