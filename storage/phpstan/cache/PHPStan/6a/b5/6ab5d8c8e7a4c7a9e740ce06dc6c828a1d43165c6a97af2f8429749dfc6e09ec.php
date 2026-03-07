@@ -12,11 +12,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'namespace' => 'App\\Http\\Controllers\\Api',
          'uses' => 
         array (
-          'controller' => 'App\\Http\\Controllers\\Controller',
           'loginrequest' => 'App\\Http\\Requests\\Auth\\LoginRequest',
           'hasmiddleware' => 'Illuminate\\Routing\\Controllers\\HasMiddleware',
-          'auth' => 'Illuminate\\Support\\Facades\\Auth',
           'middleware' => 'Illuminate\\Routing\\Controllers\\Middleware',
+          'log' => 'Illuminate\\Support\\Facades\\Log',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'controller' => 'App\\Http\\Controllers\\Controller',
         ),
          'className' => 'App\\Http\\Controllers\\Api\\AuthController',
          'functionName' => NULL,
@@ -39,11 +40,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'namespace' => 'App\\Http\\Controllers\\Api',
          'uses' => 
         array (
-          'controller' => 'App\\Http\\Controllers\\Controller',
           'loginrequest' => 'App\\Http\\Requests\\Auth\\LoginRequest',
           'hasmiddleware' => 'Illuminate\\Routing\\Controllers\\HasMiddleware',
-          'auth' => 'Illuminate\\Support\\Facades\\Auth',
           'middleware' => 'Illuminate\\Routing\\Controllers\\Middleware',
+          'log' => 'Illuminate\\Support\\Facades\\Log',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'controller' => 'App\\Http\\Controllers\\Controller',
         ),
          'className' => 'App\\Http\\Controllers\\Api\\AuthController',
          'functionName' => 'middleware',
@@ -66,11 +68,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'namespace' => 'App\\Http\\Controllers\\Api',
          'uses' => 
         array (
-          'controller' => 'App\\Http\\Controllers\\Controller',
           'loginrequest' => 'App\\Http\\Requests\\Auth\\LoginRequest',
           'hasmiddleware' => 'Illuminate\\Routing\\Controllers\\HasMiddleware',
-          'auth' => 'Illuminate\\Support\\Facades\\Auth',
           'middleware' => 'Illuminate\\Routing\\Controllers\\Middleware',
+          'log' => 'Illuminate\\Support\\Facades\\Log',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'controller' => 'App\\Http\\Controllers\\Controller',
         ),
          'className' => 'App\\Http\\Controllers\\Api\\AuthController',
          'functionName' => 'login',
@@ -93,11 +96,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'namespace' => 'App\\Http\\Controllers\\Api',
          'uses' => 
         array (
-          'controller' => 'App\\Http\\Controllers\\Controller',
           'loginrequest' => 'App\\Http\\Requests\\Auth\\LoginRequest',
           'hasmiddleware' => 'Illuminate\\Routing\\Controllers\\HasMiddleware',
-          'auth' => 'Illuminate\\Support\\Facades\\Auth',
           'middleware' => 'Illuminate\\Routing\\Controllers\\Middleware',
+          'log' => 'Illuminate\\Support\\Facades\\Log',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'controller' => 'App\\Http\\Controllers\\Controller',
         ),
          'className' => 'App\\Http\\Controllers\\Api\\AuthController',
          'functionName' => 'me',
@@ -120,11 +124,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'namespace' => 'App\\Http\\Controllers\\Api',
          'uses' => 
         array (
-          'controller' => 'App\\Http\\Controllers\\Controller',
           'loginrequest' => 'App\\Http\\Requests\\Auth\\LoginRequest',
           'hasmiddleware' => 'Illuminate\\Routing\\Controllers\\HasMiddleware',
-          'auth' => 'Illuminate\\Support\\Facades\\Auth',
           'middleware' => 'Illuminate\\Routing\\Controllers\\Middleware',
+          'log' => 'Illuminate\\Support\\Facades\\Log',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'controller' => 'App\\Http\\Controllers\\Controller',
         ),
          'className' => 'App\\Http\\Controllers\\Api\\AuthController',
          'functionName' => 'logout',
@@ -147,11 +152,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'namespace' => 'App\\Http\\Controllers\\Api',
          'uses' => 
         array (
-          'controller' => 'App\\Http\\Controllers\\Controller',
           'loginrequest' => 'App\\Http\\Requests\\Auth\\LoginRequest',
           'hasmiddleware' => 'Illuminate\\Routing\\Controllers\\HasMiddleware',
-          'auth' => 'Illuminate\\Support\\Facades\\Auth',
           'middleware' => 'Illuminate\\Routing\\Controllers\\Middleware',
+          'log' => 'Illuminate\\Support\\Facades\\Log',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'controller' => 'App\\Http\\Controllers\\Controller',
         ),
          'className' => 'App\\Http\\Controllers\\Api\\AuthController',
          'functionName' => 'refresh',
@@ -174,11 +180,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'namespace' => 'App\\Http\\Controllers\\Api',
          'uses' => 
         array (
-          'controller' => 'App\\Http\\Controllers\\Controller',
           'loginrequest' => 'App\\Http\\Requests\\Auth\\LoginRequest',
           'hasmiddleware' => 'Illuminate\\Routing\\Controllers\\HasMiddleware',
-          'auth' => 'Illuminate\\Support\\Facades\\Auth',
           'middleware' => 'Illuminate\\Routing\\Controllers\\Middleware',
+          'log' => 'Illuminate\\Support\\Facades\\Log',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'controller' => 'App\\Http\\Controllers\\Controller',
         ),
          'className' => 'App\\Http\\Controllers\\Api\\AuthController',
          'functionName' => 'respondWithToken',
@@ -201,11 +208,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'namespace' => 'App\\Http\\Controllers\\Api',
          'uses' => 
         array (
-          'controller' => 'App\\Http\\Controllers\\Controller',
           'loginrequest' => 'App\\Http\\Requests\\Auth\\LoginRequest',
           'hasmiddleware' => 'Illuminate\\Routing\\Controllers\\HasMiddleware',
-          'auth' => 'Illuminate\\Support\\Facades\\Auth',
           'middleware' => 'Illuminate\\Routing\\Controllers\\Middleware',
+          'log' => 'Illuminate\\Support\\Facades\\Log',
+          'auth' => 'Illuminate\\Support\\Facades\\Auth',
+          'controller' => 'App\\Http\\Controllers\\Controller',
         ),
          'className' => 'App\\Http\\Controllers\\Api\\AuthController',
          'functionName' => 'guard',
@@ -226,7 +234,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Controllers/Api/AuthController.php' => 'ad25b7f1b05e9c7456e00683409a2ded048a321d39dabbd2703d4207e73c0629',
+      '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Controllers/Api/AuthController.php' => '9ba3fff2b26706314cbb350e72b77a75671d305cc985f5646250f17658dcf19f',
     ),
   ),
 ));

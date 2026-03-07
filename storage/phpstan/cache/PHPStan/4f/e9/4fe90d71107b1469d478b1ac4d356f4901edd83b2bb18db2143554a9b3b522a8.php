@@ -2,7 +2,7 @@
 
 // odsl-/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Controllers/Api/AuthController.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Http\Controllers\Api\AuthController
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.65.0.9-8.2.30-ad25b7f1b05e9c7456e00683409a2ded048a321d39dabbd2703d4207e73c0629',
+   'variableKey' => 'v2-6.65.0.9-8.2.30-9ba3fff2b26706314cbb350e72b77a75671d305cc985f5646250f17658dcf19f',
    'data' => 
   array (
     'locatedSource' => 
@@ -26,8 +26,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     'attributes' => 
     array (
     ),
-    'startLine' => 11,
-    'endLine' => 90,
+    'startLine' => 12,
+    'endLine' => 92,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'App\\Http\\Controllers\\Controller',
@@ -66,8 +66,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 15,
-        'endLine' => 20,
+        'startLine' => 16,
+        'endLine' => 21,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -105,8 +105,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 23,
-            'endLine' => 23,
+            'startLine' => 24,
+            'endLine' => 24,
             'startColumn' => 27,
             'endColumn' => 47,
             'parameterIndex' => 0,
@@ -119,8 +119,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 23,
-        'endLine' => 31,
+        'startLine' => 24,
+        'endLine' => 32,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -150,8 +150,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  *
  * @return \\Illuminate\\Http\\JsonResponse
  */',
-        'startLine' => 38,
-        'endLine' => 41,
+        'startLine' => 39,
+        'endLine' => 42,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -181,8 +181,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  *
  * @return \\Illuminate\\Http\\JsonResponse
  */',
-        'startLine' => 48,
-        'endLine' => 53,
+        'startLine' => 49,
+        'endLine' => 54,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -212,8 +212,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  *
  * @return \\Illuminate\\Http\\JsonResponse
  */',
-        'startLine' => 60,
-        'endLine' => 63,
+        'startLine' => 61,
+        'endLine' => 64,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -243,8 +243,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 72,
-            'endLine' => 72,
+            'startLine' => 73,
+            'endLine' => 73,
             'startColumn' => 41,
             'endColumn' => 46,
             'parameterIndex' => 0,
@@ -263,8 +263,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  *
  * @return \\Illuminate\\Http\\JsonResponse
  */',
-        'startLine' => 72,
-        'endLine' => 79,
+        'startLine' => 73,
+        'endLine' => 80,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -292,10 +292,10 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get the guard to be used during authentication.
  *
- * @return \\Illuminate\\Contracts\\Auth\\Guard
+ * @return \\Tymon\\JWTAuth\\JWTGuard
  */',
-        'startLine' => 86,
-        'endLine' => 89,
+        'startLine' => 87,
+        'endLine' => 91,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

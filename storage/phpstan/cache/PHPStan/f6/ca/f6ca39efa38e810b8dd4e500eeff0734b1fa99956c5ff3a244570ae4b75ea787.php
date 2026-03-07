@@ -2,7 +2,7 @@
 
 // odsl-/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Exceptions\Handler
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.65.0.9-8.2.30-5a3eac394ca1d3c4410fe15ebbb62c09b1936b30640592c11670af83079c456b',
+   'variableKey' => 'v2-6.65.0.9-8.2.30-488d55cf96c6166ec23295c2f9a2e7950a04456ea8f71df236d0dba3fb389f4a',
    'data' => 
   array (
     'locatedSource' => 
@@ -26,8 +26,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     'attributes' => 
     array (
     ),
-    'startLine' => 13,
-    'endLine' => 129,
+    'startLine' => 8,
+    'endLine' => 29,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'Illuminate\\Foundation\\Exceptions\\Handler',
@@ -54,12 +54,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'code' => '[]',
           'attributes' => 
           array (
-            'startLine' => 20,
-            'endLine' => 22,
-            'startTokenPos' => 68,
-            'startFilePos' => 599,
-            'endTokenPos' => 72,
-            'endFilePos' => 616,
+            'startLine' => 15,
+            'endLine' => 17,
+            'startTokenPos' => 39,
+            'startFilePos' => 316,
+            'endTokenPos' => 43,
+            'endFilePos' => 333,
           ),
         ),
         'docComment' => '/**
@@ -70,8 +70,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'attributes' => 
         array (
         ),
-        'startLine' => 20,
-        'endLine' => 22,
+        'startLine' => 15,
+        'endLine' => 17,
         'startColumn' => 5,
         'endColumn' => 6,
         'isPromoted' => false,
@@ -93,12 +93,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'code' => '[\'current_password\', \'password\', \'password_confirmation\']',
           'attributes' => 
           array (
-            'startLine' => 29,
-            'endLine' => 33,
-            'startTokenPos' => 83,
-            'startFilePos' => 779,
-            'endTokenPos' => 94,
-            'endFilePos' => 866,
+            'startLine' => 24,
+            'endLine' => 28,
+            'startTokenPos' => 54,
+            'startFilePos' => 496,
+            'endTokenPos' => 65,
+            'endFilePos' => 583,
           ),
         ),
         'docComment' => '/**
@@ -109,8 +109,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'attributes' => 
         array (
         ),
-        'startLine' => 29,
-        'endLine' => 33,
+        'startLine' => 24,
+        'endLine' => 28,
         'startColumn' => 5,
         'endColumn' => 6,
         'isPromoted' => false,
@@ -123,176 +123,6 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     'immediateMethods' => 
     array (
-      'register' => 
-      array (
-        'name' => 'register',
-        'parameters' => 
-        array (
-        ),
-        'returnsReference' => false,
-        'returnType' => 
-        array (
-          'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
-          'data' => 
-          array (
-            'name' => 'void',
-            'isIdentifier' => true,
-          ),
-        ),
-        'attributes' => 
-        array (
-        ),
-        'docComment' => '/**
- * Register the exception handling callbacks for the application.
- */',
-        'startLine' => 38,
-        'endLine' => 45,
-        'startColumn' => 5,
-        'endColumn' => 5,
-        'couldThrow' => false,
-        'isClosure' => false,
-        'isGenerator' => false,
-        'isVariadic' => false,
-        'modifiers' => 1,
-        'namespace' => 'App\\Exceptions',
-        'declaringClassName' => 'App\\Exceptions\\Handler',
-        'implementingClassName' => 'App\\Exceptions\\Handler',
-        'currentClassName' => 'App\\Exceptions\\Handler',
-        'aliasName' => NULL,
-      ),
-      'render' => 
-      array (
-        'name' => 'render',
-        'parameters' => 
-        array (
-          'request' => 
-          array (
-            'name' => 'request',
-            'default' => NULL,
-            'type' => NULL,
-            'isVariadic' => false,
-            'byRef' => false,
-            'isPromoted' => false,
-            'attributes' => 
-            array (
-            ),
-            'startLine' => 53,
-            'endLine' => 53,
-            'startColumn' => 28,
-            'endColumn' => 35,
-            'parameterIndex' => 0,
-            'isOptional' => false,
-          ),
-          'exception' => 
-          array (
-            'name' => 'exception',
-            'default' => NULL,
-            'type' => 
-            array (
-              'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
-              'data' => 
-              array (
-                'name' => 'Throwable',
-                'isIdentifier' => false,
-              ),
-            ),
-            'isVariadic' => false,
-            'byRef' => false,
-            'isPromoted' => false,
-            'attributes' => 
-            array (
-            ),
-            'startLine' => 53,
-            'endLine' => 53,
-            'startColumn' => 38,
-            'endColumn' => 57,
-            'parameterIndex' => 1,
-            'isOptional' => false,
-          ),
-        ),
-        'returnsReference' => false,
-        'returnType' => NULL,
-        'attributes' => 
-        array (
-        ),
-        'docComment' => '/**
- * Render an exception into an HTTP response.
- *
- * @param  \\Illuminate\\Http\\Request  $request
- * @return \\Illuminate\\Http\\Response
- */',
-        'startLine' => 53,
-        'endLine' => 60,
-        'startColumn' => 5,
-        'endColumn' => 5,
-        'couldThrow' => false,
-        'isClosure' => false,
-        'isGenerator' => false,
-        'isVariadic' => false,
-        'modifiers' => 1,
-        'namespace' => 'App\\Exceptions',
-        'declaringClassName' => 'App\\Exceptions\\Handler',
-        'implementingClassName' => 'App\\Exceptions\\Handler',
-        'currentClassName' => 'App\\Exceptions\\Handler',
-        'aliasName' => NULL,
-      ),
-      'handleApiException' => 
-      array (
-        'name' => 'handleApiException',
-        'parameters' => 
-        array (
-          'exception' => 
-          array (
-            'name' => 'exception',
-            'default' => NULL,
-            'type' => 
-            array (
-              'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
-              'data' => 
-              array (
-                'name' => 'Throwable',
-                'isIdentifier' => false,
-              ),
-            ),
-            'isVariadic' => false,
-            'byRef' => false,
-            'isPromoted' => false,
-            'attributes' => 
-            array (
-            ),
-            'startLine' => 67,
-            'endLine' => 67,
-            'startColumn' => 41,
-            'endColumn' => 60,
-            'parameterIndex' => 0,
-            'isOptional' => false,
-          ),
-        ),
-        'returnsReference' => false,
-        'returnType' => NULL,
-        'attributes' => 
-        array (
-        ),
-        'docComment' => '/**
- * Handle API exceptions.
- *
- * @return \\Illuminate\\Http\\Response
- */',
-        'startLine' => 67,
-        'endLine' => 128,
-        'startColumn' => 5,
-        'endColumn' => 5,
-        'couldThrow' => false,
-        'isClosure' => false,
-        'isGenerator' => false,
-        'isVariadic' => false,
-        'modifiers' => 4,
-        'namespace' => 'App\\Exceptions',
-        'declaringClassName' => 'App\\Exceptions\\Handler',
-        'implementingClassName' => 'App\\Exceptions\\Handler',
-        'currentClassName' => 'App\\Exceptions\\Handler',
-        'aliasName' => NULL,
-      ),
     ),
     'traitsData' => 
     array (

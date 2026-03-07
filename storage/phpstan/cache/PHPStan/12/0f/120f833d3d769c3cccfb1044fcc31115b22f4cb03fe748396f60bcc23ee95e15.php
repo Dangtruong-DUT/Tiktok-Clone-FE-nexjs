@@ -7,15 +7,14 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
   array (
     0 => 
     array (
-      '1fd408145510a992b5f3fc7a0150646d' => 
+      'd379ce3aec115c2406f45d8f0dfccf29' => 
       \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Exceptions',
+         'namespace' => 'App\\Exceptions\\http',
          'uses' => 
         array (
-          'exception' => 'Exception',
-          'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
+          'response' => 'Symfony\\Component\\HttpFoundation\\Response',
         ),
-         'className' => 'App\\Exceptions\\ValidationException',
+         'className' => 'App\\Exceptions\\http\\ValidationException',
          'functionName' => NULL,
          'templatePhpDocNodes' => 
         array (
@@ -31,64 +30,15 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'typeAliasClassName' => NULL,
          'traitData' => NULL,
       )),
-      'c11db8d3e9ea1c6e84b5a3c8bcb213a4' => 
+      '5cece42fc6655be359e837088075a64c' => 
       \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Exceptions',
+         'namespace' => 'App\\Exceptions\\http',
          'uses' => 
         array (
-          'exception' => 'Exception',
-          'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
+          'response' => 'Symfony\\Component\\HttpFoundation\\Response',
         ),
-         'className' => 'App\\Exceptions\\ValidationException',
+         'className' => 'App\\Exceptions\\http\\ValidationException',
          'functionName' => '__construct',
-         'templatePhpDocNodes' => 
-        array (
-        ),
-         'parent' => NULL,
-         'typeAliasesMap' => 
-        array (
-        ),
-         'bypassTypeAliases' => false,
-         'constUses' => 
-        array (
-        ),
-         'typeAliasClassName' => NULL,
-         'traitData' => NULL,
-      )),
-      'e7156123034aedae2290aa687e36e3df' => 
-      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Exceptions',
-         'uses' => 
-        array (
-          'exception' => 'Exception',
-          'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
-        ),
-         'className' => 'App\\Exceptions\\ValidationException',
-         'functionName' => 'report',
-         'templatePhpDocNodes' => 
-        array (
-        ),
-         'parent' => NULL,
-         'typeAliasesMap' => 
-        array (
-        ),
-         'bypassTypeAliases' => false,
-         'constUses' => 
-        array (
-        ),
-         'typeAliasClassName' => NULL,
-         'traitData' => NULL,
-      )),
-      'c20157b46e49245770e5a39906bf3c37' => 
-      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Exceptions',
-         'uses' => 
-        array (
-          'exception' => 'Exception',
-          'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
-        ),
-         'className' => 'App\\Exceptions\\ValidationException',
-         'functionName' => 'render',
          'templatePhpDocNodes' => 
         array (
         ),
@@ -106,7 +56,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/ValidationException.php' => '276b2fc96b2f8c627131068b9ec9a96c22618549627a67732ecb68c1694445cd',
+      '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/ValidationException.php' => '1dc788a338b1f7f0476db0d377b9c8d13f58afcc150b6f69543d8454269c4ecd',
     ),
   ),
 ));

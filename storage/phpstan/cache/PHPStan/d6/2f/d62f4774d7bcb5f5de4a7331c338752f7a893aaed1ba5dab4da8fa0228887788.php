@@ -7,7 +7,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
   array (
     '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Controllers/Api/AuthController.php' => 
     array (
-      0 => 'ad25b7f1b05e9c7456e00683409a2ded048a321d39dabbd2703d4207e73c0629',
+      0 => '9ba3fff2b26706314cbb350e72b77a75671d305cc985f5646250f17658dcf19f',
       1 => 
       array (
         0 => 'app\\http\\controllers\\api\\authcontroller',
@@ -42,7 +42,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Requests/Auth/LoginRequest.php' => 
     array (
-      0 => '707286bba73f6c30ba6fc84cfc40c885b4e4c6464284fe9186a2a75772cff284',
+      0 => 'bee201a93198dc3502a765b66d521f2b748ff5c6c944bb0bf0a281598c665efc',
       1 => 
       array (
         0 => 'app\\http\\requests\\auth\\loginrequest',
@@ -192,16 +192,13 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php' => 
     array (
-      0 => '5a3eac394ca1d3c4410fe15ebbb62c09b1936b30640592c11670af83079c456b',
+      0 => '488d55cf96c6166ec23295c2f9a2e7950a04456ea8f71df236d0dba3fb389f4a',
       1 => 
       array (
         0 => 'app\\exceptions\\handler',
       ),
       2 => 
       array (
-        0 => 'app\\exceptions\\register',
-        1 => 'app\\exceptions\\render',
-        2 => 'app\\exceptions\\handleapiexception',
       ),
       3 => 
       array (
@@ -209,16 +206,18 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/BaseException.php' => 
     array (
-      0 => '3ff382565927ba439d3c00b67da319f9ec1e753acf4decbe0ac670f7c9df3a73',
+      0 => 'dc3cb132cfcda532aef35254837582063b24c330ff3d7988d68f6fa6331c3430',
       1 => 
       array (
-        0 => 'app\\exceptions\\baseexception',
+        0 => 'app\\exceptions\\http\\baseexception',
       ),
       2 => 
       array (
-        0 => 'app\\exceptions\\__construct',
-        1 => 'app\\exceptions\\gethttpstatuscode',
-        2 => 'app\\exceptions\\geterrors',
+        0 => 'app\\exceptions\\http\\__construct',
+        1 => 'app\\exceptions\\http\\gethttpstatuscode',
+        2 => 'app\\exceptions\\http\\geterrors',
+        3 => 'app\\exceptions\\http\\report',
+        4 => 'app\\exceptions\\http\\render',
       ),
       3 => 
       array (
@@ -226,15 +225,14 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/BusinessException.php' => 
     array (
-      0 => 'c1117d2344f356befe03ef399b132f896cb2ee7bf25e48e9e6673ab1e313deb3',
+      0 => '4f4e180cf6c6ad2062fad7c31faa154793887ceef106495c2dcf5f364a16d2aa',
       1 => 
       array (
-        0 => 'app\\exceptions\\businessexception',
+        0 => 'app\\exceptions\\http\\businessexception',
       ),
       2 => 
       array (
-        0 => 'app\\exceptions\\report',
-        1 => 'app\\exceptions\\render',
+        0 => 'app\\exceptions\\http\\__construct',
       ),
       3 => 
       array (
@@ -242,15 +240,14 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/ConflictException.php' => 
     array (
-      0 => '1336ae2d0f3218904d41e2c0baf703d0ea7c9f2d4fa6ae37a94aea8d295fb919',
+      0 => 'd9ee3b177eafd4d0a30b94267385e8b272501d76af32bd07693c9bf0475db68c',
       1 => 
       array (
-        0 => 'app\\exceptions\\conflictexception',
+        0 => 'app\\exceptions\\http\\conflictexception',
       ),
       2 => 
       array (
-        0 => 'app\\exceptions\\report',
-        1 => 'app\\exceptions\\render',
+        0 => 'app\\exceptions\\http\\__construct',
       ),
       3 => 
       array (
@@ -258,15 +255,14 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/JWTException.php' => 
     array (
-      0 => 'b35af10f72852a853e419ff5d5d6bf1d3976896fc40c6fa1dd9a6b07e3cb2658',
+      0 => '09e15c68120bffd0b737a92fb932b5053c4ce3d2876db7379c5cec0ab6004a1f',
       1 => 
       array (
-        0 => 'app\\exceptions\\jwtexception',
+        0 => 'app\\exceptions\\http\\jwtexception',
       ),
       2 => 
       array (
-        0 => 'app\\exceptions\\report',
-        1 => 'app\\exceptions\\render',
+        0 => 'app\\exceptions\\http\\__construct',
       ),
       3 => 
       array (
@@ -274,15 +270,14 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/NotFoundException.php' => 
     array (
-      0 => '7bad20bc0c9d9aea843507c4f9df17d85af1ae928be50077ba8fba3430ffac00',
+      0 => 'f9b9b40314f29866fd2938c9e12e89c1bb451b9329399f9fff2ca95db90f2757',
       1 => 
       array (
-        0 => 'app\\exceptions\\notfoundexception',
+        0 => 'app\\exceptions\\http\\notfoundexception',
       ),
       2 => 
       array (
-        0 => 'app\\exceptions\\report',
-        1 => 'app\\exceptions\\render',
+        0 => 'app\\exceptions\\http\\__construct',
       ),
       3 => 
       array (
@@ -290,15 +285,14 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/UnauthorizedException.php' => 
     array (
-      0 => '1963dd98e3ad7f181cefa1569519d069e0ae5483e78402f061d81b7a9c6643a9',
+      0 => 'f70a2517d8d133f0e0eecb2719bb19b0807da1fb3d16608ab93fd0e1d6fff290',
       1 => 
       array (
-        0 => 'app\\exceptions\\unauthorizedexception',
+        0 => 'app\\exceptions\\http\\unauthorizedexception',
       ),
       2 => 
       array (
-        0 => 'app\\exceptions\\report',
-        1 => 'app\\exceptions\\render',
+        0 => 'app\\exceptions\\http\\__construct',
       ),
       3 => 
       array (
@@ -306,16 +300,50 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/ValidationException.php' => 
     array (
-      0 => '276b2fc96b2f8c627131068b9ec9a96c22618549627a67732ecb68c1694445cd',
+      0 => '1dc788a338b1f7f0476db0d377b9c8d13f58afcc150b6f69543d8454269c4ecd',
       1 => 
       array (
-        0 => 'app\\exceptions\\validationexception',
+        0 => 'app\\exceptions\\http\\validationexception',
       ),
       2 => 
       array (
-        0 => 'app\\exceptions\\__construct',
-        1 => 'app\\exceptions\\report',
-        2 => 'app\\exceptions\\render',
+        0 => 'app\\exceptions\\http\\__construct',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Response/ApiResponse.php' => 
+    array (
+      0 => 'c47588b9fd748ffef854c7cd048b8fafb7825c1d19ad6b015f369bbf0b9c6e1f',
+      1 => 
+      array (
+        0 => 'app\\http\\response\\apiresponse',
+      ),
+      2 => 
+      array (
+        0 => 'app\\http\\response\\success',
+        1 => 'app\\http\\response\\error',
+        2 => 'app\\http\\response\\created',
+        3 => 'app\\http\\response\\notfound',
+        4 => 'app\\http\\response\\forbidden',
+        5 => 'app\\http\\response\\unauthorized',
+        6 => 'app\\http\\response\\validationerror',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/helpers.php' => 
+    array (
+      0 => '58c0b5d1b40199aa7b1075036870fa7a4e520780ae66c448cfe2253e56045de4',
+      1 => 
+      array (
+      ),
+      2 => 
+      array (
+        0 => 'is_api_request',
+        1 => 'filter_null_values',
       ),
       3 => 
       array (

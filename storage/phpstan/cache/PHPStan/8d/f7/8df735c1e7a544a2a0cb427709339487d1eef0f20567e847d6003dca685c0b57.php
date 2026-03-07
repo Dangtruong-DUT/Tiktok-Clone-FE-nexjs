@@ -7,15 +7,14 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
   array (
     0 => 
     array (
-      '274502dd8ae2cedc336eba094af3400d' => 
+      'a2d5bb12c31ab426afc3129cbfe9f858' => 
       \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Exceptions',
+         'namespace' => 'App\\Exceptions\\http',
          'uses' => 
         array (
-          'exception' => 'Exception',
-          'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
+          'response' => 'Symfony\\Component\\HttpFoundation\\Response',
         ),
-         'className' => 'App\\Exceptions\\ConflictException',
+         'className' => 'App\\Exceptions\\http\\ConflictException',
          'functionName' => NULL,
          'templatePhpDocNodes' => 
         array (
@@ -31,40 +30,15 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'typeAliasClassName' => NULL,
          'traitData' => NULL,
       )),
-      'b63ee66ab1aee82da8c8f77a49eb6c67' => 
+      '0d75b3f3e16a379b05fa036ae665e23e' => 
       \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Exceptions',
+         'namespace' => 'App\\Exceptions\\http',
          'uses' => 
         array (
-          'exception' => 'Exception',
-          'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
+          'response' => 'Symfony\\Component\\HttpFoundation\\Response',
         ),
-         'className' => 'App\\Exceptions\\ConflictException',
-         'functionName' => 'report',
-         'templatePhpDocNodes' => 
-        array (
-        ),
-         'parent' => NULL,
-         'typeAliasesMap' => 
-        array (
-        ),
-         'bypassTypeAliases' => false,
-         'constUses' => 
-        array (
-        ),
-         'typeAliasClassName' => NULL,
-         'traitData' => NULL,
-      )),
-      '83539b3c8b0bdaa7fa17db8aae051fe7' => 
-      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Exceptions',
-         'uses' => 
-        array (
-          'exception' => 'Exception',
-          'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
-        ),
-         'className' => 'App\\Exceptions\\ConflictException',
-         'functionName' => 'render',
+         'className' => 'App\\Exceptions\\http\\ConflictException',
+         'functionName' => '__construct',
          'templatePhpDocNodes' => 
         array (
         ),
@@ -82,7 +56,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/ConflictException.php' => '1336ae2d0f3218904d41e2c0baf703d0ea7c9f2d4fa6ae37a94aea8d295fb919',
+      '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/ConflictException.php' => 'd9ee3b177eafd4d0a30b94267385e8b272501d76af32bd07693c9bf0475db68c',
     ),
   ),
 ));

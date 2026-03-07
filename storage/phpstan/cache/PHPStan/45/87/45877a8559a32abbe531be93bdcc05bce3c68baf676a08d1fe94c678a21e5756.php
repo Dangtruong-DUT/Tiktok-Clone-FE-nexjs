@@ -56,7 +56,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Requests/Auth/LoginRequest.php' => '707286bba73f6c30ba6fc84cfc40c885b4e4c6464284fe9186a2a75772cff284',
+      '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Requests/Auth/LoginRequest.php' => 'bee201a93198dc3502a765b66d521f2b748ff5c6c944bb0bf0a281598c665efc',
     ),
   ),
 ));

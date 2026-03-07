@@ -2151,18 +2151,20 @@ return [
 	'projectExtensionFiles' => array (
 ),
 	'errorsCallback' => static function (): array { return array (
-  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php' => 
+); },
+	'locallyIgnoredErrorsCallback' => static function (): array { return array (
+  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Controllers/Api/AuthController.php' => 
   array (
     0 => 
     \PHPStan\Analyser\Error::__set_state(array(
-       'message' => 'Method App\\Exceptions\\Handler::render() should return Illuminate\\Http\\Response but returns Symfony\\Component\\HttpFoundation\\Response.',
-       'file' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php',
-       'line' => 59,
+       'message' => 'Method App\\Http\\Controllers\\Api\\AuthController::guard() should return Tymon\\JWTAuth\\JWTGuard but returns Illuminate\\Contracts\\Auth\\Guard.',
+       'file' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Controllers/Api/AuthController.php',
+       'line' => 90,
        'canBeIgnored' => true,
-       'filePath' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php',
+       'filePath' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Controllers/Api/AuthController.php',
        'traitFilePath' => NULL,
        'tip' => NULL,
-       'nodeLine' => 59,
+       'nodeLine' => 90,
        'nodeType' => 'PhpParser\\Node\\Stmt\\Return_',
        'identifier' => 'return.type',
        'metadata' => 
@@ -2170,199 +2172,7 @@ return [
       ),
        'fixedErrorDiff' => NULL,
     )),
-    1 => 
-    \PHPStan\Analyser\Error::__set_state(array(
-       'message' => 'Call to static method error() on an unknown class App\\Http\\Response\\ApiResponse.',
-       'file' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php',
-       'line' => 71,
-       'canBeIgnored' => true,
-       'filePath' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php',
-       'traitFilePath' => NULL,
-       'tip' => 'Learn more at https://phpstan.org/user-guide/discovering-symbols',
-       'nodeLine' => 71,
-       'nodeType' => 'PhpParser\\Node\\Expr\\StaticCall',
-       'identifier' => 'class.notFound',
-       'metadata' => 
-      array (
-      ),
-       'fixedErrorDiff' => NULL,
-    )),
-    2 => 
-    \PHPStan\Analyser\Error::__set_state(array(
-       'message' => 'Call to static method error() on an unknown class App\\Http\\Response\\ApiResponse.',
-       'file' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php',
-       'line' => 80,
-       'canBeIgnored' => true,
-       'filePath' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php',
-       'traitFilePath' => NULL,
-       'tip' => 'Learn more at https://phpstan.org/user-guide/discovering-symbols',
-       'nodeLine' => 80,
-       'nodeType' => 'PhpParser\\Node\\Expr\\StaticCall',
-       'identifier' => 'class.notFound',
-       'metadata' => 
-      array (
-      ),
-       'fixedErrorDiff' => NULL,
-    )),
-    3 => 
-    \PHPStan\Analyser\Error::__set_state(array(
-       'message' => 'Call to static method error() on an unknown class App\\Http\\Response\\ApiResponse.',
-       'file' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php',
-       'line' => 88,
-       'canBeIgnored' => true,
-       'filePath' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php',
-       'traitFilePath' => NULL,
-       'tip' => 'Learn more at https://phpstan.org/user-guide/discovering-symbols',
-       'nodeLine' => 88,
-       'nodeType' => 'PhpParser\\Node\\Expr\\StaticCall',
-       'identifier' => 'class.notFound',
-       'metadata' => 
-      array (
-      ),
-       'fixedErrorDiff' => NULL,
-    )),
-    4 => 
-    \PHPStan\Analyser\Error::__set_state(array(
-       'message' => 'Call to static method error() on an unknown class App\\Http\\Response\\ApiResponse.',
-       'file' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php',
-       'line' => 96,
-       'canBeIgnored' => true,
-       'filePath' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php',
-       'traitFilePath' => NULL,
-       'tip' => 'Learn more at https://phpstan.org/user-guide/discovering-symbols',
-       'nodeLine' => 96,
-       'nodeType' => 'PhpParser\\Node\\Expr\\StaticCall',
-       'identifier' => 'class.notFound',
-       'metadata' => 
-      array (
-      ),
-       'fixedErrorDiff' => NULL,
-    )),
-    5 => 
-    \PHPStan\Analyser\Error::__set_state(array(
-       'message' => 'Call to static method error() on an unknown class App\\Http\\Response\\ApiResponse.',
-       'file' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php',
-       'line' => 104,
-       'canBeIgnored' => true,
-       'filePath' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php',
-       'traitFilePath' => NULL,
-       'tip' => 'Learn more at https://phpstan.org/user-guide/discovering-symbols',
-       'nodeLine' => 104,
-       'nodeType' => 'PhpParser\\Node\\Expr\\StaticCall',
-       'identifier' => 'class.notFound',
-       'metadata' => 
-      array (
-      ),
-       'fixedErrorDiff' => NULL,
-    )),
-    6 => 
-    \PHPStan\Analyser\Error::__set_state(array(
-       'message' => 'Call to static method error() on an unknown class App\\Http\\Response\\ApiResponse.',
-       'file' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php',
-       'line' => 113,
-       'canBeIgnored' => true,
-       'filePath' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php',
-       'traitFilePath' => NULL,
-       'tip' => 'Learn more at https://phpstan.org/user-guide/discovering-symbols',
-       'nodeLine' => 113,
-       'nodeType' => 'PhpParser\\Node\\Expr\\StaticCall',
-       'identifier' => 'class.notFound',
-       'metadata' => 
-      array (
-      ),
-       'fixedErrorDiff' => NULL,
-    )),
-    7 => 
-    \PHPStan\Analyser\Error::__set_state(array(
-       'message' => 'Call to static method error() on an unknown class App\\Http\\Response\\ApiResponse.',
-       'file' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php',
-       'line' => 124,
-       'canBeIgnored' => true,
-       'filePath' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php',
-       'traitFilePath' => NULL,
-       'tip' => 'Learn more at https://phpstan.org/user-guide/discovering-symbols',
-       'nodeLine' => 124,
-       'nodeType' => 'PhpParser\\Node\\Expr\\StaticCall',
-       'identifier' => 'class.notFound',
-       'metadata' => 
-      array (
-      ),
-       'fixedErrorDiff' => NULL,
-    )),
   ),
-  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Controllers/Api/AuthController.php' => 
-  array (
-    0 => 
-    \PHPStan\Analyser\Error::__set_state(array(
-       'message' => 'Call to an undefined method Illuminate\\Contracts\\Auth\\Guard::attempt().',
-       'file' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Controllers/Api/AuthController.php',
-       'line' => 26,
-       'canBeIgnored' => true,
-       'filePath' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Controllers/Api/AuthController.php',
-       'traitFilePath' => NULL,
-       'tip' => NULL,
-       'nodeLine' => 26,
-       'nodeType' => 'PhpParser\\Node\\Expr\\MethodCall',
-       'identifier' => 'method.notFound',
-       'metadata' => 
-      array (
-      ),
-       'fixedErrorDiff' => NULL,
-    )),
-    1 => 
-    \PHPStan\Analyser\Error::__set_state(array(
-       'message' => 'Call to an undefined method Illuminate\\Contracts\\Auth\\Guard::logout().',
-       'file' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Controllers/Api/AuthController.php',
-       'line' => 50,
-       'canBeIgnored' => true,
-       'filePath' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Controllers/Api/AuthController.php',
-       'traitFilePath' => NULL,
-       'tip' => NULL,
-       'nodeLine' => 50,
-       'nodeType' => 'PhpParser\\Node\\Expr\\MethodCall',
-       'identifier' => 'method.notFound',
-       'metadata' => 
-      array (
-      ),
-       'fixedErrorDiff' => NULL,
-    )),
-    2 => 
-    \PHPStan\Analyser\Error::__set_state(array(
-       'message' => 'Call to an undefined method Illuminate\\Contracts\\Auth\\Guard::refresh().',
-       'file' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Controllers/Api/AuthController.php',
-       'line' => 62,
-       'canBeIgnored' => true,
-       'filePath' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Controllers/Api/AuthController.php',
-       'traitFilePath' => NULL,
-       'tip' => NULL,
-       'nodeLine' => 62,
-       'nodeType' => 'PhpParser\\Node\\Expr\\MethodCall',
-       'identifier' => 'method.notFound',
-       'metadata' => 
-      array (
-      ),
-       'fixedErrorDiff' => NULL,
-    )),
-    3 => 
-    \PHPStan\Analyser\Error::__set_state(array(
-       'message' => 'Call to an undefined method Illuminate\\Contracts\\Auth\\Guard::factory().',
-       'file' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Controllers/Api/AuthController.php',
-       'line' => 77,
-       'canBeIgnored' => true,
-       'filePath' => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Controllers/Api/AuthController.php',
-       'traitFilePath' => NULL,
-       'tip' => NULL,
-       'nodeLine' => 77,
-       'nodeType' => 'PhpParser\\Node\\Expr\\MethodCall',
-       'identifier' => 'method.notFound',
-       'metadata' => 
-      array (
-      ),
-       'fixedErrorDiff' => NULL,
-    )),
-  ),
-); },
-	'locallyIgnoredErrorsCallback' => static function (): array { return array (
   '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/routes/console.php' => 
   array (
     0 => 
@@ -2395,15 +2205,87 @@ return [
     array (
       0 => 
       array (
-        0 => 'App\\Exceptions\\BaseException',
+        0 => 'App\\Exceptions\\http\\BaseException',
         1 => 'getHttpStatusCode',
-        2 => 'App\\Exceptions\\BaseException',
+        2 => 'App\\Exceptions\\http\\BaseException',
       ),
       1 => 
       array (
-        0 => 'App\\Exceptions\\BaseException',
+        0 => 'App\\Exceptions\\http\\BaseException',
         1 => 'getErrors',
-        2 => 'App\\Exceptions\\BaseException',
+        2 => 'App\\Exceptions\\http\\BaseException',
+      ),
+    ),
+  ),
+  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/BusinessException.php' => 
+  array (
+    'PHPStan\\Rules\\DeadCode\\PossiblyPureStaticCallCollector' => 
+    array (
+      0 => 
+      array (
+        0 => 'App\\Exceptions\\http\\BaseException',
+        1 => '__construct',
+        2 => 14,
+      ),
+    ),
+  ),
+  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/ConflictException.php' => 
+  array (
+    'PHPStan\\Rules\\DeadCode\\PossiblyPureStaticCallCollector' => 
+    array (
+      0 => 
+      array (
+        0 => 'App\\Exceptions\\http\\BaseException',
+        1 => '__construct',
+        2 => 14,
+      ),
+    ),
+  ),
+  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/JWTException.php' => 
+  array (
+    'PHPStan\\Rules\\DeadCode\\PossiblyPureStaticCallCollector' => 
+    array (
+      0 => 
+      array (
+        0 => 'App\\Exceptions\\http\\BaseException',
+        1 => '__construct',
+        2 => 13,
+      ),
+    ),
+  ),
+  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/NotFoundException.php' => 
+  array (
+    'PHPStan\\Rules\\DeadCode\\PossiblyPureStaticCallCollector' => 
+    array (
+      0 => 
+      array (
+        0 => 'App\\Exceptions\\http\\BaseException',
+        1 => '__construct',
+        2 => 14,
+      ),
+    ),
+  ),
+  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/UnauthorizedException.php' => 
+  array (
+    'PHPStan\\Rules\\DeadCode\\PossiblyPureStaticCallCollector' => 
+    array (
+      0 => 
+      array (
+        0 => 'App\\Exceptions\\http\\BaseException',
+        1 => '__construct',
+        2 => 13,
+      ),
+    ),
+  ),
+  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/ValidationException.php' => 
+  array (
+    'PHPStan\\Rules\\DeadCode\\PossiblyPureStaticCallCollector' => 
+    array (
+      0 => 
+      array (
+        0 => 'App\\Exceptions\\http\\BaseException',
+        1 => '__construct',
+        2 => 14,
       ),
     ),
   ),
@@ -2460,65 +2342,69 @@ return [
 	'dependencies' => array (
   '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php' => 
   array (
-    'fileHash' => '5a3eac394ca1d3c4410fe15ebbb62c09b1936b30640592c11670af83079c456b',
+    'fileHash' => '488d55cf96c6166ec23295c2f9a2e7950a04456ea8f71df236d0dba3fb389f4a',
     'dependentFiles' => 
     array (
     ),
   ),
   '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/BaseException.php' => 
   array (
-    'fileHash' => '3ff382565927ba439d3c00b67da319f9ec1e753acf4decbe0ac670f7c9df3a73',
+    'fileHash' => 'dc3cb132cfcda532aef35254837582063b24c330ff3d7988d68f6fa6331c3430',
     'dependentFiles' => 
     array (
-      0 => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php',
+      0 => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/BusinessException.php',
+      1 => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/ConflictException.php',
+      2 => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/JWTException.php',
+      3 => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/NotFoundException.php',
+      4 => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/UnauthorizedException.php',
+      5 => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/ValidationException.php',
     ),
   ),
   '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/BusinessException.php' => 
   array (
-    'fileHash' => 'c1117d2344f356befe03ef399b132f896cb2ee7bf25e48e9e6673ab1e313deb3',
+    'fileHash' => '4f4e180cf6c6ad2062fad7c31faa154793887ceef106495c2dcf5f364a16d2aa',
     'dependentFiles' => 
     array (
     ),
   ),
   '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/ConflictException.php' => 
   array (
-    'fileHash' => '1336ae2d0f3218904d41e2c0baf703d0ea7c9f2d4fa6ae37a94aea8d295fb919',
+    'fileHash' => 'd9ee3b177eafd4d0a30b94267385e8b272501d76af32bd07693c9bf0475db68c',
     'dependentFiles' => 
     array (
-      0 => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php',
     ),
   ),
   '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/JWTException.php' => 
   array (
-    'fileHash' => 'b35af10f72852a853e419ff5d5d6bf1d3976896fc40c6fa1dd9a6b07e3cb2658',
+    'fileHash' => '09e15c68120bffd0b737a92fb932b5053c4ce3d2876db7379c5cec0ab6004a1f',
     'dependentFiles' => 
     array (
     ),
   ),
   '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/NotFoundException.php' => 
   array (
-    'fileHash' => '7bad20bc0c9d9aea843507c4f9df17d85af1ae928be50077ba8fba3430ffac00',
+    'fileHash' => 'f9b9b40314f29866fd2938c9e12e89c1bb451b9329399f9fff2ca95db90f2757',
     'dependentFiles' => 
     array (
     ),
   ),
   '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/UnauthorizedException.php' => 
   array (
-    'fileHash' => '1963dd98e3ad7f181cefa1569519d069e0ae5483e78402f061d81b7a9c6643a9',
+    'fileHash' => 'f70a2517d8d133f0e0eecb2719bb19b0807da1fb3d16608ab93fd0e1d6fff290',
     'dependentFiles' => 
     array (
     ),
   ),
   '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/ValidationException.php' => 
   array (
-    'fileHash' => '276b2fc96b2f8c627131068b9ec9a96c22618549627a67732ecb68c1694445cd',
+    'fileHash' => '1dc788a338b1f7f0476db0d377b9c8d13f58afcc150b6f69543d8454269c4ecd',
     'dependentFiles' => 
     array (
     ),
   ),
   '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Controllers/Api/AuthController.php' => 
   array (
-    'fileHash' => 'ad25b7f1b05e9c7456e00683409a2ded048a321d39dabbd2703d4207e73c0629',
+    'fileHash' => '9ba3fff2b26706314cbb350e72b77a75671d305cc985f5646250f17658dcf19f',
     'dependentFiles' => 
     array (
       0 => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/routes/api.php',
@@ -2535,7 +2421,7 @@ return [
   ),
   '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Requests/Auth/LoginRequest.php' => 
   array (
-    'fileHash' => '707286bba73f6c30ba6fc84cfc40c885b4e4c6464284fe9186a2a75772cff284',
+    'fileHash' => 'bee201a93198dc3502a765b66d521f2b748ff5c6c944bb0bf0a281598c665efc',
     'dependentFiles' => 
     array (
       0 => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Controllers/Api/AuthController.php',
@@ -2567,6 +2453,13 @@ return [
       0 => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Controllers/Api/AuthController.php',
       1 => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Requests/Auth/LoginRequest.php',
       2 => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Requests/BaseListRequest.php',
+    ),
+  ),
+  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Response/ApiResponse.php' => 
+  array (
+    'fileHash' => 'c47588b9fd748ffef854c7cd048b8fafb7825c1d19ad6b015f369bbf0b9c6e1f',
+    'dependentFiles' => 
+    array (
     ),
   ),
   '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Models/User.php' => 
@@ -2606,6 +2499,14 @@ return [
     'dependentFiles' => 
     array (
       0 => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Requests/BaseFormRequest.php',
+    ),
+  ),
+  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/helpers.php' => 
+  array (
+    'fileHash' => '58c0b5d1b40199aa7b1075036870fa7a4e520780ae66c448cfe2253e56045de4',
+    'dependentFiles' => 
+    array (
+      0 => '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Response/ApiResponse.php',
     ),
   ),
   '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/routes/api.php' => 
@@ -2667,12 +2568,7 @@ return [
              'namespace' => 'App\\Exceptions',
              'uses' => 
             array (
-              'apiresponse' => 'App\\Http\\Response\\ApiResponse',
-              'authenticationexception' => 'Illuminate\\Auth\\AuthenticationException',
-              'modelnotfoundexception' => 'Illuminate\\Database\\Eloquent\\ModelNotFoundException',
               'exceptionhandler' => 'Illuminate\\Foundation\\Exceptions\\Handler',
-              'illuminatevalidationexception' => 'Illuminate\\Validation\\ValidationException',
-              'notfoundhttpexception' => 'Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException',
               'throwable' => 'Throwable',
             ),
              'constUses' => 
@@ -2713,12 +2609,7 @@ return [
              'namespace' => 'App\\Exceptions',
              'uses' => 
             array (
-              'apiresponse' => 'App\\Http\\Response\\ApiResponse',
-              'authenticationexception' => 'Illuminate\\Auth\\AuthenticationException',
-              'modelnotfoundexception' => 'Illuminate\\Database\\Eloquent\\ModelNotFoundException',
               'exceptionhandler' => 'Illuminate\\Foundation\\Exceptions\\Handler',
-              'illuminatevalidationexception' => 'Illuminate\\Validation\\ValidationException',
-              'notfoundhttpexception' => 'Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException',
               'throwable' => 'Throwable',
             ),
              'constUses' => 
@@ -2743,105 +2634,6 @@ return [
           array (
           ),
         )),
-        2 => 
-        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
-           'name' => 'register',
-           'phpDoc' => 
-          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
-             'phpDocString' => '/**
-     * Register the exception handling callbacks for the application.
-     */',
-             'namespace' => 'App\\Exceptions',
-             'uses' => 
-            array (
-              'apiresponse' => 'App\\Http\\Response\\ApiResponse',
-              'authenticationexception' => 'Illuminate\\Auth\\AuthenticationException',
-              'modelnotfoundexception' => 'Illuminate\\Database\\Eloquent\\ModelNotFoundException',
-              'exceptionhandler' => 'Illuminate\\Foundation\\Exceptions\\Handler',
-              'illuminatevalidationexception' => 'Illuminate\\Validation\\ValidationException',
-              'notfoundhttpexception' => 'Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException',
-              'throwable' => 'Throwable',
-            ),
-             'constUses' => 
-            array (
-            ),
-          )),
-           'byRef' => false,
-           'public' => true,
-           'private' => false,
-           'abstract' => false,
-           'final' => false,
-           'static' => false,
-           'returnType' => 'void',
-           'parameters' => 
-          array (
-          ),
-           'attributes' => 
-          array (
-          ),
-        )),
-        3 => 
-        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
-           'name' => 'render',
-           'phpDoc' => 
-          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
-             'phpDocString' => '/**
-     * Render an exception into an HTTP response.
-     *
-     * @param  \\Illuminate\\Http\\Request  $request
-     * @return \\Illuminate\\Http\\Response
-     */',
-             'namespace' => 'App\\Exceptions',
-             'uses' => 
-            array (
-              'apiresponse' => 'App\\Http\\Response\\ApiResponse',
-              'authenticationexception' => 'Illuminate\\Auth\\AuthenticationException',
-              'modelnotfoundexception' => 'Illuminate\\Database\\Eloquent\\ModelNotFoundException',
-              'exceptionhandler' => 'Illuminate\\Foundation\\Exceptions\\Handler',
-              'illuminatevalidationexception' => 'Illuminate\\Validation\\ValidationException',
-              'notfoundhttpexception' => 'Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException',
-              'throwable' => 'Throwable',
-            ),
-             'constUses' => 
-            array (
-            ),
-          )),
-           'byRef' => false,
-           'public' => true,
-           'private' => false,
-           'abstract' => false,
-           'final' => false,
-           'static' => false,
-           'returnType' => NULL,
-           'parameters' => 
-          array (
-            0 => 
-            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
-               'name' => 'request',
-               'type' => NULL,
-               'byRef' => false,
-               'variadic' => false,
-               'hasDefault' => false,
-               'attributes' => 
-              array (
-              ),
-            )),
-            1 => 
-            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
-               'name' => 'exception',
-               'type' => 'Throwable',
-               'byRef' => false,
-               'variadic' => false,
-               'hasDefault' => false,
-               'attributes' => 
-              array (
-              ),
-            )),
-          ),
-           'attributes' => 
-          array (
-          ),
-        )),
       ),
        'attributes' => 
       array (
@@ -2852,7 +2644,7 @@ return [
   array (
     0 => 
     \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
-       'name' => 'App\\Exceptions\\BaseException',
+       'name' => 'App\\Exceptions\\http\\BaseException',
        'phpDoc' => NULL,
        'abstract' => true,
        'final' => false,
@@ -2875,7 +2667,7 @@ return [
             0 => 'errorCode',
           ),
            'phpDoc' => NULL,
-           'type' => NULL,
+           'type' => 'string',
            'public' => false,
            'private' => false,
            'static' => false,
@@ -2897,10 +2689,10 @@ return [
         \PHPStan\Dependency\ExportedNode\ExportedPropertiesNode::__set_state(array(
            'names' => 
           array (
-            0 => 'errorMessage',
+            0 => 'httpStatusCode',
           ),
            'phpDoc' => NULL,
-           'type' => NULL,
+           'type' => 'int',
            'public' => false,
            'private' => false,
            'static' => false,
@@ -2922,10 +2714,10 @@ return [
         \PHPStan\Dependency\ExportedNode\ExportedPropertiesNode::__set_state(array(
            'names' => 
           array (
-            0 => 'httpStatusCode',
+            0 => 'errors',
           ),
            'phpDoc' => NULL,
-           'type' => NULL,
+           'type' => 'array',
            'public' => false,
            'private' => false,
            'static' => false,
@@ -2959,7 +2751,7 @@ return [
             0 => 
             \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
                'name' => 'message',
-               'type' => NULL,
+               'type' => 'string',
                'byRef' => false,
                'variadic' => false,
                'hasDefault' => true,
@@ -2969,8 +2761,8 @@ return [
             )),
             1 => 
             \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
-               'name' => 'errors',
-               'type' => NULL,
+               'name' => 'errorCode',
+               'type' => 'string',
                'byRef' => false,
                'variadic' => false,
                'hasDefault' => true,
@@ -2980,8 +2772,19 @@ return [
             )),
             2 => 
             \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
-               'name' => 'code',
-               'type' => NULL,
+               'name' => 'errors',
+               'type' => 'array',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
+            3 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'httpStatusCode',
+               'type' => 'int',
                'byRef' => false,
                'variadic' => false,
                'hasDefault' => true,
@@ -2997,14 +2800,29 @@ return [
         4 => 
         \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
            'name' => 'getHttpStatusCode',
-           'phpDoc' => NULL,
+           'phpDoc' => 
+          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
+             'phpDocString' => '/**
+     * Get the HTTP status code.
+     */',
+             'namespace' => 'App\\Exceptions\\http',
+             'uses' => 
+            array (
+              'exception' => 'Exception',
+              'jsonresponse' => 'Symfony\\Component\\HttpFoundation\\JsonResponse',
+              'response' => 'Symfony\\Component\\HttpFoundation\\Response',
+            ),
+             'constUses' => 
+            array (
+            ),
+          )),
            'byRef' => false,
            'public' => true,
            'private' => false,
            'abstract' => false,
            'final' => false,
            'static' => false,
-           'returnType' => NULL,
+           'returnType' => 'int',
            'parameters' => 
           array (
           ),
@@ -3015,14 +2833,95 @@ return [
         5 => 
         \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
            'name' => 'getErrors',
-           'phpDoc' => NULL,
+           'phpDoc' => 
+          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
+             'phpDocString' => '/**
+     * Get the validation errors.
+     */',
+             'namespace' => 'App\\Exceptions\\http',
+             'uses' => 
+            array (
+              'exception' => 'Exception',
+              'jsonresponse' => 'Symfony\\Component\\HttpFoundation\\JsonResponse',
+              'response' => 'Symfony\\Component\\HttpFoundation\\Response',
+            ),
+             'constUses' => 
+            array (
+            ),
+          )),
            'byRef' => false,
            'public' => true,
            'private' => false,
            'abstract' => false,
            'final' => false,
            'static' => false,
-           'returnType' => NULL,
+           'returnType' => 'array',
+           'parameters' => 
+          array (
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+        6 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'report',
+           'phpDoc' => 
+          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
+             'phpDocString' => '/**
+    * Report the exception.
+    */',
+             'namespace' => 'App\\Exceptions\\http',
+             'uses' => 
+            array (
+              'exception' => 'Exception',
+              'jsonresponse' => 'Symfony\\Component\\HttpFoundation\\JsonResponse',
+              'response' => 'Symfony\\Component\\HttpFoundation\\Response',
+            ),
+             'constUses' => 
+            array (
+            ),
+          )),
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => 'void',
+           'parameters' => 
+          array (
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+        7 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'render',
+           'phpDoc' => 
+          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
+             'phpDocString' => '/**
+     * Render the exception into an HTTP response.
+     */',
+             'namespace' => 'App\\Exceptions\\http',
+             'uses' => 
+            array (
+              'exception' => 'Exception',
+              'jsonresponse' => 'Symfony\\Component\\HttpFoundation\\JsonResponse',
+              'response' => 'Symfony\\Component\\HttpFoundation\\Response',
+            ),
+             'constUses' => 
+            array (
+            ),
+          )),
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => 'Symfony\\Component\\HttpFoundation\\JsonResponse',
            'parameters' => 
           array (
           ),
@@ -3040,461 +2939,11 @@ return [
   array (
     0 => 
     \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
-       'name' => 'App\\Exceptions\\BusinessException',
+       'name' => 'App\\Exceptions\\http\\BusinessException',
        'phpDoc' => NULL,
        'abstract' => false,
        'final' => false,
-       'extends' => 'Exception',
-       'implements' => 
-      array (
-      ),
-       'usedTraits' => 
-      array (
-      ),
-       'traitUseAdaptations' => 
-      array (
-      ),
-       'statements' => 
-      array (
-        0 => 
-        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
-           'name' => 'report',
-           'phpDoc' => 
-          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
-             'phpDocString' => '/**
-     * Report the exception.
-     */',
-             'namespace' => 'App\\Exceptions',
-             'uses' => 
-            array (
-              'exception' => 'Exception',
-              'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
-            ),
-             'constUses' => 
-            array (
-            ),
-          )),
-           'byRef' => false,
-           'public' => true,
-           'private' => false,
-           'abstract' => false,
-           'final' => false,
-           'static' => false,
-           'returnType' => 'void',
-           'parameters' => 
-          array (
-          ),
-           'attributes' => 
-          array (
-          ),
-        )),
-        1 => 
-        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
-           'name' => 'render',
-           'phpDoc' => 
-          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
-             'phpDocString' => '/**
-     * Render the exception into an HTTP response.
-     */',
-             'namespace' => 'App\\Exceptions',
-             'uses' => 
-            array (
-              'exception' => 'Exception',
-              'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
-            ),
-             'constUses' => 
-            array (
-            ),
-          )),
-           'byRef' => false,
-           'public' => true,
-           'private' => false,
-           'abstract' => false,
-           'final' => false,
-           'static' => false,
-           'returnType' => 'Illuminate\\Http\\JsonResponse',
-           'parameters' => 
-          array (
-          ),
-           'attributes' => 
-          array (
-          ),
-        )),
-      ),
-       'attributes' => 
-      array (
-      ),
-    )),
-  ),
-  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/ConflictException.php' => 
-  array (
-    0 => 
-    \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
-       'name' => 'App\\Exceptions\\ConflictException',
-       'phpDoc' => NULL,
-       'abstract' => false,
-       'final' => false,
-       'extends' => 'Exception',
-       'implements' => 
-      array (
-      ),
-       'usedTraits' => 
-      array (
-      ),
-       'traitUseAdaptations' => 
-      array (
-      ),
-       'statements' => 
-      array (
-        0 => 
-        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
-           'name' => 'report',
-           'phpDoc' => 
-          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
-             'phpDocString' => '/**
-     * Report the exception.
-     */',
-             'namespace' => 'App\\Exceptions',
-             'uses' => 
-            array (
-              'exception' => 'Exception',
-              'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
-            ),
-             'constUses' => 
-            array (
-            ),
-          )),
-           'byRef' => false,
-           'public' => true,
-           'private' => false,
-           'abstract' => false,
-           'final' => false,
-           'static' => false,
-           'returnType' => 'void',
-           'parameters' => 
-          array (
-          ),
-           'attributes' => 
-          array (
-          ),
-        )),
-        1 => 
-        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
-           'name' => 'render',
-           'phpDoc' => 
-          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
-             'phpDocString' => '/**
-     * Render the exception into an HTTP response.
-     */',
-             'namespace' => 'App\\Exceptions',
-             'uses' => 
-            array (
-              'exception' => 'Exception',
-              'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
-            ),
-             'constUses' => 
-            array (
-            ),
-          )),
-           'byRef' => false,
-           'public' => true,
-           'private' => false,
-           'abstract' => false,
-           'final' => false,
-           'static' => false,
-           'returnType' => 'Illuminate\\Http\\JsonResponse',
-           'parameters' => 
-          array (
-          ),
-           'attributes' => 
-          array (
-          ),
-        )),
-      ),
-       'attributes' => 
-      array (
-      ),
-    )),
-  ),
-  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/JWTException.php' => 
-  array (
-    0 => 
-    \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
-       'name' => 'App\\Exceptions\\JWTException',
-       'phpDoc' => NULL,
-       'abstract' => false,
-       'final' => false,
-       'extends' => 'Exception',
-       'implements' => 
-      array (
-      ),
-       'usedTraits' => 
-      array (
-      ),
-       'traitUseAdaptations' => 
-      array (
-      ),
-       'statements' => 
-      array (
-        0 => 
-        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
-           'name' => 'report',
-           'phpDoc' => 
-          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
-             'phpDocString' => '/**
-     * Report the exception.
-     */',
-             'namespace' => 'App\\Exceptions',
-             'uses' => 
-            array (
-              'exception' => 'Exception',
-              'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
-            ),
-             'constUses' => 
-            array (
-            ),
-          )),
-           'byRef' => false,
-           'public' => true,
-           'private' => false,
-           'abstract' => false,
-           'final' => false,
-           'static' => false,
-           'returnType' => 'void',
-           'parameters' => 
-          array (
-          ),
-           'attributes' => 
-          array (
-          ),
-        )),
-        1 => 
-        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
-           'name' => 'render',
-           'phpDoc' => 
-          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
-             'phpDocString' => '/**
-     * Render the exception into an HTTP response.
-     */',
-             'namespace' => 'App\\Exceptions',
-             'uses' => 
-            array (
-              'exception' => 'Exception',
-              'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
-            ),
-             'constUses' => 
-            array (
-            ),
-          )),
-           'byRef' => false,
-           'public' => true,
-           'private' => false,
-           'abstract' => false,
-           'final' => false,
-           'static' => false,
-           'returnType' => 'Illuminate\\Http\\JsonResponse',
-           'parameters' => 
-          array (
-          ),
-           'attributes' => 
-          array (
-          ),
-        )),
-      ),
-       'attributes' => 
-      array (
-      ),
-    )),
-  ),
-  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/NotFoundException.php' => 
-  array (
-    0 => 
-    \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
-       'name' => 'App\\Exceptions\\NotFoundException',
-       'phpDoc' => NULL,
-       'abstract' => false,
-       'final' => false,
-       'extends' => 'Exception',
-       'implements' => 
-      array (
-      ),
-       'usedTraits' => 
-      array (
-      ),
-       'traitUseAdaptations' => 
-      array (
-      ),
-       'statements' => 
-      array (
-        0 => 
-        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
-           'name' => 'report',
-           'phpDoc' => 
-          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
-             'phpDocString' => '/**
-     * Report the exception.
-     */',
-             'namespace' => 'App\\Exceptions',
-             'uses' => 
-            array (
-              'exception' => 'Exception',
-              'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
-            ),
-             'constUses' => 
-            array (
-            ),
-          )),
-           'byRef' => false,
-           'public' => true,
-           'private' => false,
-           'abstract' => false,
-           'final' => false,
-           'static' => false,
-           'returnType' => 'void',
-           'parameters' => 
-          array (
-          ),
-           'attributes' => 
-          array (
-          ),
-        )),
-        1 => 
-        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
-           'name' => 'render',
-           'phpDoc' => 
-          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
-             'phpDocString' => '/**
-     * Render the exception into an HTTP response.
-     */',
-             'namespace' => 'App\\Exceptions',
-             'uses' => 
-            array (
-              'exception' => 'Exception',
-              'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
-            ),
-             'constUses' => 
-            array (
-            ),
-          )),
-           'byRef' => false,
-           'public' => true,
-           'private' => false,
-           'abstract' => false,
-           'final' => false,
-           'static' => false,
-           'returnType' => 'Illuminate\\Http\\JsonResponse',
-           'parameters' => 
-          array (
-          ),
-           'attributes' => 
-          array (
-          ),
-        )),
-      ),
-       'attributes' => 
-      array (
-      ),
-    )),
-  ),
-  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/UnauthorizedException.php' => 
-  array (
-    0 => 
-    \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
-       'name' => 'App\\Exceptions\\UnauthorizedException',
-       'phpDoc' => NULL,
-       'abstract' => false,
-       'final' => false,
-       'extends' => 'Exception',
-       'implements' => 
-      array (
-      ),
-       'usedTraits' => 
-      array (
-      ),
-       'traitUseAdaptations' => 
-      array (
-      ),
-       'statements' => 
-      array (
-        0 => 
-        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
-           'name' => 'report',
-           'phpDoc' => 
-          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
-             'phpDocString' => '/**
-     * Report the exception.
-     */',
-             'namespace' => 'App\\Exceptions',
-             'uses' => 
-            array (
-              'exception' => 'Exception',
-              'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
-            ),
-             'constUses' => 
-            array (
-            ),
-          )),
-           'byRef' => false,
-           'public' => true,
-           'private' => false,
-           'abstract' => false,
-           'final' => false,
-           'static' => false,
-           'returnType' => 'void',
-           'parameters' => 
-          array (
-          ),
-           'attributes' => 
-          array (
-          ),
-        )),
-        1 => 
-        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
-           'name' => 'render',
-           'phpDoc' => 
-          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
-             'phpDocString' => '/**
-     * Render the exception into an HTTP response.
-     */',
-             'namespace' => 'App\\Exceptions',
-             'uses' => 
-            array (
-              'exception' => 'Exception',
-              'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
-            ),
-             'constUses' => 
-            array (
-            ),
-          )),
-           'byRef' => false,
-           'public' => true,
-           'private' => false,
-           'abstract' => false,
-           'final' => false,
-           'static' => false,
-           'returnType' => 'Illuminate\\Http\\JsonResponse',
-           'parameters' => 
-          array (
-          ),
-           'attributes' => 
-          array (
-          ),
-        )),
-      ),
-       'attributes' => 
-      array (
-      ),
-    )),
-  ),
-  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/ValidationException.php' => 
-  array (
-    0 => 
-    \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
-       'name' => 'App\\Exceptions\\ValidationException',
-       'phpDoc' => NULL,
-       'abstract' => false,
-       'final' => false,
-       'extends' => 'Exception',
+       'extends' => 'App\\Exceptions\\http\\BaseException',
        'implements' => 
       array (
       ),
@@ -3512,13 +2961,12 @@ return [
            'phpDoc' => 
           \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
              'phpDocString' => '/**
-     * Create a new validation exception instance.
-     */',
-             'namespace' => 'App\\Exceptions',
+    * Create a new business exception instance.
+    */',
+             'namespace' => 'App\\Exceptions\\http',
              'uses' => 
             array (
-              'exception' => 'Exception',
-              'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
+              'response' => 'Symfony\\Component\\HttpFoundation\\Response',
             ),
              'constUses' => 
             array (
@@ -3560,19 +3008,44 @@ return [
           array (
           ),
         )),
-        1 => 
+      ),
+       'attributes' => 
+      array (
+      ),
+    )),
+  ),
+  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/ConflictException.php' => 
+  array (
+    0 => 
+    \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
+       'name' => 'App\\Exceptions\\http\\ConflictException',
+       'phpDoc' => NULL,
+       'abstract' => false,
+       'final' => false,
+       'extends' => 'App\\Exceptions\\http\\BaseException',
+       'implements' => 
+      array (
+      ),
+       'usedTraits' => 
+      array (
+      ),
+       'traitUseAdaptations' => 
+      array (
+      ),
+       'statements' => 
+      array (
+        0 => 
         \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
-           'name' => 'report',
+           'name' => '__construct',
            'phpDoc' => 
           \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
              'phpDocString' => '/**
-     * Report the exception.
-     */',
-             'namespace' => 'App\\Exceptions',
+    * Create a new conflict exception instance.
+    */',
+             'namespace' => 'App\\Exceptions\\http',
              'uses' => 
             array (
-              'exception' => 'Exception',
-              'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
+              'response' => 'Symfony\\Component\\HttpFoundation\\Response',
             ),
              'constUses' => 
             array (
@@ -3584,27 +3057,74 @@ return [
            'abstract' => false,
            'final' => false,
            'static' => false,
-           'returnType' => 'void',
+           'returnType' => NULL,
            'parameters' => 
           array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'message',
+               'type' => 'string',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'errors',
+               'type' => 'array',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
           ),
            'attributes' => 
           array (
           ),
         )),
-        2 => 
+      ),
+       'attributes' => 
+      array (
+      ),
+    )),
+  ),
+  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/JWTException.php' => 
+  array (
+    0 => 
+    \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
+       'name' => 'App\\Exceptions\\http\\JWTException',
+       'phpDoc' => NULL,
+       'abstract' => false,
+       'final' => false,
+       'extends' => 'App\\Exceptions\\http\\BaseException',
+       'implements' => 
+      array (
+      ),
+       'usedTraits' => 
+      array (
+      ),
+       'traitUseAdaptations' => 
+      array (
+      ),
+       'statements' => 
+      array (
+        0 => 
         \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
-           'name' => 'render',
+           'name' => '__construct',
            'phpDoc' => 
           \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
              'phpDocString' => '/**
-     * Render the exception into an HTTP response.
-     */',
-             'namespace' => 'App\\Exceptions',
+    * Create a new JWT exception instance.
+    */',
+             'namespace' => 'App\\Exceptions\\http',
              'uses' => 
             array (
-              'exception' => 'Exception',
-              'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
+              'response' => 'Symfony\\Component\\HttpFoundation\\Response',
             ),
              'constUses' => 
             array (
@@ -3616,9 +3136,268 @@ return [
            'abstract' => false,
            'final' => false,
            'static' => false,
-           'returnType' => 'Illuminate\\Http\\JsonResponse',
+           'returnType' => NULL,
            'parameters' => 
           array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'message',
+               'type' => 'string',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'errors',
+               'type' => 'array',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+      ),
+       'attributes' => 
+      array (
+      ),
+    )),
+  ),
+  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/NotFoundException.php' => 
+  array (
+    0 => 
+    \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
+       'name' => 'App\\Exceptions\\http\\NotFoundException',
+       'phpDoc' => NULL,
+       'abstract' => false,
+       'final' => false,
+       'extends' => 'App\\Exceptions\\http\\BaseException',
+       'implements' => 
+      array (
+      ),
+       'usedTraits' => 
+      array (
+      ),
+       'traitUseAdaptations' => 
+      array (
+      ),
+       'statements' => 
+      array (
+        0 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => '__construct',
+           'phpDoc' => 
+          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
+             'phpDocString' => '/**
+    * Create a new Notfound exception instance.
+    */',
+             'namespace' => 'App\\Exceptions\\http',
+             'uses' => 
+            array (
+              'response' => 'Symfony\\Component\\HttpFoundation\\Response',
+            ),
+             'constUses' => 
+            array (
+            ),
+          )),
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => NULL,
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'message',
+               'type' => 'string',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'errors',
+               'type' => 'array',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+      ),
+       'attributes' => 
+      array (
+      ),
+    )),
+  ),
+  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/UnauthorizedException.php' => 
+  array (
+    0 => 
+    \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
+       'name' => 'App\\Exceptions\\http\\UnauthorizedException',
+       'phpDoc' => NULL,
+       'abstract' => false,
+       'final' => false,
+       'extends' => 'App\\Exceptions\\http\\BaseException',
+       'implements' => 
+      array (
+      ),
+       'usedTraits' => 
+      array (
+      ),
+       'traitUseAdaptations' => 
+      array (
+      ),
+       'statements' => 
+      array (
+        0 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => '__construct',
+           'phpDoc' => 
+          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
+             'phpDocString' => '/**
+    * Create a new Unauthorized exception instance.
+    */',
+             'namespace' => 'App\\Exceptions\\http',
+             'uses' => 
+            array (
+              'response' => 'Symfony\\Component\\HttpFoundation\\Response',
+            ),
+             'constUses' => 
+            array (
+            ),
+          )),
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => NULL,
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'message',
+               'type' => 'string',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'errors',
+               'type' => 'array',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+      ),
+       'attributes' => 
+      array (
+      ),
+    )),
+  ),
+  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/ValidationException.php' => 
+  array (
+    0 => 
+    \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
+       'name' => 'App\\Exceptions\\http\\ValidationException',
+       'phpDoc' => NULL,
+       'abstract' => false,
+       'final' => false,
+       'extends' => 'App\\Exceptions\\http\\BaseException',
+       'implements' => 
+      array (
+      ),
+       'usedTraits' => 
+      array (
+      ),
+       'traitUseAdaptations' => 
+      array (
+      ),
+       'statements' => 
+      array (
+        0 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => '__construct',
+           'phpDoc' => 
+          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
+             'phpDocString' => '/**
+     * Create a new validation exception instance.
+     */',
+             'namespace' => 'App\\Exceptions\\http',
+             'uses' => 
+            array (
+              'response' => 'Symfony\\Component\\HttpFoundation\\Response',
+            ),
+             'constUses' => 
+            array (
+            ),
+          )),
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => NULL,
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'message',
+               'type' => 'string',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'errors',
+               'type' => 'array',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
           ),
            'attributes' => 
           array (
@@ -3711,11 +3490,12 @@ return [
              'namespace' => 'App\\Http\\Controllers\\Api',
              'uses' => 
             array (
-              'controller' => 'App\\Http\\Controllers\\Controller',
               'loginrequest' => 'App\\Http\\Requests\\Auth\\LoginRequest',
               'hasmiddleware' => 'Illuminate\\Routing\\Controllers\\HasMiddleware',
-              'auth' => 'Illuminate\\Support\\Facades\\Auth',
               'middleware' => 'Illuminate\\Routing\\Controllers\\Middleware',
+              'log' => 'Illuminate\\Support\\Facades\\Log',
+              'auth' => 'Illuminate\\Support\\Facades\\Auth',
+              'controller' => 'App\\Http\\Controllers\\Controller',
             ),
              'constUses' => 
             array (
@@ -3748,11 +3528,12 @@ return [
              'namespace' => 'App\\Http\\Controllers\\Api',
              'uses' => 
             array (
-              'controller' => 'App\\Http\\Controllers\\Controller',
               'loginrequest' => 'App\\Http\\Requests\\Auth\\LoginRequest',
               'hasmiddleware' => 'Illuminate\\Routing\\Controllers\\HasMiddleware',
-              'auth' => 'Illuminate\\Support\\Facades\\Auth',
               'middleware' => 'Illuminate\\Routing\\Controllers\\Middleware',
+              'log' => 'Illuminate\\Support\\Facades\\Log',
+              'auth' => 'Illuminate\\Support\\Facades\\Auth',
+              'controller' => 'App\\Http\\Controllers\\Controller',
             ),
              'constUses' => 
             array (
@@ -3785,11 +3566,12 @@ return [
              'namespace' => 'App\\Http\\Controllers\\Api',
              'uses' => 
             array (
-              'controller' => 'App\\Http\\Controllers\\Controller',
               'loginrequest' => 'App\\Http\\Requests\\Auth\\LoginRequest',
               'hasmiddleware' => 'Illuminate\\Routing\\Controllers\\HasMiddleware',
-              'auth' => 'Illuminate\\Support\\Facades\\Auth',
               'middleware' => 'Illuminate\\Routing\\Controllers\\Middleware',
+              'log' => 'Illuminate\\Support\\Facades\\Log',
+              'auth' => 'Illuminate\\Support\\Facades\\Auth',
+              'controller' => 'App\\Http\\Controllers\\Controller',
             ),
              'constUses' => 
             array (
@@ -3824,11 +3606,12 @@ return [
              'namespace' => 'App\\Http\\Controllers\\Api',
              'uses' => 
             array (
-              'controller' => 'App\\Http\\Controllers\\Controller',
               'loginrequest' => 'App\\Http\\Requests\\Auth\\LoginRequest',
               'hasmiddleware' => 'Illuminate\\Routing\\Controllers\\HasMiddleware',
-              'auth' => 'Illuminate\\Support\\Facades\\Auth',
               'middleware' => 'Illuminate\\Routing\\Controllers\\Middleware',
+              'log' => 'Illuminate\\Support\\Facades\\Log',
+              'auth' => 'Illuminate\\Support\\Facades\\Auth',
+              'controller' => 'App\\Http\\Controllers\\Controller',
             ),
              'constUses' => 
             array (
@@ -3867,16 +3650,17 @@ return [
              'phpDocString' => '/**
      * Get the guard to be used during authentication.
      *
-     * @return \\Illuminate\\Contracts\\Auth\\Guard
+     * @return \\Tymon\\JWTAuth\\JWTGuard
      */',
              'namespace' => 'App\\Http\\Controllers\\Api',
              'uses' => 
             array (
-              'controller' => 'App\\Http\\Controllers\\Controller',
               'loginrequest' => 'App\\Http\\Requests\\Auth\\LoginRequest',
               'hasmiddleware' => 'Illuminate\\Routing\\Controllers\\HasMiddleware',
-              'auth' => 'Illuminate\\Support\\Facades\\Auth',
               'middleware' => 'Illuminate\\Routing\\Controllers\\Middleware',
+              'log' => 'Illuminate\\Support\\Facades\\Log',
+              'auth' => 'Illuminate\\Support\\Facades\\Auth',
+              'controller' => 'App\\Http\\Controllers\\Controller',
             ),
              'constUses' => 
             array (
@@ -3954,10 +3738,10 @@ return [
            'phpDoc' => 
           \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
              'phpDocString' => '/**
-         * set rules
-         *
-         * @return array
-         */',
+     * set rules
+     *
+     * @return array
+     */',
              'namespace' => 'App\\Http\\Requests\\Auth',
              'uses' => 
             array (
@@ -3968,7 +3752,7 @@ return [
             ),
           )),
            'byRef' => false,
-           'public' => false,
+           'public' => true,
            'private' => false,
            'abstract' => false,
            'final' => false,
@@ -5790,6 +5574,301 @@ return [
       ),
     )),
   ),
+  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Response/ApiResponse.php' => 
+  array (
+    0 => 
+    \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
+       'name' => 'App\\Http\\Response\\ApiResponse',
+       'phpDoc' => NULL,
+       'abstract' => false,
+       'final' => false,
+       'extends' => NULL,
+       'implements' => 
+      array (
+      ),
+       'usedTraits' => 
+      array (
+      ),
+       'traitUseAdaptations' => 
+      array (
+      ),
+       'statements' => 
+      array (
+        0 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'success',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => true,
+           'returnType' => NULL,
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'data',
+               'type' => NULL,
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'message',
+               'type' => 'string',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
+            2 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'code',
+               'type' => 'int',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+        1 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'error',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => true,
+           'returnType' => NULL,
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'message',
+               'type' => 'string',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'code',
+               'type' => 'int',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
+            2 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'errors',
+               'type' => NULL,
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+        2 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'created',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => true,
+           'returnType' => NULL,
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'data',
+               'type' => NULL,
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'message',
+               'type' => 'string',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+        3 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'notFound',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => true,
+           'returnType' => NULL,
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'message',
+               'type' => 'string',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+        4 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'forbidden',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => true,
+           'returnType' => NULL,
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'message',
+               'type' => 'string',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+        5 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'unauthorized',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => true,
+           'returnType' => NULL,
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'message',
+               'type' => 'string',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+        6 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'validationError',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => true,
+           'returnType' => NULL,
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'errors',
+               'type' => NULL,
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'message',
+               'type' => 'string',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+      ),
+       'attributes' => 
+      array (
+      ),
+    )),
+  ),
   '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Models/User.php' => 
   array (
     0 => 
@@ -6480,6 +6559,60 @@ return [
               ),
             )),
           ),
+           'attributes' => 
+          array (
+          ),
+        )),
+      ),
+       'attributes' => 
+      array (
+      ),
+    )),
+  ),
+  '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/helpers.php' => 
+  array (
+    0 => 
+    \PHPStan\Dependency\ExportedNode\ExportedFunctionNode::__set_state(array(
+       'name' => 'is_api_request',
+       'phpDoc' => 
+      \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
+         'phpDocString' => '/**
+     * Determine if the current request is an API request.
+     *
+     * @return bool
+     */',
+         'namespace' => NULL,
+         'uses' => 
+        array (
+        ),
+         'constUses' => 
+        array (
+        ),
+      )),
+       'byRef' => false,
+       'returnType' => 'bool',
+       'parameters' => 
+      array (
+      ),
+       'attributes' => 
+      array (
+      ),
+    )),
+    1 => 
+    \PHPStan\Dependency\ExportedNode\ExportedFunctionNode::__set_state(array(
+       'name' => 'filter_null_values',
+       'phpDoc' => NULL,
+       'byRef' => false,
+       'returnType' => 'array',
+       'parameters' => 
+      array (
+        0 => 
+        \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+           'name' => 'data',
+           'type' => 'array',
+           'byRef' => false,
+           'variadic' => false,
+           'hasDefault' => false,
            'attributes' => 
           array (
           ),

@@ -7,15 +7,14 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
   array (
     0 => 
     array (
-      'f322ce8d5e93200a1fb1293b93b68984' => 
+      'f7657d4e3a08a01ad681f4debc3b4dbf' => 
       \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Exceptions',
+         'namespace' => 'App\\Exceptions\\http',
          'uses' => 
         array (
-          'exception' => 'Exception',
-          'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
+          'response' => 'Symfony\\Component\\HttpFoundation\\Response',
         ),
-         'className' => 'App\\Exceptions\\BusinessException',
+         'className' => 'App\\Exceptions\\http\\BusinessException',
          'functionName' => NULL,
          'templatePhpDocNodes' => 
         array (
@@ -31,40 +30,15 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'typeAliasClassName' => NULL,
          'traitData' => NULL,
       )),
-      'a3265e91626548ea980c56d50c6cf5ec' => 
+      'f9a9e7680f0b9ce7f6a81b09967112fa' => 
       \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Exceptions',
+         'namespace' => 'App\\Exceptions\\http',
          'uses' => 
         array (
-          'exception' => 'Exception',
-          'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
+          'response' => 'Symfony\\Component\\HttpFoundation\\Response',
         ),
-         'className' => 'App\\Exceptions\\BusinessException',
-         'functionName' => 'report',
-         'templatePhpDocNodes' => 
-        array (
-        ),
-         'parent' => NULL,
-         'typeAliasesMap' => 
-        array (
-        ),
-         'bypassTypeAliases' => false,
-         'constUses' => 
-        array (
-        ),
-         'typeAliasClassName' => NULL,
-         'traitData' => NULL,
-      )),
-      '8611bde10d2354c50cc72d1115d7ed51' => 
-      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Exceptions',
-         'uses' => 
-        array (
-          'exception' => 'Exception',
-          'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
-        ),
-         'className' => 'App\\Exceptions\\BusinessException',
-         'functionName' => 'render',
+         'className' => 'App\\Exceptions\\http\\BusinessException',
+         'functionName' => '__construct',
          'templatePhpDocNodes' => 
         array (
         ),
@@ -82,7 +56,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/BusinessException.php' => 'c1117d2344f356befe03ef399b132f896cb2ee7bf25e48e9e6673ab1e313deb3',
+      '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/BusinessException.php' => '4f4e180cf6c6ad2062fad7c31faa154793887ceef106495c2dcf5f364a16d2aa',
     ),
   ),
 ));

@@ -7,15 +7,14 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
   array (
     0 => 
     array (
-      'd685dbac71ed76dc91f95ec9994bf1a2' => 
+      '32fe0c348a805f2e3d31eb1f1a59fc90' => 
       \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Exceptions',
+         'namespace' => 'App\\Exceptions\\http',
          'uses' => 
         array (
-          'exception' => 'Exception',
-          'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
+          'response' => 'Symfony\\Component\\HttpFoundation\\Response',
         ),
-         'className' => 'App\\Exceptions\\JWTException',
+         'className' => 'App\\Exceptions\\http\\JWTException',
          'functionName' => NULL,
          'templatePhpDocNodes' => 
         array (
@@ -31,40 +30,15 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'typeAliasClassName' => NULL,
          'traitData' => NULL,
       )),
-      '38db454c760f8ef8b028d8b1d1aec89b' => 
+      '4db6cc802cfb720dae5fdcb1a32d4590' => 
       \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Exceptions',
+         'namespace' => 'App\\Exceptions\\http',
          'uses' => 
         array (
-          'exception' => 'Exception',
-          'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
+          'response' => 'Symfony\\Component\\HttpFoundation\\Response',
         ),
-         'className' => 'App\\Exceptions\\JWTException',
-         'functionName' => 'report',
-         'templatePhpDocNodes' => 
-        array (
-        ),
-         'parent' => NULL,
-         'typeAliasesMap' => 
-        array (
-        ),
-         'bypassTypeAliases' => false,
-         'constUses' => 
-        array (
-        ),
-         'typeAliasClassName' => NULL,
-         'traitData' => NULL,
-      )),
-      '0ca33085cf601348ffa836e5abcfb6f3' => 
-      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Exceptions',
-         'uses' => 
-        array (
-          'exception' => 'Exception',
-          'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
-        ),
-         'className' => 'App\\Exceptions\\JWTException',
-         'functionName' => 'render',
+         'className' => 'App\\Exceptions\\http\\JWTException',
+         'functionName' => '__construct',
          'templatePhpDocNodes' => 
         array (
         ),
@@ -82,7 +56,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/JWTException.php' => 'b35af10f72852a853e419ff5d5d6bf1d3976896fc40c6fa1dd9a6b07e3cb2658',
+      '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/JWTException.php' => '09e15c68120bffd0b737a92fb932b5053c4ce3d2876db7379c5cec0ab6004a1f',
     ),
   ),
 ));

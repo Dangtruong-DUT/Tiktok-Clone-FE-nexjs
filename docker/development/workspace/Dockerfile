@@ -2,6 +2,9 @@
 # Use the official PHP CLI image as the base
 FROM php:8.2-cli
 
+# Copy composer binary from the official Composer image.
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
 # Set environment variables for user and group ID
 ARG UID=1000
 ARG GID=1000
@@ -28,7 +31,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     soap \
     && pecl install redis \
     && docker-php-ext-enable redis \
-    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Use ARG to define environment variables passed from the Docker build command or Docker Compose.

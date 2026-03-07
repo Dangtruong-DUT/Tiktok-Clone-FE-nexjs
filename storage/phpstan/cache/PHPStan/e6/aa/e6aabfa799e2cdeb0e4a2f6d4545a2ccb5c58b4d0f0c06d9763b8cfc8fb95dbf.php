@@ -1190,5 +1190,20 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
       array (
       ),
     ),
+    '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/helpers.php' => 
+    array (
+      0 => '58c0b5d1b40199aa7b1075036870fa7a4e520780ae66c448cfe2253e56045de4',
+      1 => 
+      array (
+      ),
+      2 => 
+      array (
+        0 => 'is_api_request',
+        1 => 'filter_null_values',
+      ),
+      3 => 
+      array (
+      ),
+    ),
   ),
 ));

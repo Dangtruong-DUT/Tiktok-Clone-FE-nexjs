@@ -2,7 +2,7 @@
 
 // odsl-/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Http/Requests/Auth/LoginRequest.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Http\Requests\Auth\LoginRequest
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.65.0.9-8.2.30-707286bba73f6c30ba6fc84cfc40c885b4e4c6464284fe9186a2a75772cff284',
+   'variableKey' => 'v2-6.65.0.9-8.2.30-bee201a93198dc3502a765b66d521f2b748ff5c6c944bb0bf0a281598c665efc',
    'data' => 
   array (
     'locatedSource' => 
@@ -28,8 +28,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     'startLine' => 6,
     'endLine' => 21,
-    'startColumn' => 5,
-    'endColumn' => 5,
+    'startColumn' => 1,
+    'endColumn' => 1,
     'parentClassName' => 'App\\Http\\Requests\\BaseRequest',
     'implementsClassNames' => 
     array (
@@ -71,13 +71,13 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  */',
         'startLine' => 13,
         'endLine' => 20,
-        'startColumn' => 9,
-        'endColumn' => 9,
+        'startColumn' => 5,
+        'endColumn' => 5,
         'couldThrow' => false,
         'isClosure' => false,
         'isGenerator' => false,
         'isVariadic' => false,
-        'modifiers' => 2,
+        'modifiers' => 1,
         'namespace' => 'App\\Http\\Requests\\Auth',
         'declaringClassName' => 'App\\Http\\Requests\\Auth\\LoginRequest',
         'implementingClassName' => 'App\\Http\\Requests\\Auth\\LoginRequest',

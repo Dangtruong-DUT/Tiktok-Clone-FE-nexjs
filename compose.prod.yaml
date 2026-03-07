@@ -6,6 +6,10 @@ services:
       context: .
       dockerfile: ./docker/production/nginx/Dockerfile
     restart: unless-stopped # Automatically restart unless the service is explicitly stopped
+    env_file:
+      - .env
+    environment:
+      CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN:-*}
     volumes:
       # Mount the 'laravel-storage' volume to '/var/www/storage' inside the container.
       # -----------------------------------------------------------

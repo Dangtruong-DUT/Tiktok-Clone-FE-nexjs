@@ -4,9 +4,17 @@ services:
     container_name: ${CONTAINER_PREFIX:-chat_app}_web
     image: nginx:latest
     restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN:-*}
+      NGINX_ENVSUBST_TEMPLATE_DIR: /etc/nginx/templates
+      NGINX_ENVSUBST_TEMPLATE_SUFFIX: .template
+      NGINX_ENVSUBST_OUTPUT_DIR: /etc/nginx
+      NGINX_ENVSUBST_FILTER: ^CORS_ALLOW_ORIGIN$
     volumes:
       - ./:/var/www
-      - ./docker/development/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/development/nginx/nginx.conf:/etc/nginx/templates/nginx.conf.template:ro
     ports:
       - "${NGINX_PORT:-80}:80"
     networks:

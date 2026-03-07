@@ -7,15 +7,14 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
   array (
     0 => 
     array (
-      '5d1b4f703ef7788202fa89aa14c66be7' => 
+      '4d88a925ce8f556cf04330ba70387b7e' => 
       \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Exceptions',
+         'namespace' => 'App\\Exceptions\\http',
          'uses' => 
         array (
-          'exception' => 'Exception',
-          'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
+          'response' => 'Symfony\\Component\\HttpFoundation\\Response',
         ),
-         'className' => 'App\\Exceptions\\NotFoundException',
+         'className' => 'App\\Exceptions\\http\\NotFoundException',
          'functionName' => NULL,
          'templatePhpDocNodes' => 
         array (
@@ -31,40 +30,15 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'typeAliasClassName' => NULL,
          'traitData' => NULL,
       )),
-      '46fff722dfdbf859d855958d9f76772b' => 
+      'e6dea11e4f32a18e436b2274f447b357' => 
       \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Exceptions',
+         'namespace' => 'App\\Exceptions\\http',
          'uses' => 
         array (
-          'exception' => 'Exception',
-          'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
+          'response' => 'Symfony\\Component\\HttpFoundation\\Response',
         ),
-         'className' => 'App\\Exceptions\\NotFoundException',
-         'functionName' => 'report',
-         'templatePhpDocNodes' => 
-        array (
-        ),
-         'parent' => NULL,
-         'typeAliasesMap' => 
-        array (
-        ),
-         'bypassTypeAliases' => false,
-         'constUses' => 
-        array (
-        ),
-         'typeAliasClassName' => NULL,
-         'traitData' => NULL,
-      )),
-      '6466f0c68c479387c9b85e7c068dc33b' => 
-      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Exceptions',
-         'uses' => 
-        array (
-          'exception' => 'Exception',
-          'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
-        ),
-         'className' => 'App\\Exceptions\\NotFoundException',
-         'functionName' => 'render',
+         'className' => 'App\\Exceptions\\http\\NotFoundException',
+         'functionName' => '__construct',
          'templatePhpDocNodes' => 
         array (
         ),
@@ -82,7 +56,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/NotFoundException.php' => '7bad20bc0c9d9aea843507c4f9df17d85af1ae928be50077ba8fba3430ffac00',
+      '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/NotFoundException.php' => 'f9b9b40314f29866fd2938c9e12e89c1bb451b9329399f9fff2ca95db90f2757',
     ),
   ),
 ));

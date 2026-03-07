@@ -7,15 +7,14 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
   array (
     0 => 
     array (
-      'd42d56308a169089e49f0c4b95fde4d0' => 
+      'deb45dae2c17f26bf8b80f90c6b49b52' => 
       \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Exceptions',
+         'namespace' => 'App\\Exceptions\\http',
          'uses' => 
         array (
-          'exception' => 'Exception',
-          'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
+          'response' => 'Symfony\\Component\\HttpFoundation\\Response',
         ),
-         'className' => 'App\\Exceptions\\UnauthorizedException',
+         'className' => 'App\\Exceptions\\http\\UnauthorizedException',
          'functionName' => NULL,
          'templatePhpDocNodes' => 
         array (
@@ -31,40 +30,15 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'typeAliasClassName' => NULL,
          'traitData' => NULL,
       )),
-      '40e45cb4c7dffd3e0cc46f60a5c8363d' => 
+      'f4c849d920fe26b551b56cc47503a6ea' => 
       \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Exceptions',
+         'namespace' => 'App\\Exceptions\\http',
          'uses' => 
         array (
-          'exception' => 'Exception',
-          'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
+          'response' => 'Symfony\\Component\\HttpFoundation\\Response',
         ),
-         'className' => 'App\\Exceptions\\UnauthorizedException',
-         'functionName' => 'report',
-         'templatePhpDocNodes' => 
-        array (
-        ),
-         'parent' => NULL,
-         'typeAliasesMap' => 
-        array (
-        ),
-         'bypassTypeAliases' => false,
-         'constUses' => 
-        array (
-        ),
-         'typeAliasClassName' => NULL,
-         'traitData' => NULL,
-      )),
-      '8fd6e3e200747836d068a1da958eeab6' => 
-      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Exceptions',
-         'uses' => 
-        array (
-          'exception' => 'Exception',
-          'jsonresponse' => 'Illuminate\\Http\\JsonResponse',
-        ),
-         'className' => 'App\\Exceptions\\UnauthorizedException',
-         'functionName' => 'render',
+         'className' => 'App\\Exceptions\\http\\UnauthorizedException',
+         'functionName' => '__construct',
          'templatePhpDocNodes' => 
         array (
         ),
@@ -82,7 +56,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/UnauthorizedException.php' => '1963dd98e3ad7f181cefa1569519d069e0ae5483e78402f061d81b7a9c6643a9',
+      '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/http/UnauthorizedException.php' => 'f70a2517d8d133f0e0eecb2719bb19b0807da1fb3d16608ab93fd0e1d6fff290',
     ),
   ),
 ));

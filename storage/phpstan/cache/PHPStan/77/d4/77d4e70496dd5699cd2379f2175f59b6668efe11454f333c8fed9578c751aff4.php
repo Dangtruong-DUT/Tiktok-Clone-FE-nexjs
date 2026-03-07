@@ -12,12 +12,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'namespace' => 'App\\Exceptions',
          'uses' => 
         array (
-          'apiresponse' => 'App\\Http\\Response\\ApiResponse',
-          'authenticationexception' => 'Illuminate\\Auth\\AuthenticationException',
-          'modelnotfoundexception' => 'Illuminate\\Database\\Eloquent\\ModelNotFoundException',
           'exceptionhandler' => 'Illuminate\\Foundation\\Exceptions\\Handler',
-          'illuminatevalidationexception' => 'Illuminate\\Validation\\ValidationException',
-          'notfoundhttpexception' => 'Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException',
           'throwable' => 'Throwable',
         ),
          'className' => 'App\\Exceptions\\Handler',
@@ -36,97 +31,10 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'typeAliasClassName' => NULL,
          'traitData' => NULL,
       )),
-      'd26c39c4d8d569e71f9d936392591cc6' => 
-      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Exceptions',
-         'uses' => 
-        array (
-          'apiresponse' => 'App\\Http\\Response\\ApiResponse',
-          'authenticationexception' => 'Illuminate\\Auth\\AuthenticationException',
-          'modelnotfoundexception' => 'Illuminate\\Database\\Eloquent\\ModelNotFoundException',
-          'exceptionhandler' => 'Illuminate\\Foundation\\Exceptions\\Handler',
-          'illuminatevalidationexception' => 'Illuminate\\Validation\\ValidationException',
-          'notfoundhttpexception' => 'Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException',
-          'throwable' => 'Throwable',
-        ),
-         'className' => 'App\\Exceptions\\Handler',
-         'functionName' => 'register',
-         'templatePhpDocNodes' => 
-        array (
-        ),
-         'parent' => NULL,
-         'typeAliasesMap' => 
-        array (
-        ),
-         'bypassTypeAliases' => false,
-         'constUses' => 
-        array (
-        ),
-         'typeAliasClassName' => NULL,
-         'traitData' => NULL,
-      )),
-      'f9f873e82bf80af8b8f278ade79f6f1d' => 
-      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Exceptions',
-         'uses' => 
-        array (
-          'apiresponse' => 'App\\Http\\Response\\ApiResponse',
-          'authenticationexception' => 'Illuminate\\Auth\\AuthenticationException',
-          'modelnotfoundexception' => 'Illuminate\\Database\\Eloquent\\ModelNotFoundException',
-          'exceptionhandler' => 'Illuminate\\Foundation\\Exceptions\\Handler',
-          'illuminatevalidationexception' => 'Illuminate\\Validation\\ValidationException',
-          'notfoundhttpexception' => 'Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException',
-          'throwable' => 'Throwable',
-        ),
-         'className' => 'App\\Exceptions\\Handler',
-         'functionName' => 'render',
-         'templatePhpDocNodes' => 
-        array (
-        ),
-         'parent' => NULL,
-         'typeAliasesMap' => 
-        array (
-        ),
-         'bypassTypeAliases' => false,
-         'constUses' => 
-        array (
-        ),
-         'typeAliasClassName' => NULL,
-         'traitData' => NULL,
-      )),
-      '52af63f3e787e19edf621da8b206dae1' => 
-      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
-         'namespace' => 'App\\Exceptions',
-         'uses' => 
-        array (
-          'apiresponse' => 'App\\Http\\Response\\ApiResponse',
-          'authenticationexception' => 'Illuminate\\Auth\\AuthenticationException',
-          'modelnotfoundexception' => 'Illuminate\\Database\\Eloquent\\ModelNotFoundException',
-          'exceptionhandler' => 'Illuminate\\Foundation\\Exceptions\\Handler',
-          'illuminatevalidationexception' => 'Illuminate\\Validation\\ValidationException',
-          'notfoundhttpexception' => 'Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException',
-          'throwable' => 'Throwable',
-        ),
-         'className' => 'App\\Exceptions\\Handler',
-         'functionName' => 'handleApiException',
-         'templatePhpDocNodes' => 
-        array (
-        ),
-         'parent' => NULL,
-         'typeAliasesMap' => 
-        array (
-        ),
-         'bypassTypeAliases' => false,
-         'constUses' => 
-        array (
-        ),
-         'typeAliasClassName' => NULL,
-         'traitData' => NULL,
-      )),
     ),
     1 => 
     array (
-      '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php' => '5a3eac394ca1d3c4410fe15ebbb62c09b1936b30640592c11670af83079c456b',
+      '/Users/nguyendangtruong/Documents/DUT/Orther/project/chat_app/backend/app/Exceptions/Handler.php' => '488d55cf96c6166ec23295c2f9a2e7950a04456ea8f71df236d0dba3fb389f4a',
     ),
   ),
 ));

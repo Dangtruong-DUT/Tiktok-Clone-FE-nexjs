@@ -21,12 +21,15 @@ RUN npm install && npm run build
 # Stage 2: Nginx production image
 FROM nginx:alpine
 
-# Copy custom Nginx configuration
-# -----------------------------------------------------------
-# Replace the default Nginx configuration with our custom one
-# that is optimized for serving a Laravel application.
-# -----------------------------------------------------------
-COPY ./docker/production/nginx/nginx.conf /etc/nginx/nginx.conf
+# Copy custom Nginx configuration template.
+# The official nginx entrypoint renders this template with envsubst at container start.
+COPY ./docker/production/nginx/nginx.conf /etc/nginx/templates/nginx.conf.template
+
+# Render only CORS_ALLOW_ORIGIN to avoid touching native nginx variables like $uri.
+ENV NGINX_ENVSUBST_TEMPLATE_DIR=/etc/nginx/templates \
+    NGINX_ENVSUBST_TEMPLATE_SUFFIX=.template \
+    NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx \
+    NGINX_ENVSUBST_FILTER=^CORS_ALLOW_ORIGIN$
 
 # Copy Laravel's public assets from the builder stage
 # -----------------------------------------------------------
