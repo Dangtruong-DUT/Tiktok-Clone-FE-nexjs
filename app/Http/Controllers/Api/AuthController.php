@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
 
 class AuthController extends Controller implements HasMiddleware
 {
@@ -15,14 +16,14 @@ class AuthController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('auth', except: ['login']),
+            new Middleware('auth:api', except: ['login']),
         ];
     }
 
 
     public function login(LoginRequest $request) {
         $credentials = $request->validated();
-
+        Log::info('Login attempt with credentials: ', $credentials);
         if ($token = $this->guard()->attempt($credentials)) {
             return $this->respondWithToken($token);
         }
@@ -81,10 +82,11 @@ class AuthController extends Controller implements HasMiddleware
     /**
      * Get the guard to be used during authentication.
      *
-     * @return \Illuminate\Contracts\Auth\Guard
+     * @return \Tymon\JWTAuth\JWTGuard
      */
     public function guard()
     {
-        return Auth::guard();
+        // @phpstan-ignore return.type
+        return Auth::guard('api');
     }
 }
