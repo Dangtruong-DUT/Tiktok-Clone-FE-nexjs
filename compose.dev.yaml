@@ -81,7 +81,7 @@ services:
 
   postgres:
     container_name: ${CONTAINER_PREFIX:-chat_app}_postgres
-    image: postgres:18
+    image: postgres:12.7
     restart: unless-stopped
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
