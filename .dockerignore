@@ -11,9 +11,9 @@ npm-debug.log
 yarn-error.log
 pnpm-debug.log
 
-Frontend/.next
-Frontend/out
-Frontend/coverage
+frontend/.next
+frontend/out
+frontend/coverage
 
 backend/vendor
 

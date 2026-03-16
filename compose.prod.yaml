@@ -1,8 +1,8 @@
-name: ${COMPOSE_PROJECT_NAME:-chat_app}_production
+name: ${COMPOSE_PROJECT_NAME:-tiktok_clone}_production
 
 services:
   web-server:
-    container_name: ${CONTAINER_PREFIX:-chat_app}_web
+    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_web
     build:
       context: .
       dockerfile: ./.docker/production/backend/nginx/Dockerfile
@@ -24,7 +24,7 @@ services:
         condition: service_started
 
   php-fpm:
-    container_name: ${CONTAINER_PREFIX:-chat_app}_php-fpm
+    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_php-fpm
     build:
       context: .
       dockerfile: ./.docker/common/backend/php-fpm/Dockerfile
@@ -53,16 +53,16 @@ services:
         condition: service_healthy
 
   postgres:
-    container_name: ${CONTAINER_PREFIX:-chat_app}_postgres
+    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_postgres
     image: postgres:12.7
     restart: unless-stopped
     user: postgres
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     environment:
-      POSTGRES_DB: ${DB_DATABASE:-chat_app}
+      POSTGRES_DB: ${DB_DATABASE:-tiktok_clone}
       POSTGRES_USER: ${DB_USERNAME:-root}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-chat_app_password}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-tiktok_clone_password}
     volumes:
       - postgres-data-production:/var/lib/postgresql
     networks:
@@ -76,7 +76,7 @@ services:
   redis:
     image: redis:alpine
     restart: unless-stopped
-    container_name: ${CONTAINER_PREFIX:-chat_app}_redis
+    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_redis
     networks:
       - app-production
     healthcheck:
@@ -88,7 +88,7 @@ services:
   frontend:
     image: tiktok-clone-frontend:prod
     build:
-      context: ./Frontend
+      context: ./frontend
       dockerfile: ./.docker/production/frontend/Dockerfile
       args:
         NEXT_PUBLIC_API_ENDPOINT: ${NEXT_PUBLIC_API_ENDPOINT}
@@ -98,7 +98,7 @@ services:
         NEXT_APP_ENV: production
     restart: unless-stopped
     env_file:
-      - ./Frontend/.env
+      - ./frontend/.env
     environment:
       NODE_ENV: production
       NEXT_APP_ENV: production

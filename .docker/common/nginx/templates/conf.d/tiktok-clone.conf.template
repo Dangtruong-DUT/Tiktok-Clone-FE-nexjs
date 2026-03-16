@@ -1,0 +1,54 @@
+server {
+    listen 80;
+    server_name _;
+    root /var/www/public;
+    index index.php;
+
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-Content-Type-Options "nosniff";
+
+    location = /api {
+        include /etc/nginx/snippets/cors-api.conf;
+
+        if ($request_method = OPTIONS) {
+            return 204;
+        }
+
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ^~ /api/ {
+        include /etc/nginx/snippets/cors-api.conf;
+
+        if ($request_method = OPTIONS) {
+            return 204;
+        }
+
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_pass php-fpm:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
+    }
+
+    location / {
+        proxy_pass http://nextjs_frontend;
+        proxy_http_version 1.1;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}

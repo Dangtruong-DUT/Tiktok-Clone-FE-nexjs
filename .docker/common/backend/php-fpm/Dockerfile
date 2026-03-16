@@ -47,8 +47,8 @@ RUN curl -o /usr/local/bin/php-fpm-healthcheck \
     && chmod +x /usr/local/bin/php-fpm-healthcheck
 
 ARG DOCKER_ENV=production
-COPY ./docker/production/backend/php-fpm/entrypoint.sh /usr/local/bin/entrypoint.production.sh
-COPY ./docker/development/backend/php-fpm/entrypoint.sh /usr/local/bin/entrypoint.development.sh
+COPY ./.docker/production/backend/php-fpm/entrypoint.sh /usr/local/bin/entrypoint.production.sh
+COPY ./.docker/development/backend/php-fpm/entrypoint.sh /usr/local/bin/entrypoint.development.sh
 RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.production.sh /usr/local/bin/entrypoint.development.sh \
     && if [ "$DOCKER_ENV" = "production" ]; then \
         cp /usr/local/bin/entrypoint.production.sh /usr/local/bin/entrypoint.sh; \
@@ -69,7 +69,7 @@ COPY --from=builder /usr/local/bin/docker-php-ext-* /usr/local/bin/
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
-COPY ./docker/common/backend/php-fpm/conf.d/*.conf /usr/local/etc/php-fpm.d/
+COPY ./.docker/common/backend/php-fpm/conf.d/*.conf /usr/local/etc/php-fpm.d/
 
 COPY --from=builder /var/www /var/www
 
@@ -123,7 +123,7 @@ RUN if getent group ${GID}; then \
 
 WORKDIR /var/www
 
-COPY ./docker/development/backend/php-fpm/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY ./.docker/development/backend/php-fpm/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh \
         && chmod +x /usr/local/bin/entrypoint.sh
 

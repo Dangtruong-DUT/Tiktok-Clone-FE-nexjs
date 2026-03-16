@@ -1,8 +1,8 @@
-name: ${COMPOSE_PROJECT_NAME:-chat_app}_development
+name: ${COMPOSE_PROJECT_NAME:-tiktok_clone}_development
 
 services:
   web-server:
-    container_name: ${CONTAINER_PREFIX:-chat_app}_web
+    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_web
     image: nginx:latest
     restart: unless-stopped
     env_file:
@@ -15,7 +15,7 @@ services:
       NGINX_ENVSUBST_FILTER: ^CORS_ALLOW_ORIGIN$
     volumes:
       - ./backend/:/var/www
-      - ./.docker/development/backend/nginx/nginx.conf:/etc/nginx/templates/nginx.conf.template:ro
+      - ./.docker/common/nginx/templates:/etc/nginx/templates:ro
     ports:
       - "${NGINX_PORT:-9696}:80"
     networks:
@@ -27,7 +27,7 @@ services:
         condition: service_started
 
   php-fpm:
-    container_name: ${CONTAINER_PREFIX:-chat_app}_php-fpm
+    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_php-fpm
     build:
       context: .
       dockerfile: ./.docker/common/backend/php-fpm/Dockerfile
@@ -58,7 +58,7 @@ services:
         condition: service_started
 
   workspace:
-    container_name: ${CONTAINER_PREFIX:-chat_app}_workspace
+    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_workspace
     build:
       context: .
       dockerfile: ./.docker/development/backend/workspace/Dockerfile
@@ -84,22 +84,22 @@ services:
       - app-development
 
   postgres:
-    container_name: ${CONTAINER_PREFIX:-chat_app}_postgres
+    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_postgres
     image: postgres:12.7
     restart: unless-stopped
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     environment:
-      POSTGRES_DB: ${DB_DATABASE:-chat_app}
+      POSTGRES_DB: ${DB_DATABASE:-tiktok_clone}
       POSTGRES_USER: ${DB_USERNAME:-root}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-chat_app_password}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-tiktok_clone_password}
     volumes:
       - postgres-data-development:/var/lib/postgresql
     networks:
       - app-development
 
   redis:
-    container_name: ${CONTAINER_PREFIX:-chat_app}_redis
+    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_redis
     image: redis:alpine
     restart: unless-stopped
     networks:
@@ -108,11 +108,11 @@ services:
   frontend:
     image: tiktok-clone-frontend:dev
     build:
-      context: ./Frontend
+      context: ./frontend
       dockerfile: ./.docker/development/frontend/Dockerfile
     restart: unless-stopped
     env_file:
-      - ./Frontend/.env
+      - ./frontend/.env
     environment:
       NEXT_APP_ENV: development
       NEXT_PUBLIC_API_ENDPOINT: ${NEXT_PUBLIC_API_ENDPOINT:-http://localhost:9696/api}
@@ -122,7 +122,7 @@ services:
       CHOKIDAR_USEPOLLING: "true"
       WATCHPACK_POLLING: "true"
     volumes:
-      - ./Frontend:/app
+      - ./frontend:/app
       - frontend_node_modules:/app/node_modules
     expose:
       - "3000"
