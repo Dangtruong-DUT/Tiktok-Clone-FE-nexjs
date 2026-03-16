@@ -1,0 +1,39 @@
+services:
+  frontend:
+    image: tiktok-clone-frontend:prod
+    build:
+      context: .
+      dockerfile: docker/production/Dockerfile
+      args:
+        NEXT_PUBLIC_API_ENDPOINT: ${NEXT_PUBLIC_API_ENDPOINT}
+        NEXT_PUBLIC_URL: ${NEXT_PUBLIC_URL}
+        NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI: ${NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI}
+        NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+        NEXT_APP_ENV: production
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      NEXT_APP_ENV: production
+      PORT: "3000"
+    expose:
+      - "3000"
+    networks:
+      - tiktok-clone_network
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on:
+      - frontend
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/production/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - tiktok-clone_network
+
+networks:
+  tiktok-clone_network:
+    name: tiktok-clone_network

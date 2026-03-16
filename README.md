@@ -90,7 +90,7 @@ src/
 1. **Clone the repo:**
     ```bash
     git clone https://github.com/Dangtruong-DUT/Tiktok-Clone-FE-nextjs.git
-    cd Tiktok-Clone-FE-nexjs
+  cd Tiktok-Clone-FE-nextjs
     ```
 2. **Install dependencies:**
     ```bash
@@ -100,11 +100,22 @@ src/
     # or
     pnpm install
     ```
-3. **Create `.env.local` in the root and add:**
-    ```env
-    NEXT_PUBLIC_API_BASE_URL=<your_api_url>
-    JWT_SECRET=<your_jwt_secret>
-    ```
+3. **Create `.env` (or `.env.local`) in the root and add:**
+  > You can start by copying `.env.example`.
+  ```env
+  # Backend API base URL (used by RTK Query + REST clients)
+  NEXT_PUBLIC_API_ENDPOINT=http://localhost:8080
+
+  # Frontend base URL (used for sitemap/canonical/share links)
+  NEXT_PUBLIC_URL=http://localhost:3000
+
+  # Google OAuth
+  NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI=http://localhost:3000/api/auth/google/callback
+  NEXT_PUBLIC_GOOGLE_CLIENT_ID=your-google-client-id
+
+  # Optional (defaults to "production" if omitted)
+  NEXT_APP_ENV=development
+  ```
 4. **Run the development server:**
     ```bash
     npm run dev
@@ -118,6 +129,28 @@ Open [http://localhost:3000](http://localhost:3000) to view the app.
 - `npm run build` — build for production
 - `npm run start` — start production server
 - `npm run lint` — run ESLint
+
+## Docker
+
+This repo includes Docker setup for both development and production.
+
+> Note: `NEXT_PUBLIC_*` variables are embedded at build time in production. Make sure your `.env` values are set before building the production image.
+
+### Development
+
+```bash
+docker compose -f compose.dev.yaml up --build
+```
+
+Open http://localhost:3000
+
+### Production
+
+```bash
+docker compose -f compose.pro.yaml up --build -d
+```
+
+Open http://localhost
 
 ## Topics
 
