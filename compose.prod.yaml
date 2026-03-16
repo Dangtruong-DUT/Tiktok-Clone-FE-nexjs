@@ -1,0 +1,120 @@
+name: ${COMPOSE_PROJECT_NAME:-chat_app}_production
+
+services:
+  web-server:
+    container_name: ${CONTAINER_PREFIX:-chat_app}_web
+    build:
+      context: .
+      dockerfile: ./.docker/production/backend/nginx/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN:-*}
+    volumes:
+      - laravel-storage-production:/var/www/storage:ro
+    networks:
+      - app-production
+    ports:
+      - "${NGINX_PORT:-9696}:80"
+    depends_on:
+      php-fpm:
+        condition: service_healthy
+      frontend:
+        condition: service_started
+
+  php-fpm:
+    container_name: ${CONTAINER_PREFIX:-chat_app}_php-fpm
+    build:
+      context: .
+      dockerfile: ./.docker/common/backend/php-fpm/Dockerfile
+      target: production
+      args:
+        DOCKER_ENV: production
+    restart: unless-stopped
+    volumes:
+      - laravel-storage-production:/var/www/storage
+    env_file:
+      - ./backend/.env
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      DB_HOST: postgres
+      REDIS_HOST: redis
+    networks:
+      - app-production
+    healthcheck:
+      test: ["CMD-SHELL", "php-fpm-healthcheck || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    container_name: ${CONTAINER_PREFIX:-chat_app}_postgres
+    image: postgres:12.7
+    restart: unless-stopped
+    user: postgres
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-chat_app}
+      POSTGRES_USER: ${DB_USERNAME:-root}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-chat_app_password}
+    volumes:
+      - postgres-data-production:/var/lib/postgresql
+    networks:
+      - app-production
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    container_name: ${CONTAINER_PREFIX:-chat_app}_redis
+    networks:
+      - app-production
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    image: tiktok-clone-frontend:prod
+    build:
+      context: ./Frontend
+      dockerfile: ./.docker/production/frontend/Dockerfile
+      args:
+        NEXT_PUBLIC_API_ENDPOINT: ${NEXT_PUBLIC_API_ENDPOINT}
+        NEXT_PUBLIC_URL: ${NEXT_PUBLIC_URL}
+        NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI: ${NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI}
+        NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+        NEXT_APP_ENV: production
+    restart: unless-stopped
+    env_file:
+      - ./Frontend/.env
+    environment:
+      NODE_ENV: production
+      NEXT_APP_ENV: production
+      NEXT_PUBLIC_API_ENDPOINT: ${NEXT_PUBLIC_API_ENDPOINT}
+      NEXT_PUBLIC_URL: ${NEXT_PUBLIC_URL}
+      NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI: ${NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI}
+      NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+      PORT: "3000"
+    expose:
+      - "3000"
+    networks:
+      - app-production
+
+networks:
+  app-production:
+
+volumes:
+  postgres-data-production:
+  laravel-storage-production:

@@ -12,8 +12,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Set working directory
 WORKDIR /var/www
 
-# Copy Laravel application code
-COPY . /var/www
+# Copy Laravel backend source from the mono-repo root context
+COPY ./backend /var/www
 
 # Install Node.js dependencies and build assets
 RUN npm install && npm run build
@@ -23,7 +23,7 @@ FROM nginx:alpine
 
 # Copy custom Nginx configuration template.
 # The official nginx entrypoint renders this template with envsubst at container start.
-COPY ./docker/production/nginx/nginx.conf /etc/nginx/templates/nginx.conf.template
+COPY ./docker/production/backend/nginx/nginx.conf /etc/nginx/templates/nginx.conf.template
 
 # Render only CORS_ALLOW_ORIGIN to avoid touching native nginx variables like $uri.
 ENV NGINX_ENVSUBST_TEMPLATE_DIR=/etc/nginx/templates \
