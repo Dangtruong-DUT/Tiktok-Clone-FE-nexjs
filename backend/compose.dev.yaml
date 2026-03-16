@@ -1,0 +1,108 @@
+name: ${COMPOSE_PROJECT_NAME:-chat_app}_development
+services:
+  web:
+    container_name: ${CONTAINER_PREFIX:-chat_app}_web
+    image: nginx:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN:-*}
+      NGINX_ENVSUBST_TEMPLATE_DIR: /etc/nginx/templates
+      NGINX_ENVSUBST_TEMPLATE_SUFFIX: .template
+      NGINX_ENVSUBST_OUTPUT_DIR: /etc/nginx
+      NGINX_ENVSUBST_FILTER: ^CORS_ALLOW_ORIGIN$
+    volumes:
+      - ./:/var/www
+      - ./docker/development/nginx/nginx.conf:/etc/nginx/templates/nginx.conf.template:ro
+    ports:
+      - "${NGINX_PORT:-80}:80"
+    networks:
+      - laravel-development
+    depends_on:
+      php-fpm:
+        condition: service_started
+
+  php-fpm:
+    container_name: ${CONTAINER_PREFIX:-chat_app}_php-fpm
+    build:
+      context: .
+      dockerfile: ./docker/common/php-fpm/Dockerfile
+      target: development
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+        XDEBUG_ENABLED: ${XDEBUG_ENABLED:-true}
+        XDEBUG_MODE: ${XDEBUG_MODE:-develop,coverage,debug,profile}
+        XDEBUG_HOST: ${XDEBUG_HOST:-host.docker.internal}
+        XDEBUG_IDE_KEY: ${XDEBUG_IDE_KEY:-DOCKER}
+        XDEBUG_LOG: ${XDEBUG_LOG:-/dev/stdout}
+        XDEBUG_LOG_LEVEL: ${XDEBUG_LOG_LEVEL:-0}
+        DOCKER_ENV: ${DOCKER_ENV:-development}
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # Override common local defaults inside Docker network
+      DB_HOST: postgres
+      REDIS_HOST: redis
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - ./:/var/www
+    networks:
+      - laravel-development
+    depends_on:
+      postgres:
+        condition: service_started
+
+  workspace:
+    container_name: ${CONTAINER_PREFIX:-chat_app}_workspace
+    # For the workspace service, we will also create a custom image to install and setup all the necessary stuff.
+    build:
+      context: .
+      dockerfile: ./docker/development/workspace/Dockerfile
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+        XDEBUG_ENABLED: ${XDEBUG_ENABLED:-true}
+        XDEBUG_MODE: develop,coverage,debug,profile
+        XDEBUG_HOST: ${XDEBUG_HOST:-host.docker.internal}
+        XDEBUG_IDE_KEY: ${XDEBUG_IDE_KEY:-DOCKER}
+        XDEBUG_LOG: /dev/stdout
+        XDEBUG_LOG_LEVEL: 0
+    tty: true # Enables an interactive terminal
+    stdin_open: true # Keeps standard input open for 'docker exec'
+    env_file:
+      - .env
+    volumes:
+      - ./:/var/www
+    networks:
+      - laravel-development
+
+  postgres:
+    container_name: ${CONTAINER_PREFIX:-chat_app}_postgres
+    image: postgres:12.7
+    restart: unless-stopped
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      - POSTGRES_DB=${DB_DATABASE}
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - postgres-data-development:/var/lib/postgresql
+    networks:
+      - laravel-development
+
+  redis:
+    container_name: ${CONTAINER_PREFIX:-chat_app}_redis
+    image: redis:alpine
+    restart: unless-stopped
+    networks:
+      - laravel-development
+
+networks:
+  laravel-development:
+
+volumes:
+  postgres-data-development:

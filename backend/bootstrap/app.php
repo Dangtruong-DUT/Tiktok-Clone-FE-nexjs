@@ -1,0 +1,84 @@
+<?php
+
+use App\Exceptions\http\BaseException;
+use App\Http\Response\ApiResponse;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php',
+        commands: __DIR__.'/../routes/console.php',
+        health: '/up',
+    )
+    ->withMiddleware(function (Middleware $middleware): void {
+        //
+    })
+    ->withExceptions(function (Exceptions $exceptions) {
+
+        $exceptions->render(function (Throwable $e, $request) {
+
+            if (! is_api_request()) {
+                return null;
+            }
+
+            return match (true) {
+
+                $e instanceof BaseException => ApiResponse::error(
+                    $e->getMessage(),
+                    $e->getHttpStatusCode(),
+                    $e->getErrors()
+                ),
+
+                $e instanceof ModelNotFoundException => ApiResponse::error(
+                    'Resource not found',
+                    Response::HTTP_NOT_FOUND
+                ),
+
+                $e instanceof NotFoundHttpException => ApiResponse::error(
+                    'Route not found',
+                    Response::HTTP_NOT_FOUND
+                ),
+
+                $e instanceof AuthenticationException => ApiResponse::error(
+                    'Unauthenticated',
+                    Response::HTTP_UNAUTHORIZED
+                ),
+
+                $e instanceof ValidationException => ApiResponse::error(
+                    'Validation failed',
+                    Response::HTTP_UNPROCESSABLE_ENTITY,
+                    $e->errors()
+                ),
+
+                $e instanceof MethodNotAllowedHttpException => ApiResponse::error(
+                    'Method not allowed',
+                    Response::HTTP_METHOD_NOT_ALLOWED
+                ),
+
+                default => config('app.debug')
+                    ? ApiResponse::error(
+                        $e->getMessage(),
+                        Response::HTTP_INTERNAL_SERVER_ERROR,
+                        [
+                            'file' => $e->getFile(),
+                            'line' => $e->getLine(),
+                            'trace' => $e->getTrace(),
+                        ]
+                    )
+                    : ApiResponse::error(
+                        'Internal Server Error',
+                        Response::HTTP_INTERNAL_SERVER_ERROR
+                    ),
+            };
+        });
+
+})->create();
