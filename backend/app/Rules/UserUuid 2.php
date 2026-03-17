@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Rules;
+
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
+use App\Repositories\UserRepository;
+
+class UserUuid implements ValidationRule
+{
+    protected UserRepository $userRepository;
+
+    public function __construct()
+    {
+        $this->userRepository = app()->make(UserRepository::class);
+    }
+
+    /**
+     * Run the validation rule.
+     *
+     * @param  \Closure(string, ?string=): \Illuminate\Translation\PotentiallyTranslatedString  $fail
+     */
+    public function validate(string $attribute, mixed $value, Closure $fail): void
+    {
+        if (!$this->userRepository->isExistByUuid($value)) {
+            $fail(':attribute must be a valid user uuid.');
+        }
+    }
+}
