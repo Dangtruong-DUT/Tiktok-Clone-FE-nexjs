@@ -1,7 +1,4 @@
 <?php
-
-use App\Http\Controllers\Api\AuthController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*|--------------------------------------------------------------------------
@@ -12,27 +9,13 @@ use Illuminate\Support\Facades\Route;
 | group. Enjoy building your API!
 */
 
-/**
- * public routes
- */
 
-// auth routes
-Route::prefix('auth')->controller(AuthController::class)
-->name('auth.')
-->group(function() {
-    Route::post('/login', 'login')->name('login');
-});
 
-/**
- * protected routes
- */
-Route::middleware('auth:api')->group(function () {
-    // auth routes
-    Route::prefix('auth')->controller(AuthController::class)
-    ->name('auth.')
-    ->group(function() {
-        Route::post('/logout', 'logout')->name('logout');
-        Route::post('/refresh', 'refresh')->name('refresh');
-        Route::get('/me', 'me')->name('me');
-    });
+/*|--------------------------------------------------------------------------
+| API Version 1
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('v1')->as('api.v1.')->group(function() {
+    require __DIR__.'/api/api_v1.php';
 });

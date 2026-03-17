@@ -122,6 +122,17 @@ return [
 
     'refresh_ttl' => env('JWT_REFRESH_TTL', 20160),
 
+
+    /*    |--------------------------------------------------------------------------
+    | Length of Refresh token
+    |--------------------------------------------------------------------------
+    | Specify the length of the refresh token in characters.
+    | Defaults to 64.
+    |
+    */
+
+    'refresh_token_length' => env('JWT_REFRESH_TOKEN_LENGTH', 64),
+
     /*
     |--------------------------------------------------------------------------
     | JWT hashing algorithm

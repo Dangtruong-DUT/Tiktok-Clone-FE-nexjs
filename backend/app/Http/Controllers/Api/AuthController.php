@@ -3,11 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RefreshTokenRequest;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LogoutRequest;
+use App\Http\Resources\Api\Auth\AuthResource;
+use App\Http\Response\ApiResponse;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller implements HasMiddleware
 {
@@ -23,12 +29,18 @@ class AuthController extends Controller implements HasMiddleware
 
     public function login(LoginRequest $request) {
         $credentials = $request->validated();
-        Log::info('Login attempt with credentials: ', $credentials);
-        if ($token = $this->guard()->attempt($credentials)) {
-            return $this->respondWithToken($token);
+        if (!$token = $this->guard()->attempt($credentials))
+        {
+            return ApiResponse::error('Invalid credentials', Response::HTTP_UNAUTHORIZED);
         }
 
-        return response()->json(['error' => 'Unauthorized'], 401);
+        $refreshToken = Str::random(config('jwt.refresh_token_length'));
+        $user = $this->guard()->user();
+        $user->refreshTokens()->create([
+            'token' => Hash::make($refreshToken),
+            'expires_at' => now()->addMinutes(config('jwt.refresh_ttl')),
+        ]);
+        return $this->respondWithToken($token, $refreshToken);
     }
 
     /**
@@ -38,7 +50,10 @@ class AuthController extends Controller implements HasMiddleware
      */
     public function me()
     {
-        return response()->json($this->guard()->user());
+        return ApiResponse::success(
+            new AuthResource($this->guard()->user()),
+            'User retrieved successfully'
+        );
     }
 
     /**
@@ -46,11 +61,19 @@ class AuthController extends Controller implements HasMiddleware
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function logout()
+    public function logout(LogoutRequest $request)
     {
-        $this->guard()->logout();
+        $refreshToken = $request->input('refresh_token');
+        $user = $this->guard()->user();
+        $token = $user->refreshTokens()
+            ->get()
+            ->first(fn($item) => Hash::check($refreshToken, $item->token));
 
-        return response()->json(['message' => 'Successfully logged out']);
+        if (!$token) {
+            return ApiResponse::error('Invalid token', Response::HTTP_UNAUTHORIZED);
+        }
+        $token->delete();
+        return ApiResponse::success(message: 'Successfully logged out');
     }
 
     /**
@@ -58,25 +81,20 @@ class AuthController extends Controller implements HasMiddleware
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function refresh()
+    public function refresh(RefreshTokenRequest $request)
     {
-        return $this->respondWithToken($this->guard()->refresh());
-    }
+        $refreshToken = $request->input('refresh_token');
+        $user = $this->guard()->user();
+        $token = $user->refreshTokens()
+            ->get()
+            ->first(fn($item) => Hash::check($refreshToken, $item->token));
 
-    /**
-     * Get the token array structure.
-     *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function respondWithToken($token)
-    {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => $this->guard()->factory()->getTTL() * 60
-        ]);
+        if (!$token) {
+            return ApiResponse::error('Invalid token', Response::HTTP_UNAUTHORIZED);
+        }
+
+        $newAccessToken = $this->guard()->refresh();
+        return $this->respondWithToken($newAccessToken, $refreshToken, 'Token refreshed successfully');
     }
 
     /**
@@ -89,4 +107,26 @@ class AuthController extends Controller implements HasMiddleware
         // @phpstan-ignore return.type
         return Auth::guard('api');
     }
+
+
+    /**
+     * Get the token array structure.
+     *
+     * @param string $accessToken
+     * @param string|null $refreshToken
+     * @param string $message
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function respondWithToken(string $accessToken, ?string $refreshToken=null, string $message = 'Login successful')
+    {
+        $user = $this->guard()->user();
+
+        return ApiResponse::success([
+            'access_token' => $accessToken,
+            'refresh_token' => $refreshToken,
+            "user"=>new AuthResource($user),
+            'token_type' => 'bearer',
+        ],$message);
+    }
+
 }

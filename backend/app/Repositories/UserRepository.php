@@ -3,13 +3,14 @@ namespace App\Repositories;
 
 use App\Models\User;
 
-class UserRepository
+class UserRepository extends BaseRepository
 {
     protected $model;
 
     public function __construct()
     {
         $this->model = new User();
+        parent::__construct($this->model);
     }
 
     /**

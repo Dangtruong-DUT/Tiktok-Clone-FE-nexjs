@@ -2,10 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserVerifyStatus;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -33,11 +33,16 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
+            "uuid" => fake()->uuid(),
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
+            "username" => fake()->unique()->userName(),
+            "bio" => fake()->sentence(),
+            "location" => fake()->city(),
+            "website" => fake()->url(),
+            "date_of_birth" => fake()->date(),
+            "verify" => fake()->randomElement([0, 1]),
             'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
         ];
     }
 
@@ -47,7 +52,29 @@ class UserFactory extends Factory
     public function unverified(): static
     {
         return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
+            'verify' =>UserVerifyStatus::UNVERIFIED->value,
         ]);
     }
+
+    /**
+     * Indicate that the model's email address should be verified.
+     */
+    public function verified(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'verify' => UserVerifyStatus::VERIFIED->value,
+        ]);
+    }
+
+    /**
+     * Indicate that the model's email address should be banned.
+     */
+    public function banned(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'verify' => UserVerifyStatus::BANNED->value,
+        ]);
+    }
+
+
 }
