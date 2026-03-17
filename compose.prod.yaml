@@ -7,8 +7,6 @@ services:
       context: .
       dockerfile: ./.docker/production/backend/nginx/Dockerfile
     restart: unless-stopped
-    env_file:
-      - ./backend/.env
     environment:
       CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN:-*}
     volumes:
@@ -35,7 +33,7 @@ services:
     volumes:
       - laravel-storage-production:/var/www/storage
     env_file:
-      - ./backend/.env
+      - ${BACKEND_ENV_FILE:-./backend/.env}
     environment:
       APP_ENV: production
       APP_DEBUG: "false"
@@ -60,9 +58,9 @@ services:
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     environment:
-      POSTGRES_DB: ${DB_DATABASE:-tiktok_clone}
-      POSTGRES_USER: ${DB_USERNAME:-root}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-tiktok_clone_password}
+      POSTGRES_DB: ${POSTGRES_DB:-tiktok_clone}
+      POSTGRES_USER: ${POSTGRES_USER:-root}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tiktok_clone_password}
     volumes:
       - postgres-data-production:/var/lib/postgresql
     networks:
@@ -86,26 +84,26 @@ services:
       retries: 3
 
   frontend:
-    image: tiktok-clone-frontend:prod
+    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_frontend
     build:
-      context: ./frontend
+      context: .
       dockerfile: ./.docker/production/frontend/Dockerfile
       args:
-        NEXT_PUBLIC_API_ENDPOINT: ${NEXT_PUBLIC_API_ENDPOINT}
-        NEXT_PUBLIC_URL: ${NEXT_PUBLIC_URL}
-        NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI: ${NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI}
-        NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
-        NEXT_APP_ENV: production
+        NEXT_PUBLIC_API_ENDPOINT: ${FRONTEND_PUBLIC_API_ENDPOINT}
+        NEXT_PUBLIC_URL: ${FRONTEND_PUBLIC_URL}
+        NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI: ${FRONTEND_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI}
+        NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${FRONTEND_PUBLIC_GOOGLE_CLIENT_ID}
+        NEXT_APP_ENV: ${NEXT_APP_ENV:-production}
     restart: unless-stopped
     env_file:
-      - ./frontend/.env
+      - ${FRONTEND_ENV_FILE:-./frontend/.env}
     environment:
       NODE_ENV: production
-      NEXT_APP_ENV: production
-      NEXT_PUBLIC_API_ENDPOINT: ${NEXT_PUBLIC_API_ENDPOINT}
-      NEXT_PUBLIC_URL: ${NEXT_PUBLIC_URL}
-      NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI: ${NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI}
-      NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+      NEXT_APP_ENV: ${NEXT_APP_ENV:-production}
+      NEXT_PUBLIC_API_ENDPOINT: ${FRONTEND_PUBLIC_API_ENDPOINT}
+      NEXT_PUBLIC_URL: ${FRONTEND_PUBLIC_URL}
+      NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI: ${FRONTEND_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI}
+      NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${FRONTEND_PUBLIC_GOOGLE_CLIENT_ID}
       PORT: "3000"
     expose:
       - "3000"

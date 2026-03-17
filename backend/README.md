@@ -68,18 +68,19 @@ vendor/bin/phpstan analyse
 
 In `backend/.env`:
 
-- `COMPOSE_PROJECT_NAME=tiktok_clone`
-- `CONTAINER_PREFIX=backend`
-- `NGINX_PORT=9696`
+- `APP_ENV=local`
+- `APP_DEBUG=true`
+- `APP_URL=http://localhost:8000`
 - `DB_CONNECTION=pgsql`
-- `DB_HOST=postgres` (when running in Docker)
+- `DB_HOST=127.0.0.1` (local default, overridden to `postgres` in Docker Compose)
 - `DB_PORT=5432`
 - `DB_DATABASE=tiktok_clone`
 - `DB_USERNAME=root`
 - `DB_PASSWORD=tiktok_clone_password`
+- `REDIS_HOST=127.0.0.1` (local default, overridden to `redis` in Docker Compose)
 - `JWT_SECRET=...`
 
 ## Notes
 
-- Default project naming has been normalized to `tiktok_clone`.
+- Compose infrastructure variables are now managed in root `.env`, not in `backend/.env`.
 - Nginx routes `/api` traffic to Laravel and proxies UI traffic to Next.js.

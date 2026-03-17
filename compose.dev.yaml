@@ -5,8 +5,6 @@ services:
     container_name: ${CONTAINER_PREFIX:-tiktok_clone}_web
     image: nginx:latest
     restart: unless-stopped
-    env_file:
-      - ./backend/.env
     environment:
       CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN:-*}
       NGINX_ENVSUBST_TEMPLATE_DIR: /etc/nginx/templates
@@ -44,7 +42,7 @@ services:
         DOCKER_ENV: ${DOCKER_ENV:-development}
     restart: unless-stopped
     env_file:
-      - ./backend/.env
+      - ${BACKEND_ENV_FILE:-./backend/.env}
     environment:
       DB_HOST: postgres
       REDIS_HOST: redis
@@ -74,7 +72,7 @@ services:
     tty: true
     stdin_open: true
     env_file:
-      - ./backend/.env
+      - ${BACKEND_ENV_FILE:-./backend/.env}
     environment:
       DB_HOST: postgres
       REDIS_HOST: redis
@@ -90,9 +88,9 @@ services:
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     environment:
-      POSTGRES_DB: ${DB_DATABASE:-tiktok_clone}
-      POSTGRES_USER: ${DB_USERNAME:-root}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-tiktok_clone_password}
+      POSTGRES_DB: ${POSTGRES_DB:-tiktok_clone}
+      POSTGRES_USER: ${POSTGRES_USER:-root}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tiktok_clone_password}
     volumes:
       - postgres-data-development:/var/lib/postgresql
     networks:
@@ -106,19 +104,15 @@ services:
       - app-development
 
   frontend:
-    image: tiktok-clone-frontend:dev
+    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_frontend
     build:
-      context: ./frontend
+      context: .
       dockerfile: ./.docker/development/frontend/Dockerfile
     restart: unless-stopped
     env_file:
-      - ./frontend/.env
+      - ${FRONTEND_ENV_FILE:-./frontend/.env}
     environment:
-      NEXT_APP_ENV: development
-      NEXT_PUBLIC_API_ENDPOINT: ${NEXT_PUBLIC_API_ENDPOINT:-http://localhost:9696/api}
-      NEXT_PUBLIC_URL: ${NEXT_PUBLIC_URL:-http://localhost:9696}
-      NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI: ${NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI:-http://localhost:9696/api/auth/google/callback}
-      NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${NEXT_PUBLIC_GOOGLE_CLIENT_ID:-your-google-client-id}
+      NEXT_APP_ENV: ${NEXT_APP_ENV:-development}
       CHOKIDAR_USEPOLLING: "true"
       WATCHPACK_POLLING: "true"
     volumes:

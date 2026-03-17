@@ -63,6 +63,19 @@ Default local URLs with Docker:
 - App: `http://localhost:9696`
 - API Base: `http://localhost:9696/api`
 
+## Environment Strategy (Independent & Maintainable)
+
+The repository now separates environment variables into 3 layers:
+
+- Root `.env`: Docker Compose infrastructure variables only (ports, container names, postgres container credentials, selected env file paths)
+- `backend/.env`: Laravel application variables only
+- `frontend/.env`: Next.js application variables only
+
+You can switch service env files independently by editing root `.env`:
+
+- `BACKEND_ENV_FILE=./backend/.env`
+- `FRONTEND_ENV_FILE=./frontend/.env`
+
 ## Quick Start (Docker)
 
 1. Copy environment files:
@@ -85,6 +98,12 @@ docker compose -f compose.dev.yaml up --build -d
 docker compose -f compose.dev.yaml exec workspace composer install
 docker compose -f compose.dev.yaml exec workspace php artisan migrate
 ```
+
+If you need a different env profile (for example staging/production-like), update these variables in root `.env` before running compose:
+
+- `NEXT_APP_ENV`
+- `BACKEND_ENV_FILE`
+- `FRONTEND_ENV_FILE`
 
 ## Documentation
 

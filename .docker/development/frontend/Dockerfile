@@ -5,10 +5,10 @@ WORKDIR /app
 ENV NODE_ENV=development
 ENV NEXT_TELEMETRY_DISABLED=1
 
-COPY package.json package-lock.json ./
+COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci
 
-COPY . .
+COPY frontend/ ./
 
 EXPOSE 3000
 

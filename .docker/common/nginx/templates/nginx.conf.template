@@ -30,5 +30,5 @@ http {
         server frontend:3000;
     }
 
-    include /etc/nginx/conf.d/*.conf;
+    include /etc/nginx/conf.d/tiktok-clone.conf;
 }

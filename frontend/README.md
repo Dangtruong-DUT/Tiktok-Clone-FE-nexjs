@@ -32,6 +32,7 @@ Open:
 In `frontend/.env`:
 
 ```env
+NEXT_APP_ENV=development
 NEXT_PUBLIC_API_ENDPOINT=http://localhost:9696/api
 NEXT_PUBLIC_URL=http://localhost:9696
 NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI=http://localhost:9696/api/auth/google/callback
@@ -42,6 +43,13 @@ If you run frontend and backend separately in local mode, use:
 
 - `NEXT_PUBLIC_API_ENDPOINT=http://localhost:8000/api`
 - `NEXT_PUBLIC_URL=http://localhost:3000`
+
+For Docker production builds (`compose.prod.yaml`), public values are injected from root `.env` using:
+
+- `FRONTEND_PUBLIC_API_ENDPOINT`
+- `FRONTEND_PUBLIC_URL`
+- `FRONTEND_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI`
+- `FRONTEND_PUBLIC_GOOGLE_CLIENT_ID`
 
 ## Scripts
 

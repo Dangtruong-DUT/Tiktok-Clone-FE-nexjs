@@ -5,7 +5,7 @@ WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
 
 FROM base AS deps
-COPY package.json package-lock.json ./
+COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci
 
 FROM base AS builder
@@ -23,7 +23,7 @@ ENV NEXT_PUBLIC_API_ENDPOINT=$NEXT_PUBLIC_API_ENDPOINT \
 	NEXT_APP_ENV=$NEXT_APP_ENV
 
 COPY --from=deps /app/node_modules ./node_modules
-COPY . .
+COPY frontend/ ./
 
 ENV NODE_ENV=production
 RUN npm run build

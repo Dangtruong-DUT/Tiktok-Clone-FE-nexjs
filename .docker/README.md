@@ -91,19 +91,22 @@ docker compose -f compose.prod.yaml down
 Loaded from root `.env` (copy from `.env.example`):
 
 - `COMPOSE_PROJECT_NAME=tiktok_clone`
-- `CONTAINER_PREFIX=backend`
+- `CONTAINER_PREFIX=tiktok_clone`
+- `BACKEND_ENV_FILE=./backend/.env`
+- `FRONTEND_ENV_FILE=./frontend/.env`
 - `NGINX_PORT=9696`
 - `POSTGRES_PORT=5432`
-- `DB_DATABASE=tiktok_clone`
-- `DB_USERNAME=root`
-- `DB_PASSWORD=tiktok_clone_password`
+- `POSTGRES_DB=tiktok_clone`
+- `POSTGRES_USER=root`
+- `POSTGRES_PASSWORD=tiktok_clone_password`
+- `CORS_ALLOW_ORIGIN=*`
 
 Frontend build/runtime variables:
 
-- `NEXT_PUBLIC_API_ENDPOINT`
-- `NEXT_PUBLIC_URL`
-- `NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI`
-- `NEXT_PUBLIC_GOOGLE_CLIENT_ID`
+- `FRONTEND_PUBLIC_API_ENDPOINT`
+- `FRONTEND_PUBLIC_URL`
+- `FRONTEND_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI`
+- `FRONTEND_PUBLIC_GOOGLE_CLIENT_ID`
 
 ## Notes
 
