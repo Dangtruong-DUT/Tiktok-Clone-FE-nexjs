@@ -63,6 +63,19 @@ class AuthService
     }
 
     /**
+     * Log the user out from all devices by invalidating all refresh tokens.
+     *
+     * @return bool
+     */
+    public function logoutAll(): bool
+    {
+        $user = $this->guard()->user();
+        $this->guard()->logout();
+        $this->refreshRepo->deleteByUserId($user->id);
+        return true;
+    }
+
+    /**
      * Refresh the access token using the refresh token.
      *
      * @param string $refreshToken

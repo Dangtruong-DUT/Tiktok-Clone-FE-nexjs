@@ -28,4 +28,15 @@ class RefreshTokenRepository extends BaseRepository
     {
         return $this->query()->where('user_id', $id)->get();
     }
+
+    /**
+     * Delete refresh tokens by user ID
+     *
+     * @param int $id
+     * @return int
+     */
+    public function deleteByUserId(int $id): int
+    {
+        return $this->query()->where('user_id', $id)->delete();
+    }
 }

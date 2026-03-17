@@ -85,6 +85,17 @@ class AuthController extends Controller implements HasMiddleware
     }
 
     /**
+    * Log the user out from all devices (Invalidate all tokens)
+    *
+    * @return \Illuminate\Http\JsonResponse
+    */
+    public function logoutAll(): JsonResponse
+    {
+        $this->authService->logoutAll();
+        return ApiResponse::success(message: 'Successfully logged out from all devices');
+    }
+
+    /**
      * Refresh a token.
      *
      * @return \Illuminate\Http\JsonResponse
