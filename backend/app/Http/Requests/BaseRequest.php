@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\UserId;
+use App\Rules\UserUuid;
 use DateTimeInterface;
 
 abstract class BaseRequest extends BaseFormRequest
@@ -198,9 +199,11 @@ abstract class BaseRequest extends BaseFormRequest
             'password' => [self::STRING, self::MIN.':'.'8'],
             'user_id' => [self::INTEGER, new UserId()],
             'user_ids.*' => [self::INTEGER, new UserId()],
-            'full_name' => [self::STRING, self::MAX.':'.'100'],
+            'user_uuid' => [self::STRING, new UserUuid()],
+            'user_uuids.*' => [self::STRING, new UserUuid()],
+            "date_of_birth" => [self::DATE],
+            'name' => [self::STRING, self::MAX.':'.'100'],
             'phone' => [self::STRING, self::MAX.':'.'100'],
-            'id_card_number' => [self::STRING, self::MAX.':'.'100'],
             'month' => [self::INTEGER, self::MIN.':'.'1', self::MAX.':'.'12'],
             'year' => [self::INTEGER, self::MIN.':'.'1900', self::MAX.':'.'2100'],
             'keyword' => [self::STRING, self::MAX.':'.'100'],

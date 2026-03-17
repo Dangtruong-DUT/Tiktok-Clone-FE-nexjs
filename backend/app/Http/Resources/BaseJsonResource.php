@@ -19,14 +19,16 @@ class BaseJsonResource extends JsonResource
      * Create a new anonymous resource collection.
      *
      * @param mixed $resource
-     * @param int|null $totalCount
      * @return BaseResourceCollection
      */
     public static function collection($resource): BaseResourceCollection
     {
         return tap(new BaseResourceCollection($resource, static::class), function ($collection): void {
             if (property_exists(static::class, 'preserveKeys')) {
-                $collection->preserveKeys = (new static([]))->preserveKeys === true;
+                // @phpstan-ignore new.static
+                $class = (new static([]));
+                // @phpstan-ignore property.notFound
+                $collection->preserveKeys = $class->preserveKeys === true;
             }
         });
     }

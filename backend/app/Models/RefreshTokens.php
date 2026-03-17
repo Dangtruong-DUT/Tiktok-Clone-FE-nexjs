@@ -4,12 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RefreshTokens extends Model
 {
-    use SoftDeletes;
-
     /*
     * Indicates if the model should be timestamped.
     *

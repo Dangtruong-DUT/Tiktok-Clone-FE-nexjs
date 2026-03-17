@@ -1,7 +1,9 @@
 <?php
+namespace App\Repositories;
 
 use App\Models\RefreshTokens;
 use App\Repositories\BaseRepository;
+use Illuminate\Support\Collection;
 
 class RefreshTokenRepository extends BaseRepository
 {
@@ -12,19 +14,18 @@ class RefreshTokenRepository extends BaseRepository
      */
     public function __construct()
     {
-        $this->model = new RefreshTokens();
-        parent::__construct($this->model);
+        $modelInstance = app()->make(RefreshTokens::class);
+        parent::__construct($modelInstance);
     }
 
-
     /**
-     * Find a refresh token by user
+     * Find a refresh token by user ID
      *
-     * @param $user
-     * @return RefreshTokens|null
+     * @param int $id
+     * @return Collection|null
      */
-    public function findByUser($user): RefreshTokens|null
+    public function findByUserId(int $id): Collection|null
     {
-        return $this->model->where('user_id', $user->id)->first();
+        return $this->query()->where('user_id', $id)->get();
     }
 }

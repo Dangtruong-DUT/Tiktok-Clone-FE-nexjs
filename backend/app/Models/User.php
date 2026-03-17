@@ -5,12 +5,16 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Enums\UserVerifyStatus;
+use App\Traits\HasUsernameObservable;
+use App\Traits\HasUuidObservable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * @property int $id
@@ -25,6 +29,8 @@ class User extends Authenticatable implements JWTSubject
     use HasFactory;
     use Notifiable;
     use SoftDeletes;
+    use HasUuidObservable;
+    use HasUsernameObservable;
 
     /**
      * The attributes that are mass assignable.
@@ -42,6 +48,15 @@ class User extends Authenticatable implements JWTSubject
         'website',
         'date_of_birth',
         'verify',
+    ];
+
+    /**
+    * The default attributes for the model.
+    *
+    * @var array<string, mixed>
+    */
+    protected $attributes = [
+    'verify' => UserVerifyStatus::UNVERIFIED->value,
     ];
 
     /**
@@ -100,5 +115,13 @@ class User extends Authenticatable implements JWTSubject
     public function refreshTokens(): HasMany
     {
         return $this->hasMany(RefreshTokens::class);
+    }
+
+    public function password():Attribute
+    {
+        return Attribute::make(
+            set: fn($value) => Hash::make($value),
+            get: fn($value) => $value
+        );
     }
 }

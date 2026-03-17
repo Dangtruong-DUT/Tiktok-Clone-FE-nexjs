@@ -5,7 +5,6 @@ namespace Database\Factories;
 use App\Enums\UserVerifyStatus;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -42,7 +41,7 @@ class UserFactory extends Factory
             "website" => fake()->url(),
             "date_of_birth" => fake()->date(),
             "verify" => fake()->randomElement([0, 1]),
-            'password' => static::$password ??= Hash::make('password'),
+            'password' => static::$password ??= 'password',
         ];
     }
 

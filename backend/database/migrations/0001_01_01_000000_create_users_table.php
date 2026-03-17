@@ -36,7 +36,6 @@ return new class extends Migration
             $table->foreignId("user_id")->constrained()->cascadeOnDelete();
             $table->string("token")->unique();
             $table->timestamp("expires_at");
-            $table->softDeletes();
         });
 
         Schema::create("email_verifications", function(Blueprint $table) {
@@ -44,7 +43,6 @@ return new class extends Migration
             $table->foreignId("user_id")->constrained()->cascadeOnDelete();
             $table->string("token")->unique();
             $table->timestamp("expires_at");
-            $table->softDeletes();
         });
 
         Schema::create("password_resets", function(Blueprint $table) {
@@ -52,7 +50,6 @@ return new class extends Migration
             $table->foreignId("user_id")->constrained()->cascadeOnDelete();
             $table->string("token")->unique();
             $table->timestamp("expires_at");
-            $table->softDeletes();
         });
     }
 

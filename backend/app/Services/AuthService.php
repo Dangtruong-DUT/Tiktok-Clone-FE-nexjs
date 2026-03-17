@@ -120,7 +120,7 @@ class AuthService
     private function findValidToken( $user, string $refreshToken): RefreshTokens|null
     {
         $refreshTokens =  $this->refreshRepo->findByUserId($user->id);
-        if (!$refreshTokens) return null;
+        if (empty($refreshTokens)) return null;
         return $refreshTokens->first(fn($item) => Hash::check($refreshToken, $item->token));
     }
 
