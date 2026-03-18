@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Exceptions\http\BadRequestException;
 use App\Exceptions\http\BusinessException;
 use App\Exceptions\http\UnauthorizedException;
 use App\Mail\ForgotPasswordMail;
+use App\Models\ForgotPasswordToken;
 use App\Models\RefreshToken;
 use App\Repositories\ForgotPasswordTokenRepository;
 use App\Repositories\RefreshTokenRepository;
@@ -93,6 +95,10 @@ class AuthService
             throw new UnauthorizedException('Invalid refresh token');
         };
 
+        if ($token->expires_at->isPast()) {
+            throw new UnauthorizedException('Refresh token has expired');
+        }
+
         return $this->guard()->refresh();
     }
 
@@ -169,6 +175,41 @@ class AuthService
         $token = $this->createForgotPasswordToken($user);
         Mail::to($email)->send(new ForgotPasswordMail($user,$token));
 
+        return true;
+    }
+
+    /**
+     * Handle verify forgot password request by verifying the token and resetting the password.
+     *
+     * @param array $credentials
+     * @return ForgotPasswordToken
+     */
+    public function verifyForgotPasswordToken(array $credentials): ForgotPasswordToken
+    {
+        $token = $credentials['forgot_password_token'];
+        $validToken = $this->forgotPasswordTokenRepo->findByToken($token);
+        if (empty($validToken)) {
+            throw new BadRequestException('Invalid token');
+        }
+        if ($validToken->expires_at->isPast()) {
+            throw new BadRequestException('Token has expired');
+        }
+        return $validToken;
+    }
+
+    /**
+     * Handle reset password request by resetting the user's password.
+     *
+     * @param array $credentials
+     * @return bool
+     */
+    public function resetPassword(array $credentials): bool
+    {
+        $validToken= $this->verifyForgotPasswordToken($credentials);
+        $this->forgotPasswordTokenRepo->deleteByUserId($validToken->user_id);
+        $user = $this->userRepo->findOrFail($validToken->user_id);
+        $user->password = $credentials['password'];
+        $user->save();
         return true;
     }
 

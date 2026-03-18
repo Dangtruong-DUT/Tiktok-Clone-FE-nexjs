@@ -197,6 +197,7 @@ abstract class BaseRequest extends BaseFormRequest
         $this->sharedRules = [
             'email' => [self::EMAIL, self::MAX.':'.'100'],
             'password' => [self::STRING, self::MIN.':'.'8'],
+            'confirm_password'=>[self::STRING, self::MIN.':'.'8', self::SAME.':password'],
             'user_id' => [self::INTEGER, new UserId()],
             'user_ids.*' => [self::INTEGER, new UserId()],
             'user_uuid' => [self::STRING, new UserUuid()],

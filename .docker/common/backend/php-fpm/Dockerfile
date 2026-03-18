@@ -40,6 +40,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libzip-dev \
     libfcgi-bin \
     procps \
+    supervisor \
     && apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN curl -o /usr/local/bin/php-fpm-healthcheck \
@@ -60,6 +61,8 @@ RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.production.sh /usr/local/bin/entr
     fi \
     && chmod +x /usr/local/bin/entrypoint.sh \
     && rm -f /usr/local/bin/entrypoint.production.sh /usr/local/bin/entrypoint.development.sh
+
+COPY ./.docker/production/backend/worker/supervisord.conf /etc/supervisord.conf
 
 COPY ./backend/storage /var/www/storage-init
 

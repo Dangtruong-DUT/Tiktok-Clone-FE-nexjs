@@ -4,6 +4,7 @@ namespace App\Repositories;
 use App\Models\ForgotPasswordToken;
 use App\Repositories\BaseRepository;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Hash;
 
 class ForgotPasswordTokenRepository  extends BaseRepository
 {
@@ -38,5 +39,16 @@ class ForgotPasswordTokenRepository  extends BaseRepository
     public function deleteByUserId(int $id): int
     {
         return $this->query()->where('user_id', $id)->delete();
+    }
+
+    /**
+     * Find a refresh token by token string
+     *
+     * @param string $token
+     * @return ForgotPasswordToken|null
+     */
+    public function findByToken(string $token): ?ForgotPasswordToken
+    {
+        return $this->query()->get()->first(fn($item) => Hash::check($token, $item->token));
     }
 }

@@ -37,12 +37,14 @@ This structure is used by both environments:
 |        `- conf.d/
 |- development/
 |  |- backend/
-|  |  |- php-fpm/entrypoint.sh
+|  |  |- workspace/Dockerfile
+|  |  `- worker/supervisord.conf
 |  |  `- workspace/Dockerfile
 |  `- frontend/Dockerfile
 `- production/
    |- backend/
-   |  |- nginx/Dockerfile
+   |  |- php-fpm/entrypoint.sh
+   |  `- worker/supervisord.conf
    |  `- php-fpm/entrypoint.sh
    `- frontend/Dockerfile
 ```
@@ -52,6 +54,20 @@ This structure is used by both environments:
 - `compose.dev.yaml`
 - `compose.prod.yaml`
 
+## Queue Worker (supervisord)
+
+The stack includes a dedicated Laravel queue worker service (`worker`) so queue processing runs automatically.
+
+Queues/process count are managed by `supervisord`:
+
+- Dev config (mounted into the container): `.docker/development/backend/worker/supervisord.conf`
+- Prod config (baked into the image): `.docker/production/backend/worker/supervisord.conf` → `/etc/supervisord.conf`
+
+After changing the config:
+
+- Development: restart the worker container: `docker compose -f compose.dev.yaml restart worker`
+- Production: rebuild + restart worker: `docker compose -f compose.prod.yaml up -d --build worker`
+
 ## Development Workflow
 
 From the repository root:
@@ -60,6 +76,12 @@ From the repository root:
 docker compose -f compose.dev.yaml up --build -d
 docker compose -f compose.dev.yaml exec workspace composer install
 docker compose -f compose.dev.yaml exec workspace php artisan migrate
+```
+
+Tail worker logs:
+
+```bash
+docker compose -f compose.dev.yaml logs -f worker
 ```
 
 Stop services:
@@ -78,6 +100,12 @@ docker compose -f compose.dev.yaml down -v
 
 ```bash
 docker compose -f compose.prod.yaml up --build -d
+```
+
+Tail worker logs:
+
+```bash
+docker compose -f compose.prod.yaml logs -f worker
 ```
 
 Stop services:

@@ -1,6 +1,6 @@
 # TikTok Clone 2025 - taplamit
 
-A personal project replicating TikTok's core features, built with **Next.js (frontend)** and **Node.js + TypeScript + Express.js (backend)** to practice full-stack development.
+A personal project replicating TikTok's core features, built with **Next.js (frontend)** and **Laravel 12 (backend API)** to practice full-stack development.
 
 > Author: **Nguyen Dang Truong**
 
@@ -56,6 +56,7 @@ This repository currently runs as a monorepo with:
 - Nginx (`web-server`) is the public entrypoint
 - `/api/*` routes are forwarded to Laravel (`php-fpm`)
 - All other routes are proxied to Next.js (`frontend`)
+- Background jobs (queues) are processed by Laravel queue worker (`worker`)
 - Object storage is provided by MinIO (S3-compatible)
 - Development email testing is handled by MailCatcher (SMTP + web UI)
 
@@ -96,12 +97,29 @@ Copy-Item frontend/.env.example frontend/.env
 docker compose -f compose.dev.yaml up --build -d
 ```
 
+This also starts a dedicated queue worker container (`worker`).
+
 3. Install backend dependencies and run migrations:
 
 ```bash
 docker compose -f compose.dev.yaml exec workspace composer install
 docker compose -f compose.dev.yaml exec workspace php artisan migrate
 ```
+
+## Queue Worker (Docker)
+
+The repository includes a dedicated `worker` service so you don't need to run `php artisan queue:work` manually.
+
+Development:
+
+- Worker runs `supervisord` and loads config from `.docker/development/backend/worker/supervisord.conf` (mounted).
+- Tail logs: `docker compose -f compose.dev.yaml logs -f worker`
+- Restart worker: `docker compose -f compose.dev.yaml restart worker`
+
+Production:
+
+- Worker runs `supervisord` with `/etc/supervisord.conf` baked into the image from `.docker/production/backend/worker/supervisord.conf`.
+- After changing the config, rebuild + restart: `docker compose -f compose.prod.yaml up -d --build worker`
 
 If you need a different env profile (for example staging/production-like), update these variables in root `.env` before running compose:
 

@@ -81,6 +81,38 @@ services:
     networks:
       - app-development
 
+  worker:
+    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_worker
+    build:
+      context: .
+      dockerfile: ./.docker/development/backend/workspace/Dockerfile
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+        XDEBUG_ENABLED: ${XDEBUG_ENABLED:-true}
+        XDEBUG_MODE: develop,coverage,debug,profile
+        XDEBUG_HOST: ${XDEBUG_HOST:-host.docker.internal}
+        XDEBUG_IDE_KEY: ${XDEBUG_IDE_KEY:-DOCKER}
+        XDEBUG_LOG: /dev/stdout
+        XDEBUG_LOG_LEVEL: 0
+    restart: unless-stopped
+    env_file:
+      - ${BACKEND_ENV_FILE:-./backend/.env}
+    environment:
+      DB_HOST: postgres
+      REDIS_HOST: redis
+    command: ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+    volumes:
+      - ./backend/:/var/www
+      - ./.docker/development/backend/worker/supervisord.conf:/etc/supervisord.conf:ro
+    networks:
+      - app-development
+    depends_on:
+      postgres:
+        condition: service_started
+      redis:
+        condition: service_started
+
   postgres:
     container_name: ${CONTAINER_PREFIX:-tiktok_clone}_postgres
     image: postgres:12.7

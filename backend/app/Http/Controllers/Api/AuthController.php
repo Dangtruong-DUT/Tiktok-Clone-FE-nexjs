@@ -8,6 +8,8 @@ use App\Http\Requests\Auth\RefreshTokenRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LogoutRequest;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Auth\ResetPasswordRequest;
+use App\Http\Requests\Auth\VerifyForgotPasswordTokenRequest;
 use App\Http\Resources\Api\Auth\AuthResource;
 use App\Http\Response\ApiResponse;
 use App\Services\AuthService;
@@ -102,7 +104,32 @@ class AuthController extends Controller
     public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
     {
         $this->authService->forgotPassword($request->input('email'));
-        return ApiResponse::success(message: 'Password reset link has been sent to your email');
+        return ApiResponse::success(message: 'forgot password validation email sent successfully');
+    }
+
+    /**
+     * Handle verify forgot password request by verifying the token and resetting the password.
+     *
+     * @param VerifyForgotPasswordTokenRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function verifyForgotPasswordToken(VerifyForgotPasswordTokenRequest $request): JsonResponse
+    {
+        $credentials = $request->validated();
+        $this->authService->verifyForgotPasswordToken($credentials);
+        return ApiResponse::success(message: 'Password has been reset successfully');
+    }
+
+    /**
+    * Handle reset password request by resetting the user's password.
+    * @param ResetPasswordRequest $request
+    * @return \Illuminate\Http\JsonResponse
+    */
+    public function resetPassword(ResetPasswordRequest $request): JsonResponse
+    {
+        $credentials = $request->validated();
+        $this->authService->resetPassword($credentials);
+        return ApiResponse::success(message: 'Password has been reset successfully');
     }
 
     /**

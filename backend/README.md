@@ -51,6 +51,22 @@ docker compose -f compose.dev.yaml exec workspace composer install
 docker compose -f compose.dev.yaml exec workspace php artisan migrate
 ```
 
+## Queue Worker (Docker)
+
+Queue processing is handled by a dedicated `worker` service.
+
+Common commands:
+
+```bash
+docker compose -f compose.dev.yaml logs -f worker
+docker compose -f compose.dev.yaml restart worker
+```
+
+Worker process configuration:
+
+- Development: `.docker/development/backend/worker/supervisord.conf` (mounted)
+- Production: `.docker/production/backend/worker/supervisord.conf` (baked into image)
+
 ## Useful Commands
 
 ```bash

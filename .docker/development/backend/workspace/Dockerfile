@@ -14,6 +14,7 @@ ARG NODE_VERSION=22.0.0
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     unzip \
+    supervisor \
     libpq-dev \
     libonig-dev \
     libssl-dev \
