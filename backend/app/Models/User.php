@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
 use App\Enums\User\UserVerifyStatus;
 use App\Traits\HasUsernameObservable;
 use App\Traits\HasUuidObservable;
@@ -14,6 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Hash;
 
 /**
@@ -143,5 +142,36 @@ class User extends Authenticatable implements JWTSubject
             set: fn($value) => Hash::make($value),
             get: fn($value) => $value
         );
+    }
+
+    /**
+     * Get the avatar file associated with the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo The relationship instance.
+     */
+    public function avatarFile():BelongsTo
+    {
+        return $this->belongsTo(UploadFile::class, 'avatar_file_id');
+    }
+
+
+    /**
+     * Check if the user is verified.
+     *
+     * @return bool True if the user is verified, false otherwise.
+     */
+    public function isVerified(): bool
+    {
+        return $this->verify === UserVerifyStatus::VERIFIED;
+    }
+
+    /**
+     * Check if the user is banned.
+     *
+     * @return bool True if the user is banned, false otherwise.
+     */
+    public function isBanned(): bool
+    {
+        return $this->verify === UserVerifyStatus::BANNED;
     }
 }

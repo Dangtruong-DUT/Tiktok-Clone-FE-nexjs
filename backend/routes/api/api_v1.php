@@ -11,9 +11,6 @@ use App\Http\Controllers\Api\AuthController;
 | group. Enjoy building your API!
 */
 
-
-
-
 /**
  * public routes
  */
@@ -33,7 +30,7 @@ Route::prefix('auth')
 /**
  * protected routes
  */
-Route::middleware('auth:api')->group(function () {
+Route::middleware(['auth:api', 'check_user_status'])->group(function () {
     // auth routes
     Route::prefix('auth')
     ->name('auth.')
