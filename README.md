@@ -28,7 +28,6 @@ A personal project replicating TikTok's core features, built with **Next.js (fro
 	</tr>
 </table>
 
-
 </div>
 
 ---
@@ -50,18 +49,23 @@ This repository currently runs as a monorepo with:
 
 - Frontend: Next.js 15 (TypeScript)
 - Backend: Laravel 12 API (JWT)
-- Infrastructure: Docker Compose + Nginx + PostgreSQL + Redis
+- Infrastructure: Docker Compose + Nginx + PostgreSQL + Redis + MinIO + MailCatcher
 
 ## Architecture Overview
 
 - Nginx (`web-server`) is the public entrypoint
 - `/api/*` routes are forwarded to Laravel (`php-fpm`)
 - All other routes are proxied to Next.js (`frontend`)
+- Object storage is provided by MinIO (S3-compatible)
+- Development email testing is handled by MailCatcher (SMTP + web UI)
 
 Default local URLs with Docker:
 
 - App: `http://localhost:9696`
 - API Base: `http://localhost:9696/api`
+- MinIO API: `http://localhost:9000`
+- MinIO Console: `http://localhost:9001`
+- MailCatcher UI: `http://localhost:1080`
 
 ## Environment Strategy (Independent & Maintainable)
 
@@ -104,6 +108,41 @@ If you need a different env profile (for example staging/production-like), updat
 - `NEXT_APP_ENV`
 - `BACKEND_ENV_FILE`
 - `FRONTEND_ENV_FILE`
+
+## MinIO and MailCatcher
+
+Root `.env` (copy from `.env.example`) contains infrastructure variables for both services:
+
+- `MINIO_PORT`
+- `MINIO_PORT_CONSOLE`
+- `MINIO_ROOT_USER`
+- `MINIO_ROOT_PASSWORD`
+- `MAILCATCHER_WEB_PORT`
+- `MAILCATCHER_SMTP_PORT`
+
+Environment behavior:
+
+- Development (`compose.dev.yaml`): MinIO and MailCatcher run by default.
+- Production (`compose.prod.yaml`): MinIO runs by default, MailCatcher is optional and attached to profile `tools`.
+
+Start MailCatcher in production-like stack only when required:
+
+```bash
+docker compose -f compose.prod.yaml --profile tools up -d mailcatcher
+```
+
+Recommended Docker-based backend mail/storage values in `backend/.env`:
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=mailcatcher
+MAIL_PORT=1025
+
+AWS_ACCESS_KEY_ID=minio_root_user
+AWS_SECRET_ACCESS_KEY=minio_root_password
+AWS_ENDPOINT=http://minio:9000
+AWS_USE_PATH_STYLE_ENDPOINT=true
+```
 
 ## Documentation
 

@@ -110,9 +110,38 @@ services:
     networks:
       - app-production
 
+  mailcatcher:
+    image: dockage/mailcatcher:0.7.1
+    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_mailcatcher
+    profiles:
+      - tools
+    ports:
+      - ${MAILCATCHER_WEB_PORT:-1080}:1080
+      - ${MAILCATCHER_SMTP_PORT:-1025}:1025
+    networks:
+      - app-production
+    restart: unless-stopped
+
+  minio:
+    image: quay.io/minio/minio:RELEASE.2025-02-03T21-03-04Z
+    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_minio
+    command: minio server /data --console-address ":9001"
+    volumes:
+      - minio-data-production:/data
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minio_root_user}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minio_root_password}
+    ports:
+      - ${MINIO_PORT:-9000}:9000
+      - ${MINIO_PORT_CONSOLE:-9001}:9001
+    networks:
+      - app-production
+    restart: unless-stopped
+
 networks:
   app-production:
 
 volumes:
   postgres-data-production:
   laravel-storage-production:
+  minio-data-production:
