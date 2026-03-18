@@ -6,9 +6,14 @@ use App\Traits\HasToken;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class RefreshToken extends Model
+class EmailVerifyToken extends Model
 {
     use HasToken;
+    /*
+    * The table associated with the model.
+    * @var string
+    */
+    protected $table = 'email_verifications';
 
     /*
     * Indicates if the model should be timestamped.
@@ -43,7 +48,7 @@ class RefreshToken extends Model
 
 
     /**
-     * Get the user that owns the refresh token.
+     * Get the user that owns the email verification token.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo The relationship instance.
      */

@@ -1,20 +1,20 @@
 <?php
 namespace App\Repositories;
 
-use App\Models\ForgotPasswordToken;
+use App\Models\EmailVerifyToken;
 use App\Repositories\BaseRepository;
 use Illuminate\Support\Collection;
 
-class ForgotPasswordTokenRepository  extends BaseRepository
+class VerifyEmailTokenRepository  extends BaseRepository
 {
 
 
     /**
-     * ForgotPasswordTokenRepository constructor.
+     * VerifyEmailTokenRepository constructor.
      */
     public function __construct()
     {
-        $modelInstance = app()->make(ForgotPasswordToken::class);
+        $modelInstance = app()->make(EmailVerifyToken::class);
         parent::__construct($modelInstance);
     }
 
@@ -44,9 +44,9 @@ class ForgotPasswordTokenRepository  extends BaseRepository
      * Find a refresh token by token string
      *
      * @param string $token
-     * @return ForgotPasswordToken|null
+     * @return EmailVerifyToken|null
      */
-    public function findByToken(string $token): ?ForgotPasswordToken
+    public function findByToken(string $token): ?EmailVerifyToken
     {
         return $this->query()->get()->first(fn($item) => $item->isValidToken($token));
     }

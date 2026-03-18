@@ -3,7 +3,7 @@ namespace App\Http\Requests\Auth;
 
 use App\Http\Requests\BaseRequest;
 
-class VerifyForgotPasswordTokenRequest extends BaseRequest
+class VerifyEmailRequest extends BaseRequest
 {
     /**
      * set rules
@@ -14,7 +14,7 @@ class VerifyForgotPasswordTokenRequest extends BaseRequest
     {
 
         return $this->applyBaseRules([
-            'forgot_password_token' => [self::REQUIRED],
+            'email_verify_token' => [self::REQUIRED],
         ]);
     }
 }

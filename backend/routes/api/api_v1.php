@@ -26,6 +26,7 @@ Route::prefix('auth')
     Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
     Route::post('verify-forgot-password', [AuthController::class, 'verifyForgotPasswordToken'])->name('verify-forgot-password');
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
+    Route::post('/verify-email', [AuthController::class, 'verifyEmail'])->name('verify-email');
 });
 
 /**

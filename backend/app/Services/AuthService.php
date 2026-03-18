@@ -2,19 +2,21 @@
 
 namespace App\Services;
 
+use App\Enums\UserVerifyStatus;
 use App\Exceptions\http\BadRequestException;
 use App\Exceptions\http\BusinessException;
 use App\Exceptions\http\UnauthorizedException;
 use App\Mail\ForgotPasswordMail;
+use App\Mail\VerifyUserEmail;
 use App\Models\ForgotPasswordToken;
 use App\Models\RefreshToken;
 use App\Repositories\ForgotPasswordTokenRepository;
 use App\Repositories\RefreshTokenRepository;
 use App\Repositories\UserRepository;
+use App\Repositories\VerifyEmailTokenRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
 
 class AuthService
 {
@@ -24,7 +26,8 @@ class AuthService
     public function __construct(
         private UserRepository $userRepo,
         private RefreshTokenRepository $refreshRepo,
-        private ForgotPasswordTokenRepository $forgotPasswordTokenRepo
+        private ForgotPasswordTokenRepository $forgotPasswordTokenRepo,
+        private VerifyEmailTokenRepository $verifyEmailTokenRepo
     ) {}
 
 
@@ -95,7 +98,7 @@ class AuthService
             throw new UnauthorizedException('Invalid refresh token');
         };
 
-        if ($token->expires_at->isPast()) {
+        if ($token->isExpired()) {
             throw new UnauthorizedException('Refresh token has expired');
         }
 
@@ -126,12 +129,39 @@ class AuthService
         $refreshToken = $this->createRefreshToken($user);
         // @phpstan-ignore argument.type
         $accessToken = $this->guard()->login($user);
+        $verifyToken = $this->createVerifyEmailToken($user);
+        Mail::to($data['email'])->send(new VerifyUserEmail($user, $verifyToken));
+
         return [
             'access_token' => $accessToken,
             'refresh_token' => $refreshToken,
             'user' => $user
         ];
     }
+
+    /**
+     * Handle verify email request by verifying the token and activating the user's account.
+     *
+     * @param array $credentials
+     * @return bool
+     */
+    public function verifyEmail(array $credentials): bool
+    {
+        $token = $credentials['email_verify_token'];
+        $validToken = $this->verifyEmailTokenRepo->findByToken($token);
+        if (empty($validToken)) {
+            throw new BadRequestException('Invalid token');
+        }
+        if ($validToken->isExpired()) {
+            throw new BadRequestException('Token has expired');
+        }
+        $user = $this->userRepo->findOrFail($validToken->user_id);
+        $user->verify = UserVerifyStatus::VERIFIED->value;
+        $user->save();
+        $this->verifyEmailTokenRepo->deleteByUserId($validToken->user_id);
+        return true;
+    }
+
 
     /**
      * Find a valid refresh token for the user.
@@ -144,7 +174,7 @@ class AuthService
     {
         $refreshTokens =  $this->refreshRepo->findByUserId($user->id);
         if (empty($refreshTokens)) return null;
-        return $refreshTokens->first(fn($item) => Hash::check($refreshToken, $item->token));
+        return $refreshTokens->first(fn($item) =>$item->isValidToken($refreshToken));
     }
 
     /**
@@ -191,7 +221,7 @@ class AuthService
         if (empty($validToken)) {
             throw new BadRequestException('Invalid token');
         }
-        if ($validToken->expires_at->isPast()) {
+        if ($validToken->isExpired()) {
             throw new BadRequestException('Token has expired');
         }
         return $validToken;
@@ -235,7 +265,7 @@ class AuthService
         $this->refreshRepo->create(
             [
                 'user_id' => $user->id,
-                'token' => Hash::make($refreshToken),
+                'token' =>$refreshToken,
                 'expires_at' => now()->addMinutes((int)config('jwt.refresh_ttl', 20160))
             ]
         );
@@ -253,8 +283,26 @@ class AuthService
         $this->forgotPasswordTokenRepo->create(
             [
                 'user_id' => $user->id,
-                'token' => Hash::make($token),
+                'token' => $token,
                 'expires_at' => now()->addMinutes((int)config('auth.reset_password.expire', 60))
+            ]
+        );
+        return $token;
+    }
+
+    /**
+     * Create verify email token.
+     * @param $user
+     * @return string
+     */
+    public function createVerifyEmailToken($user): string
+    {
+        $token = Str::random((int)config('auth.verification.token_length', 64));
+        $this->verifyEmailTokenRepo->create(
+            [
+                'user_id' => $user->id,
+                'token' => $token,
+                'expires_at' => now()->addMinutes((int)config('auth.verification.expire', 60))
             ]
         );
         return $token;

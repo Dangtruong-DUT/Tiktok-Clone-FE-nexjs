@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LogoutRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\ResetPasswordRequest;
+use App\Http\Requests\Auth\VerifyEmailRequest;
 use App\Http\Requests\Auth\VerifyForgotPasswordTokenRequest;
 use App\Http\Resources\Api\Auth\AuthResource;
 use App\Http\Response\ApiResponse;
@@ -104,7 +105,7 @@ class AuthController extends Controller
     public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
     {
         $this->authService->forgotPassword($request->input('email'));
-        return ApiResponse::success(message: 'forgot password validation email sent successfully');
+        return ApiResponse::success(message: 'Forgot password validation email sent successfully');
     }
 
     /**
@@ -117,7 +118,7 @@ class AuthController extends Controller
     {
         $credentials = $request->validated();
         $this->authService->verifyForgotPasswordToken($credentials);
-        return ApiResponse::success(message: 'Password has been reset successfully');
+        return ApiResponse::success(message: 'forgot password validation email sent successfully');
     }
 
     /**
@@ -131,6 +132,21 @@ class AuthController extends Controller
         $this->authService->resetPassword($credentials);
         return ApiResponse::success(message: 'Password has been reset successfully');
     }
+
+
+    /**
+     * Handle verify email request by verifying the token and activating the user's account.
+     *
+     * @param VerifyEmailRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function verifyEmail(VerifyEmailRequest $request): JsonResponse
+    {
+        $credentials = $request->validated();
+        $this->authService->verifyEmail($credentials);
+        return ApiResponse::success(message: 'Email has been verified successfully');
+    }
+
 
     /**
      * Get the token array structure.

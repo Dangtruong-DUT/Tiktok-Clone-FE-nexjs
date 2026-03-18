@@ -127,6 +127,16 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(ForgotPasswordToken::class);
     }
 
+    /**
+     * Get the email verification tokens associated with the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany The relationship instance.
+     */
+    public function emailVerifyTokens(): HasMany
+    {
+        return $this->hasMany(EmailVerifyToken::class);
+    }
+
     public function password():Attribute
     {
         return Attribute::make(
