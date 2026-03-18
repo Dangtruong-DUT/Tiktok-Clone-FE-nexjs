@@ -1,6 +1,9 @@
 <?php
 
-namespace App\Enums;
+namespace App\Enums\Media;
+
+use App\Enums\BaseEnumTrait;
+use App\Enums\BaseEnumInterface;
 
 enum MediaType:int implements BaseEnumInterface
 {

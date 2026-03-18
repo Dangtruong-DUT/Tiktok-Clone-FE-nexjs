@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Enums\UserVerifyStatus;
+use App\Enums\User\UserVerifyStatus;
 use App\Exceptions\http\BadRequestException;
 use App\Exceptions\http\BusinessException;
 use App\Exceptions\http\UnauthorizedException;

@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\Api\UploadController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 
@@ -42,4 +43,12 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/refresh-token', [AuthController::class, 'refresh'])->name('refresh');
         Route::get('/me', [AuthController::class, 'me'])->name('me');
     });
+
+    Route::prefix('medias')
+        ->name('media.')
+        ->group(function () {
+            Route::post('upload-image', [UploadController::class, 'uploadImage'])->name('upload-image');
+            Route::post('upload-video', [UploadController::class, 'uploadVideo'])->name('upload-video');
+        });
+
 });

@@ -4,7 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use App\Enums\UserVerifyStatus;
+use App\Enums\User\UserVerifyStatus;
 use App\Traits\HasUsernameObservable;
 use App\Traits\HasUuidObservable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

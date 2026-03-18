@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Enums\UserVerifyStatus;
+use App\Enums\User\UserVerifyStatus;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

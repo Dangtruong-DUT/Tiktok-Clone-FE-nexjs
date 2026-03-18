@@ -216,6 +216,26 @@ abstract class BaseRequest extends BaseFormRequest
             'order_by' => [self::ARRAY],
             'order_by.*.column' => [self::STRING],
             'order_by.*.direction' => [self::STRING],
+            'file_image' => [
+                self::FILE,
+                self::MAX.":".config('const.file.image.max_size_kb', 10240),
+                self::MIMES . ':' .config('const.file.image.mimes',  'jpg,jpeg,png'),
+            ],
+            'file_images.*' => [
+                self::FILE,
+                self::MAX.":".config('const.file.image.max_size_kb', 10240),
+                self::MIMES . ':' .config('const.file.image.mimes',  'jpg,jpeg,png'),
+            ],
+            'file_video' => [
+                self::FILE,
+                self::MAX.":".config('const.file.video.max_size_kb', 51200),
+                self::MIMES . ':' .config('const.file.video.mimes',  'mp4,mov'),
+            ],
+            'file_videos.*' => [
+                self::FILE,
+                self::MAX.":".config('const.file.video.max_size_kb', 51200),
+                self::MIMES . ':' .config('const.file.video.mimes',  'mp4,mov'),
+            ],
         ];
     }
 }
