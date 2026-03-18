@@ -2,8 +2,10 @@
 
 namespace App\Enums;
 
-enum UserVerifyStatus:int
+enum UserVerifyStatus:int implements BaseEnumInterface
 {
+    use BaseEnumTrait;
+
     case UNVERIFIED = 0;
     case VERIFIED = 1;
     case BANNED = 2;
@@ -33,15 +35,4 @@ enum UserVerifyStatus:int
             self::BANNED => "Bị cấm",
         };
     }
-
-    public static function values(): array
-    {
-        return array_map(fn($case) => $case->value, self::cases());
-    }
-
-    public static function labels(): array
-    {
-        return array_map(fn($case) => $case->label(), self::cases());
-    }
-
 }
