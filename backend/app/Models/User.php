@@ -114,7 +114,17 @@ class User extends Authenticatable implements JWTSubject
      */
     public function refreshTokens(): HasMany
     {
-        return $this->hasMany(RefreshTokens::class);
+        return $this->hasMany(RefreshToken::class);
+    }
+
+    /**
+     * Get the forgot password tokens associated with the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany The relationship instance.
+     */
+    public function forgotPasswordTokens(): HasMany
+    {
+        return $this->hasMany(ForgotPasswordToken::class);
     }
 
     public function password():Attribute

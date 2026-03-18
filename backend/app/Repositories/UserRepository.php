@@ -56,5 +56,16 @@ class UserRepository extends BaseRepository
     {
         return $this->query()->where('email', $email)->exists();
     }
+
+    /**
+     * Find a user by email
+     *
+     * @param string $email
+     * @return User|null
+     */
+    public function findByEmail(string $email): ?User
+    {
+        return $this->query()->where('email', $email)->first();
+    }
 }
 ?>

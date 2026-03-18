@@ -5,8 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class RefreshTokens extends Model
+class ForgotPasswordToken extends Model
 {
+
+    /*
+    * The table associated with the model.
+    * @var string
+    */
+    protected $table = 'password_resets';
+
     /*
     * Indicates if the model should be timestamped.
     *
@@ -27,16 +34,6 @@ class RefreshTokens extends Model
     ];
 
     /*
-    * The attributes that should be hidden for serialization.
-    *
-    * @var list<string>
-    */
-    protected $hidden = [
-        "deleted_at",
-    ];
-
-
-    /*
     * Get the attributes that should be cast.
     *
     * @return array<string, string>
@@ -50,7 +47,7 @@ class RefreshTokens extends Model
 
 
     /**
-     * Get the user that owns the refresh token.
+     * Get the user that owns the forgot password token.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo The relationship instance.
      */

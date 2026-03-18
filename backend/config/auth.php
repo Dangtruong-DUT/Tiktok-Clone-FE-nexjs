@@ -117,4 +117,30 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+
+    /*    |--------------------------------------------------------------------------
+    | Email Verification Expiration
+    |--------------------------------------------------------------------------
+    | This value controls the number of minutes that email verification links
+    | are considered valid. If the user does not verify their email address
+    | within this time, they will be required to request a new verification link.
+    |    */
+
+    'verification' => [
+        'expire' => env('VERIFY_EMAIL_EXPIRATION_MINUTES', 60),
+        'token_length' => env('VERIFY_EMAIL_TOKEN_LENGTH', 64),
+    ],
+
+    /*    |--------------------------------------------------------------------------
+    | Password Reset Expiration
+    |--------------------------------------------------------------------------
+    | This value controls the number of minutes that password reset tokens are
+    | considered valid. If the user does not reset their password within this
+    | time, they will be required to request a new password reset link.
+    |    */
+    'reset_password' => [
+        'expire' => env('RESET_PASSWORD_EXPIRATION_MINUTES', 60),
+        'token_length' => env('RESET_PASSWORD_TOKEN_LENGTH', 64),
+    ],
+
 ];

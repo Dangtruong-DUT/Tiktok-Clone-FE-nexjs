@@ -4,10 +4,13 @@ namespace App\Services;
 
 use App\Exceptions\http\BusinessException;
 use App\Exceptions\http\UnauthorizedException;
-use App\Models\RefreshTokens;
+use App\Mail\ForgotPasswordMail;
+use App\Models\RefreshToken;
+use App\Repositories\ForgotPasswordTokenRepository;
 use App\Repositories\RefreshTokenRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
@@ -18,7 +21,8 @@ class AuthService
      */
     public function __construct(
         private UserRepository $userRepo,
-        private RefreshTokenRepository $refreshRepo
+        private RefreshTokenRepository $refreshRepo,
+        private ForgotPasswordTokenRepository $forgotPasswordTokenRepo
     ) {}
 
 
@@ -128,9 +132,9 @@ class AuthService
      *
      * @param  $user
      * @param string $refreshToken
-     * @return RefreshTokens|null
+     * @return RefreshToken|null
      */
-    private function findValidToken( $user, string $refreshToken): RefreshTokens|null
+    private function findValidToken( $user, string $refreshToken): RefreshToken|null
     {
         $refreshTokens =  $this->refreshRepo->findByUserId($user->id);
         if (empty($refreshTokens)) return null;
@@ -145,6 +149,27 @@ class AuthService
     public function getUserProfile(): \Illuminate\Contracts\Auth\Authenticatable|null
     {
         return $this->guard()->user();
+    }
+
+    /**
+     * Handle forgot password request by sending a reset link to the user's email.
+     *
+     * @param string $email
+     * @return bool
+     */
+    public function forgotPassword(string $email): bool
+    {
+        $user = $this->userRepo->findByEmail($email);
+        if (!$user) {
+            throw new BusinessException(
+                'Email not found',
+                ['email' => 'The email address is not registered. Please check and try again.']
+            );
+        }
+        $token = $this->createForgotPasswordToken($user);
+        Mail::to($email)->send(new ForgotPasswordMail($user,$token));
+
+        return true;
     }
 
     /**
@@ -165,14 +190,32 @@ class AuthService
      */
     private function createRefreshToken( $user): string
     {
-        $refreshToken = Str::random(config('jwt.refresh_token_length', 64));
+        $refreshToken = Str::random((int)config('jwt.refresh_token_length', 64));
         $this->refreshRepo->create(
             [
                 'user_id' => $user->id,
                 'token' => Hash::make($refreshToken),
-                'expires_at' => now()->addMinutes(config('jwt.refresh_ttl', 20160))
+                'expires_at' => now()->addMinutes((int)config('jwt.refresh_ttl', 20160))
             ]
         );
         return $refreshToken;
+    }
+
+    /**
+     * Create forgot password token.
+     * @param $user
+     * @return string
+     */
+    private function createForgotPasswordToken($user): string
+    {
+        $token = Str::random((int)config('auth.reset_password.token_length', 64));
+        $this->forgotPasswordTokenRepo->create(
+            [
+                'user_id' => $user->id,
+                'token' => Hash::make($token),
+                'expires_at' => now()->addMinutes((int)config('auth.reset_password.expire', 60))
+            ]
+        );
+        return $token;
     }
 }

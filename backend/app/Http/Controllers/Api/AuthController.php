@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RefreshTokenRequest;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LogoutRequest;
 use App\Http\Requests\Auth\RegisterRequest;
@@ -14,24 +13,11 @@ use App\Http\Response\ApiResponse;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 
-class AuthController extends Controller implements HasMiddleware
+class AuthController extends Controller
 {
     public function __construct(
         private AuthService $authService
     ) {}
-
-    /**
-     * Define middleware for the controller.
-     *
-     * @return array
-     */
-    public static function middleware(): array
-    {
-        return [
-            new Middleware('auth:api', except: ['login','register']),
-        ];
-    }
-
 
     /**
      * Handle a registration request for the application.
@@ -77,7 +63,7 @@ class AuthController extends Controller implements HasMiddleware
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function logout(LogoutRequest $request)
+    public function logout(LogoutRequest $request): JsonResponse
     {
         $refreshToken = $request->input('refresh_token');
         $this->authService->logout($refreshToken);
@@ -100,11 +86,23 @@ class AuthController extends Controller implements HasMiddleware
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function refresh(RefreshTokenRequest $request)
+    public function refresh(RefreshTokenRequest $request): JsonResponse
     {
         $refreshToken = $request->input('refresh_token');
         $newAccessToken = $this->authService->refresh($refreshToken);
         return $this->respondWithToken($newAccessToken, $refreshToken, 'Token refreshed successfully');
+    }
+
+    /**
+     * Handle forgot password request by sending a reset link to the user's email.
+     *
+     * @param ForgotPasswordRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
+    {
+        $this->authService->forgotPassword($request->input('email'));
+        return ApiResponse::success(message: 'Password reset link has been sent to your email');
     }
 
     /**
@@ -115,7 +113,11 @@ class AuthController extends Controller implements HasMiddleware
      * @param string $message
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithToken(string $accessToken, ?string $refreshToken=null, string $message = 'Login successful')
+    protected function respondWithToken(
+        string $accessToken,
+        ?string $refreshToken=null,
+        string $message = 'Login successful'
+    ): JsonResponse
     {
         $user = $this->authService->getUserProfile();
 

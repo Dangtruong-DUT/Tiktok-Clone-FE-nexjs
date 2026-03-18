@@ -1,20 +1,20 @@
 <?php
 namespace App\Repositories;
 
-use App\Models\RefreshToken;
+use App\Models\ForgotPasswordToken;
 use App\Repositories\BaseRepository;
 use Illuminate\Support\Collection;
 
-class RefreshTokenRepository extends BaseRepository
+class ForgotPasswordTokenRepository  extends BaseRepository
 {
 
 
     /**
-     * RefreshTokenRepository constructor.
+     * ForgotPasswordTokenRepository constructor.
      */
     public function __construct()
     {
-        $modelInstance = app()->make(RefreshToken::class);
+        $modelInstance = app()->make(ForgotPasswordToken::class);
         parent::__construct($modelInstance);
     }
 
