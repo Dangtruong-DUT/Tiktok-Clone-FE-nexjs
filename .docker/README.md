@@ -8,18 +8,22 @@ This document describes the Docker setup used by the tiktok-clone monorepo.
 - Separate frontend, backend, database, and cache services clearly
 - Use a centralized and maintainable Nginx configuration
 
-## Nginx Organization (Decoupled from Backend)
+## Nginx Organization (Split Backend and Frontend)
 
-Nginx is now organized in a dedicated shared module instead of a backend-specific folder:
+Nginx is now split into two template sets:
 
-- `./.docker/common/nginx/templates/nginx.conf.template`
-- `./.docker/common/nginx/templates/conf.d/tiktok-clone.conf.template`
-- `./.docker/common/nginx/templates/snippets/cors-api.conf.template`
+- Backend:
+  - `./.docker/common/nginx/backend-templates/nginx.conf.template`
+  - `./.docker/common/nginx/backend-templates/conf.d/backend.conf.template`
+  - `./.docker/common/nginx/backend-templates/snippets/cors-api.conf.template`
+- Frontend:
+  - `./.docker/common/nginx/frontend-templates/nginx.conf.template`
+  - `./.docker/common/nginx/frontend-templates/conf.d/frontend.conf.template`
 
 This structure is used by both environments:
 
 - Development: mounted by `compose.dev.yaml` into `/etc/nginx/templates`
-- Production: copied by `.docker/production/backend/nginx/Dockerfile`
+- Production: backend templates are copied by `.docker/production/backend/nginx/Dockerfile`
 
 ## Directory Structure
 
@@ -27,10 +31,13 @@ This structure is used by both environments:
 .docker/
 |- common/
 |  |- nginx/
-|  |  `- templates/
+|  |  |- backend-templates/
+|  |  |  |- nginx.conf.template
+|  |  |  |- conf.d/backend.conf.template
+|  |  |  `- snippets/cors-api.conf.template
+|  |  `- frontend-templates/
 |  |     |- nginx.conf.template
-|  |     |- conf.d/tiktok-clone.conf.template
-|  |     `- snippets/cors-api.conf.template
+|  |     `- conf.d/frontend.conf.template
 |  `- backend/
 |     `- php-fpm/
 |        |- Dockerfile
@@ -122,7 +129,8 @@ Loaded from root `.env` (copy from `.env.example`):
 - `CONTAINER_PREFIX=tiktok_clone`
 - `BACKEND_ENV_FILE=./backend/.env`
 - `FRONTEND_ENV_FILE=./frontend/.env`
-- `NGINX_PORT=9696`
+- `NGINX_BACKEND_PORT=9696`
+- `NGINX_FRONTEND_PORT=9697`
 - `POSTGRES_PORT=5432`
 - `POSTGRES_DB=tiktok_clone`
 - `POSTGRES_USER=root`

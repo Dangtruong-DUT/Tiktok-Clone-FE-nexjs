@@ -1,8 +1,8 @@
 name: ${COMPOSE_PROJECT_NAME:-tiktok_clone}_production
 
 services:
-  web-server:
-    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_web
+  backend-nginx:
+    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_backend_nginx
     build:
       context: .
       dockerfile: ./.docker/production/backend/nginx/Dockerfile
@@ -14,10 +14,26 @@ services:
     networks:
       - app-production
     ports:
-      - "${NGINX_PORT:-9696}:80"
+      - "${NGINX_BACKEND_PORT:-${NGINX_PORT:-9696}}:80"
     depends_on:
       php-fpm:
         condition: service_healthy
+
+  frontend-nginx:
+    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_frontend_nginx
+    image: nginx:alpine
+    restart: unless-stopped
+    environment:
+      NGINX_ENVSUBST_TEMPLATE_DIR: /etc/nginx/templates
+      NGINX_ENVSUBST_TEMPLATE_SUFFIX: .template
+      NGINX_ENVSUBST_OUTPUT_DIR: /etc/nginx
+    volumes:
+      - ./.docker/common/nginx/frontend-templates:/etc/nginx/templates:ro
+    networks:
+      - app-production
+    ports:
+      - "${NGINX_FRONTEND_PORT:-9697}:80"
+    depends_on:
       frontend:
         condition: service_started
 

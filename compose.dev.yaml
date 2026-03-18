@@ -1,8 +1,8 @@
 name: ${COMPOSE_PROJECT_NAME:-tiktok_clone}_development
 
 services:
-  web-server:
-    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_web
+  backend-nginx:
+    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_backend_nginx
     image: nginx:latest
     restart: unless-stopped
     environment:
@@ -13,14 +13,30 @@ services:
       NGINX_ENVSUBST_FILTER: ^CORS_ALLOW_ORIGIN$
     volumes:
       - ./backend/:/var/www
-      - ./.docker/common/nginx/templates:/etc/nginx/templates:ro
+      - ./.docker/common/nginx/backend-templates:/etc/nginx/templates:ro
     ports:
-      - "${NGINX_PORT:-9696}:80"
+      - "${NGINX_BACKEND_PORT:-${NGINX_PORT:-9696}}:80"
     networks:
       - app-development
     depends_on:
       php-fpm:
         condition: service_started
+
+  frontend-nginx:
+    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_frontend_nginx
+    image: nginx:latest
+    restart: unless-stopped
+    environment:
+      NGINX_ENVSUBST_TEMPLATE_DIR: /etc/nginx/templates
+      NGINX_ENVSUBST_TEMPLATE_SUFFIX: .template
+      NGINX_ENVSUBST_OUTPUT_DIR: /etc/nginx
+    volumes:
+      - ./.docker/common/nginx/frontend-templates:/etc/nginx/templates:ro
+    ports:
+      - "${NGINX_FRONTEND_PORT:-9697}:80"
+    networks:
+      - app-development
+    depends_on:
       frontend:
         condition: service_started
 

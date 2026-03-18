@@ -53,17 +53,16 @@ This repository currently runs as a monorepo with:
 
 ## Architecture Overview
 
-- Nginx (`web-server`) is the public entrypoint
-- `/api/*` routes are forwarded to Laravel (`php-fpm`)
-- All other routes are proxied to Next.js (`frontend`)
+- Backend Nginx (`backend-nginx`) serves the Laravel API via `php-fpm`
+- Frontend Nginx (`frontend-nginx`) proxies all requests to Next.js (`frontend`)
 - Background jobs (queues) are processed by Laravel queue worker (`worker`)
 - Object storage is provided by MinIO (S3-compatible)
 - Development email testing is handled by MailCatcher (SMTP + web UI)
 
 Default local URLs with Docker:
 
-- App: `http://localhost:9696`
-- API Base: `http://localhost:9696/api`
+- App (Frontend): `http://localhost:9697`
+- API Base (Backend): `http://localhost:9696/api`
 - MinIO API: `http://localhost:9000`
 - MinIO Console: `http://localhost:9001`
 - MailCatcher UI: `http://localhost:1080`

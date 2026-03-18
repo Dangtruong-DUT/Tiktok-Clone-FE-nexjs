@@ -21,9 +21,9 @@ RUN npm install && npm run build
 # Stage 2: Nginx production image
 FROM nginx:alpine
 
-# Copy shared Nginx template directory.
+# Copy backend-only Nginx template directory.
 # The official nginx entrypoint renders all .template files at container start.
-COPY ./.docker/common/nginx/templates/ /etc/nginx/templates/
+COPY ./.docker/common/nginx/backend-templates/ /etc/nginx/templates/
 
 # Render only CORS_ALLOW_ORIGIN to avoid touching native nginx variables like $uri.
 ENV NGINX_ENVSUBST_TEMPLATE_DIR=/etc/nginx/templates \
