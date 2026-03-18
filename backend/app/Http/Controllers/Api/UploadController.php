@@ -5,10 +5,20 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Upload\UploadImageRequest;
 use App\Http\Requests\Upload\UploadVideoRequest;
 use App\Http\Response\ApiResponse;
+use App\Services\UploadService;
 use Illuminate\Http\JsonResponse;
 
 class UploadController extends Controller
 {
+    /**
+     * UploadController constructor.
+     */
+    public function __construct(
+        private UploadService $uploadService
+    )
+    {
+    }
+
     /**
      * handle image upload
      *
@@ -17,11 +27,19 @@ class UploadController extends Controller
      */
     public function uploadImage(UploadImageRequest $request): JsonResponse
     {
-        return ApiResponse::success(null, 'Image uploaded successfully');
+        $data = $this->uploadService->uploadImage($request->file('file'));
+        return ApiResponse::success($data, 'Image uploaded successfully');
     }
 
+    /**
+     * handle video upload
+     *
+     * @param UploadVideoRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function uploadVideo(UploadVideoRequest $request): JsonResponse
     {
-        return ApiResponse::success(null, 'Video uploaded successfully');
+        $data = $this->uploadService->uploadVideo($request->file('file'));
+        return ApiResponse::success($data, 'Video uploaded successfully');
     }
 }

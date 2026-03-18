@@ -4,8 +4,10 @@ namespace App\Models;
 
 use App\Traits\HasToken;
 use App\Traits\HasUuidObservable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Storage;
 
 class UploadFile extends Model
 {
@@ -21,7 +23,7 @@ class UploadFile extends Model
         'file_name',
         'mime_type',
         'file_size',
-        'url',
+        'file_path',
         'disk',
         'expires_at',
     ];
@@ -46,5 +48,27 @@ class UploadFile extends Model
     public function user(): HasOne
     {
         return $this->hasOne(User::class, 'avatar_file_id');
+    }
+
+    /**
+     * Check if the file is expired.
+     *
+     * @return bool True if the file is expired, false otherwise.
+     */
+    public function isExpired(): bool
+    {
+        return $this->expires_at !== null && $this->expires_at->isPast();
+    }
+
+    /**
+     * Get the URL of the file.
+     *
+     * @return string The URL of the file.
+     */
+    public function url(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => Storage::disk($this->disk)->url($this->file_path)
+        );
     }
 }

@@ -23,6 +23,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'check_user_status' => \App\Http\Middleware\CheckUserStatus::class,
         ]);
+
+        $middleware->append([
+            \App\Http\Middleware\ForceJsonResponse::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
 
