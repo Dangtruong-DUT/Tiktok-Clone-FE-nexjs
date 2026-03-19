@@ -49,6 +49,7 @@ class User extends Authenticatable implements JWTSubject
         'website',
         'date_of_birth',
         'verify',
+        'avatar_file_id'
     ];
 
     /**
@@ -180,6 +181,18 @@ class User extends Authenticatable implements JWTSubject
     public function isCurrentPassword(string $password): bool
     {
         return Hash::check($password, $this->password);
+    }
+
+    /**
+     * Get the URL of the user's avatar.
+     *
+     * @return string|null The URL of the user's avatar, or null if not set.
+     */
+    public function avatar(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->avatarFile->url ?? null
+        );
     }
 
     /**

@@ -37,7 +37,7 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
     ->name('auth.')
     ->group(function() {
         Route::post('/logout',[AuthController::class, 'logout'])->name('logout');
-        Route::post('/logout-all',[AuthController::class, 'logoutAll'])->name('logout-all');
+        Route::post('/logout/all',[AuthController::class, 'logoutAll'])->name('logout-all');
         Route::post('/refresh-token', [AuthController::class, 'refresh'])->name('refresh');
         Route::get('/me', [AuthController::class, 'me'])->name('me');
     });

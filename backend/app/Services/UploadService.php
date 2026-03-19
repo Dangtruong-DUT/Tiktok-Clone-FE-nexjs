@@ -22,6 +22,7 @@ class UploadService
         $uploadFile = $this->uploadFileService->uploadFile($file, 'images');
 
         return [
+            'id' => $uploadFile->id,
             'url' => $uploadFile->url,
             'type' => MediaType::IMAGE->value,
         ];
@@ -37,6 +38,7 @@ class UploadService
         $uploadFile = $this->uploadFileService->uploadFile($file, 'videos');
 
         return [
+            'id' => $uploadFile->id,
             'url' => $uploadFile->url,
             'type' => MediaType::VIDEO->value,
         ];
