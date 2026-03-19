@@ -1,9 +1,9 @@
 <?php
 namespace App\Repositories;
 
+use App\Enums\User\RelationshipType;
 use App\Models\Relationship;
 use App\Repositories\BaseRepository;
-use Illuminate\Support\Collection;
 
 class RelationshipRepository  extends BaseRepository
 {
@@ -19,37 +19,36 @@ class RelationshipRepository  extends BaseRepository
     }
 
     /**
-     * Find a relationship by user ID
-     *
-     * @param int $id
-     * @return Collection|null
-     */
-    public function findByUserId(int $id): Collection|null
-    {
-        return $this->query()->where('user_id', $id)->get();
-    }
-
-    /**
      * Delete relationships by user ID
      *
      * @param int $userId
      * @param int $targetUserId
+     * @param RelationshipType $type
      * @return int
      */
-    public function deleteRelationship(int $userId, int $targetUserId): int
+    public function deleteRelationship(int $userId, int $targetUserId,RelationshipType $type): int
     {
-        return $this->query()->where('user_id', $userId)->where('target_user_id', $targetUserId)->delete();
+        return $this->query()->where('user_id', $userId)
+        ->where('target_user_id', $targetUserId)
+        ->where('type', $type->value)
+        ->delete();
     }
 
     /**
-     * Find a refresh token by token string
+    * Check if the user is following the target user
      *
      * @param int $userId
      * @param int $targetUserId
      * @return bool the relationship exists or not
      */
-    public function isExistRelationship(int $userId, int $targetUserId): bool
+    public function isFollowing(int $userId, int $targetUserId): bool
     {
-        return $this->query()->where('user_id', $userId)->where('target_user_id', $targetUserId)->exists();
+        return $this->query()
+        ->where('user_id', $userId)
+        ->where('target_user_id', $targetUserId)
+        ->where('type', RelationshipType::FOLLOW->value)
+        ->exists();
     }
+
+
 }

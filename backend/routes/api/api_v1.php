@@ -53,6 +53,7 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
         ->name('users.')
         ->group(function () {
             Route::post('/follow', [UserController::class, 'follow'])->name('follow');
+            Route::delete('/follow/{user_id}', [UserController::class, 'unfollow'])->name('unfollow');
             Route::put('/change-password', [UserController::class, 'changePassword'])->name('change-password');
         });
 

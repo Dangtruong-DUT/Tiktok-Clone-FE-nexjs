@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Enums\User\RelationshipType;
+use App\Exceptions\http\BadRequestException;
 use App\Exceptions\http\BusinessException;
 use App\Repositories\RelationshipRepository;
 use App\Repositories\UserRepository;
@@ -34,6 +36,51 @@ class UserService
         }
         $user->password = $data['password'];
         $user->save();
+        return true;
+    }
+
+    /**
+     * Follow someone
+     *
+     * @param array $data
+     * @return bool
+     * @throws BadRequestException
+     * @throws BusinessException
+     */
+    public function follow(array $data): bool
+    {
+        $targetUser = $data['user_id'];
+        $user = $this->guard()->user();
+        if ($user->id === $targetUser) {
+            throw new BadRequestException('You cannot follow yourself');
+        }
+
+        if ($this->relationshipRepo->isFollowing($user->id, $targetUser)) {
+            throw new BadRequestException('You are already following this user');
+        }
+
+        $this->relationshipRepo->create([
+            'user_id' => $user->id,
+            'target_user_id' => $targetUser,
+            'type' => RelationshipType::FOLLOW->value
+        ]);
+        return true;
+    }
+
+    /**
+     * Unfollow someone
+     *
+     * @param array $data
+     * @return bool
+     */
+    public function unfollow(array $data): bool
+    {
+        $targetUser = $data['user_id'];
+        $user = $this->guard()->user();
+        if (!$this->relationshipRepo->isFollowing($user->id, $targetUser)) {
+            throw new BadRequestException('You are not following this user');
+        }
+        $this->relationshipRepo->deleteRelationship($user->id, $targetUser, RelationshipType::FOLLOW);
         return true;
     }
 }
