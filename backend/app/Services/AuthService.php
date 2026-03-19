@@ -14,20 +14,22 @@ use App\Repositories\ForgotPasswordTokenRepository;
 use App\Repositories\RefreshTokenRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\VerifyEmailTokenRepository;
-use Illuminate\Support\Facades\Auth;
+use App\Traits\HasAuthUser;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class AuthService
 {
+    use HasAuthUser;
+
     /**
      * AuthService constructor.
      */
     public function __construct(
-        private UserRepository $userRepo,
-        private RefreshTokenRepository $refreshRepo,
-        private ForgotPasswordTokenRepository $forgotPasswordTokenRepo,
-        private VerifyEmailTokenRepository $verifyEmailTokenRepo
+        private readonly UserRepository $userRepo,
+        private readonly RefreshTokenRepository $refreshRepo,
+        private readonly ForgotPasswordTokenRepository $forgotPasswordTokenRepo,
+        private readonly VerifyEmailTokenRepository $verifyEmailTokenRepo
     ) {}
 
 
@@ -241,17 +243,6 @@ class AuthService
         $user->password = $credentials['password'];
         $user->save();
         return true;
-    }
-
-    /**
-     * Get the guard to be used during authentication.
-     *
-     * @return \Tymon\JWTAuth\JWTGuard
-     */
-    private function guard()
-    {
-        // @phpstan-ignore return.type
-        return Auth::guard('api');
     }
 
     /**

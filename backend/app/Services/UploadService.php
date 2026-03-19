@@ -10,7 +10,7 @@ class UploadService
 {
 
     public function __construct(
-        protected UploadFileServiceInterface $uploadFileService
+        protected readonly UploadFileServiceInterface $uploadFileService
     ) {}
 
     /**

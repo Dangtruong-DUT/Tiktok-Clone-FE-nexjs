@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Enums\User\RelationshipType;
 use App\Enums\User\UserVerifyStatus;
 use App\Traits\HasUsernameObservable;
 use App\Traits\HasUuidObservable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -173,5 +175,42 @@ class User extends Authenticatable implements JWTSubject
     public function isBanned(): bool
     {
         return $this->verify === UserVerifyStatus::BANNED;
+    }
+
+    public function isCurrentPassword(string $password): bool
+    {
+        return Hash::check($password, $this->password);
+    }
+
+    /**
+     * Get the users that follow the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany The relationship instance.
+     */
+    public function followers(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'relationships',
+            'target_user_id',
+            'user_id'
+            )
+            ->wherePivot('type', RelationshipType::FOLLOW);
+    }
+
+
+    /**
+     * Get the users that the user follows.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany The relationship instance.
+     */
+    public function followings(): belongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'relationships',
+            'user_id',
+            'target_user_id'
+            )->wherePivot('type', RelationshipType::FOLLOW);
     }
 }

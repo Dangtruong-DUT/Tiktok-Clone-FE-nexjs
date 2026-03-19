@@ -14,7 +14,7 @@ class UploadController extends Controller
      * UploadController constructor.
      */
     public function __construct(
-        private UploadService $uploadService
+        private readonly UploadService $uploadService
     )
     {
     }

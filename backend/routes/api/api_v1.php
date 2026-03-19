@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\Api\UploadController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 
@@ -46,6 +47,13 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
         ->group(function () {
             Route::post('upload-image', [UploadController::class, 'uploadImage'])->name('upload-image');
             Route::post('upload-video', [UploadController::class, 'uploadVideo'])->name('upload-video');
+        });
+
+    Route::prefix('users')
+        ->name('users.')
+        ->group(function () {
+            Route::post('/follow', [UserController::class, 'follow'])->name('follow');
+            Route::put('/change-password', [UserController::class, 'changePassword'])->name('change-password');
         });
 
 });
