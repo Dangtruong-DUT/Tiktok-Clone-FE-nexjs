@@ -191,8 +191,13 @@ class User extends Authenticatable implements JWTSubject
     public function avatar(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->avatarFile->url ?? null
+            get: fn() => $this->avatarFile?->url
         );
+    }
+
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
     }
 
     /**
@@ -226,4 +231,35 @@ class User extends Authenticatable implements JWTSubject
             'target_user_id'
             )->wherePivot('type', RelationshipType::FOLLOW);
     }
+
+    /**
+     * Get the posts that the user is mentioned in.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany The relationship instance.
+     */
+    public function postMentions(): BelongsToMany
+    {
+        return $this->belongsToMany(Post::class, 'post_mentions', 'user_id', 'post_id');
+    }
+
+    /**
+     * Get the posts that the user has liked.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany The relationship instance.
+     */
+    public function likedPosts(): BelongsToMany
+    {
+        return $this->belongsToMany(Post::class, 'post_likes', 'user_id', 'post_id');
+    }
+
+    /**
+     * Get the posts that the user has bookmarked.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany The relationship instance.
+     */
+    public function bookmarkedPosts(): BelongsToMany
+    {
+        return $this->belongsToMany(Post::class, 'post_bookmarks', 'user_id', 'post_id');
+    }
+
 }

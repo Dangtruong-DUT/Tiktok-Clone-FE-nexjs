@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\User\RelationshipType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -26,6 +27,7 @@ class Relationship extends Model
     protected function casts(): array
     {
         return [
+            'type' => RelationshipType::class,
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
