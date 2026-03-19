@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UploadFileId;
 use App\Rules\UserId;
 use App\Rules\UserUuid;
 use DateTimeInterface;
@@ -79,6 +80,7 @@ abstract class BaseRequest extends BaseFormRequest
     protected const STARTS_WITH = 'starts_with';
     protected const STRING = 'string';
     protected const TIMEZONE = 'timezone';
+    protected const SOMETIMES = 'sometimes';
     protected const UNIQUE = 'unique';
     protected const UPLOADED = 'uploaded';
     protected const URL = 'url';
@@ -207,6 +209,11 @@ abstract class BaseRequest extends BaseFormRequest
             'phone' => [self::STRING, self::MAX.':'.'100'],
             'month' => [self::INTEGER, self::MIN.':'.'1', self::MAX.':'.'12'],
             'year' => [self::INTEGER, self::MIN.':'.'1900', self::MAX.':'.'2100'],
+            'bio' => [self::STRING, self::MAX.':255'],
+            'location' => [self::STRING, self::MAX.':100'],
+            'website' => [self::STRING, self::URL],
+            'username' => [self::STRING, self::MIN.':2', self::MAX.':100'],
+            'avatar_file_id' => [self::INTEGER, new UploadFileId()],
             'keyword' => [self::STRING, self::MAX.':'.'100'],
             'days' => [self::NUMERIC, self::MIN.':'.'0'],
             'search' => [self::STRING, self::MAX.':'.'100'],

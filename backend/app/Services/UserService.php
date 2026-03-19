@@ -83,4 +83,31 @@ class UserService
         $this->relationshipRepo->deleteRelationship($user->id, $targetUser, RelationshipType::FOLLOW);
         return true;
     }
+
+    /**
+     * Update the profile of the authenticated user.
+     *
+     * @param array $data
+     * @return bool
+     */
+    public function updateProfile(array $data): bool
+    {
+        $user = $this->guard()->user();
+        $allowedFields = [
+            'name',
+            'date_of_birth',
+            'bio',
+            'location',
+            'website',
+            'username',
+            'avatar_file_id'
+        ];
+        $updateData = array_intersect_key($data, array_flip($allowedFields));
+
+        if (!empty($updateData)) {
+            $this->userRepo->update($user->id, $updateData);
+        }
+
+        return true;
+    }
 }

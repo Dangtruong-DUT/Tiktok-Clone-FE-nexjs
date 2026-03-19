@@ -67,5 +67,16 @@ class UserRepository extends BaseRepository
     {
         return $this->query()->where('email', $email)->first();
     }
+
+    /**
+     * Check if user exists by username
+     *
+     * @param string $username
+     * @return bool
+     */
+    public function checkUsernameExist(string $username): bool
+    {
+        return $this->query()->where('username', $username)->exists();
+    }
 }
 ?>

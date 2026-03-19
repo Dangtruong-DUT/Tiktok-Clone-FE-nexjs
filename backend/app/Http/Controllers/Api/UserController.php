@@ -6,6 +6,7 @@ use App\Http\Requests\User\ChangePasswordRequest;
 use App\Http\Requests\User\FollowSomeOneRequest;
 use App\Http\Requests\User\UnFollowSomeOneRequest;
 use App\Http\Response\ApiResponse;
+use App\Http\Requests\User\UpdateMeRequest;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 
@@ -28,7 +29,7 @@ class UserController extends Controller
     public function changePassword(ChangePasswordRequest $request): JsonResponse
     {
         $this->userService->changePassword($request->validated());
-        return ApiResponse::success(null, 'Password changed successfully');
+        return ApiResponse::success(message: 'Password changed successfully');
     }
 
     /**
@@ -40,7 +41,7 @@ class UserController extends Controller
     public function follow(FollowSomeOneRequest $request): JsonResponse
     {
         $this->userService->follow($request->validated());
-        return ApiResponse::success(null, 'Followed successfully');
+        return ApiResponse::success(message: 'Followed successfully');
     }
 
     /**
@@ -52,7 +53,20 @@ class UserController extends Controller
     public function unfollow(UnFollowSomeOneRequest $request): JsonResponse
     {
         $this->userService->unfollow($request->validated());
-        return ApiResponse::success(null, 'Unfollowed successfully');
+        return ApiResponse::success(message: 'Unfollowed successfully');
     }
+
+    /**
+     * Update the profile of the authenticated user.
+     *
+     * @param UpdateMeRequest $request
+     * @return JsonResponse
+     */
+    public function update(UpdateMeRequest $request): JsonResponse
+    {
+        $this->userService->updateProfile($request->validated());
+        return ApiResponse::success(message: 'User updated successfully');
+    }
+
 
 }

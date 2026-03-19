@@ -8,7 +8,7 @@ use App\Repositories\UserRepository;
 
 class UserId implements ValidationRule
 {
-    protected UserRepository $userRepository;
+    private readonly UserRepository $userRepository;
 
     public function __construct()
     {

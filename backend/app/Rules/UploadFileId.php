@@ -2,17 +2,17 @@
 
 namespace App\Rules;
 
+use App\Repositories\UploadFileRepository;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
-use App\Repositories\UserRepository;
 
-class UserUuid implements ValidationRule
+class UploadFileId implements ValidationRule
 {
-    private readonly UserRepository $userRepository;
+    private readonly UploadFileRepository $uploadFileRepo;
 
     public function __construct()
     {
-        $this->userRepository = app()->make(UserRepository::class);
+        $this->uploadFileRepo = app()->make(UploadFileRepository::class);
     }
 
     /**
@@ -22,8 +22,8 @@ class UserUuid implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!$this->userRepository->isExistByUuid($value)) {
-            $fail(':attribute must be a valid user uuid.');
+        if (!$this->uploadFileRepo->isExist($value)) {
+            $fail(':attribute must be a valid upload file id.');
         }
     }
 }
