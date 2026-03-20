@@ -3,6 +3,7 @@ use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PostController;
 
 /*|--------------------------------------------------------------------------
 | API Version 1
@@ -42,6 +43,7 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
         Route::get('/me', [AuthController::class, 'me'])->name('me');
     });
 
+    // media routes
     Route::prefix('medias')
         ->name('media.')
         ->group(function () {
@@ -49,6 +51,7 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::post('upload-video', [UploadController::class, 'uploadVideo'])->name('upload-video');
         });
 
+    // user routes
     Route::prefix('users')
         ->name('users.')
         ->group(function () {
@@ -56,6 +59,13 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::delete('/follow/{user_id}', [UserController::class, 'unfollow'])->name('unfollow');
             Route::put('/change-password', [UserController::class, 'changePassword'])->name('change-password');
             Route::patch('/me', [UserController::class, 'update'])->name('update');
+        });
+
+    //post routes
+    Route::prefix('posts')
+        ->name('posts.')
+        ->group(function () {
+            Route::post('/', [PostController::class, 'create'])->name('create');
         });
 
 });
