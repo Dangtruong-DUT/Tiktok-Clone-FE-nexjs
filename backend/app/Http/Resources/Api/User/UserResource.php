@@ -2,11 +2,16 @@
 namespace App\Http\Resources\Api\User;
 
 use App\Http\Resources\BaseJsonResource;
+use App\Traits\HasAuthUser;
 
 class UserResource extends BaseJsonResource
 {
+    use HasAuthUser;
+
     public function toArray($request): array
     {
+        $currentUser = $this->guard()->user();
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -16,38 +21,15 @@ class UserResource extends BaseJsonResource
             'bio' => $this->bio,
             'location' => $this->location,
             'website' => $this->website,
-            'avatar' => $this->avatar,
-            'cover_photo' => $this->cover_photo,
-            'following_count' => $this->following_count,
-            'followers_count' => $this->followers_count,
-            'likes_count' => $this->likes_count,
-            'is_followed' => $this->is_followed,
-            'is_owner' => $this->is_owner,
+            'avatar' => $this->relationLoaded('avatarFile') ? $this->avatar : null,
+            'verify' => $this->verify?->value,
+            'following_count' => (int) ($this->following_count ?? 0),
+            'followers_count' => (int) ($this->followers_count ?? 0),
+            'likes_count' => (int) ($this->likes_count ?? 0),
+            'is_followed' => $currentUser ? (bool) ($this->is_followed ?? false) : false,
+            'is_owner' => $currentUser ? (bool) (($this->is_owner ?? null) ?? ($currentUser->id === $this->id)) : false,
             'role' => $this->role->value,
             'created_at' => $this->created_at->toDateTimeString(),
         ];
     }
 }
-
-// export interface UserType {
-//     _id: string;
-//     name: string;
-//     email: string;
-//     password: string;
-//     date_of_birth: string;
-//     updated_at: string;
-//     created_at: string;
-//     verify: UserVerifyStatus;
-//     bio: string;
-//     location: string;
-//     website: string;
-//     username: string;
-//     avatar: string;
-//     cover_photo: string;
-//     following_count: number;
-//     followers_count: number;
-//     likes_count: number;
-//     is_followed: boolean;
-//     isOwner: boolean;
-//     role: Role;
-// }

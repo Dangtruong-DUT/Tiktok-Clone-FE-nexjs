@@ -1,11 +1,11 @@
 <?php
 namespace App\Http\Requests\Post;
 
-use App\Enums\Media\MediaType;
-use App\Enums\Post\AudienceType;
+use App\Enums\Media\MediaTypeEnum;
+use App\Enums\Post\AudienceTypeEnum;
 use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rules\Enum;
-use App\Enums\Post\PostType;
+use App\Enums\Post\PostTypeEnum;
 use App\Rules\PostId;
 use App\Rules\UploadFileId;
 use App\Rules\UserId;
@@ -28,13 +28,14 @@ class CreatePostRequest extends BaseRequest
                 ],
                 'type' => [
                     self::REQUIRED,
-                    new Enum(PostType::class),
+                    new Enum(PostTypeEnum::class),
                 ],
                 'audience'=> [
                     self::REQUIRED,
-                    new Enum(AudienceType::class),
+                    new Enum(AudienceTypeEnum::class),
                 ],
                 'content'=> [
+                    self::REQUIRED,
                     self::STRING,
                     self::MIN.':0',
                     self::MAX.':4000',
@@ -62,6 +63,7 @@ class CreatePostRequest extends BaseRequest
                     new UploadFileId(),
                 ],
                 'medias'=> [
+                    self::REQUIRED,
                     self::ARRAY,
                     self::MIN.':1',
                     self::MAX.':10',
@@ -72,7 +74,7 @@ class CreatePostRequest extends BaseRequest
                 ],
                 'medias.*.type'=> [
                     self::REQUIRED,
-                    new Enum(MediaType::class),
+                    new Enum(MediaTypeEnum::class),
                 ],
         ]);
     }

@@ -13,6 +13,11 @@ class Media extends Model
     use HasUuidObservable;
     use SoftDeletes;
 
+    /* The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'medias';
 
     /**
      * The attributes that are mass assignable.

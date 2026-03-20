@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\Post\AudienceTypeEnum;
 use App\Enums\Post\PostTypeEnum;
 use App\Traits\HasUuidObservable;
+use App\Models\Hashtag;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -105,7 +106,7 @@ class Post extends Model
      */
     public function hashtags(): BelongsToMany
     {
-        return $this->belongsToMany(HashTag::class, 'posts_hashtags', 'post_id', 'hashtag_id');
+        return $this->belongsToMany(Hashtag::class, 'posts_hashtags', 'post_id', 'hashtag_id');
     }
 
     /**
@@ -115,7 +116,7 @@ class Post extends Model
      */
     public function mentions(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'post_mentions', 'post_id', 'user_id');
+        return $this->belongsToMany(User::class, 'posts_mentions', 'post_id', 'user_id');
     }
 
     /**

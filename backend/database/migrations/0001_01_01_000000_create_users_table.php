@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\User\RoleType;
+use App\Enums\User\RoleTypeEnum;
 use App\Enums\User\UserVerifyStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -28,7 +28,7 @@ return new class extends Migration
             $table->tinyInteger("verify")
                 ->default(UserVerifyStatusEnum::UNVERIFIED->value)
                 ->index();
-            $table->tinyInteger("role")->default(RoleType::USER->value)->index();
+            $table->tinyInteger("role")->default(RoleTypeEnum::USER->value)->index();
             $table->softDeletes();
             $table->timestamps();
         });

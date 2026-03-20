@@ -9,7 +9,6 @@ use App\Repositories\HashTagRepository;
 use App\Repositories\MediaRepository;
 use App\Repositories\PostRepository;
 use App\Traits\HasAuthUser;
-use Exception;
 use Illuminate\Support\Facades\DB;
 
 class PostService
@@ -34,62 +33,71 @@ class PostService
 
         $postType = $data['type']??PostTypeEnum::POST->value;
 
-        if ($postType !==PostTypeEnum::POST->value && !empty($data['parent_id'])) {
+        if ($postType !== PostTypeEnum::POST->value && empty($data['parent_id'])) {
             throw new BusinessException('Parent ID is required for this post type.',[
                 'type' => 'Parent ID is required for this post type.',
             ]);
         }
-        $post = null;
-
-        DB::beginTransaction();
-        try {
         $user = $this->guard()->user();
-        $post = $this->postRepo->create([
-            'type' => $postType,
-            'audience' => $data['audience'],
-            'content' => $data['content'],
-            'thumbnail_file_id' => $data['thumbnail'],
-            'user_id' => $user->id,
-            'parent_id' => $data['parent_id'] ?? null,
-        ]);
-
-        if (!empty($data['mentions'])) {
-            $post->mentions()->sync($data['mentions']);
-        }
-        if (!empty($data['hashtags'])) {
-            $names = array_unique($data['hashtags']);
-            $existing = $this->hashTagRepo->getByNames($names);
-            $map = [];
-            foreach ($existing as $tag) {
-                $map[$tag->name] = $tag->id;
+        $post = DB::transaction(function () use ($data, $postType, $user): Post {
+            $post = $this->postRepo->create([
+                'type' => $postType,
+                'audience' => $data['audience'],
+                'content' => $data['content'],
+                'thumbnail_file_id' => $data['thumbnail'] ?? null,
+                'user_id' => $user->id,
+                'parent_id' => $data['parent_id'] ?? null,
+            ]);
+            if (!empty($data['mentions'])) {
+                $post->mentions()->sync($data['mentions']);
             }
-            $new = [];
-            foreach ($names as $name) {
-                if (!isset($map[$name])) {
-                    $new[] = ['name' => $name];
+            if (!empty($data['hashtags'])) {
+                $names = array_unique($data['hashtags']);
+                $existing = $this->hashTagRepo->getByNames($names);
+                $map = [];
+
+                foreach ($existing as $tag) {
+                    $map[$tag->name] = $tag->id;
                 }
+
+                $new = [];
+                foreach ($names as $name) {
+                    if (!isset($map[$name])) {
+                        $new[] = ['name' => $name];
+                    }
+                }
+
+                if (!empty($new)) {
+                    $this->hashTagRepo->createMany($new);
+                }
+
+                $ids = $this->hashTagRepo->getByNames($names)->pluck('id')->toArray();
+                $post->hashtags()->sync($ids);
             }
 
-            if (!empty($new)) {
-                $this->hashTagRepo->createMany($new);
+            if (!empty($data['medias'])) {
+                $this->mediaRepo->createMany($data['medias'], $post->id);
             }
-            $ids = $this->hashTagRepo->getByNames($names)->pluck('id')->toArray();
-            $post->hashtags()->sync($ids);
-        }
-        if (!empty($data['medias'])) {
-            $this->mediaRepo->createMany($data['medias'], $post->id);
-        }
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
-        DB::commit();
-
-        if (empty($post)) {
-            throw new Exception('Failed to create post.');
-        }
-
-        return $post;
+            return $post;
+        });
+        return $post->load([
+            'hashtags',
+            'mentions',
+            'user' => fn ($query) => $query
+                ->with('avatarFile')
+                ->withCount([
+                    'followings as following_count',
+                    'followers as followers_count',
+                    'likedPosts as likes_count',
+                ])
+                ->withExists([
+                    'followers as is_followed' => fn ($followQuery) => $followQuery->whereKey($user->id),
+                ]),
+            'media.file',
+            'thumbnailFile',
+        ])->loadExists([
+            'userLikes as is_liked' => fn ($query) => $query->where('user_id', $user->id),
+            'userBookmarks as is_bookmarked' => fn ($query) => $query->where('user_id', $user->id),
+        ]);
     }
 }

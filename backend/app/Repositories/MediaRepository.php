@@ -25,14 +25,16 @@ class MediaRepository  extends BaseRepository
      */
     public function createMany(array $array, int $postId): void
     {
-        $mediaData = array_map(function ($item) use ($postId) {
-            return [
-                'upload_file_id' => $item['file_id'],
-                'post_id' => $postId,
-                'type' => $item['type'],
-            ];
-        }, $array);
-
-        $this->query()->insert($mediaData);
+        foreach ($array as $item) {
+            $this->query()->updateOrCreate(
+                [
+                    'post_id' => $postId,
+                    'upload_file_id' => $item['file_id'],
+                ],
+                [
+                    'type' => $item['type'],
+                ]
+            );
+        }
     }
 }

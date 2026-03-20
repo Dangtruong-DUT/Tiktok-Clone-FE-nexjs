@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\User\RelationshipTypeEnum;
+use App\Enums\User\RoleTypeEnum;
 use App\Enums\User\UserVerifyStatusEnum;
 use App\Traits\HasUsernameObservable;
 use App\Traits\HasUuidObservable;
@@ -49,7 +50,7 @@ class User extends Authenticatable implements JWTSubject
         'website',
         'date_of_birth',
         'verify',
-        'avatar_file_id'
+        'avatar_file_id',
     ];
 
     /**
@@ -80,6 +81,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return [
             'verify' => UserVerifyStatusEnum::class,
+            'role' => RoleTypeEnum::class,
             'date_of_birth' => 'date',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',

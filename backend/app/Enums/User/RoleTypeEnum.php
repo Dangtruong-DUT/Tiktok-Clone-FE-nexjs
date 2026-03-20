@@ -5,7 +5,7 @@ namespace App\Enums\User;
 use App\Enums\BaseEnumTrait;
 use App\Enums\BaseEnumInterface;
 
-enum RoleType:int implements BaseEnumInterface
+enum RoleTypeEnum:int implements BaseEnumInterface
 {
     use BaseEnumTrait;
 

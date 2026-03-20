@@ -2,7 +2,9 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class BaseJsonResource extends JsonResource
@@ -19,11 +21,11 @@ class BaseJsonResource extends JsonResource
      * Create a new anonymous resource collection.
      *
      * @param mixed $resource
-     * @return BaseResourceCollection
+     * @return AnonymousResourceCollection
      */
-    public static function collection($resource): BaseResourceCollection
+    public static function collection($resource): AnonymousResourceCollection
     {
-        return tap(new BaseResourceCollection($resource, static::class), function ($collection): void {
+        return tap(new AnonymousResourceCollection($resource, static::class), function ($collection): void {
             if (property_exists(static::class, 'preserveKeys')) {
                 // @phpstan-ignore new.static
                 $class = (new static([]));
@@ -31,5 +33,12 @@ class BaseJsonResource extends JsonResource
                 $collection->preserveKeys = $class->preserveKeys === true;
             }
         });
+    }
+
+    protected function requireAttribute(string $key)
+    {
+        if (!array_key_exists($key, $this->resource->getAttributes())) {
+            Log::warning("Missing attribute: {$key}");
+        }
     }
 }

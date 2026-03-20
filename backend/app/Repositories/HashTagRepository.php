@@ -1,28 +1,28 @@
 <?php
 namespace App\Repositories;
 
-use App\Models\HashTag;
+use App\Models\Hashtag;
 use App\Repositories\BaseRepository;
 
-class HashTagRepository  extends BaseRepository
+class HashtagRepository  extends BaseRepository
 {
 
 
     /**
-     * HashTagRepository constructor.
+     * HashtagRepository constructor.
      */
     public function __construct()
     {
-        $modelInstance = app()->make(HashTag::class);
+        $modelInstance = app()->make(Hashtag::class);
         parent::__construct($modelInstance);
     }
 
     /**
      * Find a hashtag by name.
      * @param string $name
-     * @return HashTag|null
+     * @return Hashtag|null
      */
-    public function findByName(string $name): ?HashTag
+    public function findByName(string $name): ?Hashtag
     {
         return $this->query()->where('name', $name)->first();
     }
