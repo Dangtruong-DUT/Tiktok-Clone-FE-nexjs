@@ -1,7 +1,7 @@
 <?php
 namespace App\Repositories;
 
-use App\Enums\User\RelationshipType;
+use App\Enums\User\RelationshipTypeEnum;
 use App\Models\Relationship;
 use App\Repositories\BaseRepository;
 
@@ -23,10 +23,10 @@ class RelationshipRepository  extends BaseRepository
      *
      * @param int $userId
      * @param int $targetUserId
-     * @param RelationshipType $type
+     * @param RelationshipTypeEnum $type
      * @return int
      */
-    public function deleteRelationship(int $userId, int $targetUserId,RelationshipType $type): int
+    public function deleteRelationship(int $userId, int $targetUserId,RelationshipTypeEnum $type): int
     {
         return $this->query()->where('user_id', $userId)
         ->where('target_user_id', $targetUserId)
@@ -46,7 +46,7 @@ class RelationshipRepository  extends BaseRepository
         return $this->query()
         ->where('user_id', $userId)
         ->where('target_user_id', $targetUserId)
-        ->where('type', RelationshipType::FOLLOW->value)
+        ->where('type', RelationshipTypeEnum::FOLLOW->value)
         ->exists();
     }
 

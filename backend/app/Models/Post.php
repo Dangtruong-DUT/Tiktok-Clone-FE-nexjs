@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Enums\Post\AudienceType;
-use App\Enums\Post\PostType;
+use App\Enums\Post\AudienceTypeEnum;
+use App\Enums\Post\PostTypeEnum;
 use App\Traits\HasUuidObservable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -47,8 +47,8 @@ class Post extends Model
     protected function casts(): array
     {
         return [
-            'audience' => AudienceType::class,
-            'type'=>PostType::class,
+            'audience' => AudienceTypeEnum::class,
+            'type'=>PostTypeEnum::class,
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',

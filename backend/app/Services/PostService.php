@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Enums\Post\PostType;
+use App\Enums\Post\PostTypeEnum;
 use App\Exceptions\http\BusinessException;
 use App\Models\Post;
 use App\Repositories\HashTagRepository;
@@ -32,9 +32,9 @@ class PostService
     public function createPost(array $data) : Post
     {
 
-        $postType = $data['type']??PostType::POST->value;
+        $postType = $data['type']??PostTypeEnum::POST->value;
 
-        if ($postType !==PostType::POST->value && !empty($data['parent_id'])) {
+        if ($postType !==PostTypeEnum::POST->value && !empty($data['parent_id'])) {
             throw new BusinessException('Parent ID is required for this post type.',[
                 'type' => 'Parent ID is required for this post type.',
             ]);

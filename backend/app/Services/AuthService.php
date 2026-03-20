@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Enums\User\UserVerifyStatus;
+use App\Enums\User\UserVerifyStatusEnum;
 use App\Exceptions\http\BadRequestException;
 use App\Exceptions\http\BusinessException;
 use App\Exceptions\http\UnauthorizedException;
@@ -158,7 +158,7 @@ class AuthService
             throw new BadRequestException('Token has expired');
         }
         $user = $this->userRepo->findOrFail($validToken->user_id);
-        $user->verify = UserVerifyStatus::VERIFIED->value;
+        $user->verify = UserVerifyStatusEnum::VERIFIED->value;
         $user->save();
         $this->verifyEmailTokenRepo->deleteByUserId($validToken->user_id);
         return true;

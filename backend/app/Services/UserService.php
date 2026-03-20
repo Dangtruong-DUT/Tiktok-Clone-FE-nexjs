@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Enums\User\RelationshipType;
+use App\Enums\User\RelationshipTypeEnum;
 use App\Exceptions\http\BadRequestException;
 use App\Exceptions\http\BusinessException;
 use App\Repositories\RelationshipRepository;
@@ -62,7 +62,7 @@ class UserService
         $this->relationshipRepo->create([
             'user_id' => $user->id,
             'target_user_id' => $targetUser,
-            'type' => RelationshipType::FOLLOW->value
+            'type' => RelationshipTypeEnum::FOLLOW->value
         ]);
         return true;
     }
@@ -80,7 +80,7 @@ class UserService
         if (!$this->relationshipRepo->isFollowing($user->id, $targetUser)) {
             throw new BadRequestException('You are not following this user');
         }
-        $this->relationshipRepo->deleteRelationship($user->id, $targetUser, RelationshipType::FOLLOW);
+        $this->relationshipRepo->deleteRelationship($user->id, $targetUser, RelationshipTypeEnum::FOLLOW);
         return true;
     }
 

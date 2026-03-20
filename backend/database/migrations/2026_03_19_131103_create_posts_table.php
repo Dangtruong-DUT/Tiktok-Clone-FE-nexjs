@@ -1,7 +1,7 @@
 <?php
 
-use App\Enums\Post\AudienceType;
-use App\Enums\Post\PostType;
+use App\Enums\Post\AudienceTypeEnum;
+use App\Enums\Post\PostTypeEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,8 +18,8 @@ return new class extends Migration
             $table->uuid('uuid')->unique();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->text("content")->nullable();
-            $table->smallInteger("type")->default(PostType::POST->value);
-            $table->smallInteger("audience")->default(AudienceType::PRIVATE->value);
+            $table->smallInteger("type")->default(PostTypeEnum::POST->value);
+            $table->smallInteger("audience")->default(AudienceTypeEnum::PRIVATE->value);
             $table->foreignId('parent_id')->nullable()->constrained('posts')->nullOnDelete();
             $table->unsignedBigInteger('likes_count')->default(0);
             $table->unsignedBigInteger('share_count')->default(0);

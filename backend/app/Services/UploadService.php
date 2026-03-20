@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Enums\Media\MediaType;
+use App\Enums\Media\MediaTypeEnum;
 use App\Libraries\Upload\UploadFileServiceInterface;
 use Illuminate\Http\UploadedFile;
 
@@ -24,7 +24,7 @@ class UploadService
         return [
             'id' => $uploadFile->id,
             'url' => $uploadFile->url,
-            'type' => MediaType::IMAGE->value,
+            'type' => MediaTypeEnum::IMAGE->value,
         ];
     }
 
@@ -40,7 +40,7 @@ class UploadService
         return [
             'id' => $uploadFile->id,
             'url' => $uploadFile->url,
-            'type' => MediaType::VIDEO->value,
+            'type' => MediaTypeEnum::VIDEO->value,
         ];
     }
 }

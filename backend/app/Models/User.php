@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Enums\User\RelationshipType;
-use App\Enums\User\UserVerifyStatus;
+use App\Enums\User\RelationshipTypeEnum;
+use App\Enums\User\UserVerifyStatusEnum;
 use App\Traits\HasUsernameObservable;
 use App\Traits\HasUuidObservable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -58,7 +58,7 @@ class User extends Authenticatable implements JWTSubject
     * @var array<string, mixed>
     */
     protected $attributes = [
-    'verify' => UserVerifyStatus::UNVERIFIED->value,
+    'verify' => UserVerifyStatusEnum::UNVERIFIED->value,
     ];
 
     /**
@@ -79,7 +79,7 @@ class User extends Authenticatable implements JWTSubject
     protected function casts(): array
     {
         return [
-            'verify' => UserVerifyStatus::class,
+            'verify' => UserVerifyStatusEnum::class,
             'date_of_birth' => 'date',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
@@ -165,7 +165,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function isVerified(): bool
     {
-        return $this->verify === UserVerifyStatus::VERIFIED;
+        return $this->verify === UserVerifyStatusEnum::VERIFIED;
     }
 
     /**
@@ -175,7 +175,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function isBanned(): bool
     {
-        return $this->verify === UserVerifyStatus::BANNED;
+        return $this->verify === UserVerifyStatusEnum::BANNED;
     }
 
     public function isCurrentPassword(string $password): bool
@@ -213,7 +213,7 @@ class User extends Authenticatable implements JWTSubject
             'target_user_id',
             'user_id'
             )
-            ->wherePivot('type', RelationshipType::FOLLOW);
+            ->wherePivot('type', RelationshipTypeEnum::FOLLOW);
     }
 
 
@@ -229,7 +229,7 @@ class User extends Authenticatable implements JWTSubject
             'relationships',
             'user_id',
             'target_user_id'
-            )->wherePivot('type', RelationshipType::FOLLOW);
+            )->wherePivot('type', RelationshipTypeEnum::FOLLOW);
     }
 
     /**

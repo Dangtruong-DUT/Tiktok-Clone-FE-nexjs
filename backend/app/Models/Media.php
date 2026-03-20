@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\Media\MediaType;
+use App\Enums\Media\MediaTypeEnum;
 use App\Traits\HasUuidObservable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -34,7 +34,7 @@ class Media extends Model
     protected function casts(): array
     {
         return [
-            'type'=>MediaType::class,
+            'type'=>MediaTypeEnum::class,
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];

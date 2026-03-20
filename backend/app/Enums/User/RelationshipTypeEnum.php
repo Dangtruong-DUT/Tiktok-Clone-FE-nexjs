@@ -5,7 +5,7 @@ namespace App\Enums\User;
 use App\Enums\BaseEnumInterface;
 use App\Enums\BaseEnumTrait;
 
-enum RelationshipType: int implements BaseEnumInterface
+enum RelationshipTypeEnum: int implements BaseEnumInterface
 {
     use BaseEnumTrait;
     case FOLLOW = 0;
