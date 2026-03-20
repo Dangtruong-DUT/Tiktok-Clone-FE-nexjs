@@ -105,7 +105,7 @@ class Post extends Model
      */
     public function hashtags(): BelongsToMany
     {
-        return $this->belongsToMany(HashTag::class, 'posts_hashtags');
+        return $this->belongsToMany(HashTag::class, 'posts_hashtags', 'post_id', 'hashtag_id');
     }
 
     /**
@@ -157,4 +157,5 @@ class Post extends Model
     {
         return $this->belongsToMany(User::class, 'post_bookmarks', 'post_id', 'user_id');
     }
+
 }

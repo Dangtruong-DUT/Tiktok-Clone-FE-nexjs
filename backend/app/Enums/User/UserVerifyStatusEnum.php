@@ -5,7 +5,7 @@ namespace App\Enums\User;
 use App\Enums\BaseEnumTrait;
 use App\Enums\BaseEnumInterface;
 
-enum UserVerifyStatus:int implements BaseEnumInterface
+enum UserVerifyStatusEnum:int implements BaseEnumInterface
 {
     use BaseEnumTrait;
 

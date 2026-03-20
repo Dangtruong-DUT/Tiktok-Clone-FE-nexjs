@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Enums\Post;
+namespace App\Enums\Media;
 
 use App\Enums\BaseEnumTrait;
 use App\Enums\BaseEnumInterface;
 
-enum AudienceType:int implements BaseEnumInterface
+enum MediaTypeEnum:int implements BaseEnumInterface
 {
     use BaseEnumTrait;
 
-    case PUBLIC = 0;
-    case PRIVATE = 1;
-    case FRIENDS = 2;
+    case IMAGE = 0;
+    case VIDEO = 1;
+    case HLS_VIDEO = 2;
 
 
     /**
@@ -20,9 +20,9 @@ enum AudienceType:int implements BaseEnumInterface
     public function label(): string
     {
         return match($this) {
-            self::PUBLIC => 'Public',
-            self::PRIVATE => 'Private',
-            self::FRIENDS => 'Friends',
+            self::IMAGE => 'Image',
+            self::VIDEO => 'Video',
+            self::HLS_VIDEO => 'HLS Video',
         };
     }
 
@@ -33,9 +33,9 @@ enum AudienceType:int implements BaseEnumInterface
     public function translate(): string
     {
         return match($this) {
-            self::PUBLIC => "Công khai",
-            self::PRIVATE => "Riêng tư",
-            self::FRIENDS => "Bạn bè",
+            self::IMAGE => "Hình ảnh",
+            self::VIDEO => "Video",
+            self::HLS_VIDEO => "HLS Video",
         };
     }
 }

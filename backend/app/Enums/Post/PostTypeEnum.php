@@ -5,7 +5,7 @@ namespace App\Enums\Post;
 use App\Enums\BaseEnumTrait;
 use App\Enums\BaseEnumInterface;
 
-enum PostType:int implements BaseEnumInterface
+enum PostTypeEnum:int implements BaseEnumInterface
 {
     use BaseEnumTrait;
 

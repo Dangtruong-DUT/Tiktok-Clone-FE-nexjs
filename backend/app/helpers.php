@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Str;
 
 if (! function_exists('is_api_request')) {

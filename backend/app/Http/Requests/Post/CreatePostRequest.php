@@ -6,6 +6,7 @@ use App\Enums\Post\AudienceType;
 use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rules\Enum;
 use App\Enums\Post\PostType;
+use App\Rules\PostId;
 use App\Rules\UploadFileId;
 use App\Rules\UserId;
 
@@ -19,6 +20,12 @@ class CreatePostRequest extends BaseRequest
     public function rules(): array
     {
         return $this->applyBaseRules([
+                'parent_id'=> [
+                    self::SOMETIMES,
+                    self::REQUIRED,
+                    self::INTEGER,
+                    new PostId(),
+                ],
                 'type' => [
                     self::REQUIRED,
                     new Enum(PostType::class),
@@ -28,13 +35,15 @@ class CreatePostRequest extends BaseRequest
                     new Enum(AudienceType::class),
                 ],
                 'content'=> [
-                    self::NULLABLE,
                     self::STRING,
+                    self::MIN.':0',
                     self::MAX.':4000',
                 ],
                 'mentions'=> [
                     self::SOMETIMES,
                     self::ARRAY,
+                    self::MIN.':0',
+                    self::MAX.':50',
                 ],
                 'mentions.*'=> [
                     self::INTEGER,
@@ -57,7 +66,7 @@ class CreatePostRequest extends BaseRequest
                     self::MIN.':1',
                     self::MAX.':10',
                 ],
-                'medias.*.id'=> [
+                'medias.*.file_id'=> [
                     self::INTEGER,
                     new UploadFileId(),
                 ],

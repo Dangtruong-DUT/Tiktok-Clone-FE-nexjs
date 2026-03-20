@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Post\CreatePostRequest;
 use App\Http\Response\ApiResponse;
 use App\Services\PostService;
 use Illuminate\Http\JsonResponse;
@@ -18,12 +19,12 @@ class PostController extends Controller
 
     /**
      * Create a new post.
-     *
+     * @param CreatePostRequest $request
      * @return JsonResponse
      */
-    public function create(): JsonResponse
+    public function create(CreatePostRequest $request): JsonResponse
     {
-        $data = $this->postService->createPost([]);
-        return ApiResponse::success(data: $data, message: 'Post created successfully');
+        $post = $this->postService->createPost($request->validated());
+        return ApiResponse::success(data: $post, message: 'Post created successfully');
     }
 }
