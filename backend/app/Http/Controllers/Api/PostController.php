@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\CreatePostRequest;
+use App\Http\Requests\Post\GetListChildrenPostRequest;
 use App\Http\Requests\Post\GetPostRequest;
 use App\Http\Resources\Api\Post\PostResource;
 use App\Http\Response\ApiResponse;
@@ -45,6 +46,20 @@ class PostController extends Controller
         return ApiResponse::success(
             data: new PostResource($post),
             message: 'Post retrieved successfully'
+        );
+    }
+
+    /**
+     * Get list of child posts by parent post uuid.
+     * @param GetListChildrenPostRequest $request
+     * @return JsonResponse
+     */
+    public function showChildren(GetListChildrenPostRequest $request): JsonResponse
+    {
+        $children = $this->postService->getChildrenPosts($request->validated());
+        return ApiResponse::success(
+            data: PostResource::collection($children),
+            message: 'Child posts retrieved successfully'
         );
     }
 }

@@ -12,6 +12,8 @@ abstract class BaseListRequest extends BaseRequest
     protected array $casts = [
         'limit' => 'integer',
         'offset' => 'integer',
+        'page' => 'integer',
+        'per_page' => 'integer',
     ];
 
     /**
@@ -22,9 +24,18 @@ abstract class BaseListRequest extends BaseRequest
         parent::defineBaseRules();
 
         $this->sharedRules = array_merge($this->sharedRules, [
-            'keyword' => [self::STRING, self::MAX . ':' . '100'],
+            'q' => [self::STRING, self::MAX . ':' . '100'],
             'created_date_from' => [self::DATE_FORMAT . ':' . DateTimeInterface::ATOM],
             'created_date_to' => [self::DATE_FORMAT . ':' . DateTimeInterface::ATOM],
+            'page' => [
+                self::INTEGER,
+                self::MIN . ':' . config('const.pagination.min_page', 1)
+            ],
+            'per_page' => [
+                self::INTEGER,
+                self::MIN.':'.config('const.pagination.min_per_page', 1),
+                self::MAX.':'.config('const.pagination.max_per_page', 100)
+            ]
         ]);
     }
 

@@ -2,11 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Post\AudienceTypeEnum;
+use App\Enums\Post\PostTypeEnum;
 use App\Rules\PostUuid;
 use App\Rules\UploadFileId;
 use App\Rules\UserId;
 use App\Rules\UserUuid;
 use DateTimeInterface;
+use Illuminate\Validation\Rules\Enum;
 
 abstract class BaseRequest extends BaseFormRequest
 {
@@ -222,7 +225,6 @@ abstract class BaseRequest extends BaseFormRequest
             'search' => [self::STRING, self::MAX.':'.'100'],
             'created_at' => [self::DATE_FORMAT . ':' . DateTimeInterface::ATOM],
             'updated_at' => [self::DATE_FORMAT . ':' . DateTimeInterface::ATOM],
-            'per_page' => [self::INTEGER, self::MIN.':'.'1', self::MAX.':'.'100'],
             'order_by' => [self::ARRAY],
             'order_by.*.column' => [self::STRING],
             'order_by.*.direction' => [self::STRING],
@@ -246,6 +248,8 @@ abstract class BaseRequest extends BaseFormRequest
                 self::MAX.":".config('const.file.video.max_size_kb', 51200),
                 self::MIMES . ':' .config('const.file.video.mimes',  'mp4,mov'),
             ],
+            'audience'=>[new Enum(AudienceTypeEnum::class)],
+            'post_type'=>[new Enum(PostTypeEnum::class)],
         ];
     }
 }

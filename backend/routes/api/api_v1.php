@@ -6,15 +6,6 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PostController;
 
 /*|--------------------------------------------------------------------------
-| API Version 1
-|--------------------------------------------------------------------------
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which is assigned the "api" middleware
-| group. Enjoy building your API!
-*/
-
-
-/*|--------------------------------------------------------------------------
 | Public routes
 |--------------------------------------------------------------------------
 | These routes are accessible without authentication.
@@ -32,10 +23,13 @@ Route::prefix('auth')
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
     Route::post('/verify-email', [AuthController::class, 'verifyEmail'])->name('verify-email');
 });
+
+// post routes
 Route::prefix('posts')
     ->name('posts.')
     ->group(function () {
         Route::get('{post_uuid}', [PostController::class, 'show'])->name('show');
+        Route::get('{post_uuid}/children', [PostController::class, 'showChildren'])->name('show');
     });
 
 
@@ -82,5 +76,4 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
         ->group(function () {
             Route::post('/', [PostController::class, 'create'])->name('create');
         });
-
 });

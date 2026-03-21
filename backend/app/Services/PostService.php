@@ -10,6 +10,7 @@ use App\Repositories\HashTagRepository;
 use App\Repositories\MediaRepository;
 use App\Repositories\PostRepository;
 use App\Traits\HasAuthUser;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class PostService
@@ -106,5 +107,35 @@ class PostService
             throw new NotFoundException('Post not found');
         }
         return $postDetail;
+    }
+
+    /**
+     * Get list of child posts by parent post uuid.
+     * @param array $data
+     *                      - post_uuid: parent post uuid
+     *                      - audience: filter by audience
+     *                      - type: filter by post type
+     *                      - q: search keyword for content and user name
+     *                      - page: pagination page number
+     *                      - per_page: number of items per page for pagination
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getChildrenPosts(array $data): LengthAwarePaginator
+    {
+        $uuid = $data['post_uuid'];
+        $post = $this->postRepo->findByUuid($uuid);
+        if (empty($post)) {
+            throw new NotFoundException('Post not found');
+        }
+        $authUserId = $this->guard()->check() ? $this->guard()->id() : null;
+
+        return $this->postRepo->search([
+            'q' => $data['q'] ?? null,
+            'audience' => $data['audience'] ?? null,
+            'type' => $data['post_type'] ?? null,
+            'parent_id' => $post->id,
+            'per_page' => $data['per_page'] ?? config('const.pagination.default_per_page'),
+            'page' => $data['page'] ?? config('const.pagination.default_page'),
+        ], $authUserId);
     }
 }

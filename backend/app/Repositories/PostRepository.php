@@ -6,7 +6,7 @@ use App\Models\Post;
 use App\Repositories\BaseRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
 class PostRepository  extends BaseRepository
 {
@@ -56,6 +56,12 @@ class PostRepository  extends BaseRepository
         )->first();
     }
 
+    /**
+     * Get post with details by uuid.
+     * @param string $uuid
+     * @param ?int $userId
+     * @return Post|null
+     */
     public function getByUuidWithDetail(string $uuid, ?int $userId): ?Post
     {
         $query = $this->query()->where('uuid', $uuid);
@@ -63,6 +69,16 @@ class PostRepository  extends BaseRepository
             $query,
             $userId
         )->first();
+    }
+
+    /**
+     * Find a post by its UUID.
+     * @param string $uuid
+     * @return Post|null
+     */
+    public function findByUuid(string $uuid): ?Post
+    {
+        return $this->query()->where('uuid', $uuid)->first();
     }
 
     /**
@@ -108,8 +124,8 @@ class PostRepository  extends BaseRepository
                     });
                 })
                 ->orderByDesc('created_at');
-
-        return $this->withDetail($query, $userId)->paginate($collection->get('per_page', 10));
+        $perPage = $collection->get('per_page', config('const.pagination.default_per_page', 10));
+        return $this->withDetail($query, $userId)->paginate($perPage);
     }
 
     /**
