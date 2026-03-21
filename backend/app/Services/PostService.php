@@ -140,6 +140,29 @@ class PostService
     }
 
     /**
+     * Search for posts.
+     *  @param array $data
+     *                      - q: search keyword for content and user name
+     *                      - audience: filter by audience
+     *                      - type: filter by post type
+     *                      - page: pagination page number
+     *                      - per_page: number of items per page for pagination
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function searchPosts(array $data): LengthAwarePaginator
+    {
+        $authUserId = $this->guard()->check() ? $this->guard()->id() : null;
+
+        return $this->postRepo->search([
+            'q' => $data['q'] ?? null,
+            'audience' => $data['audience'] ?? null,
+            'type' => $data['post_type'] ?? null,
+            'per_page' => $data['per_page'] ?? config('const.pagination.default_per_page'),
+            'page' => $data['page'] ?? config('const.pagination.default_page'),
+        ], $authUserId);
+    }
+
+    /**
      * Like a post.
      * @param string $uuid
      * @return void

@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\BookmarkPostRequest;
 use App\Http\Requests\Post\CreatePostRequest;
 use App\Http\Requests\Post\GetListChildrenPostRequest;
+use App\Http\Requests\Post\GetListPostRequest;
 use App\Http\Requests\Post\GetPostRequest;
 use App\Http\Requests\Post\LikePostRequest;
 use App\Http\Requests\Post\UnBookmarkPostRequest;
@@ -50,6 +51,20 @@ class PostController extends Controller
         return ApiResponse::success(
             data: new PostResource($post),
             message: 'Post retrieved successfully'
+        );
+    }
+
+    /**
+    * Get list of posts.
+    * @param GetListPostRequest $request
+    * @return JsonResponse
+    */
+    public function index(GetListPostRequest $request): JsonResponse
+    {
+        $posts = $this->postService->searchPosts($request->validated());
+        return ApiResponse::success(
+            data: PostResource::collection($posts),
+            message: 'Posts retrieved successfully'
         );
     }
 

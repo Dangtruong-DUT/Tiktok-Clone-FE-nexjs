@@ -30,6 +30,7 @@ Route::prefix('posts')
     ->group(function () {
         Route::get('{post_uuid}', [PostController::class, 'show'])->name('show');
         Route::get('{post_uuid}/children', [PostController::class, 'showChildren'])->name('show');
+        Route::get('/', [PostController::class, 'index'])->name('index');
     });
 
 /*|--------------------------------------------------------------------------
