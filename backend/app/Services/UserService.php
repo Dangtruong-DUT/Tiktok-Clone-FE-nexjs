@@ -5,9 +5,11 @@ namespace App\Services;
 use App\Enums\User\RelationshipTypeEnum;
 use App\Exceptions\http\BadRequestException;
 use App\Exceptions\http\BusinessException;
+use App\Models\User;
 use App\Repositories\RelationshipRepository;
 use App\Repositories\UserRepository;
 use App\Traits\HasAuthUser;
+use Illuminate\Support\Facades\DB;
 
 class UserService
 {
@@ -62,14 +64,18 @@ class UserService
         }
 
         if ($this->relationshipRepo->isFollowing($user->id, $targetUser->id)) {
-            throw new BadRequestException('You are already following this user');
+            return true;
         }
+        DB::transaction(function () use ($user, $targetUser) {
+            $this->relationshipRepo->create([
+                'user_id' => $user->id,
+                'target_user_id' => $targetUser->id,
+                'type' => RelationshipTypeEnum::FOLLOW->value
+            ]);
+            $user->increment('following_count');
+            $targetUser->increment('followers_count');
+        });
 
-        $this->relationshipRepo->create([
-            'user_id' => $user->id,
-            'target_user_id' => $targetUser->id,
-            'type' => RelationshipTypeEnum::FOLLOW->value
-        ]);
         return true;
     }
 
@@ -86,9 +92,13 @@ class UserService
         $targetUser = $this->userRepo->findByUuid($targetUserUuid);
         $user = $this->guard()->user();
         if (!$this->relationshipRepo->isFollowing($user->id, $targetUser->id)) {
-            throw new BadRequestException('You are not following this user');
+            return true;
         }
-        $this->relationshipRepo->deleteRelationship($user->id, $targetUser->id, RelationshipTypeEnum::FOLLOW);
+        DB::transaction(function () use ($user, $targetUser) {
+            $this->relationshipRepo->deleteRelationship($user->id, $targetUser->id, RelationshipTypeEnum::FOLLOW);
+            $user->decrement('following_count');
+            $targetUser->decrement('followers_count');
+        });
         return true;
     }
 
@@ -117,5 +127,15 @@ class UserService
         }
 
         return true;
+    }
+
+    /**
+     * Get the authenticated user.
+     *
+     * @return User
+     */
+    public function getAuthenticatedUser(): User
+    {
+        return $this->guard()->user();
     }
 }

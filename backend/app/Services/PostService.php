@@ -49,6 +49,23 @@ class PostService
 
         $user = $this->guard()->user();
         $post = DB::transaction(function () use ($data, $postType, $user): Post {
+            $parentPost = null;
+
+            if (!empty($data['parent_id'])) {
+                $parentPost = $this->postRepo->findById($data['parent_id']);
+                if (empty($parentPost)) {
+                    throw new NotFoundException('Parent post not found');
+                }
+
+                if ($postType === PostTypeEnum::RE_POST->value) {
+                    $parentPost->increment('repost_count');
+                } else if ($postType === PostTypeEnum::QUOTE_POST->value) {
+                    $parentPost->increment('quote_post_count');
+                } else if ($postType === PostTypeEnum::COMMENT->value) {
+                    $parentPost->increment('comments_count');
+                }
+            }
+
             $post = $this->postRepo->create([
                 'type' => $postType,
                 'audience' => $data['audience'],
@@ -87,6 +104,7 @@ class PostService
             if (!empty($data['medias'])) {
                 $this->mediaRepo->createMany($data['medias'], $post->id);
             }
+
             return $post;
         });
 
@@ -169,11 +187,17 @@ class PostService
      */
     public function likePost(string $uuid): void
     {
-        $post = $this->postRepo->findByUuid($uuid);
-        if (empty($post)) {
-            throw new NotFoundException('Post not found');
-        }
-        $post->userLikes()->syncWithoutDetaching([$this->guard()->id()]);
+        DB::transaction(function () use ($uuid) {
+            $post = $this->postRepo->findByUuid($uuid);
+            if (empty($post)) {
+                throw new NotFoundException('Post not found');
+            }
+            if ($post->userLikes()->where('user_id', $this->guard()->id())->exists()) {
+                return;
+            }
+            $post->userLikes()->syncWithoutDetaching([$this->guard()->id()]);
+            $post->increment('likes_count');
+        });
     }
 
     /**
@@ -183,11 +207,18 @@ class PostService
      */
     public function unlikePost(string $uuid): void
     {
-        $post = $this->postRepo->findByUuid($uuid);
-        if (empty($post)) {
-            throw new NotFoundException('Post not found');
-        }
-        $post->userLikes()->detach($this->guard()->id());
+        DB::transaction(function () use ($uuid) {
+            $post = $this->postRepo->findByUuid($uuid);
+            if (empty($post)) {
+                throw new NotFoundException('Post not found');
+            }
+
+            if (!$post->userLikes()->where('user_id', $this->guard()->id())->exists()) {
+                return;
+            }
+            $post->userLikes()->detach($this->guard()->id());
+            $post->decrement('likes_count');
+        });
     }
 
     /**
@@ -197,11 +228,18 @@ class PostService
      */
     public function bookmarkPost(string $uuid): void
     {
-        $post = $this->postRepo->findByUuid($uuid);
-        if (empty($post)) {
-            throw new NotFoundException('Post not found');
-        }
-        $post->userBookmarks()->syncWithoutDetaching([$this->guard()->id()]);
+        DB::transaction(function () use ($uuid) {
+            $post = $this->postRepo->findByUuid($uuid);
+            if (empty($post)) {
+                throw new NotFoundException('Post not found');
+            }
+
+            if ($post->userBookmarks()->where('user_id', $this->guard()->id())->exists()) {
+                return;
+            }
+            $post->userBookmarks()->syncWithoutDetaching([$this->guard()->id()]);
+            $post->increment('bookmarks_count');
+        });
     }
 
     /**
@@ -211,10 +249,17 @@ class PostService
      */
     public function unbookmarkPost(string $uuid): void
     {
-        $post = $this->postRepo->findByUuid($uuid);
-        if (empty($post)) {
-            throw new NotFoundException('Post not found');
-        }
-        $post->userBookmarks()->detach($this->guard()->id());
+        DB::transaction(function () use ($uuid) {
+            $post = $this->postRepo->findByUuid($uuid);
+            if (empty($post)) {
+                throw new NotFoundException('Post not found');
+            }
+
+            if (!$post->userBookmarks()->where('user_id', $this->guard()->id())->exists()) {
+                return;
+            }
+            $post->userBookmarks()->detach($this->guard()->id());
+            $post->decrement('bookmarks_count');
+        });
     }
 }

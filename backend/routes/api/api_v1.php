@@ -33,6 +33,18 @@ Route::prefix('posts')
         Route::get('/', [PostController::class, 'index'])->name('index');
     });
 
+// user routes
+Route::prefix('users')
+    ->name('users.')
+    ->group(function () {
+        Route::get('{user_uuid}/posts', [PostController::class, 'showUserPosts'])->name('show-posts');
+        Route::get('{user_uuid}/like', [PostController::class, 'showUserLikes'])->name('show-likes');
+        Route::get('{user_uuid}/bookmark', [PostController::class, 'showUserBookmarks'])->name('show-bookmarks');
+        Route::get('/{username}', [UserController::class, 'index'])->name('index');
+    });
+
+
+
 /*|--------------------------------------------------------------------------
 | Protected routes
 |--------------------------------------------------------------------------
@@ -67,6 +79,7 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::delete('{user_uuid}/follow', [UserController::class, 'unfollow'])->name('unfollow');
             Route::put('/change-password', [UserController::class, 'changePassword'])->name('change-password');
             Route::patch('/me', [UserController::class, 'update'])->name('update');
+            Route::get('/me', [UserController::class, 'showMe'])->name('show-me');
         });
 
     //post routes

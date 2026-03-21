@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 
 class UserRepository extends BaseRepository
 {
@@ -77,6 +78,45 @@ class UserRepository extends BaseRepository
     public function checkUsernameExist(string $username): bool
     {
         return $this->query()->where('username', $username)->exists();
+    }
+
+    /**
+     * Find a user by username
+     *
+     * @param string $username
+     * @return User|null
+     */
+    public function getUserProfileByUuid(string $uuid, ?int $authUserId): ?User
+    {
+        $query = $this->query()->where('uuid', $uuid);
+        return $this->withDetail($query, $authUserId)->first();
+    }
+
+    /**
+     * Get user with details by uuid.
+     *
+     * @param string $uuid
+     * @param int|null $authUserId
+     * @return User|null
+     */
+
+    /**
+     * Get user with details by id.
+     * @param Builder<User> $query
+     * @param ?int $userId
+     * @return Builder<User>
+     */
+    private function withDetail(Builder $query, ?int $userId) : Builder
+    {
+        return $query
+            ->withCount([
+                'followers as following_count',
+                'followers as followers_count',
+                'likes as likes_count',
+            ])
+            ->withExists([
+                'followers as is_followed' => fn ($q) => $q->where('follower_id', $userId),
+            ]);
     }
 }
 ?>

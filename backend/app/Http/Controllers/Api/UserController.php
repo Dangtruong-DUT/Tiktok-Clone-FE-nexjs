@@ -68,5 +68,10 @@ class UserController extends Controller
         return ApiResponse::success(message: 'User updated successfully');
     }
 
+    public function showMe(): JsonResponse
+    {
+        $user = $this->userService->getAuthenticatedUser();
+        return ApiResponse::success(data: $user);
+    }
 
 }

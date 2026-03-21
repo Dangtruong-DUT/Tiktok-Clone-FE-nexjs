@@ -42,6 +42,17 @@ class PostRepository  extends BaseRepository
     }
 
     /**
+     * Find a post by id.
+     * @param int $id
+     * @return Post|null
+     */
+    public function findById(int $id): ?Post
+    {
+        return $this->query()->where('id', $id)->first();
+    }
+
+
+    /**
      * Get post with details by id.
      * @param int $id
      * @param ?int $userId
@@ -134,7 +145,7 @@ class PostRepository  extends BaseRepository
      * @param ?int $userId
      * @return Builder<Post>
      */
-    public function withDetail(Builder $query, ?int $userId) : Builder
+    private function withDetail(Builder $query, ?int $userId) : Builder
     {
         $queryUserId = $userId ?? -1000;
         return $query
@@ -144,8 +155,6 @@ class PostRepository  extends BaseRepository
                 'user' => fn ($q) => $q
                     ->with('avatarFile')
                     ->withCount([
-                        'followings as following_count',
-                        'followers as followers_count',
                         'likedPosts as likes_count',
                     ])
                     ->withExists([
@@ -158,11 +167,6 @@ class PostRepository  extends BaseRepository
             ->withExists([
                 'userLikes as is_liked' => fn ($q) => $q->where('user_id', $queryUserId),
                 'userBookmarks as is_bookmarked' => fn ($q) => $q->where('user_id', $queryUserId),
-            ])
-            ->withCount([
-                'userLikes as likes_count',
-                'userBookmarks as bookmarks_count',
-                'children as comments_count',
             ]);
     }
 
