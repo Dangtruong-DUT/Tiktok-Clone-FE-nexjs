@@ -153,10 +153,13 @@ class PostRepository  extends BaseRepository
                 'hashtags',
                 'mentions',
                 'user' => fn ($q) => $q
+                    ->select('users.*')
                     ->with('avatarFile')
-                    ->withCount([
-                        'likedPosts as likes_count',
-                    ])
+                    ->selectSub(function ($query) {
+                        $query->from('posts')
+                            ->selectRaw('COALESCE(SUM(likes_count), 0)')
+                            ->whereColumn('posts.user_id', 'users.id');
+                    }, 'likes_count')
                     ->withExists([
                         'followers as is_followed' => fn ($fq) => $fq->whereKey($queryUserId),
                     ])

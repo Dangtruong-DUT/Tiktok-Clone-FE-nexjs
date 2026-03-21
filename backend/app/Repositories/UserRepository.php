@@ -106,14 +106,16 @@ class UserRepository extends BaseRepository
      * @param ?int $userId
      * @return Builder<User>
      */
-    private function withDetail(Builder $query, ?int $userId) : Builder
+    private function withDetail(Builder $query, ?int $userId): Builder
     {
         return $query
-            ->withCount([
-                'followers as following_count',
-                'followers as followers_count',
-                'likes as likes_count',
-            ])
+            ->select('users.*')
+            ->with(['avatarFile'])
+            ->selectSub(function ($query) {
+                $query->from('posts')
+                    ->selectRaw('COALESCE(SUM(likes_count), 0)')
+                    ->whereColumn('posts.user_id', 'users.id');
+            }, 'likes_count')
             ->withExists([
                 'followers as is_followed' => fn ($q) => $q->where('follower_id', $userId),
             ]);
