@@ -5,6 +5,16 @@ use App\Http\Requests\BaseRequest;
 
 class FollowSomeOneRequest extends BaseRequest
 {
+    protected function prepareForValidation()
+    {
+        parent::prepareForValidation();
+        $this->merge(
+            [
+                "user_uuid"=> $this->route("user_uuid")
+            ]
+        );
+    }
+
     /**
      * set rules
      *
@@ -14,7 +24,7 @@ class FollowSomeOneRequest extends BaseRequest
     {
 
         return $this->applyBaseRules([
-                'user_id' => [
+                'user_uuid' => [
                     self::REQUIRED
                 ],
         ]);

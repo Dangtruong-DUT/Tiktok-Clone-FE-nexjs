@@ -4,7 +4,6 @@ namespace App\Repositories;
 use App\Models\Post;
 use App\Repositories\BaseRepository;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 
 class PostRepository  extends BaseRepository
 {
@@ -30,6 +29,16 @@ class PostRepository  extends BaseRepository
     }
 
     /**
+     * Check if a post exists by uuid.
+     * @param string $uuid
+     * @return bool
+     */
+    public function isExistByUuid(string $uuid): bool
+    {
+        return $this->query()->where('uuid', $uuid)->exists();
+    }
+
+    /**
      * Get post with details by id.
      * @param int $id
      * @param ?int $userId
@@ -38,6 +47,15 @@ class PostRepository  extends BaseRepository
     public function getByIdWithDetail(int $id, ?int $userId): ?Post
     {
         $query = $this->query()->whereKey($id);
+        return $this->withDetail(
+            $query,
+            $userId
+        )->first();
+    }
+
+    public function getByUuidWithDetail(string $uuid, ?int $userId): ?Post
+    {
+        $query = $this->query()->where('uuid', $uuid);
         return $this->withDetail(
             $query,
             $userId

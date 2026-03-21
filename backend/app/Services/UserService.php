@@ -43,25 +43,31 @@ class UserService
      * Follow someone
      *
      * @param array $data
+     *              - user_uuid: the uuid of the user to follow
      * @return bool
      * @throws BadRequestException
      * @throws BusinessException
      */
     public function follow(array $data): bool
     {
-        $targetUser = $data['user_id'];
+        $targetUserUuid = $data['user_uuid'];
+        $targetUser = $this->userRepo->findByUuid($targetUserUuid);
+        if (!$targetUser) {
+            throw new BusinessException('The user you are trying to follow does not exist');
+        }
+
         $user = $this->guard()->user();
-        if ($user->id === $targetUser) {
+        if ($user->uuid === $targetUserUuid) {
             throw new BadRequestException('You cannot follow yourself');
         }
 
-        if ($this->relationshipRepo->isFollowing($user->id, $targetUser)) {
+        if ($this->relationshipRepo->isFollowing($user->id, $targetUser->id)) {
             throw new BadRequestException('You are already following this user');
         }
 
         $this->relationshipRepo->create([
             'user_id' => $user->id,
-            'target_user_id' => $targetUser,
+            'target_user_id' => $targetUser->id,
             'type' => RelationshipTypeEnum::FOLLOW->value
         ]);
         return true;
@@ -71,16 +77,18 @@ class UserService
      * Unfollow someone
      *
      * @param array $data
+     *            - user_uuid: the uuid of the user to unfollow
      * @return bool
      */
     public function unfollow(array $data): bool
     {
-        $targetUser = $data['user_id'];
+        $targetUserUuid = $data['user_uuid'];
+        $targetUser = $this->userRepo->findByUuid($targetUserUuid);
         $user = $this->guard()->user();
-        if (!$this->relationshipRepo->isFollowing($user->id, $targetUser)) {
+        if (!$this->relationshipRepo->isFollowing($user->id, $targetUser->id)) {
             throw new BadRequestException('You are not following this user');
         }
-        $this->relationshipRepo->deleteRelationship($user->id, $targetUser, RelationshipTypeEnum::FOLLOW);
+        $this->relationshipRepo->deleteRelationship($user->id, $targetUser->id, RelationshipTypeEnum::FOLLOW);
         return true;
     }
 

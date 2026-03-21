@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\PostUuid;
 use App\Rules\UploadFileId;
 use App\Rules\UserId;
 use App\Rules\UserUuid;
@@ -202,8 +203,10 @@ abstract class BaseRequest extends BaseFormRequest
             'confirm_password'=>[self::STRING, self::MIN.':'.'8', self::MAX.':'.'100', self::SAME.':password'],
             'user_id' => [self::INTEGER, new UserId()],
             'user_ids.*' => [self::INTEGER, new UserId()],
-            'user_uuid' => [self::STRING, new UserUuid()],
-            'user_uuids.*' => [self::STRING, new UserUuid()],
+            'user_uuid' => [self::STRING, self::UUID, new UserUuid()],
+            'user_uuids.*' => [self::STRING, self::UUID, new UserUuid()],
+            'post_uuid' => [self::STRING, self::UUID, new PostUuid()],
+            'post_uuids.*' => [self::STRING, self::UUID, new PostUuid()],
             "date_of_birth" => [self::DATE],
             'name' => [self::STRING, self::MAX.':'.'100'],
             'phone' => [self::STRING, self::MAX.':'.'100'],

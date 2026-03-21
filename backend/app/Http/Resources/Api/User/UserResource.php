@@ -14,6 +14,7 @@ class UserResource extends BaseJsonResource
 
         return [
             'id' => $this->id,
+            'uuid' => $this->uuid,
             'name' => $this->name,
             'username' => $this->username,
             'email' => $this->email,

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\Post\PostTypeEnum;
 use App\Exceptions\http\BusinessException;
+use App\Exceptions\http\NotFoundException;
 use App\Models\Post;
 use App\Repositories\HashTagRepository;
 use App\Repositories\MediaRepository;
@@ -82,6 +83,21 @@ class PostService
         });
 
         $postDetail= $this->postRepo->getByIdWithDetail($post->id, $user->id);
+        return $postDetail;
+    }
+
+    /**
+     * Get post by uuid.
+     * @param string $uuid
+     * @return Post
+     */
+    public function getPostByUuid(string $uuid): ?Post
+    {
+        $userId = $this->guard()->check() ? $this->guard()->id() : null;
+        $postDetail = $this->postRepo->getByUuidWithDetail($uuid, $userId);
+        if (empty($postDetail)) {
+            throw new NotFoundException('Post not found');
+        }
         return $postDetail;
     }
 }

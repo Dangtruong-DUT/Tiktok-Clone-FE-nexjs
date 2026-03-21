@@ -13,9 +13,12 @@ use App\Http\Controllers\Api\PostController;
 | group. Enjoy building your API!
 */
 
-/**
- * public routes
- */
+
+/*|--------------------------------------------------------------------------
+| Public routes
+|--------------------------------------------------------------------------
+| These routes are accessible without authentication.
+*/
 
 // auth routes
 Route::prefix('auth')
@@ -29,10 +32,22 @@ Route::prefix('auth')
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
     Route::post('/verify-email', [AuthController::class, 'verifyEmail'])->name('verify-email');
 });
+Route::prefix('posts')
+    ->name('posts.')
+    ->group(function () {
+        Route::get('{post_uuid}', [PostController::class, 'show'])->name('show');
+    });
 
-/**
- * protected routes
- */
+
+
+/*|--------------------------------------------------------------------------
+| Protected routes
+|--------------------------------------------------------------------------
+| These routes require authentication and user must be active.
+| The 'check_user_status' middleware checks if the authenticated user is active.
+| If the user is not active, it will return a 403 Forbidden response.
+*/
+
 Route::middleware(['auth:api', 'check_user_status'])->group(function () {
     // auth routes
     Route::prefix('auth')
@@ -55,8 +70,8 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
     Route::prefix('users')
         ->name('users.')
         ->group(function () {
-            Route::post('/follow', [UserController::class, 'follow'])->name('follow');
-            Route::delete('/follow/{user_id}', [UserController::class, 'unfollow'])->name('unfollow');
+            Route::post('{user_uuid}/follow', [UserController::class, 'follow'])->name('follow');
+            Route::delete('{user_uuid}/follow', [UserController::class, 'unfollow'])->name('unfollow');
             Route::put('/change-password', [UserController::class, 'changePassword'])->name('change-password');
             Route::patch('/me', [UserController::class, 'update'])->name('update');
         });

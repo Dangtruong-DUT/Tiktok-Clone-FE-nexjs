@@ -1,15 +1,15 @@
 <?php
-namespace App\Http\Requests\User;
+namespace App\Http\Requests\Post;
 
 use App\Http\Requests\BaseRequest;
 
-class UnFollowSomeOneRequest extends BaseRequest
+class GetPostRequest extends BaseRequest
 {
     protected function prepareForValidation(): void
     {
         parent::prepareForValidation();
         $this->merge([
-            'user_uuid' => $this->route('user_uuid'),
+            'post_uuid' => $this->route('post_uuid'),
         ]);
     }
 
@@ -20,10 +20,9 @@ class UnFollowSomeOneRequest extends BaseRequest
      */
     public function rules(): array
     {
-
         return $this->applyBaseRules([
-                'user_uuid' => [
-                    self::REQUIRED
+                'post_uuid' => [
+                    self::REQUIRED,
                 ],
         ]);
     }
