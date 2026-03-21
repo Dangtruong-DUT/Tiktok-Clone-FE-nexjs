@@ -86,9 +86,21 @@ class UserRepository extends BaseRepository
      * @param string $username
      * @return User|null
      */
-    public function getUserProfileByUuid(string $uuid, ?int $authUserId): ?User
+    public function getByUuidWithDetail(string $username, ?int $authUserId): ?User
     {
-        $query = $this->query()->where('uuid', $uuid);
+        $query = $this->query()->where('username', $username);
+        return $this->withDetail($query, $authUserId)->first();
+    }
+
+    /**
+     * Find a user by id
+     *
+     * @param int $id
+     * @return User|null
+     */
+    public function getByIdWithDetail(int $id, ?int $authUserId): ?User
+    {
+        $query = $this->query()->where('id', $id);
         return $this->withDetail($query, $authUserId)->first();
     }
 
@@ -117,8 +129,9 @@ class UserRepository extends BaseRepository
                     ->whereColumn('posts.user_id', 'users.id');
             }, 'likes_count')
             ->withExists([
-                'followers as is_followed' => fn ($q) => $q->where('follower_id', $userId),
-            ]);
+                'followers as is_followed' => fn ($fq) => $fq->whereKey($userId),
+            ])
+            ->selectRaw('users.id = ? as is_owner', [$userId]);
     }
 }
 ?>

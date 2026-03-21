@@ -136,6 +136,7 @@ class UserService
      */
     public function getAuthenticatedUser(): User
     {
-        return $this->guard()->user();
+        $id=  $this->guard()->id();
+        return $this->userRepo->getByIdWithDetail($id, $id);
     }
 }

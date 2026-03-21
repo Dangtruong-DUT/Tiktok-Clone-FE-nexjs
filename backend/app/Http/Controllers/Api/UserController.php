@@ -7,6 +7,7 @@ use App\Http\Requests\User\FollowSomeOneRequest;
 use App\Http\Requests\User\UnFollowSomeOneRequest;
 use App\Http\Response\ApiResponse;
 use App\Http\Requests\User\UpdateMeRequest;
+use App\Http\Resources\Api\User\UserResource;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 
@@ -68,10 +69,15 @@ class UserController extends Controller
         return ApiResponse::success(message: 'User updated successfully');
     }
 
+    /**
+     * Get the profile of the authenticated user.
+     *
+     * @return JsonResponse
+     */
     public function showMe(): JsonResponse
     {
         $user = $this->userService->getAuthenticatedUser();
-        return ApiResponse::success(data: $user);
+        return ApiResponse::success(data: UserResource::make($user), message: 'User retrieved successfully');
     }
 
 }
