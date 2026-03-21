@@ -80,24 +80,8 @@ class PostService
             }
             return $post;
         });
-        return $post->load([
-            'hashtags',
-            'mentions',
-            'user' => fn ($query) => $query
-                ->with('avatarFile')
-                ->withCount([
-                    'followings as following_count',
-                    'followers as followers_count',
-                    'likedPosts as likes_count',
-                ])
-                ->withExists([
-                    'followers as is_followed' => fn ($followQuery) => $followQuery->whereKey($user->id),
-                ]),
-            'media.file',
-            'thumbnailFile',
-        ])->loadExists([
-            'userLikes as is_liked' => fn ($query) => $query->where('user_id', $user->id),
-            'userBookmarks as is_bookmarked' => fn ($query) => $query->where('user_id', $user->id),
-        ]);
+
+        $postDetail= $this->postRepo->getByIdWithDetail($post->id, $user->id);
+        return $postDetail;
     }
 }

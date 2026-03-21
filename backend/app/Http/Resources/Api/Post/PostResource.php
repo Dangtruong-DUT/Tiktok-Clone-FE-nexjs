@@ -12,9 +12,6 @@ class PostResource extends BaseJsonResource
 
     public function toArray($request): array
     {
-        $this->requireAttribute('is_liked');
-        $this->requireAttribute('is_bookmarked');
-
         return [
             'id' => $this->id,
             'uuid' => $this->uuid,
@@ -28,16 +25,16 @@ class PostResource extends BaseJsonResource
             'updated_at' => $this->updated_at->toDateTimeString(),
             'medias' => MediaResource::collection($this->whenLoaded('media'))->resolve(),
             'mentions' => MentionResource::collection($this->whenLoaded('mentions'))->resolve(),
-            'likes_count' => (int) ($this->likes_count ?? 0),
-            'bookmarks_count' => (int) ($this->bookmarks_count ?? 0),
-            'repost_count' => (int) ($this->repost_count ?? 0),
-            'comments_count' => (int) ($this->comments_count ?? 0),
-            'quote_post_count' => (int) ($this->quote_post_count ?? 0),
-            'is_liked' => (bool) ($this->is_liked ?? false),
-            'is_bookmarked' => (bool) ($this->is_bookmarked ?? false),
-            'guest_views' => (int) ($this->guest_views ?? 0),
-            'user_views' => (int) ($this->user_views ?? 0),
-            'author' => $this->whenLoaded('user', fn () => new UserResource($this->user)),
+            'likes_count' => $this->likes_count,
+            'bookmarks_count' => $this->bookmarks_count,
+            'repost_count' => $this->repost_count,
+            'comments_count' => $this->comments_count,
+            'quote_post_count' => $this->quote_post_count,
+            'is_liked' => $this->is_liked,
+            'is_bookmarked' => $this->is_bookmarked,
+            'guest_views' => $this->guest_views,
+            'user_views' => $this->user_views,
+            'author' => UserResource::make($this->whenLoaded('user')),
             'thumbnail_url' => $this->thumbnail_url,
         ];
     }

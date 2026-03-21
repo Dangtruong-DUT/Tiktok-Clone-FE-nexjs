@@ -17,6 +17,16 @@ class RefreshTokenRepository extends BaseRepository
         $modelInstance = app()->make(RefreshToken::class);
         parent::__construct($modelInstance);
     }
+    /**
+     * Find a refresh token by token string
+     *
+     * @param string $token
+     * @return RefreshToken|null
+     */
+    public function findByToken(string $token): RefreshToken|null
+    {
+        return $this->query()->where('token', $token)->first();
+    }
 
     /**
      * Find a refresh token by user ID

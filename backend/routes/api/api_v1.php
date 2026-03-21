@@ -22,6 +22,7 @@ Route::prefix('auth')
 ->name('auth.')
 ->group(function() {
     Route::post('/login', [AuthController::class, 'login'])->name('login');
+    Route::post('/refresh-token', [AuthController::class, 'refresh'])->name('refresh');
     Route::post('/register', [AuthController::class, 'register'])->name('register');
     Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
     Route::post('verify-forgot-password', [AuthController::class, 'verifyForgotPasswordToken'])->name('verify-forgot-password');
@@ -39,7 +40,6 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
     ->group(function() {
         Route::post('/logout',[AuthController::class, 'logout'])->name('logout');
         Route::post('/logout/all',[AuthController::class, 'logoutAll'])->name('logout-all');
-        Route::post('/refresh-token', [AuthController::class, 'refresh'])->name('refresh');
         Route::get('/me', [AuthController::class, 'me'])->name('me');
     });
 

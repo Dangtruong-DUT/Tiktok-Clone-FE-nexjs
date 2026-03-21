@@ -82,6 +82,11 @@ class User extends Authenticatable implements JWTSubject
         return [
             'verify' => UserVerifyStatusEnum::class,
             'role' => RoleTypeEnum::class,
+            'following_count' => 'integer',
+            'followers_count' => 'integer',
+            'likes_count' => 'integer',
+            'is_followed' => 'boolean',
+            'is_owner' => 'boolean',
             'date_of_birth' => 'date',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
@@ -159,6 +164,17 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(UploadFile::class, 'avatar_file_id');
     }
 
+    /**
+     * Get the URL of the user's avatar.
+     *
+     * @return string|null The URL of the user's avatar, or null if not set.
+     */
+    public function avatarUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->avatarFile?->url
+        );
+    }
 
     /**
      * Check if the user is verified.
@@ -183,18 +199,6 @@ class User extends Authenticatable implements JWTSubject
     public function isCurrentPassword(string $password): bool
     {
         return Hash::check($password, $this->password);
-    }
-
-    /**
-     * Get the URL of the user's avatar.
-     *
-     * @return string|null The URL of the user's avatar, or null if not set.
-     */
-    public function avatar(): Attribute
-    {
-        return Attribute::make(
-            get: fn() => $this->avatarFile?->url
-        );
     }
 
     public function posts(): HasMany

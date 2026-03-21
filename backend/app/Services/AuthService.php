@@ -64,7 +64,7 @@ class AuthService
     public function logout(string $refreshToken): bool
     {
         $user = $this->guard()->user();
-        $token = $this->findValidToken($user, $refreshToken);
+        $token = $this->refreshRepo->findByToken($refreshToken);
         if (!$token) {
             throw new UnauthorizedException('Invalid refresh token');
         };
@@ -95,12 +95,13 @@ class AuthService
     public function refresh(string $refreshToken): string
     {
         $user = $this->guard()->user();
-        $token = $this->findValidToken($user, $refreshToken);
+        $token = $this->refreshRepo->findByToken($refreshToken);
         if (!$token) {
             throw new UnauthorizedException('Invalid refresh token');
         };
 
         if ($token->isExpired()) {
+            $this->refreshRepo->delete($token->id);
             throw new UnauthorizedException('Refresh token has expired');
         }
 
@@ -155,6 +156,7 @@ class AuthService
             throw new BadRequestException('Invalid token');
         }
         if ($validToken->isExpired()) {
+            $this->verifyEmailTokenRepo->delete($validToken->id);
             throw new BadRequestException('Token has expired');
         }
         $user = $this->userRepo->findOrFail($validToken->user_id);
@@ -162,21 +164,6 @@ class AuthService
         $user->save();
         $this->verifyEmailTokenRepo->deleteByUserId($validToken->user_id);
         return true;
-    }
-
-
-    /**
-     * Find a valid refresh token for the user.
-     *
-     * @param  $user
-     * @param string $refreshToken
-     * @return RefreshToken|null
-     */
-    private function findValidToken( $user, string $refreshToken): RefreshToken|null
-    {
-        $refreshTokens =  $this->refreshRepo->findByUserId($user->id);
-        if (empty($refreshTokens)) return null;
-        return $refreshTokens->first(fn($item) =>$item->isValidToken($refreshToken));
     }
 
     /**
@@ -224,6 +211,7 @@ class AuthService
             throw new BadRequestException('Invalid token');
         }
         if ($validToken->isExpired()) {
+            $this->forgotPasswordTokenRepo->delete($validToken->id);
             throw new BadRequestException('Token has expired');
         }
         return $validToken;
