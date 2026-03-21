@@ -7,6 +7,7 @@ use App\Enums\Post\PostTypeEnum;
 use App\Rules\PostUuid;
 use App\Rules\UploadFileId;
 use App\Rules\UserId;
+use App\Rules\Username;
 use App\Rules\UserUuid;
 use DateTimeInterface;
 use Illuminate\Validation\Rules\Enum;
@@ -212,6 +213,7 @@ abstract class BaseRequest extends BaseFormRequest
             'post_uuids.*' => [self::STRING, self::UUID, new PostUuid()],
             "date_of_birth" => [self::DATE],
             'name' => [self::STRING, self::MAX.':'.'100'],
+            'username' => [self::STRING, self::MIN.':'.'2', new Username(), self::MAX.':'.'100'],
             'phone' => [self::STRING, self::MAX.':'.'100'],
             'month' => [self::INTEGER, self::MIN.':'.'1', self::MAX.':'.'12'],
             'year' => [self::INTEGER, self::MIN.':'.'1900', self::MAX.':'.'2100'],

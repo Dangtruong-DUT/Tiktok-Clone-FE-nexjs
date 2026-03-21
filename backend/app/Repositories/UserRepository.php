@@ -24,6 +24,11 @@ class UserRepository extends BaseRepository
         return $this->query()->where('id', $id)->exists();
     }
 
+    public function isExistByUsername(string $username): bool
+    {
+        return $this->query()->where('username', $username)->exists();
+    }
+
     /**
      * Check if user exists by uuid
      *
@@ -86,31 +91,11 @@ class UserRepository extends BaseRepository
      * @param string $username
      * @return User|null
      */
-    public function getByUuidWithDetail(string $username, ?int $authUserId): ?User
+    public function getByUsernameWithDetail(string $username, ?int $authUserId): ?User
     {
         $query = $this->query()->where('username', $username);
         return $this->withDetail($query, $authUserId)->first();
     }
-
-    /**
-     * Find a user by id
-     *
-     * @param int $id
-     * @return User|null
-     */
-    public function getByIdWithDetail(int $id, ?int $authUserId): ?User
-    {
-        $query = $this->query()->where('id', $id);
-        return $this->withDetail($query, $authUserId)->first();
-    }
-
-    /**
-     * Get user with details by uuid.
-     *
-     * @param string $uuid
-     * @param int|null $authUserId
-     * @return User|null
-     */
 
     /**
      * Get user with details by id.

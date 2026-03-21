@@ -106,9 +106,9 @@ class UserService
      * Update the profile of the authenticated user.
      *
      * @param array $data
-     * @return bool
+     * @return User
      */
-    public function updateProfile(array $data): bool
+    public function updateProfile(array $data): User
     {
         $user = $this->guard()->user();
         $allowedFields = [
@@ -126,7 +126,7 @@ class UserService
             $this->userRepo->update($user->id, $updateData);
         }
 
-        return true;
+        return $this->getUserProfile($user->username);
     }
 
     /**
@@ -136,7 +136,18 @@ class UserService
      */
     public function getAuthenticatedUser(): User
     {
-        $id=  $this->guard()->id();
-        return $this->userRepo->getByIdWithDetail($id, $id);
+        return $this->getUserProfile($this->guard()->user()->username);
+    }
+
+    /**
+     * Get user profile by username.
+     *
+     * @param string $username
+     * @return User
+     */
+    public function getUserProfile(string $username): User
+    {
+        $authUserId = $this->guard()->id();
+        return $this->userRepo->getByUsernameWithDetail($username, $authUserId);
     }
 }

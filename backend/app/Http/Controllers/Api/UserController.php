@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\ChangePasswordRequest;
 use App\Http\Requests\User\FollowSomeOneRequest;
+use App\Http\Requests\User\GetUserProfileRequest;
 use App\Http\Requests\User\UnFollowSomeOneRequest;
 use App\Http\Response\ApiResponse;
 use App\Http\Requests\User\UpdateMeRequest;
@@ -65,8 +66,11 @@ class UserController extends Controller
      */
     public function update(UpdateMeRequest $request): JsonResponse
     {
-        $this->userService->updateProfile($request->validated());
-        return ApiResponse::success(message: 'User updated successfully');
+        $user = $this->userService->updateProfile($request->validated());
+        return ApiResponse::success(
+            data: UserResource::make($user),
+            message: 'User updated successfully'
+        );
     }
 
     /**
@@ -77,7 +81,24 @@ class UserController extends Controller
     public function showMe(): JsonResponse
     {
         $user = $this->userService->getAuthenticatedUser();
-        return ApiResponse::success(data: UserResource::make($user), message: 'User retrieved successfully');
+        return ApiResponse::success(
+            data: UserResource::make($user),
+            message: 'User retrieved successfully'
+        );
     }
 
+    /**
+     * Get user profile by username.
+     *
+     * @param GetUserProfileRequest $request
+     * @return JsonResponse
+     */
+    public function showProfile(GetUserProfileRequest $request): JsonResponse
+    {
+        $user = $this->userService->getUserProfile($request->username);
+        return ApiResponse::success(
+            data: UserResource::make($user),
+            message: 'User profile retrieved successfully'
+        );
+    }
 }
