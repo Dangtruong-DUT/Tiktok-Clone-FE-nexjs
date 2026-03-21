@@ -106,7 +106,8 @@ class PostRepository  extends BaseRepository
                                     });
                             });
                     });
-                });
+                })
+                ->orderByDesc('created_at');
 
         return $this->withDetail($query, $userId)->paginate($collection->get('per_page', 10));
     }
@@ -154,6 +155,7 @@ class PostRepository  extends BaseRepository
      *                      - mentions: filter by array of mention user ids
      *                      - type: filter by post type (comment,post, re-post, quote)
      *                      - parent_id: filter by parent post id (for comments)
+     *                      - audience: filter by audience type (private, public, followers)
      * @return Builder
      */
     private function buildSearchQuery(Collection $collection): Builder
@@ -162,7 +164,10 @@ class PostRepository  extends BaseRepository
 
         return $this->query()
             ->with(['user','media','hashtags','mentions','thumbnailFile'])
-
+            // filter audience
+            ->when($collection->get('audience'), function ($query, $audience) {
+                $query->where('audience', $audience);
+            })
             // filter user
             ->when($collection->get('user_id'), function ($query, $userId) {
                 $query->where('user_id', $userId);
