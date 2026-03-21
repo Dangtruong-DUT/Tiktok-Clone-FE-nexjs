@@ -15,6 +15,7 @@ use App\Repositories\RefreshTokenRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\VerifyEmailTokenRepository;
 use App\Traits\HasAuthUser;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -63,11 +64,7 @@ class AuthService
      */
     public function logout(string $refreshToken): bool
     {
-        $user = $this->guard()->user();
-        $token = $this->refreshRepo->findByToken($refreshToken);
-        if (!$token) {
-            throw new UnauthorizedException('Invalid refresh token');
-        };
+        $token = $this->verifyRefreshToken($refreshToken);
         $this->guard()->logout();
         $this->refreshRepo->delete($token->id); // @phpstan-ignore-line
         return true;
@@ -75,11 +72,12 @@ class AuthService
 
     /**
      * Log the user out from all devices by invalidating all refresh tokens.
-     *
+     * @param string $refreshToken
      * @return bool
      */
-    public function logoutAll(): bool
+    public function logoutAll(string $refreshToken): bool
     {
+        $this->verifyRefreshToken($refreshToken);
         $user = $this->guard()->user();
         $this->guard()->logout();
         $this->refreshRepo->deleteByUserId($user->id);
@@ -94,18 +92,10 @@ class AuthService
      */
     public function refresh(string $refreshToken): string
     {
-        $user = $this->guard()->user();
-        $token = $this->refreshRepo->findByToken($refreshToken);
-        if (!$token) {
-            throw new UnauthorizedException('Invalid refresh token');
-        };
-
-        if ($token->isExpired()) {
-            $this->refreshRepo->delete($token->id);
-            throw new UnauthorizedException('Refresh token has expired');
-        }
-
-        return $this->guard()->refresh();
+        $token = $this->verifyRefreshToken($refreshToken);
+        $userId = $token->user_id;
+        $user = $this->userRepo->findOrFail($userId);
+        return $this->guard()->login($user);
     }
 
     /**
@@ -215,6 +205,25 @@ class AuthService
             throw new BadRequestException('Token has expired');
         }
         return $validToken;
+    }
+
+    /**
+     * Handle refresh token verification by verifying the token and returning the associated user.
+     *
+     * @param string $refreshToken
+     * @return RefreshToken
+     */
+    public function verifyRefreshToken(string $refreshToken): RefreshToken
+    {
+        $token = $this->refreshRepo->findByToken($refreshToken);
+        if (!$token) {
+            throw new UnauthorizedException('Invalid refresh token');
+        }
+        if ($token->isExpired()) {
+            $this->refreshRepo->delete($token->id);
+            throw new UnauthorizedException('Refresh token has expired');
+        }
+        return $token;
     }
 
     /**

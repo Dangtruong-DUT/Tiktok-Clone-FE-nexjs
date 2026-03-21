@@ -10,7 +10,7 @@ class AuthResource extends BaseJsonResource
         return [
             'id' => $this->id,
             "uuid" => $this->uuid,
-            'avatar' => $this->avatar,
+            'avatar' => $this->avatar_url,
             'name' => $this->name,
             'username' => $this->username,
             'email' => $this->email,

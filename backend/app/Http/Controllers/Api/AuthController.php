@@ -75,12 +75,13 @@ class AuthController extends Controller
 
     /**
     * Log the user out from all devices (Invalidate all tokens)
-    *
+    * @param LogoutRequest $request
     * @return \Illuminate\Http\JsonResponse
     */
-    public function logoutAll(): JsonResponse
+    public function logoutAll(LogoutRequest $request): JsonResponse
     {
-        $this->authService->logoutAll();
+        $refreshToken = $request->input('refresh_token');
+        $this->authService->logoutAll($refreshToken);
         return ApiResponse::success(message: 'Successfully logged out from all devices');
     }
 

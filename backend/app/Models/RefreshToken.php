@@ -41,7 +41,6 @@ class RefreshToken extends Model
         ];
     }
 
-
     /**
      * Get the user that owns the refresh token.
      *

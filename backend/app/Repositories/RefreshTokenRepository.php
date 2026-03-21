@@ -25,7 +25,7 @@ class RefreshTokenRepository extends BaseRepository
      */
     public function findByToken(string $token): RefreshToken|null
     {
-        return $this->query()->where('token', $token)->first();
+        return $this->query()->get()->first(fn($t) => $t->isValidToken($token));
     }
 
     /**
