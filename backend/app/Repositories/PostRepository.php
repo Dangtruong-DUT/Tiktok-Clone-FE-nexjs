@@ -66,16 +66,14 @@ class PostRepository  extends BaseRepository
                     ])
                     ->withExists([
                         'followers as is_followed' => fn ($fq) => $fq->whereKey($queryUserId),
-                    ]),
+                    ])
+                    ->selectRaw('users.id = ? as is_owner', [$queryUserId]),
                 'media.file',
                 'thumbnailFile',
             ])
             ->withExists([
                 'userLikes as is_liked' => fn ($q) => $q->where('user_id', $queryUserId),
                 'userBookmarks as is_bookmarked' => fn ($q) => $q->where('user_id', $queryUserId),
-            ])
-            ->addSelect([
-                'is_owner' => DB::raw('user_id = ' . $queryUserId),
             ]);
     }
 }

@@ -6,7 +6,6 @@ use App\Enums\Post\AudienceTypeEnum;
 use App\Enums\Post\PostTypeEnum;
 use App\Traits\HasUuidObservable;
 use App\Models\Hashtag;
-use App\Traits\HasAuthUser;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,7 +15,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Post extends Model
 {
     use HasUuidObservable;
-    use HasAuthUser;
 
 
     /**

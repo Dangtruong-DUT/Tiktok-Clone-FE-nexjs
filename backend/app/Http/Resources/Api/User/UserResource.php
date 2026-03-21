@@ -27,7 +27,7 @@ class UserResource extends BaseJsonResource
             'followers_count' => $this->followers_count,
             'likes_count' => $this->likes_count,
             'is_followed' => $this->is_followed,
-            'is_owner' =>$this->is_owner,
+            'is_owner' => $this->whenNotNull($this->is_owner,false),
             'role' => $this->role->value,
             'created_at' => $this->created_at->toDateTimeString(),
         ];
