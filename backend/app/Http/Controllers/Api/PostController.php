@@ -2,9 +2,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Post\BookmarkPostRequest;
 use App\Http\Requests\Post\CreatePostRequest;
 use App\Http\Requests\Post\GetListChildrenPostRequest;
 use App\Http\Requests\Post\GetPostRequest;
+use App\Http\Requests\Post\LikePostRequest;
+use App\Http\Requests\Post\UnBookmarkPostRequest;
+use App\Http\Requests\Post\UnlikePostRequest;
 use App\Http\Resources\Api\Post\PostResource;
 use App\Http\Response\ApiResponse;
 use App\Services\PostService;
@@ -61,5 +65,49 @@ class PostController extends Controller
             data: PostResource::collection($children),
             message: 'Child posts retrieved successfully'
         );
+    }
+
+    /**
+     * Like a post.
+     * @param LikePostRequest $request
+     * @return JsonResponse
+     */
+    public function like(LikePostRequest $request): JsonResponse
+    {
+        $this->postService->likePost($request->input('post_uuid'));
+        return ApiResponse::success(message: 'Post liked successfully');
+    }
+
+    /**
+     * Unlike a post.
+     * @param UnlikePostRequest $request
+     * @return JsonResponse
+     */
+    public function unlike(UnlikePostRequest $request): JsonResponse
+    {
+        $this->postService->unlikePost($request->input('post_uuid'));
+        return ApiResponse::success(message: 'Post unliked successfully');
+    }
+
+    /**
+     * Unbookmark a post.
+     * @param UnBookmarkPostRequest $request
+     * @return JsonResponse
+     */
+    public function unbookmark(UnBookmarkPostRequest $request): JsonResponse
+    {
+        $this->postService->unbookmarkPost($request->input('post_uuid'));
+        return ApiResponse::success(message: 'Post unbookmarked successfully');
+    }
+
+    /**
+     * Bookmark a post.
+     * @param BookmarkPostRequest $request
+     * @return JsonResponse
+     */
+    public function bookmark(BookmarkPostRequest $request): JsonResponse
+    {
+        $this->postService->bookmarkPost($request->input('post_uuid'));
+        return ApiResponse::success(message: 'Post bookmarked successfully');
     }
 }

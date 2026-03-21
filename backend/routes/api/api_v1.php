@@ -32,8 +32,6 @@ Route::prefix('posts')
         Route::get('{post_uuid}/children', [PostController::class, 'showChildren'])->name('show');
     });
 
-
-
 /*|--------------------------------------------------------------------------
 | Protected routes
 |--------------------------------------------------------------------------
@@ -75,5 +73,9 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
         ->name('posts.')
         ->group(function () {
             Route::post('/', [PostController::class, 'create'])->name('create');
+            Route::post('{post_uuid}/like', [PostController::class, 'like'])->name('like');
+            Route::delete('{post_uuid}/like', [PostController::class, 'unlike'])->name('unlike');
+            Route::post('{post_uuid}/bookmark', [PostController::class, 'bookmark'])->name('bookmark');
+            Route::delete('{post_uuid}/bookmark', [PostController::class, 'unbookmark'])->name('unbookmark');
         });
 });

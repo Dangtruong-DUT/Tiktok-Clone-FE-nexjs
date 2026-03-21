@@ -158,6 +158,11 @@ class PostRepository  extends BaseRepository
             ->withExists([
                 'userLikes as is_liked' => fn ($q) => $q->where('user_id', $queryUserId),
                 'userBookmarks as is_bookmarked' => fn ($q) => $q->where('user_id', $queryUserId),
+            ])
+            ->withCount([
+                'userLikes as likes_count',
+                'userBookmarks as bookmarks_count',
+                'children as comments_count',
             ]);
     }
 

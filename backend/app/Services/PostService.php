@@ -138,4 +138,60 @@ class PostService
             'page' => $data['page'] ?? config('const.pagination.default_page'),
         ], $authUserId);
     }
+
+    /**
+     * Like a post.
+     * @param string $uuid
+     * @return void
+     */
+    public function likePost(string $uuid): void
+    {
+        $post = $this->postRepo->findByUuid($uuid);
+        if (empty($post)) {
+            throw new NotFoundException('Post not found');
+        }
+        $post->userLikes()->syncWithoutDetaching([$this->guard()->id()]);
+    }
+
+    /**
+     * Unlike a post.
+     * @param string $uuid
+     * @return void
+     */
+    public function unlikePost(string $uuid): void
+    {
+        $post = $this->postRepo->findByUuid($uuid);
+        if (empty($post)) {
+            throw new NotFoundException('Post not found');
+        }
+        $post->userLikes()->detach($this->guard()->id());
+    }
+
+    /**
+     * Bookmark a post.
+     * @param string $uuid
+     * @return void
+     */
+    public function bookmarkPost(string $uuid): void
+    {
+        $post = $this->postRepo->findByUuid($uuid);
+        if (empty($post)) {
+            throw new NotFoundException('Post not found');
+        }
+        $post->userBookmarks()->syncWithoutDetaching([$this->guard()->id()]);
+    }
+
+    /**
+     * Unbookmark a post.
+     * @param string $uuid
+     * @return void
+     */
+    public function unbookmarkPost(string $uuid): void
+    {
+        $post = $this->postRepo->findByUuid($uuid);
+        if (empty($post)) {
+            throw new NotFoundException('Post not found');
+        }
+        $post->userBookmarks()->detach($this->guard()->id());
+    }
 }

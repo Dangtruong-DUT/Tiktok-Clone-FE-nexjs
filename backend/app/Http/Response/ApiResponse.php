@@ -33,8 +33,11 @@ class ApiResponse
             'success' => true,
             'message' => $message,
             'data' => $data,
-            'meta' => $mergedMeta,
         ]);
+
+        if (!empty($mergedMeta)) {
+            $data['meta'] = $mergedMeta;
+        }
 
         return response()->json($data, $code);
     }
