@@ -39,6 +39,13 @@ class PostService
                 'type' => 'Parent ID is required for this post type.',
             ]);
         }
+
+        if ($postType == PostTypeEnum::POST->value && !empty($data['parent_id'])) {
+            throw new BusinessException('Parent ID is not allowed for this post type.',[
+                'type' => 'Parent ID is not allowed for this post type.',
+            ]);
+        }
+
         $user = $this->guard()->user();
         $post = DB::transaction(function () use ($data, $postType, $user): Post {
             $post = $this->postRepo->create([

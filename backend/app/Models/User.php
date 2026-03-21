@@ -222,6 +222,28 @@ class User extends Authenticatable implements JWTSubject
             ->wherePivot('type', RelationshipTypeEnum::FOLLOW);
     }
 
+    /**
+     * Check if the user is followed by another user.
+     *
+     * @param User $user The user to check.
+     * @return bool True if the user is followed by the given user, false otherwise.
+     */
+    public function isFollowedBy(User $user): bool
+    {
+        return $this->followers()->whereKey($user->id)->exists();
+    }
+
+    /**
+     * Check if the user is following another user.
+     *
+     * @param User $user The user to check.
+     * @return bool True if the user is following the given user, false otherwise.
+     */
+    public function isFollowed(User $user): bool
+    {
+        return $this->followings()->whereKey($user->id)->exists();
+    }
+
 
     /**
      * Get the users that the user follows.
