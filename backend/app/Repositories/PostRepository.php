@@ -1,7 +1,6 @@
 <?php
 namespace App\Repositories;
 
-use App\Enums\Post\AudienceTypeEnum;
 use App\Models\Post;
 use App\Repositories\BaseRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -93,8 +92,81 @@ class PostRepository  extends BaseRepository
     }
 
     /**
+     * get posts of target user by target user by id.
+     * @param array $filters
+     *                     - per_page: number of items per page for pagination
+     *                     - type: filter by post type (comment,post, re-post, quote)
+     * @param int $targetUserId
+     * @param ?int $authUserId
+     * @return LengthAwarePaginator
+     */
+    public function getPostsByUserId(array $filters, int $targetUserId, ?int $authUserId): LengthAwarePaginator
+    {
+        $filterCollection = collect($filters);
+        $query = $this->query()
+            ->where('user_id', $targetUserId)
+            ->typeOf($filterCollection->get('type'))
+            ->visibleFor($authUserId)
+            ->orderByDesc('created_at');
+            $perPage = $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
+
+            return $this->withDetail($query, $authUserId)
+                    ->paginate($perPage);
+    }
+
+    /**
+     * Get liked posts of target user by id.
+     * @param array $filters
+     *                     - per_page: number of items per page for pagination
+     *                     - type: filter by post type (comment,post, re-post, quote)
+     * @param int $targetUserId
+     * @param ?int $authUserId
+     * @return LengthAwarePaginator
+     */
+    public function getLikedPostsByUserId(array $filters, int $targetUserId, ?int $authUserId): LengthAwarePaginator
+    {
+        $filterCollection = collect($filters);
+        $query = $this->query()
+            ->whereHas('userLikes', function ($q) use ($targetUserId) {
+                $q->where('user_id', $targetUserId);
+            })
+            ->typeOf($filterCollection->get('type'))
+            ->visibleFor($authUserId)
+            ->orderByDesc('created_at');
+            $perPage = $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
+
+            return $this->withDetail($query, $authUserId)
+                    ->paginate($perPage);
+    }
+
+    /**
+     * Get bookmarked posts of target user by id.
+     * @param array $filters
+     *                     - per_page: number of items per page for pagination
+     *                     - type: filter by post type (comment,post, re-post, quote)
+     * @param int $targetUserId
+     * @param ?int $authUserId
+     * @return LengthAwarePaginator
+     */
+    public function getBookmarkedPostsByUserId(array $filters, int $targetUserId, ?int $authUserId): LengthAwarePaginator
+    {
+        $filterCollection = collect($filters);
+        $query = $this->query()
+            ->whereHas('userBookmarks', function ($q) use ($targetUserId) {
+                $q->where('user_id', $targetUserId);
+            })
+            ->typeOf($filterCollection->get('type'))
+            ->visibleFor($authUserId)
+            ->orderByDesc('created_at');
+            $perPage = $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
+        return $this->withDetail($query, $authUserId)
+                    ->paginate($perPage);
+    }
+
+
+    /**
      * Search posts with filters and keyword.
-     * @param array $parameters
+     * @param array $filters
      *                      - q: search keyword for content and user name
      *                      - user_id: filter by user id
      *                      - hashtags: filter by array of hashtag names
@@ -104,50 +176,28 @@ class PostRepository  extends BaseRepository
      *                      - parent_id: filter by parent post id (for comments)
      *                      - per_page: number of items per page for pagination
      *
-     * @param ?int $userId
+     * @param ?int $authUserId
      * @return LengthAwarePaginator
      */
-    public function search(array $parameters = [], ?int $userId): LengthAwarePaginator
+    public function search(array $filters = [], ?int $authUserId): LengthAwarePaginator
     {
-        $collection = collect($parameters);
-        $query = $this->buildSearchQuery($collection)
-                // If userId is not provided, only return public posts
-                ->when(!$userId, function ($q) {
-                    $q->where('audience',AudienceTypeEnum::PUBLIC->value);
-                })
-                ->when($userId, function ($q) use ($userId) {
-                    $q->where(function ($q2) use ($userId) {
-                        $q2->where('audience', AudienceTypeEnum::PUBLIC->value)
-                            ->orWhere('user_id', $userId)
-                            ->orWhere(function ($q3) use ($userId) {
-                                $q3->where('audience', AudienceTypeEnum::FRIENDS->value)
-                                    ->whereHas('user', function ($uq) use ($userId) {
-
-                                        $uq->whereHas('followings', function ($q) use ($userId) {
-                                            $q->whereKey($userId);
-                                        })
-                                        ->whereHas('followers', function ($q) use ($userId) {
-                                            $q->whereKey($userId);
-                                        });
-
-                                    });
-                            });
-                    });
-                })
+        $collection = collect($filters);
+        $searchQuery = $this->buildSearchQuery($collection)
+                ->visibleFor($authUserId)
                 ->orderByDesc('created_at');
         $perPage = $collection->get('per_page', config('const.pagination.default_per_page', 10));
-        return $this->withDetail($query, $userId)->paginate($perPage);
+        return $this->withDetail($searchQuery, $authUserId)->paginate($perPage);
     }
 
     /**
      * Get post with details by id.
      * @param Builder<Post> $query
-     * @param ?int $userId
+     * @param ?int $authUserId
      * @return Builder<Post>
      */
-    private function withDetail(Builder $query, ?int $userId) : Builder
+    private function withDetail(Builder $query, ?int $authUserId) : Builder
     {
-        $queryUserId = $userId ?? -1000;
+        $queryUserId = $authUserId ?? -1000;
         return $query
             ->with([
                 'hashtags',
@@ -179,11 +229,12 @@ class PostRepository  extends BaseRepository
      * @param  Collection $collection
      *                      - q: search keyword for content and user name
      *                      - user_id: filter by user id
+     *                      - username: filter by user name
+     *                      - user_uuid: filter by user uuid
      *                      - hashtags: filter by array of hashtag names
      *                      - mentions: filter by array of mention user ids
      *                      - type: filter by post type (comment,post, re-post, quote)
      *                      - parent_id: filter by parent post id (for comments)
-     *                      - audience: filter by audience type (private, public, followers)
      * @return Builder
      */
     private function buildSearchQuery(Collection $collection): Builder
@@ -200,16 +251,24 @@ class PostRepository  extends BaseRepository
             ->when($collection->get('user_id'), function ($query, $userId) {
                 $query->where('user_id', $userId);
             })
-
+            // filter username
+            ->when($collection->get('username'), function ($query, $username) {
+                $query->whereHas('user', function ($q) use ($username) {
+                    $q->where('username', $username);
+                });
+            })
+            // filter user uuid
+            ->when($collection->get('user_uuid'), function ($query, $userUuid) {
+                $query->whereHas('user', function ($q) use ($userUuid) {
+                    $q->where('uuid', $userUuid);
+                });
+            })
             // filter parent post
             ->when($collection->get('parent_id'), function ($query, $parentId) {
                 $query->where('parent_id', $parentId);
             })
-
-            // filter type
-            ->when($collection->get('type'), function ($query, $type) {
-                $query->where('type', $type);
-            })
+            // filter post type
+            ->typeOf($collection->get('type'))
 
             // hashtags
             ->when(!empty($collection->get('hashtags')), function ($query) use ($collection) {

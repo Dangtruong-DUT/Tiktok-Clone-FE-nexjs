@@ -5,45 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PostController;
 
-/*|--------------------------------------------------------------------------
-| Public routes
-|--------------------------------------------------------------------------
-| These routes are accessible without authentication.
-*/
-
-// auth routes
-Route::prefix('auth')
-->name('auth.')
-->group(function() {
-    Route::post('/login', [AuthController::class, 'login'])->name('login');
-    Route::post('/refresh-token', [AuthController::class, 'refresh'])->name('refresh');
-    Route::post('/register', [AuthController::class, 'register'])->name('register');
-    Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
-    Route::post('verify-forgot-password', [AuthController::class, 'verifyForgotPasswordToken'])->name('verify-forgot-password');
-    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
-    Route::post('/verify-email', [AuthController::class, 'verifyEmail'])->name('verify-email');
-});
-
-// post routes
-Route::prefix('posts')
-    ->name('posts.')
-    ->group(function () {
-        Route::get('{post_uuid}', [PostController::class, 'show'])->name('show');
-        Route::get('{post_uuid}/children', [PostController::class, 'showChildren'])->name('show');
-        Route::get('/', [PostController::class, 'index'])->name('index');
-    });
-
-// user routes
-Route::prefix('users')
-    ->name('users.')
-    ->group(function () {
-        Route::get('{user_uuid}/posts', [PostController::class, 'showUserPosts'])->name('show-posts');
-        Route::get('{user_uuid}/like', [PostController::class, 'showUserLikes'])->name('show-likes');
-        Route::get('{user_uuid}/bookmark', [PostController::class, 'showUserBookmarks'])->name('show-bookmarks');
-        Route::get('/{username}', [UserController::class, 'showProfile'])->name('show-profile')->where('username', '^(?!me$).*');
-    });
-
-
 
 /*|--------------------------------------------------------------------------
 | Protected routes
@@ -93,3 +54,42 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::delete('{post_uuid}/bookmark', [PostController::class, 'unbookmark'])->name('unbookmark');
         });
 });
+
+
+/*|--------------------------------------------------------------------------
+| Public routes
+|--------------------------------------------------------------------------
+| These routes are accessible without authentication.
+*/
+
+// auth routes
+Route::prefix('auth')
+->name('auth.')
+->group(function() {
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
+    Route::post('/refresh-token', [AuthController::class, 'refresh'])->name('refresh');
+    Route::post('/register', [AuthController::class, 'register'])->name('register');
+    Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
+    Route::post('verify-forgot-password', [AuthController::class, 'verifyForgotPasswordToken'])->name('verify-forgot-password');
+    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
+    Route::post('/verify-email', [AuthController::class, 'verifyEmail'])->name('verify-email');
+});
+
+// post routes
+Route::prefix('posts')
+    ->name('posts.')
+    ->group(function () {
+        Route::get('{post_uuid}', [PostController::class, 'show'])->name('show');
+        Route::get('{post_uuid}/children', [PostController::class, 'showChildren'])->name('show');
+        Route::get('/', [PostController::class, 'index'])->name('index');
+    });
+
+// user routes
+Route::prefix('users')
+    ->name('users.')
+    ->group(function () {
+        Route::get('{user_uuid}/posts', [PostController::class, 'showUserPosts'])->name('show-posts');
+        Route::get('{user_uuid}/like', [PostController::class, 'showLikedPosts'])->name('show-likes');
+        Route::get('{user_uuid}/bookmark', [PostController::class, 'showBookmarkedPosts'])->name('show-bookmarks');
+        Route::get('/{username}', [UserController::class, 'showProfile'])->name('show-profile');
+    });

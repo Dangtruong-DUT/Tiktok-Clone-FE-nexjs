@@ -9,6 +9,7 @@ use App\Models\Post;
 use App\Repositories\HashTagRepository;
 use App\Repositories\MediaRepository;
 use App\Repositories\PostRepository;
+use App\Repositories\UserRepository;
 use App\Traits\HasAuthUser;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +21,7 @@ class PostService
      * PostService constructor.
      */
     public function __construct(
+        private readonly UserRepository $userRepo,
         private readonly PostRepository $postRepo,
         private readonly MediaRepository $mediaRepo,
         private readonly HashTagRepository $hashTagRepo
@@ -178,6 +180,76 @@ class PostService
             'per_page' => $data['per_page'] ?? config('const.pagination.default_per_page'),
             'page' => $data['page'] ?? config('const.pagination.default_page'),
         ], $authUserId);
+    }
+
+    /**
+     * Get posts of a user by user uuid.
+     * @param array $data
+     *                      - user_uuid: user uuid
+     *                      - type: filter by post type
+     *                      - page: pagination page number
+     *                      - per_page: number of items per page for pagination
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getPostsByUser(array $data): LengthAwarePaginator
+    {
+        $authUserId = $this->guard()->check() ? $this->guard()->id() : null;
+        $targetUser = $this->userRepo->findByUuidOrFail($data['user_uuid']);
+        return $this->postRepo->getPostsByUserId(
+            filters: [
+                'type' => $data['post_type'] ?? null,
+                'per_page' => $data['per_page'] ?? config('const.pagination.default_per_page'),
+            ],
+            targetUserId: $targetUser->id,
+            authUserId: $authUserId
+        );
+    }
+
+    /**
+     * Get liked posts of a user by user uuid.
+     * @param array $data
+     *                      - user_uuid: user uuid
+     *                      - type: filter by post type
+     *                      - page: pagination page number
+     *                      - per_page: number of items per page for pagination
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getLikedPostsByUser(array $data): LengthAwarePaginator
+    {
+        $authUserId = $this->guard()->check() ? $this->guard()->id() : null;
+        $targetUser = $this->userRepo->findByUuidOrFail($data['user_uuid']);
+        return $this->postRepo->getLikedPostsByUserId(
+            filters: [
+                'type' => $data['post_type'] ?? null,
+                'per_page' => $data['per_page'] ?? config('const.pagination.default_per_page'),
+            ],
+            targetUserId: $targetUser->id,
+            authUserId: $authUserId
+        );
+    }
+
+
+    /**
+     * Get bookmarked posts of a user by user uuid.
+     * @param array $data
+     *                      - user_uuid: user uuid
+     *                      - type: filter by post type
+     *                      - page: pagination page number
+     *                      - per_page: number of items per page for pagination
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getBookmarkedPostsByUser(array $data): LengthAwarePaginator
+    {
+        $authUserId = $this->guard()->check() ? $this->guard()->id() : null;
+        $targetUser = $this->userRepo->findByUuidOrFail($data['user_uuid']);
+        return $this->postRepo->getBookmarkedPostsByUserId(
+            filters: [
+                'type' => $data['post_type'] ?? null,
+                'per_page' => $data['per_page'] ?? config('const.pagination.default_per_page'),
+            ],
+            targetUserId: $targetUser->id,
+            authUserId: $authUserId
+        );
     }
 
     /**

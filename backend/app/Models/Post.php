@@ -6,6 +6,8 @@ use App\Enums\Post\AudienceTypeEnum;
 use App\Enums\Post\PostTypeEnum;
 use App\Traits\HasUuidObservable;
 use App\Models\Hashtag;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -168,6 +170,49 @@ class Post extends Model
     public function userBookmarks(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'post_bookmarks', 'post_id', 'user_id');
+    }
+
+    /**
+     * Scope a query to only include posts visible to the given user.
+     *
+     * @param Builder $query The query builder instance.
+     * @param ?int $authUserId The ID of the authenticated user, or null if not authenticated.
+     * @return Builder The modified query builder instance.
+     */
+    #[Scope]
+    public function visibleFor(Builder $query, ?int $authUserId): Builder
+    {
+        if (!$authUserId) {
+            return $query->where('audience', AudienceTypeEnum::PUBLIC->value);
+        }
+
+        return $query->where(function ($q) use ($authUserId) {
+            $q->where('audience', AudienceTypeEnum::PUBLIC->value)
+                ->orWhere('user_id', $authUserId)
+                ->orWhere(function ($q3) use ($authUserId) {
+                    $q3->where('audience', AudienceTypeEnum::FRIENDS->value)
+                        ->whereHas('user', function ($uq) use ($authUserId) {
+                            $uq->whereHas('followings', fn ($q) => $q->whereKey($authUserId))
+                            ->whereHas('followers', fn ($q) => $q->whereKey($authUserId));
+                        });
+                });
+        });
+    }
+
+    /**
+     * Scope a query to only include posts of a given type.
+     *
+     * @param Builder $query The query builder instance.
+     * @param ?int $type The type of posts to filter by (comment, post, repost, quote), or null to filter by post type.
+     * @return Builder The modified query builder instance.
+     */
+    #[Scope]
+    public function typeOf(Builder $query, ?int $type): Builder
+    {
+        if ($type !== null) {
+            return $query->where('type', $type);
+        }
+        return $query->where('type', PostTypeEnum::POST->value);
     }
 
 }

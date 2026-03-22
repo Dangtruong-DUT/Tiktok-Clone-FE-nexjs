@@ -53,6 +53,17 @@ class UserRepository extends BaseRepository
     }
 
     /**
+     * Find a user by uuid or fail
+     *
+     * @param string $uuid
+     * @return User
+     */
+    public function findByUuidOrFail(string $uuid): User
+    {
+        return $this->query()->where('uuid', $uuid)->firstOrFail();
+    }
+
+    /**
      * Check if user exists by email
      *
      * @param string $email

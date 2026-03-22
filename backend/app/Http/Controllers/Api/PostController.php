@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\BookmarkPostRequest;
 use App\Http\Requests\Post\CreatePostRequest;
+use App\Http\Requests\Post\GetBookmarkedPostsOfUserRequest;
 use App\Http\Requests\Post\GetListChildrenPostRequest;
 use App\Http\Requests\Post\GetListPostRequest;
 use App\Http\Requests\Post\GetPostRequest;
 use App\Http\Requests\Post\LikePostRequest;
 use App\Http\Requests\Post\UnBookmarkPostRequest;
 use App\Http\Requests\Post\UnlikePostRequest;
+use App\Http\Requests\Post\GetLikedPostsOfUserRequest;
+use App\Http\Requests\Post\GetPostsOfUserRequest;
 use App\Http\Resources\Api\Post\PostResource;
 use App\Http\Response\ApiResponse;
 use App\Services\PostService;
@@ -124,5 +127,47 @@ class PostController extends Controller
     {
         $this->postService->bookmarkPost($request->input('post_uuid'));
         return ApiResponse::success(message: 'Post bookmarked successfully');
+    }
+
+    /**
+     * Get posts of a user by user uuid.
+     * @param GetPostsOfUserRequest $request
+     * @return JsonResponse
+     */
+    public function showUserPosts(GetPostsOfUserRequest $request): JsonResponse
+    {
+        $posts = $this->postService->getPostsByUser($request->validated());
+        return ApiResponse::success(
+            data: PostResource::collection($posts),
+            message: 'User posts retrieved successfully'
+        );
+    }
+
+    /**
+     * Get liked posts of a user by user uuid.
+     * @param GetLikedPostsOfUserRequest $request
+     * @return JsonResponse
+     */
+    public function showLikedPosts(GetLikedPostsOfUserRequest $request): JsonResponse
+    {
+        $posts = $this->postService->getLikedPostsByUser($request->validated());
+        return ApiResponse::success(
+            data: PostResource::collection($posts),
+            message: 'Liked posts retrieved successfully'
+        );
+    }
+
+    /**
+     * Get bookmarked posts of a user by user uuid.
+     * @param GetBookmarkedPostsOfUserRequest $request
+     * @return JsonResponse
+     */
+    public function showBookmarkedPosts(GetBookmarkedPostsOfUserRequest $request): JsonResponse
+    {
+        $posts = $this->postService->getBookmarkedPostsByUser($request->validated());
+        return ApiResponse::success(
+            data: PostResource::collection($posts),
+            message: 'Bookmarked posts retrieved successfully'
+        );
     }
 }
