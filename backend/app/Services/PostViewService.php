@@ -9,10 +9,8 @@ use Illuminate\Support\Facades\Redis;
 class PostViewService
 {
     private const REDIS_POST_IDS_SET_KEY = 'post:view:posts';
-
     private const USER_VIEW_KEY_PREFIX = 'post:view:user:';
     private const GUEST_VIEW_KEY_PREFIX = 'post:view:guest:';
-
     private const ANTISPAM_KEY_PREFIX = 'post:view:lock:';
     private const ANTISPAM_TTL_SECONDS = 60;
 

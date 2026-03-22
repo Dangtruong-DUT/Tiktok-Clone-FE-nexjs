@@ -95,3 +95,10 @@ Route::prefix('users')
         Route::get('{user_uuid}/bookmark', [PostController::class, 'showBookmarkedPosts'])->name('show-bookmarks');
         Route::get('/{username}', [UserController::class, 'showProfile'])->name('show-profile');
     });
+
+Route::prefix("search")
+    ->name("search.")
+    ->group(function() {
+        Route::get('/users', [UserController::class, 'index'])->name('users');
+        Route::get('/posts', [PostController::class, 'index'])->name('posts');
+    });

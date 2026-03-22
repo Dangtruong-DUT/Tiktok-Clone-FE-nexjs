@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Repositories\RelationshipRepository;
 use App\Repositories\UserRepository;
 use App\Traits\HasAuthUser;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class UserService
@@ -19,6 +20,22 @@ class UserService
         private readonly RelationshipRepository $relationshipRepo,
         private readonly UserRepository $userRepo
     ) {}
+
+
+    /**
+     * Search users by keyword.
+     *
+     * @param array $payload
+     *              - keyword: the keyword to search for (name, username)
+     *              - role: filter by role
+     *              - verify_status: filter by verify status
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function search(array $payload): LengthAwarePaginator
+    {
+        $authUserId = $this->guard()->id();
+        return $this->userRepo->search($payload, $authUserId);
+    }
 
     /**
      * Change the password of the authenticated user.

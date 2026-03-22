@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\ChangePasswordRequest;
 use App\Http\Requests\User\FollowSomeOneRequest;
+use App\Http\Requests\User\GetListUserRequest;
 use App\Http\Requests\User\GetUserProfileRequest;
 use App\Http\Requests\User\UnFollowSomeOneRequest;
 use App\Http\Response\ApiResponse;
@@ -21,6 +22,21 @@ class UserController extends Controller
         private readonly UserService $userService
     )
     {}
+
+    /**
+     * Search users by keyword.
+     *
+     * @param GetListUserRequest $request
+     * @return JsonResponse
+     */
+    public function index(GetListUserRequest $request): JsonResponse
+    {
+        $users = $this->userService->search($request->validated());
+        return ApiResponse::success(
+            data: UserResource::collection($users),
+            message: 'Users retrieved successfully'
+        );
+    }
 
     /**
      * Change the password of the authenticated user.

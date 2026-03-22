@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use App\Enums\Post\AudienceTypeEnum;
 use App\Enums\Post\PostTypeEnum;
+use App\Enums\User\RoleTypeEnum;
+use App\Enums\User\UserVerifyStatusEnum;
 use App\Rules\PostUuid;
 use App\Rules\UploadFileId;
 use App\Rules\UserId;
@@ -213,6 +215,8 @@ abstract class BaseRequest extends BaseFormRequest
             'post_uuids.*' => [self::STRING, self::UUID, new PostUuid()],
             "date_of_birth" => [self::DATE],
             'name' => [self::STRING, self::MAX.':'.'100'],
+            'role' => [self::INTEGER, new Enum(RoleTypeEnum::class)],
+            'verify_status' => [self::INTEGER, new Enum(UserVerifyStatusEnum::class)],
             'username' => [self::STRING, self::MIN.':'.'2', new Username(), self::MAX.':'.'100'],
             'phone' => [self::STRING, self::MAX.':'.'100'],
             'month' => [self::INTEGER, self::MIN.':'.'1', self::MAX.':'.'12'],
