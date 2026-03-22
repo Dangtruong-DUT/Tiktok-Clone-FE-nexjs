@@ -46,8 +46,6 @@ services:
       args:
         DOCKER_ENV: production
     restart: unless-stopped
-    volumes:
-      - laravel-storage-production:/var/www/storage
     env_file:
       - ${BACKEND_ENV_FILE:-./backend/.env}
     environment:
@@ -55,39 +53,17 @@ services:
       APP_DEBUG: "false"
       DB_HOST: postgres
       REDIS_HOST: redis
+    command: ["/usr/bin/supervisord", "-c", "/etc/supervisord.backend.conf"]
     networks:
       - app-production
+    volumes:
+      - laravel-storage-production:/var/www/storage
+      - ./.docker/common/backend/php-fpm/supervisord.backend.conf:/etc/supervisord.backend.conf:ro
     healthcheck:
       test: ["CMD-SHELL", "php-fpm-healthcheck || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 3
-    depends_on:
-      postgres:
-        condition: service_healthy
-
-  worker:
-    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_worker
-    build:
-      context: .
-      dockerfile: ./.docker/common/backend/php-fpm/Dockerfile
-      target: production
-      args:
-        DOCKER_ENV: production
-    restart: unless-stopped
-    working_dir: /var/www
-    volumes:
-      - laravel-storage-production:/var/www/storage
-    env_file:
-      - ${BACKEND_ENV_FILE:-./backend/.env}
-    environment:
-      APP_ENV: production
-      APP_DEBUG: "false"
-      DB_HOST: postgres
-      REDIS_HOST: redis
-    command: ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
-    networks:
-      - app-production
     depends_on:
       postgres:
         condition: service_healthy

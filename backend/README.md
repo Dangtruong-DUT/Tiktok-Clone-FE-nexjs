@@ -67,6 +67,23 @@ Worker process configuration:
 - Development: `.docker/development/backend/worker/supervisord.conf` (mounted)
 - Production: `.docker/production/backend/worker/supervisord.conf` (baked into image)
 
+## Post View Sync (Redis -> PostgreSQL)
+
+Post detail API (`GET /api/posts/{post_uuid}`) now records views in Redis first (fast path), then a scheduler syncs batched counters to PostgreSQL every minute.
+
+Manual sync command:
+
+```bash
+php artisan posts:sync-views
+```
+
+Scheduler:
+
+- Registered in `routes/console.php`
+- Runs `posts:sync-views` every minute (`withoutOverlapping`)
+
+Important: this feature requires Redis runtime support (`phpredis` extension in PHP container).
+
 ## Useful Commands
 
 ```bash

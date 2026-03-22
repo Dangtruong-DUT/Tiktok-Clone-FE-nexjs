@@ -14,6 +14,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
         "league/flysystem-aws-s3-v3": "*",
+        "predis/predis": "*",
         "tymon/jwt-auth": "*"
     },
     "require-dev": {

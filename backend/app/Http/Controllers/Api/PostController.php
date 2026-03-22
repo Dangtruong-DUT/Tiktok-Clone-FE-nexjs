@@ -17,6 +17,7 @@ use App\Http\Requests\Post\UpdatePostRequest;
 use App\Http\Resources\Api\Post\PostResource;
 use App\Http\Response\ApiResponse;
 use App\Services\PostService;
+use App\Services\PostViewService;
 use Illuminate\Http\JsonResponse;
 
 class PostController extends Controller
@@ -25,7 +26,8 @@ class PostController extends Controller
      * PostController constructor.
      */
     public function __construct(
-        private readonly PostService $postService
+        private readonly PostService $postService,
+        private readonly PostViewService $postViewService
     )
     {}
 
@@ -77,6 +79,18 @@ class PostController extends Controller
     {
         $uuid = $request->input('post_uuid');
         $post = $this->postService->getByUuidOrFail($uuid);
+
+        $viewerFingerprint = implode('|', [
+            $request->ip(),
+            (string) $request->userAgent(),
+        ]);
+
+        $this->postViewService->increaseView(
+            postId: $post->id,
+            authUserId: auth('api')->id(),
+            viewerFingerprint: $viewerFingerprint
+        );
+
         return ApiResponse::success(
             data: new PostResource($post),
             message: 'Post retrieved successfully'
