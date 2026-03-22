@@ -44,7 +44,6 @@ export default function UpdateProfileForm() {
     resolver: zodResolver(UpdateUserBody),
     defaultValues: {
       name: "",
-      avatar: undefined,
     },
     mode: "onChange",
   });
@@ -54,7 +53,6 @@ export default function UpdateProfileForm() {
   useEffect(() => {
     form.reset({
       name: user?.name || "",
-      avatar: user?.avatar || undefined,
     });
   }, [user, form]);
 
@@ -67,7 +65,6 @@ export default function UpdateProfileForm() {
       try {
         const payload: UpdateUserBodyType = {
           ...data,
-          avatar: undefined,
         };
 
         if (fileImage) {
