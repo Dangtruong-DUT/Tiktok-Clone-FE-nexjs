@@ -3,7 +3,7 @@ namespace App\Http\Resources\Api\Hashtag;
 
 use App\Http\Resources\BaseJsonResource;
 
-class HashTagResource extends BaseJsonResource
+class HashtagResource extends BaseJsonResource
 {
     public function toArray($request): array
     {

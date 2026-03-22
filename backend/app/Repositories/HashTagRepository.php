@@ -4,7 +4,7 @@ namespace App\Repositories;
 use App\Models\Hashtag;
 use App\Repositories\BaseRepository;
 
-class HashtagRepository  extends BaseRepository
+class HashtagRepository extends BaseRepository
 {
 
 
@@ -44,10 +44,10 @@ class HashtagRepository  extends BaseRepository
      */
     public function createMany(array $data): array
     {
-        $createdHashTags = [];
+        $createdHashtags = [];
         foreach ($data as $item) {
-            $createdHashTags[] = $this->query()->create($item);
+            $createdHashtags[] = $this->query()->create($item);
         }
-        return $createdHashTags;
+        return $createdHashtags;
     }
 }

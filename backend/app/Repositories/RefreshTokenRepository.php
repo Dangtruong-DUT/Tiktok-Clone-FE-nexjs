@@ -25,28 +25,28 @@ class RefreshTokenRepository extends BaseRepository
      */
     public function findByToken(string $token): RefreshToken|null
     {
-        return $this->query()->get()->first(fn($t) => $t->isValidToken($token));
+        return $this->query()->get()->first(fn($refreshToken) => $refreshToken->isValidToken($token));
     }
 
     /**
      * Find a refresh token by user ID
      *
-     * @param int $id
+     * @param int $userId
      * @return Collection|null
      */
-    public function findByUserId(int $id): Collection|null
+    public function findByUserId(int $userId): Collection|null
     {
-        return $this->query()->where('user_id', $id)->get();
+        return $this->query()->where('user_id', $userId)->get();
     }
 
     /**
      * Delete refresh tokens by user ID
      *
-     * @param int $id
+     * @param int $userId
      * @return int
      */
-    public function deleteByUserId(int $id): int
+    public function deleteByUserId(int $userId): int
     {
-        return $this->query()->where('user_id', $id)->delete();
+        return $this->query()->where('user_id', $userId)->delete();
     }
 }

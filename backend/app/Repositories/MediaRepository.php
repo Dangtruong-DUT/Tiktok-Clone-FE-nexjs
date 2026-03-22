@@ -4,12 +4,12 @@ namespace App\Repositories;
 use App\Models\Media;
 use App\Repositories\BaseRepository;
 
-class MediaRepository  extends BaseRepository
+class MediaRepository extends BaseRepository
 {
 
 
     /**
-     * PostRepository constructor.
+     * MediaRepository constructor.
      */
     public function __construct()
     {
@@ -20,19 +20,19 @@ class MediaRepository  extends BaseRepository
     /**
      * Create or update multiple media records for a post.
      *
-     * @param array $array Array of media data, each containing 'file_id' and 'type'.
+     * @param array $mediaItems Array of media data, each containing 'file_id' and 'type'.
      * @param int $postId The ID of the post to associate the media with.
      */
-    public function createMany(array $array, int $postId): void
+    public function createMany(array $mediaItems, int $postId): void
     {
-        foreach ($array as $item) {
+        foreach ($mediaItems as $mediaItem) {
             $this->query()->updateOrCreate(
                 [
                     'post_id' => $postId,
-                    'upload_file_id' => $item['file_id'],
+                    'upload_file_id' => $mediaItem['file_id'],
                 ],
                 [
-                    'type' => $item['type'],
+                    'type' => $mediaItem['type'],
                 ]
             );
         }

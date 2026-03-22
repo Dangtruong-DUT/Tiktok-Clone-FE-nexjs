@@ -54,7 +54,7 @@ class AuthController extends Controller
      */
     public function me(): JsonResponse
     {
-        $user = $this->authService->getUserProfile();
+        $user = $this->authService->me();
         return ApiResponse::success(
             new AuthResource($user),
             'User retrieved successfully'
@@ -105,7 +105,7 @@ class AuthController extends Controller
      */
     public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
     {
-        $this->authService->forgotPassword($request->input('email'));
+        $this->authService->forgot($request->input('email'));
         return ApiResponse::success(message: 'Forgot password validation email sent successfully');
     }
 
@@ -118,7 +118,7 @@ class AuthController extends Controller
     public function verifyForgotPasswordToken(VerifyForgotPasswordTokenRequest $request): JsonResponse
     {
         $credentials = $request->validated();
-        $this->authService->verifyForgotPasswordToken($credentials);
+        $this->authService->verifyForgotToken($credentials);
         return ApiResponse::success(message: 'forgot password validation email sent successfully');
     }
 
@@ -163,7 +163,7 @@ class AuthController extends Controller
         string $message = 'Login successful'
     ): JsonResponse
     {
-        $user = $this->authService->getUserProfile();
+        $user = $this->authService->me();
 
         return ApiResponse::success([
             'access_token' => $accessToken,

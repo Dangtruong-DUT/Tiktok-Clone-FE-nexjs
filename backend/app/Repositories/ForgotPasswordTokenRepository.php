@@ -5,7 +5,7 @@ use App\Models\ForgotPasswordToken;
 use App\Repositories\BaseRepository;
 use Illuminate\Support\Collection;
 
-class ForgotPasswordTokenRepository  extends BaseRepository
+class ForgotPasswordTokenRepository extends BaseRepository
 {
 
 
@@ -19,29 +19,29 @@ class ForgotPasswordTokenRepository  extends BaseRepository
     }
 
     /**
-     * Find a refresh token by user ID
+     * Find forgot password tokens by user ID
      *
-     * @param int $id
+     * @param int $userId
      * @return Collection|null
      */
-    public function findByUserId(int $id): Collection|null
+    public function findByUserId(int $userId): Collection|null
     {
-        return $this->query()->where('user_id', $id)->get();
+        return $this->query()->where('user_id', $userId)->get();
     }
 
     /**
-     * Delete refresh tokens by user ID
+     * Delete forgot password tokens by user ID
      *
-     * @param int $id
+     * @param int $userId
      * @return int
      */
-    public function deleteByUserId(int $id): int
+    public function deleteByUserId(int $userId): int
     {
-        return $this->query()->where('user_id', $id)->delete();
+        return $this->query()->where('user_id', $userId)->delete();
     }
 
     /**
-     * Find a refresh token by token string
+     * Find a forgot password token by token string
      *
      * @param string $token
      * @return ForgotPasswordToken|null

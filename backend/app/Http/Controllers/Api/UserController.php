@@ -66,7 +66,7 @@ class UserController extends Controller
      */
     public function update(UpdateMeRequest $request): JsonResponse
     {
-        $user = $this->userService->updateProfile($request->validated());
+        $user = $this->userService->update($request->validated());
         return ApiResponse::success(
             data: UserResource::make($user),
             message: 'User updated successfully'
@@ -80,7 +80,7 @@ class UserController extends Controller
      */
     public function showMe(): JsonResponse
     {
-        $user = $this->userService->getAuthenticatedUser();
+        $user = $this->userService->me();
         return ApiResponse::success(
             data: UserResource::make($user),
             message: 'User retrieved successfully'
@@ -95,7 +95,7 @@ class UserController extends Controller
      */
     public function showProfile(GetUserProfileRequest $request): JsonResponse
     {
-        $user = $this->userService->getUserProfile($request->username);
+        $user = $this->userService->getByUsername($request->username);
         return ApiResponse::success(
             data: UserResource::make($user),
             message: 'User profile retrieved successfully'

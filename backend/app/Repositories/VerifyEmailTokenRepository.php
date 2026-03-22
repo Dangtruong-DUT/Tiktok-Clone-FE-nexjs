@@ -5,7 +5,7 @@ use App\Models\EmailVerifyToken;
 use App\Repositories\BaseRepository;
 use Illuminate\Support\Collection;
 
-class VerifyEmailTokenRepository  extends BaseRepository
+class VerifyEmailTokenRepository extends BaseRepository
 {
 
 
@@ -19,29 +19,29 @@ class VerifyEmailTokenRepository  extends BaseRepository
     }
 
     /**
-     * Find a refresh token by user ID
+     * Find verify email tokens by user ID
      *
-     * @param int $id
+     * @param int $userId
      * @return Collection|null
      */
-    public function findByUserId(int $id): Collection|null
+    public function findByUserId(int $userId): Collection|null
     {
-        return $this->query()->where('user_id', $id)->get();
+        return $this->query()->where('user_id', $userId)->get();
     }
 
     /**
-     * Delete refresh tokens by user ID
+     * Delete verify email tokens by user ID
      *
-     * @param int $id
+     * @param int $userId
      * @return int
      */
-    public function deleteByUserId(int $id): int
+    public function deleteByUserId(int $userId): int
     {
-        return $this->query()->where('user_id', $id)->delete();
+        return $this->query()->where('user_id', $userId)->delete();
     }
 
     /**
-     * Find a refresh token by token string
+     * Find a verify email token by token string
      *
      * @param string $token
      * @return EmailVerifyToken|null

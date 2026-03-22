@@ -7,7 +7,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
-class PostRepository  extends BaseRepository
+class PostRepository extends BaseRepository
 {
 
 
@@ -127,8 +127,8 @@ class PostRepository  extends BaseRepository
     {
         $filterCollection = collect($filters);
         $query = $this->query()
-            ->whereHas('userLikes', function ($q) use ($targetUserId) {
-                $q->where('user_id', $targetUserId);
+            ->whereHas('userLikes', function ($relationQuery) use ($targetUserId) {
+                $relationQuery->where('user_id', $targetUserId);
             })
             ->typeOf($filterCollection->get('type'))
             ->visibleFor($authUserId)
@@ -152,8 +152,8 @@ class PostRepository  extends BaseRepository
     {
         $filterCollection = collect($filters);
         $query = $this->query()
-            ->whereHas('userBookmarks', function ($q) use ($targetUserId) {
-                $q->where('user_id', $targetUserId);
+            ->whereHas('userBookmarks', function ($relationQuery) use ($targetUserId) {
+                $relationQuery->where('user_id', $targetUserId);
             })
             ->typeOf($filterCollection->get('type'))
             ->visibleFor($authUserId)
@@ -181,11 +181,11 @@ class PostRepository  extends BaseRepository
      */
     public function search(array $filters = [], ?int $authUserId): LengthAwarePaginator
     {
-        $collection = collect($filters);
-        $searchQuery = $this->buildSearchQuery($collection)
+        $filterCollection = collect($filters);
+        $searchQuery = $this->buildSearchQuery($filterCollection)
                 ->visibleFor($authUserId)
                 ->orderByDesc('created_at');
-        $perPage = $collection->get('per_page', config('const.pagination.default_per_page', 10));
+        $perPage = $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
         return $this->withDetail($searchQuery, $authUserId)->paginate($perPage);
     }
 
@@ -202,7 +202,7 @@ class PostRepository  extends BaseRepository
             ->with([
                 'hashtags',
                 'mentions',
-                'user' => fn ($q) => $q
+                'user' => fn ($userQuery) => $userQuery
                     ->select('users.*')
                     ->with('avatarFile')
                     ->selectSub(function ($query) {
@@ -211,22 +211,22 @@ class PostRepository  extends BaseRepository
                             ->whereColumn('posts.user_id', 'users.id');
                     }, 'likes_count')
                     ->withExists([
-                        'followers as is_followed' => fn ($fq) => $fq->whereKey($queryUserId),
+                        'followers as is_followed' => fn ($followersQuery) => $followersQuery->whereKey($queryUserId),
                     ])
                     ->selectRaw('users.id = ? as is_owner', [$queryUserId]),
                 'media.file',
                 'thumbnailFile',
             ])
             ->withExists([
-                'userLikes as is_liked' => fn ($q) => $q->where('user_id', $queryUserId),
-                'userBookmarks as is_bookmarked' => fn ($q) => $q->where('user_id', $queryUserId),
+                'userLikes as is_liked' => fn ($likesQuery) => $likesQuery->where('user_id', $queryUserId),
+                'userBookmarks as is_bookmarked' => fn ($bookmarksQuery) => $bookmarksQuery->where('user_id', $queryUserId),
             ]);
     }
 
     /**
      * Build search query with filters
      *
-     * @param  Collection $collection
+        * @param  Collection $filterCollection
      *                      - q: search keyword for content and user name
      *                      - user_id: filter by user id
      *                      - username: filter by user name
@@ -237,64 +237,64 @@ class PostRepository  extends BaseRepository
      *                      - parent_id: filter by parent post id (for comments)
      * @return Builder
      */
-    private function buildSearchQuery(Collection $collection): Builder
+    private function buildSearchQuery(Collection $filterCollection): Builder
     {
-        $keyword = trim($collection->get('q', ''));
+        $keyword = trim($filterCollection->get('q', ''));
 
         return $this->query()
             ->with(['user','media','hashtags','mentions','thumbnailFile'])
             // filter audience
-            ->when($collection->get('audience'), function ($query, $audience) {
+            ->when($filterCollection->get('audience'), function ($query, $audience) {
                 $query->where('audience', $audience);
             })
             // filter user
-            ->when($collection->get('user_id'), function ($query, $userId) {
+            ->when($filterCollection->get('user_id'), function ($query, $userId) {
                 $query->where('user_id', $userId);
             })
             // filter username
-            ->when($collection->get('username'), function ($query, $username) {
-                $query->whereHas('user', function ($q) use ($username) {
-                    $q->where('username', $username);
+            ->when($filterCollection->get('username'), function ($query, $username) {
+                $query->whereHas('user', function ($userQuery) use ($username) {
+                    $userQuery->where('username', $username);
                 });
             })
             // filter user uuid
-            ->when($collection->get('user_uuid'), function ($query, $userUuid) {
-                $query->whereHas('user', function ($q) use ($userUuid) {
-                    $q->where('uuid', $userUuid);
+            ->when($filterCollection->get('user_uuid'), function ($query, $userUuid) {
+                $query->whereHas('user', function ($userQuery) use ($userUuid) {
+                    $userQuery->where('uuid', $userUuid);
                 });
             })
             // filter parent post
-            ->when($collection->get('parent_id'), function ($query, $parentId) {
+            ->when($filterCollection->get('parent_id'), function ($query, $parentId) {
                 $query->where('parent_id', $parentId);
             })
             // filter post type
-            ->typeOf($collection->get('type'))
+            ->typeOf($filterCollection->get('type'))
 
             // hashtags
-            ->when(!empty($collection->get('hashtags')), function ($query) use ($collection) {
-                $query->whereHas('hashtags', function ($q) use ($collection) {
-                    $q->whereIn('name', $collection->get('hashtags'));
+            ->when(!empty($filterCollection->get('hashtags')), function ($query) use ($filterCollection) {
+                $query->whereHas('hashtags', function ($hashtagQuery) use ($filterCollection) {
+                    $hashtagQuery->whereIn('name', $filterCollection->get('hashtags'));
                 });
             })
 
             // mentions
-            ->when(!empty($collection->get('mentions')), function ($query) use ($collection) {
-                $query->whereHas('mentions', function ($q) use ($collection) {
-                    $q->whereIn('id', $collection->get('mentions'));
+            ->when(!empty($filterCollection->get('mentions')), function ($query) use ($filterCollection) {
+                $query->whereHas('mentions', function ($mentionQuery) use ($filterCollection) {
+                    $mentionQuery->whereIn('id', $filterCollection->get('mentions'));
                 });
             })
 
             // full-text search
             ->when($keyword !== '', function ($query) use ($keyword) {
 
-                $query->where(function ($q) use ($keyword) {
+                $query->where(function ($searchQuery) use ($keyword) {
 
-                    $q->whereRaw("
+                    $searchQuery->whereRaw("
                         search_vector @@ plainto_tsquery('simple', ?)
                     ", [$keyword])
 
-                    ->orWhereHas('user', function ($userQ) use ($keyword) {
-                        $userQ->whereRaw("
+                    ->orWhereHas('user', function ($userSearchQuery) use ($keyword) {
+                        $userSearchQuery->whereRaw("
                             search_vector @@ plainto_tsquery('simple', ?)
                         ", [$keyword]);
                     });

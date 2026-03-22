@@ -2,7 +2,7 @@
 namespace App\Http\Resources\Api\Post;
 
 use App\Http\Resources\BaseJsonResource;
-use App\Http\Resources\Api\Hashtag\HashTagResource;
+use App\Http\Resources\Api\Hashtag\HashtagResource;
 use App\Http\Resources\Api\Media\MediaResource;
 use App\Http\Resources\Api\Mention\MentionResource;
 use App\Http\Resources\Api\User\UserResource;
@@ -20,7 +20,7 @@ class PostResource extends BaseJsonResource
             'audience' => $this->audience->value,
             'content' => $this->content,
             'parent_id' => $this->parent_id,
-            'hashtags' => HashTagResource::collection($this->whenLoaded('hashtags'))->resolve(),
+            'hashtags' => HashtagResource::collection($this->whenLoaded('hashtags'))->resolve(),
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
             'medias' => MediaResource::collection($this->whenLoaded('media'))->resolve(),

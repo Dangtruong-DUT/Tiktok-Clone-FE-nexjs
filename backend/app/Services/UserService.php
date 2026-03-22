@@ -23,56 +23,56 @@ class UserService
     /**
      * Change the password of the authenticated user.
      *
-     * @param array $data
+     * @param array $payload
      * @return bool
      * @throws BusinessException
      */
-    public function changePassword(array $data):bool
+    public function changePassword(array $payload): bool
     {
-        $user = $this->guard()->user();
-        if (! $user->isCurrentPassword($data['current_password'])) {
+        $authUser = $this->guard()->user();
+        if (! $authUser->isCurrentPassword($payload['current_password'])) {
             throw new BusinessException('Current password is incorrect',
             [
                 'current_password' => ['Current password is incorrect']
             ]);
         }
-        $user->password = $data['password'];
-        $user->save();
+        $authUser->password = $payload['password'];
+        $authUser->save();
         return true;
     }
 
     /**
      * Follow someone
      *
-     * @param array $data
+     * @param array $payload
      *              - user_uuid: the uuid of the user to follow
      * @return bool
      * @throws BadRequestException
      * @throws BusinessException
      */
-    public function follow(array $data): bool
+    public function follow(array $payload): bool
     {
-        $targetUserUuid = $data['user_uuid'];
+        $targetUserUuid = $payload['user_uuid'];
         $targetUser = $this->userRepo->findByUuid($targetUserUuid);
         if (!$targetUser) {
             throw new BusinessException('The user you are trying to follow does not exist');
         }
 
-        $user = $this->guard()->user();
-        if ($user->uuid === $targetUserUuid) {
+        $authUser = $this->guard()->user();
+        if ($authUser->uuid === $targetUserUuid) {
             throw new BadRequestException('You cannot follow yourself');
         }
 
-        if ($this->relationshipRepo->isFollowing($user->id, $targetUser->id)) {
+        if ($this->relationshipRepo->isFollowing($authUser->id, $targetUser->id)) {
             return true;
         }
-        DB::transaction(function () use ($user, $targetUser) {
+        DB::transaction(function () use ($authUser, $targetUser) {
             $this->relationshipRepo->create([
-                'user_id' => $user->id,
+                'user_id' => $authUser->id,
                 'target_user_id' => $targetUser->id,
                 'type' => RelationshipTypeEnum::FOLLOW->value
             ]);
-            $user->increment('following_count');
+            $authUser->increment('following_count');
             $targetUser->increment('followers_count');
         });
 
@@ -82,21 +82,21 @@ class UserService
     /**
      * Unfollow someone
      *
-     * @param array $data
+     * @param array $payload
      *            - user_uuid: the uuid of the user to unfollow
      * @return bool
      */
-    public function unfollow(array $data): bool
+    public function unfollow(array $payload): bool
     {
-        $targetUserUuid = $data['user_uuid'];
+        $targetUserUuid = $payload['user_uuid'];
         $targetUser = $this->userRepo->findByUuid($targetUserUuid);
-        $user = $this->guard()->user();
-        if (!$this->relationshipRepo->isFollowing($user->id, $targetUser->id)) {
+        $authUser = $this->guard()->user();
+        if (!$this->relationshipRepo->isFollowing($authUser->id, $targetUser->id)) {
             return true;
         }
-        DB::transaction(function () use ($user, $targetUser) {
-            $this->relationshipRepo->deleteRelationship($user->id, $targetUser->id, RelationshipTypeEnum::FOLLOW);
-            $user->decrement('following_count');
+        DB::transaction(function () use ($authUser, $targetUser) {
+            $this->relationshipRepo->deleteRelationship($authUser->id, $targetUser->id, RelationshipTypeEnum::FOLLOW);
+            $authUser->decrement('following_count');
             $targetUser->decrement('followers_count');
         });
         return true;
@@ -105,12 +105,12 @@ class UserService
     /**
      * Update the profile of the authenticated user.
      *
-     * @param array $data
+     * @param array $payload
      * @return User
      */
-    public function updateProfile(array $data): User
+    public function update(array $payload): User
     {
-        $user = $this->guard()->user();
+        $authUser = $this->guard()->user();
         $allowedFields = [
             'name',
             'date_of_birth',
@@ -120,13 +120,13 @@ class UserService
             'username',
             'avatar_file_id'
         ];
-        $updateData = array_intersect_key($data, array_flip($allowedFields));
+        $updateData = array_intersect_key($payload, array_flip($allowedFields));
 
         if (!empty($updateData)) {
-            $this->userRepo->update($user->id, $updateData);
+            $this->userRepo->update($authUser->id, $updateData);
         }
 
-        return $this->getUserProfile($user->username);
+        return $this->getByUsername($authUser->username);
     }
 
     /**
@@ -134,9 +134,9 @@ class UserService
      *
      * @return User
      */
-    public function getAuthenticatedUser(): User
+    public function me(): User
     {
-        return $this->getUserProfile($this->guard()->user()->username);
+        return $this->getByUsername($this->guard()->user()->username);
     }
 
     /**
@@ -145,7 +145,7 @@ class UserService
      * @param string $username
      * @return User
      */
-    public function getUserProfile(string $username): User
+    public function getByUsername(string $username): User
     {
         $authUserId = $this->guard()->id();
         return $this->userRepo->getByUsernameWithDetail($username, $authUserId);

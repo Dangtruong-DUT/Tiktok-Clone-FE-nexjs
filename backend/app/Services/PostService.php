@@ -6,7 +6,7 @@ use App\Enums\Post\PostTypeEnum;
 use App\Exceptions\http\BusinessException;
 use App\Exceptions\http\NotFoundException;
 use App\Models\Post;
-use App\Repositories\HashTagRepository;
+use App\Repositories\HashtagRepository;
 use App\Repositories\MediaRepository;
 use App\Repositories\PostRepository;
 use App\Repositories\UserRepository;
@@ -24,37 +24,37 @@ class PostService
         private readonly UserRepository $userRepo,
         private readonly PostRepository $postRepo,
         private readonly MediaRepository $mediaRepo,
-        private readonly HashTagRepository $hashTagRepo
+        private readonly HashtagRepository $hashtagRepo
     ) {}
 
     /**
      * Create a new post.
-     * @param array $data
+     * @param array $payload
      * @return Post
      */
-    public function createPost(array $data) : Post
+    public function create(array $payload): Post
     {
 
-        $postType = $data['type']??PostTypeEnum::POST->value;
+        $postType = $payload['type'] ?? PostTypeEnum::POST->value;
 
-        if ($postType !== PostTypeEnum::POST->value && empty($data['parent_id'])) {
+        if ($postType !== PostTypeEnum::POST->value && empty($payload['parent_id'])) {
             throw new BusinessException('Parent ID is required for this post type.',[
                 'type' => 'Parent ID is required for this post type.',
             ]);
         }
 
-        if ($postType == PostTypeEnum::POST->value && !empty($data['parent_id'])) {
+        if ($postType === PostTypeEnum::POST->value && !empty($payload['parent_id'])) {
             throw new BusinessException('Parent ID is not allowed for this post type.',[
                 'type' => 'Parent ID is not allowed for this post type.',
             ]);
         }
 
         $user = $this->guard()->user();
-        $post = DB::transaction(function () use ($data, $postType, $user): Post {
+        $post = DB::transaction(function () use ($payload, $postType, $user): Post {
             $parentPost = null;
 
-            if (!empty($data['parent_id'])) {
-                $parentPost = $this->postRepo->findById($data['parent_id']);
+            if (!empty($payload['parent_id'])) {
+                $parentPost = $this->postRepo->findById($payload['parent_id']);
                 if (empty($parentPost)) {
                     throw new NotFoundException('Parent post not found');
                 }
@@ -70,48 +70,47 @@ class PostService
 
             $post = $this->postRepo->create([
                 'type' => $postType,
-                'audience' => $data['audience'],
-                'content' => $data['content'],
-                'thumbnail_file_id' => $data['thumbnail'] ?? null,
+                'audience' => $payload['audience'],
+                'content' => $payload['content'],
+                'thumbnail_file_id' => $payload['thumbnail'] ?? null,
                 'user_id' => $user->id,
-                'parent_id' => $data['parent_id'] ?? null,
+                'parent_id' => $payload['parent_id'] ?? null,
             ]);
-            if (!empty($data['mentions'])) {
-                $post->mentions()->sync($data['mentions']);
+            if (!empty($payload['mentions'])) {
+                $post->mentions()->sync($payload['mentions']);
             }
-            if (!empty($data['hashtags'])) {
-                $names = array_unique($data['hashtags']);
-                $existing = $this->hashTagRepo->getByNames($names);
-                $map = [];
+            if (!empty($payload['hashtags'])) {
+                $hashtagNames = array_unique($payload['hashtags']);
+                $existingHashtags = $this->hashtagRepo->getByNames($hashtagNames);
+                $hashtagIdByName = [];
 
-                foreach ($existing as $tag) {
-                    $map[$tag->name] = $tag->id;
+                foreach ($existingHashtags as $hashtag) {
+                    $hashtagIdByName[$hashtag->name] = $hashtag->id;
                 }
 
-                $new = [];
-                foreach ($names as $name) {
-                    if (!isset($map[$name])) {
-                        $new[] = ['name' => $name];
+                $newHashtags = [];
+                foreach ($hashtagNames as $hashtagName) {
+                    if (!isset($hashtagIdByName[$hashtagName])) {
+                        $newHashtags[] = ['name' => $hashtagName];
                     }
                 }
 
-                if (!empty($new)) {
-                    $this->hashTagRepo->createMany($new);
+                if (!empty($newHashtags)) {
+                    $this->hashtagRepo->createMany($newHashtags);
                 }
 
-                $ids = $this->hashTagRepo->getByNames($names)->pluck('id')->toArray();
-                $post->hashtags()->sync($ids);
+                $hashtagIds = $this->hashtagRepo->getByNames($hashtagNames)->pluck('id')->toArray();
+                $post->hashtags()->sync($hashtagIds);
             }
 
-            if (!empty($data['medias'])) {
-                $this->mediaRepo->createMany($data['medias'], $post->id);
+            if (!empty($payload['medias'])) {
+                $this->mediaRepo->createMany($payload['medias'], $post->id);
             }
 
             return $post;
         });
 
-        $postDetail= $this->postRepo->getByIdWithDetail($post->id, $user->id);
-        return $postDetail;
+        return $this->postRepo->getByIdWithDetail($post->id, $user->id);
     }
 
     /**
@@ -119,7 +118,7 @@ class PostService
      * @param string $uuid
      * @return Post
      */
-    public function getPostByUuid(string $uuid): ?Post
+    public function getByUuid(string $uuid): ?Post
     {
         $userId = $this->guard()->check() ? $this->guard()->id() : null;
         $postDetail = $this->postRepo->getByUuidWithDetail($uuid, $userId);
@@ -131,7 +130,7 @@ class PostService
 
     /**
      * Get list of child posts by parent post uuid.
-     * @param array $data
+      * @param array $payload
      *                      - post_uuid: parent post uuid
      *                      - audience: filter by audience
      *                      - type: filter by post type
@@ -140,28 +139,28 @@ class PostService
      *                      - per_page: number of items per page for pagination
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function getChildrenPosts(array $data): LengthAwarePaginator
+    public function getChildren(array $payload): LengthAwarePaginator
     {
-        $uuid = $data['post_uuid'];
-        $post = $this->postRepo->findByUuid($uuid);
+        $postUuid = $payload['post_uuid'];
+        $post = $this->postRepo->findByUuid($postUuid);
         if (empty($post)) {
             throw new NotFoundException('Post not found');
         }
         $authUserId = $this->guard()->check() ? $this->guard()->id() : null;
 
         return $this->postRepo->search([
-            'q' => $data['q'] ?? null,
-            'audience' => $data['audience'] ?? null,
-            'type' => $data['post_type'] ?? null,
+            'q' => $payload['q'] ?? null,
+            'audience' => $payload['audience'] ?? null,
+            'type' => $payload['post_type'] ?? null,
             'parent_id' => $post->id,
-            'per_page' => $data['per_page'] ?? config('const.pagination.default_per_page'),
-            'page' => $data['page'] ?? config('const.pagination.default_page'),
+            'per_page' => $payload['per_page'] ?? config('const.pagination.default_per_page'),
+            'page' => $payload['page'] ?? config('const.pagination.default_page'),
         ], $authUserId);
     }
 
     /**
      * Search for posts.
-     *  @param array $data
+      * @param array $payload
      *                      - q: search keyword for content and user name
      *                      - audience: filter by audience
      *                      - type: filter by post type
@@ -169,36 +168,36 @@ class PostService
      *                      - per_page: number of items per page for pagination
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function searchPosts(array $data): LengthAwarePaginator
+    public function search(array $payload): LengthAwarePaginator
     {
         $authUserId = $this->guard()->check() ? $this->guard()->id() : null;
 
         return $this->postRepo->search([
-            'q' => $data['q'] ?? null,
-            'audience' => $data['audience'] ?? null,
-            'type' => $data['post_type'] ?? null,
-            'per_page' => $data['per_page'] ?? config('const.pagination.default_per_page'),
-            'page' => $data['page'] ?? config('const.pagination.default_page'),
+            'q' => $payload['q'] ?? null,
+            'audience' => $payload['audience'] ?? null,
+            'type' => $payload['post_type'] ?? null,
+            'per_page' => $payload['per_page'] ?? config('const.pagination.default_per_page'),
+            'page' => $payload['page'] ?? config('const.pagination.default_page'),
         ], $authUserId);
     }
 
     /**
      * Get posts of a user by user uuid.
-     * @param array $data
+      * @param array $payload
      *                      - user_uuid: user uuid
      *                      - type: filter by post type
      *                      - page: pagination page number
      *                      - per_page: number of items per page for pagination
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function getPostsByUser(array $data): LengthAwarePaginator
+    public function getByUser(array $payload): LengthAwarePaginator
     {
         $authUserId = $this->guard()->check() ? $this->guard()->id() : null;
-        $targetUser = $this->userRepo->findByUuidOrFail($data['user_uuid']);
+        $targetUser = $this->userRepo->findByUuidOrFail($payload['user_uuid']);
         return $this->postRepo->getPostsByUserId(
             filters: [
-                'type' => $data['post_type'] ?? null,
-                'per_page' => $data['per_page'] ?? config('const.pagination.default_per_page'),
+                'type' => $payload['post_type'] ?? null,
+                'per_page' => $payload['per_page'] ?? config('const.pagination.default_per_page'),
             ],
             targetUserId: $targetUser->id,
             authUserId: $authUserId
@@ -207,21 +206,21 @@ class PostService
 
     /**
      * Get liked posts of a user by user uuid.
-     * @param array $data
+      * @param array $payload
      *                      - user_uuid: user uuid
      *                      - type: filter by post type
      *                      - page: pagination page number
      *                      - per_page: number of items per page for pagination
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function getLikedPostsByUser(array $data): LengthAwarePaginator
+    public function getLikedByUser(array $payload): LengthAwarePaginator
     {
         $authUserId = $this->guard()->check() ? $this->guard()->id() : null;
-        $targetUser = $this->userRepo->findByUuidOrFail($data['user_uuid']);
+        $targetUser = $this->userRepo->findByUuidOrFail($payload['user_uuid']);
         return $this->postRepo->getLikedPostsByUserId(
             filters: [
-                'type' => $data['post_type'] ?? null,
-                'per_page' => $data['per_page'] ?? config('const.pagination.default_per_page'),
+                'type' => $payload['post_type'] ?? null,
+                'per_page' => $payload['per_page'] ?? config('const.pagination.default_per_page'),
             ],
             targetUserId: $targetUser->id,
             authUserId: $authUserId
@@ -231,21 +230,21 @@ class PostService
 
     /**
      * Get bookmarked posts of a user by user uuid.
-     * @param array $data
+      * @param array $payload
      *                      - user_uuid: user uuid
      *                      - type: filter by post type
      *                      - page: pagination page number
      *                      - per_page: number of items per page for pagination
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function getBookmarkedPostsByUser(array $data): LengthAwarePaginator
+    public function getBookmarkedByUser(array $payload): LengthAwarePaginator
     {
         $authUserId = $this->guard()->check() ? $this->guard()->id() : null;
-        $targetUser = $this->userRepo->findByUuidOrFail($data['user_uuid']);
+        $targetUser = $this->userRepo->findByUuidOrFail($payload['user_uuid']);
         return $this->postRepo->getBookmarkedPostsByUserId(
             filters: [
-                'type' => $data['post_type'] ?? null,
-                'per_page' => $data['per_page'] ?? config('const.pagination.default_per_page'),
+                'type' => $payload['post_type'] ?? null,
+                'per_page' => $payload['per_page'] ?? config('const.pagination.default_per_page'),
             ],
             targetUserId: $targetUser->id,
             authUserId: $authUserId
@@ -257,7 +256,7 @@ class PostService
      * @param string $uuid
      * @return void
      */
-    public function likePost(string $uuid): void
+    public function like(string $uuid): void
     {
         DB::transaction(function () use ($uuid) {
             $post = $this->postRepo->findByUuid($uuid);
@@ -277,7 +276,7 @@ class PostService
      * @param string $uuid
      * @return void
      */
-    public function unlikePost(string $uuid): void
+    public function unlike(string $uuid): void
     {
         DB::transaction(function () use ($uuid) {
             $post = $this->postRepo->findByUuid($uuid);
@@ -298,7 +297,7 @@ class PostService
      * @param string $uuid
      * @return void
      */
-    public function bookmarkPost(string $uuid): void
+    public function bookmark(string $uuid): void
     {
         DB::transaction(function () use ($uuid) {
             $post = $this->postRepo->findByUuid($uuid);
@@ -319,7 +318,7 @@ class PostService
      * @param string $uuid
      * @return void
      */
-    public function unbookmarkPost(string $uuid): void
+    public function unbookmark(string $uuid): void
     {
         DB::transaction(function () use ($uuid) {
             $post = $this->postRepo->findByUuid($uuid);

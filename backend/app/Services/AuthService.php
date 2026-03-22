@@ -15,7 +15,6 @@ use App\Repositories\RefreshTokenRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\VerifyEmailTokenRepository;
 use App\Traits\HasAuthUser;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -161,7 +160,7 @@ class AuthService
      *
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
-    public function getUserProfile(): \Illuminate\Contracts\Auth\Authenticatable|null
+    public function me(): \Illuminate\Contracts\Auth\Authenticatable|null
     {
         return $this->guard()->user();
     }
@@ -172,7 +171,7 @@ class AuthService
      * @param string $email
      * @return bool
      */
-    public function forgotPassword(string $email): bool
+    public function forgot(string $email): bool
     {
         $user = $this->userRepo->findByEmail($email);
         if (!$user) {
@@ -193,7 +192,7 @@ class AuthService
      * @param array $credentials
      * @return ForgotPasswordToken
      */
-    public function verifyForgotPasswordToken(array $credentials): ForgotPasswordToken
+    public function verifyForgotToken(array $credentials): ForgotPasswordToken
     {
         $token = $credentials['forgot_password_token'];
         $validToken = $this->forgotPasswordTokenRepo->findByToken($token);
@@ -234,7 +233,7 @@ class AuthService
      */
     public function resetPassword(array $credentials): bool
     {
-        $validToken= $this->verifyForgotPasswordToken($credentials);
+        $validToken= $this->verifyForgotToken($credentials);
         $this->forgotPasswordTokenRepo->deleteByUserId($validToken->user_id);
         $user = $this->userRepo->findOrFail($validToken->user_id);
         $user->password = $credentials['password'];

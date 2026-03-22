@@ -27,7 +27,7 @@ class UploadController extends Controller
      */
     public function uploadImage(UploadImageRequest $request): JsonResponse
     {
-        $data = $this->uploadService->uploadImage($request->file('file'));
+        $data = $this->uploadService->image($request->file('file'));
         return ApiResponse::success($data, 'Image uploaded successfully');
     }
 
@@ -39,7 +39,7 @@ class UploadController extends Controller
      */
     public function uploadVideo(UploadVideoRequest $request): JsonResponse
     {
-        $data = $this->uploadService->uploadVideo($request->file('file'));
+        $data = $this->uploadService->video($request->file('file'));
         return ApiResponse::success($data, 'Video uploaded successfully');
     }
 }
