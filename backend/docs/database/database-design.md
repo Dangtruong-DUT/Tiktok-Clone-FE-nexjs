@@ -1,273 +1,310 @@
 # Database Design
 
-This document outlines the database design for the TikTok Clone application, detailing the tables, relationships, and structure.
+This document describes the current database schema generated from migrations in `backend/database/migrations`.
 
-* ER Diagram: [https://dbdiagram.io/d/69b8c349fb2db18e3b970549](https://dbdiagram.io/d/69b8c349fb2db18e3b970549)
-* Modified: 17/03/2026
-* Author: Nguyen Dang Truong
+- Source of truth: Laravel migrations
+- Updated: 22/03/2026
+- Database engine assumptions: PostgreSQL (uses `tsvector`, GIN index, and SQL `CHECK` constraints)
 
 ---
 
-## USERS
+## Core Domain Tables
+
+### USERS
 
 ```
 Table users {
-  id              bigint [pk, increment]
-  uuid            uuid   [unique]
+  id                bigint [pk, increment]
+  uuid              uuid [unique]
 
-  username        varchar [unique]
-  email           varchar [unique]
-  password        varchar
+  name              varchar [index]
+  username          varchar [unique]
+  email             varchar [unique]
+  password          varchar
 
-  name            varchar
-  bio             text
-  location        varchar
-  website         varchar
+  bio               text [null]
+  location          varchar [null]
+  website           varchar [null]
+  date_of_birth     date [null]
 
-  date_of_birth   date
-  verify          smallint
+  verify            tinyint [default: UNVERIFIED, index]
+  role              tinyint [default: USER, index]
 
-  created_at      timestamp
-  updated_at      timestamp
-  deleted_at      timestamp
+  avatar_file_id    bigint [null, ref: > upload_files.id, delete: set null]
+
+  followers_count   bigint [default: 0]
+  following_count   bigint [default: 0]
+
+  search_vector     tsvector [generated always stored]
+
+  deleted_at        timestamp [null]
+  created_at        timestamp
+  updated_at        timestamp
 }
 ```
 
+Notes:
+
+- `search_vector` is generated from `name`, `username`, `email`, `bio`.
+- GIN index: `users_search_vector_idx`.
+- Constraint: `users_follow_counters_non_negative` ensures `followers_count >= 0` and `following_count >= 0`.
+
 ---
 
-## POSTS
+### POSTS
 
 ```
 Table posts {
-  id              bigint [pk, increment]
-  uuid            uuid   [unique]
+  id                bigint [pk, increment]
+  uuid              uuid [unique]
 
-  user_id         bigint
-  content         text
-  type            smallint
-  audience        smallint
+  user_id           bigint [ref: > users.id, delete: cascade]
+  content           text [null]
+  type              smallint [default: POST]
+  audience          smallint [default: PRIVATE]
 
-  parent_id       bigint
+  parent_id         bigint [null, ref: > posts.id, delete: set null]
 
-  like_count      int
-  comment_count   int
-  share_count     int
+  likes_count       bigint [default: 0]
+  share_count       bigint [default: 0]
+  comments_count    bigint [default: 0]
+  bookmarks_count   bigint [default: 0]
+  repost_count      bigint [default: 0]
+  quote_post_count  bigint [default: 0]
+  guest_views       bigint [default: 0]
+  user_views        bigint [default: 0]
 
-  created_at      timestamp
-  updated_at      timestamp
-  deleted_at      timestamp
+  thumbnail_file_id bigint [null, ref: > upload_files.id, delete: set null]
 
-  indexes {
-    (user_id, created_at)
-    (parent_id)
-    (created_at)
-  }
+  search_vector     tsvector [generated always stored]
+
+  deleted_at        timestamp [null]
+  created_at        timestamp
+  updated_at        timestamp
 }
 ```
 
----
+Notes:
 
-## MEDIAS
-
-```
-Table medias {
-  id              bigint [pk, increment]
-  uuid            uuid   [unique]
-
-  user_id         bigint
-  post_id         bigint
-
-  type            smallint
-
-  created_at      timestamp
-  updated_at      timestamp
-  deleted_at      timestamp
-
-  indexes {
-    (post_id)
-  }
-}
-```
+- `search_vector` is generated from `content`.
+- GIN index: `posts_search_vector_idx`.
+- Constraint: `posts_counters_non_negative` ensures all counter/view columns are non-negative.
 
 ---
 
-## UPLOAD FILES (POLYMORPHIC)
+### UPLOAD FILES
 
 ```
 Table upload_files {
   id              bigint [pk, increment]
-
+  uuid            uuid [unique]
   file_name       varchar
   mime_type       varchar
+  file_path       varchar [unique]
+  disk            varchar [default: s3]
   file_size       bigint
-  disk            varchar
-  url             text
-
-  fileable_id     bigint
-  fileable_type   varchar
-
+  expired_at      timestamp [null]
+  deleted_at      timestamp [null]
   created_at      timestamp
   updated_at      timestamp
-  deleted_at      timestamp
-
-  indexes {
-    (fileable_id, fileable_type)
-  }
 }
 ```
 
 ---
 
-## HASHTAGS
+### MEDIAS
+
+```
+Table medias {
+  id              bigint [pk, increment]
+  uuid            uuid [unique]
+  type            smallint
+  order           int [default: 0]
+  post_id         bigint [ref: > posts.id, delete: cascade]
+  upload_file_id  bigint [ref: > upload_files.id, delete: cascade]
+  deleted_at      timestamp [null]
+  created_at      timestamp
+  updated_at      timestamp
+}
+```
+
+---
+
+### HASHTAGS
 
 ```
 Table hashtags {
   id              bigint [pk, increment]
   name            varchar [unique]
-
   created_at      timestamp
-  deleted_at      timestamp
+  updated_at      timestamp
 }
 ```
 
 ---
 
-## POST HASHTAGS
+### POSTS_HASHTAGS
 
 ```
-Table post_hashtags {
-  post_id         bigint
-  hashtag_id      bigint
+Table posts_hashtags {
+  id              bigint [pk, increment]
+  post_id         bigint [ref: > posts.id, delete: cascade]
+  hashtag_id      bigint [ref: > hashtags.id, delete: cascade]
 
   indexes {
-    (post_id, hashtag_id) [pk]
-    (hashtag_id)
+    (post_id, hashtag_id) [unique]
   }
 }
 ```
 
 ---
 
-## POST MENTIONS
+### POSTS_MENTIONS
 
 ```
-Table post_mentions {
-  post_id         bigint
-  user_id         bigint
-
-  indexes {
-    (post_id, user_id) [pk]
-    (user_id)
-  }
-}
-```
-
----
-
-## LIKES
-
-```
-Table likes {
-  user_id         bigint
-  post_id         bigint
-
+Table posts_mentions {
+  id              bigint [pk, increment]
+  post_id         bigint [ref: > posts.id, delete: cascade]
+  user_id         bigint [ref: > users.id, delete: cascade]
   created_at      timestamp
-  deleted_at      timestamp
+  updated_at      timestamp
 
   indexes {
-    (user_id, post_id) [pk]
-    (post_id)
+    (post_id, user_id) [unique]
   }
 }
 ```
 
 ---
 
-## BOOKMARKS
+### POST_LIKES
 
 ```
-Table bookmarks {
-  user_id         bigint
-  post_id         bigint
-
+Table post_likes {
+  id              bigint [pk, increment]
+  post_id         bigint [ref: > posts.id, delete: cascade]
+  user_id         bigint [ref: > users.id, delete: cascade]
   created_at      timestamp
-  deleted_at      timestamp
+  updated_at      timestamp
 
   indexes {
-    (user_id, post_id) [pk]
+    (post_id, user_id) [unique]
   }
 }
 ```
 
 ---
 
-## RELATIONSHIPS
+### POST_BOOKMARKS
+
+```
+Table post_bookmarks {
+  id              bigint [pk, increment]
+  post_id         bigint [ref: > posts.id, delete: cascade]
+  user_id         bigint [ref: > users.id, delete: cascade]
+  created_at      timestamp
+  updated_at      timestamp
+}
+```
+
+---
+
+### RELATIONSHIPS
 
 ```
 Table relationships {
   id              bigint [pk, increment]
-
-  user_id         bigint
-  target_user_id  bigint
-
+  user_id         bigint [ref: > users.id, delete: cascade]
+  target_user_id  bigint [ref: > users.id, delete: cascade]
   type            smallint
-
   created_at      timestamp
-  deleted_at      timestamp
+  updated_at      timestamp
 
   indexes {
     (user_id, target_user_id, type) [unique]
-    (target_user_id)
   }
 }
 ```
 
 ---
 
-## REFRESH TOKENS
+## Authentication Tables
+
+### REFRESH_TOKENS
 
 ```
 Table refresh_tokens {
   id              bigint [pk, increment]
-  uuid            uuid   [unique]
+  user_id         bigint [ref: > users.id, delete: cascade]
+  token           varchar [unique]
+  expires_at      timestamp
+}
+```
 
-  user_id         bigint
-  token           text
+### EMAIL_VERIFICATIONS
 
-  created_at      timestamp
-  deleted_at      timestamp
+```
+Table email_verifications {
+  id              bigint [pk, increment]
+  user_id         bigint [ref: > users.id, delete: cascade]
+  token           varchar [unique]
+  expires_at      timestamp
+}
+```
 
-  indexes {
-    (user_id)
-  }
+### PASSWORD_RESETS
+
+```
+Table password_resets {
+  id              bigint [pk, increment]
+  user_id         bigint [ref: > users.id, delete: cascade]
+  token           varchar [unique]
+  expires_at      timestamp
 }
 ```
 
 ---
 
-# RELATIONSHIPS
+## Framework Infrastructure Tables
+
+These are standard Laravel runtime tables:
+
+- `cache`
+- `cache_locks`
+- `jobs`
+- `job_batches`
+- `failed_jobs`
+
+---
+
+## Relationship Summary
 
 ```
-Ref: posts.user_id            > users.id [delete: set null, update: no action]
-Ref: posts.parent_id          > posts.id [delete: cascade, update: no action]
+Ref: users.avatar_file_id             > upload_files.id [delete: set null]
 
-Ref: medias.user_id           > users.id [delete: set null, update: no action]
-Ref: medias.post_id           > posts.id [delete: cascade, update: no action]
+Ref: posts.user_id                    > users.id [delete: cascade]
+Ref: posts.parent_id                  > posts.id [delete: set null]
+Ref: posts.thumbnail_file_id          > upload_files.id [delete: set null]
 
-Ref: post_hashtags.post_id    > posts.id [delete: cascade, update: no action]
-Ref: post_hashtags.hashtag_id > hashtags.id [delete: cascade, update: no action]
+Ref: medias.post_id                   > posts.id [delete: cascade]
+Ref: medias.upload_file_id            > upload_files.id [delete: cascade]
 
-Ref: post_mentions.post_id    > posts.id [delete: cascade, update: no action]
-Ref: post_mentions.user_id    > users.id [delete: cascade, update: no action]
+Ref: posts_hashtags.post_id           > posts.id [delete: cascade]
+Ref: posts_hashtags.hashtag_id        > hashtags.id [delete: cascade]
 
-Ref: likes.user_id            > users.id [delete: cascade, update: no action]
-Ref: likes.post_id            > posts.id [delete: cascade, update: no action]
+Ref: posts_mentions.post_id           > posts.id [delete: cascade]
+Ref: posts_mentions.user_id           > users.id [delete: cascade]
 
-Ref: bookmarks.user_id        > users.id [delete: cascade, update: no action]
-Ref: bookmarks.post_id        > posts.id [delete: cascade, update: no action]
+Ref: post_likes.post_id               > posts.id [delete: cascade]
+Ref: post_likes.user_id               > users.id [delete: cascade]
 
-Ref: relationships.user_id        > users.id [delete: cascade, update: no action]
-Ref: relationships.target_user_id > users.id [delete: cascade, update: no action]
+Ref: post_bookmarks.post_id           > posts.id [delete: cascade]
+Ref: post_bookmarks.user_id           > users.id [delete: cascade]
 
-Ref: refresh_tokens.user_id   > users.id [delete: cascade, update: no action]
+Ref: relationships.user_id            > users.id [delete: cascade]
+Ref: relationships.target_user_id     > users.id [delete: cascade]
+
+Ref: refresh_tokens.user_id           > users.id [delete: cascade]
+Ref: email_verifications.user_id      > users.id [delete: cascade]
+Ref: password_resets.user_id          > users.id [delete: cascade]
 ```
