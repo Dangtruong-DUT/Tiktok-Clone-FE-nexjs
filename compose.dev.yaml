@@ -148,6 +148,8 @@ services:
     container_name: ${CONTAINER_PREFIX:-tiktok_clone}_redis
     image: redis:alpine
     restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379" #only expose to host for development, in production it should be internal only
     networks:
       - app-development
 
