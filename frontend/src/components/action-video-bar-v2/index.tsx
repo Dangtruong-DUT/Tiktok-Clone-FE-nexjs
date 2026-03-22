@@ -21,14 +21,14 @@ interface ActionBarProps {
 }
 
 export default function ActionBar({ post, className }: ActionBarProps) {
-    const { data: postDetailRes } = useGetPostDetailQuery(post._id);
+    const { data: postDetailRes } = useGetPostDetailQuery(post.uuid);
     const postDetail = postDetailRes?.data;
 
     const role = useAppSelector((state) => state.auth.role);
 
     const [isOpenAnimatingLike, setIsOpenAnimatingLike] = useState<boolean>(false);
     const { isLikedState, toggleLikeState } = useLikePost({
-        postId: post._id,
+        postId: post.uuid,
         initialLikeState: postDetail?.is_liked || false,
         onLiked: () => {
             setIsOpenAnimatingLike(true);
@@ -38,7 +38,7 @@ export default function ActionBar({ post, className }: ActionBarProps) {
 
     const [isOpenAnimatingBookmark, setIsOpenAnimatingBookmark] = useState<boolean>(false);
     const { isBookmarkedState, toggleBookmarkState } = useBookmarkPost({
-        postId: post._id,
+        postId: post.uuid,
         initialBookmarkState: postDetail?.is_bookmarked || false,
         onBookmarked: () => {
             setIsOpenAnimatingBookmark(true);
@@ -47,11 +47,11 @@ export default function ActionBar({ post, className }: ActionBarProps) {
     });
 
     const handleOpenComment = useCallback(() => {
-        const commentSection = document.getElementById(`comment-section-${post._id}`);
+        const commentSection = document.getElementById(`comment-section-${post.uuid}`);
         if (commentSection) {
             commentSection.scrollIntoView({ behavior: "smooth" });
         }
-    }, [post._id]);
+    }, [post.uuid]);
 
     const shares_count = useMemo(() => {
         if (postDetail) return postDetail.quote_post_count + postDetail.repost_count;
@@ -59,7 +59,7 @@ export default function ActionBar({ post, className }: ActionBarProps) {
     }, [postDetail, post]);
 
     const local = useLocale();
-    const videoUrl = `${envConfig.NEXT_PUBLIC_URL}${local}/@${post.author.username}/video/${post._id}`;
+    const videoUrl = `${envConfig.NEXT_PUBLIC_URL}${local}/@${post.author.username}/video/${post.uuid}`;
 
     return (
         <section className={cn("flex flex-col items-center relative", className)}>

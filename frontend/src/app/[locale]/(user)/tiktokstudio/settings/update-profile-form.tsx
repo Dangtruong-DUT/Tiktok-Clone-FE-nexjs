@@ -9,9 +9,19 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { toast } from "sonner";
-import { UpdateUserBody, UpdateUserBodyType } from "@/utils/validations/user.schema";
+import {
+  UpdateUserBody,
+  UpdateUserBodyType,
+} from "@/utils/validations/user.schema";
 import useCurrentUserData from "@/hooks/data/useCurrentUserData";
 import { useUpdateMeMutation } from "@/services/RTK/user.services";
 import { useUploadImageMutation } from "@/services/RTK/upload.services";
@@ -19,189 +29,230 @@ import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
 import PhotoEditorDialog from "@/components/photo-editor-dialog";
 
 export default function UpdateProfileForm() {
-    const t = useTranslations("TiktokStudio.settings");
-    const [fileImage, setFileImage] = useState<File | null>(null);
-    const avatarPreviewRef = useRef<HTMLInputElement>(null);
-    const [isPhotoEditorVisible, setIsPhotoEditorVisible] = useState<boolean>(false);
+  const t = useTranslations("TiktokStudio.settings");
+  const [fileImage, setFileImage] = useState<File | null>(null);
+  const avatarPreviewRef = useRef<HTMLInputElement>(null);
+  const [isPhotoEditorVisible, setIsPhotoEditorVisible] =
+    useState<boolean>(false);
 
-    const [updateProfileMutateAsync, { isLoading: isUpdatingProfile }] = useUpdateMeMutation();
-    const [uploadImageMutateAsync, { isLoading: isUploadingAvatar }] = useUploadImageMutation();
+  const [updateProfileMutateAsync, { isLoading: isUpdatingProfile }] =
+    useUpdateMeMutation();
+  const [uploadImageMutateAsync, { isLoading: isUploadingAvatar }] =
+    useUploadImageMutation();
 
-    const form = useForm<UpdateUserBodyType>({
-        resolver: zodResolver(UpdateUserBody),
-        defaultValues: {
-            name: "",
-            avatar: undefined,
-        },
-        mode: "onChange",
+  const form = useForm<UpdateUserBodyType>({
+    resolver: zodResolver(UpdateUserBody),
+    defaultValues: {
+      name: "",
+      avatar: undefined,
+    },
+    mode: "onChange",
+  });
+
+  const user = useCurrentUserData();
+
+  useEffect(() => {
+    form.reset({
+      name: user?.name || "",
+      avatar: user?.avatar || undefined,
     });
+  }, [user, form]);
 
-    const user = useCurrentUserData();
+  const isLoading = isUploadingAvatar || isUpdatingProfile;
 
-    useEffect(() => {
+  const handleSubmit = useCallback(
+    async (data: UpdateUserBodyType) => {
+      if (isLoading) return;
+
+      try {
+        const payload: UpdateUserBodyType = {
+          ...data,
+          avatar: undefined,
+        };
+
+        if (fileImage) {
+          const formData = new FormData();
+          formData.append("file", fileImage);
+          const uploadResponse =
+            await uploadImageMutateAsync(formData).unwrap();
+          payload.avatar_file_id = uploadResponse.data.id;
+        }
+
+        const updateProfileRes =
+          await updateProfileMutateAsync(payload).unwrap();
+        const { avatar, name } = updateProfileRes.data;
+
         form.reset({
-            name: user?.name || "",
-            avatar: user?.avatar || undefined,
+          avatar: avatar || "",
+          name,
         });
-    }, [user, form]);
+        toast.success(updateProfileRes.message);
+      } catch (error) {
+        handleFormError<UpdateUserBodyType>({
+          error: error,
+          setFormError: form.setError,
+        });
+      }
+    },
+    [
+      form,
+      uploadImageMutateAsync,
+      updateProfileMutateAsync,
+      isLoading,
+      fileImage,
+    ],
+  );
 
-    const isLoading = isUploadingAvatar || isUpdatingProfile;
+  const avatarSrc = useMemo(
+    () =>
+      fileImage != null
+        ? URL.createObjectURL(fileImage)
+        : (user?.avatar ?? undefined),
+    [fileImage, user?.avatar],
+  );
+  const onReset = useCallback(() => {
+    form.reset();
+    setFileImage(null);
+  }, [form]);
 
-    const handleSubmit = useCallback(
-        async (data: UpdateUserBodyType) => {
-            if (isLoading) return;
+  const handleChangeAvatar = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const selectedFile = e.target.files?.[0] || null;
+      setFileImage(selectedFile);
 
-            try {
-                if (fileImage) {
-                    const formData = new FormData();
-                    formData.append("file", fileImage);
-                    const uploadResponse = await uploadImageMutateAsync(formData).unwrap();
-                    data.avatar = uploadResponse.data[0].url;
-                } else {
-                    data.avatar = user?.avatar || undefined;
-                }
-                const updateProfileRes = await updateProfileMutateAsync(data).unwrap();
-                const { avatar, name } = updateProfileRes.data;
+      if (selectedFile) {
+        setIsPhotoEditorVisible(true);
+      }
+      e.target.value = "";
+      form.setValue(
+        "avatar",
+        selectedFile ? URL.createObjectURL(selectedFile) : "",
+      );
+    },
+    [form],
+  );
 
-                form.reset({
-                    avatar: avatar || "",
-                    name,
-                });
-                toast.success(updateProfileRes.message);
-            } catch (error) {
-                handleFormError<UpdateUserBodyType>({
-                    error: error,
-                    setFormError: form.setError,
-                });
-            }
-        },
-        [form, uploadImageMutateAsync, updateProfileMutateAsync, user?.avatar, isLoading, fileImage]
-    );
+  return (
+    <Form {...form}>
+      <PhotoEditorDialog
+        setVisible={setIsPhotoEditorVisible}
+        isVisible={isPhotoEditorVisible}
+        photoUrl={avatarSrc!}
+        onConfirm={setFileImage}
+      />
+      <form
+        noValidate
+        className="grid auto-rows-max items-start gap-4 md:gap-8"
+        onSubmit={form.handleSubmit(handleSubmit)}
+        method="POST"
+        onReset={onReset}
+      >
+        <div>
+          <div className="flex items-center gap-2 mb-6">
+            <div className="p-2 rounded-full bg-brand/10">
+              <UserIcon className="w-5 h-5 text-brand" />
+            </div>
+            <div>
+              <h3 className="font-semibold">{t("updateProfile.title")}</h3>
+              <p className="text-sm text-muted-foreground">
+                {t("updateProfile.description")}
+              </p>
+            </div>
+          </div>
+          <div className="space-y-6">
+            <div className="grid gap-6">
+              <FormField
+                control={form.control}
+                name="avatar"
+                render={({}) => (
+                  <FormItem>
+                    <div className="flex gap-2 items-start justify-start">
+                      <Avatar className="aspect-square w-[100px] h-[100px] rounded-md object-cover">
+                        <AvatarImage
+                          src={avatarSrc}
+                          className="shrink-0 object-cover"
+                        />
+                        <AvatarFallback className="rounded-none">
+                          {user?.name.split(" ").at(-1) ||
+                            t("updateProfile.defaultUser")}
+                        </AvatarFallback>
+                      </Avatar>
 
-    const avatarSrc = useMemo(
-        () => (fileImage != null ? URL.createObjectURL(fileImage) : user?.avatar ?? undefined),
-        [fileImage, user?.avatar]
-    );
-    const onReset = useCallback(() => {
-        form.reset();
-        setFileImage(null);
-    }, [form]);
-
-    const handleChangeAvatar = useCallback(
-        (e: ChangeEvent<HTMLInputElement>) => {
-            const selectedFile = e.target.files?.[0] || null;
-            setFileImage(selectedFile);
-
-            if (selectedFile) {
-                setIsPhotoEditorVisible(true);
-            }
-            e.target.value = "";
-            form.setValue("avatar", selectedFile ? URL.createObjectURL(selectedFile) : "");
-        },
-        [form]
-    );
-
-    return (
-        <Form {...form}>
-            <PhotoEditorDialog
-                setVisible={setIsPhotoEditorVisible}
-                isVisible={isPhotoEditorVisible}
-                photoUrl={avatarSrc!}
-                onConfirm={setFileImage}
-            />
-            <form
-                noValidate
-                className="grid auto-rows-max items-start gap-4 md:gap-8"
-                onSubmit={form.handleSubmit(handleSubmit)}
-                method="POST"
-                onReset={onReset}
-            >
-                <div>
-                    <div className="flex items-center gap-2 mb-6">
-                        <div className="p-2 rounded-full bg-brand/10">
-                            <UserIcon className="w-5 h-5 text-brand" />
-                        </div>
-                        <div>
-                            <h3 className="font-semibold">{t("updateProfile.title")}</h3>
-                            <p className="text-sm text-muted-foreground">{t("updateProfile.description")}</p>
-                        </div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        ref={avatarPreviewRef}
+                        onChange={handleChangeAvatar}
+                      />
+                      <button
+                        className="flex aspect-square w-[100px] items-center justify-center rounded-md border border-dashed"
+                        type="button"
+                        onClick={() => {
+                          avatarPreviewRef.current?.click();
+                        }}
+                      >
+                        <Upload className="h-4 w-4 text-muted-foreground" />
+                        <span className="sr-only">
+                          {t("updateProfile.upload")}
+                        </span>
+                      </button>
                     </div>
-                    <div className="space-y-6">
-                        <div className="grid gap-6">
-                            <FormField
-                                control={form.control}
-                                name="avatar"
-                                render={({}) => (
-                                    <FormItem>
-                                        <div className="flex gap-2 items-start justify-start">
-                                            <Avatar className="aspect-square w-[100px] h-[100px] rounded-md object-cover">
-                                                <AvatarImage src={avatarSrc} className="shrink-0 object-cover" />
-                                                <AvatarFallback className="rounded-none">
-                                                    {user?.name.split(" ").at(-1) || t("updateProfile.defaultUser")}
-                                                </AvatarFallback>
-                                            </Avatar>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                className="hidden"
-                                                ref={avatarPreviewRef}
-                                                onChange={handleChangeAvatar}
-                                            />
-                                            <button
-                                                className="flex aspect-square w-[100px] items-center justify-center rounded-md border border-dashed"
-                                                type="button"
-                                                onClick={() => {
-                                                    avatarPreviewRef.current?.click();
-                                                }}
-                                            >
-                                                <Upload className="h-4 w-4 text-muted-foreground" />
-                                                <span className="sr-only">{t("updateProfile.upload")}</span>
-                                            </button>
-                                        </div>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="name"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <div className="grid gap-3">
-                                            <Label htmlFor="name" className="font-semibold text-muted-foreground">
-                                                {t("updateProfile.fullNameLabel")}
-                                            </Label>
-                                            <Input
-                                                id="name"
-                                                type="text"
-                                                className="brand-input bg-muted! border-none!"
-                                                {...field}
-                                            />
-                                            <FormMessage />
-                                        </div>
-                                    </FormItem>
-                                )}
-                            />
-
-                            <div className=" items-center gap-2 md:ml-auto flex">
-                                <Button variant="outline" size="sm" type="reset" className="min-w-[90px]">
-                                    {t("updateProfile.cancel")}
-                                </Button>
-                                <Button
-                                    size="sm"
-                                    type="submit"
-                                    disabled={isLoading}
-                                    className="bg-brand hover:bg-brand/90 w-[90px] flex items-center justify-center [&_svg]:size-5! cursor-pointer text-white"
-                                >
-                                    {isLoading ? <Loader className="animate-spin" /> : t("updateProfile.save")}
-                                </Button>
-                            </div>
-                        </div>
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="grid gap-3">
+                      <Label
+                        htmlFor="name"
+                        className="font-semibold text-muted-foreground"
+                      >
+                        {t("updateProfile.fullNameLabel")}
+                      </Label>
+                      <Input
+                        id="name"
+                        type="text"
+                        className="brand-input bg-muted! border-none!"
+                        {...field}
+                      />
+                      <FormMessage />
                     </div>
-                </div>
-            </form>
-        </Form>
-    );
+                  </FormItem>
+                )}
+              />
+
+              <div className=" items-center gap-2 md:ml-auto flex">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  type="reset"
+                  className="min-w-[90px]"
+                >
+                  {t("updateProfile.cancel")}
+                </Button>
+                <Button
+                  size="sm"
+                  type="submit"
+                  disabled={isLoading}
+                  className="bg-brand hover:bg-brand/90 w-[90px] flex items-center justify-center [&_svg]:size-5! cursor-pointer text-white"
+                >
+                  {isLoading ? (
+                    <Loader className="animate-spin" />
+                  ) : (
+                    t("updateProfile.save")
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </Form>
+  );
 }

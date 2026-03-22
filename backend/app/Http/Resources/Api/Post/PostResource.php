@@ -16,6 +16,7 @@ class PostResource extends BaseJsonResource
             'id' => $this->id,
             'uuid' => $this->uuid,
             'user_id' => $this->user_id,
+            'user_uuid' => $this->whenLoaded("user", fn() => $this->user->uuid),
             'type' => $this->type->value,
             'audience' => $this->audience->value,
             'content' => $this->content,

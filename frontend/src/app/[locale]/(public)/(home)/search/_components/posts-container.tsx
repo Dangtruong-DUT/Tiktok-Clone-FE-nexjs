@@ -65,8 +65,8 @@ export default function PostsContainer({
             <div className="mx-auto p-4 max-w-184  overflow-y-auto   scrollbar-hidden grid  gap-6 grid-cols-[repeat(auto-fill,minmax(240px,1fr))]  md:grid-cols-[repeat(auto-fill,minmax(180px,1fr))]  w-full">
                 {data.map((post) => (
                     <Link
-                        key={post._id}
-                        href={`/@${post.author.username}/video/${post._id}`}
+                        key={post.uuid}
+                        href={`/@${post.author.username}/video/${post.uuid}`}
                         className="w-full"
                         onClick={handleVideoClick}
                     >

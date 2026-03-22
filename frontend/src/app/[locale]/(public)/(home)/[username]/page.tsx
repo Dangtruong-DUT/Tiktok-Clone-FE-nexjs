@@ -82,7 +82,7 @@ export default async function Profile({ params }: { params: Promise<{ username: 
     return (
         <div className="w-full px-6 py-8">
             <ProfileUser userData={userData} className="mb-5" />
-            <VideosProvider userId={userData._id}>
+            <VideosProvider userId={userData.uuid}>
                 <TabBar tabs={TAB_ITEMS} />
                 <VideoGrid />
             </VideosProvider>

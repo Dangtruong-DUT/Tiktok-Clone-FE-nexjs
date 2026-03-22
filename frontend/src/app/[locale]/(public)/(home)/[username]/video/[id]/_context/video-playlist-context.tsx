@@ -47,7 +47,7 @@ interface VideoPlaylistProviderProps {
 
 export function VideoPlaylistProvider({ children, video }: VideoPlaylistProviderProps) {
     const [playlist, setPlaylistState] = useState<TikTokPostType[]>([video]);
-    const { fetchNextPage, isLoading, isFetching, data, hasNextPage } = useGetRelatedPostsInfiniteQuery(video._id);
+    const { fetchNextPage, isLoading, isFetching, data, hasNextPage } = useGetRelatedPostsInfiniteQuery(video.uuid);
     const postList: TikTokPostType[] = React.useMemo(
         () => data?.pages.flatMap((page) => page.data.posts) || [],
         [data]
@@ -89,7 +89,7 @@ export function VideoPlaylistProvider({ children, video }: VideoPlaylistProvider
 
     const playVideoById = useCallback(
         (videoId: string) => {
-            const index = playlist.findIndex((item) => item._id === videoId);
+            const index = playlist.findIndex((item) => item.uuid === videoId);
             if (index >= 0) {
                 setCurrentIndex(index);
             }

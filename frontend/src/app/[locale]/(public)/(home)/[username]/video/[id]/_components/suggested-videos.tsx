@@ -29,7 +29,7 @@ export default function SuggestedVideos() {
             <h4 className="text-lg font-semibold">You may like</h4>
             <div className="md:grid @4xl:grid-cols-2 hidden grid-cols-[repeat(auto-fill,minmax(180px,1fr))]  gap-4 mt-4">
                 {playlist.map((post, index) => (
-                    <div key={post._id} className="relative cursor-pointer" onClick={() => handleVideoClick(post._id)}>
+                    <div key={post.uuid} className="relative cursor-pointer" onClick={() => handleVideoClick(post.uuid)}>
                         <CardVideoItem post={post} isCurrentlyPlaying={index === currentIndex} />
                     </div>
                 ))}

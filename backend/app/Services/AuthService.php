@@ -17,10 +17,15 @@ use App\Repositories\VerifyEmailTokenRepository;
 use App\Traits\HasAuthUser;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthService
 {
     use HasAuthUser;
+
+    private const ACCESS_TOKEN_TYPE = 0;
+    private const REFRESH_TOKEN_TYPE = 1;
 
     /**
      * AuthService constructor.
@@ -41,14 +46,15 @@ class AuthService
      */
     public function login(array $credentials): array
     {
-        if (!$token = $this->guard()->attempt($credentials)) {
+        if (!$this->guard()->attempt($credentials)) {
             throw new UnauthorizedException('Email or password is incorrect');
         }
         $user = $this->guard()->user();
+        $accessToken = $this->createAccessToken($user);
         $refreshToken = $this->createRefreshToken($user);
 
         return [
-            'access_token' => $token,
+            'access_token' => $accessToken,
             'refresh_token' => $refreshToken,
             'user' => $user
         ];
@@ -89,12 +95,20 @@ class AuthService
      * @param string $refreshToken
      * @return string
      */
-    public function refresh(string $refreshToken): string
+    public function refresh(string $refreshToken): array
     {
         $token = $this->verifyRefreshToken($refreshToken);
-        $userId = $token->user_id;
-        $user = $this->userRepo->findOrFail($userId);
-        return $this->guard()->login($user);
+        $user = $this->userRepo->findOrFail($token->user_id);
+
+        $this->refreshRepo->delete($token->id); // @phpstan-ignore-line
+        $newAccessToken = $this->createAccessToken($user);
+        $newRefreshToken = $this->createRefreshToken($user);
+
+        return [
+            'access_token' => $newAccessToken,
+            'refresh_token' => $newRefreshToken,
+            'user' => $user,
+        ];
     }
 
     /**
@@ -118,9 +132,8 @@ class AuthService
             'password' => $data['password'],
             'date_of_birth' => $data['date_of_birth'],
         ]);
+        $accessToken = $this->createAccessToken($user);
         $refreshToken = $this->createRefreshToken($user);
-        // @phpstan-ignore argument.type
-        $accessToken = $this->guard()->login($user);
         $verifyToken = $this->createVerifyEmailToken($user);
         Mail::to($data['email'])->send(new VerifyUserEmail($user, $verifyToken));
 
@@ -137,7 +150,7 @@ class AuthService
      * @param array $credentials
      * @return bool
      */
-    public function verifyEmail(array $credentials): bool
+    public function verifyEmail(array $credentials): array
     {
         $token = $credentials['email_verify_token'];
         $validToken = $this->verifyEmailTokenRepo->findByToken($token);
@@ -152,7 +165,12 @@ class AuthService
         $user->verify = UserVerifyStatusEnum::VERIFIED->value;
         $user->save();
         $this->verifyEmailTokenRepo->deleteByUserId($validToken->user_id);
-        return true;
+
+        return [
+            'access_token' => $this->createAccessToken($user),
+            'refresh_token' => $this->createRefreshToken($user),
+            'user' => $user,
+        ];
     }
 
     /**
@@ -214,10 +232,25 @@ class AuthService
      */
     public function verifyRefreshToken(string $refreshToken): RefreshToken
     {
+        try {
+            $payload = JWTAuth::setToken($refreshToken)->getPayload();
+        } catch (JWTException $exception) {
+            throw new UnauthorizedException('Invalid refresh token');
+        }
+
+        if ((int) ($payload->get('token_Type') ?? -1) !== self::REFRESH_TOKEN_TYPE) {
+            throw new UnauthorizedException('Invalid refresh token');
+        }
+
         $token = $this->refreshRepo->findByToken($refreshToken);
         if (!$token) {
             throw new UnauthorizedException('Invalid refresh token');
         }
+
+        if ((int) $payload->get('sub') !== (int) $token->user_id) {
+            throw new UnauthorizedException('Invalid refresh token');
+        }
+
         if ($token->isExpired()) {
             $this->refreshRepo->delete($token->id);
             throw new UnauthorizedException('Refresh token has expired');
@@ -246,17 +279,49 @@ class AuthService
      * @param $user
      * @return string
      */
-    private function createRefreshToken( $user): string
+    private function createRefreshToken($user): string
     {
-        $refreshToken = Str::random((int)config('jwt.refresh_token_length', 64));
+        JWTAuth::factory()->setTTL((int) config('jwt.refresh_ttl', 20160));
+        $refreshToken = JWTAuth::claims($this->buildTokenClaims($user, self::REFRESH_TOKEN_TYPE))
+            ->fromUser($user);
+
         $this->refreshRepo->create(
             [
                 'user_id' => $user->id,
-                'token' =>$refreshToken,
+                'token' => $refreshToken,
                 'expires_at' => now()->addMinutes((int)config('jwt.refresh_ttl', 20160))
             ]
         );
         return $refreshToken;
+    }
+
+    /**
+     * Create access token.
+     * @param mixed $user
+     * @return string
+     */
+    private function createAccessToken($user): string
+    {
+        JWTAuth::factory()->setTTL((int) config('jwt.ttl', 60));
+        return JWTAuth::claims($this->buildTokenClaims($user, self::ACCESS_TOKEN_TYPE))
+            ->fromUser($user);
+    }
+
+    /**
+     * Build custom token claims.
+     * @param mixed $user
+     * @param int $tokenType
+     * @return array<string, mixed>
+     */
+    private function buildTokenClaims($user, int $tokenType): array
+    {
+        return [
+            'user_id' => (string) $user->uuid,
+            'uuid' => $user->uuid,
+            'verify' => $user->verify->value,
+            'role' => $user->role->value,
+            'token_Type' => $tokenType,
+        ];
     }
 
     /**

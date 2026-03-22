@@ -56,10 +56,10 @@ function FollowButton({
 export default function CardVideoItem({ post, className }: { post: TikTokPostType; className?: string }) {
     const author = post.author;
     const currentUser = useCurrentUserData();
-    const isCurrentUser = currentUser?._id === author._id;
+    const isCurrentUser = currentUser?.uuid === author.uuid;
     const { data: userProfileRes } = useGetUserByUsernameQuery(author.username, { skip: isCurrentUser });
     const { isFollowedState, onToggleFollow } = useFollowUser({
-        userId: author._id,
+        userId: author.uuid,
         initialFollowState: userProfileRes?.data.is_followed ?? false,
     });
 

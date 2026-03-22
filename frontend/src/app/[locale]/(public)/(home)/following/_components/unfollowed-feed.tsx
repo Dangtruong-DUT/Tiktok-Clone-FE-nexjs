@@ -47,7 +47,7 @@ export default function UnfollowedFeed({
     return (
         <>
             <div className="mx-auto p-4 max-w-184  overflow-y-auto   scrollbar-hidden grid  gap-6 grid-cols-[repeat(auto-fill,minmax(226px,1fr))]  md:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] w-full h-fit m-auto">
-                {posts.length > 0 && posts.map((post) => <CardVideoItem post={post} className="" key={post._id} />)}
+                {posts.length > 0 && posts.map((post) => <CardVideoItem post={post} className="" key={post.uuid} />)}
 
                 {posts.length > 0 && isFetching && (
                     <div className="px-4 py-4 col-span-full w-full flex justify-center items-center">

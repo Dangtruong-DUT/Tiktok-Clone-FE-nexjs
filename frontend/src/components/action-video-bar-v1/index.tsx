@@ -31,7 +31,7 @@ interface ActionBarProps {
 export default function ActionBar({ post, className }: ActionBarProps) {
     const { author } = post;
     const currentUser = useCurrentUserData();
-    const isCurrentUser = currentUser?._id === author._id;
+    const isCurrentUser = currentUser?.uuid === author.uuid;
 
     const { data: userData } = useGetUserByUsernameQuery(author.username);
     const fetchedAuthor = userData?.data;
@@ -41,13 +41,13 @@ export default function ActionBar({ post, className }: ActionBarProps) {
     const pathname = usePathname();
 
     const { isFollowedState, onToggleFollow } = useFollowUser({
-        userId: fetchedAuthor?._id ?? author._id,
+        userId: fetchedAuthor?.uuid ?? author.uuid,
         initialFollowState: fetchedAuthor?.is_followed ?? author.is_followed,
     });
 
     const [isOpenAnimatingLike, setIsOpenAnimatingLike] = useState<boolean>(false);
     const { isLikedState, toggleLikeState } = useLikePost({
-        postId: post._id,
+        postId: post.uuid,
         initialLikeState: post.is_liked,
         onLiked: () => {
             setIsOpenAnimatingLike(true);
@@ -57,7 +57,7 @@ export default function ActionBar({ post, className }: ActionBarProps) {
 
     const [isOpenAnimatingBookmark, setIsOpenAnimatingBookmark] = useState<boolean>(false);
     const { isBookmarkedState, toggleBookmarkState } = useBookmarkPost({
-        postId: post._id,
+        postId: post.uuid,
         initialBookmarkState: post.is_bookmarked,
         onBookmarked: () => {
             setIsOpenAnimatingBookmark(true);
@@ -74,7 +74,7 @@ export default function ActionBar({ post, className }: ActionBarProps) {
     }, [openModalVideoDetailType, dispatch, pathname]);
 
     const local = useLocale();
-    const videoUrl = `${envConfig.NEXT_PUBLIC_URL}${local}/@${author.username}/video/${post._id}`;
+    const videoUrl = `${envConfig.NEXT_PUBLIC_URL}${local}/@${author.username}/video/${post.uuid}`;
 
     return (
         <section className={cn("flex flex-col items-center gap-3  relative", className)}>

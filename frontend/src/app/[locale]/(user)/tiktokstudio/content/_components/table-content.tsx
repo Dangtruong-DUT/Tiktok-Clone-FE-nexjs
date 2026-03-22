@@ -49,9 +49,9 @@ export default function TableContent() {
     const { data: queryData, isLoading: isLoadingPosts } = useGetPostOfUserPagingQuery(
         {
             page: pagination.pageIndex + 1,
-            userId: currentUser?._id || "",
+            userId: currentUser?.uuid || "",
         },
-        { skip: !currentUser?._id }
+        { skip: !currentUser?.uuid }
     );
 
     const data = queryData?.data.posts || [];

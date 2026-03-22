@@ -66,21 +66,21 @@ export default function VideoDescription({ post, className }: VideoDescriptionPr
     const user = post.author;
     const locale = useLocale();
     const currentUser = useCurrentUserData();
-    const isCurrentUser = currentUser?._id === user._id;
+    const isCurrentUser = currentUser?.uuid === user.uuid;
     const { data: userProfileRes } = useGetUserByUsernameQuery(user.username, { skip: isCurrentUser });
     const { isFollowedState, onToggleFollow } = useFollowUser({
-        userId: user._id,
+        userId: user.uuid,
         initialFollowState: userProfileRes?.data.is_followed ?? false,
     });
-    const linkToVideo = `${envConfig.NEXT_PUBLIC_URL}${locale}/@${user.username}/video/${post._id}`;
+    const linkToVideo = `${envConfig.NEXT_PUBLIC_URL}${locale}/@${user.username}/video/${post.uuid}`;
 
     const role = useAppSelector((state) => state.auth.role);
-    const { data: postDetailRes } = useGetPostDetailQuery(post._id);
+    const { data: postDetailRes } = useGetPostDetailQuery(post.uuid);
     const postDetail = postDetailRes?.data;
 
     const [isOpenAnimatingLike, setIsOpenAnimatingLike] = useState<boolean>(false);
     const { isLikedState, toggleLikeState } = useLikePost({
-        postId: post._id,
+        postId: post.uuid,
         initialLikeState: postDetail?.is_liked || false,
         onLiked: () => {
             setIsOpenAnimatingLike(true);
@@ -90,7 +90,7 @@ export default function VideoDescription({ post, className }: VideoDescriptionPr
 
     const [isOpenAnimatingBookmark, setIsOpenAnimatingBookmark] = useState<boolean>(false);
     const { isBookmarkedState, toggleBookmarkState } = useBookmarkPost({
-        postId: post._id,
+        postId: post.uuid,
         initialBookmarkState: postDetail?.is_bookmarked || false,
         onBookmarked: () => {
             setIsOpenAnimatingBookmark(true);
@@ -167,7 +167,7 @@ export default function VideoDescription({ post, className }: VideoDescriptionPr
                             )}
                             size="icon"
                             onClick={() => {
-                                const commentSection = document.getElementById(`comment-section-${post._id}`);
+                                const commentSection = document.getElementById(`comment-section-${post.uuid}`);
                                 if (commentSection) {
                                     commentSection.scrollIntoView({ behavior: "smooth" });
                                 }

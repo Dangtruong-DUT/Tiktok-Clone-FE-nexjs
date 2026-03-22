@@ -25,7 +25,7 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
     const { authStatus } = useAppContext();
     const role = useAppSelector((state) => state.auth.role);
     const currentUser = useCurrentUserData();
-    const isCurrentUser = currentUser?._id === userId;
+    const isCurrentUser = currentUser?.uuid === userId;
     const t = useTranslations("ProfilePage.actions");
     const { data: userProfileRes } = useGetUserByUsernameQuery(username, { skip: isCurrentUser });
     const { isFollowedState, onToggleFollow } = useFollowUser({

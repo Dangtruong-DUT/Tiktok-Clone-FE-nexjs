@@ -80,7 +80,7 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
                 preload="metadata"
                 muted={isMuted}
                 autoPlay={true}
-                key={displayPost._id}
+                key={displayPost.uuid}
             >
                 <source src={displayPost.medias[0].url} type="video/mp4" />
             </video>

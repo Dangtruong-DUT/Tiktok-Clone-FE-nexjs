@@ -15,6 +15,7 @@ use App\Http\Resources\Api\Auth\AuthResource;
 use App\Http\Response\ApiResponse;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class AuthController extends Controller
 {
@@ -32,7 +33,12 @@ class AuthController extends Controller
     {
         $credentials = $request->validated();
         $registerResult = $this->authService->register($credentials);
-        return $this->respondWithToken($registerResult['access_token'], $registerResult['refresh_token'], 'Registration successful');
+        return $this->respondWithToken(
+            $registerResult['access_token'],
+            $registerResult['refresh_token'],
+            'Registration successful',
+            $registerResult['user']
+        );
     }
 
     /**
@@ -44,7 +50,12 @@ class AuthController extends Controller
     public function login(LoginRequest $request): JsonResponse{
         $credentials = $request->validated();
         $loginResult = $this->authService->login($credentials);
-        return $this->respondWithToken($loginResult['access_token'], $loginResult['refresh_token']);
+        return $this->respondWithToken(
+            $loginResult['access_token'],
+            $loginResult['refresh_token'],
+            'Login successful',
+            $loginResult['user']
+        );
     }
 
     /**
@@ -93,8 +104,13 @@ class AuthController extends Controller
     public function refresh(RefreshTokenRequest $request): JsonResponse
     {
         $refreshToken = $request->input('refresh_token');
-        $newAccessToken = $this->authService->refresh($refreshToken);
-        return $this->respondWithToken($newAccessToken, $refreshToken, 'Token refreshed successfully');
+        $result = $this->authService->refresh($refreshToken);
+        return $this->respondWithToken(
+            $result['access_token'],
+            $result['refresh_token'],
+            'Token refreshed successfully',
+            $result['user']
+        );
     }
 
     /**
@@ -144,8 +160,13 @@ class AuthController extends Controller
     public function verifyEmail(VerifyEmailRequest $request): JsonResponse
     {
         $credentials = $request->validated();
-        $this->authService->verifyEmail($credentials);
-        return ApiResponse::success(message: 'Email has been verified successfully');
+        $result = $this->authService->verifyEmail($credentials);
+        return $this->respondWithToken(
+            $result['access_token'],
+            $result['refresh_token'],
+            'Email has been verified successfully',
+            $result['user']
+        );
     }
 
 
@@ -160,15 +181,16 @@ class AuthController extends Controller
     protected function respondWithToken(
         string $accessToken,
         ?string $refreshToken=null,
-        string $message = 'Login successful'
+        string $message = 'Login successful',
+        ?Authenticatable $user = null
     ): JsonResponse
     {
-        $user = $this->authService->me();
+        $userData = $user ?? $this->authService->me();
 
         return ApiResponse::success([
             'access_token' => $accessToken,
             'refresh_token' => $refreshToken,
-            "user"=>new AuthResource($user),
+            'user' => $userData ? new AuthResource($userData) : null,
         ],$message);
     }
 

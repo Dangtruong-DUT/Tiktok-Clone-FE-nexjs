@@ -22,11 +22,11 @@ export default function RecentPosts({ classNames }: RecentPostProps) {
     const currentUser = useCurrentUserData();
     const { data } = useGetPostOfUserPagingQuery(
         {
-            userId: currentUser?._id || "",
+            userId: currentUser?.uuid || "",
             page: 1,
         },
         {
-            skip: !currentUser?._id,
+            skip: !currentUser?.uuid,
         }
     );
 
@@ -46,7 +46,7 @@ export default function RecentPosts({ classNames }: RecentPostProps) {
             <div className="bg-card border rounded-lg border-border  mt-4">
                 <ul className="divide-y ">
                     {posts.slice(0, 4).map((post) => (
-                        <li key={post._id}>
+                        <li key={post.uuid}>
                             <VideoItem post={post} />
                         </li>
                     ))}
@@ -107,7 +107,7 @@ function VideoItem({ post }: { post: TikTokPostType }) {
                 handleClose={() => setIsModalDetailOpen(false)}
                 post={post}
                 isLoading={!post}
-                key={post._id}
+                key={post.uuid}
             />
         </>
     );

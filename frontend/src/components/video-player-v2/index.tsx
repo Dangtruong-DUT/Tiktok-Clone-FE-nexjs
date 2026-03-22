@@ -88,7 +88,7 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
                 loop={true}
                 muted={isMuted}
                 autoPlay={true}
-                key={post._id}
+                key={post.uuid}
             >
                 <source src={post.medias[0].url} type="video/mp4" />
             </video>

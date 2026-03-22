@@ -60,7 +60,7 @@ export default function UsersContainer({
     return (
         <ul className="flex flex-col overflow-y-auto scrollbar-hidden mt-2">
             {data.map((user) => (
-                <li key={user._id}>
+                <li key={user.uuid}>
                     <Link href={`/@${user.username}`} className="inline-block w-full">
                         <Button
                             variant={"ghost"}

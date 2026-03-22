@@ -63,7 +63,7 @@ export function useColumns(): ColumnDef<TikTokPostType>[] {
                                 handleClose={() => setIsModalDetailOpen(false)}
                                 post={row.original}
                                 isLoading={!row.original}
-                                key={row.original._id}
+                                key={row.original.uuid}
                             />
                         </div>
                     );
@@ -77,7 +77,7 @@ export function useColumns(): ColumnDef<TikTokPostType>[] {
                     const { changeAudienceStatus } = usePostTableContext();
 
                     const onChangeStatus = (status: string) => {
-                        changeAudienceStatus({ status: Number(status), postId: originalRow._id });
+                        changeAudienceStatus({ status: Number(status), postId: originalRow.uuid });
                     };
 
                     return (
@@ -124,7 +124,7 @@ export function useColumns(): ColumnDef<TikTokPostType>[] {
                             <Tooltip>
                                 <TooltipTrigger asChild>
                                     <Link
-                                        href={`/tiktokstudio/upload/post/${post._id}?from=${encodeURIComponent(
+                                        href={`/tiktokstudio/upload/post/${post.uuid}?from=${encodeURIComponent(
                                             "/tiktokstudio/content"
                                         )}`}
                                     >
@@ -156,7 +156,7 @@ export function useColumns(): ColumnDef<TikTokPostType>[] {
                                     <Button
                                         variant="ghost"
                                         className=" cursor-pointer text-red-500 hover:text-red-600 w-full justify-start px-6!"
-                                        onClick={() => setPostIdDelete(post._id)}
+                                        onClick={() => setPostIdDelete(post.uuid)}
                                     >
                                         <Trash2 />
                                         <span>{t("actions.delete")}</span>

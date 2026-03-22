@@ -22,7 +22,7 @@ export function useHandleVideos(postList: TikTokPostType[]) {
     const handleUpdateNewPathForVideo = useCallback(() => {
         const currentPost = postList[currentIndex];
         if (!currentPost) return;
-        const newUrl = `/@${currentPost.author.username}/video/${currentPost._id}`;
+        const newUrl = `/@${currentPost.author.username}/video/${currentPost.uuid}`;
         if (pathname.includes("video")) {
             router.replace(newUrl);
         } else {

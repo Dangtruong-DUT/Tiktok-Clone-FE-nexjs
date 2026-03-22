@@ -95,7 +95,7 @@ export default function SearchDrawerContent({ searchValue, setSearchValue }: Sea
                         </h4>
                         <ul tabIndex={-1} className="space-y-1">
                             {searchResults.map((user) => (
-                                <li key={user._id}>
+                                <li key={user.uuid}>
                                     <Link href={`/@${user.username}`} className="inline-block w-full">
                                         <Button
                                             variant={"ghost"}
