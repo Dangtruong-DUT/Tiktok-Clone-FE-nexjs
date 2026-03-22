@@ -12,16 +12,13 @@ The backend for this TikTok Clone project is built with Laravel 12 and JWT authe
 - Pest (testing)
 - PHPStan (static analysis)
 
-## Current API Endpoints
+## API Documentation
 
-Base path: `/api`
-
-Auth routes:
-
-- `POST /api/auth/login` (public)
-- `POST /api/auth/logout` (requires auth)
-- `POST /api/auth/refresh` (requires auth)
-- `GET /api/auth/me` (requires auth)
+- Current API version base path: `/api/v1`
+- Swagger/OpenAPI spec: `backend/docs/api/swagger.yaml`
+- Swagger UI (served by backend): `/docs/swagger`
+- Raw Swagger spec endpoint: `/docs/swagger.yaml`
+- Database design (from migrations): `backend/docs/database/database-design.md`
 
 ## Run Locally (without Docker)
 
