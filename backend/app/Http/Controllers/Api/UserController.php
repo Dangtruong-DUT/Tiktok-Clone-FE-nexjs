@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\ChangePasswordRequest;
 use App\Http\Requests\User\FollowSomeOneRequest;
 use App\Http\Requests\User\GetListUserRequest;
+use App\Http\Requests\User\GetUserIndicatorsRequest;
 use App\Http\Requests\User\GetUserProfileRequest;
 use App\Http\Requests\User\UnFollowSomeOneRequest;
 use App\Http\Response\ApiResponse;
@@ -100,6 +101,22 @@ class UserController extends Controller
         return ApiResponse::success(
             data: UserResource::make($user),
             message: 'User retrieved successfully'
+        );
+    }
+
+    /**
+     * Get indicators of the authenticated user.
+     *
+     * @param GetUserIndicatorsRequest $request
+     * @return JsonResponse
+     */
+    public function indicators(GetUserIndicatorsRequest $request): JsonResponse
+    {
+        $indicators = $this->userService->getIndicators($request->validated());
+
+        return ApiResponse::success(
+            data: $indicators,
+            message: 'User indicators retrieved successfully'
         );
     }
 

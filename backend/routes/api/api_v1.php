@@ -41,6 +41,7 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::put('/change-password', [UserController::class, 'changePassword'])->name('change-password');
             Route::patch('/me', [UserController::class, 'update'])->name('update');
             Route::get('/me', [UserController::class, 'showMe'])->name('show-me');
+            Route::get('/me/indicators', [UserController::class, 'indicators'])->name('indicators');
         });
 
     //post routes

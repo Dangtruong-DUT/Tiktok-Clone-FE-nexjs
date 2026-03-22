@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class UserRepository extends BaseRepository
 {
@@ -131,6 +132,30 @@ class UserRepository extends BaseRepository
         ->orderByDesc('created_at');
         $perPage = $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
         return $this->withDetail($query, $authUserId)->paginate($perPage);
+    }
+
+    /**
+     * Get user indicators grouped by date in given range.
+     *
+     * @param int $userId
+     * @param string $fromDate
+     * @param string $toDate
+     * @return Collection
+     */
+    public function getIndicatorsByUserIdAndDateRange(int $userId, string $fromDate, string $toDate): Collection
+    {
+        return DB::table('posts')
+            ->where('user_id', $userId)
+            ->selectRaw('DATE(created_at) as date')
+            ->selectRaw('COALESCE(SUM(likes_count), 0) as likes_count')
+            ->selectRaw('COALESCE(SUM(guest_views), 0) as guests_view')
+            ->selectRaw('COALESCE(SUM(user_views), 0) as users_view')
+            ->selectRaw('COALESCE(SUM(comments_count), 0) as comments_count')
+            ->whereDate('created_at', '>=', $fromDate)
+            ->whereDate('created_at', '<=', $toDate)
+            ->groupByRaw('DATE(created_at)')
+            ->orderBy('date')
+            ->get();
     }
 
     /**

@@ -9,7 +9,9 @@ use App\Models\User;
 use App\Repositories\RelationshipRepository;
 use App\Repositories\UserRepository;
 use App\Traits\HasAuthUser;
+use Carbon\CarbonPeriod as CarbonCarbonPeriod;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class UserService
@@ -177,5 +179,59 @@ class UserService
     {
         $authUserId = $this->guard()->id();
         return $this->userRepo->getByUsernameWithDetail($username, $authUserId);
+    }
+
+    /**
+     * Get indicators of authenticated user in date range.
+     *
+     * @param array $payload
+     * @return array<string, mixed>
+     */
+    public function getIndicators(array $payload): array
+    {
+        $authUserId = $this->guard()->id();
+        $fromDate = Carbon::parse($payload['fromDate'])->toDateString();
+        $toDate = Carbon::parse($payload['toDate'])->toDateString();
+
+        $rowsByDate = $this->userRepo
+            ->getIndicatorsByUserIdAndDateRange($authUserId, $fromDate, $toDate)
+            ->keyBy('date');
+
+        $totalLikes = 0;
+        $totalGuestsView = 0;
+        $totalUsersView = 0;
+        $totalComments = 0;
+        $indicator = [];
+
+        foreach (CarbonCarbonPeriod::create($fromDate, $toDate) as $date) {
+            $dateKey = $date->format('Y-m-d');
+            $row = $rowsByDate->get($dateKey);
+
+            $likesCount = (int) ($row->likes_count ?? 0);
+            $guestsView = (int) ($row->guests_view ?? 0);
+            $usersView = (int) ($row->users_view ?? 0);
+            $commentsCount = (int) ($row->comments_count ?? 0);
+
+            $totalLikes += $likesCount;
+            $totalGuestsView += $guestsView;
+            $totalUsersView += $usersView;
+            $totalComments += $commentsCount;
+
+            $indicator[] = [
+                'date' => $dateKey,
+                'likes_count' => $likesCount,
+                'guests_view' => $guestsView,
+                'users_view' => $usersView,
+                'comments_count' => $commentsCount,
+            ];
+        }
+
+        return [
+            'likes_count' => $totalLikes,
+            'guests_view' => $totalGuestsView,
+            'users_view' => $totalUsersView,
+            'comments_count' => $totalComments,
+            'Indicator' => $indicator,
+        ];
     }
 }
