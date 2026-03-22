@@ -21,6 +21,29 @@ class PostRepository extends BaseRepository
     }
 
     /**
+     * Increment user_views and guest_views for a post by given amounts.
+     *
+     * @param int $postId ID of the post to update
+     * @param int $userViews Number of user views to add
+     * @param int $guestViews Number of guest views to add
+     * @return bool True if the update was successful, false otherwise
+     */
+    public function incrementViews(int $postId, int $userViews, int $guestViews): bool
+    {
+        $post = $this->query()->whereKey($postId)->first();
+
+        if (!$post) {
+            return false;
+        }
+
+        $post->user_views += $userViews;
+        $post->guest_views += $guestViews;
+
+        return $post->save();
+    }
+
+
+    /**
      * Check if a post exists by id.
      * @param int $id
      * @return bool
