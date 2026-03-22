@@ -122,9 +122,20 @@ class UserService
         ];
         $updateData = array_intersect_key($payload, array_flip($allowedFields));
 
-        if (!empty($updateData)) {
-            $this->userRepo->update($authUser->id, $updateData);
+        if (empty($updateData)) {
+            throw new BusinessException('No valid fields to update');
         }
+        $this->userRepo->update($authUser->id, [
+            'name' => $updateData['name'] ?? $authUser->name,
+            'date_of_birth' => $updateData['date_of_birth'] ?? $authUser->date_of_birth,
+            'bio' => $updateData['bio'] ?? $authUser->bio,
+            'location' => $updateData['location'] ?? $authUser->location,
+            'website' => $updateData['website'] ?? $authUser->website,
+            'username' => $updateData['username'] ?? $authUser->username,
+            'avatar_file_id' => array_key_exists('avatar_file_id', $updateData)
+                ? $updateData['avatar_file_id']
+                : $authUser->avatar_file_id,
+        ]);
 
         return $this->getByUsername($authUser->username);
     }

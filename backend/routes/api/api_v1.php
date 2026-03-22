@@ -48,6 +48,8 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
         ->name('posts.')
         ->group(function () {
             Route::post('/', [PostController::class, 'create'])->name('create');
+            Route::patch('{post_uuid}', [PostController::class, 'update'])->name('update');
+            Route::delete('{post_uuid}', [PostController::class, 'delete'])->name('delete');
             Route::post('{post_uuid}/like', [PostController::class, 'like'])->name('like');
             Route::delete('{post_uuid}/like', [PostController::class, 'unlike'])->name('unlike');
             Route::post('{post_uuid}/bookmark', [PostController::class, 'bookmark'])->name('bookmark');

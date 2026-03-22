@@ -13,6 +13,7 @@ use App\Http\Requests\Post\UnBookmarkPostRequest;
 use App\Http\Requests\Post\UnlikePostRequest;
 use App\Http\Requests\Post\GetLikedPostsOfUserRequest;
 use App\Http\Requests\Post\GetPostsOfUserRequest;
+use App\Http\Requests\Post\UpdatePostRequest;
 use App\Http\Resources\Api\Post\PostResource;
 use App\Http\Response\ApiResponse;
 use App\Services\PostService;
@@ -43,6 +44,31 @@ class PostController extends Controller
     }
 
     /**
+     * Update a post by uuid.
+     * @param UpdatePostRequest $request
+     * @return JsonResponse
+     */
+    public function update(UpdatePostRequest $request): JsonResponse
+    {
+        $post = $this->postService->update($request->validated());
+        return ApiResponse::success(
+            data: new PostResource($post),
+            message: 'Post updated successfully'
+        );
+    }
+
+    /**
+     * Delete a post by uuid.
+     * @param GetPostRequest $request
+     * @return JsonResponse
+     */
+    public function delete(GetPostRequest $request): JsonResponse
+    {
+        $this->postService->delete($request->input('post_uuid'));
+        return ApiResponse::success(message: 'Post deleted successfully');
+    }
+
+    /**
      * Get post details by uuid.
      * @param GetPostRequest $request
      * @return JsonResponse
@@ -50,7 +76,7 @@ class PostController extends Controller
     public function show(GetPostRequest $request): JsonResponse
     {
         $uuid = $request->input('post_uuid');
-        $post = $this->postService->getByUuid($uuid);
+        $post = $this->postService->getByUuidOrFail($uuid);
         return ApiResponse::success(
             data: new PostResource($post),
             message: 'Post retrieved successfully'

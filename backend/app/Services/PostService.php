@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\Post\PostTypeEnum;
 use App\Exceptions\http\BusinessException;
+use App\Exceptions\http\ForbiddenException;
 use App\Exceptions\http\NotFoundException;
 use App\Models\Post;
 use App\Repositories\HashtagRepository;
@@ -59,13 +60,7 @@ class PostService
                     throw new NotFoundException('Parent post not found');
                 }
 
-                if ($postType === PostTypeEnum::RE_POST->value) {
-                    $parentPost->increment('repost_count');
-                } else if ($postType === PostTypeEnum::QUOTE_POST->value) {
-                    $parentPost->increment('quote_post_count');
-                } else if ($postType === PostTypeEnum::COMMENT->value) {
-                    $parentPost->increment('comments_count');
-                }
+                $this->updateParentCounter($parentPost, $postType, 'increment');
             }
 
             $post = $this->postRepo->create([
@@ -80,27 +75,7 @@ class PostService
                 $post->mentions()->sync($payload['mentions']);
             }
             if (!empty($payload['hashtags'])) {
-                $hashtagNames = array_unique($payload['hashtags']);
-                $existingHashtags = $this->hashtagRepo->getByNames($hashtagNames);
-                $hashtagIdByName = [];
-
-                foreach ($existingHashtags as $hashtag) {
-                    $hashtagIdByName[$hashtag->name] = $hashtag->id;
-                }
-
-                $newHashtags = [];
-                foreach ($hashtagNames as $hashtagName) {
-                    if (!isset($hashtagIdByName[$hashtagName])) {
-                        $newHashtags[] = ['name' => $hashtagName];
-                    }
-                }
-
-                if (!empty($newHashtags)) {
-                    $this->hashtagRepo->createMany($newHashtags);
-                }
-
-                $hashtagIds = $this->hashtagRepo->getByNames($hashtagNames)->pluck('id')->toArray();
-                $post->hashtags()->sync($hashtagIds);
+                $this->syncHashtags($post, $payload['hashtags']);
             }
 
             if (!empty($payload['medias'])) {
@@ -114,11 +89,87 @@ class PostService
     }
 
     /**
+     * Update a post by uuid.
+     * @param array $payload
+     *              - post_uuid: post uuid
+     *              - content: post content
+     *              - audience: post audience
+     *              - thumbnail: thumbnail file id
+     *              - mentions: array of mentioned user ids
+     *              - hashtags: array of hashtag names
+     * @return Post
+     */
+    public function update(array $payload): Post
+    {
+        $post = $this->findPostOrFail($payload['post_uuid']);
+
+        $authUserId = $this->guard()->id();
+        if ($post->user_id !== $authUserId) {
+            throw new ForbiddenException('You can only update your own post');
+        }
+
+        $allowedFields = ['content', 'audience', 'thumbnail'];
+        $dataToUpdate = array_intersect_key($payload, array_flip($allowedFields));
+
+        if (empty($dataToUpdate) && !array_key_exists('mentions', $payload) && !array_key_exists('hashtags', $payload)) {
+            throw new BusinessException('At least one field must be provided for update');
+        }
+
+        DB::transaction(function () use ($post, $payload, $dataToUpdate): void {
+            if (!empty($dataToUpdate)) {
+                $this->postRepo->update($post->id, [
+                    'content' => $dataToUpdate['content'] ?? $post->content,
+                    'audience' => $dataToUpdate['audience'] ?? $post->audience,
+                    'thumbnail_file_id' => array_key_exists('thumbnail', $dataToUpdate)
+                        ? $dataToUpdate['thumbnail']
+                        : $post->thumbnail_file_id,
+                ]);
+            }
+
+            if (array_key_exists('mentions', $payload)) {
+                $post->mentions()->sync($payload['mentions'] ?? []);
+            }
+
+            if (array_key_exists('hashtags', $payload)) {
+                $this->syncHashtags($post, $payload['hashtags'] ?? []);
+            }
+        });
+
+        return $this->postRepo->getByIdWithDetail($post->id, $authUserId);
+    }
+
+    /**
+     * Delete a post by uuid.
+     * @param string $uuid
+     * @return void
+     */
+    public function delete(string $uuid): void
+    {
+        DB::transaction(function () use ($uuid): void {
+            $post = $this->findPostOrFail($uuid);
+
+            if ($post->user_id !== $this->guard()->id()) {
+                throw new ForbiddenException('You can only delete your own post');
+            }
+
+            if (!empty($post->parent_id)) {
+                $parentPost = $this->postRepo->findById($post->parent_id);
+
+                if (!empty($parentPost)) {
+                    $this->updateParentCounter($parentPost, $post->type->value, 'decrement');
+                }
+            }
+
+            $this->postRepo->delete($post->id);
+        });
+    }
+
+    /**
      * Get post by uuid.
      * @param string $uuid
      * @return Post
      */
-    public function getByUuid(string $uuid): ?Post
+    public function getByUuidOrFail(string $uuid): ?Post
     {
         $userId = $this->guard()->check() ? $this->guard()->id() : null;
         $postDetail = $this->postRepo->getByUuidWithDetail($uuid, $userId);
@@ -142,10 +193,7 @@ class PostService
     public function getChildren(array $payload): LengthAwarePaginator
     {
         $postUuid = $payload['post_uuid'];
-        $post = $this->postRepo->findByUuid($postUuid);
-        if (empty($post)) {
-            throw new NotFoundException('Post not found');
-        }
+        $post = $this->findPostOrFail($postUuid);
         $authUserId = $this->guard()->check() ? $this->guard()->id() : null;
 
         return $this->postRepo->search([
@@ -259,10 +307,7 @@ class PostService
     public function like(string $uuid): void
     {
         DB::transaction(function () use ($uuid) {
-            $post = $this->postRepo->findByUuid($uuid);
-            if (empty($post)) {
-                throw new NotFoundException('Post not found');
-            }
+            $post = $this->findPostOrFail($uuid);
             if ($post->userLikes()->where('user_id', $this->guard()->id())->exists()) {
                 return;
             }
@@ -279,10 +324,7 @@ class PostService
     public function unlike(string $uuid): void
     {
         DB::transaction(function () use ($uuid) {
-            $post = $this->postRepo->findByUuid($uuid);
-            if (empty($post)) {
-                throw new NotFoundException('Post not found');
-            }
+            $post = $this->findPostOrFail($uuid);
 
             if (!$post->userLikes()->where('user_id', $this->guard()->id())->exists()) {
                 return;
@@ -300,10 +342,7 @@ class PostService
     public function bookmark(string $uuid): void
     {
         DB::transaction(function () use ($uuid) {
-            $post = $this->postRepo->findByUuid($uuid);
-            if (empty($post)) {
-                throw new NotFoundException('Post not found');
-            }
+            $post = $this->findPostOrFail($uuid);
 
             if ($post->userBookmarks()->where('user_id', $this->guard()->id())->exists()) {
                 return;
@@ -321,10 +360,7 @@ class PostService
     public function unbookmark(string $uuid): void
     {
         DB::transaction(function () use ($uuid) {
-            $post = $this->postRepo->findByUuid($uuid);
-            if (empty($post)) {
-                throw new NotFoundException('Post not found');
-            }
+            $post = $this->findPostOrFail($uuid);
 
             if (!$post->userBookmarks()->where('user_id', $this->guard()->id())->exists()) {
                 return;
@@ -332,5 +368,81 @@ class PostService
             $post->userBookmarks()->detach($this->guard()->id());
             $post->decrement('bookmarks_count');
         });
+    }
+
+    /**
+     * Find post by uuid or throw not found exception.
+     * @param string $uuid
+     * @return Post
+     */
+    private function findPostOrFail(string $uuid): Post
+    {
+        $post = $this->postRepo->findByUuid($uuid);
+
+        if (empty($post)) {
+            throw new NotFoundException('Post not found');
+        }
+
+        return $post;
+    }
+
+    /**
+     * Sync hashtags to post.
+     * @param Post $post
+     * @param array $hashtagNames
+     * @return void
+     */
+    private function syncHashtags(Post $post, array $hashtagNames): void
+    {
+        $hashtagNames = array_values(array_unique($hashtagNames));
+        $existingHashtags = $this->hashtagRepo->getByNames($hashtagNames);
+        $hashtagIdByName = [];
+
+        foreach ($existingHashtags as $hashtag) {
+            $hashtagIdByName[$hashtag->name] = $hashtag->id;
+        }
+
+        $newHashtags = [];
+        foreach ($hashtagNames as $hashtagName) {
+            if (!isset($hashtagIdByName[$hashtagName])) {
+                $newHashtags[] = ['name' => $hashtagName];
+            }
+        }
+
+        if (!empty($newHashtags)) {
+            $this->hashtagRepo->createMany($newHashtags);
+        }
+
+        $hashtagIds = empty($hashtagNames)
+            ? []
+            : $this->hashtagRepo->getByNames($hashtagNames)->pluck('id')->toArray();
+
+        $post->hashtags()->sync($hashtagIds);
+    }
+
+    /**
+     * Update parent post counter by post type.
+     * @param Post $parentPost
+     * @param int $type
+     * @param string $action
+     * @return void
+     */
+    private function updateParentCounter(Post $parentPost, int $type, string $action = 'increment'): void
+    {
+        $map = [
+            PostTypeEnum::RE_POST->value => 'repost_count',
+            PostTypeEnum::QUOTE_POST->value => 'quote_post_count',
+            PostTypeEnum::COMMENT->value => 'comments_count',
+        ];
+
+        if (!isset($map[$type])) {
+            return;
+        }
+
+        $field = $map[$type];
+
+        $action === 'increment'
+            ? $parentPost->increment($field)
+            : $parentPost->decrement($field);
     }
 }
