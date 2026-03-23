@@ -32,6 +32,7 @@ class ForgotPasswordToken extends Model
         'user_id',
         'token',
         'expires_at',
+        'token_fingerprint',
     ];
 
     /*

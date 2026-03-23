@@ -3,7 +3,6 @@ namespace App\Repositories;
 
 use App\Models\ForgotPasswordToken;
 use App\Repositories\BaseRepository;
-use Illuminate\Support\Collection;
 
 class ForgotPasswordTokenRepository extends BaseRepository
 {
@@ -19,17 +18,6 @@ class ForgotPasswordTokenRepository extends BaseRepository
     }
 
     /**
-     * Find forgot password tokens by user ID
-     *
-     * @param int $userId
-     * @return Collection|null
-     */
-    public function findByUserId(int $userId): Collection|null
-    {
-        return $this->query()->where('user_id', $userId)->get();
-    }
-
-    /**
      * Delete forgot password tokens by user ID
      *
      * @param int $userId
@@ -41,13 +29,13 @@ class ForgotPasswordTokenRepository extends BaseRepository
     }
 
     /**
-     * Find a forgot password token by token string
+     * Find a forgot password token by token fingerprint
      *
-     * @param string $token
+     * @param string $tokenFingerprint
      * @return ForgotPasswordToken|null
      */
-    public function findByToken(string $token): ?ForgotPasswordToken
+    public function findByTokenFingerprint(string $tokenFingerprint): ?ForgotPasswordToken
     {
-        return $this->query()->get()->first(fn($item) => $item->isValidToken($token));
+        return $this->query()->where('token_fingerprint', $tokenFingerprint)->first();
     }
 }

@@ -44,3 +44,15 @@ if (! function_exists('generate_username')) {
         return $username;
     }
 }
+
+if (!function_exists("auth_user_id")) {
+    /**
+     * Get the authenticated user's ID.
+     *
+     * @return int|null
+     */
+    function auth_user_id(): ?int
+    {
+        return auth()->check() ? auth()->id() : null;
+    }
+}

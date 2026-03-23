@@ -18,6 +18,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 /**
  * @property int $id
@@ -121,6 +122,7 @@ class User extends Authenticatable implements JWTSubject
             'verify' => $this->verify->value,
             'role' => $this->role->value,
             'token_Type' => $tokenType,
+            'jti' => Str::uuid(),
         ];
     }
 

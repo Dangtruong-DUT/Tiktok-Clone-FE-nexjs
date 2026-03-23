@@ -3,11 +3,11 @@
 namespace App\Services;
 
 use App\Enums\User\UserVerifyStatusEnum;
-use App\Exceptions\http\BadRequestException;
 use App\Exceptions\http\BusinessException;
 use App\Exceptions\http\UnauthorizedException;
 use App\Mail\ForgotPasswordMail;
 use App\Mail\VerifyUserEmail;
+use App\Models\User;
 use App\Repositories\ForgotPasswordTokenRepository;
 use App\Repositories\RefreshTokenRepository;
 use App\Repositories\UserRepository;
@@ -142,19 +142,13 @@ class AuthService
      * Handle verify email request by verifying the token and activating the user's account.
      *
      * @param array $credentials
+     *              - email_verify_token: The token sent to the user's email for verification.
      * @return bool
      */
     public function verifyEmail(array $credentials): array
     {
         $token = $credentials['email_verify_token'];
-        $validToken = $this->verifyEmailTokenRepo->findByToken($token);
-        if (empty($validToken)) {
-            throw new BadRequestException('Invalid token');
-        }
-        if ($validToken->isExpired()) {
-            $this->verifyEmailTokenRepo->delete($validToken->id);
-            throw new BadRequestException('Token has expired');
-        }
+        $validToken = $this->tokenService->verifyVerifyEmailToken($token);
         $user = $this->userRepo->findOrFail($validToken->user_id);
         $user->verify = UserVerifyStatusEnum::VERIFIED->value;
         $user->save();
@@ -170,9 +164,9 @@ class AuthService
     /**
      * Get the authenticated user's profile.
      *
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     * @return User|null
      */
-    public function me(): \Illuminate\Contracts\Auth\Authenticatable|null
+    public function me(): User|null
     {
         return $this->guard()->user();
     }
@@ -195,6 +189,22 @@ class AuthService
         $token = $this->tokenService->createForgotPasswordToken($user);
         Mail::to($email)->send(new ForgotPasswordMail($user,$token));
 
+        return true;
+    }
+
+    /**
+     * Handle reset password request by resetting the user's password.
+     *
+     * @param array $credentials
+     * @return bool
+     */
+    public function resetPassword(array $credentials): bool
+    {
+        $validToken= $this->tokenService->verifyForgotToken($credentials['forgot_password_token']);
+        $this->forgotPasswordTokenRepo->deleteByUserId($validToken->user_id);
+        $user = $this->userRepo->findOrFail($validToken->user_id);
+        $user->password = $credentials['password'];
+        $user->save();
         return true;
     }
 }

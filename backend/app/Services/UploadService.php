@@ -15,7 +15,7 @@ class UploadService
 
     /**
      * @param UploadedFile $file
-     * @return array{url: string, type: string}
+     * @return array{id: string, url: string, type: string}
      */
     public function image(UploadedFile $file)
     {
@@ -30,7 +30,7 @@ class UploadService
 
     /**
      * @param UploadedFile $file
-     * @return array{url: string, type: string}
+     * @return array{id: string, url: string, type: string}
      */
 
     public function video(UploadedFile $file)

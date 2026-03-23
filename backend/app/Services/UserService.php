@@ -35,7 +35,7 @@ class UserService
      */
     public function search(array $payload): LengthAwarePaginator
     {
-        $authUserId = $this->guard()->id();
+        $authUserId = auth_user_id();
         return $this->userRepo->search($payload, $authUserId);
     }
 
@@ -177,7 +177,7 @@ class UserService
      */
     public function getByUsername(string $username): User
     {
-        $authUserId = $this->guard()->id();
+        $authUserId = auth_user_id();
         return $this->userRepo->getByUsernameWithDetail($username, $authUserId);
     }
 
@@ -189,7 +189,7 @@ class UserService
      */
     public function getIndicators(array $payload): array
     {
-        $authUserId = $this->guard()->id();
+        $authUserId = auth_user_id();
         $fromDate = Carbon::parse($payload['fromDate'])->toDateString();
         $toDate = Carbon::parse($payload['toDate'])->toDateString();
 

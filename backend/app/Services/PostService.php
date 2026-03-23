@@ -103,7 +103,7 @@ class PostService
     {
         $post = $this->findPostOrFail($payload['post_uuid']);
 
-        $authUserId = $this->guard()->id();
+        $authUserId =auth_user_id();
         if ($post->user_id !== $authUserId) {
             throw new ForbiddenException('You can only update your own post');
         }
@@ -148,7 +148,7 @@ class PostService
         DB::transaction(function () use ($uuid): void {
             $post = $this->findPostOrFail($uuid);
 
-            if ($post->user_id !== $this->guard()->id()) {
+            if ($post->user_id !== auth_user_id()) {
                 throw new ForbiddenException('You can only delete your own post');
             }
 
@@ -171,7 +171,7 @@ class PostService
      */
     public function getByUuidOrFail(string $uuid): ?Post
     {
-        $userId = $this->guard()->check() ? $this->guard()->id() : null;
+        $userId = auth_user_id();
         $postDetail = $this->postRepo->getByUuidWithDetail($uuid, $userId);
         if (empty($postDetail)) {
             throw new NotFoundException('Post not found');
@@ -194,7 +194,7 @@ class PostService
     {
         $postUuid = $payload['post_uuid'];
         $post = $this->findPostOrFail($postUuid);
-        $authUserId = $this->guard()->check() ? $this->guard()->id() : null;
+        $authUserId = auth_user_id();
 
         return $this->postRepo->search([
             'q' => $payload['q'] ?? null,
@@ -218,7 +218,7 @@ class PostService
      */
     public function search(array $payload): LengthAwarePaginator
     {
-        $authUserId = $this->guard()->check() ? $this->guard()->id() : null;
+        $authUserId = auth_user_id();
 
         return $this->postRepo->search([
             'q' => $payload['q'] ?? null,
@@ -240,7 +240,7 @@ class PostService
      */
     public function getByUser(array $payload): LengthAwarePaginator
     {
-        $authUserId = $this->guard()->check() ? $this->guard()->id() : null;
+        $authUserId = auth_user_id();
         $targetUser = $this->userRepo->findByUuidOrFail($payload['user_uuid']);
         return $this->postRepo->getPostsByUserId(
             filters: [
@@ -263,7 +263,7 @@ class PostService
      */
     public function getLikedByUser(array $payload): LengthAwarePaginator
     {
-        $authUserId = $this->guard()->check() ? $this->guard()->id() : null;
+        $authUserId = auth_user_id();
         $targetUser = $this->userRepo->findByUuidOrFail($payload['user_uuid']);
         return $this->postRepo->getLikedPostsByUserId(
             filters: [
@@ -287,7 +287,7 @@ class PostService
      */
     public function getBookmarkedByUser(array $payload): LengthAwarePaginator
     {
-        $authUserId = $this->guard()->check() ? $this->guard()->id() : null;
+        $authUserId = auth_user_id();
         $targetUser = $this->userRepo->findByUuidOrFail($payload['user_uuid']);
         return $this->postRepo->getBookmarkedPostsByUserId(
             filters: [
@@ -308,10 +308,10 @@ class PostService
     {
         DB::transaction(function () use ($uuid) {
             $post = $this->findPostOrFail($uuid);
-            if ($post->userLikes()->where('user_id', $this->guard()->id())->exists()) {
+            if ($post->userLikes()->where('user_id', auth_user_id())->exists()) {
                 return;
             }
-            $post->userLikes()->syncWithoutDetaching([$this->guard()->id()]);
+            $post->userLikes()->syncWithoutDetaching([auth_user_id()]);
             $post->increment('likes_count');
         });
     }
@@ -326,10 +326,10 @@ class PostService
         DB::transaction(function () use ($uuid) {
             $post = $this->findPostOrFail($uuid);
 
-            if (!$post->userLikes()->where('user_id', $this->guard()->id())->exists()) {
+            if (!$post->userLikes()->where('user_id', auth_user_id())->exists()) {
                 return;
             }
-            $post->userLikes()->detach($this->guard()->id());
+            $post->userLikes()->detach(auth_user_id());
             $post->decrement('likes_count');
         });
     }
@@ -344,10 +344,10 @@ class PostService
         DB::transaction(function () use ($uuid) {
             $post = $this->findPostOrFail($uuid);
 
-            if ($post->userBookmarks()->where('user_id', $this->guard()->id())->exists()) {
+            if ($post->userBookmarks()->where('user_id', auth_user_id())->exists()) {
                 return;
             }
-            $post->userBookmarks()->syncWithoutDetaching([$this->guard()->id()]);
+            $post->userBookmarks()->syncWithoutDetaching([auth_user_id()]);
             $post->increment('bookmarks_count');
         });
     }
@@ -362,10 +362,10 @@ class PostService
         DB::transaction(function () use ($uuid) {
             $post = $this->findPostOrFail($uuid);
 
-            if (!$post->userBookmarks()->where('user_id', $this->guard()->id())->exists()) {
+            if (!$post->userBookmarks()->where('user_id', auth_user_id())->exists()) {
                 return;
             }
-            $post->userBookmarks()->detach($this->guard()->id());
+            $post->userBookmarks()->detach(auth_user_id());
             $post->decrement('bookmarks_count');
         });
     }

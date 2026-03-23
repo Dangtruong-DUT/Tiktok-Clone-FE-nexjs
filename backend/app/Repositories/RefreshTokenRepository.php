@@ -3,7 +3,6 @@ namespace App\Repositories;
 
 use App\Models\RefreshToken;
 use App\Repositories\BaseRepository;
-use Illuminate\Support\Collection;
 
 class RefreshTokenRepository extends BaseRepository
 {
@@ -18,25 +17,14 @@ class RefreshTokenRepository extends BaseRepository
         parent::__construct($modelInstance);
     }
     /**
-     * Find a refresh token by token string
+     * Find a refresh token by JTI
      *
-     * @param string $token
+     * @param string $jti
      * @return RefreshToken|null
      */
-    public function findByToken(string $token): RefreshToken|null
+    public function findByJti(string $jti): RefreshToken|null
     {
-        return $this->query()->get()->first(fn($refreshToken) => $refreshToken->isValidToken($token));
-    }
-
-    /**
-     * Find a refresh token by user ID
-     *
-     * @param int $userId
-     * @return Collection|null
-     */
-    public function findByUserId(int $userId): Collection|null
-    {
-        return $this->query()->where('user_id', $userId)->get();
+        return $this->query()->where('jti', $jti)->first();
     }
 
     /**
