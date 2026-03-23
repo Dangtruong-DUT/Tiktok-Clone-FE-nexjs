@@ -7,6 +7,12 @@ use Illuminate\Support\Str;
 
 class HasUuidObserver
 {
+    /**
+     * Handle the Model "creating" event.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @return void
+     */
     public function creating(Model $model): void
     {
         if (empty($model->uuid)) {

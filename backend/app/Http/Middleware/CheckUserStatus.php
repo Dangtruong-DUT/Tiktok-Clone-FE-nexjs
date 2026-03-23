@@ -8,6 +8,14 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class CheckUserStatus
 {
+    /**
+     * Check the user's status for the incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @param  bool  $requireVerify
+     * @return mixed
+     */
     public function handle($request, Closure $next,bool $requireVerify = false)
     {
         try {

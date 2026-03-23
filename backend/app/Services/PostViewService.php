@@ -77,8 +77,8 @@ class PostViewService
                 $userKey = self::USER_VIEW_KEY_PREFIX . $postId;
                 $guestKey = self::GUEST_VIEW_KEY_PREFIX . $postId;
 
-                $userViews = (int) Redis::get($userKey);
-                $guestViews = (int) Redis::get($guestKey);
+                $userViews = (int) Redis::get($userKey) ?? 0;
+                $guestViews = (int) Redis::get($guestKey) ?? 0;
 
                 if ($userViews > 0 || $guestViews > 0) {
                     $this->postRepo->incrementViews(

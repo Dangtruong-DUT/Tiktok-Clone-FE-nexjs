@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Auth\TokenTypeEnum;
 use App\Enums\User\RelationshipTypeEnum;
 use App\Enums\User\RoleTypeEnum;
 use App\Enums\User\UserVerifyStatusEnum;
@@ -107,16 +108,19 @@ class User extends Authenticatable implements JWTSubject
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.
      *
+     * @param int $tokenType The type of the token (access or refresh).
      * @return array
      */
-    public function getJWTCustomClaims()
+    public function getJWTCustomClaims(
+        int $tokenType = TokenTypeEnum::ACCESS->value
+    )
     {
         return [
             'user_id' => $this->uuid,
             'uuid' => $this->uuid,
             'verify' => $this->verify->value,
             'role' => $this->role->value,
-            'token_Type' => 0,
+            'token_Type' => $tokenType,
         ];
     }
 
