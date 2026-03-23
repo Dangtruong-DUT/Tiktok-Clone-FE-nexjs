@@ -13,9 +13,9 @@ use App\Repositories\RefreshTokenRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\VerifyEmailTokenRepository;
 use App\Traits\HasAuthUser;
+use App\Services\TokenService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use TokenService;
-
 class AuthService
 {
     use HasAuthUser;
@@ -119,17 +119,18 @@ class AuthService
             ['email' => 'The email address is already registered. Please use a different email.']
             );
         }
-
-        $user = $this->userRepo->create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => $data['password'],
-            'date_of_birth' => $data['date_of_birth'],
-        ]);
-        $accessToken = $this->tokenService->createAccessToken($user);
-        $refreshToken = $this->tokenService->createRefreshToken($user);
-        $verifyToken = $this->tokenService->createVerifyEmailToken($user);
-        Mail::to($data['email'])->send(new VerifyUserEmail($user, $verifyToken));
+        DB::transaction(function ()use ($data, &$accessToken, &$refreshToken, &$user) {
+            $user = $this->userRepo->create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => $data['password'],
+                'date_of_birth' => $data['date_of_birth'],
+            ]);
+            $accessToken = $this->tokenService->createAccessToken($user);
+            $refreshToken = $this->tokenService->createRefreshToken($user);
+            $verifyToken = $this->tokenService->createVerifyEmailToken($user);
+            Mail::to($data['email'])->send(new VerifyUserEmail($user, $verifyToken));
+        });
 
         return [
             'access_token' => $accessToken,
@@ -186,9 +187,26 @@ class AuthService
                 ['email' => 'The email address is not registered. Please check and try again.']
             );
         }
-        $token = $this->tokenService->createForgotPasswordToken($user);
-        Mail::to($email)->send(new ForgotPasswordMail($user,$token));
 
+        DB::transaction(function () use ($user, $email) {
+            $token = $this->tokenService->createForgotPasswordToken($user);
+            Mail::to($email)->send(new ForgotPasswordMail($user,$token));
+        });
+
+        return true;
+    }
+
+    /**
+     * Handle verify forgot password token request by verifying the token and allowing the user to reset the password.
+     *
+     * @param array $credentials
+     *              - forgot_password_token: The token sent to the user's email for password reset verification.
+     * @return bool
+     */
+    public function verifyForgotToken(array $credentials): bool
+    {
+        $token = $credentials['forgot_password_token'];
+        $this->tokenService->verifyForgotToken($token);
         return true;
     }
 

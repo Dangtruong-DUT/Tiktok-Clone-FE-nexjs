@@ -42,6 +42,21 @@ class Post extends Model
         'thumbnail_file_id',
     ];
 
+    /**
+    * The default attributes for the model.
+    * @var array<string, mixed>
+    */
+    protected $attributes = [
+        'likes_count' => 0,
+        'shares_count' => 0,
+        'comments_count' => 0,
+        'bookmarks_count' => 0,
+        'repost_count' => 0,
+        'quote_post_count' => 0,
+        'guest_views' => 0,
+        'user_views' => 0,
+    ];
+
     /*
     * Get the attributes that should be cast.
     *

@@ -62,6 +62,9 @@ class User extends Authenticatable implements JWTSubject
     */
     protected $attributes = [
     'verify' => UserVerifyStatusEnum::UNVERIFIED->value,
+    'role' => RoleTypeEnum::USER->value,
+    'following_count' => 0,
+    'followers_count' => 0,
     ];
 
     /**
@@ -117,7 +120,7 @@ class User extends Authenticatable implements JWTSubject
     )
     {
         return [
-            'user_id' => $this->uuid,
+            'user_id' => $this->id,
             'uuid' => $this->uuid,
             'verify' => $this->verify->value,
             'role' => $this->role->value,
