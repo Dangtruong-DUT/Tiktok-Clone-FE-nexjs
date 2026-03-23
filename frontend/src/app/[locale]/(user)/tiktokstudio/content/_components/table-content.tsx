@@ -1,21 +1,24 @@
 "use client";
 
 import {
-    ColumnFiltersState,
-    SortingState,
-    VisibilityState,
-    getCoreRowModel,
-    getFilteredRowModel,
-    getPaginationRowModel,
-    getSortedRowModel,
-    useReactTable,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
 } from "@tanstack/react-table";
 import { useTranslations } from "next-intl";
 import LoadingIcon from "@/components/lottie-icons/loading";
 
 import { useEffect, useState } from "react";
 
-import { SearchParamsLoader, useSearchParamsLoader } from "@/components/searchparams-loader";
+import {
+  SearchParamsLoader,
+  useSearchParamsLoader,
+} from "@/components/searchparams-loader";
 import { useGetPostOfUserPagingQuery } from "@/services/RTK/posts.services";
 import useCurrentUserData from "@/hooks/data/useCurrentUserData";
 import { DataTable } from "@/components/ui/data-table";
@@ -27,88 +30,98 @@ import { useColumns } from "@/app/[locale]/(user)/tiktokstudio/content/_componen
 import TableSkeleton from "@/app/[locale]/(user)/tiktokstudio/content/_components/table-skeleton";
 
 export default function TableContent() {
-    const t = useTranslations("TiktokStudio.content");
-    const currentUser = useCurrentUserData();
-    const columns = useColumns();
-    const { searchParams, setSearchParams } = useSearchParamsLoader();
+  const t = useTranslations("TiktokStudio.content");
+  const currentUser = useCurrentUserData();
+  const columns = useColumns();
+  const { searchParams, setSearchParams } = useSearchParamsLoader();
 
-    // page param mặc định 1, nhưng TanStack dùng pageIndex (0-based)
-    const page = searchParams?.get("page") ? Number(searchParams.get("page")) : 1;
+  // page param mặc định 1, nhưng TanStack dùng pageIndex (0-based)
+  const page = searchParams?.get("page") ? Number(searchParams.get("page")) : 1;
 
-    const { setPostIdDelete, postIdDelete } = usePostTableContext();
+  const { setPostIdDelete, postIdDelete } = usePostTableContext();
 
-    const [sorting, setSorting] = useState<SortingState>([]);
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-    const [rowSelection, setRowSelection] = useState({});
-    const [pagination, setPagination] = useState({
-        pageIndex: page - 1,
-        pageSize: 10,
-    });
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
+  const [pagination, setPagination] = useState({
+    pageIndex: page - 1,
+    pageSize: 10,
+  });
 
-    const { data: queryData, isLoading: isLoadingPosts } = useGetPostOfUserPagingQuery(
-        {
-            page: pagination.pageIndex + 1,
-            userId: currentUser?.uuid || "",
-        },
-        { skip: !currentUser?.uuid }
+  const { data: queryData, isLoading: isLoadingPosts } =
+    useGetPostOfUserPagingQuery(
+      {
+        page: pagination.pageIndex + 1,
+        userId: currentUser?.uuid || "",
+      },
+      { skip: !currentUser?.uuid },
     );
 
-    const data = queryData?.data.posts || [];
+  const data = queryData?.data || [];
 
-    const table = useReactTable({
-        data,
-        columns,
-        onSortingChange: setSorting,
-        onColumnFiltersChange: setColumnFilters,
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        getSortedRowModel: getSortedRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
-        onColumnVisibilityChange: setColumnVisibility,
-        onRowSelectionChange: setRowSelection,
-        onPaginationChange: setPagination,
-        autoResetPageIndex: false,
-        state: {
-            sorting,
-            columnFilters,
-            columnVisibility,
-            rowSelection,
-            pagination,
-        },
-        manualPagination: true,
-        pageCount: queryData?.meta?.total_pages ?? -1,
-    });
+  const table = useReactTable({
+    data,
+    columns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    onPaginationChange: setPagination,
+    autoResetPageIndex: false,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+      pagination,
+    },
+    manualPagination: true,
+    pageCount: queryData?.meta?.total ?? -1,
+  });
 
-    useEffect(() => {
-        setPagination((prev) => ({
-            ...prev,
-            pageIndex: page - 1,
-        }));
-    }, [page]);
+  useEffect(() => {
+    setPagination((prev) => ({
+      ...prev,
+      pageIndex: page - 1,
+    }));
+  }, [page]);
 
-    return (
-        <div className="w-full relative">
-            <SearchParamsLoader onParamsReceived={setSearchParams} />
-            <AlertDialogDeleteDish postIdDelete={postIdDelete} setPostIdDelete={setPostIdDelete} />
-            <div className="flex items-center py-4">
-                <Input
-                    placeholder={t("search.placeholder")}
-                    value={(table.getColumn("content")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) => table.getColumn("content")?.setFilterValue(event.target.value)}
-                    className="max-w-sm ml-auto"
-                />
-            </div>
-            {isLoadingPosts ? <TableSkeleton /> : <DataTable columns={columns} table={table} />}
-            <div className="flex items-center justify-end space-x-2 py-4">
-                <div>
-                    <AutoPagination
-                        page={table.getState().pagination.pageIndex + 1}
-                        pageSize={queryData?.meta?.total_pages || 1}
-                        pathname="/tiktokstudio/content"
-                    />
-                </div>
-            </div>
+  return (
+    <div className="w-full relative">
+      <SearchParamsLoader onParamsReceived={setSearchParams} />
+      <AlertDialogDeleteDish
+        postIdDelete={postIdDelete}
+        setPostIdDelete={setPostIdDelete}
+      />
+      <div className="flex items-center py-4">
+        <Input
+          placeholder={t("search.placeholder")}
+          value={(table.getColumn("content")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("content")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm ml-auto"
+        />
+      </div>
+      {isLoadingPosts ? (
+        <TableSkeleton />
+      ) : (
+        <DataTable columns={columns} table={table} />
+      )}
+      <div className="flex items-center justify-end space-x-2 py-4">
+        <div>
+          <AutoPagination
+            page={table.getState().pagination.pageIndex + 1}
+            pageSize={queryData?.meta?.total || 1}
+            pathname="/tiktokstudio/content"
+          />
         </div>
-    );
+      </div>
+    </div>
+  );
 }

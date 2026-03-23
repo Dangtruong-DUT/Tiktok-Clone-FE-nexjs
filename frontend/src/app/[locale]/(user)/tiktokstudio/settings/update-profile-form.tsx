@@ -77,10 +77,9 @@ export default function UpdateProfileForm() {
 
         const updateProfileRes =
           await updateProfileMutateAsync(payload).unwrap();
-        const { avatar, name } = updateProfileRes.data;
+        const { name } = updateProfileRes.data;
 
         form.reset({
-          avatar: avatar || "",
           name,
         });
         toast.success(updateProfileRes.message);
@@ -112,22 +111,15 @@ export default function UpdateProfileForm() {
     setFileImage(null);
   }, [form]);
 
-  const handleChangeAvatar = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const selectedFile = e.target.files?.[0] || null;
-      setFileImage(selectedFile);
+  const handleChangeAvatar = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0] || null;
+    setFileImage(selectedFile);
 
-      if (selectedFile) {
-        setIsPhotoEditorVisible(true);
-      }
-      e.target.value = "";
-      form.setValue(
-        "avatar",
-        selectedFile ? URL.createObjectURL(selectedFile) : "",
-      );
-    },
-    [form],
-  );
+    if (selectedFile) {
+      setIsPhotoEditorVisible(true);
+    }
+    e.target.value = "";
+  }, []);
 
   return (
     <Form {...form}>
@@ -160,7 +152,7 @@ export default function UpdateProfileForm() {
             <div className="grid gap-6">
               <FormField
                 control={form.control}
-                name="avatar"
+                name="avatar_file_id"
                 render={({}) => (
                   <FormItem>
                     <div className="flex gap-2 items-start justify-start">

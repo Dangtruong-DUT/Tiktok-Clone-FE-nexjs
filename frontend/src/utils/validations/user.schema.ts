@@ -38,9 +38,7 @@ export const UpdateUserBody = z.object({
   location: z.string().max(100).optional(),
   website: z.string().max(100).optional(),
   username: z.string().min(2).max(100).optional(),
-  avatar: z.string().optional(),
   avatar_file_id: z.number().int().positive().optional(),
-  cover_photo: z.string().optional(),
 });
 
 export type UpdateUserBodyType = z.TypeOf<typeof UpdateUserBody>;

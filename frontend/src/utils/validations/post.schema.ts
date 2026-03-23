@@ -22,7 +22,7 @@ export const CreatePostReqBody = z.object({
     z.literal(Audience.FRIENDS),
     z.literal(Audience.PRIVATE),
   ]),
-  content: z.string().min(0).max(4000),
+  content: z.string().min(1).max(4000),
   hashtags: z.array(z.string()).optional(),
   mentions: z.array(z.number().int().positive()).optional(),
   medias: z.array(MediaSchema).optional(),

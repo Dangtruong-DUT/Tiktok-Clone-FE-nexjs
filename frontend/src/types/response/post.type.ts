@@ -19,12 +19,7 @@ export type MetaDataListComment = MetaDataListPost & {
 
 export type GetPostDetailRes = ResType<TikTokPostType, MetaDataListPost>;
 
-export type GetListPostRes = ResType<
-  {
-    posts: TikTokPostType[];
-  },
-  MetaDataListPost
->;
+export type GetListPostRes = ResType<TikTokPostType[], MetaDataListPost>;
 
 export type GetListCommentRes = ResType<
   {
