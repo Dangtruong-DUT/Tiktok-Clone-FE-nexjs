@@ -230,6 +230,48 @@ class PostService
     }
 
     /**
+     * Get ports of friends.
+      * @param array $payload
+     *                      - q: search keyword for content and user name
+     *                      - page: pagination page number
+     *                      - per_page: number of items per page for pagination
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getMutualFriendsPosts(array $payload): LengthAwarePaginator
+    {
+        $authUserId = auth_user_id();
+        return $this->postRepo->getMutualFriendsPosts(
+            filters: [
+                'q' => $payload['q'] ?? null,
+                'per_page' => $payload['per_page'] ?? config('const.pagination.default_per_page'),
+                'page' => $payload['page'] ?? config('const.pagination.default_page'),
+            ],
+            authUserId: $authUserId
+        );
+    }
+
+    /**
+     * Get ports of following users.
+      * @param array $payload
+     *                      - q: search keyword for content and user name
+     *                      - page: pagination page number
+     *                      - per_page: number of items per page for pagination
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getFollowingPosts(array $payload): LengthAwarePaginator
+    {
+        $authUserId = auth_user_id();
+        return $this->postRepo->getFollowingPosts(
+            filters: [
+                'q' => $payload['q'] ?? null,
+                'per_page' => $payload['per_page'] ?? config('const.pagination.default_per_page'),
+                'page' => $payload['page'] ?? config('const.pagination.default_page'),
+            ],
+            authUserId: $authUserId
+        );
+    }
+
+    /**
      * Get posts of a user by user uuid.
       * @param array $payload
      *                      - user_uuid: user uuid
@@ -238,7 +280,7 @@ class PostService
      *                      - per_page: number of items per page for pagination
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function getByUser(array $payload): LengthAwarePaginator
+    public function getUserPosts(array $payload): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
         $targetUser = $this->userRepo->findByUuidOrFail($payload['user_uuid']);
@@ -261,7 +303,7 @@ class PostService
      *                      - per_page: number of items per page for pagination
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function getLikedByUser(array $payload): LengthAwarePaginator
+    public function getUserLikedPosts(array $payload): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
         $targetUser = $this->userRepo->findByUuidOrFail($payload['user_uuid']);
@@ -285,7 +327,7 @@ class PostService
      *                      - per_page: number of items per page for pagination
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function getBookmarkedByUser(array $payload): LengthAwarePaginator
+    public function getUserBookmarkedPosts(array $payload): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
         $targetUser = $this->userRepo->findByUuidOrFail($payload['user_uuid']);
@@ -395,27 +437,23 @@ class PostService
     private function syncHashtags(Post $post, array $hashtagNames): void
     {
         $hashtagNames = array_values(array_unique($hashtagNames));
-        $existingHashtags = $this->hashtagRepo->getByNames($hashtagNames);
-        $hashtagIdByName = [];
-
-        foreach ($existingHashtags as $hashtag) {
-            $hashtagIdByName[$hashtag->name] = $hashtag->id;
-        }
-
+        $existingHashtags = $this->hashtagRepo->getByNames($hashtagNames)
+            ->keyBy('name');
         $newHashtags = [];
         foreach ($hashtagNames as $hashtagName) {
-            if (!isset($hashtagIdByName[$hashtagName])) {
+            if (!isset($existingHashtags[$hashtagName])) {
                 $newHashtags[] = ['name' => $hashtagName];
             }
         }
 
+        $hashtagIds = [];
         if (!empty($newHashtags)) {
             $this->hashtagRepo->createMany($newHashtags);
+            $hashtagIds = $this->hashtagRepo
+                        ->getByNames($hashtagNames)
+                        ->pluck('id')
+                        ->toArray();
         }
-
-        $hashtagIds = empty($hashtagNames)
-            ? []
-            : $this->hashtagRepo->getByNames($hashtagNames)->pluck('id')->toArray();
 
         $post->hashtags()->sync($hashtagIds);
     }

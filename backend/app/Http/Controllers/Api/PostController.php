@@ -5,6 +5,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\BookmarkPostRequest;
 use App\Http\Requests\Post\CreatePostRequest;
 use App\Http\Requests\Post\GetBookmarkedPostsOfUserRequest;
+use App\Http\Requests\Post\GetFollowingPostsRequest;
+use App\Http\Requests\Post\GetFriendPostsRequest;
 use App\Http\Requests\Post\GetListChildrenPostRequest;
 use App\Http\Requests\Post\GetListPostRequest;
 use App\Http\Requests\Post\GetPostRequest;
@@ -112,6 +114,34 @@ class PostController extends Controller
     }
 
     /**
+     * Get friends posts.
+     * @param GetFriendPostsRequest $request
+     * @return JsonResponse
+     */
+    public function showFriendsPosts(GetFriendPostsRequest $request): JsonResponse
+    {
+        $posts = $this->postService->getMutualFriendsPosts($request->validated());
+        return ApiResponse::success(
+            data: PostResource::collection($posts),
+            message: 'Friends posts retrieved successfully'
+        );
+    }
+
+    /**
+     * Get following posts.
+     * @param GetFollowingPostsRequest $request
+     * @return JsonResponse
+     */
+    public function showFollowingPosts(GetFollowingPostsRequest $request): JsonResponse
+    {
+        $posts = $this->postService->getFollowingPosts($request->validated());
+        return ApiResponse::success(
+            data: PostResource::collection($posts),
+            message: 'Following posts retrieved successfully'
+        );
+    }
+
+    /**
      * Get list of child posts by parent post uuid.
      * @param GetListChildrenPostRequest $request
      * @return JsonResponse
@@ -176,7 +206,7 @@ class PostController extends Controller
      */
     public function showUserPosts(GetPostsOfUserRequest $request): JsonResponse
     {
-        $posts = $this->postService->getByUser($request->validated());
+        $posts = $this->postService->getUserPosts($request->validated());
         return ApiResponse::success(
             data: PostResource::collection($posts),
             message: 'User posts retrieved successfully'
@@ -190,7 +220,7 @@ class PostController extends Controller
      */
     public function showLikedPosts(GetLikedPostsOfUserRequest $request): JsonResponse
     {
-        $posts = $this->postService->getLikedByUser($request->validated());
+        $posts = $this->postService->getUserLikedPosts($request->validated());
         return ApiResponse::success(
             data: PostResource::collection($posts),
             message: 'Liked posts retrieved successfully'
@@ -204,7 +234,7 @@ class PostController extends Controller
      */
     public function showBookmarkedPosts(GetBookmarkedPostsOfUserRequest $request): JsonResponse
     {
-        $posts = $this->postService->getBookmarkedByUser($request->validated());
+        $posts = $this->postService->getUserBookmarkedPosts($request->validated());
         return ApiResponse::success(
             data: PostResource::collection($posts),
             message: 'Bookmarked posts retrieved successfully'

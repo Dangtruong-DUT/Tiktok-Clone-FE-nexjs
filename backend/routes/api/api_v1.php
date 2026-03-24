@@ -55,6 +55,8 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::delete('{post_uuid}/like', [PostController::class, 'unlike'])->name('unlike');
             Route::post('{post_uuid}/bookmark', [PostController::class, 'bookmark'])->name('bookmark');
             Route::delete('{post_uuid}/bookmark', [PostController::class, 'unbookmark'])->name('unbookmark');
+            Route::get('friend', [PostController::class, 'showFriendsPosts'])->name('friends');
+            Route::get('following', [PostController::class, 'showFollowingPosts'])->name('following');
         });
 });
 

@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories;
 
+use App\Enums\Post\AudienceTypeEnum;
 use App\Models\Post;
 use App\Repositories\BaseRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -186,6 +187,51 @@ class PostRepository extends BaseRepository
                     ->paginate($perPage);
     }
 
+
+    /**
+    * Get posts of friends.
+    * @param array $filters
+    *                      - q: search keyword for content and user name
+    *                      - page: pagination page number
+    *                      - per_page: number of items per page for pagination
+    * @param ?int $authUserId
+    * @return LengthAwarePaginator
+    */
+    public function getMutualFriendsPosts(array $filters, ?int $authUserId): LengthAwarePaginator
+    {
+            $filterCollection = collect($filters);
+            $searchQuery = $this->buildSearchQuery($filterCollection)
+                        ->visibleFor($authUserId)
+                        ->whereHas('user', function ($userQuery) use ($authUserId) {
+                            $userQuery->whereHas('followings', fn ($q) => $q->whereKey($authUserId))
+                            ->whereHas('followers', fn ($q) => $q->whereKey($authUserId));
+                        })
+                        ->orderByDesc('created_at');
+            $perPage = $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
+        return $this->withDetail($searchQuery,$authUserId)->paginate($perPage);
+    }
+
+    /**
+     * Get posts of following users.
+     * @param array $filters
+     *                      - q: search keyword for content and user name
+     *                      - page: pagination page number
+     *                      - per_page: number of items per page for pagination
+     * @param ?int $authUserId
+     * @return LengthAwarePaginator
+     */
+    public function getFollowingPosts(array $filters, ?int $authUserId): LengthAwarePaginator
+    {
+        $filterCollection = collect($filters);
+        $searchQuery = $this->buildSearchQuery($filterCollection)
+                ->visibleFor($authUserId)
+                ->whereHas('user', function ($userQuery) use ($authUserId) {
+                    $userQuery->whereHas('followers', fn ($q) => $q->whereKey($authUserId));
+                })
+                ->orderByDesc('created_at');
+        $perPage = $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
+        return $this->withDetail($searchQuery, $authUserId)->paginate($perPage);
+    }
 
     /**
      * Search posts with filters and keyword.

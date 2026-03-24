@@ -3,6 +3,7 @@ namespace App\Repositories;
 
 use App\Models\Hashtag;
 use App\Repositories\BaseRepository;
+use Illuminate\Database\Eloquent\Collection;
 
 class HashtagRepository extends BaseRepository
 {
@@ -32,7 +33,7 @@ class HashtagRepository extends BaseRepository
      * @param array $names
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getByNames(array $names)
+    public function getByNames(array $names):Collection
     {
         return $this->query()->whereIn('name', $names)->get();
     }
