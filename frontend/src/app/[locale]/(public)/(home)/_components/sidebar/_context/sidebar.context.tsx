@@ -1,15 +1,15 @@
-"use client";
+'use client'
 
-import React, { createContext, useContext, useState, useRef, useCallback } from "react";
-import { SidebarActiveType, SidebarActiveState, routeToActiveType } from "../_types/sidebar.types";
-import { usePathname } from "@/i18n/navigation";
+import React, { createContext, useContext, useState, useRef, useCallback } from 'react'
+import { SidebarActiveType, SidebarActiveState, routeToActiveType } from '../_types/sidebar.types'
+import { usePathname } from '@/i18n/navigation'
 
 export interface SidebarContextType {
-    isOpenDrawer: boolean;
-    setIsOpenDrawer: (isOpen: boolean) => void;
-    activeState: SidebarActiveState;
-    setActiveState: (state: SidebarActiveState) => void;
-    resetToRouteActive: () => void;
+    isOpenDrawer: boolean
+    setIsOpenDrawer: (isOpen: boolean) => void
+    activeState: SidebarActiveState
+    setActiveState: (state: SidebarActiveState) => void
+    resetToRouteActive: () => void
 }
 
 const SidebarContext = createContext<SidebarContextType>({
@@ -17,47 +17,47 @@ const SidebarContext = createContext<SidebarContextType>({
     setIsOpenDrawer: () => {},
     activeState: { type: SidebarActiveType.NONE },
     setActiveState: () => {},
-    resetToRouteActive: () => {},
-});
+    resetToRouteActive: () => {}
+})
 
 const getCurrentActiveStateFromPathname = (pathname: string): SidebarActiveState => {
     if (pathname in routeToActiveType) {
         return {
-            type: routeToActiveType[pathname as keyof typeof routeToActiveType],
-        };
+            type: routeToActiveType[pathname as keyof typeof routeToActiveType]
+        }
     }
 
-    return { type: SidebarActiveType.NONE };
-};
+    return { type: SidebarActiveType.NONE }
+}
 
 export function SidebarProvider({ children }: { children: React.ReactNode }) {
-    const [isOpenDrawer, setIsOpenDrawer] = useState<boolean>(false);
-    const [activeState, setActiveState] = useState<SidebarActiveState>({ type: SidebarActiveType.NONE });
-    const activeOldStateRef = useRef<SidebarActiveState | null>(null);
-    const initialized = useRef(false);
-    const pathname = usePathname();
+    const [isOpenDrawer, setIsOpenDrawer] = useState<boolean>(false)
+    const [activeState, setActiveState] = useState<SidebarActiveState>({ type: SidebarActiveType.NONE })
+    const activeOldStateRef = useRef<SidebarActiveState | null>(null)
+    const initialized = useRef(false)
+    const pathname = usePathname()
 
     if (initialized.current === false) {
-        setActiveState(getCurrentActiveStateFromPathname(pathname));
-        activeOldStateRef.current = { type: SidebarActiveType.NONE };
-        initialized.current = true;
+        setActiveState(getCurrentActiveStateFromPathname(pathname))
+        activeOldStateRef.current = { type: SidebarActiveType.NONE }
+        initialized.current = true
     }
 
     const resetToRouteActive = useCallback(() => {
         if (activeState.type) {
-            setActiveState(activeOldStateRef.current || { type: SidebarActiveType.NONE });
+            setActiveState(activeOldStateRef.current || { type: SidebarActiveType.NONE })
         }
-    }, [activeState]);
+    }, [activeState])
 
     const handleSetActiveState = useCallback(
         (state: SidebarActiveState) => {
             if (state.type === SidebarActiveType.SEARCH || state.type === SidebarActiveType.MORE) {
-                activeOldStateRef.current = activeState;
+                activeOldStateRef.current = activeState
             }
-            setActiveState(state);
+            setActiveState(state)
         },
         [activeState]
-    );
+    )
 
     return (
         <SidebarContext.Provider
@@ -66,18 +66,18 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
                 setIsOpenDrawer,
                 activeState,
                 setActiveState: handleSetActiveState,
-                resetToRouteActive,
+                resetToRouteActive
             }}
         >
             {children}
         </SidebarContext.Provider>
-    );
+    )
 }
 
 export default function useSidebar() {
-    const context = useContext(SidebarContext);
+    const context = useContext(SidebarContext)
     if (!context) {
-        throw new Error("useSidebar must be used within a SidebarProvider");
+        throw new Error('useSidebar must be used within a SidebarProvider')
     }
-    return context;
+    return context
 }

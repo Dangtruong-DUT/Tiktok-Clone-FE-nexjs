@@ -1,26 +1,26 @@
-"use client";
+'use client'
 
-import { generateTimeLineFrames, TimelineFrameType } from "@/utils/video";
-import { useEffect, useState } from "react";
+import { generateTimeLineFrames, TimelineFrameType } from '@/utils/video'
+import { useEffect, useState } from 'react'
 
 export default function useVideoFrames(VideoSrc: string | null, frameCount: number) {
-    const [frames, setFrames] = useState<TimelineFrameType[]>([]);
+    const [frames, setFrames] = useState<TimelineFrameType[]>([])
 
     useEffect(() => {
         if (!VideoSrc) {
-            setFrames([]);
-            return;
+            setFrames([])
+            return
         }
 
         generateTimeLineFrames(VideoSrc, frameCount)
             .then((generatedFrames) => {
-                setFrames(generatedFrames);
+                setFrames(generatedFrames)
             })
             .catch((error) => {
-                setFrames([]);
-                console.error("Error generating frames:", error);
-            });
-    }, [VideoSrc, frameCount]);
+                setFrames([])
+                console.error('Error generating frames:', error)
+            })
+    }, [VideoSrc, frameCount])
 
-    return frames;
+    return frames
 }

@@ -1,34 +1,34 @@
-"use client";
+'use client'
 
-import React, { useRef, useState, useCallback } from "react";
-import { cn } from "@/lib/utils";
-import { useLocale } from "next-intl";
-import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
-import { useVideoPlayer } from "@/hooks/video/useVideoPlayer";
-import { useVideoControls } from "@/hooks/video/useVideoControls";
-import { useVideoAutoPlay } from "@/hooks/video/useVideoAutoPlay";
-import { VideoOverlayIcons } from "./components/video-overlay-icons";
-import Image from "next/image";
-import { VideoControlsBottom } from "@/components/video-player-v3/components/video-controls-bottom";
+import React, { useRef, useState, useCallback } from 'react'
+import { cn } from '@/lib/utils'
+import { useLocale } from 'next-intl'
+import { TikTokPostType } from '@/types/schemas/TikTokPost.schemas'
+import { useVideoPlayer } from '@/hooks/video/useVideoPlayer'
+import { useVideoControls } from '@/hooks/video/useVideoControls'
+import { useVideoAutoPlay } from '@/hooks/video/useVideoAutoPlay'
+import { VideoOverlayIcons } from './components/video-overlay-icons'
+import Image from 'next/image'
+import { VideoControlsBottom } from '@/components/video-player-v3/components/video-controls-bottom'
 
 interface VideoPlayerProps {
-    className?: string;
-    post: TikTokPostType;
+    className?: string
+    post: TikTokPostType
 }
 
 export default function VideoPlayer({ className, post }: VideoPlayerProps) {
-    const author = post.author;
-    const videoRef = useRef<HTMLVideoElement | null>(null);
-    const [isHovered, setIsHovered] = useState(false);
-    const [isProgressBarActive, setIsProgressBarActive] = useState(false);
+    const author = post.author
+    const videoRef = useRef<HTMLVideoElement | null>(null)
+    const [isHovered, setIsHovered] = useState(false)
+    const [isProgressBarActive, setIsProgressBarActive] = useState(false)
 
-    const thumbnailUrl = post.thumbnail_url || "/images/desktop-wallpaper-tiktok.jpg";
-    const locale = useLocale();
+    const thumbnailUrl = post.thumbnail_url || '/images/desktop-wallpaper-tiktok.jpg'
+    const locale = useLocale()
 
     const { isPlaying, setIsPlaying, isMuted, setIsMuted, volume, setVolume, currentTime, duration } =
-        useVideoPlayer(videoRef);
+        useVideoPlayer(videoRef)
 
-    useVideoAutoPlay({ videoRef });
+    useVideoAutoPlay({ videoRef })
 
     const { handlePlayPause, handleSeek, handleMuteToggle, handleVolumeChange, showPlayPauseIcon, showMutedIcon } =
         useVideoControls({
@@ -37,32 +37,32 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
             isMuted,
             setIsPlaying,
             setIsMuted,
-            setVolume,
-        });
+            setVolume
+        })
 
     const handleProgressBarActive = useCallback((active: boolean) => {
-        setIsProgressBarActive(active);
-    }, []);
+        setIsProgressBarActive(active)
+    }, [])
 
     // Use current video data if available, fallback to props
-    const displayPost = post;
-    const displayAuthor = author;
+    const displayPost = post
+    const displayAuthor = author
 
     return (
         <section
             className={cn(
-                "block relative top-0 left-0 w-full h-full group cursor-pointer rounded-sm overflow-hidden",
+                'block relative top-0 left-0 w-full h-full group cursor-pointer rounded-sm overflow-hidden',
                 className
             )}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <div className="absolute inset-0 blur-md opacity-30 transform: scale(11)">
+            <div className='absolute inset-0 blur-md opacity-30 transform: scale(11)'>
                 <Image
-                    src={thumbnailUrl || "/images/desktop-wallpaper-tiktok.jpg"}
+                    src={thumbnailUrl || '/images/desktop-wallpaper-tiktok.jpg'}
                     alt={displayAuthor.username}
-                    className="object-cover w-full h-full"
-                    layout="fill"
+                    className='object-cover w-full h-full'
+                    layout='fill'
                 />
             </div>
             <VideoOverlayIcons
@@ -73,16 +73,16 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
             />
             <video
                 onClick={handlePlayPause}
-                className=" absolute block  top-0 left-0 w-full h-full"
+                className=' absolute block  top-0 left-0 w-full h-full'
                 ref={videoRef}
                 playsInline
                 loop={true}
-                preload="metadata"
+                preload='metadata'
                 muted={isMuted}
                 autoPlay={true}
                 key={displayPost.uuid}
             >
-                <source src={displayPost.medias[0].url} type="video/mp4" />
+                <source src={displayPost.medias[0].url} type='video/mp4' />
             </video>
 
             <VideoControlsBottom
@@ -102,5 +102,5 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
                 isHovered={isHovered}
             />
         </section>
-    );
+    )
 }

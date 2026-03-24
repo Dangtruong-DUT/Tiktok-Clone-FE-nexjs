@@ -1,5 +1,5 @@
-import { describe, it } from "vitest";
+import { describe, it } from 'vitest'
 
-describe("LoginForm", () => {
-    it("should render correctly", () => {});
-});
+describe('LoginForm', () => {
+    it('should render correctly', () => {})
+})

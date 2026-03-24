@@ -1,13 +1,13 @@
-import z from "zod";
+import z from 'zod'
 
 export const LoginReqBody = z
     .object({
         email: z.email(),
-        password: z.string().min(6).max(100),
+        password: z.string().min(6).max(100)
     })
-    .strict();
+    .strict()
 
-export type LoginReqBodyType = z.TypeOf<typeof LoginReqBody>;
+export type LoginReqBodyType = z.TypeOf<typeof LoginReqBody>
 
 export const RegisterReqBody = z
     .object({
@@ -15,67 +15,67 @@ export const RegisterReqBody = z
         email: z.email(),
         password: z.string().min(6).max(100),
         confirm_password: z.string().min(6).max(100),
-        date_of_birth: z.iso.datetime(),
+        date_of_birth: z.iso.datetime()
     })
     .strict()
     .superRefine(({ confirm_password, password }, ctx) => {
         if (confirm_password !== password) {
             ctx.addIssue({
-                code: "custom",
-                message: "Passwords do not match",
-                path: ["confirm_password"],
-            });
+                code: 'custom',
+                message: 'Passwords do not match',
+                path: ['confirm_password']
+            })
         }
-    });
+    })
 
-export type RegisterReqBodyType = z.TypeOf<typeof RegisterReqBody>;
+export type RegisterReqBodyType = z.TypeOf<typeof RegisterReqBody>
 
 export const RefreshTokenReqBody = z
     .object({
-        refresh_token: z.string(),
+        refresh_token: z.string()
     })
-    .strict();
+    .strict()
 
-export type RefreshTokenReqBodyType = z.TypeOf<typeof RefreshTokenReqBody>;
+export type RefreshTokenReqBodyType = z.TypeOf<typeof RefreshTokenReqBody>
 
 export const LogoutReqBody = z
     .object({
-        refresh_token: z.string(),
+        refresh_token: z.string()
     })
-    .strict();
+    .strict()
 
-export type LogoutReqBodyType = z.TypeOf<typeof LogoutReqBody>;
+export type LogoutReqBodyType = z.TypeOf<typeof LogoutReqBody>
 
 export const forgotPasswordReqBody = z
     .object({
-        email: z.email(),
+        email: z.email()
     })
-    .strict();
-export type ForgotPasswordReqBodyType = z.TypeOf<typeof forgotPasswordReqBody>;
+    .strict()
+export type ForgotPasswordReqBodyType = z.TypeOf<typeof forgotPasswordReqBody>
 
 export const verifyForgotPasswordReqBody = z
     .object({
-        forgot_password_token: z.string().min(10),
+        forgot_password_token: z.string().min(10)
     })
-    .strict();
+    .strict()
 
-export type verifyForgotPasswordReqBodyType = z.TypeOf<typeof verifyForgotPasswordReqBody>;
+export type verifyForgotPasswordReqBodyType = z.TypeOf<typeof verifyForgotPasswordReqBody>
 
 export const resetPasswordReqBody = z
     .object({
         forgot_password_token: z.string().min(10),
         password: z.string().min(6).max(100),
-        confirm_password: z.string().min(6).max(100),
+        confirm_password: z.string().min(6).max(100)
     })
     .strict()
     .superRefine(({ confirm_password, password }, ctx) => {
         if (confirm_password !== password) {
             ctx.addIssue({
-                code: "custom",
-                message: "Passwords do not match",
-                path: ["confirm_password"],
-            });
+                code: 'custom',
+                message: 'Passwords do not match',
+                path: ['confirm_password']
+            })
         }
-    });
+    })
 
-export type ResetPasswordReqBodyType = z.TypeOf<typeof resetPasswordReqBody>;
+export type ResetPasswordReqBodyType = z.TypeOf<typeof resetPasswordReqBody>

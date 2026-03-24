@@ -1,7 +1,7 @@
-import LazyLottie, { LottieProps } from "@/components/lazy-lottie";
-import { memo } from "react";
+import LazyLottie, { LottieProps } from '@/components/lazy-lottie'
+import { memo } from 'react'
 
-function BookmarkIcon({ ...props }: Omit<LottieProps, "path">) {
-    return <LazyLottie {...props} autoplay path="/lottie/bookmark.json" />;
+function BookmarkIcon({ ...props }: Omit<LottieProps, 'path'>) {
+    return <LazyLottie {...props} autoplay path='/lottie/bookmark.json' />
 }
-export default memo(BookmarkIcon);
+export default memo(BookmarkIcon)

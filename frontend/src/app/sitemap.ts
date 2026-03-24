@@ -1,111 +1,111 @@
-import envConfig from "@/config/app.config";
-import { locales } from "@/i18n/config";
-import type { MetadataRoute } from "next";
+import envConfig from '@/config/app.config'
+import { locales } from '@/i18n/config'
+import type { MetadataRoute } from 'next'
 
-const baseUrl = envConfig.NEXT_PUBLIC_URL || "http://localhost:3000";
+const baseUrl = envConfig.NEXT_PUBLIC_URL || 'http://localhost:3000'
 
 const staticRoutes: MetadataRoute.Sitemap = [
     // Main app routes
     {
-        url: "",
+        url: '',
         lastModified: new Date(),
-        changeFrequency: "daily" as const,
-        priority: 1,
+        changeFrequency: 'daily' as const,
+        priority: 1
     },
     {
-        url: "/upload",
+        url: '/upload',
         lastModified: new Date(),
-        changeFrequency: "daily" as const,
-        priority: 0.8,
+        changeFrequency: 'daily' as const,
+        priority: 0.8
     },
     {
-        url: "/explore",
+        url: '/explore',
         lastModified: new Date(),
-        changeFrequency: "daily" as const,
-        priority: 0.8,
+        changeFrequency: 'daily' as const,
+        priority: 0.8
     },
     {
-        url: "/messages",
+        url: '/messages',
         lastModified: new Date(),
-        changeFrequency: "daily" as const,
-        priority: 0.7,
+        changeFrequency: 'daily' as const,
+        priority: 0.7
     },
     {
-        url: "/activity",
+        url: '/activity',
         lastModified: new Date(),
-        changeFrequency: "daily" as const,
-        priority: 0.7,
+        changeFrequency: 'daily' as const,
+        priority: 0.7
     },
 
     // TikTok Studio routes
     {
-        url: "/tiktokstudio",
+        url: '/tiktokstudio',
         lastModified: new Date(),
-        changeFrequency: "daily" as const,
-        priority: 0.9,
+        changeFrequency: 'daily' as const,
+        priority: 0.9
     },
     {
-        url: "/tiktokstudio/content",
+        url: '/tiktokstudio/content',
         lastModified: new Date(),
-        changeFrequency: "daily" as const,
-        priority: 0.8,
+        changeFrequency: 'daily' as const,
+        priority: 0.8
     },
     {
-        url: "/tiktokstudio/settings",
+        url: '/tiktokstudio/settings',
         lastModified: new Date(),
-        changeFrequency: "weekly" as const,
-        priority: 0.6,
+        changeFrequency: 'weekly' as const,
+        priority: 0.6
     },
 
     // Auth routes
     {
-        url: "/auth/login",
+        url: '/auth/login',
         lastModified: new Date(),
-        changeFrequency: "monthly" as const,
-        priority: 0.5,
+        changeFrequency: 'monthly' as const,
+        priority: 0.5
     },
     {
-        url: "/signup",
+        url: '/signup',
         lastModified: new Date(),
-        changeFrequency: "monthly" as const,
-        priority: 0.5,
+        changeFrequency: 'monthly' as const,
+        priority: 0.5
     },
     {
-        url: "/forgot-password",
+        url: '/forgot-password',
         lastModified: new Date(),
-        changeFrequency: "monthly" as const,
-        priority: 0.4,
+        changeFrequency: 'monthly' as const,
+        priority: 0.4
     },
     {
-        url: "/reset-password",
+        url: '/reset-password',
         lastModified: new Date(),
-        changeFrequency: "monthly" as const,
-        priority: 0.4,
+        changeFrequency: 'monthly' as const,
+        priority: 0.4
     },
 
     // Legal routes
     {
-        url: "/terms-of-service",
+        url: '/terms-of-service',
         lastModified: new Date(),
-        changeFrequency: "monthly" as const,
-        priority: 0.3,
+        changeFrequency: 'monthly' as const,
+        priority: 0.3
     },
     {
-        url: "/privacy-policy",
+        url: '/privacy-policy',
         lastModified: new Date(),
-        changeFrequency: "monthly" as const,
-        priority: 0.3,
-    },
-];
+        changeFrequency: 'monthly' as const,
+        priority: 0.3
+    }
+]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Add language variations for each static route
     const localeStaticRoutes = locales.flatMap((locale) =>
         staticRoutes.map((route) => ({
             ...route,
-            url: `${baseUrl}${locale}${route.url}`,
+            url: `${baseUrl}${locale}${route.url}`
         }))
-    );
+    )
 
-    return [...localeStaticRoutes];
+    return [...localeStaticRoutes]
 }

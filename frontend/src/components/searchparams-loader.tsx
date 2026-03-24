@@ -1,4 +1,4 @@
-"use client";
+'use client'
 // modified from https://github.com/vercel/next.js/discussions/61654#discussioncomment-10178402
 // context https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
 
@@ -8,38 +8,38 @@
 // suspense, this is a good, childless way of hoisting the params back up to the
 // parent component that needs them in a non-UI blocking way
 
-import { type ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
-import React, { Suspense, useEffect } from "react";
+import { type ReadonlyURLSearchParams, useSearchParams } from 'next/navigation'
+import React, { Suspense, useEffect } from 'react'
 
 type SearchParamsLoaderProps = {
-    onParamsReceived: (params: ReadonlyURLSearchParams) => void;
-};
+    onParamsReceived: (params: ReadonlyURLSearchParams) => void
+}
 
-export const SearchParamsLoader = React.memo(Suspender);
+export const SearchParamsLoader = React.memo(Suspender)
 
 function Suspender(props: SearchParamsLoaderProps) {
     return (
         <Suspense>
             <Suspended {...props} />
         </Suspense>
-    );
+    )
 }
 
 function Suspended({ onParamsReceived }: SearchParamsLoaderProps) {
-    const searchParams = useSearchParams();
+    const searchParams = useSearchParams()
 
     useEffect(() => {
-        onParamsReceived(searchParams);
-    });
+        onParamsReceived(searchParams)
+    })
 
-    return null;
+    return null
 }
 
 export function useSearchParamsLoader() {
-    const [searchParams, setSearchParams] = React.useState<ReadonlyURLSearchParams>();
+    const [searchParams, setSearchParams] = React.useState<ReadonlyURLSearchParams>()
 
     return {
         searchParams,
-        setSearchParams,
-    };
+        setSearchParams
+    }
 }

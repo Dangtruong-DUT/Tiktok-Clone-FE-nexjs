@@ -1,37 +1,37 @@
-"use client";
+'use client'
 
-import { SearchParamsLoader, useSearchParamsLoader } from "@/components/searchparams-loader";
-import { useAppSelector } from "@/hooks/redux";
-import { useRouter } from "@/i18n/navigation";
-import { useLogoutMutation } from "@/services/RTK/auth.services";
-import { useEffect } from "react";
+import { SearchParamsLoader, useSearchParamsLoader } from '@/components/searchparams-loader'
+import { useAppSelector } from '@/hooks/redux'
+import { useRouter } from '@/i18n/navigation'
+import { useLogoutMutation } from '@/services/RTK/auth.services'
+import { useEffect } from 'react'
 
 export default function Logout() {
-    const router = useRouter();
-    const { searchParams, setSearchParams } = useSearchParamsLoader();
-    const accessTokenFromStore = useAppSelector((state) => state.auth.access_token);
-    const refreshTokenFromStore = useAppSelector((state) => state.auth.refresh_token);
-    const accessToken = searchParams?.get("accessToken");
-    const refreshToken = searchParams?.get("refreshToken");
-    const [logoutMutate] = useLogoutMutation();
+    const router = useRouter()
+    const { searchParams, setSearchParams } = useSearchParamsLoader()
+    const accessTokenFromStore = useAppSelector((state) => state.auth.access_token)
+    const refreshTokenFromStore = useAppSelector((state) => state.auth.refresh_token)
+    const accessToken = searchParams?.get('accessToken')
+    const refreshToken = searchParams?.get('refreshToken')
+    const [logoutMutate] = useLogoutMutation()
     useEffect(() => {
         const handleLogout = async () => {
             try {
-                await logoutMutate().unwrap();
+                await logoutMutate().unwrap()
             } catch (error) {
-                console.error("Error logging out:", error);
+                console.error('Error logging out:', error)
             } finally {
-                router.push("/");
+                router.push('/')
             }
-        };
+        }
         if (
             (accessToken && accessTokenFromStore === accessToken) ||
             (refreshToken && refreshTokenFromStore === refreshToken)
         ) {
-            handleLogout();
+            handleLogout()
         } else {
-            router.push("/");
+            router.push('/')
         }
-    }, [logoutMutate, accessToken, refreshToken, router, accessTokenFromStore, refreshTokenFromStore]);
-    return <SearchParamsLoader onParamsReceived={setSearchParams} />;
+    }, [logoutMutate, accessToken, refreshToken, router, accessTokenFromStore, refreshTokenFromStore])
+    return <SearchParamsLoader onParamsReceived={setSearchParams} />
 }

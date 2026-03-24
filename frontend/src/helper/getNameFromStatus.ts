@@ -1,14 +1,14 @@
-import { Audience } from "@/constants/enum";
+import { Audience } from '@/constants/enum'
 
 export function getAudienceNameFromEnum(audience: Audience) {
     switch (audience) {
         case Audience.PUBLIC:
-            return "Public";
+            return 'Public'
         case Audience.FRIENDS:
-            return "Friends";
+            return 'Friends'
         case Audience.PRIVATE:
-            return "Private";
+            return 'Private'
         default:
-            return "Unknown";
+            return 'Unknown'
     }
 }

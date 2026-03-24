@@ -1,69 +1,69 @@
-"use client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+'use client'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 
-import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { PasswordInput } from "@/components/ui/password-input";
+import { Button } from '@/components/ui/button'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { PasswordInput } from '@/components/ui/password-input'
 
-import { useTranslations } from "next-intl";
-import { resetPasswordReqBody, ResetPasswordReqBodyType } from "@/utils/validations/auth.schema";
-import { useResetPasswordMutation } from "@/services/RTK/user.services";
-import { Loader } from "lucide-react";
-import { handleFormError } from "@/utils/handleErrors/handleFormErrors";
-import { useState } from "react";
-import ResetPasswordSuccess from "./reset-password-success";
+import { useTranslations } from 'next-intl'
+import { resetPasswordReqBody, ResetPasswordReqBodyType } from '@/utils/validations/auth.schema'
+import { useResetPasswordMutation } from '@/services/RTK/user.services'
+import { Loader } from 'lucide-react'
+import { handleFormError } from '@/utils/handleErrors/handleFormErrors'
+import { useState } from 'react'
+import ResetPasswordSuccess from './reset-password-success'
 
 interface ResetPasswordFormProps {
-    token: string;
+    token: string
 }
 
 export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
-    const t = useTranslations("resetPasswordPage");
-    const [resetSuccess, setResetSuccess] = useState(false);
+    const t = useTranslations('resetPasswordPage')
+    const [resetSuccess, setResetSuccess] = useState(false)
 
-    const [resetPasswordMutate, resetPasswordResult] = useResetPasswordMutation();
+    const [resetPasswordMutate, resetPasswordResult] = useResetPasswordMutation()
 
     const form = useForm<ResetPasswordReqBodyType>({
         resolver: zodResolver(resetPasswordReqBody),
         defaultValues: {
             forgot_password_token: token,
-            confirm_password: "",
-            password: "",
-        },
-    });
+            confirm_password: '',
+            password: ''
+        }
+    })
 
     const onSubmit = async (data: ResetPasswordReqBodyType) => {
         try {
-            const result = await resetPasswordMutate(data).unwrap();
-            toast.success(result.message);
-            setResetSuccess(true);
-            form.reset();
+            const result = await resetPasswordMutate(data).unwrap()
+            toast.success(result.message)
+            setResetSuccess(true)
+            form.reset()
         } catch (error) {
             handleFormError<ResetPasswordReqBodyType>({
                 error,
-                setFormError: form.setError,
-            });
+                setFormError: form.setError
+            })
         }
-    };
+    }
 
     if (resetSuccess) {
-        return <ResetPasswordSuccess />;
+        return <ResetPasswordSuccess />
     }
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-2.25">
+            <form onSubmit={form.handleSubmit(onSubmit)} className=' space-y-2.25'>
                 <FormField
                     control={form.control}
-                    name="password"
+                    name='password'
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
                                 <PasswordInput
-                                    placeholder={t("newPasswordPlaceholder")}
+                                    placeholder={t('newPasswordPlaceholder')}
                                     {...field}
-                                    className="brand-input"
+                                    className='brand-input'
                                 />
                             </FormControl>
                             <FormMessage />
@@ -72,14 +72,14 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                 />
                 <FormField
                     control={form.control}
-                    name="confirm_password"
+                    name='confirm_password'
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
                                 <PasswordInput
-                                    placeholder={t("confirmPasswordPlaceholder")}
+                                    placeholder={t('confirmPasswordPlaceholder')}
                                     {...field}
-                                    className="brand-input"
+                                    className='brand-input'
                                 />
                             </FormControl>
                             <FormMessage />
@@ -88,17 +88,17 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                 />
 
                 <Button
-                    type="submit"
-                    className="primary-button w-full flex items-center justify-center [&_svg]:size-5!"
+                    type='submit'
+                    className='primary-button w-full flex items-center justify-center [&_svg]:size-5!'
                     disabled={resetPasswordResult.isLoading}
                 >
                     {resetPasswordResult.isLoading ? (
-                        <Loader className="animate-spin font-semibold text-brand" />
+                        <Loader className='animate-spin font-semibold text-brand' />
                     ) : (
-                        t("submit")
+                        t('submit')
                     )}
                 </Button>
             </form>
         </Form>
-    );
+    )
 }

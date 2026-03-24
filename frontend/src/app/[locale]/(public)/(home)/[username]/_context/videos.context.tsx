@@ -1,22 +1,22 @@
-"use client";
+'use client'
 
-import { ID_TAB_ITEMS } from "@/app/[locale]/(public)/(home)/[username]/_config/tab-items.config";
-import usePostsTabQuery from "@/app/[locale]/(public)/(home)/[username]/_hooks/usePostsTabQuery";
-import { GetListPostRes } from "@/types/response/post.type";
-import { TikTokPostType } from "@/types/schemas/TikTokPost.schemas";
+import { ID_TAB_ITEMS } from '@/app/[locale]/(public)/(home)/[username]/_config/tab-items.config'
+import usePostsTabQuery from '@/app/[locale]/(public)/(home)/[username]/_hooks/usePostsTabQuery'
+import { GetListPostRes } from '@/types/response/post.type'
+import { TikTokPostType } from '@/types/schemas/TikTokPost.schemas'
 import {
     BaseQueryFn,
     FetchArgs,
     FetchBaseQueryError,
     InfiniteQueryActionCreatorResult,
-    InfiniteQueryDefinition,
-} from "@reduxjs/toolkit/query";
-import { createContext, use, useState } from "react";
+    InfiniteQueryDefinition
+} from '@reduxjs/toolkit/query'
+import { createContext, use, useState } from 'react'
 
 type VideoContainerContextType = {
-    activeTabId: ID_TAB_ITEMS;
-    setActiveTabId: (tabId: ID_TAB_ITEMS) => void;
-    hasNextPage: boolean;
+    activeTabId: ID_TAB_ITEMS
+    setActiveTabId: (tabId: ID_TAB_ITEMS) => void
+    hasNextPage: boolean
     fetchNextPage:
         | (() => void)
         | (() => InfiniteQueryActionCreatorResult<
@@ -24,34 +24,34 @@ type VideoContainerContextType = {
                   string,
                   number,
                   BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>,
-                  "Posts",
+                  'Posts',
                   GetListPostRes,
-                  "postApi",
+                  'postApi',
                   unknown
               >
-          >);
-    postList: TikTokPostType[];
-    isFetching: boolean;
-    isLoading: boolean;
-};
+          >)
+    postList: TikTokPostType[]
+    isFetching: boolean
+    isLoading: boolean
+}
 const videosContext = createContext<VideoContainerContextType>({
-    activeTabId: "videos",
+    activeTabId: 'videos',
     setActiveTabId: () => {},
     hasNextPage: false,
     fetchNextPage: () => Promise.resolve(),
     postList: [],
     isFetching: false,
-    isLoading: false,
-});
+    isLoading: false
+})
 
 interface VideoContainerProps {
-    children: React.ReactNode;
-    userId: string;
+    children: React.ReactNode
+    userId: string
 }
 
 export default function VideosProvider({ children, userId }: VideoContainerProps) {
-    const [activeTabId, setActiveTabId] = useState<ID_TAB_ITEMS>("videos");
-    const { postList, hasNextPage, fetchNextPage, isFetching, isLoading } = usePostsTabQuery({ activeTabId, userId });
+    const [activeTabId, setActiveTabId] = useState<ID_TAB_ITEMS>('videos')
+    const { postList, hasNextPage, fetchNextPage, isFetching, isLoading } = usePostsTabQuery({ activeTabId, userId })
 
     return (
         <videosContext.Provider
@@ -59,11 +59,11 @@ export default function VideosProvider({ children, userId }: VideoContainerProps
         >
             {children}
         </videosContext.Provider>
-    );
+    )
 }
 
 export const useVideosContext = () => {
-    const context = use(videosContext);
-    if (!context) throw new Error("useVideosContext must be used within a VideosProvider");
-    return context;
-};
+    const context = use(videosContext)
+    if (!context) throw new Error('useVideosContext must be used within a VideosProvider')
+    return context
+}

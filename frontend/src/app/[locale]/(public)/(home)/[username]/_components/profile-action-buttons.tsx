@@ -1,90 +1,90 @@
-"use client";
-import { Settings, Share } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import useCurrentUserData from "@/hooks/data/useCurrentUserData";
-import { useGetUserByUsernameQuery } from "@/services/RTK/user.services";
-import { useCallback } from "react";
-import { toast } from "sonner";
-import { useFollowUser } from "@/hooks/data/useUser";
-import ButtonFollow from "@/app/[locale]/(public)/(home)/[username]/_components/button-follow";
-import { Link } from "@/i18n/navigation";
-import EditProfileDialog from "@/app/[locale]/(public)/(home)/[username]/_components/edit-profile-dialog";
-import { useAppContext } from "@/provider/app-provider";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useAppSelector } from "@/hooks/redux";
-import { useLocale, useTranslations } from "next-intl";
-import { ShareMenuDialog } from "@/components/share-menu-dialog";
-import envConfig from "@/config/app.config";
+'use client'
+import { Settings, Share } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import useCurrentUserData from '@/hooks/data/useCurrentUserData'
+import { useGetUserByUsernameQuery } from '@/services/RTK/user.services'
+import { useCallback } from 'react'
+import { toast } from 'sonner'
+import { useFollowUser } from '@/hooks/data/useUser'
+import ButtonFollow from '@/app/[locale]/(public)/(home)/[username]/_components/button-follow'
+import { Link } from '@/i18n/navigation'
+import EditProfileDialog from '@/app/[locale]/(public)/(home)/[username]/_components/edit-profile-dialog'
+import { useAppContext } from '@/provider/app-provider'
+import { Skeleton } from '@/components/ui/skeleton'
+import { useAppSelector } from '@/hooks/redux'
+import { useLocale, useTranslations } from 'next-intl'
+import { ShareMenuDialog } from '@/components/share-menu-dialog'
+import envConfig from '@/config/app.config'
 
 interface ProfileActionButtonsProps {
-    username: string;
-    userId: string;
+    username: string
+    userId: string
 }
 
 export default function ProfileActionButtons({ userId, username }: ProfileActionButtonsProps) {
-    const { authStatus } = useAppContext();
-    const role = useAppSelector((state) => state.auth.role);
-    const currentUser = useCurrentUserData();
-    const isCurrentUser = currentUser?.uuid === userId;
-    const t = useTranslations("ProfilePage.actions");
-    const { data: userProfileRes } = useGetUserByUsernameQuery(username, { skip: isCurrentUser });
+    const { authStatus } = useAppContext()
+    const role = useAppSelector((state) => state.auth.role)
+    const currentUser = useCurrentUserData()
+    const isCurrentUser = currentUser?.uuid === userId
+    const t = useTranslations('ProfilePage.actions')
+    const { data: userProfileRes } = useGetUserByUsernameQuery(username, { skip: isCurrentUser })
     const { isFollowedState, onToggleFollow } = useFollowUser({
         userId,
-        initialFollowState: userProfileRes?.data.is_followed ?? false,
-    });
+        initialFollowState: userProfileRes?.data.is_followed ?? false
+    })
 
     const handleMessage = useCallback(() => {
-        toast.info("Message feature coming soon!");
-    }, []);
-    const local = useLocale();
-    const ProfileUserUrl = `${envConfig.NEXT_PUBLIC_URL}${local}/@${username}`;
+        toast.info('Message feature coming soon!')
+    }, [])
+    const local = useLocale()
+    const ProfileUserUrl = `${envConfig.NEXT_PUBLIC_URL}${local}/@${username}`
 
-    if (authStatus === "loading" || (role != null && currentUser == null)) {
+    if (authStatus === 'loading' || (role != null && currentUser == null)) {
         return (
-            <div className="flex items-center">
-                <Skeleton className="w-[122px]  h-10 font-medium rounded-md " />
-                <Skeleton className="ml-2 w-[122px]  h-10 font-medium rounded-md" />
-                <Skeleton className="ml-2 w-10  h-10 font-medium rounded-md" />
+            <div className='flex items-center'>
+                <Skeleton className='w-[122px]  h-10 font-medium rounded-md ' />
+                <Skeleton className='ml-2 w-[122px]  h-10 font-medium rounded-md' />
+                <Skeleton className='ml-2 w-10  h-10 font-medium rounded-md' />
             </div>
-        );
+        )
     }
 
     if (isCurrentUser) {
         return (
-            <div className="flex items-center">
+            <div className='flex items-center'>
                 <EditProfileDialog />
-                <Link href="/tiktokstudio/settings">
-                    <Button variant="outline" className="ml-2 h-10 font-medium rounded-md text-base cursor-pointer">
-                        <span className="flex justify-center  items-center mr-1 max-lg:flex max-md:mr-0">
+                <Link href='/tiktokstudio/settings'>
+                    <Button variant='outline' className='ml-2 h-10 font-medium rounded-md text-base cursor-pointer'>
+                        <span className='flex justify-center  items-center mr-1 max-lg:flex max-md:mr-0'>
                             <Settings size={19} />
                         </span>
-                        <span className="max-md:hidden">{t("settings")}</span>
+                        <span className='max-md:hidden'>{t('settings')}</span>
                     </Button>
                 </Link>
                 <ShareMenuDialog url={ProfileUserUrl}>
-                    <Button variant="outline" className="ml-2  h-10 font-medium rounded-md text-base">
+                    <Button variant='outline' className='ml-2  h-10 font-medium rounded-md text-base'>
                         <Share size={19} />
                     </Button>
                 </ShareMenuDialog>
             </div>
-        );
+        )
     } else {
         return (
-            <div className="flex items-center">
+            <div className='flex items-center'>
                 <ButtonFollow isFollowed={isFollowedState} onToggleFollow={onToggleFollow} isAuth={!!currentUser} />
                 <Button
-                    variant="outline"
-                    className="ml-2 h-10 font-medium rounded-md text-base cursor-pointer"
+                    variant='outline'
+                    className='ml-2 h-10 font-medium rounded-md text-base cursor-pointer'
                     onClick={handleMessage}
                 >
-                    {t("message")}
+                    {t('message')}
                 </Button>
                 <ShareMenuDialog url={ProfileUserUrl}>
-                    <Button variant="outline" className="ml-2 h-10 font-medium rounded-md text-base">
+                    <Button variant='outline' className='ml-2 h-10 font-medium rounded-md text-base'>
                         <Share size={19} />
                     </Button>
                 </ShareMenuDialog>
             </div>
-        );
+        )
     }
 }

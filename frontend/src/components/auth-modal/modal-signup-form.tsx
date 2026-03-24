@@ -1,45 +1,45 @@
-"use client";
+'use client'
 
-import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { PasswordInput } from "@/components/ui/password-input";
-import { useTranslations } from "next-intl";
-import DateTimePicker from "@/components/date-time-picker";
-import { Loader } from "lucide-react";
-import { useRegisterWithEmail } from "@/hooks/data/useAuth";
+import { Button } from '@/components/ui/button'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { PasswordInput } from '@/components/ui/password-input'
+import { useTranslations } from 'next-intl'
+import DateTimePicker from '@/components/date-time-picker'
+import { Loader } from 'lucide-react'
+import { useRegisterWithEmail } from '@/hooks/data/useAuth'
 
 export function ModalSignUpForm() {
-    const t = useTranslations("SignUpPage.email");
-    const { form, onSubmit, registerResult } = useRegisterWithEmail();
+    const t = useTranslations('SignUpPage.email')
+    const { form, onSubmit, registerResult } = useRegisterWithEmail()
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-2.25">
+            <form onSubmit={form.handleSubmit(onSubmit)} className=' space-y-2.25'>
                 <FormField
                     control={form.control}
-                    name="date_of_birth"
+                    name='date_of_birth'
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>{t("dateOfBirthLabel")}</FormLabel>
+                            <FormLabel>{t('dateOfBirthLabel')}</FormLabel>
                             <FormControl>
-                                <DateTimePicker {...field} inputClassName="bg-muted! border-none!" />
+                                <DateTimePicker {...field} inputClassName='bg-muted! border-none!' />
                             </FormControl>
-                            <FormDescription>{t("dateOfBirthDescription")}</FormDescription>
+                            <FormDescription>{t('dateOfBirthDescription')}</FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
                 <FormField
                     control={form.control}
-                    name="name"
+                    name='name'
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
                                 <Input
-                                    placeholder={t("namePlaceholder")}
+                                    placeholder={t('namePlaceholder')}
                                     {...field}
-                                    className="brand-input bg-muted! border-none!"
+                                    className='brand-input bg-muted! border-none!'
                                 />
                             </FormControl>
                             <FormMessage />
@@ -48,14 +48,14 @@ export function ModalSignUpForm() {
                 />
                 <FormField
                     control={form.control}
-                    name="email"
+                    name='email'
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
                                 <Input
-                                    placeholder={t("emailPlaceholder")}
+                                    placeholder={t('emailPlaceholder')}
                                     {...field}
-                                    className="brand-input bg-muted! border-none!"
+                                    className='brand-input bg-muted! border-none!'
                                 />
                             </FormControl>
                             <FormMessage />
@@ -64,15 +64,15 @@ export function ModalSignUpForm() {
                 />
                 <FormField
                     control={form.control}
-                    name="password"
+                    name='password'
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
                                 <PasswordInput
-                                    placeholder={t("passwordPlaceholder")}
+                                    placeholder={t('passwordPlaceholder')}
                                     {...field}
-                                    className="brand-input bg-muted! border-none!"
-                                    containerClassName="flex-1"
+                                    className='brand-input bg-muted! border-none!'
+                                    containerClassName='flex-1'
                                 />
                             </FormControl>
                             <FormMessage />
@@ -81,15 +81,15 @@ export function ModalSignUpForm() {
                 />
                 <FormField
                     control={form.control}
-                    name="confirm_password"
+                    name='confirm_password'
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
                                 <PasswordInput
-                                    placeholder={t("confirmPasswordPlaceholder")}
+                                    placeholder={t('confirmPasswordPlaceholder')}
                                     {...field}
-                                    className="brand-input bg-muted! border-none!"
-                                    containerClassName="flex-1"
+                                    className='brand-input bg-muted! border-none!'
+                                    containerClassName='flex-1'
                                 />
                             </FormControl>
                             <FormMessage />
@@ -98,17 +98,17 @@ export function ModalSignUpForm() {
                 />
 
                 <Button
-                    type="submit"
-                    className="primary-button w-full flex items-center justify-center [&_svg]:size-5! cursor-pointer"
+                    type='submit'
+                    className='primary-button w-full flex items-center justify-center [&_svg]:size-5! cursor-pointer'
                     disabled={registerResult.isLoading}
                 >
                     {registerResult.isLoading ? (
-                        <Loader className="animate-spin font-semibold text-brand" />
+                        <Loader className='animate-spin font-semibold text-brand' />
                     ) : (
-                        t("submit")
+                        t('submit')
                     )}
                 </Button>
             </form>
         </Form>
-    );
+    )
 }

@@ -1,39 +1,39 @@
-import { AuthModal } from "@/components/auth-modal";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { useTranslations } from "next-intl";
+import { AuthModal } from '@/components/auth-modal'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+import { useTranslations } from 'next-intl'
 
 interface ButtonFollowProps {
-    isFollowed: boolean;
-    onToggleFollow: () => void;
-    className?: string;
-    isAuth: boolean;
+    isFollowed: boolean
+    onToggleFollow: () => void
+    className?: string
+    isAuth: boolean
 }
 
 export default function ButtonFollow({ isFollowed, onToggleFollow, className, isAuth }: ButtonFollowProps) {
-    const t = useTranslations("ProfilePage.actions");
+    const t = useTranslations('ProfilePage.actions')
     const content = (
         <Button
-            variant={isFollowed ? "outline" : "default"}
-            className={cn("cursor-pointer px-8!", {
-                "primary-button h-10! rounded-md! text-base! font-medium!": !isFollowed,
-                "h-10 font-medium rounded-md text-base ": isFollowed,
-                className,
+            variant={isFollowed ? 'outline' : 'default'}
+            className={cn('cursor-pointer px-8!', {
+                'primary-button h-10! rounded-md! text-base! font-medium!': !isFollowed,
+                'h-10 font-medium rounded-md text-base ': isFollowed,
+                className
             })}
             onClick={onToggleFollow}
         >
-            {isFollowed ? t("following") : t("follow")}
+            {isFollowed ? t('following') : t('follow')}
         </Button>
-    );
+    )
 
     return isAuth ? (
         content
     ) : (
         <AuthModal>
-            <div className="relative">
-                <button className="absolute inset-0 cursor-pointer" />
+            <div className='relative'>
+                <button className='absolute inset-0 cursor-pointer' />
                 {content}
             </div>
         </AuthModal>
-    );
+    )
 }

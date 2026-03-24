@@ -1,34 +1,34 @@
-import React, { useState, useEffect, useRef, memo } from "react";
-import { cn } from "@/lib/utils";
+import React, { useState, useEffect, useRef, memo } from 'react'
+import { cn } from '@/lib/utils'
 
 interface VideoDescriptionProps {
-    description: string;
-    className?: string;
+    description: string
+    className?: string
 }
 
 function VideoDescription({ description, className }: VideoDescriptionProps) {
-    const [expanded, setExpanded] = useState(false);
-    const [canExpand, setCanExpand] = useState(false);
-    const textRef = useRef<HTMLDivElement>(null);
+    const [expanded, setExpanded] = useState(false)
+    const [canExpand, setCanExpand] = useState(false)
+    const textRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         const checkOverflow = () => {
-            const el = textRef.current;
-            if (el) setCanExpand(el.scrollHeight > el.clientHeight);
-        };
-        checkOverflow();
-        window.addEventListener("resize", checkOverflow);
-        return () => window.removeEventListener("resize", checkOverflow);
-    }, [description]);
+            const el = textRef.current
+            if (el) setCanExpand(el.scrollHeight > el.clientHeight)
+        }
+        checkOverflow()
+        window.addEventListener('resize', checkOverflow)
+        return () => window.removeEventListener('resize', checkOverflow)
+    }, [description])
 
     return (
-        <div className="relative w-full flex flex-row items-end justify-center">
+        <div className='relative w-full flex flex-row items-end justify-center'>
             <div
                 ref={textRef}
                 className={cn(
-                    "text-sm leading-[18px] font-normal text-white whitespace-pre-wrap overflow-hidden w-4/5",
-                    "[-webkit-box-orient:vertical] [display:-webkit-box]",
-                    expanded ? "[-webkit-line-clamp:unset]" : "[-webkit-line-clamp:1]",
+                    'text-sm leading-[18px] font-normal text-white whitespace-pre-wrap overflow-hidden w-4/5',
+                    '[-webkit-box-orient:vertical] [display:-webkit-box]',
+                    expanded ? '[-webkit-line-clamp:unset]' : '[-webkit-line-clamp:1]',
                     className
                 )}
             >
@@ -38,13 +38,13 @@ function VideoDescription({ description, className }: VideoDescriptionProps) {
             {canExpand && (
                 <button
                     onClick={() => setExpanded(!expanded)}
-                    className=" text-sm font-semibold px-1.5 py-0.5 text-white"
+                    className=' text-sm font-semibold px-1.5 py-0.5 text-white'
                 >
-                    {expanded ? "less" : "more"}
+                    {expanded ? 'less' : 'more'}
                 </button>
             )}
         </div>
-    );
+    )
 }
 
-export default memo(VideoDescription);
+export default memo(VideoDescription)

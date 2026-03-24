@@ -1,73 +1,73 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import { hasLocale, NextIntlClientProvider } from "next-intl";
-import { notFound } from "next/navigation";
-import { routing } from "@/i18n/routing";
-import { LocalesType } from "@/i18n/config";
-import { tiktokDisplayFont, tiktokFont } from "@/config/font";
-import { ThemeProvider } from "@/provider/theme-provider";
-import { AppProvider } from "@/provider/app-provider";
-import StoreProvider from "@/provider/store-provider";
-import envConfig from "@/config/app.config";
+import type { Metadata } from 'next'
+import './globals.css'
+import { hasLocale, NextIntlClientProvider } from 'next-intl'
+import { notFound } from 'next/navigation'
+import { routing } from '@/i18n/routing'
+import { LocalesType } from '@/i18n/config'
+import { tiktokDisplayFont, tiktokFont } from '@/config/font'
+import { ThemeProvider } from '@/provider/theme-provider'
+import { AppProvider } from '@/provider/app-provider'
+import StoreProvider from '@/provider/store-provider'
+import envConfig from '@/config/app.config'
 
 export function generateStaticParams() {
-    return routing.locales.map((locale) => ({ locale }));
+    return routing.locales.map((locale) => ({ locale }))
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
-    const { locale } = await params;
+    const { locale } = await params
 
     return {
         title: {
-            template: "%s | Tiktok",
-            default: "Tiktok",
+            template: '%s | Tiktok',
+            default: 'Tiktok'
         },
-        description: "tiktok",
-        authors: [{ name: "TaplamIT", url: "https://taplamit.com" }],
+        description: 'tiktok',
+        authors: [{ name: 'TaplamIT', url: 'https://taplamit.com' }],
         openGraph: {
-            title: "Tiktok",
-            description: "tiktok",
+            title: 'Tiktok',
+            description: 'tiktok',
             locale,
-            type: "website",
+            type: 'website',
             url: `${envConfig.NEXT_PUBLIC_URL}${locale}`,
-            siteName: "Tiktok",
+            siteName: 'Tiktok',
             images: [
                 {
-                    url: "https://api.taplamit.tech/api/v1/static/images/72e81f3e59013ce9726567704.jpg",
+                    url: 'https://api.taplamit.tech/api/v1/static/images/72e81f3e59013ce9726567704.jpg',
                     width: 1200,
                     height: 630,
-                    alt: "TaplamIT - Tiktok",
-                },
-            ],
+                    alt: 'TaplamIT - Tiktok'
+                }
+            ]
         },
-        creator: "TaplamIT",
-        publisher: "TaplamIT",
+        creator: 'TaplamIT',
+        publisher: 'TaplamIT',
         alternates: {
-            canonical: "/",
+            canonical: '/',
             languages: {
-                "en-US": "/en-US",
-                "vi-VN": "/vi-VN",
-            },
+                'en-US': '/en-US',
+                'vi-VN': '/vi-VN'
+            }
         },
         formatDetection: {
             email: false,
             address: false,
-            telephone: false,
-        },
-    };
+            telephone: false
+        }
+    }
 }
 
 export default async function LocaleLayout({
     children,
-    params,
+    params
 }: Readonly<{
-    children: React.ReactNode;
-    params: Promise<{ locale: LocalesType }>;
+    children: React.ReactNode
+    params: Promise<{ locale: LocalesType }>
 }>) {
     // Ensure that the incoming `locale` is valid
-    const { locale } = await params;
+    const { locale } = await params
     if (!hasLocale(routing.locales, locale)) {
-        notFound();
+        notFound()
     }
 
     return (
@@ -77,8 +77,8 @@ export default async function LocaleLayout({
                     <StoreProvider>
                         <AppProvider>
                             <ThemeProvider
-                                attribute="class"
-                                defaultTheme="system"
+                                attribute='class'
+                                defaultTheme='system'
                                 enableSystem
                                 disableTransitionOnChange
                             >
@@ -89,5 +89,5 @@ export default async function LocaleLayout({
                 </NextIntlClientProvider>
             </body>
         </html>
-    );
+    )
 }

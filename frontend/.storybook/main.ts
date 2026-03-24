@@ -1,37 +1,37 @@
-import type { StorybookConfig } from "@storybook/nextjs-vite";
+import type { StorybookConfig } from '@storybook/nextjs-vite'
 
 const config: StorybookConfig = {
-    stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
+    stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
     addons: [
-        "@chromatic-com/storybook",
-        "@storybook/addon-docs",
-        "@storybook/addon-onboarding",
-        "@storybook/addon-a11y",
-        "@storybook/addon-vitest",
+        '@chromatic-com/storybook',
+        '@storybook/addon-docs',
+        '@storybook/addon-onboarding',
+        '@storybook/addon-a11y',
+        '@storybook/addon-vitest'
     ],
     framework: {
-        name: "@storybook/nextjs-vite",
-        options: {},
+        name: '@storybook/nextjs-vite',
+        options: {}
     },
     staticDirs: [
         {
-            from: "../src/assets/fonts",
-            to: "src/assets/fonts",
+            from: '../src/assets/fonts',
+            to: 'src/assets/fonts'
         },
-        "../public",
+        '../public'
     ],
     features: {
-        experimentalRSC: true,
+        experimentalRSC: true
     },
     viteFinal: async (config, { configType }) => {
         if (!config.resolve) {
-            config.resolve = { alias: {} };
+            config.resolve = { alias: {} }
         }
         config.resolve.alias = {
             ...(config.resolve.alias || {}),
-            "next-intl/server": require.resolve("./mocks/next-intl-server"),
-        };
-        return config;
-    },
-};
-export default config;
+            'next-intl/server': require.resolve('./mocks/next-intl-server')
+        }
+        return config
+    }
+}
+export default config

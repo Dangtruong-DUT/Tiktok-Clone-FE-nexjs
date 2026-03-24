@@ -48,7 +48,7 @@ class Post extends Model
     */
     protected $attributes = [
         'likes_count' => 0,
-        'shares_count' => 0,
+        'share_count' => 0,
         'comments_count' => 0,
         'bookmarks_count' => 0,
         'repost_count' => 0,
@@ -74,6 +74,7 @@ class Post extends Model
             'repost_count' => 'integer',
             'comments_count' => 'integer',
             'quote_post_count' => 'integer',
+            'share_count' => 'integer',
             'guest_views' => 'integer',
             'user_views' => 'integer',
             'is_bookmarked' => 'boolean',

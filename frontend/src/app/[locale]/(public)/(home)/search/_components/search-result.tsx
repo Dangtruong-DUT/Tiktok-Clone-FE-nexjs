@@ -1,44 +1,44 @@
-"use client";
+'use client'
 
-import Header from "@/app/[locale]/(public)/(home)/search/_components/tabbar-header";
-import { TabbarItemsId } from "@/app/[locale]/(public)/(home)/search/_config/tabbar-items";
-import { SearchParamsLoader, useSearchParamsLoader } from "@/components/searchparams-loader";
-import { useSearchPostsInfiniteQuery, useSearchUsersInfiniteQuery } from "@/services/RTK/search.services";
-import { useTranslations } from "next-intl";
-import { useState } from "react";
-import UsersContainer from "@/app/[locale]/(public)/(home)/search/_components/users-container";
-import PostsContainer from "@/app/[locale]/(public)/(home)/search/_components/posts-container";
-import { MdSearchOff } from "react-icons/md";
+import Header from '@/app/[locale]/(public)/(home)/search/_components/tabbar-header'
+import { TabbarItemsId } from '@/app/[locale]/(public)/(home)/search/_config/tabbar-items'
+import { SearchParamsLoader, useSearchParamsLoader } from '@/components/searchparams-loader'
+import { useSearchPostsInfiniteQuery, useSearchUsersInfiniteQuery } from '@/services/RTK/search.services'
+import { useTranslations } from 'next-intl'
+import { useState } from 'react'
+import UsersContainer from '@/app/[locale]/(public)/(home)/search/_components/users-container'
+import PostsContainer from '@/app/[locale]/(public)/(home)/search/_components/posts-container'
+import { MdSearchOff } from 'react-icons/md'
 
 export default function SearchResults() {
-    const t = useTranslations("HomePage.search");
-    const [tabActive, setTabActive] = useState<TabbarItemsId>("USERS");
-    const { setSearchParams, searchParams } = useSearchParamsLoader();
-    const query = searchParams?.get("q") || "";
+    const t = useTranslations('HomePage.search')
+    const [tabActive, setTabActive] = useState<TabbarItemsId>('USERS')
+    const { setSearchParams, searchParams } = useSearchParamsLoader()
+    const query = searchParams?.get('q') || ''
     const {
         fetchNextPage: handleFetchNextPageUsers,
         hasNextPage: hasNextPageUsers,
         data: dataUsers,
         isFetching: isFetchingUsers,
-        isLoading: isLoadingUsers,
-    } = useSearchUsersInfiniteQuery({ q: query ?? "" }, { skip: tabActive !== "USERS" });
+        isLoading: isLoadingUsers
+    } = useSearchUsersInfiniteQuery({ q: query ?? '' }, { skip: tabActive !== 'USERS' })
 
     const {
         fetchNextPage: handleFetchNextPagePosts,
         hasNextPage: hasNextPagePosts,
         data: dataPosts,
         isFetching: isFetchingPosts,
-        isLoading: isLoadingPosts,
-    } = useSearchPostsInfiniteQuery({ q: query ?? "" }, { skip: tabActive !== "VIDEOS" });
+        isLoading: isLoadingPosts
+    } = useSearchPostsInfiniteQuery({ q: query ?? '' }, { skip: tabActive !== 'VIDEOS' })
 
-    const userDataResults = dataUsers?.pages.flatMap((page) => page.data) || [];
-    const postDataResults = dataPosts?.pages.flatMap((page) => page.data) || [];
+    const userDataResults = dataUsers?.pages.flatMap((page) => page.data) || []
+    const postDataResults = dataPosts?.pages.flatMap((page) => page.data) || []
 
-    const activeResultUserTab = tabActive === "USERS" && (userDataResults.length > 0 || isLoadingUsers);
-    const activeResultVideoTab = tabActive === "VIDEOS" && (postDataResults.length > 0 || isLoadingPosts);
+    const activeResultUserTab = tabActive === 'USERS' && (userDataResults.length > 0 || isLoadingUsers)
+    const activeResultVideoTab = tabActive === 'VIDEOS' && (postDataResults.length > 0 || isLoadingPosts)
 
     return (
-        <div className="p-4 mx-auto max-w-[800px] w-[73%] min-w-[420px]">
+        <div className='p-4 mx-auto max-w-[800px] w-[73%] min-w-[420px]'>
             <SearchParamsLoader onParamsReceived={setSearchParams} />
             <Header tabActive={tabActive} setTabActive={setTabActive} />
             <div>
@@ -61,15 +61,15 @@ export default function SearchResults() {
                     />
                 )}
                 {!activeResultUserTab && !activeResultVideoTab && (
-                    <div className="mx-auto flex flex-col justify-center items-center min-h-[490px]">
-                        <div className="flex justify-center items-center size-[92px] rounded-full bg-muted">
+                    <div className='mx-auto flex flex-col justify-center items-center min-h-[490px]'>
+                        <div className='flex justify-center items-center size-[92px] rounded-full bg-muted'>
                             <MdSearchOff size={44} />
                         </div>
-                        <p className="text-2xl font-bold mt-6">{t("noResults.title")}</p>
-                        <p className="text-base mt-2 text-muted-foreground">{t("noResults.description")}</p>
+                        <p className='text-2xl font-bold mt-6'>{t('noResults.title')}</p>
+                        <p className='text-base mt-2 text-muted-foreground'>{t('noResults.description')}</p>
                     </div>
                 )}
             </div>
         </div>
-    );
+    )
 }

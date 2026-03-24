@@ -1,3 +1,3 @@
-import { Audience } from "@/constants/enum";
+import { Audience } from '@/constants/enum'
 
-export const audienceStatusValues = [Audience.PUBLIC, Audience.FRIENDS, Audience.PRIVATE] as const;
+export const audienceStatusValues = [Audience.PUBLIC, Audience.FRIENDS, Audience.PRIVATE] as const

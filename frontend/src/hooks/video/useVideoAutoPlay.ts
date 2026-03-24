@@ -1,51 +1,51 @@
-"use client";
+'use client'
 
-import { useEffect } from "react";
-import { useInViewport } from "@/hooks/ui/useInViewport";
+import { useEffect } from 'react'
+import { useInViewport } from '@/hooks/ui/useInViewport'
 
 interface UseVideoAutoPlayProps {
-    videoRef: React.RefObject<HTMLVideoElement | null>;
-    threshold?: number;
+    videoRef: React.RefObject<HTMLVideoElement | null>
+    threshold?: number
 }
 
 export function useVideoAutoPlay({ videoRef, threshold = 0.5 }: UseVideoAutoPlayProps) {
-    const isInViewport = useInViewport(videoRef, threshold);
+    const isInViewport = useInViewport(videoRef, threshold)
 
     useEffect(() => {
-        const video = videoRef.current;
-        if (!video) return;
+        const video = videoRef.current
+        if (!video) return
 
         if (isInViewport) {
             video.play().catch((error) => {
-                console.error("Error attempting to play video:", error);
-            });
+                console.error('Error attempting to play video:', error)
+            })
         } else {
-            video.pause();
+            video.pause()
         }
-    }, [isInViewport, videoRef]);
+    }, [isInViewport, videoRef])
 
     useEffect(() => {
-        const video = videoRef.current;
-        if (!video) return;
+        const video = videoRef.current
+        if (!video) return
 
         const handleVisibilityChange = () => {
             if (document.hidden) {
-                video.pause();
+                video.pause()
             } else {
                 if (isInViewport) {
                     video.play().catch((error) => {
-                        console.error("Error attempting to play video:", error);
-                    });
+                        console.error('Error attempting to play video:', error)
+                    })
                 }
             }
-        };
+        }
 
-        document.addEventListener("visibilitychange", handleVisibilityChange);
+        document.addEventListener('visibilitychange', handleVisibilityChange)
 
         return () => {
-            document.removeEventListener("visibilitychange", handleVisibilityChange);
-        };
-    }, [isInViewport, videoRef]);
+            document.removeEventListener('visibilitychange', handleVisibilityChange)
+        }
+    }, [isInViewport, videoRef])
 
-    return { isInViewport };
+    return { isInViewport }
 }

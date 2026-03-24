@@ -1,36 +1,36 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-export type OpenModalVideoDetailType = "commentsVideoDetail" | "modalVideoDetail" | null;
+export type OpenModalVideoDetailType = 'commentsVideoDetail' | 'modalVideoDetail' | null
 
 interface ModalStateType {
-    typeOpenModal: OpenModalVideoDetailType;
-    prevPathnameOpenModal: string | null;
+    typeOpenModal: OpenModalVideoDetailType
+    prevPathnameOpenModal: string | null
 }
 
 const initialState: ModalStateType = {
     typeOpenModal: null,
-    prevPathnameOpenModal: null,
-};
+    prevPathnameOpenModal: null
+}
 
 const modalSlice = createSlice({
-    name: "modal",
+    name: 'modal',
     initialState,
     reducers: {
         setOpenModal(
             state,
             action: PayloadAction<{ type: Exclude<OpenModalVideoDetailType, null>; prevPathname: string }>
         ) {
-            state.typeOpenModal = action.payload.type;
-            state.prevPathnameOpenModal = action.payload.prevPathname;
+            state.typeOpenModal = action.payload.type
+            state.prevPathnameOpenModal = action.payload.prevPathname
         },
         closeModal(state) {
-            state.typeOpenModal = null;
-            state.prevPathnameOpenModal = null;
-        },
-    },
-});
+            state.typeOpenModal = null
+            state.prevPathnameOpenModal = null
+        }
+    }
+})
 
-export const { setOpenModal, closeModal } = modalSlice.actions;
+export const { setOpenModal, closeModal } = modalSlice.actions
 
-const modalReducer = modalSlice.reducer;
-export default modalReducer;
+const modalReducer = modalSlice.reducer
+export default modalReducer

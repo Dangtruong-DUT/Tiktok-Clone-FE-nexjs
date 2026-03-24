@@ -1,31 +1,31 @@
-import { routesValuesType } from "@/app/[locale]/(public)/(home)/_components/sidebar/_config/menu-items-sidebar.config";
+import { routesValuesType } from '@/app/[locale]/(public)/(home)/_components/sidebar/_config/menu-items-sidebar.config'
 
 export enum SidebarActiveType {
     // Navigation items
-    HOME = "home",
-    EXPLORE = "explore",
-    FOLLOWING = "following",
-    UPLOAD = "upload",
-    ACTIVITY = "activity",
-    MESSAGES = "messages",
+    HOME = 'home',
+    EXPLORE = 'explore',
+    FOLLOWING = 'following',
+    UPLOAD = 'upload',
+    ACTIVITY = 'activity',
+    MESSAGES = 'messages',
 
     // Special actions
-    PROFILE = "profile",
-    MORE = "more",
-    SEARCH = "search",
+    PROFILE = 'profile',
+    MORE = 'more',
+    SEARCH = 'search',
 
     // Default state
-    NONE = "none",
+    NONE = 'none'
 }
 
 export interface SidebarActiveState {
-    type: SidebarActiveType;
-    route?: string;
+    type: SidebarActiveType
+    route?: string
 }
 
 export const routeToActiveType: Record<routesValuesType, SidebarActiveType> = {
-    "/": SidebarActiveType.HOME,
-    "/explore": SidebarActiveType.EXPLORE,
-    "/following": SidebarActiveType.FOLLOWING,
-    "/tiktokstudio/upload": SidebarActiveType.UPLOAD,
-};
+    '/': SidebarActiveType.HOME,
+    '/explore': SidebarActiveType.EXPLORE,
+    '/following': SidebarActiveType.FOLLOWING,
+    '/tiktokstudio/upload': SidebarActiveType.UPLOAD
+}

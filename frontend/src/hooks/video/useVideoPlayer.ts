@@ -1,104 +1,104 @@
-"use client";
+'use client'
 
-import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { setIsMute, setVolume as setVolumeToStore } from "@/store/features/videoSlice";
-import { useCallback, useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from '@/hooks/redux'
+import { setIsMute, setVolume as setVolumeToStore } from '@/store/features/videoSlice'
+import { useCallback, useEffect, useState } from 'react'
 
 interface UseVideoPlayerOptions {
-    onVideoEnd?: () => void;
+    onVideoEnd?: () => void
 }
 
 export function useVideoPlayer(
     videoRef: React.RefObject<HTMLVideoElement | null>,
     options: UseVideoPlayerOptions = {}
 ) {
-    const [isPlaying, setIsPlaying] = useState(true);
-    const isMuted = useAppSelector((state) => state.video.isMuted);
-    const dispatch = useAppDispatch();
+    const [isPlaying, setIsPlaying] = useState(true)
+    const isMuted = useAppSelector((state) => state.video.isMuted)
+    const dispatch = useAppDispatch()
     const setIsMuted = useCallback(
         (value: boolean) => {
-            dispatch(setIsMute(value));
+            dispatch(setIsMute(value))
         },
         [dispatch]
-    );
-    const volume = useAppSelector((state) => state.video.volume);
+    )
+    const volume = useAppSelector((state) => state.video.volume)
     const setVolume = useCallback(
         (value: number) => {
-            dispatch(setVolumeToStore(value));
+            dispatch(setVolumeToStore(value))
         },
         [dispatch]
-    );
-    const [currentTime, setCurrentTime] = useState(0);
-    const [duration, setDuration] = useState(0);
+    )
+    const [currentTime, setCurrentTime] = useState(0)
+    const [duration, setDuration] = useState(0)
 
-    const { onVideoEnd } = options;
+    const { onVideoEnd } = options
 
     useEffect(() => {
-        const video = videoRef.current;
-        if (!video) return;
+        const video = videoRef.current
+        if (!video) return
 
-        const updateTime = () => setCurrentTime(video.currentTime);
-        const updateDuration = () => setDuration(video.duration);
+        const updateTime = () => setCurrentTime(video.currentTime)
+        const updateDuration = () => setDuration(video.duration)
         const handleVideoEnd = () => {
-            setIsPlaying(false);
+            setIsPlaying(false)
             if (onVideoEnd) {
-                onVideoEnd();
+                onVideoEnd()
             } else {
                 // Default behavior: restart the video
-                video.currentTime = 0;
+                video.currentTime = 0
                 video
                     .play()
                     .then(() => {
-                        setIsPlaying(true);
+                        setIsPlaying(true)
                     })
-                    .catch(console.error);
+                    .catch(console.error)
             }
-        };
+        }
 
-        video.addEventListener("timeupdate", updateTime);
-        video.addEventListener("loadedmetadata", updateDuration);
-        video.addEventListener("ended", handleVideoEnd);
+        video.addEventListener('timeupdate', updateTime)
+        video.addEventListener('loadedmetadata', updateDuration)
+        video.addEventListener('ended', handleVideoEnd)
 
         if (video.readyState >= 1 && video.duration) {
-            setDuration(video.duration);
+            setDuration(video.duration)
         }
 
         return () => {
-            video.removeEventListener("timeupdate", updateTime);
-            video.removeEventListener("loadedmetadata", updateDuration);
-            video.removeEventListener("ended", handleVideoEnd);
-        };
-    }, [videoRef, onVideoEnd]);
+            video.removeEventListener('timeupdate', updateTime)
+            video.removeEventListener('loadedmetadata', updateDuration)
+            video.removeEventListener('ended', handleVideoEnd)
+        }
+    }, [videoRef, onVideoEnd])
 
     // Add an effect to sync video state with isPlaying state
     useEffect(() => {
-        const video = videoRef.current;
-        if (!video) return;
+        const video = videoRef.current
+        if (!video) return
 
-        const handlePlay = () => setIsPlaying(true);
-        const handlePause = () => setIsPlaying(false);
+        const handlePlay = () => setIsPlaying(true)
+        const handlePause = () => setIsPlaying(false)
 
-        video.addEventListener("play", handlePlay);
-        video.addEventListener("pause", handlePause);
+        video.addEventListener('play', handlePlay)
+        video.addEventListener('pause', handlePause)
 
         return () => {
-            video.removeEventListener("play", handlePlay);
-            video.removeEventListener("pause", handlePause);
-        };
-    }, [videoRef, setIsPlaying]);
+            video.removeEventListener('play', handlePlay)
+            video.removeEventListener('pause', handlePause)
+        }
+    }, [videoRef, setIsPlaying])
 
     // Add an effect to sync video state with isMuted state
     useEffect(() => {
-        const video = videoRef.current;
-        if (!video) return;
+        const video = videoRef.current
+        if (!video) return
 
-        const handleVolumeChange = () => setIsMuted(video.muted);
-        video.addEventListener("volumechange", handleVolumeChange);
+        const handleVolumeChange = () => setIsMuted(video.muted)
+        video.addEventListener('volumechange', handleVolumeChange)
 
         return () => {
-            video.removeEventListener("volumechange", handleVolumeChange);
-        };
-    }, [videoRef, setIsMuted]);
+            video.removeEventListener('volumechange', handleVolumeChange)
+        }
+    }, [videoRef, setIsMuted])
 
     return {
         isPlaying,
@@ -108,6 +108,6 @@ export function useVideoPlayer(
         volume,
         setVolume,
         currentTime,
-        duration,
-    };
+        duration
+    }
 }

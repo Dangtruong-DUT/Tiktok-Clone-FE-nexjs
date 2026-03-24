@@ -1,20 +1,20 @@
-"use client";
+'use client'
 
-import { useVideosProvider } from "@/app/[locale]/(public)/(home)/following/_context/videos-provider";
-import NavigationVideo from "@/app/[locale]/(public)/(home)/following/_components/navigation-video";
-import InfiniteVideoFeed from "@/components/infinite-video-feed";
-import UnfollowedFeed from "@/app/[locale]/(public)/(home)/following/_components/unfollowed-feed";
-import { useAppContext } from "@/provider/app-provider";
+import { useVideosProvider } from '@/app/[locale]/(public)/(home)/following/_context/videos-provider'
+import NavigationVideo from '@/app/[locale]/(public)/(home)/following/_components/navigation-video'
+import InfiniteVideoFeed from '@/components/infinite-video-feed'
+import UnfollowedFeed from '@/app/[locale]/(public)/(home)/following/_components/unfollowed-feed'
+import { useAppContext } from '@/provider/app-provider'
 
 export default function VideoScrollWrapper() {
-    const { authStatus } = useAppContext();
+    const { authStatus } = useAppContext()
 
-    const { feeds } = useVideosProvider();
-    const isFriendViewMode = feeds.friend.postList.length > 0 || feeds.friend.isLoading;
+    const { feeds } = useVideosProvider()
+    const isFriendViewMode = feeds.friend.postList.length > 0 || feeds.friend.isLoading
 
     return (
         <>
-            {isFriendViewMode && authStatus == "ready" && (
+            {isFriendViewMode && authStatus == 'ready' && (
                 <InfiniteVideoFeed
                     posts={feeds.friend.postList}
                     fetchNextPage={feeds.friend.fetchNextPage}
@@ -34,5 +34,5 @@ export default function VideoScrollWrapper() {
                 />
             )}
         </>
-    );
+    )
 }
