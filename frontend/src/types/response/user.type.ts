@@ -1,10 +1,12 @@
 import { ResType } from '@/types/response/response.type'
 import { UserType } from '@/types/schemas/User.schema'
+import { UserAuthType } from './auth.type'
 
 export type VerifyEmailResType = ResType<
     {
         access_token: string
         refresh_token: string
+        user: UserAuthType
     },
     void
 >

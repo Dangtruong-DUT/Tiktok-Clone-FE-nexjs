@@ -1,7 +1,7 @@
 import { API_ENDPOINT } from '@/config/endpoint.config'
 import baseQueryWithReauth from '@/services/RTK/client'
 import { UserIndicatorsResponse } from '@/types/response/stats.type'
-import { GetUserProfileResType, UpdateUserResType, VerifyEmailResType } from '@/types/response/user.type'
+import { GetUserProfileResType, UpdateUserResType } from '@/types/response/user.type'
 import {
     ForgotPasswordReqBodyType,
     ResetPasswordReqBodyType,
@@ -11,8 +11,7 @@ import {
     ChangePasswordBodyType,
     FollowUserReqBodyType,
     GetUserIndicatorQueryParamsType,
-    UpdateUserBodyType,
-    VerifyEmailReqBodyType
+    UpdateUserBodyType
 } from '@/utils/validations/user.schema'
 import { createApi } from '@reduxjs/toolkit/query/react'
 import queryString from 'query-string'
@@ -26,13 +25,6 @@ export const UserApi = createApi({
     refetchOnFocus: false,
     refetchOnReconnect: true,
     endpoints: (builder) => ({
-        verify: builder.mutation<VerifyEmailResType, VerifyEmailReqBodyType>({
-            query: (data) => ({
-                url: API_ENDPOINT.API_VERIFY_EMAIL,
-                method: 'POST',
-                body: data
-            })
-        }),
         forgotPassword: builder.mutation<{ message: string }, ForgotPasswordReqBodyType>({
             query: (data) => ({
                 url: API_ENDPOINT.API_FORGOT_PASSWORD,
@@ -132,7 +124,6 @@ export const UserApi = createApi({
 })
 
 export const {
-    useVerifyMutation,
     useForgotPasswordMutation,
     useResetPasswordMutation,
     useVerifyForgotPasswordMutation,

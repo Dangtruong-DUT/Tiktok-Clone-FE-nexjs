@@ -15,6 +15,7 @@ export async function POST(request: NextRequest) {
         const { access_token, refresh_token } = response.data
         const decodedAccessToken = decodeJwt<TokenPayload>(access_token)
         const decodedRefreshToken = decodeJwt<TokenPayload>(refresh_token)
+
         cookieStore.set('access_token', access_token, {
             httpOnly: true,
             sameSite: 'lax',
@@ -29,15 +30,15 @@ export async function POST(request: NextRequest) {
             secure: true,
             path: '/'
         })
+
         return NextResponse.json(response)
     } catch (error) {
         if (error instanceof HttpError) {
             return NextResponse.json(error.data, { status: error.status })
         } else {
-            console.error('Register error:', error)
             return NextResponse.json(
-                { message: 'An unexpected error occurred during registration.' },
-                { status: HTTP_STATUS.INTERNAL_SERVER_STATUS }
+                { message: 'Please check your email and password.' },
+                { status: HTTP_STATUS.UNAUTHORIZED }
             )
         }
     }

@@ -1,7 +1,10 @@
+import { API_ENDPOINT } from '@/config/endpoint.config'
 import { NextWithAuthBaseQuery } from '@/services/RTK/client'
 import { SetCookieBodyType } from '@/types/auth'
 import { LoginResponseType, LogoutResType, RefreshTokenRes, RegisterResponseType } from '@/types/response/auth.type'
+import { VerifyEmailResType } from '@/types/response/user.type'
 import { LoginReqBodyType, RegisterReqBodyType } from '@/utils/validations/auth.schema'
+import { VerifyEmailReqBodyType } from '@/utils/validations/user.schema'
 import { createApi } from '@reduxjs/toolkit/query/react'
 
 export const AuthApi = createApi({
@@ -41,6 +44,13 @@ export const AuthApi = createApi({
                 method: 'POST',
                 body
             })
+        }),
+        verifyEmail: builder.mutation<VerifyEmailResType, VerifyEmailReqBodyType>({
+            query: (data) => ({
+                url: API_ENDPOINT.API_VERIFY_EMAIL,
+                method: 'POST',
+                body: data
+            })
         })
     })
 })
@@ -50,5 +60,6 @@ export const {
     useLogoutMutation,
     useRegisterMutation,
     useRefreshTokenMutation,
-    useSetCookieMutation
+    useSetCookieMutation,
+    useVerifyEmailMutation
 } = AuthApi

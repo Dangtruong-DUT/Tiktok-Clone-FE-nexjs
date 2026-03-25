@@ -3,7 +3,7 @@
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'
 import { useRouter } from '@/i18n/navigation'
 import { useGetPostOfUserPagingQuery } from '@/services/RTK/posts.services'
-import { TikTokPostType } from '@/types/schemas/TikTokPost.schemas'
+import { TikTokPostType } from '@/types/schemas/TikTokPost.schema'
 import { formatCash } from '@/utils/formatting/formatNumber'
 import { formatISOToDisplayDate } from '@/utils/formatting/formatTime'
 import Image from 'next/image'

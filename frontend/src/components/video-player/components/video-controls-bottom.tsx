@@ -1,7 +1,7 @@
 import React from 'react'
 import { cn } from '@/lib/utils'
 import { timeAgo } from '@/utils/formatting/formatTime'
-import { TikTokPostType } from '@/types/schemas/TikTokPost.schemas'
+import { TikTokPostType } from '@/types/schemas/TikTokPost.schema'
 import { UserType } from '@/types/schemas/User.schema'
 import ProgressBar from './progress-bar'
 import VideoDescription from '@/components/video-player/components/video-description'

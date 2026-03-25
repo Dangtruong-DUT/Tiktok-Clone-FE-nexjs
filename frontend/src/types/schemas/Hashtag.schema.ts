@@ -1,5 +1,5 @@
 export interface HashtagType {
-    _id: string
+    id: string
     name: string
     created_at: string
 }

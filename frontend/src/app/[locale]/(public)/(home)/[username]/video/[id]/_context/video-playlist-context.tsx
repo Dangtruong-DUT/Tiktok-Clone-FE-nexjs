@@ -1,7 +1,7 @@
 'use client'
 
 import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react'
-import { TikTokPostType } from '@/types/schemas/TikTokPost.schemas'
+import { TikTokPostType } from '@/types/schemas/TikTokPost.schema'
 import { useGetRelatedPostsInfiniteQuery } from '@/services/RTK/posts.services'
 import {
     BaseQueryFn,

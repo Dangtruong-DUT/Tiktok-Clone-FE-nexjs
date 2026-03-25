@@ -33,12 +33,9 @@ export async function clientRequest<response>({ method, url, options = {} }: Req
             body: isFormData ? options.body : JSON.stringify(options.body)
         })
 
-        console.log(`Request: ${method} ${fullUrl}`, options)
-        console.log(`Response: ${response.status} ${response}`)
-
         if (!response.ok) {
             const errorPayload = await response.json()
-            if (response.status === HTTP_STATUS.ENTITY_ERROR_STATUS) {
+            if (response.status === HTTP_STATUS.UNPROCESSABLE_ENTITY) {
                 throw new EntityError(errorPayload)
             }
             throw new HttpError(errorPayload, response.status, errorPayload.message || 'Request failed')

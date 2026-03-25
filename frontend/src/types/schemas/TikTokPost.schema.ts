@@ -1,7 +1,8 @@
 import { Audience, PosterType } from '@/constants/enum'
-import { HashtagType } from '@/types/schemas/Hashtag.schemas'
+import { HashtagType } from '@/types/schemas/Hashtag.schema'
 import { Media } from '@/types/schemas/Media.schema'
 import { UserType } from '@/types/schemas/User.schema'
+import { MentionType } from './Mention.schema'
 
 export type TikTokPostType = {
     id: number
@@ -16,12 +17,7 @@ export type TikTokPostType = {
     created_at: string
     updated_at: string
     medias: Media[]
-    mentions: {
-        id: number
-        name: string
-        username: string
-        email: string
-    }[]
+    mentions: MentionType[]
     likes_count: number
     bookmarks_count: number
     repost_count: number

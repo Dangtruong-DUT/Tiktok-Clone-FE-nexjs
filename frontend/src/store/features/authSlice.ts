@@ -1,4 +1,5 @@
 import { Role } from '@/constants/enum'
+import { UserAuthType } from '@/types/response/auth.type'
 import { UserType } from '@/types/schemas/User.schema'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
@@ -6,7 +7,7 @@ interface AuthState {
     refresh_token: string | null
     access_token: string | null
     role: Role | null
-    user_profile: UserType | null
+    user_profile: UserAuthType | null
 }
 
 const initialState: AuthState = {
@@ -32,7 +33,7 @@ const authSlice = createSlice({
             state.access_token = null
             state.role = null
         },
-        setUserProfile: (state, action: PayloadAction<UserType | null>) => {
+        setUserProfile: (state, action: PayloadAction<UserAuthType | null>) => {
             state.user_profile = action.payload
         }
     }

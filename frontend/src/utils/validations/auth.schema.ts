@@ -3,7 +3,7 @@ import z from 'zod'
 export const LoginReqBody = z
     .object({
         email: z.email(),
-        password: z.string().min(6).max(100)
+        password: z.string().min(8).max(100)
     })
     .strict()
 
@@ -13,8 +13,8 @@ export const RegisterReqBody = z
     .object({
         name: z.string().min(1).max(50),
         email: z.email(),
-        password: z.string().min(6).max(100),
-        confirm_password: z.string().min(6).max(100),
+        password: z.string().min(8).max(100),
+        confirm_password: z.string().min(8).max(100),
         date_of_birth: z.iso.datetime()
     })
     .strict()
@@ -64,8 +64,8 @@ export type verifyForgotPasswordReqBodyType = z.TypeOf<typeof verifyForgotPasswo
 export const resetPasswordReqBody = z
     .object({
         forgot_password_token: z.string().min(10),
-        password: z.string().min(6).max(100),
-        confirm_password: z.string().min(6).max(100)
+        password: z.string().min(8).max(100),
+        confirm_password: z.string().min(8).max(100)
     })
     .strict()
     .superRefine(({ confirm_password, password }, ctx) => {

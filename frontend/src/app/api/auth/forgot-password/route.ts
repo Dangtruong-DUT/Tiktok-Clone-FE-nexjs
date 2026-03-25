@@ -13,10 +13,9 @@ export async function POST(request: NextRequest) {
         if (error instanceof HttpError) {
             return NextResponse.json(error.data, { status: error.status })
         } else {
-            console.error('Forgot password error:', error)
             return NextResponse.json(
-                { message: 'An unexpected error occurred while processing forgot password request.' },
-                { status: HTTP_STATUS.INTERNAL_SERVER_STATUS }
+                { message: 'Invalid email address. Please enter a valid email address.' },
+                { status: HTTP_STATUS.BAD_REQUEST }
             )
         }
     }

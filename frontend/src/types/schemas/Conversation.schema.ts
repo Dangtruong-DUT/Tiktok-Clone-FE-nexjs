@@ -1,5 +1,5 @@
 export interface ConversationType {
-    _id?: string
+    id: string
     sender_id: string
     receiver_id: string
     content: string

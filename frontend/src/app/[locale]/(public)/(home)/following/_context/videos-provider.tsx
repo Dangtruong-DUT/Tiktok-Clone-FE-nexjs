@@ -1,6 +1,6 @@
 'use client'
 import { ScrollType } from '@/hooks/ui/useScrollIndexObserver'
-import { TikTokPostType } from '@/types/schemas/TikTokPost.schemas'
+import { TikTokPostType } from '@/types/schemas/TikTokPost.schema'
 import React, { createContext, useMemo } from 'react'
 import { useGetListPostInfiniteQuery, useGetUnfollowedPostsInfiniteQuery } from '@/services/RTK/posts.services'
 import { useHandleVideos } from '@/app/[locale]/(public)/(home)/following/_hooks/useHandleVideos'

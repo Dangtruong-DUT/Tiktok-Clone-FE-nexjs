@@ -58,7 +58,7 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
         return result
     },
     {
-        maxRetries: 5
+        maxRetries: 2
     }
 )
 

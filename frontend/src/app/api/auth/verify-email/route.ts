@@ -1,18 +1,25 @@
 import AuthRequestApi from '@/apis/auth.request'
 import { HTTP_STATUS } from '@/constants/http'
+import { AuthApi } from '@/services/RTK/auth.services'
+import { SetCookieBodyType } from '@/types/auth'
 import { HttpError } from '@/types/errors'
 import { TokenPayload } from '@/types/jwt'
 import { decodeJwt } from '@/utils/jwt'
-import { LoginReqBodyType } from '@/utils/validations/auth.schema'
+import { VerifyEmailReqBodyType } from '@/utils/validations/user.schema'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
-    const body = (await request.json()) as LoginReqBodyType
+    const body = (await request.json()) as VerifyEmailReqBodyType
     const cookieStore = await cookies()
     try {
-        const response = await AuthRequestApi.login(body)
+        const { email_verify_token } = body
+        if (!email_verify_token) {
+            throw new Error('Missing email verify token')
+        }
+        const response = await AuthRequestApi.verifyEmail(body)
         const { access_token, refresh_token } = response.data
+
         const decodedAccessToken = decodeJwt<TokenPayload>(access_token)
         const decodedRefreshToken = decodeJwt<TokenPayload>(refresh_token)
 
@@ -33,10 +40,9 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json(response)
     } catch (error) {
-        if (error instanceof HttpError) {
-            return NextResponse.json(error.data, { status: error.status })
-        } else {
-            return NextResponse.json({ message: 'Invalid email or password.' }, { status: HTTP_STATUS.UNAUTHORIZED })
-        }
+        return NextResponse.json(
+            { message: 'Please provide a valid email verify token.' },
+            { status: HTTP_STATUS.BAD_REQUEST }
+        )
     }
 }

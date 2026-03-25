@@ -5,7 +5,6 @@ import { useAppDispatch, useAppSelector } from '@/hooks/redux'
 import { handleRefreshToken } from '@/lib/auth'
 import { useLogoutMutation } from '@/services/RTK/auth.services'
 import { tokenReceived } from '@/store/features/authSlice'
-//must next navigation, redirect form server: /locale/endpoint
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
 

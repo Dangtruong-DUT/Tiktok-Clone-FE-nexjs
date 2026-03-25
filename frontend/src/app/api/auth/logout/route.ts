@@ -10,7 +10,7 @@ export async function POST() {
     cookieStore.delete('access_token')
     cookieStore.delete('refresh_token')
     if (!access_token || !refresh_token) {
-        return NextResponse.json({ message: 'Missing access token or refresh token.' }, { status: HTTP_STATUS.OK })
+        return NextResponse.json({ message: 'Logout successful.' }, { status: HTTP_STATUS.OK })
     }
     try {
         const response = await AuthRequestApi.logout({
@@ -19,6 +19,6 @@ export async function POST() {
         })
         return NextResponse.json(response, { status: HTTP_STATUS.OK })
     } catch (error) {
-        return NextResponse.json({ message: 'An unexpected error occurred during logout.' }, { status: HTTP_STATUS.OK })
+        return NextResponse.json({ message: 'Logout successful.' }, { status: HTTP_STATUS.OK })
     }
 }

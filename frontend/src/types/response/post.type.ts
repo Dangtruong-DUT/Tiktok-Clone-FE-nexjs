@@ -1,7 +1,7 @@
 import { PosterType } from '@/constants/enum'
 import { ResType } from '@/types/response/response.type'
-import { CommentType } from '@/types/schemas/comment.schemas'
-import { TikTokPostType } from '@/types/schemas/TikTokPost.schemas'
+import { CommentType } from '@/types/schemas/Comment.schema'
+import { TikTokPostType } from '@/types/schemas/TikTokPost.schema'
 
 export type MetaDataListPost = {
     type: 'offset' | 'simple' | 'cursor'

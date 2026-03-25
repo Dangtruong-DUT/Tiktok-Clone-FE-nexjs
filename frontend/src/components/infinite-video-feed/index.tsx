@@ -1,7 +1,7 @@
 'use client'
 
 import { keyDataScroll } from '@/app/[locale]/(public)/(home)/following/_hooks/useHandleVideos'
-import { TikTokPostType } from '@/types/schemas/TikTokPost.schemas'
+import { TikTokPostType } from '@/types/schemas/TikTokPost.schema'
 import VideoPlayer from '@/components/video-player'
 import { useInViewport } from '@/hooks/ui/useInViewport'
 import { useEffect, useRef } from 'react'

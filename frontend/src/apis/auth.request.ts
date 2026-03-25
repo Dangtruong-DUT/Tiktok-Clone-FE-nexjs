@@ -1,6 +1,7 @@
 import httpClient from '@/apis/client'
 import { API_ENDPOINT } from '@/config/endpoint.config'
 import { LoginResponseType, LogoutResType, RefreshTokenRes, RegisterResponseType } from '@/types/response/auth.type'
+import { VerifyEmailResType } from '@/types/response/user.type'
 import {
     ForgotPasswordReqBodyType,
     LoginReqBodyType,
@@ -10,6 +11,8 @@ import {
     ResetPasswordReqBodyType,
     verifyForgotPasswordReqBodyType
 } from '@/utils/validations/auth.schema'
+import { VerifyEmailReqBodyType } from '@/utils/validations/user.schema'
+import { verify } from 'crypto'
 
 const AuthRequestApi = {
     login: (body: LoginReqBodyType) => httpClient.post<LoginResponseType>(API_ENDPOINT.API_LOGIN, body),
@@ -30,7 +33,9 @@ const AuthRequestApi = {
         httpClient.post<{ message: string }>(API_ENDPOINT.API_RESET_PASSWORD, body),
     refreshToken: (body: RefreshTokenReqBodyType) => {
         return httpClient.post<RefreshTokenRes>(API_ENDPOINT.API_REFRESH_TOKEN, body)
-    }
+    },
+    verifyEmail: (body: VerifyEmailReqBodyType) =>
+        httpClient.post<VerifyEmailResType>(API_ENDPOINT.API_VERIFY_EMAIL, body)
 }
 
 export default AuthRequestApi

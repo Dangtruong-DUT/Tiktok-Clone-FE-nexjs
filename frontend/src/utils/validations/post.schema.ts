@@ -26,7 +26,7 @@ export const CreateCommentsReqBody = z
         content: z.string().min(0).max(500),
         hashtags: z.array(z.string()).optional(),
         mentions: z.array(z.number().int().positive()).optional(),
-        parent_id: z.number().int().positive().optional(),
+        parent_id: z.number().int().positive(),
         medias: z.array(MediaSchema).optional()
     })
     .strict()

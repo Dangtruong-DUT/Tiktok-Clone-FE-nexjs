@@ -1,7 +1,7 @@
 import ProgressBar from '@/components/video-player-v2/components/progress-bar'
 import VolumeBar from '@/components/video-player-v2/components/volume-bar'
 import { cn } from '@/lib/utils'
-import { TikTokPostType } from '@/types/schemas/TikTokPost.schemas'
+import { TikTokPostType } from '@/types/schemas/TikTokPost.schema'
 import { formatSecondsToTime } from '@/utils/formatting/formatTime'
 import { FaPause, FaPlay } from 'react-icons/fa6'
 

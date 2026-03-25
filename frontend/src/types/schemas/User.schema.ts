@@ -5,7 +5,6 @@ export interface UserType {
     uuid: string
     name: string
     email: string
-    password: string
     date_of_birth: string
     updated_at: string
     created_at: string
@@ -15,7 +14,6 @@ export interface UserType {
     website: string
     username: string
     avatar: string
-    cover_photo: string
     following_count: number
     followers_count: number
     likes_count: number

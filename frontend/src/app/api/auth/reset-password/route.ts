@@ -13,10 +13,9 @@ export async function POST(request: NextRequest) {
         if (error instanceof HttpError) {
             return NextResponse.json(error.data, { status: error.status })
         } else {
-            console.error('Reset password error:', error)
             return NextResponse.json(
-                { message: 'An unexpected error occurred while resetting password.' },
-                { status: HTTP_STATUS.INTERNAL_SERVER_STATUS }
+                { message: 'Please enter a valid reset password token and ensure both passwords match.' },
+                { status: HTTP_STATUS.BAD_REQUEST }
             )
         }
     }

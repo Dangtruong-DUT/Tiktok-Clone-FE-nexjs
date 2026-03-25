@@ -1,7 +1,7 @@
 import { EncodingStatus } from '@/constants/enum'
 
 export interface VideoStatusType {
-    _id: string
+    id: string
     name: string
     status: EncodingStatus
     message: string

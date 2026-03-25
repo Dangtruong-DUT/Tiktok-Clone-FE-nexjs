@@ -1,6 +1,5 @@
 import AuthRequestApi from '@/apis/auth.request'
 import { HTTP_STATUS } from '@/constants/http'
-import { HttpError } from '@/types/errors'
 import { TokenPayload } from '@/types/jwt'
 import { decodeJwt } from '@/utils/jwt'
 import { cookies } from 'next/headers'
@@ -10,7 +9,10 @@ export async function POST() {
     const cookieStore = await cookies()
     const refresh_token = cookieStore.get('refresh_token')?.value
     if (!refresh_token) {
-        return NextResponse.json({ message: 'Missing refresh token.' }, { status: HTTP_STATUS.UNAUTHORIZED })
+        return NextResponse.json(
+            { message: 'Your session has expired, please login again.' },
+            { status: HTTP_STATUS.UNAUTHORIZED }
+        )
     }
     try {
         const response = await AuthRequestApi.refreshToken({
@@ -20,6 +22,7 @@ export async function POST() {
         const { access_token: newAccessToken, refresh_token: newRefreshToken } = response.data
         const decodedAccessToken = decodeJwt<TokenPayload>(newAccessToken)
         const decodedRefreshToken = decodeJwt<TokenPayload>(newRefreshToken)
+
         cookieStore.set('access_token', newAccessToken, {
             httpOnly: true,
             secure: true,
@@ -36,14 +39,12 @@ export async function POST() {
         })
         return NextResponse.json(response, { status: HTTP_STATUS.OK })
     } catch (error) {
-        if (error instanceof HttpError) {
-            return NextResponse.json(error.data, { status: error.status })
-        } else {
-            console.error('Refresh token error:', error)
-            return NextResponse.json(
-                { message: 'An unexpected error occurred during refresh token.' },
-                { status: HTTP_STATUS.INTERNAL_SERVER_STATUS }
-            )
-        }
+        cookieStore.delete('access_token')
+        cookieStore.delete('refresh_token')
+
+        return NextResponse.json(
+            { message: 'Session expired. Please login again.' },
+            { status: HTTP_STATUS.UNAUTHORIZED }
+        )
     }
 }

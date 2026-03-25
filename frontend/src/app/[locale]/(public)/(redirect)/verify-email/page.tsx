@@ -6,56 +6,35 @@ import VerifyIcon from '@/components/lottie-icons/verify-icon'
 import { SearchParamsLoader, useSearchParamsLoader } from '@/components/searchparams-loader'
 import { useAppDispatch } from '@/hooks/redux'
 import { useRouter } from '@/i18n/navigation'
-import { useSetCookieMutation } from '@/services/RTK/auth.services'
-import { useVerifyMutation } from '@/services/RTK/user.services'
+import { useVerifyEmailMutation } from '@/services/RTK/auth.services'
 import { setRole, tokenReceived } from '@/store/features/authSlice'
-import { TokenPayload } from '@/types/jwt'
-import { decodeJwt } from '@/utils/jwt'
 import { useCallback, useEffect, useState } from 'react'
 export default function VerifyPage() {
     const { searchParams, setSearchParams } = useSearchParamsLoader()
-    const [setCookieMutateAsync] = useSetCookieMutation()
 
     const dispatch = useAppDispatch()
 
     const router = useRouter()
 
     const token = searchParams?.get('token')
-    const [verifyEmailMutate] = useVerifyMutation()
+    const [verifyEmailMutate] = useVerifyEmailMutation()
     const [VerifyStatus, setVerifyStatus] = useState<'loading' | 'success' | 'error'>('loading')
-
-    const handleSetCookie = useCallback(
-        async (access_token: string, refresh_token: string) => {
-            try {
-                await setCookieMutateAsync({
-                    access_token,
-                    refresh_token
-                }).unwrap()
-                const { role } = decodeJwt<TokenPayload>(access_token)
-
-                dispatch(tokenReceived({ access_token, refresh_token }))
-                dispatch(setRole(role))
-                router.push('/')
-            } catch (error) {
-                console.error('Error setting cookies:', error)
-            }
-        },
-        [router, setCookieMutateAsync, dispatch]
-    )
 
     const handleVerifyEmail = useCallback(
         async (token: string) => {
             try {
-                const res = await verifyEmailMutate({ email_verify_token: token }).unwrap()
-                const { access_token, refresh_token } = res.data
-                await handleSetCookie(access_token, refresh_token)
+                const response = await verifyEmailMutate({ email_verify_token: token }).unwrap()
+                const { access_token, refresh_token, user } = response.data
+                dispatch(tokenReceived({ access_token, refresh_token }))
+                dispatch(setRole(user.role))
+                router.push('/')
                 setVerifyStatus('success')
             } catch (error) {
                 console.error('Error verifying email:', error)
                 setVerifyStatus('error')
             }
         },
-        [verifyEmailMutate, handleSetCookie]
+        [verifyEmailMutate]
     )
 
     useEffect(() => {

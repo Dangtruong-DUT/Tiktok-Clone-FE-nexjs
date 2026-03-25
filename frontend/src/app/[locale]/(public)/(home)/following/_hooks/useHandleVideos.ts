@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation'
 import { useRouter } from '@/i18n/navigation'
 import { useAppSelector } from '@/hooks/redux'
 import useScrollIndexObserver from '@/hooks/ui/useScrollIndexObserver'
-import { TikTokPostType } from '@/types/schemas/TikTokPost.schemas'
+import { TikTokPostType } from '@/types/schemas/TikTokPost.schema'
 
 export const keyDataScroll = 'data-scroll-index'
 

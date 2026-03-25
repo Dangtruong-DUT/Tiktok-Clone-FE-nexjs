@@ -1,4 +1,4 @@
-import { TikTokPostType } from '@/types/schemas/TikTokPost.schemas'
+import { TikTokPostType } from '@/types/schemas/TikTokPost.schema'
 import { UserType } from '@/types/schemas/User.schema'
 import { Metadata, ResolvingMetadata } from 'next'
 import { LocalesType } from '@/i18n/config'
