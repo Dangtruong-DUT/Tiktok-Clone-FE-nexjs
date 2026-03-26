@@ -1,4 +1,4 @@
-import { API_ENDPOINT } from '@/config/endpoint.config'
+import { BACKEND_API_ENDPOINT, NEXT_API_ENDPOINT } from '@/config/endpoint.config'
 import { NextWithAuthBaseQuery } from '@/store/services/client'
 import { SetCookieBodyType } from '@/types/auth'
 import { LoginResponseType, LogoutResType, RefreshTokenRes, RegisterResponseType } from '@/types/dtos/auth/auth-response.dto'
@@ -14,40 +14,40 @@ export const AuthApi = createApi({
     endpoints: (builder) => ({
         login: builder.mutation<LoginResponseType, LoginReqBodyType>({
             query: (body) => ({
-                url: '/api/auth/login',
+                url: NEXT_API_ENDPOINT.API_LOGIN,
                 method: 'POST',
                 body
             })
         }),
         logout: builder.mutation<LogoutResType, void>({
             query: () => ({
-                url: '/api/auth/logout',
+                url: NEXT_API_ENDPOINT.API_LOGOUT,
                 method: 'POST'
             })
         }),
         register: builder.mutation<RegisterResponseType, RegisterReqBodyType>({
             query: (body) => ({
-                url: '/api/auth/register',
+                url: NEXT_API_ENDPOINT.API_REGISTER,
                 method: 'POST',
                 body
             })
         }),
         refreshToken: builder.mutation<RefreshTokenRes, void>({
             query: () => ({
-                url: '/api/auth/refresh-token',
+                url: NEXT_API_ENDPOINT.API_REFRESH_TOKEN,
                 method: 'POST'
             })
         }),
         setCookie: builder.mutation<void, SetCookieBodyType>({
             query: (body) => ({
-                url: '/api/auth/token',
+                url: NEXT_API_ENDPOINT.API_SET_TOKEN,
                 method: 'POST',
                 body
             })
         }),
         verifyEmail: builder.mutation<VerifyEmailResType, VerifyEmailReqBodyType>({
             query: (data) => ({
-                url: API_ENDPOINT.API_VERIFY_EMAIL,
+                url: BACKEND_API_ENDPOINT.API_VERIFY_EMAIL,
                 method: 'POST',
                 body: data
             })

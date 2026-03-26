@@ -1,4 +1,13 @@
-export const API_ENDPOINT = {
+export const NEXT_API_ENDPOINT = {
+    API_REFRESH_TOKEN: '/api/auth/refresh-token',
+    API_LOGIN: '/api/auth/login',
+    API_GOOGLE_LOGIN: '/api/auth/login/google',
+    API_LOGOUT: '/api/auth/logout',
+    API_REGISTER: '/api/auth/register',
+    API_SET_TOKEN: '/api/auth/token'
+} as const
+
+export const BACKEND_API_ENDPOINT = {
     API_REFRESH_TOKEN: '/auth/refresh-token',
     API_LOGIN: '/auth/login',
     API_GOOGLE_LOGIN: '/auth/login/google',

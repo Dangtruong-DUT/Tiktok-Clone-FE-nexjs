@@ -13,7 +13,7 @@ import { authMiddleware } from './middlewares/auth.middleware'
 
 export const makeStore = () => {
     return configureStore({
-        devTools: !isProduction,
+        devTools:true,
         reducer: {
             [UserApi.reducerPath]: UserApi.reducer,
             [SearchApi.reducerPath]: SearchApi.reducer,

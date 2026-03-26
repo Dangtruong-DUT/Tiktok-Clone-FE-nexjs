@@ -4,7 +4,7 @@ import useCurrentUserData from '@/hooks/data/useCurrentUserData'
 import { useRouter } from '@/i18n/navigation'
 import { useGetPostOfUserPagingQuery } from '@/store/services/posts.service'
 import { TikTokPostType } from '@/types/models/post.model'
-import { formatCash } from '@/utils/formatting/formatNumber'
+import { formatCompactNumber } from '@/utils/formatting/formatNumber'
 import { formatISOToDisplayDate } from '@/utils/formatting/formatTime'
 import Image from 'next/image'
 import { useState } from 'react'
@@ -90,15 +90,15 @@ function VideoItem({ post }: { post: TikTokPostType }) {
                 <div className='flex gap-4 text-xs text-secondary-foreground'>
                     <div className='flex flex-col items-center gap-2 w-[72px] h-[48px]'>
                         <FaPlay size={16} />
-                        <span>{formatCash.format(post.user_views + post.guest_views || 0)}</span>
+                        <span>{formatCompactNumber(post.user_views + post.guest_views || 0)}</span>
                     </div>
                     <div className='flex flex-col items-center gap-2 w-[72px] h-[48px]'>
                         <FaHeart size={16} />
-                        <span>{formatCash.format(post.likes_count || 0)}</span>
+                        <span>{formatCompactNumber(post.likes_count || 0)}</span>
                     </div>
                     <div className='flex flex-col items-center gap-2 w-[72px] h-[48px]'>
                         <FaCommentDots size={16} />
-                        <span>{formatCash.format(post.comments_count || 0)}</span>
+                        <span>{formatCompactNumber(post.comments_count || 0)}</span>
                     </div>
                 </div>
             </div>

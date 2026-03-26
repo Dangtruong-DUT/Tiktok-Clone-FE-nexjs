@@ -1,6 +1,11 @@
 import { isEntityError } from '@/helper/checkType'
 import { FieldValues, Path, UseFormSetError } from 'react-hook-form'
 
+
+/** This function is used to handle form errors from the API response and set the form errors using react-hook-form's setError function
+ * @param error The error object returned from the API response
+ * @param setFormError The setError function from react-hook-form to set the form errors
+ */
 export function handleFormError<TFieldValues extends FieldValues>({
     error,
     setFormError

@@ -9,7 +9,7 @@ import { UserIndicatorsData } from '@/types/dtos/stats/stats-response.dto'
 import { useTranslations } from 'next-intl'
 import _ from 'lodash'
 import { cn } from '@/lib/utils'
-import { formatCash } from '@/utils/formatting/formatNumber'
+import { formatCompactNumber } from '@/utils/formatting/formatNumber'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 export const description = 'An interactive line chart'
@@ -116,7 +116,7 @@ export default function DirectorLineChart() {
                                         }
                                     )}
                                 >
-                                    {formatCash.format(total[key as keyof typeof total] ?? 0)}
+                                    {formatCompactNumber(total[key as keyof typeof total] ?? 0)}
                                 </span>
                             </button>
                         )

@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import { setupListeners } from '@reduxjs/toolkit/query'
 
 export default function StoreProvider({ children }: { children: React.ReactNode }) {
-    const storeRef = useRef<AppStore>(undefined)
+    const storeRef = useRef<AppStore>(null)
     if (!storeRef.current) {
         storeRef.current = makeStore()
         setupListeners(storeRef.current.dispatch)

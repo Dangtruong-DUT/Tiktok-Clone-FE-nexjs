@@ -3,7 +3,7 @@
 import { CommentBody } from '@/components/comment-section/comment-body'
 import ReplyList from '@/components/comment-section/reply-list'
 import { CommentType } from '@/types/models/comment.model'
-import { formatCash } from '@/utils/formatting/formatNumber'
+import { formatCompactNumber } from '@/utils/formatting/formatNumber'
 import { ChevronDown } from 'lucide-react'
 import { useState } from 'react'
 
@@ -25,7 +25,7 @@ export default function CommentItem({ comment }: ReplyListProps) {
                     >
                         {showReplies
                             ? 'Hide'
-                            : `View ${formatCash.format(comment.comments_count)} ${
+                            : `View ${formatCompactNumber(comment.comments_count)} ${
                                   comment.comments_count > 1 ? 'replies' : 'reply'
                               }`}
                     </button>

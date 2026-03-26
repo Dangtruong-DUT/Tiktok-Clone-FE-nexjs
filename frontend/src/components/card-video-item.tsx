@@ -2,7 +2,7 @@
 
 import { Audience } from '@/constants/enum'
 import { TikTokPostType } from '@/types/models/post.model'
-import { formatCash } from '@/utils/formatting/formatNumber'
+import { formatCompactNumber } from '@/utils/formatting/formatNumber'
 import { IoLockClosedOutline } from 'react-icons/io5'
 import Image from 'next/image'
 import React from 'react'
@@ -73,7 +73,7 @@ export default function CardVideoItem({
                         <div className='flex items-center gap-1.5'>
                             <CiHeart className='text-white size-4.5' />
                             <span className='text-white font-semibold text-sm'>
-                                {formatCash.format(post.likes_count)}
+                                {formatCompactNumber(post.likes_count)}
                             </span>
                         </div>
                         {post.audience == Audience.PRIVATE ? (
@@ -82,7 +82,7 @@ export default function CardVideoItem({
                             <span className='flex gap-1'>
                                 <HiOutlinePlay className='text-white size-4.5' />
                                 <strong className='text-xs text-white'>
-                                    {formatCash.format(post.user_views + post.guest_views)}
+                                    {formatCompactNumber(post.user_views + post.guest_views)}
                                 </strong>
                             </span>
                         )}
@@ -102,7 +102,7 @@ export default function CardVideoItem({
                     <p className='text-muted-foreground flex text-sm gap-1.5'>
                         <span className='flex items-center gap-1'>
                             <FaRegHeart className='size-3.5' />
-                            {formatCash.format(post.likes_count)}
+                            {formatCompactNumber(post.likes_count)}
                         </span>
                         <span>·</span> <span>{timeAgo({ date: post.created_at, locale })}</span>
                     </p>

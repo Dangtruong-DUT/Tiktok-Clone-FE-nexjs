@@ -1,7 +1,7 @@
 import { AuthModal } from '@/components/auth-modal'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { formatCash } from '@/utils/formatting/formatNumber'
+import { formatCompactNumber } from '@/utils/formatting/formatNumber'
 
 interface ActionButtonProps {
     icon: React.ReactNode
@@ -35,7 +35,7 @@ export default function ActionButton({
             >
                 {icon}
             </Button>
-            <span className='text-xs font-bold text-center text-white'>{count ? formatCash.format(count) : label}</span>
+            <span className='text-xs font-bold text-center text-white'>{count ? formatCompactNumber(count) : label}</span>
         </div>
     )
 

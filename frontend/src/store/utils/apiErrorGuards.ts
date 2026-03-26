@@ -6,6 +6,11 @@ export function isFetchBaseQueryError(error: unknown): error is FetchBaseQueryEr
     return typeof error === 'object' && error !== null && 'status' in error
 }
 
+/**
+ * 
+ * @param error 
+ * @returns boolean
+ */
 export function isEntityError(error: unknown): error is FetchBaseQueryError & {
     data: { errors: EntityError[] }
 } {
@@ -21,6 +26,11 @@ export function isEntityError(error: unknown): error is FetchBaseQueryError & {
     )
 }
 
+/**
+ * This error guard is used to check if the error payload has a message property
+ * @param payload 
+ * @returns  boolean
+ */
 export function isPayloadErrorWithMessage(payload: unknown): payload is { data: { message: string } } {
     return (
         typeof payload === 'object' &&
@@ -30,49 +40,5 @@ export function isPayloadErrorWithMessage(payload: unknown): payload is { data: 
         payload.data !== null &&
         'message' in payload.data &&
         typeof payload.data.message === 'string'
-    )
-}
-
-export function isActionHttpErrorWithMessage(
-    action: unknown
-): action is { payload: { data: { message: string }; status: number } } {
-    return (
-        typeof action === 'object' &&
-        action !== null &&
-        'payload' in action &&
-        typeof action.payload === 'object' &&
-        action.payload !== null &&
-        'data' in action.payload &&
-        'status' in action.payload &&
-        isPayloadErrorWithMessage(action.payload)
-    )
-}
-
-export function isActionHttpErrorWithDetail(
-    action: unknown
-): action is { payload: { data: { title: string; detail: string }; status: number } } {
-    return (
-        typeof action === 'object' &&
-        action !== null &&
-        'payload' in action &&
-        typeof action.payload === 'object' &&
-        action.payload !== null &&
-        'data' in action.payload &&
-        'status' in action.payload &&
-        isPayloadErrorWithDetail(action.payload)
-    )
-}
-
-export function isPayloadErrorWithDetail(payload: unknown): payload is { data: { title: string; detail: string } } {
-    return (
-        typeof payload === 'object' &&
-        payload !== null &&
-        'data' in payload &&
-        typeof payload.data === 'object' &&
-        payload.data !== null &&
-        'title' in payload.data &&
-        typeof payload.data.title === 'string' &&
-        'detail' in payload.data &&
-        typeof payload.data.detail === 'string'
     )
 }

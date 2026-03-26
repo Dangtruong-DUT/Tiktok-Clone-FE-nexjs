@@ -10,7 +10,7 @@ import { useAppSelector } from '@/store/hooks'
 import { Link } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
 import { CommentType } from '@/types/models/comment.model'
-import { formatCash } from '@/utils/formatting/formatNumber'
+import { formatCompactNumber } from '@/utils/formatting/formatNumber'
 import { timeAgo } from '@/utils/formatting/formatTime'
 import { X } from 'lucide-react'
 import { useLocale } from 'next-intl'
@@ -40,7 +40,7 @@ function LikeButton({
             <button onClick={toggleLike} className='cursor-pointer'>
                 {isLiked ? <FaHeart size={17} className='text-red-500' /> : <FaRegHeart size={17} />}
             </button>
-            <strong>{formatCash.format(likesCount)}</strong>
+            <strong>{formatCompactNumber(likesCount)}</strong>
         </span>
     )
     return (

@@ -53,6 +53,6 @@ export function formatISOToDisplayDate(data: string): string {
         }).format(date)
     } catch (error) {
         console.log('Error in formatISOToDisplayDate function:', error)
-        return 'Invalid date'
+        return ''
     }
 }

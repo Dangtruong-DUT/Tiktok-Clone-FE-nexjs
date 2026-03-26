@@ -12,7 +12,7 @@ import { Link } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
 import { useGetUserByUsernameQuery } from '@/store/services/user.service'
 import { TikTokPostType } from '@/types/models/post.model'
-import { formatCash } from '@/utils/formatting/formatNumber'
+import { formatCompactNumber } from '@/utils/formatting/formatNumber'
 import { timeAgo } from '@/utils/formatting/formatTime'
 import { useLocale } from 'next-intl'
 import { useCallback, useState } from 'react'
@@ -176,7 +176,7 @@ export default function VideoDescription({ post, className }: VideoDescriptionPr
                             <AiFillMessage className='size-[0.5em]' />
                         </Button>
                         <span className='text-sm font-semibold'>
-                            {formatCash.format(postDetail?.comments_count ?? post.comments_count)}
+                            {formatCompactNumber(postDetail?.comments_count ?? post.comments_count)}
                         </span>
                     </div>
 

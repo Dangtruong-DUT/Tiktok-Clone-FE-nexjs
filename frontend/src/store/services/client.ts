@@ -2,14 +2,16 @@ import { fetchBaseQuery, retry } from '@reduxjs/toolkit/query/react'
 import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Mutex } from 'async-mutex'
 import envConfig from '@/config/app.config'
+import { NEXT_API_ENDPOINT } from '@/config/endpoint.config'
 import { setLoggedOutAction, tokenReceived } from '@/store/features/authSlice'
 import { RefreshTokenRes } from '@/types/dtos/auth/auth-response.dto'
 import { HTTP_STATUS } from '@/constants/http'
 import { RootState } from '@/store'
 
-// create a new mutex
-const mutex = new Mutex()
-//backend server
+/**
+ * Base query for backend API requests. 
+ * It automatically includes the access token in the headers if it exists in the state.
+ */
 export const BackendBaseQuery = fetchBaseQuery({
     baseUrl: envConfig.NEXT_PUBLIC_API_ENDPOINT,
     prepareHeaders: async (headers, api) => {
@@ -22,9 +24,22 @@ export const BackendBaseQuery = fetchBaseQuery({
         return headers
     }
 })
-//proxy server manager auth for nextjs
+
+/**
+ * Nextjs server for handle public api route, it will forward the request to backend server and return the response to client.
+ * This is used to handle the case when we want to set httpOnly cookie for refresh token, which can only be set from server side.
+ * So we need to forward the request to backend server and set the cookie from there.
+ */
 export const NextWithAuthBaseQuery = fetchBaseQuery({ baseUrl: '' })
 
+const mutex = new Mutex()
+
+/**
+ * A custom base query that handles token refresh logic. 
+ * It checks if the access token is expired and attempts to refresh it using the refresh token. 
+ * If the refresh is successful, it retries the original request with the new access token.
+ * If the refresh fails, it dispatches a logout action.
+ */
 const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = retry(
     async (args, api, extraOptions) => {
         await mutex.waitForUnlock()
@@ -34,7 +49,7 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
                 const release = await mutex.acquire()
                 try {
                     const refreshResult = await NextWithAuthBaseQuery(
-                        { url: '/api/auth/refresh-token', method: 'POST' },
+                        { url: NEXT_API_ENDPOINT.API_REFRESH_TOKEN, method: 'POST' },
                         api,
                         extraOptions
                     )
@@ -44,7 +59,7 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
                         api.dispatch(tokenReceived({ access_token, refresh_token }))
                         result = await BackendBaseQuery(args, api, extraOptions)
                     } else {
-                        await NextWithAuthBaseQuery({ url: '/api/auth/logout', method: 'POST' }, api, extraOptions)
+                        await NextWithAuthBaseQuery({ url: NEXT_API_ENDPOINT.API_LOGOUT, method: 'POST' }, api, extraOptions)
                         api.dispatch(setLoggedOutAction())
                     }
                 } finally {
@@ -58,7 +73,7 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
         return result
     },
     {
-        maxRetries: 2
+        maxRetries: 1
     }
 )
 

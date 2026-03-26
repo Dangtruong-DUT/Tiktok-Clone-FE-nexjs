@@ -1,4 +1,4 @@
-import { API_ENDPOINT } from '@/config/endpoint.config'
+import { BACKEND_API_ENDPOINT } from '@/config/endpoint.config'
 import baseQueryWithReauth from '@/store/services/client'
 import { UserIndicatorsResponse } from '@/types/dtos/stats/stats-response.dto'
 import { GetUserProfileResType, UpdateUserResType } from '@/types/dtos/user/user-response.dto'
@@ -27,28 +27,28 @@ export const UserApi = createApi({
     endpoints: (builder) => ({
         forgotPassword: builder.mutation<{ message: string }, ForgotPasswordReqBodyType>({
             query: (data) => ({
-                url: API_ENDPOINT.API_FORGOT_PASSWORD,
+                url: BACKEND_API_ENDPOINT.API_FORGOT_PASSWORD,
                 method: 'POST',
                 body: data
             })
         }),
         verifyForgotPassword: builder.mutation<{ message: string }, verifyForgotPasswordReqBodyType>({
             query: (data) => ({
-                url: API_ENDPOINT.API_VERIFY_FORGOT_PASSWORD,
+                url: BACKEND_API_ENDPOINT.API_VERIFY_FORGOT_PASSWORD,
                 method: 'POST',
                 body: data
             })
         }),
         resetPassword: builder.mutation<{ message: string }, ResetPasswordReqBodyType>({
             query: (data) => ({
-                url: API_ENDPOINT.API_RESET_PASSWORD,
+                url: BACKEND_API_ENDPOINT.API_RESET_PASSWORD,
                 method: 'POST',
                 body: data
             })
         }),
         getMe: builder.query<GetUserProfileResType, void>({
             query: () => ({
-                url: API_ENDPOINT.API_GET_ME,
+                url: BACKEND_API_ENDPOINT.API_GET_ME,
                 method: 'GET'
             }),
             providesTags: (result) => (result ? [{ type: 'Users', id: result.data.uuid }] : [])

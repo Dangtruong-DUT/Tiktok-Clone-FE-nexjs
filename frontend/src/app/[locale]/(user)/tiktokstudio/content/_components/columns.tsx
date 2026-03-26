@@ -12,7 +12,7 @@ import { Ellipsis, PencilLine, Trash2 } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { formatCash } from '@/utils/formatting/formatNumber'
+import { formatCompactNumber } from '@/utils/formatting/formatNumber'
 import { usePostTableContext } from '@/app/[locale]/(user)/tiktokstudio/content/_context/content-table.context'
 import { BsFillImageFill } from 'react-icons/bs'
 import { useMemo, useState } from 'react'
@@ -103,14 +103,14 @@ export function useColumns(): ColumnDef<TikTokPostType>[] {
                     const originalRow = row.original
                     const userViews = Number(originalRow.user_views)
                     const guestViews = Number(originalRow.guest_views)
-                    return <div className='capitalize '>{formatCash.format(userViews + guestViews)}</div>
+                    return <div className='capitalize '>{formatCompactNumber(userViews + guestViews)}</div>
                 }
             },
             {
                 accessorKey: 'comments_count',
                 header: t('columns.comments'),
                 cell: ({ row }) => (
-                    <div className='capitalize '>{formatCash.format(row.getValue('comments_count'))}</div>
+                    <div className='capitalize '>{formatCompactNumber(row.getValue('comments_count'))}</div>
                 )
             },
             {

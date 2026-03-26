@@ -1,5 +1,5 @@
 import { HTTP_STATUS } from '@/constants/http'
-import { isPayloadErrorWithDetail, isPayloadErrorWithMessage } from '@/store/utils/apiErrorGuards'
+import { isPayloadErrorWithMessage } from '@/store/utils/apiErrorGuards'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 
 export interface ReadableErrorMessageReturn {
@@ -26,13 +26,6 @@ export function formatFetchBaseQueryErrorMessage(error: FetchBaseQueryError): Re
         return {
             title: 'Error Occurred',
             description: error.data.message
-        }
-    }
-
-    if (isPayloadErrorWithDetail(error)) {
-        return {
-            title: error.data.title,
-            description: error.data.detail
         }
     }
 

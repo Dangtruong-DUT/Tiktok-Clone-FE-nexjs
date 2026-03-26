@@ -7,19 +7,19 @@ export function getTokens(request: NextRequest) {
 }
 
 export function handleInvalidAccessToken(
-    access_token: string | undefined,
-    refresh_token: string | undefined,
+    access_token: string | null|undefined,
+    refresh_token: string | null|undefined,
     pathname: string,
     request: NextRequest,
     locale: string
 ) {
-    const isAccessTokenValid = access_token !== undefined
-    const isAuthenticated = refresh_token !== undefined
+    const isAccessTokenValid = !!access_token;
+    const isAuthenticated = !!refresh_token;
 
     if (!isAccessTokenValid && isAuthenticated) {
         const url = new URL(`/${locale}/refresh-token`, request.url)
         url.searchParams.set('redirect', pathname)
-        url.searchParams.set('refreshToken', refresh_token!)
+        url.searchParams.set('refreshToken', refresh_token)
         return NextResponse.redirect(url)
     }
 
