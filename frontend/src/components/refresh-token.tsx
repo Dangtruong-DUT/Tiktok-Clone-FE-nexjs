@@ -6,8 +6,8 @@ import { handleRefreshToken } from '@/lib/auth'
 import { useLogoutMutation } from '@/store/services/auth.service'
 import { RootState } from '@/store'
 import { tokenReceived } from '@/store/features/authSlice'
-import { JwtPayloadType } from '@/types/jwt'
-import { decodeJwt } from '@/utils/jwt'
+import { JwtPayloadType } from '@/types/common/jwt-payload.type'
+import { decodeJwt } from '@/utils/auth/jwt'
 import { useCallback, useEffect, useRef } from 'react'
 
 const EXCLUDE_PATHS = ['/login', '/register', '/logout', '/refresh-token', '/oauth']

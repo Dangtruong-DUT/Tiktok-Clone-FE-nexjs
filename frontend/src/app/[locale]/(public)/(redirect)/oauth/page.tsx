@@ -1,7 +1,7 @@
 'use client'
 
-import { JwtPayloadType } from '@/types/jwt'
-import { decodeJwt } from '@/utils/jwt'
+import { JwtPayloadType } from '@/types/common/jwt-payload.type'
+import { decodeJwt } from '@/utils/auth/jwt'
 import { useCallback, useEffect } from 'react'
 import { useRouter } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'

@@ -1,8 +1,9 @@
 import httpClient from '@/apis/client'
+import { NEXT_API_ENDPOINT } from '@/config/endpoint.config'
 import clientSessionToken from '@/services/storage/clientSessionToken'
-import { JwtPayloadType } from '@/types/jwt'
+import { JwtPayloadType } from '@/types/common/jwt-payload.type'
 import { RefreshTokenRes } from '@/types/dtos/auth/auth-response.dto'
-import { decodeJwt } from '@/utils/jwt'
+import { decodeJwt } from '@/utils/auth/jwt'
 
 /**
  * Handles the refresh token logic.
@@ -36,7 +37,7 @@ export async function handleRefreshToken(params?: {
         return
 
     try {
-        const res = await httpClient.post<RefreshTokenRes>('/api/auth/refresh-token', null, {
+        const res = await httpClient.post<RefreshTokenRes>(NEXT_API_ENDPOINT.API_REFRESH_TOKEN, null, {
             baseUrl: ''
         })
         params?.onSuccess?.(res)

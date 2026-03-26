@@ -1,13 +1,10 @@
 import AuthRequestApi from '@/apis/auth.request'
 import { HTTP_STATUS } from '@/constants/http'
-import { AuthApi } from '@/store/services/auth.service'
-import { SetCookieBodyType } from '@/types/auth'
-import { HttpError } from '@/types/errors'
-import { JwtPayloadType } from '@/types/jwt'
-import { decodeJwt } from '@/utils/jwt'
+import { decodeJwt } from '@/utils/auth/jwt'
 import { VerifyEmailReqBodyType } from '@/types/dtos/user/user-request.dto'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
+import { JwtPayloadType } from '@/types/common/jwt-payload.type'
 
 export async function POST(request: NextRequest) {
     const body = (await request.json()) as VerifyEmailReqBodyType

@@ -11,7 +11,6 @@ import { useCallback, useEffect } from 'react'
 export default function RefreshToken() {
     const refreshTokenFormStore = useAppSelector((state) => state.auth.refresh_token)
     const { searchParams, setSearchParams } = useSearchParamsLoader()
-    const refreshTokenQuery = searchParams?.get('refreshToken')
     const redirectQuery = searchParams?.get('redirect')
     const [logoutMutate] = useLogoutMutation()
     const router = useRouter()
@@ -31,6 +30,11 @@ export default function RefreshToken() {
             onSuccess: (data) => {
                 const { access_token, refresh_token } = data.data
                 dispatch(tokenReceived({ access_token, refresh_token }))
+                if (redirectQuery?.startsWith('/')) {
+                    router.replace(redirectQuery)
+                    return
+                }
+                router.replace('/')
             },
             onError: async () => {
                 try {
@@ -42,16 +46,14 @@ export default function RefreshToken() {
                 }
             }
         })
-    }, [dispatch, logoutMutate, router])
+    }, [dispatch, logoutMutate, router, redirectQuery])
 
     useEffect(() => {
-        if (refreshTokenFormStore && refreshTokenQuery === refreshTokenFormStore && refreshToken) {
+        if (refreshTokenFormStore && refreshToken) {
             refreshToken()
-        } else if (refreshTokenFormStore == null && refreshTokenQuery != null) {
-            handleLogout()
         } else {
-            router.push('/')
+            handleLogout()
         }
-    }, [refreshToken, refreshTokenQuery, redirectQuery, refreshTokenFormStore, router, handleLogout])
+    }, [refreshToken, refreshTokenFormStore, handleLogout])
     return <SearchParamsLoader onParamsReceived={setSearchParams} />
 }
