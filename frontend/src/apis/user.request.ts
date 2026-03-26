@@ -1,5 +1,5 @@
 import httpClient from '@/apis/client'
-import { GetUserProfileResType } from '@/types/response/user.type'
+import { GetUserProfileResType } from '@/types/dtos/user/user-response.dto'
 
 const userRequestApi = {
     getUserByUsername: (username: string) => httpClient.get<GetUserProfileResType>(`/users/${username}`)

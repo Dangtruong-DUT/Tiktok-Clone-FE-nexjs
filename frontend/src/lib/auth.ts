@@ -1,7 +1,7 @@
 import httpClient from '@/apis/client'
 import clientSessionToken from '@/services/storage/clientSessionToken'
 import { TokenPayload } from '@/types/jwt'
-import { RefreshTokenRes } from '@/types/response/auth.type'
+import { RefreshTokenRes } from '@/types/dtos/auth/auth-response.dto'
 import { decodeJwt } from '@/utils/jwt'
 
 /**

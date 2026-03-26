@@ -2,8 +2,8 @@
 
 import { ID_TAB_ITEMS } from '@/app/[locale]/(public)/(home)/[username]/_config/tab-items.config'
 import usePostsTabQuery from '@/app/[locale]/(public)/(home)/[username]/_hooks/usePostsTabQuery'
-import { GetListPostRes } from '@/types/response/post.type'
-import { TikTokPostType } from '@/types/schemas/TikTokPost.schema'
+import { GetListPostRes } from '@/types/dtos/post/post-response.dto'
+import { TikTokPostType } from '@/types/models/post.model'
 import {
     BaseQueryFn,
     FetchArgs,

@@ -1,6 +1,6 @@
 import { Role } from '@/constants/enum'
-import { UserAuthType } from '@/types/response/auth.type'
-import { UserType } from '@/types/schemas/User.schema'
+import { UserAuthType } from '@/types/dtos/auth/auth-response.dto'
+import { UserType } from '@/types/models/user.model'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface AuthState {

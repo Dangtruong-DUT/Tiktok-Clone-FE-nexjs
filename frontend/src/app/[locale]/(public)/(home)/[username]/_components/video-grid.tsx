@@ -2,7 +2,7 @@
 
 import { useVideosContext } from '@/app/[locale]/(public)/(home)/[username]/_context/videos.context'
 import CardVideoItem from '@/components/card-video-item'
-import { useAppDispatch } from '@/hooks/redux'
+import { useAppDispatch } from '@/store/hooks'
 import { useInViewport } from '@/hooks/ui/useInViewport'
 import { Link, usePathname } from '@/i18n/navigation'
 import { setOpenModal } from '@/store/features/modalSlide'

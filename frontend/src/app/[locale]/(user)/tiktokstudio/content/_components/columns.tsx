@@ -16,7 +16,7 @@ import { formatCash } from '@/utils/formatting/formatNumber'
 import { usePostTableContext } from '@/app/[locale]/(user)/tiktokstudio/content/_context/content-table.context'
 import { BsFillImageFill } from 'react-icons/bs'
 import { useMemo, useState } from 'react'
-import { TikTokPostType } from '@/types/schemas/TikTokPost.schema'
+import { TikTokPostType } from '@/types/models/post.model'
 import VideoDetailDialog from '@/components/video-dialog'
 
 export function useColumns(): ColumnDef<TikTokPostType>[] {

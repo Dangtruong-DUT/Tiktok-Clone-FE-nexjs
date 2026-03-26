@@ -1,5 +1,5 @@
-import { TikTokPostType } from '@/types/schemas/TikTokPost.schema'
-import { UserType } from '@/types/schemas/User.schema'
+import { TikTokPostType } from '@/types/models/post.model'
+import { UserType } from '@/types/models/user.model'
 import { Metadata, ResolvingMetadata } from 'next'
 import { LocalesType } from '@/i18n/config'
 import { WrapperServerCallApi } from '@/utils/handleErrors/handleServerError'

@@ -3,7 +3,7 @@ import {
     useGetBookmarkedPostsOfUserInfiniteQuery,
     useGetLikedPostsOfUserInfiniteQuery,
     useGetPostOfUserInfiniteQuery
-} from '@/services/RTK/posts.services'
+} from '@/store/services/posts.service'
 import { useMemo } from 'react'
 
 interface UsePostsTabQueryProps {

@@ -1,11 +1,11 @@
 import AuthRequestApi from '@/apis/auth.request'
 import { HTTP_STATUS } from '@/constants/http'
-import { AuthApi } from '@/services/RTK/auth.services'
+import { AuthApi } from '@/store/services/auth.service'
 import { SetCookieBodyType } from '@/types/auth'
 import { HttpError } from '@/types/errors'
 import { TokenPayload } from '@/types/jwt'
 import { decodeJwt } from '@/utils/jwt'
-import { VerifyEmailReqBodyType } from '@/utils/validations/user.schema'
+import { VerifyEmailReqBodyType } from '@/types/dtos/user/user-request.dto'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 

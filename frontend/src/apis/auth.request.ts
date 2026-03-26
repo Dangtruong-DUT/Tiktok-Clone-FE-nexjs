@@ -1,7 +1,7 @@
 import httpClient from '@/apis/client'
 import { API_ENDPOINT } from '@/config/endpoint.config'
-import { LoginResponseType, LogoutResType, RefreshTokenRes, RegisterResponseType } from '@/types/response/auth.type'
-import { VerifyEmailResType } from '@/types/response/user.type'
+import { LoginResponseType, LogoutResType, RefreshTokenRes, RegisterResponseType } from '@/types/dtos/auth/auth-response.dto'
+import { VerifyEmailResType } from '@/types/dtos/user/user-response.dto'
 import {
     ForgotPasswordReqBodyType,
     LoginReqBodyType,
@@ -10,8 +10,8 @@ import {
     RegisterReqBodyType,
     ResetPasswordReqBodyType,
     verifyForgotPasswordReqBodyType
-} from '@/utils/validations/auth.schema'
-import { VerifyEmailReqBodyType } from '@/utils/validations/user.schema'
+} from '@/types/dtos/auth/auth-request.dto'
+import { VerifyEmailReqBodyType } from '@/types/dtos/user/user-request.dto'
 import { verify } from 'crypto'
 
 const AuthRequestApi = {

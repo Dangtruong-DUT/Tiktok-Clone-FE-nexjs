@@ -1,9 +1,9 @@
 'use client'
 
 import { SearchParamsLoader, useSearchParamsLoader } from '@/components/searchparams-loader'
-import { useAppSelector } from '@/hooks/redux'
+import { useAppSelector } from '@/store/hooks'
 import { useRouter } from '@/i18n/navigation'
-import { useLogoutMutation } from '@/services/RTK/auth.services'
+import { useLogoutMutation } from '@/store/services/auth.service'
 import { useEffect } from 'react'
 
 export default function Logout() {

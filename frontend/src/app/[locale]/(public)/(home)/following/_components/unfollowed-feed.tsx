@@ -1,6 +1,6 @@
 'use client'
 
-import { TikTokPostType } from '@/types/schemas/TikTokPost.schema'
+import { TikTokPostType } from '@/types/models/post.model'
 import { useInViewport } from '@/hooks/ui/useInViewport'
 import { useEffect, useRef, useState } from 'react'
 import LoadingIcon from '@/components/lottie-icons/loading'

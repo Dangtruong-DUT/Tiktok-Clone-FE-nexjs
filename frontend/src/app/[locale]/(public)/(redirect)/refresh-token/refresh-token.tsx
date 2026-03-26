@@ -1,9 +1,9 @@
 'use client'
 
 import { SearchParamsLoader, useSearchParamsLoader } from '@/components/searchparams-loader'
-import { useAppDispatch, useAppSelector } from '@/hooks/redux'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { handleRefreshToken } from '@/lib/auth'
-import { useLogoutMutation } from '@/services/RTK/auth.services'
+import { useLogoutMutation } from '@/store/services/auth.service'
 import { tokenReceived } from '@/store/features/authSlice'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect } from 'react'

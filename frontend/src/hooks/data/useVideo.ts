@@ -6,7 +6,7 @@ import {
     useLikePostMutation,
     useUnBookmarkPostMutation,
     useUnlikePostMutation
-} from '@/services/RTK/posts.services'
+} from '@/store/services/posts.service'
 import { useCallback, useEffect, useState } from 'react'
 
 interface UseLikePostProps {

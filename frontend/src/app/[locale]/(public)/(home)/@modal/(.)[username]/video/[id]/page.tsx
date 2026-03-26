@@ -2,7 +2,7 @@
 
 import CommentsSection from '@/app/[locale]/(public)/(home)/@modal/(.)[username]/video/[id]/comments-section'
 import ModalVideoDetail from '@/app/[locale]/(public)/(home)/@modal/(.)[username]/video/[id]/modal'
-import { useAppDispatch, useAppSelector } from '@/hooks/redux'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { usePathname, useRouter } from '@/i18n/navigation'
 import { closeModal } from '@/store/features/modalSlide'
 import { useParams } from 'next/navigation'

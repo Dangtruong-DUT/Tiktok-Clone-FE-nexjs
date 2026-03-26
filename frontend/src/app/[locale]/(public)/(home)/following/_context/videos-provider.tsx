@@ -1,10 +1,10 @@
 'use client'
 import { ScrollType } from '@/hooks/ui/useScrollIndexObserver'
-import { TikTokPostType } from '@/types/schemas/TikTokPost.schema'
+import { TikTokPostType } from '@/types/models/post.model'
 import React, { createContext, useMemo } from 'react'
-import { useGetListPostInfiniteQuery, useGetUnfollowedPostsInfiniteQuery } from '@/services/RTK/posts.services'
+import { useGetListPostInfiniteQuery, useGetUnfollowedPostsInfiniteQuery } from '@/store/services/posts.service'
 import { useHandleVideos } from '@/app/[locale]/(public)/(home)/following/_hooks/useHandleVideos'
-import { useAppSelector } from '@/hooks/redux'
+import { useAppSelector } from '@/store/hooks'
 
 interface FeedState {
     postList: TikTokPostType[]

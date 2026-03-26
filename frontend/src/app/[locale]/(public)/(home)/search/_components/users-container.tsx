@@ -1,6 +1,6 @@
 'use client'
 
-import { UserType } from '@/types/schemas/User.schema'
+import { UserType } from '@/types/models/user.model'
 import { Button } from '@/components/ui/button'
 import { Link } from '@/i18n/navigation'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'

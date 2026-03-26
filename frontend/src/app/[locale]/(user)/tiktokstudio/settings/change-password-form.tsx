@@ -11,8 +11,8 @@ import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { useCallback } from 'react'
 import { toast } from 'sonner'
 import { handleFormError } from '@/utils/handleErrors/handleFormErrors'
-import { ChangePasswordBody, ChangePasswordBodyType } from '@/utils/validations/user.schema'
-import { useChangePasswordMutation } from '@/services/RTK/user.services'
+import { ChangePasswordBody, ChangePasswordBodyType } from '@/types/dtos/user/user-request.dto'
+import { useChangePasswordMutation } from '@/store/services/user.service'
 import { Loader } from 'lucide-react'
 
 export default function ChangePasswordForm() {

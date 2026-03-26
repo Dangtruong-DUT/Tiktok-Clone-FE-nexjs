@@ -3,7 +3,7 @@
 import React, { useRef, useState, useCallback } from 'react'
 import { cn } from '@/lib/utils'
 import { useLocale } from 'next-intl'
-import { TikTokPostType } from '@/types/schemas/TikTokPost.schema'
+import { TikTokPostType } from '@/types/models/post.model'
 import { useVideoPlayer } from '@/hooks/video/useVideoPlayer'
 import { useVideoAutoPlay } from '@/hooks/video/useVideoAutoPlay'
 import { useVideoControls } from '@/hooks/video/useVideoControls'

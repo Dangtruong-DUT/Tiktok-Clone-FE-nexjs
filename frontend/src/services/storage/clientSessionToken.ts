@@ -1,6 +1,6 @@
 'use client'
 
-import { UserType } from '@/types/schemas/User.schema'
+import { UserAuthType } from '@/types/dtos/auth/auth-response.dto'
 
 const isClient = typeof window !== 'undefined'
 
@@ -8,14 +8,14 @@ class ClientSessionToken {
     private static instance: ClientSessionToken
     private access_token: string | null = null
     private refresh_token: string | null = null
-    private user_profile: UserType | null = null
+    private user_profile: UserAuthType | null = null
 
     private constructor() {
         if (!isClient) return
         this.access_token = localStorage.getItem('access_token')
         this.refresh_token = localStorage.getItem('refresh_token')
         this.user_profile = localStorage.getItem('user_profile')
-            ? (JSON.parse(localStorage.getItem('user_profile') || '') as UserType | null)
+            ? (JSON.parse(localStorage.getItem('user_profile') || '') as UserAuthType | null)
             : null
     }
 
@@ -48,12 +48,12 @@ class ClientSessionToken {
         localStorage.setItem('refresh_token', token)
     }
 
-    public getUserProfile(): UserType | null {
+    public getUserProfile(): UserAuthType | null {
         if (!isClient) return null
         return this.user_profile
     }
 
-    public setUserProfile(profile: UserType | null): void {
+    public setUserProfile(profile: UserAuthType | null): void {
         if (!isClient) throw new Error('Not running in client environment')
         this.user_profile = profile
         localStorage.setItem('user_profile', JSON.stringify(profile))

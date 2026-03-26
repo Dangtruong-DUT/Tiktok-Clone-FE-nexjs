@@ -1,8 +1,8 @@
 'use client'
 import { ScrollType } from '@/hooks/ui/useScrollIndexObserver'
-import { TikTokPostType } from '@/types/schemas/TikTokPost.schema'
+import { TikTokPostType } from '@/types/models/post.model'
 import React, { createContext, useMemo } from 'react'
-import { useGetListPostInfiniteQuery } from '@/services/RTK/posts.services'
+import { useGetListPostInfiniteQuery } from '@/store/services/posts.service'
 import { useHandleVideos } from '@/app/[locale]/(public)/(home)/(foryou)/_hooks/useHandleVideos'
 import {
     BaseQueryFn,
@@ -11,7 +11,7 @@ import {
     InfiniteQueryActionCreatorResult,
     InfiniteQueryDefinition
 } from '@reduxjs/toolkit/query'
-import { GetListPostRes } from '@/types/response/post.type'
+import { GetListPostRes } from '@/types/dtos/post/post-response.dto'
 
 interface VideosProviderContextProps {
     currentIndex: number

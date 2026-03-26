@@ -1,7 +1,7 @@
 'use client'
 
 import useDebounceCallback from '@/hooks/shared/useCallback'
-import { useFollowUserMutation, useUnfollowUserMutation } from '@/services/RTK/user.services'
+import { useFollowUserMutation, useUnfollowUserMutation } from '@/store/services/user.service'
 import { useCallback, useEffect, useState } from 'react'
 
 export function useFollowUser({ userId, initialFollowState }: { userId: string; initialFollowState: boolean }) {

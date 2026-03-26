@@ -1,9 +1,9 @@
 'use client '
 
-import { useAppDispatch, useAppSelector } from '@/hooks/redux'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { usePathname, useRouter } from '@/i18n/navigation'
 import { handleRefreshToken } from '@/lib/auth'
-import { useLogoutMutation } from '@/services/RTK/auth.services'
+import { useLogoutMutation } from '@/store/services/auth.service'
 import { RootState } from '@/store'
 import { tokenReceived } from '@/store/features/authSlice'
 import { TokenPayload } from '@/types/jwt'

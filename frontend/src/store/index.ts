@@ -1,14 +1,15 @@
 import { isProduction } from '@/config/app.config'
-import { AuthApi } from '@/services/RTK/auth.services'
-import { PostApi } from '@/services/RTK/posts.services'
-import { SearchApi } from '@/services/RTK/search.services'
-import { UploadApi } from '@/services/RTK/upload.services'
-import { UserApi } from '@/services/RTK/user.services'
+import { AuthApi } from '@/store/services/auth.service'
+import { PostApi } from '@/store/services/posts.service'
+import { SearchApi } from '@/store/services/search.service'
+import { UploadApi } from '@/store/services/upload.service'
+import { UserApi } from '@/store/services/user.service'
 import authReducer from '@/store/features/authSlice'
 import modalReducer from '@/store/features/modalSlide'
 import videoReducer from '@/store/features/videoSlice'
-import { authMiddleware, rtkQueryLogger } from '@/store/middleware'
 import { configureStore } from '@reduxjs/toolkit'
+import { errorHandleMiddleware } from './middlewares/errorHandling.middleware'
+import { authMiddleware } from './middlewares/auth.middleware'
 
 export const makeStore = () => {
     return configureStore({
@@ -31,7 +32,7 @@ export const makeStore = () => {
                 AuthApi.middleware,
                 PostApi.middleware,
                 authMiddleware,
-                rtkQueryLogger
+                errorHandleMiddleware,
             )
     })
 }

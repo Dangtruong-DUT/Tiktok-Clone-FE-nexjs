@@ -7,7 +7,7 @@ import {
 import { AuthModal } from '@/components/auth-modal'
 import { AvatarImage, Avatar, AvatarFallback } from '@/components/ui/avatar'
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'
-import { useAppSelector } from '@/hooks/redux'
+import { useAppSelector } from '@/store/hooks'
 import { Link } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
 import { useTranslations } from 'next-intl'

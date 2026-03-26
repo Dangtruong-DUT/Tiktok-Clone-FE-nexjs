@@ -2,7 +2,7 @@
 
 import Loading from '@/components/lottie-icons/loading'
 import { SearchParamsLoader, useSearchParamsLoader } from '@/components/searchparams-loader'
-import { useVerifyForgotPasswordMutation } from '@/services/RTK/user.services'
+import { useVerifyForgotPasswordMutation } from '@/store/services/user.service'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
 

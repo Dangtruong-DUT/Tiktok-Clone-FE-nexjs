@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { useCallback } from 'react'
 import { toast } from 'sonner'
-import { useDeletePostMutation } from '@/services/RTK/posts.services'
+import { useDeletePostMutation } from '@/store/services/posts.service'
 
 export default function AlertDialogDeleteDish({
     postIdDelete,

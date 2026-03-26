@@ -1,8 +1,8 @@
 'use client'
 
 import { SearchParamsLoader, useSearchParamsLoader } from '@/components/searchparams-loader'
-import { useAppDispatch } from '@/hooks/redux'
 import { setLoggedOutAction } from '@/store/features/authSlice'
+import { useAppDispatch } from '@/store/hooks'
 import { useEffect } from 'react'
 
 export default function ClearTokenByServer() {

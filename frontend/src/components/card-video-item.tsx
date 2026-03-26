@@ -1,7 +1,7 @@
 'use client'
 
 import { Audience } from '@/constants/enum'
-import { TikTokPostType } from '@/types/schemas/TikTokPost.schema'
+import { TikTokPostType } from '@/types/models/post.model'
 import { formatCash } from '@/utils/formatting/formatNumber'
 import { IoLockClosedOutline } from 'react-icons/io5'
 import Image from 'next/image'

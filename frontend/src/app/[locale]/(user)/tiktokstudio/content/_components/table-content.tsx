@@ -16,7 +16,7 @@ import LoadingIcon from '@/components/lottie-icons/loading'
 import { useEffect, useState } from 'react'
 
 import { SearchParamsLoader, useSearchParamsLoader } from '@/components/searchparams-loader'
-import { useGetPostOfUserPagingQuery } from '@/services/RTK/posts.services'
+import { useGetPostOfUserPagingQuery } from '@/store/services/posts.service'
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'
 import { DataTable } from '@/components/ui/data-table'
 import AutoPagination from '@/components/auto-pagination'

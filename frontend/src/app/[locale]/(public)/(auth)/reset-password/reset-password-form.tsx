@@ -8,8 +8,8 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { PasswordInput } from '@/components/ui/password-input'
 
 import { useTranslations } from 'next-intl'
-import { resetPasswordReqBody, ResetPasswordReqBodyType } from '@/utils/validations/auth.schema'
-import { useResetPasswordMutation } from '@/services/RTK/user.services'
+import { resetPasswordReqBody, ResetPasswordReqBodyType } from '@/types/dtos/auth/auth-request.dto'
+import { useResetPasswordMutation } from '@/store/services/user.service'
 import { Loader } from 'lucide-react'
 import { handleFormError } from '@/utils/handleErrors/handleFormErrors'
 import { useState } from 'react'

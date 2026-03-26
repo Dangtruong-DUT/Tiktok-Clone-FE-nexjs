@@ -1,7 +1,7 @@
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { UserVerifyStatus } from '@/constants/enum'
 import { cn } from '@/lib/utils'
-import { UserType } from '@/types/schemas/User.schema'
+import { UserType } from '@/types/models/user.model'
 import ProfileActionButtons from '@/app/[locale]/(public)/(home)/[username]/_components/profile-action-buttons'
 import { MdVerified } from 'react-icons/md'
 import { getTranslations } from 'next-intl/server'

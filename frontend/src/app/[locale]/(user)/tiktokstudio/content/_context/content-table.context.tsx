@@ -1,7 +1,7 @@
 'use client'
 
 import { Audience } from '@/constants/enum'
-import { useUpdatePostMutation } from '@/services/RTK/posts.services'
+import { useUpdatePostMutation } from '@/store/services/posts.service'
 import { createContext, use, useState } from 'react'
 
 type PostTableContextType = {

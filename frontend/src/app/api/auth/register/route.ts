@@ -3,7 +3,7 @@ import { HTTP_STATUS } from '@/constants/http'
 import { HttpError } from '@/types/errors'
 import { TokenPayload } from '@/types/jwt'
 import { decodeJwt } from '@/utils/jwt'
-import { RegisterReqBodyType } from '@/utils/validations/auth.schema'
+import { RegisterReqBodyType } from '@/types/dtos/auth/auth-request.dto'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 

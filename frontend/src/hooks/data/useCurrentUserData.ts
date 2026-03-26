@@ -1,5 +1,5 @@
-import { useAppSelector } from '@/hooks/redux'
-import { useGetMeQuery } from '@/services/RTK/user.services'
+import { useAppSelector } from '@/store/hooks'
+import { useGetMeQuery } from '@/store/services/user.service'
 import { useMemo } from 'react'
 
 export default function useCurrentUserData() {

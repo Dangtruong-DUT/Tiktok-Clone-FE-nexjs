@@ -1,6 +1,6 @@
 import AuthRequestApi from '@/apis/auth.request'
 import { HTTP_STATUS } from '@/constants/http'
-import { verifyForgotPasswordReqBodyType } from '@/utils/validations/auth.schema'
+import { verifyForgotPasswordReqBodyType } from '@/types/dtos/auth/auth-request.dto'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {

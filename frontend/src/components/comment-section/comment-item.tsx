@@ -2,7 +2,7 @@
 
 import { CommentBody } from '@/components/comment-section/comment-body'
 import ReplyList from '@/components/comment-section/reply-list'
-import { CommentType } from '@/types/schemas/Comment.schema'
+import { CommentType } from '@/types/models/comment.model'
 import { formatCash } from '@/utils/formatting/formatNumber'
 import { ChevronDown } from 'lucide-react'
 import { useState } from 'react'

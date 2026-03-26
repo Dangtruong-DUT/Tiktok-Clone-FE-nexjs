@@ -1,7 +1,7 @@
 'use client'
 
 import VideoDetailDialog from '@/components/video-dialog'
-import { useGetPostDetailQuery } from '@/services/RTK/posts.services'
+import { useGetPostDetailQuery } from '@/store/services/posts.service'
 
 interface ModalVideoDetailProps {
     isVisible: boolean

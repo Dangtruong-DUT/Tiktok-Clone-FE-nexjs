@@ -1,9 +1,9 @@
 'use client'
 
 import { CommentBody } from '@/components/comment-section/comment-body'
-import { useGetCommentsInfiniteQuery } from '@/services/RTK/posts.services'
-import { GetListCommentRes } from '@/types/response/post.type'
-import { CommentType } from '@/types/schemas/Comment.schema'
+import { useGetCommentsInfiniteQuery } from '@/store/services/posts.service'
+import { GetListCommentRes } from '@/types/dtos/post/post-response.dto'
+import { CommentType } from '@/types/models/comment.model'
 import {
     BaseQueryFn,
     FetchArgs,
