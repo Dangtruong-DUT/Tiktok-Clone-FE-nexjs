@@ -3,7 +3,7 @@ import { HTTP_STATUS } from '@/constants/http'
 import { AuthApi } from '@/store/services/auth.service'
 import { SetCookieBodyType } from '@/types/auth'
 import { HttpError } from '@/types/errors'
-import { TokenPayload } from '@/types/jwt'
+import { JwtPayloadType } from '@/types/jwt'
 import { decodeJwt } from '@/utils/jwt'
 import { VerifyEmailReqBodyType } from '@/types/dtos/user/user-request.dto'
 import { cookies } from 'next/headers'
@@ -20,8 +20,8 @@ export async function POST(request: NextRequest) {
         const response = await AuthRequestApi.verifyEmail(body)
         const { access_token, refresh_token } = response.data
 
-        const decodedAccessToken = decodeJwt<TokenPayload>(access_token)
-        const decodedRefreshToken = decodeJwt<TokenPayload>(refresh_token)
+        const decodedAccessToken = decodeJwt<JwtPayloadType>(access_token)
+        const decodedRefreshToken = decodeJwt<JwtPayloadType>(refresh_token)
 
         cookieStore.set('access_token', access_token, {
             httpOnly: true,

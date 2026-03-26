@@ -16,11 +16,11 @@ import { handleFormError } from '@/utils/handleErrors/handleFormErrors'
 import envConfig from '@/config/app.config'
 import { usePathname, useRouter } from '@/i18n/navigation'
 import { clearStore } from '@/store'
-import { useAppDispatch } from '@/store/hooks'
+import { useAppDispatch } from '@/hooks/redux'
 import { useTranslations } from 'next-intl'
 import PhotoEditorDialog from '@/components/photo-editor-dialog'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { useUploadImageMutation } from '@/store/services/upload.service'
+import { useUploadImageMutation } from '@/store/services/upload.services'
 
 export default function EditProfileDialog() {
     const [open, setOpen] = useState(false)

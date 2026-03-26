@@ -6,7 +6,7 @@ import NextTopLoader from 'nextjs-toploader'
 import { Toaster } from 'sonner'
 import { useAppDispatch } from '@/store/hooks'
 import clientSessionToken from '@/services/storage/clientSessionToken'
-import { TokenPayload } from '@/types/jwt'
+import { JwtPayloadType } from '@/types/jwt'
 import { decodeJwt } from '@/utils/jwt'
 import { setRole, setUserProfile, tokenReceived } from '@/store/features/authSlice'
 import RefreshToken from '@/components/refresh-token'
@@ -43,7 +43,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             return
         }
         try {
-            const { role } = decodeJwt<TokenPayload>(accessToken)
+            const { role } = decodeJwt<JwtPayloadType>(accessToken)
             dispatch(tokenReceived({ access_token: accessToken, refresh_token: refreshToken }))
             dispatch(setRole(role))
             dispatch(setUserProfile(userProfile))

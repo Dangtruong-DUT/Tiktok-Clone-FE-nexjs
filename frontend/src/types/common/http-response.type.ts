@@ -1,10 +1,9 @@
 import { z } from 'zod'
 
-export const HttpStatusMessageSchema = z.string().min(1)
 
 export const HttpResponseSchema = z
     .object({
-        status: HttpStatusMessageSchema,
+        status: z.boolean(),
         message: z.string()
     })
     .strict()
@@ -32,7 +31,6 @@ export const HttpResponseWithEntityErrorsSchema = HttpResponseSchema.extend({
     errors: z.array(EntityErrorSchema)
 }).strict()
 
-export type HttpStatusMessage = z.infer<typeof HttpStatusMessageSchema>
 export type HttpResponse = z.infer<typeof HttpResponseSchema>
 export type HttpResponseWithData<T> = HttpResponse & { data: T }
 export type HttpResponseWithMeta<T, M> = HttpResponseWithData<T> & { meta: M }

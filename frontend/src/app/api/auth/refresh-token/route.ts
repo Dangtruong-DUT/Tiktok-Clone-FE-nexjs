@@ -1,6 +1,6 @@
 import AuthRequestApi from '@/apis/auth.request'
 import { HTTP_STATUS } from '@/constants/http'
-import { TokenPayload } from '@/types/jwt'
+import { JwtPayloadType } from '@/types/jwt'
 import { decodeJwt } from '@/utils/jwt'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
@@ -20,8 +20,8 @@ export async function POST() {
         })
 
         const { access_token: newAccessToken, refresh_token: newRefreshToken } = response.data
-        const decodedAccessToken = decodeJwt<TokenPayload>(newAccessToken)
-        const decodedRefreshToken = decodeJwt<TokenPayload>(newRefreshToken)
+        const decodedAccessToken = decodeJwt<JwtPayloadType>(newAccessToken)
+        const decodedRefreshToken = decodeJwt<JwtPayloadType>(newRefreshToken)
 
         cookieStore.set('access_token', newAccessToken, {
             httpOnly: true,

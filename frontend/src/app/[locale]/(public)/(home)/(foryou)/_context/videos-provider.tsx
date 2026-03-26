@@ -47,7 +47,7 @@ export function useVideosProvider() {
 export function VideosProvider({ children }: { children: React.ReactNode }) {
     const { fetchNextPage, isLoading, isFetching, data, hasNextPage } = useGetListPostInfiniteQuery('foryou')
 
-    const postList: TikTokPostType[] = useMemo(() => data?.pages.flatMap((page) => page.data.posts) || [], [data])
+    const postList: TikTokPostType[] = useMemo(() => data?.pages.flatMap((page) => page.data) || [], [data])
 
     const handleVideoObj = useHandleVideos(postList)
 

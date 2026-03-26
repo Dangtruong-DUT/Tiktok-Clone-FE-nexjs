@@ -6,7 +6,7 @@ import { handleRefreshToken } from '@/lib/auth'
 import { useLogoutMutation } from '@/store/services/auth.service'
 import { RootState } from '@/store'
 import { tokenReceived } from '@/store/features/authSlice'
-import { TokenPayload } from '@/types/jwt'
+import { JwtPayloadType } from '@/types/jwt'
 import { decodeJwt } from '@/utils/jwt'
 import { useCallback, useEffect, useRef } from 'react'
 
@@ -52,7 +52,7 @@ export default function RefreshToken() {
     useEffect(() => {
         if (!refreshTokenFromStore || !accessTokenFromStore) return
         if (EXCLUDE_PATHS.some((path) => pathname.startsWith(path))) return
-        const decodeAccessToken = decodeJwt<TokenPayload>(accessTokenFromStore)
+        const decodeAccessToken = decodeJwt<JwtPayloadType>(accessTokenFromStore)
         const INTERVAL_TIME = ((decodeAccessToken.exp - decodeAccessToken.iat) / 2) * 1000
         doRefresh()
         timer.current = setInterval(doRefresh, Math.max(INTERVAL_TIME, 1000 * 30))

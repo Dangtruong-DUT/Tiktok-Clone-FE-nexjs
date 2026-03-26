@@ -22,6 +22,27 @@ export function formatFetchBaseQueryErrorMessage(error: FetchBaseQueryError): Re
         }
     }
 
+    if (error.status === HTTP_STATUS.NOT_FOUND) {
+        return {
+            title: 'Not Found',
+            description: 'The requested resource was not found.'
+        }
+    }
+
+    if (error.status === HTTP_STATUS.BAD_REQUEST) {
+        return {
+            title: 'Bad Request',
+            description: 'The request was invalid. Please check your input and try again.'
+        }
+    }
+
+    if (error.status === HTTP_STATUS.UNAUTHORIZED) {
+        return {
+            title: 'Unauthorized',
+            description: 'You are not authorized to perform this action. Please log in and try again.'
+        }
+    }
+
     if (isPayloadErrorWithMessage(error)) {
         return {
             title: 'Error Occurred',

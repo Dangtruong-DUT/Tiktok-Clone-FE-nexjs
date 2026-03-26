@@ -1,6 +1,6 @@
 'use client'
 
-import { TokenPayload } from '@/types/jwt'
+import { JwtPayloadType } from '@/types/jwt'
 import { decodeJwt } from '@/utils/jwt'
 import { useCallback, useEffect } from 'react'
 import { useRouter } from '@/i18n/navigation'
@@ -30,7 +30,7 @@ export default function OauthGooglePage() {
                     access_token,
                     refresh_token
                 }).unwrap()
-                const { role } = decodeJwt<TokenPayload>(access_token)
+                const { role } = decodeJwt<JwtPayloadType>(access_token)
 
                 dispatch(tokenReceived({ access_token, refresh_token }))
                 dispatch(setRole(role))
