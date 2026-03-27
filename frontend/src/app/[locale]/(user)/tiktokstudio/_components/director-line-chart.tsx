@@ -9,7 +9,7 @@ import { UserIndicatorsData } from '@/types/dtos/stats/stats-response.dto'
 import { useTranslations } from 'next-intl'
 import _ from 'lodash'
 import { cn } from '@/lib/utils'
-import { formatCompactNumber } from '@/utils/formatting/formatNumber'
+import { formatCompactNumber } from '@/utils/formatting/formatNumber.util'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 export const description = 'An interactive line chart'

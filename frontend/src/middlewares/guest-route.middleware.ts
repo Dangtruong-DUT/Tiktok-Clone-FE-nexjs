@@ -1,6 +1,6 @@
 import { GUEST_ONLY_ROUTE_PREFIXES } from '@/config/route-access.config'
-import { isPathMatched } from '@/utils/auth/path-check'
-import { getSafeInternalRedirectPath } from '@/utils/auth/redirect-path'
+import { isPathMatched } from '@/utils/auth/path-check.util'
+import { getSafeInternalRedirectPath } from '@/utils/auth/redirect-path.util'
 import { NextRequest, NextResponse } from 'next/server'
 
 type GuestRouteMiddlewareParams = {

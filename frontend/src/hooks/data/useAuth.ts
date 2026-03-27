@@ -5,8 +5,13 @@ import { useRouter } from '@/i18n/navigation'
 import { useLoginMutation, useLogoutMutation, useRegisterMutation } from '@/store/services/auth.service'
 import { clearStore } from '@/store'
 import { LogoutResType } from '@/types/dtos/auth/auth-response.dto'
-import { handleFormError } from '@/utils/handleErrors/handleFormErrors'
-import { LoginReqBody, LoginReqBodyType, RegisterReqBody, RegisterReqBodyType } from '@/types/dtos/auth/auth-request.dto'
+import { handleFormError } from '@/utils/handleErrors/handleFormErrors.util'
+import {
+    LoginReqBody,
+    LoginReqBodyType,
+    RegisterReqBody,
+    RegisterReqBodyType
+} from '@/types/dtos/auth/auth-request.dto'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'

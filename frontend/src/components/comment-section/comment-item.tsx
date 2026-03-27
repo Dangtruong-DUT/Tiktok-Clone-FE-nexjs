@@ -3,7 +3,7 @@
 import { CommentBody } from '@/components/comment-section/comment-body'
 import ReplyList from '@/components/comment-section/reply-list'
 import { CommentType } from '@/types/models/comment.model'
-import { formatCompactNumber } from '@/utils/formatting/formatNumber'
+import { formatCompactNumber } from '@/utils/formatting/formatNumber.util'
 import { ChevronDown } from 'lucide-react'
 import { useState } from 'react'
 

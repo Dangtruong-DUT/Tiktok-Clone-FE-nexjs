@@ -1,6 +1,6 @@
 import AuthRequestApi from '@/apis/auth.request'
 import { HTTP_STATUS } from '@/constants/http'
-import { decodeJwt } from '@/utils/auth/jwt'
+import { decodeJwt } from '@/utils/auth/jwt.util'
 import { VerifyEmailReqBodyType } from '@/types/dtos/user/user-request.dto'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'

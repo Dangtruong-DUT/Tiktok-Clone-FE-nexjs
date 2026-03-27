@@ -16,7 +16,7 @@ import SelectThumbnailDialog from '@/app/[locale]/(user)/tiktokstudio/upload/_co
 
 import { useUploadImageMutation } from '@/store/services/upload.service'
 import { useGetPostDetailQuery, useUpdatePostMutation } from '@/store/services/posts.service'
-import { handleFormError } from '@/utils/handleErrors/handleFormErrors'
+import { handleFormError } from '@/utils/handleErrors/handleFormErrors.util'
 import { audienceStatusValues } from '@/constants/types'
 import { getAudienceNameFromEnum } from '@/helper/getNameFromStatus'
 import { SearchParamsLoader, useSearchParamsLoader } from '@/components/searchparams-loader'

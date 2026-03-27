@@ -1,6 +1,6 @@
 'use client'
 
-import { generateTimeLineFrames, TimelineFrameType } from '@/utils/video'
+import { generateTimeLineFrames, TimelineFrameType } from '@/utils/video.util'
 import { useEffect, useState } from 'react'
 
 export default function useVideoFrames(VideoSrc: string | null, frameCount: number) {

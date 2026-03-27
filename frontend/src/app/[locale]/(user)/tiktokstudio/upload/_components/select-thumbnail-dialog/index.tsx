@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import { BsFillImageFill } from 'react-icons/bs'
 import { useRef, useState } from 'react'
-import { TimelineFrameType } from '@/utils/video'
+import { TimelineFrameType } from '@/utils/video.util'
 import { useTranslations } from 'next-intl'
 
 type SelectThumbnailMode = 'UPLOAD' | 'SELECT_FROM_VIDEO'

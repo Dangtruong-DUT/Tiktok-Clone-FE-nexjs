@@ -1,7 +1,7 @@
 import { AuthModal } from '@/components/auth-modal'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { formatCompactNumber } from '@/utils/formatting/formatNumber'
+import { formatCompactNumber } from '@/utils/formatting/formatNumber.util'
 
 interface ActionButtonProps {
     icon: React.ReactNode

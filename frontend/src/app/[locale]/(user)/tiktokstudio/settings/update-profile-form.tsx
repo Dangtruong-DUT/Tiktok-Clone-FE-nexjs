@@ -15,7 +15,7 @@ import { UpdateUserBody, UpdateUserBodyType } from '@/types/dtos/user/user-reque
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'
 import { useUpdateMeMutation } from '@/store/services/user.service'
 import { useUploadImageMutation } from '@/store/services/upload.service'
-import { handleFormError } from '@/utils/handleErrors/handleFormErrors'
+import { handleFormError } from '@/utils/handleErrors/handleFormErrors.util'
 import PhotoEditorDialog from '@/components/photo-editor-dialog'
 
 export default function UpdateProfileForm() {

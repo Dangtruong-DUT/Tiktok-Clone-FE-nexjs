@@ -5,7 +5,7 @@ import VideoGrid from '@/app/[locale]/(public)/(home)/[username]/_components/vid
 import TAB_ITEMS from '@/app/[locale]/(public)/(home)/[username]/_config/tab-items.config'
 import VideosProvider from '@/app/[locale]/(public)/(home)/[username]/_context/videos.context'
 import envConfig from '@/config/app.config'
-import { WrapperServerCallApi } from '@/utils/handleErrors/handleServerError'
+import { WrapperServerCallApi } from '@/utils/handleErrors/handleServerError.util'
 import { Metadata, ResolvingMetadata } from 'next'
 import { notFound } from 'next/navigation'
 

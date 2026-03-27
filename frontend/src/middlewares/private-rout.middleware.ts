@@ -1,5 +1,5 @@
 import { PROTECTED_ROUTE_PREFIXES } from '@/config/route-access.config'
-import { isPathMatched } from '@/utils/auth/path-check'
+import { isPathMatched } from '@/utils/auth/path-check.util'
 import { NextRequest, NextResponse } from 'next/server'
 
 type PrivateRouteMiddlewareParams = {

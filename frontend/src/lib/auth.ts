@@ -3,7 +3,7 @@ import { NEXT_API_ENDPOINT } from '@/config/endpoint.config'
 import clientSessionToken from '@/services/storage/clientSessionToken'
 import { JwtPayloadType } from '@/types/common/jwt-payload.type'
 import { RefreshTokenRes } from '@/types/dtos/auth/auth-response.dto'
-import { decodeJwt } from '@/utils/auth/jwt'
+import { decodeJwt } from '@/utils/auth/jwt.util'
 
 /**
  * Handles the refresh token logic.

@@ -1,6 +1,6 @@
 import React, { memo, useRef, useState, TouchEvent, MouseEvent } from 'react'
 import { cn } from '@/lib/utils'
-import { formatSecondsToTime } from '@/utils/formatting/formatTime'
+import { formatSecondsToTime } from '@/utils/formatting/formatTime.util'
 
 interface ProgressBarProps {
     currentTime: number

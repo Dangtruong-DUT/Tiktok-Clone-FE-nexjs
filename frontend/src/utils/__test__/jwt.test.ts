@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import jwt from 'jsonwebtoken'
-import { decodeJwt } from '@/utils/auth/jwt'
+import { decodeJwt } from '@/utils/auth/jwt.util'
 
 describe('decodeJwt', () => {
     it('should decode a token', () => {

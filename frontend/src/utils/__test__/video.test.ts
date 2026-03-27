@@ -1,4 +1,4 @@
-import { generateTimeLineFrames } from '@/utils/video'
+import { generateTimeLineFrames } from '@/utils/video.util'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 describe('generateTimeLineFrames', () => {

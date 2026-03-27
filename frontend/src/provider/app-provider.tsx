@@ -7,7 +7,7 @@ import { Toaster } from 'sonner'
 import { useAppDispatch } from '@/store/hooks'
 import clientSessionToken from '@/services/storage/clientSessionToken'
 import { JwtPayloadType } from '@/types/common/jwt-payload.type'
-import { decodeJwt } from '@/utils/auth/jwt'
+import { decodeJwt } from '@/utils/auth/jwt.util'
 import { setRole, setUserProfile, tokenReceived } from '@/store/features/authSlice'
 import RefreshToken from '@/components/refresh-token'
 

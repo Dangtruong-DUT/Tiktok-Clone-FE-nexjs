@@ -1,8 +1,8 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { convertBase64ToFileToFile } from '@/utils/file'
-import { TimelineFrameType } from '@/utils/video'
+import { convertBase64ToFileToFile } from '@/utils/file.util'
+import { TimelineFrameType } from '@/utils/video.util'
 import Image from 'next/image'
 import { useEffect, useRef, useState, TouchEvent, MouseEvent as ReactMouseEvent, MouseEvent } from 'react'
 
