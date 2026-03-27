@@ -1,6 +1,5 @@
 import { z } from 'zod'
 
-
 export const HttpResponseSchema = z
     .object({
         status: z.boolean(),
@@ -25,15 +24,15 @@ export const HttpResponseWithMetaSchema = <T extends z.ZodTypeAny, M extends z.Z
         meta: metaSchema
     }).strict()
 
-export const EntityErrorSchema = z.record(z.string(), z.array(z.string()))
+export const BusinessExceptionSchema = z.record(z.string(), z.array(z.string()))
 
-export const HttpResponseWithEntityErrorsSchema = HttpResponseSchema.extend({
-    errors: z.array(EntityErrorSchema)
+export const HttpResponseWithBusinessExceptionsSchema = HttpResponseSchema.extend({
+    errors: z.array(BusinessExceptionSchema)
 }).strict()
 
 export type HttpResponse = z.infer<typeof HttpResponseSchema>
 export type HttpResponseWithData<T> = HttpResponse & { data: T }
 export type HttpResponseWithMeta<T, M> = HttpResponseWithData<T> & { meta: M }
-export type HttpResponseWithError = HttpResponseWithEntityErrors
-export type EntityError = z.infer<typeof EntityErrorSchema>
-export type HttpResponseWithEntityErrors = z.infer<typeof HttpResponseWithEntityErrorsSchema>
+export type HttpResponseWithError = HttpResponseWithBusinessExceptions
+export type BusinessException = z.infer<typeof BusinessExceptionSchema>
+export type HttpResponseWithBusinessExceptions = z.infer<typeof HttpResponseWithBusinessExceptionsSchema>

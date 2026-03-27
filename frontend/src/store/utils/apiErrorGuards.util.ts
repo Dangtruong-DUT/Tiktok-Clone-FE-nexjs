@@ -1,5 +1,5 @@
 import { HTTP_STATUS } from '@/constants/http'
-import { EntityError } from '@/types/common/http-response.type'
+import { BusinessException } from '@/types/common/http-response.type'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 
 export function isFetchBaseQueryError(error: unknown): error is FetchBaseQueryError {
@@ -7,12 +7,12 @@ export function isFetchBaseQueryError(error: unknown): error is FetchBaseQueryEr
 }
 
 /**
- * 
- * @param error 
+ *
+ * @param error
  * @returns boolean
  */
-export function isEntityError(error: unknown): error is FetchBaseQueryError & {
-    data: { errors: EntityError[] }
+export function isBusinessException(error: unknown): error is FetchBaseQueryError & {
+    data: { errors: BusinessException[] }
 } {
     return (
         isFetchBaseQueryError(error) &&
@@ -28,7 +28,7 @@ export function isEntityError(error: unknown): error is FetchBaseQueryError & {
 
 /**
  * This error guard is used to check if the error payload has a message property
- * @param payload 
+ * @param payload
  * @returns  boolean
  */
 export function isPayloadErrorWithMessage(payload: unknown): payload is { data: { message: string } } {

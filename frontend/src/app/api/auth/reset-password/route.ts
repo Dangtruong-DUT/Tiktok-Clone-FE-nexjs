@@ -1,6 +1,6 @@
 import AuthRequestApi from '@/apis/auth.request'
 import { HTTP_STATUS } from '@/constants/http'
-import { HttpError } from '@/types/errors'
+import { HttpException } from '@/exceptions/HttpException.exception'
 import { ResetPasswordReqBodyType } from '@/types/dtos/auth/auth-request.dto'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
         const response = await AuthRequestApi.resetPassword(body)
         return NextResponse.json(response)
     } catch (error) {
-        if (error instanceof HttpError) {
+        if (error instanceof HttpException) {
             return NextResponse.json(error.data, { status: error.status })
         } else {
             return NextResponse.json(

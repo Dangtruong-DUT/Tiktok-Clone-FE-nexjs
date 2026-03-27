@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import envConfig from '@/config/app.config'
 import { HTTP_STATUS } from '@/constants/http'
+import { BusinessException } from '@/exceptions/BussinessException.exception'
+import { HttpException } from '@/exceptions/HttpException.exception'
 import { redirect } from '@/i18n/navigation'
-import { EntityError, HttpError } from '@/types/errors'
+
 import { getLocale } from 'next-intl/server'
 
 const isClient = typeof window !== 'undefined'
@@ -36,16 +38,16 @@ export async function clientRequest<response>({ method, url, options = {} }: Req
         if (!response.ok) {
             const errorPayload = await response.json()
             if (response.status === HTTP_STATUS.UNPROCESSABLE_ENTITY) {
-                throw new EntityError(errorPayload)
+                throw new BusinessException(errorPayload)
             }
-            throw new HttpError(errorPayload, response.status, errorPayload.message || 'Request failed')
+            throw new HttpException(errorPayload, response.status, errorPayload.message || 'Request failed')
         }
 
         return await response.json()
     } catch (error) {
         if (isClient) throw error
 
-        if (error instanceof HttpError && error.status === HTTP_STATUS.UNAUTHORIZED) {
+        if (error instanceof HttpException && error.status === HTTP_STATUS.UNAUTHORIZED) {
             const token = (options.headers as any)?.Authorization?.replace('Bearer ', '') || ''
             const locale = await getLocale()
             redirect({

@@ -1,6 +1,6 @@
 import AuthRequestApi from '@/apis/auth.request'
 import { HTTP_STATUS } from '@/constants/http'
-import { HttpError } from '@/types/errors'
+import { HttpException } from '@/exceptions/HttpException.exception'
 import { JwtPayloadType } from '@/types/common/jwt-payload.type'
 import { decodeJwt } from '@/utils/auth/jwt.util'
 import { LoginReqBodyType } from '@/types/dtos/auth/auth-request.dto'
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json(response)
     } catch (error) {
-        if (error instanceof HttpError) {
+        if (error instanceof HttpException) {
             return NextResponse.json(error.data, { status: error.status })
         } else {
             return NextResponse.json({ message: 'Invalid email or password.' }, { status: HTTP_STATUS.UNAUTHORIZED })

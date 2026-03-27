@@ -1,4 +1,3 @@
-import { locales } from '@/i18n/config'
 import { guestRouteMiddleware } from '@/middlewares/guest-route.middleware'
 import { i18nMiddleware } from '@/middlewares/i18n.middleware'
 import { privateRouteMiddleware } from '@/middlewares/private-rout.middleware'
