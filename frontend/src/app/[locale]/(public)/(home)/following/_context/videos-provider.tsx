@@ -42,10 +42,7 @@ export function VideosProvider({ children }: { children: React.ReactNode }) {
         data: dataFriend,
         hasNextPage: hasNextPageFriend
     } = useGetListPostInfiniteQuery('friend', { skip: role == null })
-    const postList: TikTokPostType[] = useMemo(
-        () => dataFriend?.pages.flatMap((page) => page.data.posts) || [],
-        [dataFriend]
-    )
+    const postList: TikTokPostType[] = useMemo(() => dataFriend?.pages.flatMap((page) => page.data) || [], [dataFriend])
 
     const {
         data: dataUnfollowed,
@@ -58,7 +55,7 @@ export function VideosProvider({ children }: { children: React.ReactNode }) {
     })
 
     const postListUnfollowed: TikTokPostType[] = useMemo(
-        () => dataUnfollowed?.pages.flatMap((page) => page.data.posts) || [],
+        () => dataUnfollowed?.pages.flatMap((page) => page.data) || [],
         [dataUnfollowed]
     )
 
