@@ -1,4 +1,7 @@
 <?php
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 if (! function_exists('is_api_request')) {
@@ -53,6 +56,11 @@ if (!function_exists("auth_user_id")) {
      */
     function auth_user_id(): ?int
     {
-        return auth()->check() ? auth()->id() : null;
+
+        if (Auth::guard('api')->user()) {
+            return Auth::guard('api')->user()->id;
+        }
+
+        return null;
     }
 }
