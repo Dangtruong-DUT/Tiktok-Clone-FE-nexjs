@@ -9,7 +9,7 @@ import {
     isSetUserProfileAction,
     isSignUpMutationAction,
     isTokenReceivedAction
-} from '@/store/utils/authActionGuards'
+} from '@/store/utils/authActionGuards.util'
 import { Middleware } from '@reduxjs/toolkit'
 
 export const authMiddleware: Middleware = (storeAPI: storeApiType) => (next) => (action) => {
