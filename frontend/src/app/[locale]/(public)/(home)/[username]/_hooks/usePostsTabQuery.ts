@@ -28,11 +28,11 @@ export default function usePostsTabQuery({ activeTabId, userId }: UsePostsTabQue
     const postList = useMemo(() => {
         switch (activeTabId) {
             case 'videos':
-                return videosQuery.data?.pages.flatMap((page) => page.data.posts) || []
+                return videosQuery.data?.pages.flatMap((page) => page.data) || []
             case 'favorites':
-                return bookmarkedQuery.data?.pages.flatMap((page) => page.data.posts) || []
+                return bookmarkedQuery.data?.pages.flatMap((page) => page.data) || []
             case 'liked':
-                return likedQuery.data?.pages.flatMap((page) => page.data.posts) || []
+                return likedQuery.data?.pages.flatMap((page) => page.data) || []
             default:
                 return []
         }

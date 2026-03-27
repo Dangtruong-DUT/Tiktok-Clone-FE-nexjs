@@ -6,7 +6,9 @@ export default function useCurrentUserData() {
     const role = useAppSelector((state) => state.auth.role)
 
     const userFromStore = useAppSelector((state) => state.auth.user_profile)
-    const { data: getMeRes } = useGetMeQuery(undefined, { skip: role == null })
+    const { data: getMeRes } = useGetMeQuery(undefined, {
+        skip: role == null || role == undefined
+    })
     const userFromServer = getMeRes?.data
 
     const user = useMemo(() => {
@@ -14,7 +16,7 @@ export default function useCurrentUserData() {
         return userFromStore
     }, [userFromServer, userFromStore])
 
-    if (role == null) return null
+    if (role == null || role == undefined) return null
 
     return user
 }

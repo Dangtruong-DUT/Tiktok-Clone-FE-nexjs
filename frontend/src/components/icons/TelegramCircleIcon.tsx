@@ -8,7 +8,7 @@ export default function TelegramCircleIcon(props: React.SVGProps<SVGSVGElement>)
             height='1em'
             {...props}
         >
-            <g clip-path='url(#Icon_Color-Telegram_Circle_svg__a)'>
+            <g clipPath='url(#Icon_Color-Telegram_Circle_svg__a)'>
                 <path
                     d='M7.03 40.97A24 24 0 1 0 40.97 7.03 24 24 0 0 0 7.03 40.97Z'
                     fill='url(#Icon_Color-Telegram_Circle_svg__b)'
@@ -27,8 +27,8 @@ export default function TelegramCircleIcon(props: React.SVGProps<SVGSVGElement>)
                     y2='40.97'
                     gradientUnits='userSpaceOnUse'
                 >
-                    <stop stop-color='#37AEE2'></stop>
-                    <stop offset='1' stop-color='#1E96C8'></stop>
+                    <stop stopColor='#37AEE2'></stop>
+                    <stop offset='1' stopColor='#1E96C8'></stop>
                 </linearGradient>
                 <clipPath id='Icon_Color-Telegram_Circle_svg__a'>
                     <path fill='#fff' d='M0 0h48v48H0z'></path>

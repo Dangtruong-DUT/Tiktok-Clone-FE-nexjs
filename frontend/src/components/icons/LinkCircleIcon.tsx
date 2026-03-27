@@ -8,7 +8,7 @@ export default function LinkCircleIcon(props: React.SVGProps<SVGSVGElement>) {
             height='1em'
             {...props}
         >
-            <g clip-path='url(#Icon_Color-Link_Circle_svg__a)'>
+            <g clipPath='url(#Icon_Color-Link_Circle_svg__a)'>
                 <path
                     fillRule='evenodd'
                     clipRule='evenodd'

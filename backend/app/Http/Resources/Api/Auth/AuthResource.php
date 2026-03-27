@@ -16,6 +16,7 @@ class AuthResource extends BaseJsonResource
             'email' => $this->email,
             'verify' => $this->verify->value,
             'role' => $this->role->value,
+            'bio' => $this->bio,
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];
     }

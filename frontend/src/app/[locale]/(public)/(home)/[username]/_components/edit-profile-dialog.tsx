@@ -16,11 +16,11 @@ import { handleFormError } from '@/utils/handleErrors/handleFormErrors.util'
 import envConfig from '@/config/app.config'
 import { usePathname, useRouter } from '@/i18n/navigation'
 import { clearStore } from '@/store'
-import { useAppDispatch } from '@/hooks/redux'
 import { useTranslations } from 'next-intl'
 import PhotoEditorDialog from '@/components/photo-editor-dialog'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { useUploadImageMutation } from '@/store/services/upload.services'
+import { useUploadImageMutation } from '@/store/services/upload.service'
+import { useAppDispatch } from '@/store/hooks'
 
 export default function EditProfileDialog() {
     const [open, setOpen] = useState(false)
@@ -44,8 +44,7 @@ export default function EditProfileDialog() {
         defaultValues: {
             username: '',
             name: '',
-            bio: '',
-            avatar: ''
+            bio: ''
         }
     })
 
@@ -54,8 +53,7 @@ export default function EditProfileDialog() {
             form.reset({
                 username: currentUser.username,
                 name: currentUser.name,
-                bio: currentUser.bio,
-                avatar: currentUser.avatar
+                bio: currentUser.bio
             })
         }
     }, [currentUser, form])
@@ -63,16 +61,18 @@ export default function EditProfileDialog() {
     async function onSubmit(values: UpdateUserBodyType) {
         if (isLoading || !currentUser) return
         try {
-            const payload: UpdateUserBodyType = {
-                ...values,
-                avatar: undefined
-            }
+            const payload: UpdateUserBodyType = {}
 
             if (fileImage) {
                 const formData = new FormData()
                 formData.append('file', fileImage)
                 const uploadResponse = await uploadImageMutateAsync(formData).unwrap()
                 payload.avatar_file_id = uploadResponse.data.id
+            }
+
+            if (Object.keys(payload).length === 0) {
+                setOpen(false)
+                return
             }
 
             const oldUsername = currentUser.username
@@ -96,6 +96,7 @@ export default function EditProfileDialog() {
 
     const onReset = () => {
         form.reset()
+        setFileImage(null)
     }
 
     const avatarSrc = useMemo(
@@ -111,7 +112,6 @@ export default function EditProfileDialog() {
             setIsPhotoEditorVisible(true)
         }
         e.target.value = ''
-        form.setValue('avatar', selectedFile ? URL.createObjectURL(selectedFile) : '')
     }
 
     return (
@@ -141,7 +141,7 @@ export default function EditProfileDialog() {
                     <form onSubmit={form.handleSubmit(onSubmit)} onReset={onReset} className='px-8 py-4'>
                         <FormField
                             control={form.control}
-                            name='avatar'
+                            name='avatar_file_id'
                             render={({}) => (
                                 <FormItem>
                                     <div className='mb-6 flex flex-row items-center relative justify-center  '>
