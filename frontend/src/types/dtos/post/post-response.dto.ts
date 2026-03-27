@@ -14,11 +14,6 @@ export type GetPostDetailRes = HttpResponseWithMeta<TikTokPostType, MetaDataList
 
 export type GetListPostRes = HttpResponseWithMeta<TikTokPostType[], MetaDataListPost>
 
-export type GetListCommentRes = HttpResponseWithMeta<
-    {
-        posts: CommentType[]
-    },
-    MetaDataListComment
->
+export type GetListCommentRes = HttpResponseWithMeta<CommentType[], MetaDataListComment>
 
 export type SearchPostRes = HttpResponseWithMeta<TikTokPostType[], MetaDataListPost>

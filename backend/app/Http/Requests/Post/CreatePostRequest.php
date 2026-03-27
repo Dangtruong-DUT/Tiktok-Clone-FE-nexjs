@@ -9,6 +9,7 @@ use App\Enums\Post\PostTypeEnum;
 use App\Rules\PostId;
 use App\Rules\UploadFileId;
 use App\Rules\UserId;
+use Illuminate\Validation\Rule;
 
 class CreatePostRequest extends BaseRequest
 {
@@ -63,10 +64,19 @@ class CreatePostRequest extends BaseRequest
                     new UploadFileId(),
                 ],
                 'medias'=> [
-                    self::REQUIRED,
-                    self::ARRAY,
-                    self::MIN.':1',
-                    self::MAX.':10',
+                    Rule::requiredIf(fn() => in_array($this->type, [
+                        PostTypeEnum::POST->value,
+                        PostTypeEnum::RE_POST->value,
+                        PostTypeEnum::QUOTE_POST->value
+                    ])),
+                    Rule::when(
+                        fn() => in_array($this->type, [
+                            PostTypeEnum::POST->value,
+                            PostTypeEnum::RE_POST->value,
+                            PostTypeEnum::QUOTE_POST->value
+                        ]),
+                        ['array', 'min:1', 'max:10']
+                    ),
                 ],
                 'medias.*.file_id'=> [
                     self::INTEGER,

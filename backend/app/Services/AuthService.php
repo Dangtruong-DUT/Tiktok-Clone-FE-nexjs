@@ -7,6 +7,7 @@ use App\Exceptions\http\BusinessException;
 use App\Exceptions\http\UnauthorizedException;
 use App\Mail\ForgotPasswordMail;
 use App\Mail\VerifyUserEmail;
+use App\Mail\VerifyUserSuccess;
 use App\Models\User;
 use App\Repositories\ForgotPasswordTokenRepository;
 use App\Repositories\RefreshTokenRepository;
@@ -150,10 +151,15 @@ class AuthService
     {
         $token = $credentials['email_verify_token'];
         $validToken = $this->tokenService->verifyVerifyEmailToken($token);
-        $user = $this->userRepo->findOrFail($validToken->user_id);
-        $user->verify = UserVerifyStatusEnum::VERIFIED->value;
-        $user->save();
-        $this->verifyEmailTokenRepo->deleteByUserId($validToken->user_id);
+        $user = null;
+
+        DB::transaction(function () use ($validToken, &$user) {
+            $user = $this->userRepo->findOrFail($validToken->user_id);
+            $user->verify = UserVerifyStatusEnum::VERIFIED->value;
+            $user->save();
+            $this->verifyEmailTokenRepo->deleteByUserId($validToken->user_id);
+            Mail::to($user->email)->send(new VerifyUserSuccess($user));
+        });
 
         return [
             'access_token' => $this->tokenService->createAccessToken($user),

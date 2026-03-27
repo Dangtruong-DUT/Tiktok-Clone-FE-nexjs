@@ -54,7 +54,7 @@ export const PostApi = createApi({
                 if (result) {
                     const final = [
                         ...result.pages.flatMap((page) => {
-                            return page.data.posts.map((post) => ({
+                            return page.data.map((post) => ({
                                 type: 'Posts' as const,
                                 id: post.id
                             }))

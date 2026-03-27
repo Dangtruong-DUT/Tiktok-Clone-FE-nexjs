@@ -35,7 +35,7 @@ export default function CommentList({ postUuid, postId, username }: CommentListP
     const { data, fetchNextPage, hasNextPage, isLoading } = useGetCommentsInfiniteQuery(postUuid, {
         pollingInterval: 10000
     })
-    const comments: CommentType[] = data?.pages.flatMap((page) => page.data.posts) || []
+    const comments: CommentType[] = data?.pages.flatMap((page) => page.data) || []
 
     const sentinelScrollRef = useRef<HTMLDivElement | null>(null)
     const isSentinelInView = useInViewport(sentinelScrollRef)

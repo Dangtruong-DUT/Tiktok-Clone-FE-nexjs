@@ -1,7 +1,12 @@
 import { BACKEND_API_ENDPOINT, NEXT_API_ENDPOINT } from '@/config/endpoint.config'
 import { NextWithAuthBaseQuery } from '@/store/services/client'
 import { SetCookieBodyType } from '@/types/auth'
-import { LoginResponseType, LogoutResType, RefreshTokenRes, RegisterResponseType } from '@/types/dtos/auth/auth-response.dto'
+import {
+    LoginResponseType,
+    LogoutResType,
+    RefreshTokenRes,
+    RegisterResponseType
+} from '@/types/dtos/auth/auth-response.dto'
 import { VerifyEmailResType } from '@/types/dtos/user/user-response.dto'
 import { LoginReqBodyType, RegisterReqBodyType } from '@/types/dtos/auth/auth-request.dto'
 import { VerifyEmailReqBodyType } from '@/types/dtos/user/user-request.dto'
@@ -47,7 +52,7 @@ export const AuthApi = createApi({
         }),
         verifyEmail: builder.mutation<VerifyEmailResType, VerifyEmailReqBodyType>({
             query: (data) => ({
-                url: BACKEND_API_ENDPOINT.API_VERIFY_EMAIL,
+                url: NEXT_API_ENDPOINT.API_VERIFY_EMAIL,
                 method: 'POST',
                 body: data
             })

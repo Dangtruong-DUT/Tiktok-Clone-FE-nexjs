@@ -24,7 +24,7 @@ export const HttpResponseWithMetaSchema = <T extends z.ZodTypeAny, M extends z.Z
         meta: metaSchema
     }).strict()
 
-export const BusinessExceptionSchema = z.record(z.string(), z.array(z.string()))
+export const BusinessExceptionSchema = z.record(z.string(), z.union([z.string(), z.array(z.string())]))
 
 export const HttpResponseWithBusinessExceptionsSchema = HttpResponseSchema.extend({
     errors: z.array(BusinessExceptionSchema)

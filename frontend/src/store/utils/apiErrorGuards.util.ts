@@ -21,8 +21,7 @@ export function isBusinessException(error: unknown): error is FetchBaseQueryErro
         error.data !== null &&
         'errors' in error.data &&
         error.data.errors !== null &&
-        typeof error.data.errors == 'object' &&
-        Array.isArray(error.data.errors)
+        typeof error.data.errors == 'object'
     )
 }
 

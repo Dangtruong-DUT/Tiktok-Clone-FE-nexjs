@@ -14,18 +14,18 @@ export const navItems: NavItem[] = [
         title: 'home',
         href: '/tiktokstudio',
         Icon: LayoutPanelLeft,
-        role: [Role.USER, Role.ADMIN, Role.SUPER_ADMIN]
+        role: [Role.USER, Role.SUPER_ADMIN]
     },
     {
         title: 'posts',
         href: '/tiktokstudio/content',
         Icon: BookUp,
-        role: [Role.USER, Role.ADMIN, Role.SUPER_ADMIN]
+        role: [Role.USER, Role.SUPER_ADMIN]
     },
     {
         title: 'settings',
         href: '/tiktokstudio/settings',
         Icon: Settings,
-        role: [Role.USER, Role.ADMIN, Role.SUPER_ADMIN]
+        role: [Role.USER, Role.SUPER_ADMIN]
     }
 ]

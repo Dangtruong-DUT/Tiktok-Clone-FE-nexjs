@@ -37,6 +37,7 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json(response)
     } catch (error) {
+        console.error('Error verifying email:', error)
         return NextResponse.json(
             { message: 'Please provide a valid email verify token.' },
             { status: HTTP_STATUS.BAD_REQUEST }

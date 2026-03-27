@@ -7,6 +7,7 @@ export const errorHandleMiddleware: Middleware = () => (next) => (action) => {
     if (!isRejectedWithValue(action)) return next(action)
 
     if (!isFetchBaseQueryError(action.payload)) return next(action)
+    console.error('API Error:', action.payload)
 
     if (isBusinessException(action.payload)) return next(action)
 
