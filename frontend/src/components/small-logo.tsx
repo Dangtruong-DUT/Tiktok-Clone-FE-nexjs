@@ -36,19 +36,19 @@ export default function SmallLogo({ className, height, color = 'currentColor' }:
                 d='M165,540 L535,300 L250,300'
                 opacity='0.9'
                 stroke='#9900FF'
-                stroke-linecap='round'
-                stroke-linejoin='round'
-                stroke-width='60'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth='60'
             ></path>
             <path d='M150,100 L500,300 L150,500 Z' fill='url(#grad_refined)' filter='url(#shadow)'></path>
             <g transform='translate(150, 240)'>
                 <rect
                     fill='white'
-                    fill-opacity='0.25'
+                    fillOpacity='0.25'
                     height='110'
                     rx='15'
                     stroke='white'
-                    stroke-width='2'
+                    strokeWidth='2'
                     width='180'
                     x='0'
                     y='0'
@@ -56,10 +56,10 @@ export default function SmallLogo({ className, height, color = 'currentColor' }:
                 <path
                     d='M30,110 L30,140 L60,110 Z'
                     fill='white'
-                    fill-opacity='0.25'
+                    fillOpacity='0.25'
                     stroke='white'
-                    stroke-linejoin='round'
-                    stroke-width='2'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
                 ></path>
                 <circle cx='50' cy='55' fill='white' r='10'></circle>
                 <circle cx='90' cy='55' fill='white' r='10'></circle>

@@ -14,10 +14,10 @@ export default function ButtonFollow({ isFollowed, onToggleFollow, className, is
     const t = useTranslations('ProfilePage.actions')
     const content = (
         <Button
-            variant={isFollowed ? 'outline' : 'default'}
+            variant={isFollowed ? 'secondary' : 'default'}
             className={cn('cursor-pointer px-8!', {
-                'primary-button h-10! rounded-md! text-base! font-medium!': !isFollowed,
-                'h-10 font-medium rounded-md text-base ': isFollowed,
+                'primary-button h-10! rounded-sm! text-base! font-medium!': !isFollowed,
+                'h-10 font-medium rounded-sm! text-base ': isFollowed,
                 className
             })}
             onClick={onToggleFollow}

@@ -42,9 +42,9 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
     if (authStatus === 'loading' || (role != null && currentUser == null)) {
         return (
             <div className='flex items-center'>
-                <Skeleton className='w-[122px]  h-10 font-medium rounded-md ' />
-                <Skeleton className='ml-2 w-[122px]  h-10 font-medium rounded-md' />
-                <Skeleton className='ml-2 w-10  h-10 font-medium rounded-md' />
+                <Skeleton className='w-[122px]  h-10 font-medium rounded-sm ' />
+                <Skeleton className='ml-2 w-[122px]  h-10 font-medium rounded-sm' />
+                <Skeleton className='ml-2 w-10  h-10 font-medium rounded-sm' />
             </div>
         )
     }
@@ -54,7 +54,7 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
             <div className='flex items-center'>
                 <EditProfileDialog />
                 <Link href='/tiktokstudio/settings'>
-                    <Button variant='outline' className='ml-2 h-10 font-medium rounded-md text-base cursor-pointer'>
+                    <Button variant='secondary' className='ml-2 h-10 font-medium rounded-sm text-base cursor-pointer'>
                         <span className='flex justify-center  items-center mr-1 max-lg:flex max-md:mr-0'>
                             <Settings size={19} />
                         </span>
@@ -62,7 +62,7 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
                     </Button>
                 </Link>
                 <ShareMenuDialog url={ProfileUserUrl}>
-                    <Button variant='outline' className='ml-2  h-10 font-medium rounded-md text-base'>
+                    <Button variant='secondary' className='ml-2  h-10 font-medium rounded-sm text-base'>
                         <Share size={19} />
                     </Button>
                 </ShareMenuDialog>
@@ -73,14 +73,14 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
             <div className='flex items-center'>
                 <ButtonFollow isFollowed={isFollowedState} onToggleFollow={onToggleFollow} isAuth={!!currentUser} />
                 <Button
-                    variant='outline'
-                    className='ml-2 h-10 font-medium rounded-md text-base cursor-pointer'
+                    variant='secondary'
+                    className='ml-2 h-10 font-medium rounded-sm text-base cursor-pointer'
                     onClick={handleMessage}
                 >
                     {t('message')}
                 </Button>
                 <ShareMenuDialog url={ProfileUserUrl}>
-                    <Button variant='outline' className='ml-2 h-10 font-medium rounded-md text-base'>
+                    <Button variant='secondary' className='ml-2 h-10 font-medium rounded-sm text-base'>
                         <Share size={19} />
                     </Button>
                 </ShareMenuDialog>

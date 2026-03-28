@@ -72,7 +72,7 @@ export default function VideoDescription({ post, className }: VideoDescriptionPr
         userId: user.uuid,
         initialFollowState: userProfileRes?.data.is_followed ?? false
     })
-    const linkToVideo = `${envConfig.NEXT_PUBLIC_URL}${locale}/@${user.username}/video/${post.uuid}`
+    const linkToVideo = `${envConfig.NEXT_PUBLIC_URL}/${locale}/@${user.username}/video/${post.uuid}`
 
     const role = useAppSelector((state) => state.auth.role)
     const { data: postDetailRes } = useGetPostDetailQuery(post.uuid)
