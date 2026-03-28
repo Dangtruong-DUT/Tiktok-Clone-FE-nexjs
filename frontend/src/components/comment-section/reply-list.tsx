@@ -37,7 +37,7 @@ interface ReplyItemProps {
 
 export default function ReplyList({ parentUuid }: ReplyItemProps) {
     const { data, fetchNextPage, hasNextPage, isFetching } = useGetCommentsInfiniteQuery(parentUuid)
-    const comments: CommentType[] = data?.pages.flatMap((page) => page.data.posts) || []
+    const comments: CommentType[] = data?.pages.flatMap((page) => page.data) || []
     return (
         <ReplyCommentsContext
             value={{

@@ -48,7 +48,7 @@ interface VideoPlaylistProviderProps {
 export function VideoPlaylistProvider({ children, video }: VideoPlaylistProviderProps) {
     const [playlist, setPlaylistState] = useState<TikTokPostType[]>([video])
     const { fetchNextPage, isLoading, isFetching, data, hasNextPage } = useGetRelatedPostsInfiniteQuery(video.uuid)
-    const postList: TikTokPostType[] = React.useMemo(() => data?.pages.flatMap((page) => page.data.posts) || [], [data])
+    const postList: TikTokPostType[] = React.useMemo(() => data?.pages.flatMap((page) => page.data) || [], [data])
 
     useEffect(() => {
         if (postList.length > 0) {

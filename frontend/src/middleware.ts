@@ -1,6 +1,6 @@
 import { guestRouteMiddleware } from '@/middlewares/guest-route.middleware'
 import { i18nMiddleware } from '@/middlewares/i18n.middleware'
-import { privateRouteMiddleware } from '@/middlewares/private-rout.middleware'
+import { privateRouteMiddleware } from '@/middlewares/private-route.middleware'
 import { roleCheckMiddleware } from '@/middlewares/role-check.middleware'
 import { getAuthTokens } from '@/utils/auth/token.util'
 import { NextRequest } from 'next/server'

@@ -18,7 +18,7 @@ export default function SidebarHeader({ isOpenSearch, toggleSearchDrawer, search
                 'justify-center mr-4': isOpenSearch
             })}
         >
-            <Link href='/' className='flex items-center text-foreground ml-2'>
+            <Link href='/' className='flex items-center text-foreground'>
                 <LogoBrand small={isOpenSearch} />
             </Link>
 

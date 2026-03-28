@@ -6,27 +6,65 @@ type Props = {
 
 export default function SmallLogo({ className, height, color = 'currentColor' }: Props) {
     return (
-        <svg xmlns='http://www.w3.org/2000/svg' className={className} width='26px' height={height} fill={color}>
+        <svg
+            color={color}
+            className={className}
+            fill='none'
+            height={height}
+            viewBox='0 0 600 600'
+            xmlns='http://www.w3.org/2000/svg'
+        >
+            <defs>
+                <linearGradient id='grad_refined' x1='0%' x2='100%' y1='0%' y2='100%'>
+                    <stop offset='0%' style={{ stopColor: '#FF9900', stopOpacity: 1 }}></stop>
+                    <stop offset='50%' style={{ stopColor: '#FF00CC', stopOpacity: 1 }}></stop>
+                    <stop offset='100%' style={{ stopColor: '#9900FF', stopOpacity: 1 }}></stop>
+                </linearGradient>
+                <filter height='140%' id='shadow' width='140%' x='-20%' y='-20%'>
+                    <feGaussianBlur in='SourceAlpha' stdDeviation='5'></feGaussianBlur>
+                    <feOffset dx='0' dy='5' result='offsetblur'></feOffset>
+                    <feComponentTransfer>
+                        <feFuncA slope='0.2' type='linear'></feFuncA>
+                    </feComponentTransfer>
+                    <feMerge>
+                        <feMergeNode></feMergeNode>
+                        <feMergeNode in='SourceGraphic'></feMergeNode>
+                    </feMerge>
+                </filter>
+            </defs>
             <path
-                fill='#25F4EE'
-                d='M9.875 16.842v-1.119A9 9 0 0 0 8.7 15.64c-4.797-.006-8.7 3.9-8.7 8.708a8.7 8.7 0 0 0 3.718 7.134A8.68 8.68 0 0 1 1.38 25.55c0-4.737 3.794-8.598 8.495-8.707'
+                d='M165,540 L535,300 L250,300'
+                opacity='0.9'
+                stroke='#9900FF'
+                stroke-linecap='round'
+                stroke-linejoin='round'
+                stroke-width='60'
             ></path>
-            <path
-                fill='#25F4EE'
-                d='M10.087 29.526c2.14 0 3.89-1.707 3.966-3.83l.007-18.968h3.462a7 7 0 0 1-.109-1.202h-4.727l-.006 18.969a3.98 3.98 0 0 1-3.967 3.829 3.9 3.9 0 0 1-1.846-.46 3.95 3.95 0 0 0 3.22 1.662m13.905-16.36v-1.055a6.5 6.5 0 0 1-3.584-1.068 6.57 6.57 0 0 0 3.584 2.123'
-            ></path>
-            <path
-                fill='#FE2C55'
-                d='M20.408 11.043a6.54 6.54 0 0 1-1.616-4.315h-1.265a6.56 6.56 0 0 0 2.881 4.315M8.707 20.365a3.98 3.98 0 0 0-3.974 3.976c0 1.528.87 2.858 2.134 3.523a3.94 3.94 0 0 1-.754-2.32 3.98 3.98 0 0 1 3.973-3.977c.41 0 .805.07 1.176.185V16.92a9 9 0 0 0-1.176-.083c-.07 0-.134.006-.204.006v3.708a4 4 0 0 0-1.175-.185'
-            ></path>
-            <path
-                fill='#FE2C55'
-                d='M23.992 13.166v3.676a11.25 11.25 0 0 1-6.579-2.116v9.622c0 4.8-3.903 8.713-8.706 8.713a8.67 8.67 0 0 1-4.99-1.579 8.7 8.7 0 0 0 6.37 2.781c4.797 0 8.706-3.906 8.706-8.714v-9.621a11.25 11.25 0 0 0 6.579 2.116v-4.73a6.5 6.5 0 0 1-1.38-.148'
-            ></path>
-            <path
-                fill={color}
-                d='M17.413 24.347v-9.621a11.25 11.25 0 0 0 6.58 2.116v-3.676a6.57 6.57 0 0 1-3.584-2.123 6.6 6.6 0 0 1-2.887-4.315h-3.463l-.006 18.968a3.98 3.98 0 0 1-3.967 3.83 3.99 3.99 0 0 1-3.225-1.656 3.99 3.99 0 0 1-2.134-3.523A3.98 3.98 0 0 1 8.7 20.371c.409 0 .805.07 1.176.185v-3.708c-4.702.103-8.496 3.964-8.496 8.701 0 2.289.888 4.373 2.338 5.933a8.67 8.67 0 0 0 4.989 1.58c4.797 0 8.706-3.913 8.706-8.715'
-            ></path>
+            <path d='M150,100 L500,300 L150,500 Z' fill='url(#grad_refined)' filter='url(#shadow)'></path>
+            <g transform='translate(150, 240)'>
+                <rect
+                    fill='white'
+                    fill-opacity='0.25'
+                    height='110'
+                    rx='15'
+                    stroke='white'
+                    stroke-width='2'
+                    width='180'
+                    x='0'
+                    y='0'
+                ></rect>
+                <path
+                    d='M30,110 L30,140 L60,110 Z'
+                    fill='white'
+                    fill-opacity='0.25'
+                    stroke='white'
+                    stroke-linejoin='round'
+                    stroke-width='2'
+                ></path>
+                <circle cx='50' cy='55' fill='white' r='10'></circle>
+                <circle cx='90' cy='55' fill='white' r='10'></circle>
+                <circle cx='130' cy='55' fill='white' r='10'></circle>
+            </g>
         </svg>
     )
 }
