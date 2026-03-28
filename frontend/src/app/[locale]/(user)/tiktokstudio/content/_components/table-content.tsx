@@ -11,7 +11,6 @@ import {
     useReactTable
 } from '@tanstack/react-table'
 import { useTranslations } from 'next-intl'
-import LoadingIcon from '@/components/lottie-icons/loading'
 
 import { useEffect, useState } from 'react'
 
@@ -77,7 +76,7 @@ export default function TableContent() {
             pagination
         },
         manualPagination: true,
-        pageCount: queryData?.meta?.total ?? -1
+        pageCount: queryData?.meta?.last_page ?? -1
     })
 
     useEffect(() => {
@@ -104,7 +103,7 @@ export default function TableContent() {
                 <div>
                     <AutoPagination
                         page={table.getState().pagination.pageIndex + 1}
-                        pageSize={queryData?.meta?.total || 1}
+                        pageSize={queryData?.meta?.last_page || 1}
                         pathname='/tiktokstudio/content'
                     />
                 </div>

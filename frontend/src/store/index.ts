@@ -5,6 +5,7 @@ import { SearchApi } from '@/store/services/search.service'
 import { UploadApi } from '@/store/services/upload.service'
 import { UserApi } from '@/store/services/user.service'
 import authReducer from '@/store/features/authSlice'
+import appReducer, { clearAllLoading } from '@/store/features/appSlice'
 import modalReducer from '@/store/features/modalSlide'
 import videoReducer from '@/store/features/videoSlice'
 import { configureStore } from '@reduxjs/toolkit'
@@ -13,7 +14,7 @@ import { authMiddleware } from './middlewares/auth.middleware'
 
 export const makeStore = () => {
     return configureStore({
-        devTools:true,
+        devTools: true,
         reducer: {
             [UserApi.reducerPath]: UserApi.reducer,
             [SearchApi.reducerPath]: SearchApi.reducer,
@@ -21,6 +22,7 @@ export const makeStore = () => {
             [AuthApi.reducerPath]: AuthApi.reducer,
             [PostApi.reducerPath]: PostApi.reducer,
             auth: authReducer,
+            app: appReducer,
             modal: modalReducer,
             video: videoReducer
         },
@@ -32,7 +34,7 @@ export const makeStore = () => {
                 AuthApi.middleware,
                 PostApi.middleware,
                 authMiddleware,
-                errorHandleMiddleware,
+                errorHandleMiddleware
             )
     })
 }
@@ -50,4 +52,5 @@ export function clearStore(dispatch: AppDispatch) {
     dispatch(AuthApi.util.resetApiState())
     dispatch(PostApi.util.resetApiState())
     dispatch(UploadApi.util.resetApiState())
+    dispatch(clearAllLoading())
 }

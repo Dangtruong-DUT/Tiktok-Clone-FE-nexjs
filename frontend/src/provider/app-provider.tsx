@@ -10,6 +10,7 @@ import { JwtPayloadType } from '@/types/common/jwt-payload.type'
 import { decodeJwt } from '@/utils/auth/jwt.util'
 import { setRole, setUserProfile, tokenReceived } from '@/store/features/authSlice'
 import RefreshToken from '@/components/refresh-token'
+import GlobalAppLoader from '@/components/global-app-loader'
 
 interface AppContextType {
     authStatus: AuthStatus
@@ -64,6 +65,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
                 {children}
                 <Toaster />
                 <RefreshToken />
+                <GlobalAppLoader />
                 <NextTopLoader showSpinner={false} color='var(--color-brand)' />
             </QueryClientProvider>
         </AppContext>

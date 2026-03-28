@@ -26,9 +26,16 @@ import useVideoFrames from '@/hooks/video/useVideoFrames'
 import { useRouter } from '@/i18n/navigation'
 import { useConfirmNavigation } from '@/hooks/shared/useConfirmNavigation'
 import AlertDialogExitPage from '@/app/[locale]/(user)/tiktokstudio/upload/_components/alert-confirm-leave-page'
+import { useAppDispatch } from '@/store/hooks'
+import { setLoadingByKey } from '@/store/features/appSlice'
+
+const APP_LOADING_KEYS = {
+    uploadVideoPost: 'upload.video-post'
+} as const
 
 export default function FormUploadVideo() {
     const t = useTranslations('TiktokStudio.upload')
+    const dispatch = useAppDispatch()
     const [uploadImage, uploadImageResult] = useUploadImageMutation()
     const [uploadVideo, uploadVideoResult] = useUploadVideoMutation()
     const [createPost, createPostResult] = useCreatePostMutation()
@@ -98,6 +105,24 @@ export default function FormUploadVideo() {
         }
         fetchFrame()
     }, [videoUrl, videoFrames])
+
+    useEffect(() => {
+        dispatch(
+            setLoadingByKey({
+                key: APP_LOADING_KEYS.uploadVideoPost,
+                isLoading: isCreatePostLoading
+            })
+        )
+
+        return () => {
+            dispatch(
+                setLoadingByKey({
+                    key: APP_LOADING_KEYS.uploadVideoPost,
+                    isLoading: false
+                })
+            )
+        }
+    }, [dispatch, isCreatePostLoading])
 
     const onReset = () => {
         if (isCreatePostLoading) return
