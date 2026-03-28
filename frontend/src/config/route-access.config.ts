@@ -5,7 +5,7 @@ function buildLocalizedRoutes(basePaths: string[]) {
 }
 
 const SUPER_ADMIN_BASE_PATHS = ['/admin']
-const USER_PROTECTED_BASE_PATHS = ['/business-suite', '/tiktokstudio']
+const USER_PROTECTED_BASE_PATHS = ['/business-suite', '/snapistudio']
 const GUEST_ONLY_BASE_PATHS = ['/login', '/register', '/oauth']
 
 export const SUPER_ADMIN_ROUTE_PREFIXES = buildLocalizedRoutes(SUPER_ADMIN_BASE_PATHS)

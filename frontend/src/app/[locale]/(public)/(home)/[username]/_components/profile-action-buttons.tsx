@@ -53,7 +53,7 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
         return (
             <div className='flex items-center'>
                 <EditProfileDialog />
-                <Link href='/tiktokstudio/settings'>
+                <Link href='/snapistudio/settings'>
                     <Button variant='secondary' className='ml-2 h-10 font-medium rounded-sm text-base cursor-pointer'>
                         <span className='flex justify-center  items-center mr-1 max-lg:flex max-md:mr-0'>
                             <Settings size={19} />

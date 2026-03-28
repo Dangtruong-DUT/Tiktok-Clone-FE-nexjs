@@ -20,7 +20,7 @@ export const sidebarConfig = {
         home: '/',
         explore: '/explore',
         following: '/following',
-        upload: '/tiktokstudio/upload'
+        upload: '/snapistudio/upload'
     }
 } as const
 

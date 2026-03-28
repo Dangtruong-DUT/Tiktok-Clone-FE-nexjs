@@ -39,19 +39,19 @@ const staticRoutes: MetadataRoute.Sitemap = [
 
     // TikTok Studio routes
     {
-        url: '/tiktokstudio',
+        url: '/snapistudio',
         lastModified: new Date(),
         changeFrequency: 'daily' as const,
         priority: 0.9
     },
     {
-        url: '/tiktokstudio/content',
+        url: '/snapistudio/content',
         lastModified: new Date(),
         changeFrequency: 'daily' as const,
         priority: 0.8
     },
     {
-        url: '/tiktokstudio/settings',
+        url: '/snapistudio/settings',
         lastModified: new Date(),
         changeFrequency: 'weekly' as const,
         priority: 0.6
