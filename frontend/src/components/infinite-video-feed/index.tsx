@@ -39,16 +39,16 @@ export default function InfiniteVideoFeed({
     return (
         <>
             <div className=' max-h-screen w-full  overflow-y-auto  snap-y snap-mandatory scrollbar-hidden @container transition-all duration-300'>
-                {isLoading && <VideoWithActionSkeleton className='snap-start snap-always' />}
+                {isLoading && <VideoWithActionSkeleton className='snap-start snap-always ' />}
                 {!isLoading &&
                     posts.map((post, index) => (
                         <article
                             key={String(post.uuid + index)}
                             {...{ [keyDataScroll]: index }}
-                            className='px-4 @5xl:ps-[3rem] @5xl:pe-[15rem]  py-4 min-h-screen snap-start snap-always  transition-all duration-300'
+                            className='flex items-center px-4 @5xl:ps-[3rem] @5xl:pe-[15rem]  py-4 min-h-screen snap-start snap-always  transition-all duration-300'
                         >
                             <div className='flex flex-row items-end justify-center space-x-4 mx-auto'>
-                                <VideoPlayer post={post} className='sm:max-w-[400px]' />
+                                <VideoPlayer post={post} className='h-[calc(100vh-32px)]' />
                                 <ActionBar post={post} className='mt-4' />
                             </div>
                         </article>

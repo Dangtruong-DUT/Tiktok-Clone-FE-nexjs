@@ -43,7 +43,7 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
 
     return (
         <section
-            className={cn(' lokrelative top-0 left-0 w-full h-full group cursor-pointer', className)}
+            className={cn('block relative top-0 left-0 w-full h-full group cursor-pointer', className)}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
@@ -67,7 +67,7 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
             {/* Video Element */}
             <video
                 onClick={handlePlayPause}
-                className='w-full aspect-[9/16] rounded-2xl object-cover bg-accent'
+                className='w-full h-full rounded-2xl object-contain  bg-accent'
                 ref={videoRef}
                 playsInline
                 loop

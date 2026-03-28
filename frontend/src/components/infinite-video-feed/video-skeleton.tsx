@@ -7,8 +7,10 @@ interface VideoWithActionSkeletonProps {
 
 export default function VideoWithActionSkeleton({ className }: VideoWithActionSkeletonProps) {
     return (
-        <div className={cn('px-4 @5xl:ps-[3rem] @5xl:pe-[15rem]  py-4 min-h-screen', className)}>
-            <div className='flex flex-row items-end justify-center space-x-4 mx-auto'>
+        <div
+            className={cn('flex w-full items-center px-4 @5xl:ps-[3rem] @5xl:pe-[15rem]  py-4 min-h-screen', className)}
+        >
+            <div className='flex w-full flex-row items-end justify-center space-x-4 mx-auto'>
                 <Skeleton className=' w-full h-full sm:max-w-[400px] aspect-[9/16] rounded-2xl' />
                 <div className='flex flex-col items-center gap-6 mt-4'>
                     {Array.from({ length: 5 }, (_, index) => (
