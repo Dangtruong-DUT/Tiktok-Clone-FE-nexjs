@@ -10,6 +10,8 @@ type PostTableContextType = {
     postIdDelete: string | null
     setPostIdDelete: (value: string | null) => void
     changeAudienceStatus: ({ status, postId }: { status: Audience; postId: string }) => void
+    getAudienceStatus: ({ postId, fallback }: { postId: string; fallback: Audience }) => Audience
+    clearAudienceStatus: (postId: string) => void
 }
 
 const PostTableContext = createContext<PostTableContextType>({
@@ -17,7 +19,9 @@ const PostTableContext = createContext<PostTableContextType>({
     postIdEdit: undefined,
     postIdDelete: null,
     setPostIdDelete: () => {},
-    changeAudienceStatus: () => {}
+    changeAudienceStatus: () => {},
+    getAudienceStatus: ({ fallback }) => fallback,
+    clearAudienceStatus: () => {}
 })
 
 export function usePostTableContext() {
@@ -27,17 +31,41 @@ export function usePostTableContext() {
 function PostTableProvider({ children }: { children: React.ReactNode }) {
     const [postIdEdit, setPostIdEdit] = useState<number | undefined>()
     const [postIdDelete, setPostIdDelete] = useState<string | null>(null)
+    const [audienceStatusMap, setAudienceStatusMap] = useState<Record<string, Audience>>({})
     const [updatePost] = useUpdatePostMutation()
 
     const changeAudienceStatus = async ({ status, postId }: { status: Audience; postId: string }) => {
+        setAudienceStatusMap((prev) => ({ ...prev, [postId]: status }))
+
         try {
             await updatePost({
                 post_uuid: postId,
                 body: { audience: status }
             }).unwrap()
         } catch (error) {
+            setAudienceStatusMap((prev) => {
+                const next = { ...prev }
+                delete next[postId]
+                return next
+            })
             console.error('Failed to update post audience:', error)
         }
+    }
+
+    const getAudienceStatus = ({ postId, fallback }: { postId: string; fallback: Audience }) => {
+        return audienceStatusMap[postId] ?? fallback
+    }
+
+    const clearAudienceStatus = (postId: string) => {
+        setAudienceStatusMap((prev) => {
+            if (!(postId in prev)) {
+                return prev
+            }
+
+            const next = { ...prev }
+            delete next[postId]
+            return next
+        })
     }
 
     return (
@@ -47,7 +75,9 @@ function PostTableProvider({ children }: { children: React.ReactNode }) {
                 setPostIdEdit,
                 postIdDelete,
                 setPostIdDelete,
-                changeAudienceStatus
+                changeAudienceStatus,
+                getAudienceStatus,
+                clearAudienceStatus
             }}
         >
             {children}

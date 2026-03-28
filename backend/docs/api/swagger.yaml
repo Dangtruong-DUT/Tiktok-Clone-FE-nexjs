@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: TikTok V2 Backend API
+  title: Snapi V1 Backend API
   version: 1.0.0
   description: |
     Swagger/OpenAPI documentation for the current Laravel backend API.

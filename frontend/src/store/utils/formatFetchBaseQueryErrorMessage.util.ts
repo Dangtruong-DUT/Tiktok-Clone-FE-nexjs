@@ -36,13 +36,6 @@ export function formatFetchBaseQueryErrorMessage(error: FetchBaseQueryError): Re
         }
     }
 
-    if (error.status === HTTP_STATUS.UNAUTHORIZED) {
-        return {
-            title: 'Unauthorized',
-            description: 'You are not authorized to perform this action. Please log in and try again.'
-        }
-    }
-
     if (isPayloadErrorWithMessage(error)) {
         return {
             title: 'Error Occurred',

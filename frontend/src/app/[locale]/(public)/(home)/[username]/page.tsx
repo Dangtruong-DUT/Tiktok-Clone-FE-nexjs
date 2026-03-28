@@ -33,15 +33,15 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
     const previousImages = (await parent).openGraph?.images || []
 
     return {
-        title: user?.name ? `${user.name} (@${user.username})` : 'TikTok Profile',
-        description: user?.bio || `Check out ${user?.name || user?.username}'s profile on TikTok`,
+        title: user?.name ? `${user.name} (@${user.username})` : 'Snapi Profile',
+        description: user?.bio || `Check out ${user?.name || user?.username}'s profile on Snapi`,
         openGraph: {
             images: [user?.avatar || '', ...previousImages],
-            title: user?.name ? `${user.name} (@${user.username})` : 'TikTok Profile',
-            description: user?.bio || `Check out ${user?.name || user?.username}'s profile on TikTok`,
+            title: user?.name ? `${user.name} (@${user.username})` : 'Snapi Profile',
+            description: user?.bio || `Check out ${user?.name || user?.username}'s profile on Snapi`,
             type: 'profile',
             url: `${process.env.NEXT_PUBLIC_URL}${locale}/@${cleanUsername}`,
-            siteName: 'TikTok Clone',
+            siteName: 'Snapi',
             locale
         },
         alternates: {
@@ -53,8 +53,8 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
         },
         twitter: {
             card: 'summary_large_image',
-            title: user?.name ? `${user.name} (@${user.username})` : 'TikTok Profile',
-            description: user?.bio || `Check out ${user?.name || user?.username}'s profile on TikTok`,
+            title: user?.name ? `${user.name} (@${user.username})` : 'Snapi Profile',
+            description: user?.bio || `Check out ${user?.name || user?.username}'s profile on Snapi`,
             images: [user?.avatar || '']
         }
     }

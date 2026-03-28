@@ -10,10 +10,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
     const t = await getTranslations('HomePage.menu')
     return {
         title: t('following'),
-        description: 'Keep up with all the latest videos from creators you follow on TikTok',
+        description: 'Keep up with all the latest videos from creators you follow on Snapi',
         openGraph: {
             title: t('following'),
-            description: 'Keep up with all the latest videos from creators you follow on TikTok',
+            description: 'Keep up with all the latest videos from creators you follow on Snapi',
             images: ['https://api.taplamit.tech/api/v1/static/images/72e81f3e59013ce9726567704.jpg'],
             url: `${process.env.NEXT_PUBLIC_URL}${locale}/following`
         },

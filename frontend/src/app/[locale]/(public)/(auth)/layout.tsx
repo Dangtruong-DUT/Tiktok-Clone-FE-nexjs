@@ -15,7 +15,7 @@ export async function generateMetadata(
     const images = parentMeta.openGraph?.images || []
     return {
         title: {
-            template: `%s | TikTok`,
+            template: `%s | Snapi`,
             default: t('title')
         },
         description: t('description'),

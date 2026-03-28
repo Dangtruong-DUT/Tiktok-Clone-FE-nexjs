@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
     const t = await getTranslations('HomePage.menu')
     return {
         title: t('forYou'),
-        description: 'Watch the latest and most engaging videos personalized for you on TikTok',
+        description: 'Watch the latest and most engaging videos personalized for you on Snapi',
         alternates: {
             canonical: `${envConfig.NEXT_PUBLIC_URL}${locale}`,
             languages: {

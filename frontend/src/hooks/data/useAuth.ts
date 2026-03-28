@@ -4,6 +4,7 @@ import { useAppDispatch } from '@/store/hooks'
 import { useRouter } from '@/i18n/navigation'
 import { useLoginMutation, useLogoutMutation, useRegisterMutation } from '@/store/services/auth.service'
 import { clearStore } from '@/store'
+import { startLoadingByKey, stopLoadingByKey } from '@/store/features/appSlice'
 import { LogoutResType } from '@/types/dtos/auth/auth-response.dto'
 import { handleFormError } from '@/utils/handleErrors/handleFormErrors.util'
 import {
@@ -16,6 +17,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+
+const LOGOUT_LOADING_KEY = 'logout'
 
 export function useLoginWithEmail() {
     const router = useRouter()
@@ -107,6 +110,7 @@ export function useLogout(props?: UseLogoutProps) {
 
     const handleLogout = useCallback(async () => {
         props?.onLogout?.()
+        dispatch(startLoadingByKey(LOGOUT_LOADING_KEY))
         try {
             const res = await logoutMutate().unwrap()
             router.replace('/')
@@ -116,6 +120,8 @@ export function useLogout(props?: UseLogoutProps) {
         } catch (error) {
             console.error('Logout error:', error)
             props?.onError?.(error)
+        } finally {
+            dispatch(stopLoadingByKey(LOGOUT_LOADING_KEY))
         }
     }, [logoutMutate, router, props, dispatch])
 

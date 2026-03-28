@@ -130,7 +130,7 @@ export default function VideoPreview({ videoSrc, content, className }: VideoPrev
                             width={25}
                             height={174}
                             className='inline-block mt-5'
-                            alt='action bar tiktok'
+                            alt='action bar Snapi'
                         />
                     </div>
                     <div className='absolute left-1 bottom-4 flex flex-col w-[70%] '>

@@ -31,7 +31,6 @@ export default function TableContent() {
     const columns = useColumns()
     const { searchParams, setSearchParams } = useSearchParamsLoader()
 
-    // page param mặc định 1, nhưng TanStack dùng pageIndex (0-based)
     const page = searchParams?.get('page') ? Number(searchParams.get('page')) : 1
 
     const { setPostIdDelete, postIdDelete } = usePostTableContext()

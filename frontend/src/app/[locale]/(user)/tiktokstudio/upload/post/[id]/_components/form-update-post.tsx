@@ -27,6 +27,7 @@ import LoadingIcon from '@/components/lottie-icons/loading'
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'
 import { useConfirmNavigation } from '@/hooks/shared/useConfirmNavigation'
 import AlertDialogExitPage from '@/app/[locale]/(user)/tiktokstudio/upload/_components/alert-confirm-leave-page'
+import { toast } from 'sonner'
 
 export default function FormUpdatePost() {
     const { id } = useParams<{ id: string }>()
@@ -53,7 +54,6 @@ export default function FormUpdatePost() {
             audience: Audience.PUBLIC,
             content: '',
             hashtags: [],
-            medias: [],
             mentions: [],
             thumbnail: undefined
         }
@@ -76,7 +76,6 @@ export default function FormUpdatePost() {
         if (post) {
             form.setValue('content', post.content)
             form.setValue('audience', post.audience)
-            form.setValue('medias', post.medias)
             form.setValue('thumbnail', post.thumbnail_file_id ?? undefined)
             setVideoUrl(post.medias?.[0]?.url || null)
             setThumbnailUrl(post.thumbnail_url || null)
@@ -117,11 +116,7 @@ export default function FormUpdatePost() {
                 thumbnail
             }
             await updatePostMutate({ post_uuid: post.uuid, body }).unwrap()
-            if (redirectFrom) {
-                router.push(redirectFrom)
-            } else {
-                router.push('/tiktokstudio/content')
-            }
+            toast('Post updated successfully')
         } catch (error) {
             console.error(error)
             handleFormError<CreatePostReqBodyType>({

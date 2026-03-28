@@ -161,7 +161,7 @@
                 "contact": {
                     "title": "9. Contact Us",
                     "description": "If you have any questions or concerns about this Privacy Policy, please contact us at",
-                    "email": "privacy@tiktok.com"
+                    "email": "privacy@snapi.com"
                 }
             }
         }
@@ -171,7 +171,7 @@
     },
     "TiktokStudio": {
         "footer": {
-            "copyright": "Copyright © 2025 TikTok",
+            "copyright": "Copyright © 2025 Snapi",
             "privacyPolicy": "Privacy Policy",
             "termsOfService": "Terms of Service"
         },
@@ -179,7 +179,7 @@
             "home": "Home",
             "posts": "Posts",
             "settings": "Settings",
-            "back": "Back to TikTok"
+            "back": "Back to Snapi"
         },
         "content": {
             "table": {
@@ -350,7 +350,7 @@
         "notice": "By continuing with an account located in Vietnam, you agree to our <terms>Terms of Service</terms> and acknowledge that you have read our <privacy>Privacy Policy</privacy>."
     },
     "LoginPage": {
-        "title": "Log in to TikTok",
+        "title": "Log in to Snapi",
         "description": "Manage your account, check notifications, comment on videos, and more.",
         "goBack": "Go back",
         "noAccount": "Don’t have an account?",
@@ -369,7 +369,7 @@
         "authenticationFailed": "Authentication failed. Please try again."
     },
     "SignUpPage": {
-        "title": "Sign up for TikTok",
+        "title": "Sign up for Snapi",
         "description": "Create a profile, follow other accounts, make your own videos, and more.",
         "goBack": "Go back",
         "email": {
@@ -481,7 +481,7 @@
                 "company": "Company",
                 "program": "Program",
                 "termsAndPolicies": "Terms & Policies",
-                "copyright": "© 2025 TikTok.",
+                "copyright": "© 2025 Snapi.",
                 "privacyPolicy": "Privacy Policy",
                 "termsOfService": "Terms of Service"
             },

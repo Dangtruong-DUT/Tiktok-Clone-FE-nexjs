@@ -19,29 +19,29 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
     return {
         title: {
-            template: '%s | Tiktok',
-            default: 'Tiktok'
+            template: '%s | Snapi',
+            default: 'Snapi'
         },
-        description: 'tiktok',
+        description: 'Snapi',
         authors: [{ name: 'TaplamIT', url: 'https://taplamit.com' }],
         openGraph: {
-            title: 'Tiktok',
-            description: 'tiktok',
+            title: 'Snapi',
+            description: 'Snapi',
             locale,
             type: 'website',
             url: `${envConfig.NEXT_PUBLIC_URL}${locale}`,
-            siteName: 'Tiktok',
+            siteName: 'Snapi',
             images: [
                 {
                     url: 'https://api.taplamit.tech/api/v1/static/images/72e81f3e59013ce9726567704.jpg',
                     width: 1200,
                     height: 630,
-                    alt: 'TaplamIT - Tiktok'
+                    alt: 'TaplamIT - Snapi'
                 }
             ]
         },
-        creator: 'TaplamIT',
-        publisher: 'TaplamIT',
+        creator: 'Trường Nguyễn Đăng',
+        publisher: 'Trường Nguyễn Đăng',
         alternates: {
             canonical: '/',
             languages: {
@@ -53,6 +53,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
             email: false,
             address: false,
             telephone: false
+        },
+        icons: {
+            icon: '/images/logo/favicon.svg'
         }
     }
 }

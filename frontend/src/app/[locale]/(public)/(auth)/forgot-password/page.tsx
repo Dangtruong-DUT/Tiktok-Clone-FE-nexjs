@@ -14,10 +14,10 @@ export async function generateMetadata(
     const images = parentMeta.openGraph?.images || []
     return {
         title: t('title'),
-        description: 'Reset your TikTok account password securely',
+        description: 'Reset your Snapi account password securely',
         openGraph: {
             title: t('title'),
-            description: 'Reset your TikTok account password securely',
+            description: 'Reset your Snapi account password securely',
             images,
             url: `${envConfig.NEXT_PUBLIC_URL}${locale}/forgot-password`
         },

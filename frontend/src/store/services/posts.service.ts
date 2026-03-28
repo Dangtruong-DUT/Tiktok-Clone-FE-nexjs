@@ -9,6 +9,14 @@ import {
 import { createApi } from '@reduxjs/toolkit/query/react'
 import _ from 'lodash'
 
+const getPostEntityTags = (post: { id: number | string; uuid?: string }) => {
+    const tags = [{ type: 'Posts' as const, id: post.id }]
+    if (post.uuid) {
+        tags.push({ type: 'Posts' as const, id: post.uuid })
+    }
+    return tags
+}
+
 export const PostApi = createApi({
     baseQuery: baseQueryWithReauth,
     tagTypes: ['Posts'],
@@ -54,10 +62,7 @@ export const PostApi = createApi({
                 if (result) {
                     const final = [
                         ...result.pages.flatMap((page) => {
-                            return page.data.map((post) => ({
-                                type: 'Posts' as const,
-                                id: post.id
-                            }))
+                            return page.data.flatMap((post) => getPostEntityTags(post))
                         }),
                         { type: 'Posts' as const, id: `${parentId}-COMMENT-LIST` }
                     ]
@@ -113,10 +118,7 @@ export const PostApi = createApi({
                 if (result) {
                     const final = [
                         ...result.pages.flatMap((page) => {
-                            return page.data.map(({ id }) => ({
-                                type: 'Posts' as const,
-                                id: id
-                            }))
+                            return page.data.flatMap((post) => getPostEntityTags(post))
                         }),
                         { type: 'Posts' as const, id: `${arg}-LIST` } // phân biệt LIST của friend và foryou
                     ]
@@ -143,7 +145,13 @@ export const PostApi = createApi({
         }),
         getPostDetail: builder.query<GetPostDetailRes, string>({
             query: (id) => `/posts/${id}`,
-            providesTags: (result, error, id) => [{ type: 'Posts' as const, id }]
+            providesTags: (result, error, id) => {
+                void error
+                if (result?.data) {
+                    return [...getPostEntityTags(result.data), { type: 'Posts' as const, id }]
+                }
+                return [{ type: 'Posts' as const, id }]
+            }
         }),
 
         getRelatedPosts: builder.infiniteQuery<GetListPostRes, string, number>({
@@ -152,10 +160,7 @@ export const PostApi = createApi({
                 if (result) {
                     const final = [
                         ...result.pages.flatMap((page) => {
-                            return page.data.map(({ id }) => ({
-                                type: 'Posts' as const,
-                                id: id
-                            }))
+                            return page.data.flatMap((post) => getPostEntityTags(post))
                         }),
                         { type: 'Posts' as const, id: `RELATED-${arg}-LIST` }
                     ]
@@ -187,10 +192,7 @@ export const PostApi = createApi({
                 if (result) {
                     const final = [
                         ...result.pages.flatMap((page) => {
-                            return page.data.map(({ id }) => ({
-                                type: 'Posts' as const,
-                                id: id
-                            }))
+                            return page.data.flatMap((post) => getPostEntityTags(post))
                         }),
                         { type: 'Posts' as const, id: `POST-OF-${arg}-LIST` }
                     ]
@@ -219,10 +221,7 @@ export const PostApi = createApi({
             providesTags: (result) => {
                 if (result) {
                     const final = [
-                        ...result.data.map(({ id }) => ({
-                            type: 'Posts' as const,
-                            id: id
-                        })),
+                        ...result.data.flatMap((post) => getPostEntityTags(post)),
                         {
                             type: 'Posts' as const,
                             id: `POST-OF-CONTENT-OF-CURRENT-USER-LIST`
@@ -247,10 +246,7 @@ export const PostApi = createApi({
                 if (result) {
                     const final = [
                         ...result.pages.flatMap((page) => {
-                            return page.data.map(({ id }) => ({
-                                type: 'Posts' as const,
-                                id: id
-                            }))
+                            return page.data.flatMap((post) => getPostEntityTags(post))
                         }),
                         { type: 'Posts' as const, id: `POST-BOOKMARKS-OF-${arg}-LIST` }
                     ]
@@ -283,10 +279,7 @@ export const PostApi = createApi({
                 if (result) {
                     const final = [
                         ...result.pages.flatMap((page) => {
-                            return page.data.map(({ id }) => ({
-                                type: 'Posts' as const,
-                                id: id
-                            }))
+                            return page.data.flatMap((post) => getPostEntityTags(post))
                         }),
                         { type: 'Posts' as const, id: `POST-LIKED-OF-${arg}-LIST` }
                     ]
@@ -332,10 +325,7 @@ export const PostApi = createApi({
                 if (result) {
                     const final = [
                         ...result.pages.flatMap((page) => {
-                            return page.data.map(({ id }) => ({
-                                type: 'Posts' as const,
-                                id: id
-                            }))
+                            return page.data.flatMap((post) => getPostEntityTags(post))
                         }),
                         { type: 'Posts' as const, id: `POST-UNFOLLOWED-LIST` }
                     ]
@@ -372,7 +362,10 @@ export const PostApi = createApi({
                 method: 'PATCH',
                 body
             }),
-            invalidatesTags: (result, error, arg) => [{ type: 'Posts' as const, id: arg.post_uuid }]
+            invalidatesTags: (result, error, arg) => [
+                { type: 'Posts' as const, id: arg.post_uuid },
+                { type: 'Posts' as const, id: 'POST-OF-CONTENT-OF-CURRENT-USER-LIST' }
+            ]
         })
     })
 })

@@ -44,9 +44,9 @@ export async function generateMetadata({ params }: VideoDetailPageProps, parent:
     const displayName = user?.name || user?.username || cleanUsername
     const postContent = post?.content?.trim().slice(0, 20) || ''
 
-    const pageTitle = postContent ? `${displayName} on TikTok: "${postContent}"` : `${displayName} on TikTok`
+    const pageTitle = postContent ? `${displayName} on Snapi: "${postContent}"` : `${displayName} on Snapi`
 
-    const pageDescription = postContent || `Watch ${displayName}'s video on TikTok.`
+    const pageDescription = postContent || `Watch ${displayName}'s video on Snapi.`
 
     const canonicalUrl = `${envConfig.NEXT_PUBLIC_URL}${locale}/@${cleanUsername}/video/${id}`
 
@@ -58,7 +58,7 @@ export async function generateMetadata({ params }: VideoDetailPageProps, parent:
             description: pageDescription,
             type: 'video.other',
             url: canonicalUrl,
-            siteName: 'TikTok Clone',
+            siteName: 'Snapi',
             locale,
             images: [(videoThumb || user?.avatar) ?? '', ...previousImages]
         },

@@ -1,8 +1,8 @@
-name: ${COMPOSE_PROJECT_NAME:-tiktok_clone}_production
+name: ${COMPOSE_PROJECT_NAME:-Snapi}_production
 
 services:
   backend-nginx:
-    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_backend_nginx
+    container_name: ${CONTAINER_PREFIX:-Snapi}_backend_nginx
     build:
       context: .
       dockerfile: ./.docker/production/backend/nginx/Dockerfile
@@ -20,7 +20,7 @@ services:
         condition: service_healthy
 
   frontend-nginx:
-    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_frontend_nginx
+    container_name: ${CONTAINER_PREFIX:-Snapi}_frontend_nginx
     image: nginx:alpine
     restart: unless-stopped
     environment:
@@ -38,7 +38,7 @@ services:
         condition: service_started
 
   php-fpm:
-    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_php-fpm
+    container_name: ${CONTAINER_PREFIX:-Snapi}_php-fpm
     build:
       context: .
       dockerfile: ./.docker/common/backend/php-fpm/Dockerfile
@@ -71,16 +71,16 @@ services:
         condition: service_healthy
 
   postgres:
-    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_postgres
+    container_name: ${CONTAINER_PREFIX:-Snapi}_postgres
     image: postgres:12.7
     restart: unless-stopped
     user: postgres
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-tiktok_clone}
+      POSTGRES_DB: ${POSTGRES_DB:-Snapi}
       POSTGRES_USER: ${POSTGRES_USER:-root}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tiktok_clone_password}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Snapi_password}
     volumes:
       - postgres-data-production:/var/lib/postgresql
     networks:
@@ -94,7 +94,7 @@ services:
   redis:
     image: redis:alpine
     restart: unless-stopped
-    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_redis
+    container_name: ${CONTAINER_PREFIX:-Snapi}_redis
     networks:
       - app-production
     healthcheck:
@@ -104,7 +104,7 @@ services:
       retries: 3
 
   frontend:
-    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_frontend
+    container_name: ${CONTAINER_PREFIX:-Snapi}_frontend
     build:
       context: .
       dockerfile: ./.docker/production/frontend/Dockerfile
@@ -132,7 +132,7 @@ services:
 
   mailcatcher:
     image: dockage/mailcatcher:0.7.1
-    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_mailcatcher
+    container_name: ${CONTAINER_PREFIX:-Snapi}_mailcatcher
     profiles:
       - tools
     ports:
@@ -144,7 +144,7 @@ services:
 
   minio:
     image: quay.io/minio/minio:RELEASE.2025-02-03T21-03-04Z
-    container_name: ${CONTAINER_PREFIX:-tiktok_clone}_minio
+    container_name: ${CONTAINER_PREFIX:-Snapi}_minio
     command: minio server /data --console-address ":9001"
     volumes:
       - minio-data-production:/data

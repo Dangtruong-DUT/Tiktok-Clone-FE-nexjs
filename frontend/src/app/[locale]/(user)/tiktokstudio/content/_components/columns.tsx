@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl'
 import { ColumnDef } from '@tanstack/react-table'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { audienceStatusValues } from '@/constants/types'
+import { Audience } from '@/constants/enum'
 import Image from 'next/image'
 import { formatISOToDisplayDate } from '@/utils/formatting/formatTime.util'
 import { Button } from '@/components/ui/button'
@@ -15,7 +16,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { formatCompactNumber } from '@/utils/formatting/formatNumber.util'
 import { usePostTableContext } from '@/app/[locale]/(user)/tiktokstudio/content/_context/content-table.context'
 import { BsFillImageFill } from 'react-icons/bs'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { TikTokPostType } from '@/types/models/post.model'
 import VideoDetailDialog from '@/components/video-dialog'
 
@@ -74,14 +75,26 @@ export function useColumns(): ColumnDef<TikTokPostType>[] {
                 header: t('columns.privacy'),
                 cell: function PrivacySelect({ row }) {
                     const originalRow = row.original
-                    const { changeAudienceStatus } = usePostTableContext()
+                    const { changeAudienceStatus, getAudienceStatus, clearAudienceStatus } = usePostTableContext()
+
+                    const serverAudience = Number(row.getValue('audience')) as Audience
+                    const displayedAudience = getAudienceStatus({
+                        postId: originalRow.uuid,
+                        fallback: serverAudience
+                    })
+
+                    useEffect(() => {
+                        if (displayedAudience === serverAudience) {
+                            clearAudienceStatus(originalRow.uuid)
+                        }
+                    }, [clearAudienceStatus, displayedAudience, originalRow.uuid, serverAudience])
 
                     const onChangeStatus = (status: string) => {
                         changeAudienceStatus({ status: Number(status), postId: originalRow.uuid })
                     }
 
                     return (
-                        <Select value={row.getValue('audience')?.toString()} onValueChange={onChangeStatus}>
+                        <Select value={displayedAudience.toString()} onValueChange={onChangeStatus}>
                             <SelectTrigger className='w-[140px]'>
                                 <SelectValue placeholder='Select Privacy' />
                             </SelectTrigger>

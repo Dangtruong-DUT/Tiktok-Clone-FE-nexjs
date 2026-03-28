@@ -161,7 +161,7 @@
                 "contact": {
                     "title": "9. Liên hệ với chúng tôi",
                     "description": "Nếu bạn có bất kỳ câu hỏi hoặc thắc mắc nào về Chính sách Quyền riêng tư này, vui lòng liên hệ với chúng tôi tại",
-                    "email": "privacy@tiktok.com"
+                    "email": "privacy@snapi.com"
                 }
             }
         }
@@ -171,7 +171,7 @@
     },
     "TiktokStudio": {
         "footer": {
-            "copyright": "Bản quyền © 2025 TikTok",
+            "copyright": "Bản quyền © 2025 Snapi",
             "privacyPolicy": "Chính sách quyền riêng tư",
             "termsOfService": "Điều khoản dịch vụ"
         },
@@ -179,7 +179,7 @@
             "home": "Trang chủ",
             "posts": "Nội dung",
             "settings": "Cài đặt",
-            "back": "Quay lại Tiktok"
+            "back": "Quay lại Snapi"
         },
         "content": {
             "table": {
@@ -350,7 +350,7 @@
         "notice": "Bằng cách tiếp tục với tài khoản ở Việt Nam, bạn đồng ý với <terms>Điều khoản Dịch vụ</terms> của chúng tôi và xác nhận rằng bạn đã đọc <privacy>Chính sách Bảo mật</privacy>."
     },
     "LoginPage": {
-        "title": "Đăng nhập vào TikTok",
+        "title": "Đăng nhập vào Snapi",
         "description": "Quản lý tài khoản của bạn, kiểm tra thông báo, bình luận video và nhiều hơn nữa.",
         "goBack": "Quay lại",
         "noAccount": "Chưa có tài khoản?",
@@ -369,7 +369,7 @@
         "authenticationFailed": "Xác thực thất bại. Vui lòng thử lại."
     },
     "SignUpPage": {
-        "title": "Đăng ký TikTok",
+        "title": "Đăng ký Snapi",
         "description": "Tạo hồ sơ, theo dõi tài khoản khác, tạo video của riêng bạn và nhiều hơn nữa.",
         "goBack": "Quay lại",
         "email": {
@@ -483,7 +483,7 @@
                 "termsAndPolicies": "Điều khoản & Chính sách",
                 "privacyPolicy": "Chính sách bảo mật",
                 "termsOfService": "Điều khoản dịch vụ",
-                "copyright": "© 2025 TikTok."
+                "copyright": "© 2025 Snapi."
             },
             "search": {
                 "title": "Tìm kiếm",
