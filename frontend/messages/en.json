@@ -129,12 +129,12 @@
                 "dataSharing": {
                     "title": "4. How We Share Information",
                     "description": "We do not sell your personal information. We may share information in the following circumstances:",
-                    "items": [
-                        "With Other Users: Your profile information and publicly posted content will be visible to other users.",
-                        "With Service Providers: We share information with partners who help us operate the Service, such as cloud storage providers, data analytics, and customer service.",
-                        "For Legal Reasons: We may disclose your information if required by law or to protect the rights, property, and safety of {companyName}, our users, or the public.",
-                        "In Business Transfers: If we're involved in a merger, acquisition, or sale of assets, your information may be transferred."
-                    ]
+                    "items": {
+                        "1": "With Other Users: Your profile information and publicly posted content will be visible to other users.",
+                        "2": "With Service Providers: We share information with partners who help us operate the Service, such as cloud storage providers, data analytics, and customer service.",
+                        "3": "For Legal Reasons: We may disclose your information if required by law or to protect the rights, property, and safety of {companyName}, our users, or the public.",
+                        "4": "In Business Transfers: If we're involved in a merger, acquisition, or sale of assets, your information may be transferred."
+                    }
                 },
                 "dataRetention": {
                     "title": "5. Data Storage and Deletion",
@@ -143,12 +143,12 @@
                 "userRights": {
                     "title": "6. Your Rights and Choices",
                     "description": "You have the following rights regarding your personal information:",
-                    "items": [
-                        "Access and Edit: You can view and edit your profile information through your account settings.",
-                        "Delete: You have the right to request deletion of your account and personal data.",
-                        "Notification Management: You can manage push notifications and emails in your settings.",
-                        "Cookie Control: Most web browsers let you control cookies through their settings."
-                    ]
+                    "items": {
+                        "1": "Access and Edit: You can view and edit your profile information through your account settings.",
+                        "2": "Delete: You have the right to request deletion of your account and personal data.",
+                        "3": "Notification Management: You can manage push notifications and emails in your settings.",
+                        "4": "Cookie Control: Most web browsers let you control cookies through their settings."
+                    }
                 },
                 "childrenPrivacy": {
                     "title": "7. Children's Privacy",

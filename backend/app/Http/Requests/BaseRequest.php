@@ -9,7 +9,6 @@ use App\Enums\User\UserVerifyStatusEnum;
 use App\Rules\PostUuid;
 use App\Rules\UploadFileId;
 use App\Rules\UserId;
-use App\Rules\Username;
 use App\Rules\UserUuid;
 use DateTimeInterface;
 use Illuminate\Validation\Rules\Enum;
@@ -217,14 +216,13 @@ abstract class BaseRequest extends BaseFormRequest
             'name' => [self::STRING, self::MAX.':'.'100'],
             'role' => [self::INTEGER, new Enum(RoleTypeEnum::class)],
             'verify_status' => [self::INTEGER, new Enum(UserVerifyStatusEnum::class)],
-            'username' => [self::STRING, self::MIN.':'.'2', new Username(), self::MAX.':'.'100'],
+            'username' => [self::STRING, 'regex:/^(?!.*\.\.)(?!.*__)[a-zA-Z0-9._]{3,20}$/'],
             'phone' => [self::STRING, self::MAX.':'.'100'],
             'month' => [self::INTEGER, self::MIN.':'.'1', self::MAX.':'.'12'],
             'year' => [self::INTEGER, self::MIN.':'.'1900', self::MAX.':'.'2100'],
             'bio' => [self::STRING, self::MAX.':255'],
             'location' => [self::STRING, self::MAX.':100'],
             'website' => [self::STRING, self::URL],
-            'username' => [self::STRING, self::MIN.':2', self::MAX.':100'],
             'avatar_file_id' => [self::INTEGER, new UploadFileId()],
             'keyword' => [self::STRING, self::MAX.':'.'100'],
             'days' => [self::NUMERIC, self::MIN.':'.'0'],

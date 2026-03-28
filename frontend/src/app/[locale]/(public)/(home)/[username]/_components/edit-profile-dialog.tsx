@@ -61,25 +61,23 @@ export default function EditProfileDialog() {
     async function onSubmit(values: UpdateUserBodyType) {
         if (isLoading || !currentUser) return
         try {
-            const payload: UpdateUserBodyType = {}
-
             if (fileImage) {
                 const formData = new FormData()
                 formData.append('file', fileImage)
                 const uploadResponse = await uploadImageMutateAsync(formData).unwrap()
-                payload.avatar_file_id = uploadResponse.data.id
+                values.avatar_file_id = uploadResponse.data.id
             }
 
-            if (Object.keys(payload).length === 0) {
+            if (Object.keys(values).length === 0) {
                 setOpen(false)
                 return
             }
 
             const oldUsername = currentUser.username
 
-            await updateProfile(payload).unwrap()
-            if (typeof pathname === 'string' && typeof payload?.username === 'string') {
-                const newURL = pathname.replace(oldUsername, payload.username)
+            await updateProfile(values).unwrap()
+            if (typeof pathname === 'string' && typeof values?.username === 'string') {
+                const newURL = pathname.replace(oldUsername, values.username)
                 router.replace(newURL)
             } else {
                 router.refresh()

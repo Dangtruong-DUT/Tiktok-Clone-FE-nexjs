@@ -37,7 +37,7 @@ class UpdateMeRequest extends BaseRequest
                 'username' => [
                     self::SOMETIMES,
                     self::REQUIRED,
-                    'unique:users,username,' . auth()->id(),
+                    'unique:users,username,' . auth_user_id(),
                 ],
                 'avatar_file_id' => [
                     self::SOMETIMES,

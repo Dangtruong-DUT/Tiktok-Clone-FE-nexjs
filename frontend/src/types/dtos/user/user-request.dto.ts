@@ -37,7 +37,10 @@ export const UpdateUserBody = z.object({
     bio: z.string().max(300).optional(),
     location: z.string().max(100).optional(),
     website: z.string().max(100).optional(),
-    username: z.string().min(2).max(100).optional(),
+    username: z
+        .string()
+        .regex(/^(?!.*\.\.)(?!.*__)[a-zA-Z0-9._]{3,20}$/)
+        .optional(),
     avatar_file_id: z.number().int().positive().optional()
 })
 

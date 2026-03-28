@@ -144,7 +144,7 @@ class UserService
         if (empty($updateData)) {
             throw new BusinessException('No valid fields to update');
         }
-        $this->userRepo->update($authUser->id, [
+        $updatedUser = $this->userRepo->update($authUser->id, [
             'name' => $updateData['name'] ?? $authUser->name,
             'date_of_birth' => $updateData['date_of_birth'] ?? $authUser->date_of_birth,
             'bio' => $updateData['bio'] ?? $authUser->bio,
@@ -156,7 +156,7 @@ class UserService
                 : $authUser->avatar_file_id,
         ]);
 
-        return $this->getByUsername($authUser->username);
+        return $this->getByUsername($updatedUser->username);
     }
 
     /**
