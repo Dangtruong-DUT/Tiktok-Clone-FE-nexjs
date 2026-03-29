@@ -159,7 +159,8 @@ export const PostApi = createApi({
         }),
 
         getRelatedPosts: builder.infiniteQuery<GetListPostRes, string, number>({
-            query: ({ pageParam }) => `/posts?page=${pageParam}&per_page=10&type=${PosterType.POST}`,
+            query: ({ pageParam, queryArg }) =>
+                `/posts/${queryArg}/related?page=${pageParam}&per_page=10&type=${PosterType.POST}`,
             providesTags: (result, error, arg) => {
                 if (result) {
                     const final = [

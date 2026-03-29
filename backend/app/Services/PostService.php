@@ -230,6 +230,33 @@ class PostService
     }
 
     /**
+     * Get related posts by post uuid.
+     * @param array $payload
+     *                      - post_uuid: target post uuid
+     *                      - type: filter by post type
+     *                      - page: pagination page number
+     *                      - per_page: number of items per page for pagination
+     * @return LengthAwarePaginator
+     */
+    public function getRelatedPosts(array $payload): LengthAwarePaginator
+    {
+        $authUserId = auth_user_id();
+        $targetPost = $this->findPostOrFail($payload['post_uuid']);
+        $hashtagIds = $targetPost->hashtags()->pluck('hashtags.id')->toArray();
+
+        return $this->postRepo->getRelatedPosts(
+            targetPostId: $targetPost->id,
+            targetUserId: $targetPost->user_id,
+            hashtagIds: $hashtagIds,
+            filters: [
+                'type' => $payload['post_type'] ?? PostTypeEnum::POST->value,
+                'per_page' => $payload['per_page'] ?? config('const.pagination.default_per_page'),
+            ],
+            authUserId: $authUserId
+        );
+    }
+
+    /**
      * Get ports of friends.
       * @param array $payload
      *                      - q: search keyword for content and user name

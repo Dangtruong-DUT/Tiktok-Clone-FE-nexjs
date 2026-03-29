@@ -10,6 +10,7 @@ use App\Http\Requests\Post\GetFriendPostsRequest;
 use App\Http\Requests\Post\GetListChildrenPostRequest;
 use App\Http\Requests\Post\GetListPostRequest;
 use App\Http\Requests\Post\GetPostRequest;
+use App\Http\Requests\Post\GetRelatedPostsRequest;
 use App\Http\Requests\Post\LikePostRequest;
 use App\Http\Requests\Post\UnBookmarkPostRequest;
 use App\Http\Requests\Post\UnlikePostRequest;
@@ -155,6 +156,20 @@ class PostController extends Controller
         return ApiResponse::success(
             data: PostResource::collection($children),
             message: 'Child posts retrieved successfully'
+        );
+    }
+
+    /**
+     * Get related posts by post uuid.
+     * @param GetRelatedPostsRequest $request
+     * @return JsonResponse
+     */
+    public function showRelatedPosts(GetRelatedPostsRequest $request): JsonResponse
+    {
+        $posts = $this->postService->getRelatedPosts($request->validated());
+        return ApiResponse::success(
+            data: PostResource::collection($posts),
+            message: 'Related posts retrieved successfully'
         );
     }
 

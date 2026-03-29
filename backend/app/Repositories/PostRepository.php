@@ -250,6 +250,47 @@ class PostRepository extends BaseRepository
     }
 
     /**
+     * Get related posts by target post, prioritizing same hashtags.
+     * @param int $targetPostId
+     * @param int $targetUserId
+     * @param array $hashtagIds
+     * @param array $filters
+     * @param ?int $authUserId
+     * @return LengthAwarePaginator
+     */
+    public function getRelatedPosts(
+        int $targetPostId,
+        int $targetUserId,
+        array $hashtagIds,
+        array $filters,
+        ?int $authUserId
+    ): LengthAwarePaginator {
+        $filterCollection = collect($filters);
+
+        $query = $this->query()
+            ->whereKeyNot($targetPostId)
+            ->typeOf($filterCollection->get('type'))
+            ->visibleFor($authUserId);
+
+        if (!empty($hashtagIds)) {
+            $query->whereHas('hashtags', function ($hashtagQuery) use ($hashtagIds) {
+                $hashtagQuery->whereIn('hashtags.id', $hashtagIds);
+            })->withCount([
+                'hashtags as related_score' => function ($hashtagQuery) use ($hashtagIds) {
+                    $hashtagQuery->whereIn('hashtags.id', $hashtagIds);
+                }
+            ])->orderByDesc('related_score');
+        } else {
+            $query->where('user_id', $targetUserId);
+        }
+
+        $query->orderByDesc('created_at');
+        $perPage = $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
+
+        return $this->withDetail($query, $authUserId)->paginate($perPage);
+    }
+
+    /**
      * Search posts with filters and keyword.
      * @param array $filters
      *                      - q: search keyword for content and user name
