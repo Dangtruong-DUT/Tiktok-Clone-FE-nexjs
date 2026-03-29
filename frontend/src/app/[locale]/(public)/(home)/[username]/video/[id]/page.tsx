@@ -65,8 +65,8 @@ export async function generateMetadata({ params }: VideoDetailPageProps, parent:
         alternates: {
             canonical: canonicalUrl,
             languages: {
-                'en-US': `${envConfig.NEXT_PUBLIC_URL}en/@${cleanUsername}/video/${id}`,
-                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}vi/@${cleanUsername}/video/${id}`
+                'en-US': `${envConfig.NEXT_PUBLIC_URL}/en/@${cleanUsername}/video/${id}`,
+                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}/vi/@${cleanUsername}/video/${id}`
             }
         },
         twitter: {

@@ -15,8 +15,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
         alternates: {
             canonical: `${envConfig.NEXT_PUBLIC_URL}/${locale}/login`,
             languages: {
-                'en-US': `${envConfig.NEXT_PUBLIC_URL}en/login`,
-                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}vi/login`
+                'en-US': `${envConfig.NEXT_PUBLIC_URL}/en/login`,
+                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}/vi/login`
             }
         }
     }

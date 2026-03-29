@@ -47,8 +47,8 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
         alternates: {
             canonical: `${envConfig.NEXT_PUBLIC_URL}/${locale}/@${cleanUsername}`,
             languages: {
-                'en-US': `${envConfig.NEXT_PUBLIC_URL}en/@${cleanUsername}`,
-                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}vi/@${cleanUsername}`
+                'en-US': `${envConfig.NEXT_PUBLIC_URL}/en/@${cleanUsername}`,
+                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}/vi/@${cleanUsername}`
             }
         },
         twitter: {

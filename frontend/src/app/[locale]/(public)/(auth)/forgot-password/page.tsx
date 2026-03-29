@@ -24,8 +24,8 @@ export async function generateMetadata(
         alternates: {
             canonical: `${envConfig.NEXT_PUBLIC_URL}/${locale}/forgot-password`,
             languages: {
-                'en-US': `${envConfig.NEXT_PUBLIC_URL}en/forgot-password`,
-                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}vi/forgot-password`
+                'en-US': `${envConfig.NEXT_PUBLIC_URL}/en/forgot-password`,
+                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}/vi/forgot-password`
             }
         }
     }

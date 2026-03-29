@@ -36,8 +36,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
         alternates: {
             canonical: `${envConfig.NEXT_PUBLIC_URL}/${locale}/privacy-policy`,
             languages: {
-                'en-US': `${envConfig.NEXT_PUBLIC_URL}en/privacy-policy`,
-                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}vi/privacy-policy`
+                'en-US': `${envConfig.NEXT_PUBLIC_URL}/en/privacy-policy`,
+                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}/vi/privacy-policy`
             }
         }
     }

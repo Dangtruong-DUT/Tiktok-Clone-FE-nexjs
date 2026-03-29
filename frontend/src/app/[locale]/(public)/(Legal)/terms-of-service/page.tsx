@@ -36,8 +36,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
         alternates: {
             canonical: `${envConfig.NEXT_PUBLIC_URL}/${locale}/terms-of-service`,
             languages: {
-                'en-US': `${envConfig.NEXT_PUBLIC_URL}en/terms-of-service`,
-                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}vi/terms-of-service`
+                'en-US': `${envConfig.NEXT_PUBLIC_URL}/en/terms-of-service`,
+                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}/vi/terms-of-service`
             }
         }
     }

@@ -20,8 +20,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
         alternates: {
             canonical: `${envConfig.NEXT_PUBLIC_URL}/${locale}/following`,
             languages: {
-                'en-US': `${envConfig.NEXT_PUBLIC_URL}en/following`,
-                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}vi/following`
+                'en-US': `${envConfig.NEXT_PUBLIC_URL}/en/following`,
+                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}/vi/following`
             }
         }
     }
