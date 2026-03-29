@@ -2,7 +2,7 @@
 import { ScrollType } from '@/hooks/ui/useScrollIndexObserver'
 import { TikTokPostType } from '@/types/models/post.model'
 import React, { createContext, useMemo } from 'react'
-import { useGetFollowingPostsInfiniteQuery, useGetUnfollowedPostsInfiniteQuery } from '@/store/services/posts.service'
+import { useGetListPostInfiniteQuery, useGetUnfollowedPostsInfiniteQuery } from '@/store/services/posts.service'
 import { useHandleVideos } from '@/app/[locale]/(public)/(home)/following/_hooks/useHandleVideos'
 import { useAppSelector } from '@/store/hooks'
 
@@ -16,7 +16,7 @@ interface FeedState {
 
 interface VideosProviderContextProps {
     feeds: {
-        following: FeedState
+        friend: FeedState
         unfollowed: FeedState
     }
     currentIndex: number
@@ -36,16 +36,13 @@ export function useVideosProvider() {
 export function VideosProvider({ children }: { children: React.ReactNode }) {
     const role = useAppSelector((state) => state.auth.role)
     const {
-        fetchNextPage: fetchNextPageFollowing,
-        isLoading: isLoadingFollowing,
-        isFetching: isFetchingFollowing,
-        data: dataFollowing,
-        hasNextPage: hasNextPageFollowing
-    } = useGetFollowingPostsInfiniteQuery(undefined, { skip: role == null })
-    const postList: TikTokPostType[] = useMemo(
-        () => dataFollowing?.pages.flatMap((page) => page.data) || [],
-        [dataFollowing]
-    )
+        fetchNextPage: fetchNextPageFriend,
+        isLoading: isLoadingFriend,
+        isFetching: isFetchingFriend,
+        data: dataFriend,
+        hasNextPage: hasNextPageFriend
+    } = useGetListPostInfiniteQuery('friend', { skip: role == null })
+    const postList: TikTokPostType[] = useMemo(() => dataFriend?.pages.flatMap((page) => page.data) || [], [dataFriend])
 
     const {
         data: dataUnfollowed,
@@ -65,12 +62,12 @@ export function VideosProvider({ children }: { children: React.ReactNode }) {
     const handleVideoObj = useHandleVideos(postList)
 
     const feeds = {
-        following: {
+        friend: {
             postList,
-            fetchNextPage: fetchNextPageFollowing,
-            hasNextPage: hasNextPageFollowing,
-            isLoading: isLoadingFollowing,
-            isFetching: isFetchingFollowing
+            fetchNextPage: fetchNextPageFriend,
+            hasNextPage: hasNextPageFriend,
+            isLoading: isLoadingFriend,
+            isFetching: isFetchingFriend
         },
         unfollowed: {
             postList: postListUnfollowed,

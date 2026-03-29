@@ -1,7 +1,7 @@
 'use client'
 
-import { useVideosProvider } from '@/app/[locale]/(public)/(home)/following/_context/videos-provider'
-import NavigationVideo from '@/app/[locale]/(public)/(home)/following/_components/navigation-video'
+import { useVideosProvider } from '@/app/[locale]/(public)/(home)/friends/_context/videos-provider'
+import NavigationVideo from '@/app/[locale]/(public)/(home)/friends/_components/navigation-video'
 import InfiniteVideoFeed from '@/components/infinite-video-feed'
 import UnfollowedFeed from '@/app/[locale]/(public)/(home)/following/_components/unfollowed-feed'
 import { useAppContext } from '@/provider/app-provider'
@@ -10,21 +10,21 @@ export default function VideoScrollWrapper() {
     const { authStatus } = useAppContext()
 
     const { feeds } = useVideosProvider()
-    const isFollowingViewMode = feeds.following.postList.length > 0 || feeds.following.isLoading
+    const isFriendViewMode = feeds.friend.postList.length > 0 || feeds.friend.isLoading
 
     return (
         <>
-            {isFollowingViewMode && authStatus == 'ready' && (
+            {isFriendViewMode && authStatus == 'ready' && (
                 <InfiniteVideoFeed
-                    posts={feeds.following.postList}
-                    fetchNextPage={feeds.following.fetchNextPage}
-                    hasNextPage={feeds.following.hasNextPage}
-                    isLoading={feeds.following.isLoading ?? true}
-                    isFetching={feeds.following.isFetching ?? true}
+                    posts={feeds.friend.postList}
+                    fetchNextPage={feeds.friend.fetchNextPage}
+                    hasNextPage={feeds.friend.hasNextPage}
+                    isLoading={feeds.friend.isLoading ?? true}
+                    isFetching={feeds.friend.isFetching ?? true}
                     NavigationVideo={NavigationVideo}
                 />
             )}
-            {!isFollowingViewMode && (
+            {!isFriendViewMode && (
                 <UnfollowedFeed
                     posts={feeds.unfollowed.postList}
                     fetchNextPage={feeds.unfollowed.fetchNextPage}

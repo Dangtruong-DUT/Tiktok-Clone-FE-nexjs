@@ -34,16 +34,22 @@ if (! function_exists('filter_null_values')) {
 
 if (! function_exists('generate_username')) {
 
-    /**
-     * Generate a unique username based on the given name.
-     *
-     * @param string $name
-     * @return string
-     */
     function generate_username(string $name): string
     {
-        $base= Str::slug($name);
-        $username = $base.Str::random(30);
+        $base = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $name));
+
+        if (empty($base)) {
+            $base = 'user';
+        }
+
+        $base = substr($base, 0, 15);
+
+        $suffix = strtolower(Str::random(5));
+
+        $username = $base . $suffix;
+
+        $username = substr($username, 0, 20);
+
         return $username;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Enums\User\UserVerifyStatus;
+use App\Enums\User\UserVerifyStatusEnum;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -35,7 +35,7 @@ class UserFactory extends Factory
             "uuid" => fake()->uuid(),
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            "username" => fake()->unique()->userName(),
+            "username" => generate_username(fake()->name()),
             "bio" => fake()->sentence(),
             "location" => fake()->city(),
             "website" => fake()->url(),
@@ -51,7 +51,7 @@ class UserFactory extends Factory
     public function unverified(): static
     {
         return $this->state(fn (array $attributes) => [
-            'verify' =>UserVerifyStatus::UNVERIFIED->value,
+            'verify' =>UserVerifyStatusEnum::UNVERIFIED->value,
         ]);
     }
 
@@ -61,7 +61,7 @@ class UserFactory extends Factory
     public function verified(): static
     {
         return $this->state(fn(array $attributes) => [
-            'verify' => UserVerifyStatus::VERIFIED->value,
+            'verify' => UserVerifyStatusEnum::VERIFIED->value,
         ]);
     }
 
@@ -71,7 +71,7 @@ class UserFactory extends Factory
     public function banned(): static
     {
         return $this->state(fn(array $attributes) => [
-            'verify' => UserVerifyStatus::BANNED->value,
+            'verify' => UserVerifyStatusEnum::BANNED->value,
         ]);
     }
 

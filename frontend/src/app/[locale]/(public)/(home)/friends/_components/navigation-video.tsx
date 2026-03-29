@@ -1,6 +1,6 @@
 'use client'
 
-import { useVideosProvider } from '@/app/[locale]/(public)/(home)/following/_context/videos-provider'
+import { useVideosProvider } from '@/app/[locale]/(public)/(home)/friends/_context/videos-provider'
 import { Button } from '@/components/ui/button'
 import { ScrollType } from '@/hooks/ui/useScrollIndexObserver'
 import { cn } from '@/lib/utils'
@@ -9,7 +9,7 @@ import { HiOutlineChevronDown, HiOutlineChevronUp } from 'react-icons/hi2'
 
 function NavigatorVideo({ className }: { className?: string }) {
     const { handleScrollToIndex, currentIndex, feeds } = useVideosProvider()
-    const { fetchNextPage, hasNextPage, postList } = feeds.following
+    const { fetchNextPage, hasNextPage, postList } = feeds.friend
     const isFirstPost = currentIndex <= 0
     const isLastPost = currentIndex >= postList.length - 1
 

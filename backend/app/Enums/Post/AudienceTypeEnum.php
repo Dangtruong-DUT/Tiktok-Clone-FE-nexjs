@@ -12,6 +12,7 @@ enum AudienceTypeEnum:int implements BaseEnumInterface
     case PUBLIC = 0;
     case PRIVATE = 1;
     case FRIENDS = 2;
+    case FOLLOWING = 3;
 
 
     /**

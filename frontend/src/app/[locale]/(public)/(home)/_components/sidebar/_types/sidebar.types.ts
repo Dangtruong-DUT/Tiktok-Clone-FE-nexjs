@@ -4,6 +4,7 @@ export enum SidebarActiveType {
     // Navigation items
     HOME = 'home',
     EXPLORE = 'explore',
+    FRIENDS = 'friends',
     FOLLOWING = 'following',
     UPLOAD = 'upload',
     ACTIVITY = 'activity',
@@ -26,6 +27,7 @@ export interface SidebarActiveState {
 export const routeToActiveType: Record<routesValuesType, SidebarActiveType> = {
     '/': SidebarActiveType.HOME,
     '/explore': SidebarActiveType.EXPLORE,
+    '/friends': SidebarActiveType.FRIENDS,
     '/following': SidebarActiveType.FOLLOWING,
     '/snapistudio/upload': SidebarActiveType.UPLOAD
 }

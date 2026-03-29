@@ -111,6 +111,10 @@ export const PostApi = createApi({
                     params.set('audience', String(Audience.FRIENDS))
                 }
 
+                if (queryArg === 'foryou') {
+                    params.set('audience', String(Audience.PUBLIC))
+                }
+
                 return `/posts?${params.toString()}`
             },
             providesTags: (result, error, arg) => {
@@ -120,7 +124,7 @@ export const PostApi = createApi({
                         ...result.pages.flatMap((page) => {
                             return page.data.flatMap((post) => getPostEntityTags(post))
                         }),
-                        { type: 'Posts' as const, id: `${arg}-LIST` } // phân biệt LIST của friend và foryou
+                        { type: 'Posts' as const, id: `${arg}-LIST` }
                     ]
                     return final
                 }
@@ -349,6 +353,66 @@ export const PostApi = createApi({
                 }
             }
         }),
+        getFollowingPosts: builder.infiniteQuery<GetListPostRes, void, number>({
+            query: ({ pageParam }) => `/posts/following?page=${pageParam}&per_page=10&type=${PosterType.POST}`,
+            providesTags: (result) => {
+                if (result) {
+                    const final = [
+                        ...result.pages.flatMap((page) => {
+                            return page.data.flatMap((post) => getPostEntityTags(post))
+                        }),
+                        { type: 'Posts' as const, id: `POST-FOLLOWING-LIST` }
+                    ]
+                    return final
+                }
+                return [{ type: 'Posts' as const, id: `POST-FOLLOWING-LIST` }]
+            },
+            infiniteQueryOptions: {
+                initialPageParam: 1,
+                getNextPageParam: ({ meta }) => {
+                    if (!meta) return undefined
+                    const { current_page, last_page } = meta
+                    if (current_page >= last_page) return undefined
+                    return current_page + 1
+                },
+                getPreviousPageParam: ({ meta }) => {
+                    if (!meta) return undefined
+                    const { current_page } = meta
+                    if (current_page <= 1) return undefined
+                    return current_page - 1
+                }
+            }
+        }),
+        getFriendPosts: builder.infiniteQuery<GetListPostRes, void, number>({
+            query: ({ pageParam }) => `/posts/friend?page=${pageParam}&per_page=10&type=${PosterType.POST}`,
+            providesTags: (result) => {
+                if (result) {
+                    const final = [
+                        ...result.pages.flatMap((page) => {
+                            return page.data.flatMap((post) => getPostEntityTags(post))
+                        }),
+                        { type: 'Posts' as const, id: `POST-FRIEND-LIST` }
+                    ]
+                    return final
+                }
+                return [{ type: 'Posts' as const, id: `POST-FRIEND-LIST` }]
+            },
+            infiniteQueryOptions: {
+                initialPageParam: 1,
+                getNextPageParam: ({ meta }) => {
+                    if (!meta) return undefined
+                    const { current_page, last_page } = meta
+                    if (current_page >= last_page) return undefined
+                    return current_page + 1
+                },
+                getPreviousPageParam: ({ meta }) => {
+                    if (!meta) return undefined
+                    const { current_page } = meta
+                    if (current_page <= 1) return undefined
+                    return current_page - 1
+                }
+            }
+        }),
         deletePost: builder.mutation<{ message: string }, string>({
             query: (id) => ({
                 url: `/posts/${id}`,
@@ -384,6 +448,8 @@ export const {
     useGetBookmarkedPostsOfUserInfiniteQuery,
     useGetLikedPostsOfUserInfiniteQuery,
     useGetUnfollowedPostsInfiniteQuery,
+    useGetFollowingPostsInfiniteQuery,
+    useGetFriendPostsInfiniteQuery,
     useCreatePostMutation,
     useGetPostOfUserPagingQuery,
     useDeletePostMutation,

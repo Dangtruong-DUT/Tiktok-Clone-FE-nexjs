@@ -106,7 +106,10 @@ class PostController extends Controller
     */
     public function index(GetListPostRequest $request): JsonResponse
     {
-        $posts = $this->postService->search($request->validated());
+        $params= array_merge(
+                $request->validated()
+        );
+        $posts = $this->postService->search($params);
         return ApiResponse::success(
             data: PostResource::collection($posts),
             message: 'Posts retrieved successfully'

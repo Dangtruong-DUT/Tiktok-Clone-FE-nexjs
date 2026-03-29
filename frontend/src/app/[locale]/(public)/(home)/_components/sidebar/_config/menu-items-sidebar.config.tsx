@@ -9,8 +9,10 @@ import {
 import {
     // Outline icons từ Heroicons v2
     HiOutlineUsers,
+    HiOutlineUserGroup,
     // Filled icons từ Heroicons v2
     HiUsers,
+    HiUserGroup,
     HiCloudArrowUp
 } from 'react-icons/hi2'
 
@@ -19,6 +21,7 @@ export const sidebarConfig = {
     routes: {
         home: '/',
         explore: '/explore',
+        friends: '/friends',
         following: '/following',
         upload: '/snapistudio/upload'
     }
@@ -43,6 +46,14 @@ export const HOME_MENU_ITEMS: MenuItemConfig[] = [
         Icon: AiOutlineHome,
         ActiveIcon: AiFillHome,
         requiredAuth: false,
+        viewFor: 'all'
+    },
+    {
+        titleKey: 'HomePage.menu.friends',
+        to: sidebarConfig.routes.friends,
+        Icon: HiOutlineUserGroup,
+        ActiveIcon: HiUserGroup,
+        requiredAuth: true,
         viewFor: 'all'
     },
     {
