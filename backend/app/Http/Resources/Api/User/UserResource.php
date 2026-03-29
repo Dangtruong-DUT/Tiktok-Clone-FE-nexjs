@@ -10,8 +10,6 @@ class UserResource extends BaseJsonResource
 
     public function toArray($request): array
     {
-        $currentUser = $this->guard()->user();
-
         return [
             'id' => $this->id,
             'uuid' => $this->uuid,

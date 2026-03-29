@@ -4,7 +4,7 @@ use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PostController;
-
+use App\Http\Controllers\Api\UserSettingsController;
 
 /*|--------------------------------------------------------------------------
 | Protected routes
@@ -43,6 +43,8 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::patch('/me', [UserController::class, 'update'])->name('update');
             Route::get('/me', [UserController::class, 'showMe'])->name('show-me');
             Route::get('/me/indicators', [UserController::class, 'indicators'])->name('indicators');
+            Route::get('/me/settings', [UserSettingsController::class, 'show'])->name('show-settings');
+            Route::patch('/me/settings', [UserSettingsController::class, 'update'])->name('update-settings');
         });
 
     //post routes
