@@ -87,6 +87,12 @@ export const UserApi = createApi({
                 body: data
             })
         }),
+        resendVerifyEmail: builder.mutation<{ message: string }, void>({
+            query: () => ({
+                url: BACKEND_API_ENDPOINT.API_RESEND_VERIFY_EMAIL,
+                method: 'POST'
+            })
+        }),
         updateMe: builder.mutation<UpdateUserResType, UpdateUserBodyType>({
             query: (data) => ({
                 url: `/users/me`,
@@ -132,6 +138,7 @@ export const {
     useFollowUserMutation,
     useUnfollowUserMutation,
     useChangePasswordMutation,
+    useResendVerifyEmailMutation,
     useUpdateMeMutation,
     useGetUserIndicatorQuery
 } = UserApi

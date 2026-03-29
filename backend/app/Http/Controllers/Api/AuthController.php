@@ -16,6 +16,7 @@ use App\Http\Response\ApiResponse;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Symfony\Component\HttpFoundation\Request;
 
 class AuthController extends Controller
 {
@@ -167,6 +168,18 @@ class AuthController extends Controller
             'Email has been verified successfully',
             $result['user']
         );
+    }
+
+    /**
+     * Resend the verification email to the user if their email is not verified.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function resendVerifyEmail(Request $request): JsonResponse
+    {
+        $this->authService->resendVerifyEmail();
+        return ApiResponse::success(message: 'Verification email resent successfully');
     }
 
 

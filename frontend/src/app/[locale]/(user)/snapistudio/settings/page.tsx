@@ -1,6 +1,7 @@
 import Footer from '@/app/[locale]/(user)/snapistudio/_components/footer'
 import ChangePasswordForm from '@/app/[locale]/(user)/snapistudio/settings/change-password-form'
 import UpdateProfileForm from '@/app/[locale]/(user)/snapistudio/settings/update-profile-form'
+import VerifyEmailForm from '@/app/[locale]/(user)/snapistudio/settings/verify-email-form'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Metadata } from 'next'
@@ -28,6 +29,8 @@ export default async function Setting() {
                     </CardHeader>
                     <CardContent className='space-y-6'>
                         <UpdateProfileForm />
+                        <Separator className='my-6' />
+                        <VerifyEmailForm />
                         <Separator className='my-6' />
                         <ChangePasswordForm />
                     </CardContent>

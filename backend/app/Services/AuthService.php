@@ -169,6 +169,25 @@ class AuthService
     }
 
     /**
+     * Resend the verification email to the user if their email is not verified.
+     *
+     * @return bool
+     */
+    public function resendVerifyEmail(): bool
+    {
+        $user = $this->guard()->user();
+        if ($user->verify === UserVerifyStatusEnum::VERIFIED->value) {
+            throw new BusinessException('Email is already verified');
+        }
+        DB::transaction(function () use ($user) {
+            $this->verifyEmailTokenRepo->deleteByUserId($user->id);
+            $verifyToken = $this->tokenService->createVerifyEmailToken($user);
+            Mail::to($user->email)->send(new VerifyUserEmail($user, $verifyToken));
+        });
+        return true;
+    }
+
+    /**
      * Get the authenticated user's profile.
      *
      * @return User|null

@@ -261,8 +261,20 @@
                 "oldPassword": "Mật khẩu cũ",
                 "newPassword": "Mật khẩu mới",
                 "confirmPassword": "Xác nhận mật khẩu",
+                "forgotPassword": "Quên mật khẩu?",
                 "cancel": "Hủy",
                 "save": "Lưu"
+            },
+            "verifyEmail": {
+                "title": "Xác minh email",
+                "description": "Xác minh email để bảo mật tài khoản và mở khóa đầy đủ tính năng",
+                "notice": "Tài khoản của bạn chưa được xác minh. Chúng tôi sẽ gửi email xác minh tới {email}.",
+                "verifiedTitle": "Email đã xác minh",
+                "verifiedDescription": "Email của bạn đã được xác minh",
+                "verifiedNotice": "Tài khoản này đã xác minh với email: {email}.",
+                "emailLabel": "Email",
+                "resendButton": "Gửi lại email",
+                "resendError": "Không thể gửi lại email xác minh. Vui lòng thử lại."
             }
         },
         "upload": {

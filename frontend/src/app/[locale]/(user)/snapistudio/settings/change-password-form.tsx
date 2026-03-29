@@ -14,6 +14,7 @@ import { handleFormError } from '@/utils/handleErrors/handleFormErrors.util'
 import { ChangePasswordBody, ChangePasswordBodyType } from '@/types/dtos/user/user-request.dto'
 import { useChangePasswordMutation } from '@/store/services/user.service'
 import { Loader } from 'lucide-react'
+import { Link } from '@/i18n/navigation'
 
 export default function ChangePasswordForm() {
     const t = useTranslations('SnapiStudio.settings')
@@ -91,6 +92,11 @@ export default function ChangePasswordForm() {
                                     </FormItem>
                                 )}
                             />
+                            <div className='-mt-3'>
+                                <Button asChild variant='link' size='sm' className='h-auto px-0 text-muted-foreground'>
+                                    <Link href='/forgot-password'>{t('changePassword.forgotPassword')}</Link>
+                                </Button>
+                            </div>
                             <FormField
                                 control={form.control}
                                 name='password'
@@ -132,7 +138,7 @@ export default function ChangePasswordForm() {
                                     </FormItem>
                                 )}
                             />
-                            <div className=' items-center gap-2 md:ml-auto flex'>
+                            <div className='items-center gap-2 md:ml-auto flex flex-wrap'>
                                 <Button variant='outline' size='sm' type='reset' className='min-w-[90px]'>
                                     {t('changePassword.cancel')}
                                 </Button>

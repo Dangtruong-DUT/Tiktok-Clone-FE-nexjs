@@ -261,8 +261,20 @@
                 "oldPassword": "Old Password",
                 "newPassword": "New Password",
                 "confirmPassword": "Confirm Password",
+                "forgotPassword": "Forgot password?",
                 "cancel": "Cancel",
                 "save": "Save"
+            },
+            "verifyEmail": {
+                "title": "Verify Email",
+                "description": "Verify your email to secure your account and unlock full features",
+                "notice": "Your account is not verified yet. We will send a verification email to {email}.",
+                "verifiedTitle": "Email Verified",
+                "verifiedDescription": "Your email has already been verified",
+                "verifiedNotice": "This account is verified with email: {email}.",
+                "emailLabel": "Email",
+                "resendButton": "Resend Email",
+                "resendError": "Unable to resend verification email. Please try again."
             }
         },
         "upload": {

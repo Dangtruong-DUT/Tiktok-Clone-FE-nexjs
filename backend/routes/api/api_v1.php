@@ -22,6 +22,7 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
         Route::post('/logout',[AuthController::class, 'logout'])->name('logout');
         Route::post('/logout/all',[AuthController::class, 'logoutAll'])->name('logout-all');
         Route::get('/me', [AuthController::class, 'me'])->name('me');
+        Route::post('/resend-verify-email', [AuthController::class, 'resendVerifyEmail'])->name('resend-verify-email');
     });
 
     // media routes
