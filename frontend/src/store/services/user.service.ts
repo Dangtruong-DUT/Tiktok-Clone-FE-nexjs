@@ -1,7 +1,12 @@
 import { BACKEND_API_ENDPOINT } from '@/config/endpoint.config'
 import baseQueryWithReauth from '@/store/services/client'
 import { UserIndicatorsResponse } from '@/types/dtos/stats/stats-response.dto'
-import { GetUserProfileResType, UpdateUserResType } from '@/types/dtos/user/user-response.dto'
+import {
+    GetUserProfileResType,
+    GetUserSettingsResType,
+    UpdateUserResType,
+    UpdateUserSettingsResType
+} from '@/types/dtos/user/user-response.dto'
 import {
     ForgotPasswordReqBodyType,
     ResetPasswordReqBodyType,
@@ -11,6 +16,7 @@ import {
     ChangePasswordBodyType,
     FollowUserReqBodyType,
     GetUserIndicatorQueryParamsType,
+    UpdateUserSettingsBodyType,
     UpdateUserBodyType
 } from '@/types/dtos/user/user-request.dto'
 import { createApi } from '@reduxjs/toolkit/query/react'
@@ -19,7 +25,7 @@ import queryString from 'query-string'
 export const UserApi = createApi({
     reducerPath: 'UserApi',
     baseQuery: baseQueryWithReauth,
-    tagTypes: ['Users', 'UserIndicators'],
+    tagTypes: ['Users', 'UserIndicators', 'UserSettings'],
     refetchOnMountOrArgChange: false,
     keepUnusedDataFor: 60,
     refetchOnFocus: false,
@@ -125,6 +131,21 @@ export const UserApi = createApi({
                       ]
                     : []
             }
+        }),
+        getUserSettings: builder.query<GetUserSettingsResType, void>({
+            query: () => ({
+                url: BACKEND_API_ENDPOINT.API_GET_USER_SETTINGS,
+                method: 'GET'
+            }),
+            providesTags: ['UserSettings']
+        }),
+        updateUserSettings: builder.mutation<UpdateUserSettingsResType, UpdateUserSettingsBodyType>({
+            query: (data) => ({
+                url: BACKEND_API_ENDPOINT.API_UPDATE_USER_SETTINGS,
+                method: 'PATCH',
+                body: data
+            }),
+            invalidatesTags: ['UserSettings']
         })
     })
 })
@@ -140,5 +161,7 @@ export const {
     useChangePasswordMutation,
     useResendVerifyEmailMutation,
     useUpdateMeMutation,
-    useGetUserIndicatorQuery
+    useGetUserIndicatorQuery,
+    useGetUserSettingsQuery,
+    useUpdateUserSettingsMutation
 } = UserApi

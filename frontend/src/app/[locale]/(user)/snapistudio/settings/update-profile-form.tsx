@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Loader, Upload, UserIcon } from 'lucide-react'
+import { Loader, Pencil, UserIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form'
@@ -82,10 +82,6 @@ export default function UpdateProfileForm() {
         () => (fileImage != null ? URL.createObjectURL(fileImage) : (user?.avatar ?? undefined)),
         [fileImage, user?.avatar]
     )
-    const onReset = useCallback(() => {
-        form.reset()
-        setFileImage(null)
-    }, [form])
 
     const handleChangeAvatar = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0] || null
@@ -107,94 +103,90 @@ export default function UpdateProfileForm() {
             />
             <form
                 noValidate
-                className='grid auto-rows-max items-start gap-4 md:gap-8'
+                className='grid auto-rows-max items-start gap-6'
                 onSubmit={form.handleSubmit(handleSubmit)}
                 method='POST'
-                onReset={onReset}
             >
-                <div>
-                    <div className='flex items-center gap-2 mb-6'>
-                        <div className='p-2 rounded-full bg-brand/10'>
-                            <UserIcon className='w-5 h-5 text-brand' />
-                        </div>
-                        <div>
-                            <h3 className='font-semibold'>{t('updateProfile.title')}</h3>
-                            <p className='text-sm text-muted-foreground'>{t('updateProfile.description')}</p>
-                        </div>
-                    </div>
-                    <div className='space-y-6'>
-                        <div className='grid gap-6'>
-                            <FormField
-                                control={form.control}
-                                name='avatar_file_id'
-                                render={({}) => (
-                                    <FormItem>
-                                        <div className='flex gap-2 items-start justify-start'>
-                                            <Avatar className='aspect-square w-[100px] h-[100px] rounded-md object-cover'>
-                                                <AvatarImage src={avatarSrc} className='shrink-0 object-cover' />
-                                                <AvatarFallback className='rounded-none'>
-                                                    {user?.name.split(' ').at(-1) || t('updateProfile.defaultUser')}
-                                                </AvatarFallback>
-                                            </Avatar>
-
-                                            <input
-                                                type='file'
-                                                accept='image/*'
-                                                className='hidden'
-                                                ref={avatarPreviewRef}
-                                                onChange={handleChangeAvatar}
-                                            />
-                                            <button
-                                                className='flex aspect-square w-[100px] items-center justify-center rounded-md border border-dashed'
-                                                type='button'
-                                                onClick={() => {
-                                                    avatarPreviewRef.current?.click()
-                                                }}
-                                            >
-                                                <Upload className='h-4 w-4 text-muted-foreground' />
-                                                <span className='sr-only'>{t('updateProfile.upload')}</span>
-                                            </button>
-                                        </div>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name='name'
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <div className='grid gap-3'>
-                                            <Label htmlFor='name' className='font-semibold text-muted-foreground'>
-                                                {t('updateProfile.fullNameLabel')}
-                                            </Label>
-                                            <Input
-                                                id='name'
-                                                type='text'
-                                                className='brand-input bg-muted! border-none!'
-                                                {...field}
-                                            />
-                                            <FormMessage />
-                                        </div>
-                                    </FormItem>
-                                )}
-                            />
-
-                            <div className=' items-center gap-2 md:ml-auto flex'>
-                                <Button variant='outline' size='sm' type='reset' className='min-w-[90px]'>
-                                    {t('updateProfile.cancel')}
-                                </Button>
-                                <Button
-                                    size='sm'
-                                    type='submit'
-                                    disabled={isLoading}
-                                    className='bg-brand hover:bg-brand/90 w-[90px] flex items-center justify-center [&_svg]:size-5! cursor-pointer text-white'
-                                >
-                                    {isLoading ? <Loader className='animate-spin' /> : t('updateProfile.save')}
-                                </Button>
+                <div className='space-y-6'>
+                    <div className='flex items-start justify-between gap-4'>
+                        <div className='flex items-center gap-2'>
+                            <div className='p-2 rounded-full bg-brand/10'>
+                                <UserIcon className='w-5 h-5 text-brand' />
+                            </div>
+                            <div>
+                                <h3 className='font-semibold'>{t('updateProfile.title')}</h3>
+                                <p className='text-sm text-muted-foreground'>{t('updateProfile.description')}</p>
                             </div>
                         </div>
+                        <Button
+                            size='sm'
+                            type='submit'
+                            disabled={isLoading}
+                            className='bg-brand hover:bg-brand/90 min-w-[90px] rounded-full flex items-center justify-center [&_svg]:size-5! cursor-pointer text-white'
+                        >
+                            {isLoading ? <Loader className='animate-spin' /> : t('updateProfile.save')}
+                        </Button>
+                    </div>
+
+                    <div className='grid gap-6 sm:grid-cols-[auto_1fr] sm:items-center'>
+                        <FormField
+                            control={form.control}
+                            name='avatar_file_id'
+                            render={({}) => (
+                                <FormItem>
+                                    <div className='relative h-[112px] w-[112px]'>
+                                        <Avatar className='h-full w-full rounded-full border-2 border-brand/20'>
+                                            <AvatarImage src={avatarSrc} className='shrink-0 object-cover' />
+                                            <AvatarFallback>
+                                                {user?.name.split(' ').at(-1) || t('updateProfile.defaultUser')}
+                                            </AvatarFallback>
+                                        </Avatar>
+
+                                        <input
+                                            type='file'
+                                            accept='image/*'
+                                            className='hidden'
+                                            ref={avatarPreviewRef}
+                                            onChange={handleChangeAvatar}
+                                        />
+
+                                        <Button
+                                            type='button'
+                                            size='icon'
+                                            className='absolute bottom-0 right-0 h-8 w-8 rounded-full bg-brand hover:bg-brand/90 text-white'
+                                            onClick={() => {
+                                                avatarPreviewRef.current?.click()
+                                            }}
+                                        >
+                                            <Pencil className='h-4 w-4' />
+                                            <span className='sr-only'>{t('updateProfile.upload')}</span>
+                                        </Button>
+                                    </div>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name='name'
+                            render={({ field }) => (
+                                <FormItem>
+                                    <div className='grid gap-3'>
+                                        <Label htmlFor='name' className='font-semibold text-muted-foreground'>
+                                            {t('updateProfile.fullNameLabel')}
+                                        </Label>
+                                        <Input
+                                            id='name'
+                                            type='text'
+                                            className='brand-input bg-muted! border-none!'
+                                            {...field}
+                                        />
+                                        <FormMessage />
+                                    </div>
+                                </FormItem>
+                            )}
+                        />
                     </div>
                 </div>
             </form>

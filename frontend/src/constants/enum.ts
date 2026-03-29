@@ -30,6 +30,11 @@ export enum Audience {
     FRIENDS
 }
 
+export enum PrivacyVisibility {
+    PUBLIC,
+    PRIVATE
+}
+
 export enum PosterType {
     POST,
     RE_POST,

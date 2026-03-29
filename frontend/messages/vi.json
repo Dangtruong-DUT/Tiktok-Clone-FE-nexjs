@@ -275,6 +275,33 @@
                 "emailLabel": "Email",
                 "resendButton": "Gửi lại email",
                 "resendError": "Không thể gửi lại email xác minh. Vui lòng thử lại."
+            },
+            "privacy": {
+                "title": "Quyền riêng tư",
+                "description": "Kiểm soát ai có thể xem hoạt động xã hội của bạn.",
+                "public": "Công khai",
+                "private": "Riêng tư",
+                "cancel": "Hủy",
+                "save": "Lưu",
+                "updateError": "Không thể cập nhật cài đặt quyền riêng tư. Vui lòng thử lại.",
+                "fields": {
+                    "likedVideos": {
+                        "label": "Video đã thích",
+                        "description": "Cho phép người khác xem video bạn đã thích."
+                    },
+                    "bookmarkedVideos": {
+                        "label": "Video đã lưu",
+                        "description": "Cho phép người khác xem video bạn đã lưu."
+                    },
+                    "followers": {
+                        "label": "Danh sách người theo dõi",
+                        "description": "Cho phép người khác xem danh sách người theo dõi bạn."
+                    },
+                    "following": {
+                        "label": "Danh sách đang theo dõi",
+                        "description": "Cho phép người khác xem bạn đang theo dõi ai."
+                    }
+                }
             }
         },
         "upload": {

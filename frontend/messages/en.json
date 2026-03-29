@@ -275,6 +275,33 @@
                 "emailLabel": "Email",
                 "resendButton": "Resend Email",
                 "resendError": "Unable to resend verification email. Please try again."
+            },
+            "privacy": {
+                "title": "Privacy",
+                "description": "Control who can view your social activity.",
+                "public": "Public",
+                "private": "Private",
+                "cancel": "Cancel",
+                "save": "Save",
+                "updateError": "Unable to update privacy settings. Please try again.",
+                "fields": {
+                    "likedVideos": {
+                        "label": "Liked videos",
+                        "description": "Allow others to see videos you liked."
+                    },
+                    "bookmarkedVideos": {
+                        "label": "Bookmarked videos",
+                        "description": "Allow others to see your bookmarked videos."
+                    },
+                    "followers": {
+                        "label": "Followers list",
+                        "description": "Allow others to view your followers."
+                    },
+                    "following": {
+                        "label": "Following list",
+                        "description": "Allow others to view who you follow."
+                    }
+                }
             }
         },
         "upload": {

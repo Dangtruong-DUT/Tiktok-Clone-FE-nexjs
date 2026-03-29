@@ -2,7 +2,6 @@
 
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 import { UserVerifyStatus } from '@/constants/enum'
 import { useResendVerifyEmailMutation } from '@/store/services/user.service'
 import { MailCheck, Loader } from 'lucide-react'
@@ -85,29 +84,36 @@ export default function VerifyEmailForm() {
             </div>
 
             {isVerified ? (
-                <div className='rounded-lg p-4 border bg-muted/40'>
-                    <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
-                        <div className='text-sm text-foreground font-medium'>
-                            {t('verifyEmail.verifiedDescription')}
-                        </div>
-                        <div className='text-sm sm:text-right'>
-                            <span className='text-muted-foreground'>{t('verifyEmail.emailLabel')}:</span>{' '}
-                            <span className='font-medium text-foreground'>{user.email || ''}</span>
-                        </div>
+                <div className='space-y-4'>
+                    <div className='rounded-xl p-4 border bg-muted/40'>
+                        <p className='text-xs uppercase tracking-wide text-muted-foreground mb-2'>
+                            {t('verifyEmail.emailLabel')}
+                        </p>
+                        <p className='text-sm sm:text-base font-medium text-foreground'>{user.email || ''}</p>
+                    </div>
+                    <div className='rounded-xl p-4 border border-brand/30 bg-brand/5'>
+                        <p className='text-sm text-foreground'>{t('verifyEmail.verifiedDescription')}</p>
                     </div>
                 </div>
             ) : (
-                <div className='rounded-lg p-4 border border-dashed bg-muted/40 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
+                <div className='space-y-4'>
+                    <div className='rounded-xl p-4 border bg-muted/40'>
+                        <p className='text-xs uppercase tracking-wide text-muted-foreground mb-2'>
+                            {t('verifyEmail.emailLabel')}
+                        </p>
+                        <p className='text-sm sm:text-base font-medium text-foreground'>{user.email || ''}</p>
+                    </div>
+
                     <div className='text-sm text-muted-foreground'>
                         {t('verifyEmail.notice', { email: user.email || '' })}
                     </div>
 
                     <Button
-                        size='sm'
+                        size='lg'
                         type='button'
                         disabled={isLoading || remainingCooldown > 0}
                         onClick={handleResendVerifyEmail}
-                        className='bg-brand hover:bg-brand/90 min-w-[140px] text-white [&_svg]:size-5!'
+                        className='w-full rounded-full border border-brand/40 bg-transparent text-brand hover:bg-brand/10 hover:text-brand [&_svg]:size-5!'
                     >
                         {isLoading ? <Loader className='animate-spin' /> : t('verifyEmail.resendButton')}
                     </Button>

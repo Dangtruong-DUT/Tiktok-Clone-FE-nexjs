@@ -1,3 +1,4 @@
+import { PrivacyVisibility } from '@/constants/enum'
 import z from 'zod'
 
 export const VerifyEmailReqBody = z.object({
@@ -52,3 +53,14 @@ export const GetUserIndicatorQueryParams = z.object({
 })
 
 export type GetUserIndicatorQueryParamsType = z.TypeOf<typeof GetUserIndicatorQueryParams>
+
+export const UpdateUserSettingsBody = z
+    .object({
+        liked_videos_visibility: z.nativeEnum(PrivacyVisibility).optional(),
+        bookmarked_videos_visibility: z.nativeEnum(PrivacyVisibility).optional(),
+        followers_visibility: z.nativeEnum(PrivacyVisibility).optional(),
+        following_visibility: z.nativeEnum(PrivacyVisibility).optional()
+    })
+    .strict()
+
+export type UpdateUserSettingsBodyType = z.TypeOf<typeof UpdateUserSettingsBody>
