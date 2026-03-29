@@ -6,6 +6,7 @@ use App\Enums\Auth\TokenTypeEnum;
 use App\Enums\User\RelationshipTypeEnum;
 use App\Enums\User\RoleTypeEnum;
 use App\Enums\User\UserVerifyStatusEnum;
+use App\Traits\HasCreateDefaultUserSettingObservable;
 use App\Traits\HasUsernameObservable;
 use App\Traits\HasUuidObservable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,6 +18,7 @@ use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -35,6 +37,7 @@ class User extends Authenticatable implements JWTSubject
     use SoftDeletes;
     use HasUuidObservable;
     use HasUsernameObservable;
+    use HasCreateDefaultUserSettingObservable;
 
     /**
      * The attributes that are mass assignable.
@@ -301,5 +304,15 @@ class User extends Authenticatable implements JWTSubject
     public function bookmarkedPosts(): BelongsToMany
     {
         return $this->belongsToMany(Post::class, 'post_bookmarks', 'user_id', 'post_id');
+    }
+
+    /**
+     * Get the user settings associated with the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne The relationship instance.
+     */
+    public function settings(): HasOne
+    {
+        return $this->hasOne(UserSettings::class);
     }
 }
