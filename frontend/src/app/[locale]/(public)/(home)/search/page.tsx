@@ -21,7 +21,7 @@ export async function generateMetadata({
             ? `Search results for "${query}" on TikTok - find related videos and creators`
             : 'Search for creators, videos, and trending content on TikTok',
         alternates: {
-            canonical: `${envConfig.NEXT_PUBLIC_URL}${locale}/search?q=${query}`,
+            canonical: `${envConfig.NEXT_PUBLIC_URL}/${locale}/search?q=${query}`,
             languages: {
                 'en-US': `${envConfig.NEXT_PUBLIC_URL}en/search?q=${query}`,
                 'vi-VN': `${envConfig.NEXT_PUBLIC_URL}vi/search?q=${query}`

@@ -84,6 +84,7 @@ function DialogVideoContent({ post }: DialogContentProps) {
                 >
                     <VideoDescription post={post} />
                     <TabNavigation
+                        commentCount={post.comments_count}
                         activeTab={activeTab}
                         setActiveTab={setActiveTab}
                         className='sticky top-0 z-10 bg-background'

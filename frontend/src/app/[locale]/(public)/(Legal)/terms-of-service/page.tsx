@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
             title,
             description,
             type: 'website',
-            url: `${envConfig.NEXT_PUBLIC_URL}${locale}/terms-of-service`,
+            url: `${envConfig.NEXT_PUBLIC_URL}/${locale}/terms-of-service`,
             siteName: BRAND_CONFIG.APP_NAME,
             images: [
                 {
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
             ]
         },
         alternates: {
-            canonical: `${envConfig.NEXT_PUBLIC_URL}${locale}/terms-of-service`,
+            canonical: `${envConfig.NEXT_PUBLIC_URL}/${locale}/terms-of-service`,
             languages: {
                 'en-US': `${envConfig.NEXT_PUBLIC_URL}en/terms-of-service`,
                 'vi-VN': `${envConfig.NEXT_PUBLIC_URL}vi/terms-of-service`

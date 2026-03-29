@@ -6,9 +6,10 @@ export type TabNavigationProps = {
     activeTab: TabNavigationType
     setActiveTab: (tab: TabNavigationType) => void
     className?: string
+    commentCount?: number
 }
 
-export default function TabNavigation({ activeTab, setActiveTab, className }: TabNavigationProps) {
+export default function TabNavigation({ activeTab, setActiveTab, className, commentCount }: TabNavigationProps) {
     return (
         <div className={cn('flex border-b', className)}>
             <button
@@ -19,7 +20,7 @@ export default function TabNavigation({ activeTab, setActiveTab, className }: Ta
                         : 'border-transparent text-muted-foreground hover:text-foreground'
                 }`}
             >
-                Comments
+                Comments ({commentCount ?? 0})
             </button>
             <button
                 onClick={() => setActiveTab('creator')}

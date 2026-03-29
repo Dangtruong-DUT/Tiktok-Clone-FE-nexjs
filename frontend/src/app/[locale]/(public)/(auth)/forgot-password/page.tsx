@@ -19,10 +19,10 @@ export async function generateMetadata(
             title: t('title'),
             description: 'Reset your Snapi account password securely',
             images,
-            url: `${envConfig.NEXT_PUBLIC_URL}${locale}/forgot-password`
+            url: `${envConfig.NEXT_PUBLIC_URL}/${locale}/forgot-password`
         },
         alternates: {
-            canonical: `${envConfig.NEXT_PUBLIC_URL}${locale}/forgot-password`,
+            canonical: `${envConfig.NEXT_PUBLIC_URL}/${locale}/forgot-password`,
             languages: {
                 'en-US': `${envConfig.NEXT_PUBLIC_URL}en/forgot-password`,
                 'vi-VN': `${envConfig.NEXT_PUBLIC_URL}vi/forgot-password`

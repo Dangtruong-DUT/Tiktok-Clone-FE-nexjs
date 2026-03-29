@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
             url: `${process.env.NEXT_PUBLIC_URL}${locale}/following`
         },
         alternates: {
-            canonical: `${envConfig.NEXT_PUBLIC_URL}${locale}/following`,
+            canonical: `${envConfig.NEXT_PUBLIC_URL}/${locale}/following`,
             languages: {
                 'en-US': `${envConfig.NEXT_PUBLIC_URL}en/following`,
                 'vi-VN': `${envConfig.NEXT_PUBLIC_URL}vi/following`

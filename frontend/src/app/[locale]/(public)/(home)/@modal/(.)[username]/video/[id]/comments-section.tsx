@@ -28,13 +28,15 @@ export default function CommentsSection({
     return (
         <section
             className={cn(
-                'flex-1 min-h-screen flex flex-col py-3 pl-3 bg-sidebar border-l transition-all duration-300',
+                'flex-1 min-h-screen flex flex-col py-3 pl-3 bg-sidebar border-l overflow-hidden transition-all duration-700 ease-out',
                 className,
-                isVisible ? 'w-96 max-w-92 pl-3 py-3 opacity-100' : 'w-0 max-w-0 p-0 opacity-0'
+                isVisible
+                    ? 'w-96 max-w-92 pl-3 py-3 opacity-100 translate-x-0'
+                    : 'w-0 max-w-0 p-0 opacity-0 translate-x-6 pointer-events-none'
             )}
         >
             <header className='flex justify-between items-center pe-3 h-[28px] '>
-                <h4 className='text-base font-semibold'>Comments</h4>
+                <h4 className='text-base font-semibold'>Comments ({postDetailRes?.data?.comments_count ?? 0})</h4>
                 <Button
                     variant='secondary'
                     className='size-7 aspect-square rounded-full shadow-xs cursor-pointer'

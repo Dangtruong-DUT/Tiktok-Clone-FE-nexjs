@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
         title: t('forYou'),
         description: 'Watch the latest and most engaging videos personalized for you on Snapi',
         alternates: {
-            canonical: `${envConfig.NEXT_PUBLIC_URL}${locale}`,
+            canonical: `${envConfig.NEXT_PUBLIC_URL}/${locale}`,
             languages: {
                 'en-US': `${envConfig.NEXT_PUBLIC_URL}en`,
                 'vi-VN': `${envConfig.NEXT_PUBLIC_URL}vi`

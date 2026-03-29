@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
     return {
         title: t('title'),
         alternates: {
-            canonical: `${envConfig.NEXT_PUBLIC_URL}${locale}/reset-password`,
+            canonical: `${envConfig.NEXT_PUBLIC_URL}/${locale}/reset-password`,
             languages: {
                 'en-US': `${envConfig.NEXT_PUBLIC_URL}en/reset-password`,
                 'vi-VN': `${envConfig.NEXT_PUBLIC_URL}vi/reset-password`

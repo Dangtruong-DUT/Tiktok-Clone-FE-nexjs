@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
             description: 'Snapi',
             locale,
             type: 'website',
-            url: `${envConfig.NEXT_PUBLIC_URL}${locale}`,
+            url: `${envConfig.NEXT_PUBLIC_URL}/${locale}`,
             siteName: 'Snapi',
             images: [
                 {
