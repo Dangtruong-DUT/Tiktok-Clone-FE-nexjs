@@ -160,6 +160,82 @@ class UserRepository extends BaseRepository
     }
 
     /**
+     * Get followers of target user.
+     *
+     * @param int $targetUserId
+     * @param array $filters
+     * @param ?int $authUserId
+     * @return LengthAwarePaginator
+     */
+    public function getFollowersByUserId(int $targetUserId, array $filters, ?int $authUserId): LengthAwarePaginator
+    {
+        $filterCollection = collect($filters);
+
+        $query = $this->query()
+            ->whereHas('followings', fn ($relationQuery) => $relationQuery->whereKey($targetUserId));
+
+        return $this->paginateListWithDetail($query, $filterCollection, $authUserId);
+    }
+
+    /**
+     * Get followings of target user.
+     *
+     * @param int $targetUserId
+     * @param array $filters
+     * @param ?int $authUserId
+     * @return LengthAwarePaginator
+     */
+    public function getFollowingByUserId(int $targetUserId, array $filters, ?int $authUserId): LengthAwarePaginator
+    {
+        $filterCollection = collect($filters);
+
+        $query = $this->query()
+            ->whereHas('followers', fn ($relationQuery) => $relationQuery->whereKey($targetUserId));
+
+        return $this->paginateListWithDetail($query, $filterCollection, $authUserId);
+    }
+
+    /**
+     * Get mutual friends of target user.
+     *
+     * @param int $targetUserId
+     * @param array $filters
+     * @param ?int $authUserId
+     * @return LengthAwarePaginator
+     */
+    public function getFriendsByUserId(int $targetUserId, array $filters, ?int $authUserId): LengthAwarePaginator
+    {
+        $filterCollection = collect($filters);
+
+        $query = $this->query()
+            ->whereHas('followings', fn ($relationQuery) => $relationQuery->whereKey($targetUserId))
+            ->whereHas('followers', fn ($relationQuery) => $relationQuery->whereKey($targetUserId));
+
+        return $this->paginateListWithDetail($query, $filterCollection, $authUserId);
+    }
+
+    /**
+     * Get suggested users for authenticated user.
+     *
+     * @param array $filters
+     * @param ?int $authUserId
+     * @return LengthAwarePaginator
+     */
+    public function getSuggestedUsers(array $filters, ?int $authUserId): LengthAwarePaginator
+    {
+        $filterCollection = collect($filters);
+
+        $query = $this->query()
+            ->where('role', '!=', RoleTypeEnum::SUPER_ADMIN->value)
+            ->when($authUserId !== null, function (Builder $query) use ($authUserId) {
+                $query->whereKeyNot($authUserId)
+                    ->whereDoesntHave('followers', fn ($relationQuery) => $relationQuery->whereKey($authUserId));
+            });
+
+        return $this->paginateListWithDetail($query, $filterCollection, $authUserId);
+    }
+
+    /**
      * Get user with details by id.
      * @param Builder<User> $query
      * @param ?int $userId
@@ -180,6 +256,32 @@ class UserRepository extends BaseRepository
                 'followers as is_followed' => fn ($fq) => $fq->whereKey($userId),
             ])
             ->selectRaw('users.id = ? as is_owner', [$userId]);
+    }
+
+    /**
+     * Apply list filters and return paginated users with detail.
+     *
+     * @param Builder<User> $query
+     * @param Collection $filterCollection
+     * @param ?int $authUserId
+     * @return LengthAwarePaginator
+     */
+    private function paginateListWithDetail(Builder $query, Collection $filterCollection, ?int $authUserId): LengthAwarePaginator
+    {
+        $keyword = trim($filterCollection->get('q', ''));
+
+        $query
+            ->when($keyword !== '', function (Builder $query) use ($keyword) {
+                $query->whereRaw("\n
+                        search_vector @@ plainto_tsquery('simple', ?)\n
+                    ", [$keyword]);
+            })
+            ->orderByDesc('followers_count')
+            ->orderByDesc('created_at');
+
+        $perPage = $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
+
+        return $this->withDetail($query, $authUserId)->paginate($perPage);
     }
 
     /**

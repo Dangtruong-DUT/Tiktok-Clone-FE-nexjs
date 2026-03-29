@@ -182,6 +182,64 @@ class UserService
     }
 
     /**
+     * Get paginated followers of target user.
+     *
+     * @param string $userUuid
+     * @param array $filters
+     * @return LengthAwarePaginator
+     */
+    public function getFollowers(string $userUuid, array $filters): LengthAwarePaginator
+    {
+        $authUserId = auth_user_id();
+        $targetUser = $this->userRepo->findByUuidOrFail($userUuid);
+
+        return $this->userRepo->getFollowersByUserId($targetUser->id, $filters, $authUserId);
+    }
+
+    /**
+     * Get paginated following users of target user.
+     *
+     * @param string $userUuid
+     * @param array $filters
+     * @return LengthAwarePaginator
+     */
+    public function getFollowing(string $userUuid, array $filters): LengthAwarePaginator
+    {
+        $authUserId = auth_user_id();
+        $targetUser = $this->userRepo->findByUuidOrFail($userUuid);
+
+        return $this->userRepo->getFollowingByUserId($targetUser->id, $filters, $authUserId);
+    }
+
+    /**
+     * Get paginated mutual friends of target user.
+     *
+     * @param string $userUuid
+     * @param array $filters
+     * @return LengthAwarePaginator
+     */
+    public function getFriends(string $userUuid, array $filters): LengthAwarePaginator
+    {
+        $authUserId = auth_user_id();
+        $targetUser = $this->userRepo->findByUuidOrFail($userUuid);
+
+        return $this->userRepo->getFriendsByUserId($targetUser->id, $filters, $authUserId);
+    }
+
+    /**
+     * Get paginated suggested users for authenticated user.
+     *
+     * @param array $filters
+     * @return LengthAwarePaginator
+     */
+    public function getSuggestedUsers(array $filters): LengthAwarePaginator
+    {
+        $authUserId = auth_user_id();
+
+        return $this->userRepo->getSuggestedUsers($filters, $authUserId);
+    }
+
+    /**
      * Get indicators of authenticated user in date range.
      *
      * @param array $payload

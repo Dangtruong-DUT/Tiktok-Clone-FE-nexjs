@@ -54,6 +54,19 @@ export const GetUserIndicatorQueryParams = z.object({
 
 export type GetUserIndicatorQueryParamsType = z.TypeOf<typeof GetUserIndicatorQueryParams>
 
+export type GetUserListPagingQueryType = {
+    user_uuid: string
+    page?: number
+    per_page?: number
+    q?: string
+}
+
+export type GetSuggestedUsersQueryType = {
+    page?: number
+    per_page?: number
+    q?: string
+}
+
 export const UpdateUserSettingsBody = z
     .object({
         liked_videos_visibility: z.nativeEnum(PrivacyVisibility).optional(),

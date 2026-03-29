@@ -43,6 +43,7 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::patch('/me', [UserController::class, 'update'])->name('update');
             Route::get('/me', [UserController::class, 'showMe'])->name('show-me');
             Route::get('/me/indicators', [UserController::class, 'indicators'])->name('indicators');
+            Route::get('/suggested', [UserController::class, 'suggested'])->name('suggested');
             Route::get('/me/settings', [UserSettingsController::class, 'show'])->name('show-settings');
             Route::patch('/me/settings', [UserSettingsController::class, 'update'])->name('update-settings');
         });
@@ -100,6 +101,9 @@ Route::prefix('users')
         Route::get('{user_uuid}/posts', [PostController::class, 'showUserPosts'])->name('show-posts');
         Route::get('{user_uuid}/like', [PostController::class, 'showLikedPosts'])->name('show-likes');
         Route::get('{user_uuid}/bookmark', [PostController::class, 'showBookmarkedPosts'])->name('show-bookmarks');
+        Route::get('{user_uuid}/followers', [UserController::class, 'followers'])->name('followers');
+        Route::get('{user_uuid}/following', [UserController::class, 'following'])->name('following');
+        Route::get('{user_uuid}/friends', [UserController::class, 'friends'])->name('friends');
         Route::get('/{username}', [UserController::class, 'showProfile'])->name('show-profile');
     });
 

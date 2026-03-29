@@ -2,6 +2,7 @@ import { BACKEND_API_ENDPOINT } from '@/config/endpoint.config'
 import baseQueryWithReauth from '@/store/services/client'
 import { UserIndicatorsResponse } from '@/types/dtos/stats/stats-response.dto'
 import {
+    GetListUserResType,
     GetUserProfileResType,
     GetUserSettingsResType,
     UpdateUserResType,
@@ -16,6 +17,8 @@ import {
     ChangePasswordBodyType,
     FollowUserReqBodyType,
     GetUserIndicatorQueryParamsType,
+    GetSuggestedUsersQueryType,
+    GetUserListPagingQueryType,
     UpdateUserSettingsBodyType,
     UpdateUserBodyType
 } from '@/types/dtos/user/user-request.dto'
@@ -65,6 +68,114 @@ export const UserApi = createApi({
                 method: 'GET'
             }),
             providesTags: (result) => (result ? [{ type: 'Users', id: result.data.uuid }] : [])
+        }),
+        getFollowersOfUser: builder.query<GetListUserResType, GetUserListPagingQueryType>({
+            query: ({ user_uuid, page = 1, per_page = 10, q }) => {
+                const query = queryString.stringify(
+                    {
+                        page,
+                        per_page,
+                        q
+                    },
+                    {
+                        skipNull: true,
+                        skipEmptyString: true
+                    }
+                )
+
+                return {
+                    url: `/users/${user_uuid}/followers${query ? `?${query}` : ''}`,
+                    method: 'GET'
+                }
+            },
+            providesTags: (result) =>
+                result
+                    ? [
+                          ...result.data.map((user) => ({ type: 'Users' as const, id: user.uuid })),
+                          { type: 'Users' as const, id: 'LIST' }
+                      ]
+                    : [{ type: 'Users' as const, id: 'LIST' }]
+        }),
+        getFollowingOfUser: builder.query<GetListUserResType, GetUserListPagingQueryType>({
+            query: ({ user_uuid, page = 1, per_page = 10, q }) => {
+                const query = queryString.stringify(
+                    {
+                        page,
+                        per_page,
+                        q
+                    },
+                    {
+                        skipNull: true,
+                        skipEmptyString: true
+                    }
+                )
+
+                return {
+                    url: `/users/${user_uuid}/following${query ? `?${query}` : ''}`,
+                    method: 'GET'
+                }
+            },
+            providesTags: (result) =>
+                result
+                    ? [
+                          ...result.data.map((user) => ({ type: 'Users' as const, id: user.uuid })),
+                          { type: 'Users' as const, id: 'LIST' }
+                      ]
+                    : [{ type: 'Users' as const, id: 'LIST' }]
+        }),
+        getFriendsOfUser: builder.query<GetListUserResType, GetUserListPagingQueryType>({
+            query: ({ user_uuid, page = 1, per_page = 10, q }) => {
+                const query = queryString.stringify(
+                    {
+                        page,
+                        per_page,
+                        q
+                    },
+                    {
+                        skipNull: true,
+                        skipEmptyString: true
+                    }
+                )
+
+                return {
+                    url: `/users/${user_uuid}/friends${query ? `?${query}` : ''}`,
+                    method: 'GET'
+                }
+            },
+            providesTags: (result) =>
+                result
+                    ? [
+                          ...result.data.map((user) => ({ type: 'Users' as const, id: user.uuid })),
+                          { type: 'Users' as const, id: 'LIST' }
+                      ]
+                    : [{ type: 'Users' as const, id: 'LIST' }]
+        }),
+        getSuggestedUsers: builder.query<GetListUserResType, GetSuggestedUsersQueryType | void>({
+            query: (params) => {
+                const query = queryString.stringify(
+                    {
+                        page: params?.page ?? 1,
+                        per_page: params?.per_page ?? 10,
+                        q: params?.q
+                    },
+                    {
+                        skipNull: true,
+                        skipEmptyString: true
+                    }
+                )
+
+                return {
+                    url: `/users/suggested${query ? `?${query}` : ''}`,
+                    method: 'GET'
+                }
+            },
+            providesTags: (result) =>
+                result
+                    ? [
+                          ...result.data.map((user) => ({ type: 'Users' as const, id: user.uuid })),
+                          { type: 'Users' as const, id: 'LIST' }
+                      ]
+                    : [{ type: 'Users' as const, id: 'LIST' }]
         }),
         followUser: builder.mutation<{ message: string }, FollowUserReqBodyType>({
             query: (body) => ({
@@ -156,6 +267,10 @@ export const {
     useVerifyForgotPasswordMutation,
     useGetMeQuery,
     useGetUserByUsernameQuery,
+    useGetFollowersOfUserQuery,
+    useGetFollowingOfUserQuery,
+    useGetFriendsOfUserQuery,
+    useGetSuggestedUsersQuery,
     useFollowUserMutation,
     useUnfollowUserMutation,
     useChangePasswordMutation,

@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\ChangePasswordRequest;
 use App\Http\Requests\User\FollowSomeOneRequest;
+use App\Http\Requests\User\GetFriendsListRequest;
 use App\Http\Requests\User\GetListUserRequest;
+use App\Http\Requests\User\GetSuggestedUsersRequest;
+use App\Http\Requests\User\GetUserFollowersRequest;
+use App\Http\Requests\User\GetUserFollowingRequest;
 use App\Http\Requests\User\GetUserIndicatorsRequest;
 use App\Http\Requests\User\GetUserProfileRequest;
 use App\Http\Requests\User\UnFollowSomeOneRequest;
@@ -132,6 +136,79 @@ class UserController extends Controller
         return ApiResponse::success(
             data: UserResource::make($user),
             message: 'User profile retrieved successfully'
+        );
+    }
+
+    /**
+     * Get paginated followers by user uuid.
+     *
+     * @param GetUserFollowersRequest $request
+     * @return JsonResponse
+     */
+    public function followers(GetUserFollowersRequest $request): JsonResponse
+    {
+        $users = $this->userService->getFollowers(
+            userUuid: $request->user_uuid,
+            filters: $request->validated()
+        );
+
+        return ApiResponse::success(
+            data: UserResource::collection($users),
+            message: 'Followers retrieved successfully'
+        );
+    }
+
+    /**
+     * Get paginated following users by user uuid.
+     *
+     * @param GetUserFollowingRequest $request
+     * @return JsonResponse
+     */
+    public function following(GetUserFollowingRequest $request): JsonResponse
+    {
+        $users = $this->userService->getFollowing(
+            userUuid: $request->user_uuid,
+            filters: $request->validated()
+        );
+
+        return ApiResponse::success(
+            data: UserResource::collection($users),
+            message: 'Following users retrieved successfully'
+        );
+    }
+
+    /**
+     * Get paginated friends by user uuid.
+     *
+     * @param GetFriendsListRequest $request
+     * @return JsonResponse
+     */
+    public function friends(GetFriendsListRequest $request): JsonResponse
+    {
+        $users = $this->userService->getFriends(
+            userUuid: $request->user_uuid,
+            filters: $request->validated()
+        );
+
+        return ApiResponse::success(
+            data: UserResource::collection($users),
+            message: 'Friends retrieved successfully'
+        );
+    }
+
+    /**
+     * Get suggested users for authenticated user.
+     *
+     * @param GetSuggestedUsersRequest $request
+     * @return JsonResponse
+     */
+    public function suggested(GetSuggestedUsersRequest $request): JsonResponse
+    {
+        $users = $this->userService->getSuggestedUsers($request->validated());
+
+        return ApiResponse::success(
+            data: UserResource::collection($users),
+            message: 'Suggested users retrieved successfully'
         );
     }
 }

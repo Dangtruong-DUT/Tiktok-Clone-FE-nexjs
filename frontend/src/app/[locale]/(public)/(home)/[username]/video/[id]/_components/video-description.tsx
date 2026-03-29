@@ -84,7 +84,7 @@ export default function VideoDescription({ author, createdAt, postContent, class
                     />
                 )}
             </div>
-            <ShowMore text={postContent} className='text-base' maxHeight={50} />
+            <ShowMore text={postContent} className='text-base' maxHeight={42} />
         </div>
     )
 }
