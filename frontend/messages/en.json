@@ -196,7 +196,21 @@
                 }
             },
             "search": {
-                "placeholder": "Search..."
+                "placeholder": "Search...",
+                "clearButton": "Clear",
+                "clearingButton": "Clearing...",
+                "searchButton": "Search",
+                "searchingButton": "Searching..."
+            },
+            "filter": {
+                "audiencePlaceholder": "Filter by audience",
+                "allAudience": "All audiences",
+                "audience": {
+                    "public": "Public",
+                    "friends": "Friends",
+                    "private": "Private",
+                    "unknown": "Unknown"
+                }
             }
         },
         "dashboard": {

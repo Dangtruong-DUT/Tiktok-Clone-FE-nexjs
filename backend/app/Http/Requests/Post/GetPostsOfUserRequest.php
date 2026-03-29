@@ -41,6 +41,12 @@ class GetPostsOfUserRequest extends BaseListRequest
                     self::SOMETIMES,
                     self::REQUIRED,
                 ],
+                'q' => [
+                    self::SOMETIMES,
+                ],
+                'audience' => [
+                    self::SOMETIMES,
+                ],
         ]);
     }
 }

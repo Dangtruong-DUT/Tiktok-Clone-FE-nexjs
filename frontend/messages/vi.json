@@ -196,7 +196,21 @@
                 }
             },
             "search": {
-                "placeholder": "Tìm kiếm..."
+                "placeholder": "Tìm kiếm...",
+                "clearButton": "Xóa",
+                "clearingButton": "Đang xóa...",
+                "searchButton": "Tìm kiếm",
+                "searchingButton": "Đang tìm..."
+            },
+            "filter": {
+                "audiencePlaceholder": "Lọc theo đối tượng xem",
+                "allAudience": "Tất cả đối tượng",
+                "audience": {
+                    "public": "Công khai",
+                    "friends": "Bạn bè",
+                    "private": "Riêng tư",
+                    "unknown": "Không xác định"
+                }
             }
         },
         "dashboard": {

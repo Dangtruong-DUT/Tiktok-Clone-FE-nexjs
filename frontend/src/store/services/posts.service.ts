@@ -220,8 +220,27 @@ export const PostApi = createApi({
                 }
             }
         }),
-        getPostOfUserPaging: builder.query<GetListPostRes, { userId: string; page: number }>({
-            query: ({ userId, page }) => `/users/${userId}/posts?page=${page}&per_page=10&type=${PosterType.POST}`,
+        getPostOfUserPaging: builder.query<
+            GetListPostRes,
+            { userId: string; page: number; q?: string; audience?: number }
+        >({
+            query: ({ userId, page, q, audience }) => {
+                const params = new URLSearchParams({
+                    page: String(page),
+                    per_page: '10',
+                    type: String(PosterType.POST)
+                })
+
+                if (q?.trim()) {
+                    params.set('q', q.trim())
+                }
+
+                if (typeof audience === 'number') {
+                    params.set('audience', String(audience))
+                }
+
+                return `/users/${userId}/posts?${params.toString()}`
+            },
             providesTags: (result) => {
                 if (result) {
                     const final = [

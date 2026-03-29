@@ -287,6 +287,8 @@ class PostService
         return $this->postRepo->getPostsByUserId(
             filters: [
                 'type' => $payload['post_type'] ?? null,
+                'q' => $payload['q'] ?? null,
+                'audience' => $payload['audience'] ?? null,
                 'per_page' => $payload['per_page'] ?? config('const.pagination.default_per_page'),
             ],
             targetUserId: $targetUser->id,

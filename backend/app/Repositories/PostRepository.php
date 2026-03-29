@@ -1,7 +1,6 @@
 <?php
 namespace App\Repositories;
 
-use App\Enums\Post\AudienceTypeEnum;
 use App\Models\Post;
 use App\Repositories\BaseRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -127,15 +126,32 @@ class PostRepository extends BaseRepository
     public function getPostsByUserId(array $filters, int $targetUserId, ?int $authUserId): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
+        $keyword = trim($filterCollection->get('q', ''));
+
         $query = $this->query()
             ->where('user_id', $targetUserId)
+            ->when(
+                $filterCollection->has('audience') && $filterCollection->get('audience') !== null,
+                function ($query) use ($filterCollection) {
+                    $query->where('audience', $filterCollection->get('audience'));
+                }
+            )
             ->typeOf($filterCollection->get('type'))
             ->visibleFor($authUserId)
+            ->when($keyword !== '', function ($query) use ($keyword) {
+                $query->where(function ($searchQuery) use ($keyword) {
+                    $searchQuery->whereRaw("\n                        search_vector @@ plainto_tsquery('simple', ?)\n                    ", [$keyword])
+                        ->orWhereHas('user', function ($userSearchQuery) use ($keyword) {
+                            $userSearchQuery->whereRaw("\n                            search_vector @@ plainto_tsquery('simple', ?)\n                        ", [$keyword]);
+                        });
+                });
+            })
             ->orderByDesc('created_at');
-            $perPage = $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
 
-            return $this->withDetail($query, $authUserId)
-                    ->paginate($perPage);
+        $perPage = $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
+
+        return $this->withDetail($query, $authUserId)
+            ->paginate($perPage);
     }
 
     /**
@@ -313,9 +329,12 @@ class PostRepository extends BaseRepository
         return $this->query()
             ->with(['user','media','hashtags','mentions','thumbnailFile'])
             // filter audience
-            ->when($filterCollection->get('audience'), function ($query, $audience) {
-                $query->where('audience', $audience);
-            })
+            ->when(
+                $filterCollection->has('audience') && $filterCollection->get('audience') !== null,
+                function ($query) use ($filterCollection) {
+                    $query->where('audience', $filterCollection->get('audience'));
+                }
+            )
             // filter user
             ->when($filterCollection->get('user_id'), function ($query, $userId) {
                 $query->where('user_id', $userId);
