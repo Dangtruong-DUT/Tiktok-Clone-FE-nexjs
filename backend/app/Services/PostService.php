@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\Post\PostTypeEnum;
+use App\Enums\Settings\PrivacyVisibilityEnum;
 use App\Exceptions\http\BusinessException;
 use App\Exceptions\http\ForbiddenException;
 use App\Exceptions\http\NotFoundException;
@@ -67,6 +68,7 @@ class PostService
                 'type' => $postType,
                 'audience' => $payload['audience'],
                 'content' => $payload['content'],
+
                 'thumbnail_file_id' => $payload['thumbnail'] ?? null,
                 'user_id' => $user->id,
                 'parent_id' => $payload['parent_id'] ?? null,
@@ -336,6 +338,14 @@ class PostService
     {
         $authUserId = auth_user_id();
         $targetUser = $this->userRepo->findByUuidOrFail($payload['user_uuid']);
+
+        $this->ensureUserSettingsVisibility(
+            targetUser: $targetUser,
+            authUserId: $authUserId,
+            settingField: 'liked_videos_visibility',
+            forbiddenMessage: 'This user keeps liked videos private'
+        );
+
         return $this->postRepo->getLikedPostsByUserId(
             filters: [
                 'type' => $payload['post_type'] ?? null,
@@ -360,6 +370,14 @@ class PostService
     {
         $authUserId = auth_user_id();
         $targetUser = $this->userRepo->findByUuidOrFail($payload['user_uuid']);
+
+        $this->ensureUserSettingsVisibility(
+            targetUser: $targetUser,
+            authUserId: $authUserId,
+            settingField: 'bookmarked_videos_visibility',
+            forbiddenMessage: 'This user keeps bookmarked videos private'
+        );
+
         return $this->postRepo->getBookmarkedPostsByUserId(
             filters: [
                 'type' => $payload['post_type'] ?? null,
@@ -469,6 +487,8 @@ class PostService
         $existingHashtags = $this->hashtagRepo->getByNames($hashtagNames)
             ->keyBy('name');
         $newHashtags = [];
+
+
         foreach ($hashtagNames as $hashtagName) {
             if (!isset($existingHashtags[$hashtagName])) {
                 $newHashtags[] = ['name' => $hashtagName];
@@ -485,6 +505,33 @@ class PostService
         }
 
         $post->hashtags()->sync($hashtagIds);
+    }
+
+    /**
+     * Ensure target user's privacy setting allows current viewer.
+     *
+     * @param \App\Models\User $targetUser
+     * @param ?int $authUserId
+     * @param string $settingField
+     * @param string $forbiddenMessage
+     * @return void
+     */
+    private function ensureUserSettingsVisibility(
+        \App\Models\User $targetUser,
+        ?int $authUserId,
+        string $settingField,
+        string $forbiddenMessage
+    ): void {
+        if ($authUserId === $targetUser->id) {
+            return;
+        }
+
+        $targetUser->loadMissing('settings');
+        $visibility = $targetUser->settings?->{$settingField};
+
+        if ($visibility === PrivacyVisibilityEnum::PRIVATE) {
+            throw new ForbiddenException($forbiddenMessage);
+        }
     }
 
     /**

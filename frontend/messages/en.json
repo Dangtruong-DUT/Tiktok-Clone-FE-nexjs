@@ -524,7 +524,9 @@
                 "friends": "Friends"
             },
             "emptyTitle": "No data",
-            "empty": "No users found."
+            "empty": "No users found.",
+            "privateTitle": "Private account",
+            "privateDescription": "This list is private."
         },
         "editProfileDialog": {
             "title": "Edit profile",
@@ -568,6 +570,10 @@
             "liked": {
                 "title": "No liked posts yet",
                 "description": "This user has not liked any posts yet."
+            },
+            "private": {
+                "title": "Private account",
+                "description": "This content is private."
             }
         }
     },

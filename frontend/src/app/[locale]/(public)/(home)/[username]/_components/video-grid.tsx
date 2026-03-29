@@ -14,7 +14,7 @@ import { useTranslations } from 'next-intl'
 
 function VideoGrid() {
     const [showSkeleton, setShowSkeleton] = useState<boolean>(true)
-    const { postList, hasNextPage, fetchNextPage, isFetching, isLoading, activeTabId } = useVideosContext()
+    const { postList, hasNextPage, fetchNextPage, isFetching, isLoading, activeTabId, isPrivate } = useVideosContext()
     const dispatch = useAppDispatch()
     const pathname = usePathname()
     const pathnameRef = useRef(pathname)
@@ -75,8 +75,12 @@ function VideoGrid() {
                     <div className='flex justify-center items-center size-[92px] rounded-full bg-muted'>
                         <CiGrid41 size={44} />
                     </div>
-                    <p className='text-2xl font-bold mt-6'>{t(`${emptyStateKey}.title`)}</p>
-                    <p className='text-base mt-2 text-muted-foreground'>{t(`${emptyStateKey}.description`)}</p>
+                    <p className='text-2xl font-bold mt-6'>
+                        {isPrivate ? t('private.title') : t(`${emptyStateKey}.title`)}
+                    </p>
+                    <p className='text-base mt-2 text-muted-foreground'>
+                        {isPrivate ? t('private.description') : t(`${emptyStateKey}.description`)}
+                    </p>
                 </div>
             )}
             {postList.length === 0 && showSkeleton && (

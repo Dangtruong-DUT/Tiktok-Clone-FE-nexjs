@@ -19,6 +19,7 @@ import {
 import { UserType } from '@/types/models/user.model'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
+import { HTTP_STATUS } from '@/constants/http'
 
 type RelationTab = 'following' | 'followers' | 'friends' | 'suggested'
 
@@ -118,6 +119,7 @@ export default function ProfileRelationsModal({
 
     const users = activeQuery.data?.data ?? []
     const isLoading = activeQuery.isLoading || activeQuery.isFetching
+    const isPrivateData = (activeQuery.error as { status?: number } | undefined)?.status === HTTP_STATUS.FORBIDDEN
 
     const defaultFollowActionLabel = useMemo(() => {
         if (activeTab === 'followers') {
@@ -265,7 +267,18 @@ export default function ProfileRelationsModal({
                             </div>
                         )}
 
-                        {!isLoading && users.length === 0 && (
+                        {!isLoading && isPrivateData && (
+                            <div className='flex h-full min-h-[360px] items-center justify-center'>
+                                <div className='text-center'>
+                                    <p className='text-2xl font-semibold'>{t('relationsModal.privateTitle')}</p>
+                                    <p className='mt-2 text-base text-muted-foreground'>
+                                        {t('relationsModal.privateDescription')}
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+
+                        {!isLoading && !isPrivateData && users.length === 0 && (
                             <div className='flex h-full min-h-[360px] items-center justify-center'>
                                 <div className='text-center'>
                                     <p className='text-2xl font-semibold'>{t('relationsModal.emptyTitle')}</p>
@@ -274,7 +287,7 @@ export default function ProfileRelationsModal({
                             </div>
                         )}
 
-                        {!isLoading && users.length > 0 && (
+                        {!isLoading && !isPrivateData && users.length > 0 && (
                             <div className='space-y-4'>
                                 {users.map((user) => (
                                     <div key={user.uuid} className='flex items-center justify-between gap-3'>

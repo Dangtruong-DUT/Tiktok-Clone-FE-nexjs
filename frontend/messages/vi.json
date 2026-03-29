@@ -524,7 +524,9 @@
                 "friends": "Bạn bè"
             },
             "emptyTitle": "Không có dữ liệu",
-            "empty": "Không tìm thấy người dùng nào."
+            "empty": "Không tìm thấy người dùng nào.",
+            "privateTitle": "Tài khoản riêng tư",
+            "privateDescription": "Danh sách này đang ở chế độ riêng tư."
         },
         "editProfileDialog": {
             "title": "Sửa hồ sơ",
@@ -568,6 +570,10 @@
             "liked": {
                 "title": "Chưa có bài viết đã thích",
                 "description": "Người dùng này chưa like bài viết nào."
+            },
+            "private": {
+                "title": "Tài khoản riêng tư",
+                "description": "Nội dung này đang ở chế độ riêng tư."
             }
         }
     },

@@ -33,6 +33,7 @@ type VideoContainerContextType = {
     postList: TikTokPostType[]
     isFetching: boolean
     isLoading: boolean
+    isPrivate: boolean
 }
 const videosContext = createContext<VideoContainerContextType>({
     activeTabId: 'videos',
@@ -41,7 +42,8 @@ const videosContext = createContext<VideoContainerContextType>({
     fetchNextPage: () => Promise.resolve(),
     postList: [],
     isFetching: false,
-    isLoading: false
+    isLoading: false,
+    isPrivate: false
 })
 
 interface VideoContainerProps {
@@ -51,11 +53,23 @@ interface VideoContainerProps {
 
 export default function VideosProvider({ children, userId }: VideoContainerProps) {
     const [activeTabId, setActiveTabId] = useState<ID_TAB_ITEMS>('videos')
-    const { postList, hasNextPage, fetchNextPage, isFetching, isLoading } = usePostsTabQuery({ activeTabId, userId })
+    const { postList, hasNextPage, fetchNextPage, isFetching, isLoading, isPrivate } = usePostsTabQuery({
+        activeTabId,
+        userId
+    })
 
     return (
         <videosContext.Provider
-            value={{ activeTabId, setActiveTabId, hasNextPage, fetchNextPage, postList, isFetching, isLoading }}
+            value={{
+                activeTabId,
+                setActiveTabId,
+                hasNextPage,
+                fetchNextPage,
+                postList,
+                isFetching,
+                isLoading,
+                isPrivate
+            }}
         >
             {children}
         </videosContext.Provider>

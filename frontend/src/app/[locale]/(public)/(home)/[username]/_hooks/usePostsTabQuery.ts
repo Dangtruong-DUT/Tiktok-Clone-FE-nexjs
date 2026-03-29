@@ -1,4 +1,5 @@
 import { ID_TAB_ITEMS } from '@/app/[locale]/(public)/(home)/[username]/_config/tab-items.config'
+import { HTTP_STATUS } from '@/constants/http'
 import {
     useGetBookmarkedPostsOfUserInfiniteQuery,
     useGetLikedPostsOfUserInfiniteQuery,
@@ -52,12 +53,14 @@ export default function usePostsTabQuery({ activeTabId, userId }: UsePostsTabQue
     }
 
     const currentQuery = getCurrentQuery()
+    const isPrivate = (currentQuery.error as { status?: number } | undefined)?.status === HTTP_STATUS.FORBIDDEN
 
     return {
         postList,
         hasNextPage: currentQuery.hasNextPage,
         fetchNextPage: currentQuery.fetchNextPage,
         isFetching: currentQuery.isFetching,
-        isLoading: currentQuery.isLoading
+        isLoading: currentQuery.isLoading,
+        isPrivate
     }
 }

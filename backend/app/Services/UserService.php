@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Enums\Settings\PrivacyVisibilityEnum;
 use App\Enums\User\RelationshipTypeEnum;
 use App\Exceptions\http\BadRequestException;
 use App\Exceptions\http\BusinessException;
+use App\Exceptions\http\ForbiddenException;
 use App\Models\User;
 use App\Repositories\RelationshipRepository;
 use App\Repositories\UserRepository;
@@ -193,6 +195,13 @@ class UserService
         $authUserId = auth_user_id();
         $targetUser = $this->userRepo->findByUuidOrFail($userUuid);
 
+        $this->ensureUserSettingsVisibility(
+            targetUser: $targetUser,
+            authUserId: $authUserId,
+            settingField: 'followers_visibility',
+            forbiddenMessage: 'This user keeps followers list private'
+        );
+
         return $this->userRepo->getFollowersByUserId($targetUser->id, $filters, $authUserId);
     }
 
@@ -207,6 +216,13 @@ class UserService
     {
         $authUserId = auth_user_id();
         $targetUser = $this->userRepo->findByUuidOrFail($userUuid);
+
+        $this->ensureUserSettingsVisibility(
+            targetUser: $targetUser,
+            authUserId: $authUserId,
+            settingField: 'following_visibility',
+            forbiddenMessage: 'This user keeps following list private'
+        );
 
         return $this->userRepo->getFollowingByUserId($targetUser->id, $filters, $authUserId);
     }
@@ -223,6 +239,19 @@ class UserService
         $authUserId = auth_user_id();
         $targetUser = $this->userRepo->findByUuidOrFail($userUuid);
 
+        $this->ensureUserSettingsVisibility(
+            targetUser: $targetUser,
+            authUserId: $authUserId,
+            settingField: 'followers_visibility',
+            forbiddenMessage: 'This user keeps friends list private'
+        );
+        $this->ensureUserSettingsVisibility(
+            targetUser: $targetUser,
+            authUserId: $authUserId,
+            settingField: 'following_visibility',
+            forbiddenMessage: 'This user keeps friends list private'
+        );
+
         return $this->userRepo->getFriendsByUserId($targetUser->id, $filters, $authUserId);
     }
 
@@ -237,6 +266,33 @@ class UserService
         $authUserId = auth_user_id();
 
         return $this->userRepo->getSuggestedUsers($filters, $authUserId);
+    }
+
+    /**
+     * Ensure target user's privacy setting allows current viewer.
+     *
+     * @param User $targetUser
+     * @param ?int $authUserId
+     * @param string $settingField
+     * @param string $forbiddenMessage
+     * @return void
+     */
+    private function ensureUserSettingsVisibility(
+        User $targetUser,
+        ?int $authUserId,
+        string $settingField,
+        string $forbiddenMessage
+    ): void {
+        if ($authUserId === $targetUser->id) {
+            return;
+        }
+
+        $targetUser->loadMissing('settings');
+        $visibility = $targetUser->settings?->{$settingField};
+
+        if ($visibility === PrivacyVisibilityEnum::PRIVATE) {
+            throw new ForbiddenException($forbiddenMessage);
+        }
     }
 
     /**
