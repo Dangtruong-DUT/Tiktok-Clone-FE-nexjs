@@ -9,16 +9,14 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Audience } from '@/constants/enum'
 import { Textarea } from '@/components/ui/textarea'
 import { Info, Loader } from 'lucide-react'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import VideoPreview from '@/app/[locale]/(user)/snapistudio/upload/_components/video-preview'
 import SelectThumbnailDialog from '@/app/[locale]/(user)/snapistudio/upload/_components/select-thumbnail-dialog'
+import AudienceSelect from '@/components/common/audience-select'
 
 import { useUploadImageMutation } from '@/store/services/upload.service'
 import { useGetPostDetailQuery, useUpdatePostMutation } from '@/store/services/posts.service'
 import { handleFormError } from '@/utils/handleErrors/handleFormErrors.util'
-import { audienceStatusValues } from '@/constants/types'
-import { getAudienceNameFromEnum } from '@/helper/getNameFromStatus'
 import { SearchParamsLoader, useSearchParamsLoader } from '@/components/searchparams-loader'
 import { useRouter } from '@/i18n/navigation'
 import { useParams } from 'next/navigation'
@@ -28,8 +26,10 @@ import useCurrentUserData from '@/hooks/data/useCurrentUserData'
 import { useConfirmNavigation } from '@/hooks/shared/useConfirmNavigation'
 import AlertDialogExitPage from '@/app/[locale]/(user)/snapistudio/upload/_components/alert-confirm-leave-page'
 import { toast } from 'sonner'
+import { useTranslations } from 'next-intl'
 
 export default function FormUpdatePost() {
+    const t = useTranslations('SnapiStudio.upload')
     const { id } = useParams<{ id: string }>()
     const [uploadImageMutate, uploadImageResult] = useUploadImageMutation()
     const [updatePostMutate, createPostResult] = useUpdatePostMutation()
@@ -153,19 +153,21 @@ export default function FormUpdatePost() {
             <form onSubmit={form.handleSubmit(onsubmit)} onReset={onReset} method='POST' className='relative'>
                 <div className='grid grid-cols-[70%_30%] gap-4'>
                     <div>
-                        <div className='mt-5 text-base font-bold'>Detail</div>
+                        <div className='mt-5 text-base font-bold'>{t('detail.title')}</div>
                         <div className='rounded-lg border border-border p-5 mt-[16px]'>
                             <FormField
                                 control={form.control}
                                 name='content'
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className='text-sm font-semibold'>Description</FormLabel>
+                                        <FormLabel className='text-sm font-semibold'>
+                                            {t('detail.description.label')}
+                                        </FormLabel>
                                         <FormControl>
                                             <Textarea
                                                 className='resize-none bg-accent'
                                                 rows={5}
-                                                placeholder='Share more about your video here ...'
+                                                placeholder={t('detail.description.placeholder')}
                                                 {...field}
                                             />
                                         </FormControl>
@@ -176,16 +178,13 @@ export default function FormUpdatePost() {
                             />
 
                             <div className='flex mt-7 mb-2 items-center gap-2 text-sm font-semibold'>
-                                Cover
+                                {t('detail.cover.label')}
                                 <Tooltip>
                                     <TooltipTrigger asChild>
                                         <Info size={14} className='text-muted-foreground' />
                                     </TooltipTrigger>
                                     <TooltipContent align='center' className='w-2xs'>
-                                        <p>
-                                            Select a cover or upload one from your device. An engaging cover can capture
-                                            viewers interest effectively.
-                                        </p>
+                                        <p>{t('detail.cover.tooltip')}</p>
                                     </TooltipContent>
                                 </Tooltip>
                             </div>
@@ -197,7 +196,7 @@ export default function FormUpdatePost() {
                             />
                         </div>
 
-                        <div className='mt-5 text-base font-bold'>Settings</div>
+                        <div className='mt-5 text-base font-bold'>{t('settings.title')}</div>
                         <div className='rounded-lg border border-border p-5 mt-[16px] '>
                             <FormField
                                 control={form.control}
@@ -205,25 +204,13 @@ export default function FormUpdatePost() {
                                 render={({ field }) => (
                                     <FormItem className='w-[280px]'>
                                         <FormLabel className='text-sm font-semibold'>
-                                            Who can watch this video
+                                            {t('settings.audience.label')}
                                         </FormLabel>
-                                        <Select
+                                        <AudienceSelect
+                                            value={(field?.value ?? Audience.PUBLIC).toString()}
                                             onValueChange={(value) => field.onChange(Number(value))}
-                                            defaultValue={field?.value?.toString() ?? Audience.PUBLIC.toString()}
-                                        >
-                                            <FormControl>
-                                                <SelectTrigger className='w-full '>
-                                                    <SelectValue placeholder='Select an audience' />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                {audienceStatusValues.map((status) => (
-                                                    <SelectItem key={status} value={status.toString()}>
-                                                        {getAudienceNameFromEnum(status)}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
+                                            placeholder={t('settings.audience.placeholder')}
+                                        />
                                         <FormMessage />
                                     </FormItem>
                                 )}

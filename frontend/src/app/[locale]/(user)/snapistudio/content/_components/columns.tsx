@@ -1,10 +1,8 @@
 'use client'
 
-import { getAudienceNameFromEnum } from '@/helper/getNameFromStatus'
 import { useTranslations } from 'next-intl'
 import { ColumnDef } from '@tanstack/react-table'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { audienceStatusValues } from '@/constants/types'
+import AudienceSelect from '@/components/common/audience-select'
 import { Audience } from '@/constants/enum'
 import Image from 'next/image'
 import { formatISOToDisplayDate } from '@/utils/formatting/formatTime.util'
@@ -94,18 +92,12 @@ export function useColumns(): ColumnDef<TikTokPostType>[] {
                     }
 
                     return (
-                        <Select value={displayedAudience.toString()} onValueChange={onChangeStatus}>
-                            <SelectTrigger className='w-[140px]'>
-                                <SelectValue placeholder='Select Privacy' />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {audienceStatusValues.map((status) => (
-                                    <SelectItem key={status} value={status.toString()}>
-                                        {getAudienceNameFromEnum(status)}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+                        <AudienceSelect
+                            value={displayedAudience.toString()}
+                            onValueChange={onChangeStatus}
+                            className='w-[140px]'
+                            placeholder={t('columns.privacy')}
+                        />
                     )
                 }
             },

@@ -181,6 +181,16 @@
             "settings": "Settings",
             "back": "Back to Snapi"
         },
+        "common": {
+            "audience": {
+                "selectPlaceholder": "Select audience",
+                "all": "All audiences",
+                "public": "Public",
+                "friends": "Friends",
+                "private": "Private",
+                "unknown": "Unknown"
+            }
+        },
         "content": {
             "table": {
                 "columns": {
@@ -267,7 +277,11 @@
                 "defaultUser": "USER",
                 "fullNameLabel": "Full Name",
                 "cancel": "Cancel",
-                "save": "Save"
+                "save": "Save",
+                "validation": {
+                    "invalidType": "Invalid image format. Only {accepted} files are supported.",
+                    "tooLarge": "Image is too large. Maximum allowed size is {maxSizeMb} MB."
+                }
             },
             "changePassword": {
                 "title": "Change Password",
@@ -321,10 +335,14 @@
         "upload": {
             "selectVideo": "Select Video to Upload",
             "dragAndDrop": "Or drag and drop files",
-            "mp4OrWebmOnly": "Only MP4 or WebM supported",
+            "mp4OrWebmOnly": "Only MP4 or MOV supported",
             "fileInfo": {
                 "size": "{size} MB",
                 "replace": "Replace"
+            },
+            "validation": {
+                "invalidType": "Invalid file format. Only {accepted} files are supported.",
+                "tooLarge": "File is too large. Maximum allowed size is {maxSizeMb} MB."
             },
             "exitDialog": {
                 "title": "Are you sure you want to exit?",
@@ -341,11 +359,11 @@
             "guidelines": {
                 "sizeAndDuration": {
                     "title": "Size and Duration",
-                    "description": "Maximum size: 30 GB, video length: 60 minutes."
+                    "description": "Maximum size: 50 MB, video length: 60 minutes."
                 },
                 "fileFormats": {
                     "title": "File Formats",
-                    "description": "Recommended: '.mp4'. Other main formats are supported."
+                    "description": "Supported formats: '.mp4', '.mov'."
                 },
                 "videoResolutions": {
                     "title": "Video Resolutions",
@@ -363,10 +381,22 @@
                 "unmute": "Unmute"
             },
             "resolutionReq": "Resolution 720x1280 or higher",
-            "maxFileSize": "Maximum size 30 GB",
+            "maxFileSize": "Maximum size 50 MB",
             "maxDuration": "Maximum duration 60 minutes",
             "selectFile": "Select File",
             "selectedFile": "Selected File",
+            "thumbnailUpload": {
+                "dragAndDrop": "Drag and drop a file here",
+                "or": "or",
+                "selectFile": "select file",
+                "supportedFormats": "Supported formats: JPG, JPEG and PNG.",
+                "uploadNew": "Upload new",
+                "confirm": "Confirm",
+                "validation": {
+                    "invalidType": "Invalid image format. Only {accepted} files are supported.",
+                    "tooLarge": "Image is too large. Maximum allowed size is {maxSizeMb} MB."
+                }
+            },
             "detail": {
                 "title": "Details",
                 "description": {
@@ -506,7 +536,11 @@
             },
             "avatar": {
                 "label": "Avatar",
-                "placeholder": "Select an avatar"
+                "placeholder": "Select an avatar",
+                "validation": {
+                    "invalidType": "Invalid image format. Only {accepted} files are supported.",
+                    "tooLarge": "Image is too large. Maximum allowed size is {maxSizeMb} MB."
+                }
             }
         },
         "noContent": {

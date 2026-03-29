@@ -21,6 +21,8 @@ import PhotoEditorDialog from '@/components/photo-editor-dialog'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useUploadImageMutation } from '@/store/services/upload.service'
 import { useAppDispatch } from '@/store/hooks'
+import { getAcceptedFileAttribute, validateUploadFile } from '@/utils/validation/upload-file.util'
+import { toast } from 'sonner'
 
 export default function EditProfileDialog() {
     const [open, setOpen] = useState(false)
@@ -104,6 +106,30 @@ export default function EditProfileDialog() {
 
     const handleChangeAvatar = (e: ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0] || null
+        if (!selectedFile) {
+            e.target.value = ''
+            return
+        }
+
+        const validation = validateUploadFile(selectedFile, 'image')
+        if (!validation.isValid) {
+            if (validation.code === 'invalid_type') {
+                toast.error(
+                    t('avatar.validation.invalidType', {
+                        accepted: validation.acceptedExtensions
+                    })
+                )
+            } else {
+                toast.error(
+                    t('avatar.validation.tooLarge', {
+                        maxSizeMb: validation.maxSizeMb
+                    })
+                )
+            }
+            e.target.value = ''
+            return
+        }
+
         setFileImage(selectedFile)
 
         if (selectedFile) {
@@ -156,7 +182,7 @@ export default function EditProfileDialog() {
 
                                             <input
                                                 type='file'
-                                                accept='image/*'
+                                                accept={getAcceptedFileAttribute('image')}
                                                 className='hidden'
                                                 ref={avatarPreviewRef}
                                                 onChange={handleChangeAvatar}

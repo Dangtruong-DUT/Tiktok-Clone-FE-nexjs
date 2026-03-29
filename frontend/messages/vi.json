@@ -181,6 +181,16 @@
             "settings": "Cài đặt",
             "back": "Quay lại Snapi"
         },
+        "common": {
+            "audience": {
+                "selectPlaceholder": "Chọn đối tượng xem",
+                "all": "Tất cả đối tượng",
+                "public": "Công khai",
+                "friends": "Bạn bè",
+                "private": "Riêng tư",
+                "unknown": "Không xác định"
+            }
+        },
         "content": {
             "table": {
                 "columns": {
@@ -267,7 +277,11 @@
                 "defaultUser": "USER",
                 "fullNameLabel": "Họ và tên",
                 "cancel": "Hủy",
-                "save": "Lưu"
+                "save": "Lưu",
+                "validation": {
+                    "invalidType": "Định dạng ảnh không hợp lệ. Chỉ hỗ trợ {accepted}.",
+                    "tooLarge": "Ảnh quá lớn. Kích thước tối đa cho phép là {maxSizeMb} MB."
+                }
             },
             "changePassword": {
                 "title": "Đổi mật khẩu",
@@ -326,6 +340,10 @@
                 "size": "{size} MB",
                 "replace": "Thay thế"
             },
+            "validation": {
+                "invalidType": "Định dạng tệp không hợp lệ. Chỉ hỗ trợ {accepted}.",
+                "tooLarge": "Tệp quá lớn. Kích thước tối đa cho phép là {maxSizeMb} MB."
+            },
             "exitDialog": {
                 "title": "Bạn có chắc chắn muốn thoát?",
                 "description": "Các chỉnh sửa của bạn sẽ không được lưu.",
@@ -367,6 +385,18 @@
             "maxDuration": "Thời lượng tối đa 60 phút",
             "selectFile": "Chọn tệp",
             "selectedFile": "Tệp đã chọn",
+            "thumbnailUpload": {
+                "dragAndDrop": "Kéo và thả tệp vào đây",
+                "or": "hoặc",
+                "selectFile": "chọn tệp",
+                "supportedFormats": "Định dạng hỗ trợ: JPG, JPEG và PNG.",
+                "uploadNew": "Tải ảnh mới",
+                "confirm": "Xác nhận",
+                "validation": {
+                    "invalidType": "Định dạng ảnh không hợp lệ. Chỉ hỗ trợ {accepted}.",
+                    "tooLarge": "Ảnh quá lớn. Kích thước tối đa cho phép là {maxSizeMb} MB."
+                }
+            },
             "detail": {
                 "title": "Chi tiết",
                 "description": {
@@ -487,7 +517,11 @@
             "title": "Sửa hồ sơ",
             "avatar": {
                 "label": "Ảnh đại diện",
-                "placeholder": "Chọn ảnh đại diện"
+                "placeholder": "Chọn ảnh đại diện",
+                "validation": {
+                    "invalidType": "Định dạng ảnh không hợp lệ. Chỉ hỗ trợ {accepted}.",
+                    "tooLarge": "Ảnh quá lớn. Kích thước tối đa cho phép là {maxSizeMb} MB."
+                }
             },
             "username": {
                 "label": "Tên người dùng",

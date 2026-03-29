@@ -18,6 +18,7 @@ import { useUpdateMeMutation } from '@/store/services/user.service'
 import { useUploadImageMutation } from '@/store/services/upload.service'
 import { handleFormError } from '@/utils/handleErrors/handleFormErrors.util'
 import PhotoEditorDialog from '@/components/photo-editor-dialog'
+import { getAcceptedFileAttribute, validateUploadFile } from '@/utils/validation/upload-file.util'
 
 export default function UpdateProfileForm() {
     const t = useTranslations('SnapiStudio.settings')
@@ -86,6 +87,30 @@ export default function UpdateProfileForm() {
 
     const handleChangeAvatar = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0] || null
+        if (!selectedFile) {
+            e.target.value = ''
+            return
+        }
+
+        const validation = validateUploadFile(selectedFile, 'image')
+        if (!validation.isValid) {
+            if (validation.code === 'invalid_type') {
+                toast.error(
+                    t('updateProfile.validation.invalidType', {
+                        accepted: validation.acceptedExtensions
+                    })
+                )
+            } else {
+                toast.error(
+                    t('updateProfile.validation.tooLarge', {
+                        maxSizeMb: validation.maxSizeMb
+                    })
+                )
+            }
+            e.target.value = ''
+            return
+        }
+
         setFileImage(selectedFile)
 
         if (selectedFile) {
@@ -170,7 +195,7 @@ export default function UpdateProfileForm() {
 
                                         <input
                                             type='file'
-                                            accept='image/*'
+                                            accept={getAcceptedFileAttribute('image')}
                                             className='hidden'
                                             ref={avatarPreviewRef}
                                             onChange={handleChangeAvatar}

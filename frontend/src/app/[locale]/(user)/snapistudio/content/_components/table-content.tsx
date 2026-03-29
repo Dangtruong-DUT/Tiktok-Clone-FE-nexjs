@@ -20,15 +20,14 @@ import useCurrentUserData from '@/hooks/data/useCurrentUserData'
 import { DataTable } from '@/components/ui/data-table'
 import AutoPagination from '@/components/auto-pagination'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Loader2 } from 'lucide-react'
+import AudienceSelect from '@/components/common/audience-select'
 import AlertDialogDeleteDish from '@/app/[locale]/(user)/snapistudio/content/_components/alert-confirm-delete-post'
 import { usePostTableContext } from '@/app/[locale]/(user)/snapistudio/content/_context/content-table.context'
 import { useColumns } from '@/app/[locale]/(user)/snapistudio/content/_components/columns'
 import TableSkeleton from '@/app/[locale]/(user)/snapistudio/content/_components/table-skeleton'
-import { audienceStatusValues } from '@/constants/types'
 import { Audience } from '@/constants/enum'
 
 export default function TableContent() {
@@ -124,19 +123,6 @@ export default function TableContent() {
         table.setPageIndex(0)
     }
 
-    const getAudienceLabel = (audience: Audience) => {
-        switch (audience) {
-            case Audience.PUBLIC:
-                return t('filter.audience.public')
-            case Audience.FRIENDS:
-                return t('filter.audience.friends')
-            case Audience.PRIVATE:
-                return t('filter.audience.private')
-            default:
-                return t('filter.audience.unknown')
-        }
-    }
-
     return (
         <div className='w-full relative'>
             <SearchParamsLoader onParamsReceived={setSearchParams} />
@@ -156,19 +142,15 @@ export default function TableContent() {
                             className='w-full md:flex-1 md:max-w-[220px]'
                         />
 
-                        <Select value={audienceFilter} onValueChange={setAudienceFilter}>
-                            <SelectTrigger className='w-full md:w-[220px]'>
-                                <SelectValue placeholder={t('filter.audiencePlaceholder')} />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value='all'>{t('filter.allAudience')}</SelectItem>
-                                {audienceStatusValues.map((audience) => (
-                                    <SelectItem key={audience} value={audience.toString()}>
-                                        {getAudienceLabel(audience)}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+                        <AudienceSelect
+                            value={audienceFilter}
+                            onValueChange={setAudienceFilter}
+                            className='md:w-[220px]'
+                            placeholder={t('filter.audiencePlaceholder')}
+                            includeAllOption
+                            allOptionLabel={t('filter.allAudience')}
+                            disabled={isFetchingPosts}
+                        />
 
                         <div className='flex w-full gap-2 md:ml-auto md:w-auto'>
                             <Button
@@ -186,7 +168,11 @@ export default function TableContent() {
                                     t('search.clearButton')
                                 )}
                             </Button>
-                            <Button className='flex-1 md:flex-none' onClick={handleSearch} disabled={isFetchingPosts}>
+                            <Button
+                                className='flex-1 md:flex-none bg-brand hover:bg-brand/90 text-white'
+                                onClick={handleSearch}
+                                disabled={isFetchingPosts}
+                            >
                                 {isFetchingPosts && pendingAction === 'search' ? (
                                     <>
                                         <Loader2 className='h-4 w-4 animate-spin' />

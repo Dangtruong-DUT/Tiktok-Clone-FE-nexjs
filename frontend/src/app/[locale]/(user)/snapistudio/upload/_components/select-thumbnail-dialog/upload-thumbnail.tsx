@@ -3,21 +3,38 @@ import { Button } from '@/components/ui/button'
 import { CloudUpload } from 'lucide-react'
 import Image from 'next/image'
 import { ChangeEvent, DragEvent, MouseEvent, useRef, useState } from 'react'
+import { useTranslations } from 'next-intl'
+import { toast } from 'sonner'
+import { getAcceptedFileAttribute, validateUploadFile } from '@/utils/validation/upload-file.util'
 
 interface UploadThumbnailFromDeviceProps {
     setCoverImage: (image: File) => void
     className?: string
 }
 export default function UploadThumbnailFromDevice({ setCoverImage, className }: UploadThumbnailFromDeviceProps) {
+    const t = useTranslations('SnapiStudio.upload.thumbnailUpload')
     const [file, setFile] = useState<File | null>(null)
 
     const inputRef = useRef<HTMLInputElement | null>(null)
     const handleDrop = (e: DragEvent<HTMLDivElement>) => {
         e.preventDefault()
         const files = e.dataTransfer.files
-        if (files && files.length > 0 && files[0].type.startsWith('image/')) {
-            setFile(files[0])
+        const selectedFile = files?.[0]
+        if (!selectedFile) {
+            return
         }
+
+        const validation = validateUploadFile(selectedFile, 'image')
+        if (!validation.isValid) {
+            if (validation.code === 'invalid_type') {
+                toast.error(t('validation.invalidType', { accepted: validation.acceptedExtensions }))
+                return
+            }
+            toast.error(t('validation.tooLarge', { maxSizeMb: validation.maxSizeMb }))
+            return
+        }
+
+        setFile(selectedFile)
     }
 
     const handleOpenFileDialog = () => {
@@ -28,10 +45,24 @@ export default function UploadThumbnailFromDevice({ setCoverImage, className }: 
     }
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const files = e.target.files
-        if (files && files.length > 0 && files[0].type.startsWith('image/')) {
-            setFile(files[0])
+        const selectedFile = e.target.files?.[0]
+        if (!selectedFile) {
+            e.target.value = ''
+            return
         }
+
+        const validation = validateUploadFile(selectedFile, 'image')
+        if (!validation.isValid) {
+            if (validation.code === 'invalid_type') {
+                toast.error(t('validation.invalidType', { accepted: validation.acceptedExtensions }))
+            } else {
+                toast.error(t('validation.tooLarge', { maxSizeMb: validation.maxSizeMb }))
+            }
+            e.target.value = ''
+            return
+        }
+
+        setFile(selectedFile)
         e.target.value = ''
     }
 
@@ -64,14 +95,12 @@ export default function UploadThumbnailFromDevice({ setCoverImage, className }: 
                 >
                     <div className=' flex flex-col items-center justify-between '>
                         <CloudUpload size={60} />
-                        <span className='text-2xl font-semibold mt-2'>Drag and drop a file here</span>
+                        <span className='text-2xl font-semibold mt-2'>{t('dragAndDrop')}</span>
                         <div className='text-lg mt-1'>
-                            <span>or </span>
-                            <span className='text-blue-500'>select file</span>
+                            <span>{t('or')} </span>
+                            <span className='text-blue-500'>{t('selectFile')}</span>
                         </div>
-                        <span className='text-sm text-muted-foreground mt-5'>
-                            Supported formats: JPG, JPEG and PNG.
-                        </span>
+                        <span className='text-sm text-muted-foreground mt-5'>{t('supportedFormats')}</span>
                     </div>
                 </div>
             )}
@@ -83,21 +112,21 @@ export default function UploadThumbnailFromDevice({ setCoverImage, className }: 
                         className='cursor-pointer h-10 rounded-lg mr-2'
                         onClick={handleOpenFileDialog}
                     >
-                        Upload new
+                        {t('uploadNew')}
                     </Button>
                     <Button
                         type='button'
                         className='primary-button h-10! rounded-lg! cursor-pointer text-sm! font-medium!'
                         onClick={onConfirm}
                     >
-                        Confirm
+                        {t('confirm')}
                     </Button>
                 </footer>
             )}
             <input
                 type='file'
                 ref={inputRef}
-                accept='image/png, image/jpeg, image/jpg'
+                accept={getAcceptedFileAttribute('image')}
                 className='hidden'
                 onChange={handleFileChange}
             />

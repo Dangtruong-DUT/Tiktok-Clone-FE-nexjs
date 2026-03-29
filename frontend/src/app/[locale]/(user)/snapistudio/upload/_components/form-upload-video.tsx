@@ -11,17 +11,15 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Audience, MediaType, PosterType } from '@/constants/enum'
 import { Textarea } from '@/components/ui/textarea'
 import { Info, Loader } from 'lucide-react'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import VideoPreview from '@/app/[locale]/(user)/snapistudio/upload/_components/video-preview'
 import SelectThumbnailDialog from '@/app/[locale]/(user)/snapistudio/upload/_components/select-thumbnail-dialog'
+import AudienceSelect from '@/components/common/audience-select'
 import { convertBase64ToFileToFile } from '@/utils/file.util'
 import { useUploadImageMutation, useUploadVideoMutation } from '@/store/services/upload.service'
 import { useCreatePostMutation } from '@/store/services/posts.service'
 import { handleFormError } from '@/utils/handleErrors/handleFormErrors.util'
 import { toast } from 'sonner'
-import { audienceStatusValues } from '@/constants/types'
-import { getAudienceNameFromEnum } from '@/helper/getNameFromStatus'
 import useVideoFrames from '@/hooks/video/useVideoFrames'
 import { useRouter } from '@/i18n/navigation'
 import { useConfirmNavigation } from '@/hooks/shared/useConfirmNavigation'
@@ -241,23 +239,11 @@ export default function FormUploadVideo() {
                                             <FormLabel className='text-sm font-semibold'>
                                                 {t('settings.audience.label')}
                                             </FormLabel>
-                                            <Select
+                                            <AudienceSelect
+                                                value={field.value.toString()}
                                                 onValueChange={(value) => field.onChange(Number(value))}
-                                                defaultValue={field.value.toString()}
-                                            >
-                                                <FormControl>
-                                                    <SelectTrigger className='w-full '>
-                                                        <SelectValue placeholder={t('settings.audience.placeholder')} />
-                                                    </SelectTrigger>
-                                                </FormControl>
-                                                <SelectContent>
-                                                    {audienceStatusValues.map((status) => (
-                                                        <SelectItem key={status} value={status.toString()}>
-                                                            {getAudienceNameFromEnum(status)}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
+                                                placeholder={t('settings.audience.placeholder')}
+                                            />
                                             <FormMessage />
                                         </FormItem>
                                     )}

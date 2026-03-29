@@ -6,6 +6,8 @@ import Image from 'next/image'
 import UploadGuideLine from '@/app/[locale]/(user)/snapistudio/upload/_components/upload-video/upload-guide-lines'
 import { cn } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
+import { toast } from 'sonner'
+import { getAcceptedFileAttribute, validateUploadFile } from '@/utils/validation/upload-file.util'
 
 interface UploadFileProps {
     onFileSelect: (file: File | null) => void
@@ -50,17 +52,60 @@ const UploadFile = forwardRef<UploadFileRef, UploadFileProps>(
             setIsDragActive(false)
 
             const droppedFile = e.dataTransfer.files[0]
-            if (droppedFile && droppedFile.type.startsWith('video/')) {
-                onFileSelect(droppedFile)
-                setIsInitialRender(false)
+            if (!droppedFile) {
+                return
             }
+
+            const validation = validateUploadFile(droppedFile, 'video')
+            if (!validation.isValid) {
+                if (validation.code === 'invalid_type') {
+                    toast.error(
+                        t('validation.invalidType', {
+                            accepted: validation.acceptedExtensions
+                        })
+                    )
+                    return
+                }
+
+                toast.error(
+                    t('validation.tooLarge', {
+                        maxSizeMb: validation.maxSizeMb
+                    })
+                )
+                return
+            }
+
+            onFileSelect(droppedFile)
+            setIsInitialRender(false)
         }
 
         const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-            if (e.target.files && e.target.files[0] && e.target.files[0].type.startsWith('video/')) {
-                onFileSelect(e.target.files[0])
-                setIsInitialRender(false)
+            const selectedFile = e.target.files?.[0]
+            if (!selectedFile) {
+                return
             }
+
+            const validation = validateUploadFile(selectedFile, 'video')
+            if (!validation.isValid) {
+                if (validation.code === 'invalid_type') {
+                    toast.error(
+                        t('validation.invalidType', {
+                            accepted: validation.acceptedExtensions
+                        })
+                    )
+                    return
+                }
+
+                toast.error(
+                    t('validation.tooLarge', {
+                        maxSizeMb: validation.maxSizeMb
+                    })
+                )
+                return
+            }
+
+            onFileSelect(selectedFile)
+            setIsInitialRender(false)
         }
 
         return (
@@ -81,7 +126,7 @@ const UploadFile = forwardRef<UploadFileRef, UploadFileProps>(
                 >
                     <input
                         type='file'
-                        accept='video/*'
+                        accept={getAcceptedFileAttribute('video')}
                         onChange={handleFileChange}
                         className='absolute inset-0 cursor-pointer opacity-0'
                         onClick={(event) => {
