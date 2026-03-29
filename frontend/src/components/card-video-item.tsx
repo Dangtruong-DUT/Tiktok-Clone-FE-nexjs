@@ -7,7 +7,7 @@ import { IoLockClosedOutline } from 'react-icons/io5'
 import Image from 'next/image'
 import React from 'react'
 import { CiHeart } from 'react-icons/ci'
-import { Link } from '@/i18n/navigation'
+import { useRouter } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
 import PlayingIcon from '@/components/lottie-icons/playing'
 import { HiOutlinePlay } from 'react-icons/hi2'
@@ -26,6 +26,8 @@ export default function CardVideoItem({
 }) {
     const author = post.author
     const locale = useLocale()
+    const router = useRouter()
+
     return (
         <article className='w-full'>
             <div className={cn('relative block w-full pt-[133.333%] aspect-[3/4] overflow-hidden rounded-md group')}>
@@ -63,7 +65,7 @@ export default function CardVideoItem({
                         playsInline
                         loop
                         preload='metadata'
-                        className='w-full h-full object-cover'
+                        className='w-full h-full object-contain'
                         src={post.medias[0].url}
                     />
                 </div>
@@ -93,12 +95,13 @@ export default function CardVideoItem({
             {isDescriptionVisible && (
                 <div className='mt-2'>
                     <p className='text-sm line-clamp-2 mb-1'>{post.content}</p>
-                    <Link
-                        href={`/${author.username}`}
+                    <button
+                        type='button'
+                        onClick={() => router.push(`/@${author.username}`)}
                         className='text-sm font-semibold hover:underline text-muted-foreground truncate block max-w-[90%] '
                     >
                         {author.username}
-                    </Link>
+                    </button>
                     <p className='text-muted-foreground flex text-sm gap-1.5'>
                         <span className='flex items-center gap-1'>
                             <FaRegHeart className='size-3.5' />

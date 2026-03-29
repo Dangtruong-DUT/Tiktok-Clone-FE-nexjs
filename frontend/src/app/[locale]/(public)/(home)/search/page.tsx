@@ -23,8 +23,8 @@ export async function generateMetadata({
         alternates: {
             canonical: `${envConfig.NEXT_PUBLIC_URL}/${locale}/search?q=${query}`,
             languages: {
-                'en-US': `${envConfig.NEXT_PUBLIC_URL}en/search?q=${query}`,
-                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}vi/search?q=${query}`
+                'en-US': `${envConfig.NEXT_PUBLIC_URL}/en/search?q=${query}`,
+                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}/vi/search?q=${query}`
             }
         }
     }
