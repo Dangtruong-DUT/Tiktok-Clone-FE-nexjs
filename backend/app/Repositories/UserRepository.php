@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories;
 
+use App\Enums\Post\PostTypeEnum;
 use App\Enums\User\RoleTypeEnum;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -171,6 +172,7 @@ class UserRepository extends BaseRepository
             ->with(['avatarFile'])
             ->selectSub(function ($query) {
                 $query->from('posts')
+                    ->where('type', PostTypeEnum::POST->value)
                     ->selectRaw('COALESCE(SUM(likes_count), 0)')
                     ->whereColumn('posts.user_id', 'users.id');
             }, 'likes_count')
