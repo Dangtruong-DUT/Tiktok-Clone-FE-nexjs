@@ -1,8 +1,5 @@
 import React from 'react'
-import MaterialSymbolsPlayCircleRounded from '@/components/icons/MaterialSymbolsPlayCircleRounded'
-import MaterialSymbolsPauseCircle from '@/components/icons/MaterialSymbolsPauseCircle'
-import MaterialSymbolsNoSoundRounded from '@/components/icons/MaterialSymbolsNoSoundRounded'
-import MaterialSymbolsVolumeUpRoundedAnimated from '@/components/icons/MaterialSymbolsVolumeUpRounded'
+import { IoPause, IoPlay, IoVolumeHigh, IoVolumeMute } from 'react-icons/io5'
 
 interface VideoOverlayIconsProps {
     showPlayPauseIcon: boolean
@@ -15,20 +12,16 @@ export function VideoOverlayIcons({ showPlayPauseIcon, showMutedIcon, isPlaying,
     return (
         <>
             {showPlayPauseIcon && (
-                <div className='absolute top-1/2 left-1/2   w-[4.5rem] text-[clamp(3.2rem,3vw+1rem,4.8rem)] -translate-y-1/2 -translate-x-1/2  z-[3] text-black  origin-center  animate-popup '>
-                    {isPlaying ? (
-                        <MaterialSymbolsPauseCircle className='w-[1.5em]' />
-                    ) : (
-                        <MaterialSymbolsPlayCircleRounded className=' w-[1.5em]' />
-                    )}
+                <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[3] origin-center animate-popup text-white drop-shadow-[0_3px_10px_rgba(0,0,0,0.5)]'>
+                    {isPlaying ? <IoPause className='text-[4.25rem]' /> : <IoPlay className='text-[4.25rem]' />}
                 </div>
             )}
             {showMutedIcon && (
-                <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 text-[clamp(3.2rem,3vw+1rem,4.8rem)] -translate-y-1/2 z-[3] text-black origin-center animate-popup  '>
+                <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[3] origin-center animate-popup text-white drop-shadow-[0_3px_10px_rgba(0,0,0,0.5)]'>
                     {isMuted ? (
-                        <MaterialSymbolsNoSoundRounded className=' w-[1.5em]' />
+                        <IoVolumeMute className='text-[4.25rem]' />
                     ) : (
-                        <MaterialSymbolsVolumeUpRoundedAnimated className='w-[1.5em]' />
+                        <IoVolumeHigh className='text-[4.25rem]' />
                     )}
                 </div>
             )}

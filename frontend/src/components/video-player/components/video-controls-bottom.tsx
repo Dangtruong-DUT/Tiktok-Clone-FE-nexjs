@@ -29,7 +29,7 @@ export function VideoControlsBottom({
     onProgressBarActive
 }: VideoControlsBottomProps) {
     return (
-        <div className='absolute bottom-0 left-0  flex justify-end flex-col z-[5] rounded-b-2xl w-full  bg-black/2'>
+        <div className='absolute bottom-0 left-0  flex justify-end flex-col z-[5] rounded-b-2xl w-full  bg-gradient-to-b from-transparent to-black/50'>
             <div
                 className={cn(
                     'flex-grow justify-start text-white px-3 pb-4 w-full relative transition-all duration-200 ease-out',
