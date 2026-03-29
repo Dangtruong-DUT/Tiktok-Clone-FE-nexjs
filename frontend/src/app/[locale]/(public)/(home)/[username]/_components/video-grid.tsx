@@ -6,7 +6,7 @@ import { useAppDispatch } from '@/store/hooks'
 import { useInViewport } from '@/hooks/ui/useInViewport'
 import { Link, usePathname } from '@/i18n/navigation'
 import { setOpenModal } from '@/store/features/modalSlide'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import LoadingIcon from '@/components/lottie-icons/loading'
 import { CiGrid41 } from 'react-icons/ci'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -14,12 +14,19 @@ import { useTranslations } from 'next-intl'
 
 function VideoGrid() {
     const [showSkeleton, setShowSkeleton] = useState<boolean>(true)
-    const { postList, hasNextPage, fetchNextPage, isFetching, isLoading } = useVideosContext()
+    const { postList, hasNextPage, fetchNextPage, isFetching, isLoading, activeTabId } = useVideosContext()
     const dispatch = useAppDispatch()
     const pathname = usePathname()
     const pathnameRef = useRef(pathname)
 
     const t = useTranslations('ProfilePage.noContent')
+
+    const emptyStateKey = useMemo(() => {
+        if (activeTabId === 'favorites') return 'favorites'
+        if (activeTabId === 'liked') return 'liked'
+        return 'videos'
+    }, [activeTabId])
+
     const handleVideoClick = useCallback(() => {
         dispatch(setOpenModal({ prevPathname: pathnameRef.current, type: 'modalVideoDetail' }))
     }, [dispatch, pathnameRef])
@@ -68,8 +75,8 @@ function VideoGrid() {
                     <div className='flex justify-center items-center size-[92px] rounded-full bg-muted'>
                         <CiGrid41 size={44} />
                     </div>
-                    <p className='text-2xl font-bold mt-6'>{t('title')}</p>
-                    <p className='text-base mt-2 text-muted-foreground'>{t('description')}</p>
+                    <p className='text-2xl font-bold mt-6'>{t(`${emptyStateKey}.title`)}</p>
+                    <p className='text-base mt-2 text-muted-foreground'>{t(`${emptyStateKey}.description`)}</p>
                 </div>
             )}
             {postList.length === 0 && showSkeleton && (

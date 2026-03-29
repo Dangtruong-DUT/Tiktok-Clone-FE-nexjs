@@ -457,8 +457,18 @@
             }
         },
         "noContent": {
-            "title": "No content",
-            "description": "This user has not published any videos."
+            "videos": {
+                "title": "No content",
+                "description": "This user has not published any videos."
+            },
+            "favorites": {
+                "title": "No bookmarked posts yet",
+                "description": "This user has not bookmarked any posts yet."
+            },
+            "liked": {
+                "title": "No liked posts yet",
+                "description": "This user has not liked any posts yet."
+            }
         }
     },
     "HomePage": {

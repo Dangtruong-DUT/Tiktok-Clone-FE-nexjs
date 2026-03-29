@@ -457,8 +457,18 @@
             }
         },
         "noContent": {
-            "title": "Không có nội dung",
-            "description": "Người dùng này chưa đăng tải video nào."
+            "videos": {
+                "title": "Không có nội dung",
+                "description": "Người dùng này chưa đăng tải video nào."
+            },
+            "favorites": {
+                "title": "Chưa có bài viết đã lưu",
+                "description": "Người dùng này chưa bookmark bài viết nào."
+            },
+            "liked": {
+                "title": "Chưa có bài viết đã thích",
+                "description": "Người dùng này chưa like bài viết nào."
+            }
         }
     },
     "HomePage": {
