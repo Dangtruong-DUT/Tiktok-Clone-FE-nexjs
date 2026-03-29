@@ -2,6 +2,7 @@
 
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import { UserVerifyStatus } from '@/constants/enum'
 import { useResendVerifyEmailMutation } from '@/store/services/user.service'
 import { MailCheck, Loader } from 'lucide-react'
@@ -65,7 +66,28 @@ export default function VerifyEmailForm() {
         }
     }, [isLoading, isUnverified, remainingCooldown, resendVerifyEmailMutate, t])
 
-    if (!user) return null
+    if (!user) {
+        return (
+            <div className='space-y-6'>
+                <div className='flex items-center gap-2 mb-6'>
+                    <Skeleton className='size-9 rounded-full' />
+                    <div className='space-y-2'>
+                        <Skeleton className='h-4 w-32' />
+                        <Skeleton className='h-3 w-56' />
+                    </div>
+                </div>
+
+                <div className='space-y-4'>
+                    <div className='rounded-xl p-4 border bg-muted/40 space-y-2'>
+                        <Skeleton className='h-3 w-24' />
+                        <Skeleton className='h-5 w-48' />
+                    </div>
+                    <Skeleton className='h-4 w-full' />
+                    <Skeleton className='h-11 w-full rounded-full' />
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className='space-y-6'>

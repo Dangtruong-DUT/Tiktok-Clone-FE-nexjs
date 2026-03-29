@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Loader, Pencil, UserIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -92,6 +93,31 @@ export default function UpdateProfileForm() {
         }
         e.target.value = ''
     }, [])
+
+    if (!user) {
+        return (
+            <div className='space-y-6'>
+                <div className='flex items-start justify-between gap-4'>
+                    <div className='flex items-center gap-2'>
+                        <Skeleton className='size-9 rounded-full' />
+                        <div className='space-y-2'>
+                            <Skeleton className='h-4 w-32' />
+                            <Skeleton className='h-3 w-56' />
+                        </div>
+                    </div>
+                    <Skeleton className='h-9 w-[90px] rounded-full' />
+                </div>
+
+                <div className='grid gap-6 sm:grid-cols-[auto_1fr] sm:items-center'>
+                    <Skeleton className='h-[112px] w-[112px] rounded-full' />
+                    <div className='grid gap-3'>
+                        <Skeleton className='h-4 w-32' />
+                        <Skeleton className='h-11 w-full rounded-full' />
+                    </div>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <Form {...form}>

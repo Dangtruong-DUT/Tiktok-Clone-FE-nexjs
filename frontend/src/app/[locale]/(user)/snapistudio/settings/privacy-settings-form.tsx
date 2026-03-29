@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Switch } from '@/components/ui/switch'
 import { PrivacyVisibility } from '@/constants/enum'
 import { formatFetchBaseQueryErrorMessage } from '@/store/utils/formatFetchBaseQueryErrorMessage.util'
@@ -41,7 +42,7 @@ function mapToPrivacyFormState(data: UserSettingsType): PrivacyFormState {
 
 export default function PrivacySettingsForm() {
     const t = useTranslations('SnapiStudio.settings')
-    const { data: settingsRes } = useGetUserSettingsQuery()
+    const { data: settingsRes, isLoading, isFetching } = useGetUserSettingsQuery()
     const [updateSettingsMutate, { isLoading: isUpdating }] = useUpdateUserSettingsMutation()
 
     const [draftSettings, setDraftSettings] = useState<PrivacyFormState | null>(null)
@@ -133,7 +134,36 @@ export default function PrivacySettingsForm() {
         }
     }, [currentSettings, hasChanges, initialSettings, isUpdating, privacyFields, t, updateSettingsMutate])
 
-    if (!currentSettings) return null
+    if (isLoading || (isFetching && !currentSettings) || !currentSettings) {
+        return (
+            <div className='space-y-6'>
+                <div className='flex items-center gap-2 mb-6'>
+                    <Skeleton className='size-9 rounded-full' />
+                    <div className='space-y-2'>
+                        <Skeleton className='h-4 w-24' />
+                        <Skeleton className='h-3 w-56' />
+                    </div>
+                </div>
+
+                <div className='rounded-lg border bg-muted/20 divide-y'>
+                    {[1, 2, 3, 4].map((index) => (
+                        <div key={index} className='flex items-center justify-between gap-4 p-4 sm:p-5'>
+                            <div className='space-y-2'>
+                                <Skeleton className='h-4 w-32' />
+                                <Skeleton className='h-3 w-52' />
+                            </div>
+                            <Skeleton className='h-5 w-10 rounded-full' />
+                        </div>
+                    ))}
+                </div>
+
+                <div className='items-center gap-2 md:ml-auto flex'>
+                    <Skeleton className='h-9 w-[90px]' />
+                    <Skeleton className='h-9 w-[90px]' />
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className='space-y-6'>
