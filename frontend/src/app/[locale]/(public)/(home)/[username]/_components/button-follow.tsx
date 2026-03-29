@@ -1,6 +1,4 @@
-import { AuthModal } from '@/components/auth-modal'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import FollowToggleButton from '@/components/common/follow-toggle-button'
 import { useTranslations } from 'next-intl'
 
 interface ButtonFollowProps {
@@ -12,28 +10,16 @@ interface ButtonFollowProps {
 
 export default function ButtonFollow({ isFollowed, onToggleFollow, className, isAuth }: ButtonFollowProps) {
     const t = useTranslations('ProfilePage.actions')
-    const content = (
-        <Button
-            variant={isFollowed ? 'secondary' : 'default'}
-            className={cn('cursor-pointer px-8!', {
-                'primary-button h-10! rounded-sm! text-base! font-medium!': !isFollowed,
-                'h-10 font-medium rounded-sm! text-base ': isFollowed,
-                className
-            })}
-            onClick={onToggleFollow}
-        >
-            {isFollowed ? t('following') : t('follow')}
-        </Button>
-    )
-
-    return isAuth ? (
-        content
-    ) : (
-        <AuthModal>
-            <div className='relative'>
-                <button className='absolute inset-0 cursor-pointer' />
-                {content}
-            </div>
-        </AuthModal>
+    return (
+        <FollowToggleButton
+            isFollowed={isFollowed}
+            onToggleFollow={onToggleFollow}
+            isAuth={isAuth}
+            followLabel={t('follow')}
+            followedLabel={t('following')}
+            className={className}
+            followClassName='primary-button h-10! rounded-sm! text-base! font-medium! px-8!'
+            followedClassName='h-10 rounded-sm! text-base! font-medium! px-8!'
+        />
     )
 }

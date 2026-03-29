@@ -513,6 +513,19 @@
             "editProfile": "Edit profile",
             "settings": "Settings"
         },
+        "relationsModal": {
+            "title": "Connections",
+            "tabs": {
+                "friends": "Friends",
+                "suggested": "Suggested"
+            },
+            "actions": {
+                "followBack": "Follow back",
+                "friends": "Friends"
+            },
+            "emptyTitle": "No data",
+            "empty": "No users found."
+        },
         "editProfileDialog": {
             "title": "Edit profile",
             "username": {

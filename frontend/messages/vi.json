@@ -513,6 +513,19 @@
             "editProfile": "Sửa hồ sơ",
             "settings": "Cài đặt"
         },
+        "relationsModal": {
+            "title": "Kết nối",
+            "tabs": {
+                "friends": "Bạn bè",
+                "suggested": "Gợi ý"
+            },
+            "actions": {
+                "followBack": "Theo dõi lại",
+                "friends": "Bạn bè"
+            },
+            "emptyTitle": "Không có dữ liệu",
+            "empty": "Không tìm thấy người dùng nào."
+        },
         "editProfileDialog": {
             "title": "Sửa hồ sơ",
             "avatar": {

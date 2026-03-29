@@ -3,6 +3,7 @@ import { UserVerifyStatus } from '@/constants/enum'
 import { cn } from '@/lib/utils'
 import { UserType } from '@/types/models/user.model'
 import ProfileActionButtons from '@/app/[locale]/(public)/(home)/[username]/_components/profile-action-buttons'
+import ProfileRelationsModal from '@/app/[locale]/(public)/(home)/[username]/_components/profile-relations-modal'
 import { MdVerified } from 'react-icons/md'
 import { getTranslations } from 'next-intl/server'
 
@@ -44,28 +45,13 @@ async function ProfileUser({ userData, className }: ProfileUserProps) {
                     </h2>
                 </div>
                 <ProfileActionButtons username={userUsername} userId={uuid} />
-                <div className='flex items-center'>
-                    <div className='flex gap-5'>
-                        <div className='cursor-pointer'>
-                            <strong className='font-bold text-lg leading-6'>{following_count}</strong>
-                            <span className='text-muted-foreground font-normal text-base leading-5 inline-block ml-1.5 cursor-pointer hover:underline'>
-                                {t('stats.following')}
-                            </span>
-                        </div>
-                        <div className='cursor-pointer'>
-                            <strong className='font-bold  text-lg leading-6'>{followers_count}</strong>
-                            <span className='text-muted-foreground font-normal text-base leading-5 inline-block ml-1.5 cursor-pointer hover:underline'>
-                                {t('stats.followers')}
-                            </span>
-                        </div>
-                        <div className=' cursor-pointer'>
-                            <strong className='font-bold  text-lg leading-6'>{likes_count}</strong>
-                            <span className='text-muted-foreground font-normal text-base leading-5 inline-block ml-1.5 cursor-pointer hover:underline'>
-                                {t('stats.likes')}
-                            </span>
-                        </div>
-                    </div>
-                </div>
+                <ProfileRelationsModal
+                    userUuid={uuid}
+                    username={userUsername}
+                    followingCount={following_count}
+                    followersCount={followers_count}
+                    likesCount={likes_count}
+                />
 
                 <div className='flex items-center'>
                     <p className='text-left  font-normal text-base leading-5  break-words max-w-96 max-lg:text-center'>
