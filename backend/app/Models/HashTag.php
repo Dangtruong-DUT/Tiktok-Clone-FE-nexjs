@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuidObservable;
 use Illuminate\Database\Eloquent\Model;
 
 class Hashtag extends Model
 {
-
+    use HasUuidObservable;
 
     /**
      * The attributes that are mass assignable.

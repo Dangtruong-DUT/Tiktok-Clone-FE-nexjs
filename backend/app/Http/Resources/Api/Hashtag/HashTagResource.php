@@ -9,6 +9,7 @@ class HashtagResource extends BaseJsonResource
     {
         return [
             'id' => $this->id,
+            'uuid' => $this->uuid,
             'name' => $this->name,
             'created_at' => $this->created_at->toDateTimeString(),
         ];

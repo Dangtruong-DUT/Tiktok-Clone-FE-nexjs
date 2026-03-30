@@ -3,6 +3,7 @@ use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\HashtagController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UserSettingsController;
 
@@ -112,4 +113,5 @@ Route::prefix("search")
     ->group(function() {
         Route::get('/users', [UserController::class, 'index'])->name('users');
         Route::get('/posts', [PostController::class, 'index'])->name('posts');
+        Route::get('/hashtags', [HashtagController::class, 'index'])->name('hashtags');
     });
