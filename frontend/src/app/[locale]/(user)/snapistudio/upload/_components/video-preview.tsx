@@ -13,6 +13,7 @@ import { useTranslations } from 'next-intl'
 import { ImVolumeMute2 } from 'react-icons/im'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
+import RichTextContent from '@/components/rich-text-content'
 
 interface VideoPreviewProps {
     videoSrc: string | null
@@ -138,7 +139,12 @@ export default function VideoPreview({ videoSrc, content, className }: VideoPrev
                             {currentUserData?.username}
                         </span>
                         <span className='text-white inline-block w-full font-normal text-xs overflow-ellipsis overflow-hidden whitespace-nowrap'>
-                            {content}
+                            <RichTextContent
+                                text={content}
+                                className='text-white'
+                                mentionClassName='text-white underline'
+                                hashtagClassName='text-white underline'
+                            />
                         </span>
                     </div>
                 </div>

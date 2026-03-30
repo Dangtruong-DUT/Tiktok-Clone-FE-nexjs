@@ -137,7 +137,8 @@ class Post extends Model
      */
     public function hashtags(): BelongsToMany
     {
-        return $this->belongsToMany(Hashtag::class, 'posts_hashtags', 'post_id', 'hashtag_id');
+        return $this->belongsToMany(Hashtag::class, 'posts_hashtags', 'post_id', 'hashtag_id')
+            ->withPivot(['start', 'end']);
     }
 
     /**
@@ -147,7 +148,8 @@ class Post extends Model
      */
     public function mentions(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'posts_mentions', 'post_id', 'user_id');
+        return $this->belongsToMany(User::class, 'posts_mentions', 'post_id', 'user_id')
+            ->withPivot(['start', 'end']);
     }
 
     /**

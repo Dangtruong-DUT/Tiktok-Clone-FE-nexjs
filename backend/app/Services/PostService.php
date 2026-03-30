@@ -51,8 +51,11 @@ class PostService
             ]);
         }
 
+        $mentionSyncData = $this->resolveMentionSyncData($payload);
+        $hashtagSyncData = $this->resolveHashtagSyncData($payload);
+
         $user = $this->guard()->user();
-        $post = DB::transaction(function () use ($payload, $postType, $user): Post {
+        $post = DB::transaction(function () use ($payload, $postType, $user, $mentionSyncData, $hashtagSyncData): Post {
             $parentPost = null;
 
             if (!empty($payload['parent_id'])) {
@@ -73,11 +76,11 @@ class PostService
                 'user_id' => $user->id,
                 'parent_id' => $payload['parent_id'] ?? null,
             ]);
-            if (!empty($payload['mentions'])) {
-                $post->mentions()->sync($payload['mentions']);
+            if (!empty($mentionSyncData)) {
+                $post->mentions()->sync($mentionSyncData);
             }
-            if (!empty($payload['hashtags'])) {
-                $this->syncHashtags($post, $payload['hashtags']);
+            if (!empty($hashtagSyncData)) {
+                $this->syncHashtags($post, $hashtagSyncData);
             }
 
             if (!empty($payload['medias'])) {
@@ -110,6 +113,9 @@ class PostService
             throw new ForbiddenException('You can only update your own post');
         }
 
+        $mentionSyncData = $this->resolveMentionSyncData($payload);
+        $hashtagSyncData = $this->resolveHashtagSyncData($payload);
+
         $allowedFields = ['content', 'audience', 'thumbnail'];
         $dataToUpdate = array_intersect_key($payload, array_flip($allowedFields));
 
@@ -117,7 +123,7 @@ class PostService
             throw new BusinessException('At least one field must be provided for update');
         }
 
-        DB::transaction(function () use ($post, $payload, $dataToUpdate): void {
+        DB::transaction(function () use ($post, $payload, $dataToUpdate, $mentionSyncData, $hashtagSyncData): void {
             if (!empty($dataToUpdate)) {
                 $this->postRepo->update($post->id, [
                     'content' => $dataToUpdate['content'] ?? $post->content,
@@ -128,12 +134,12 @@ class PostService
                 ]);
             }
 
-            if (array_key_exists('mentions', $payload)) {
-                $post->mentions()->sync($payload['mentions'] ?? []);
+            if (array_key_exists('mentions', $payload) || array_key_exists('content', $payload)) {
+                $post->mentions()->sync($mentionSyncData);
             }
 
-            if (array_key_exists('hashtags', $payload)) {
-                $this->syncHashtags($post, $payload['hashtags'] ?? []);
+            if (array_key_exists('hashtags', $payload) || array_key_exists('content', $payload)) {
+                $this->syncHashtags($post, $hashtagSyncData);
             }
         });
 
@@ -478,12 +484,23 @@ class PostService
     /**
      * Sync hashtags to post.
      * @param Post $post
-     * @param array $hashtagNames
+     * @param array<int, array{name: string, start: int|null, end: int|null}> $hashtags
      * @return void
      */
-    private function syncHashtags(Post $post, array $hashtagNames): void
+    private function syncHashtags(Post $post, array $hashtags): void
     {
-        $hashtagNames = array_values(array_unique($hashtagNames));
+        if (empty($hashtags)) {
+            $post->hashtags()->sync([]);
+            return;
+        }
+
+        $hashtagNames = array_values(array_unique(array_map(fn ($item) => (string) $item['name'], $hashtags)));
+
+        if (empty($hashtagNames)) {
+            $post->hashtags()->sync([]);
+            return;
+        }
+
         $existingHashtags = $this->hashtagRepo->getByNames($hashtagNames)
             ->keyBy('name');
         $newHashtags = [];
@@ -495,16 +512,210 @@ class PostService
             }
         }
 
-        $hashtagIds = [];
         if (!empty($newHashtags)) {
             $this->hashtagRepo->createMany($newHashtags);
-            $hashtagIds = $this->hashtagRepo
-                        ->getByNames($hashtagNames)
-                        ->pluck('id')
-                        ->toArray();
         }
 
-        $post->hashtags()->sync($hashtagIds);
+        $hashtagMapByName = $this->hashtagRepo->getByNames($hashtagNames)
+            ->keyBy('name');
+
+        $syncData = [];
+        foreach ($hashtags as $hashtag) {
+            $hashtagName = (string) $hashtag['name'];
+            if (!isset($hashtagMapByName[$hashtagName])) {
+                continue;
+            }
+
+            $syncData[(int) $hashtagMapByName[$hashtagName]->id] = [
+                'start' => $hashtag['start'],
+                'end' => $hashtag['end'],
+            ];
+        }
+
+        $post->hashtags()->sync($syncData);
+    }
+
+    /**
+     * Resolve mention sync data [userId => pivotData].
+     *
+     * @param array $payload
+     * @return array<int, array{start: int|null, end: int|null}>
+     */
+    private function resolveMentionSyncData(array $payload): array
+    {
+        $explicitMentionIds = collect($payload['mentions'] ?? [])
+            ->map(fn ($id) => (int) $id)
+            ->filter(fn ($id) => $id > 0)
+            ->values()
+            ->toArray();
+
+        $mentionTokens = $this->extractMentionTokens($payload['content'] ?? '');
+        $mentionUsernames = array_values(array_unique(array_map(fn ($item) => $item['username'], $mentionTokens)));
+        $userIdMap = $this->userRepo->getIdMapByUsernames($mentionUsernames);
+
+        $syncData = [];
+
+        foreach ($mentionTokens as $token) {
+            $username = (string) $token['username'];
+            if (!isset($userIdMap[$username])) {
+                continue;
+            }
+
+            $userId = (int) $userIdMap[$username];
+            if (isset($syncData[$userId])) {
+                continue;
+            }
+
+            $syncData[$userId] = [
+                'start' => $token['start'],
+                'end' => $token['end'],
+            ];
+        }
+
+        foreach ($explicitMentionIds as $userId) {
+            $syncData[$userId] = $syncData[$userId] ?? [
+                'start' => null,
+                'end' => null,
+            ];
+        }
+
+        return $syncData;
+    }
+
+    /**
+     * Resolve hashtag sync payload with positions.
+     *
+     * @param array $payload
+     * @return array<int, array{name: string, start: int|null, end: int|null}>
+     */
+    private function resolveHashtagSyncData(array $payload): array
+    {
+        $explicitHashtags = collect($payload['hashtags'] ?? [])
+            ->map(fn ($name) => trim((string) $name))
+            ->filter(fn ($name) => $name !== '')
+            ->map(fn ($name) => mb_strtolower(ltrim($name, '#')))
+            ->values()
+            ->toArray();
+
+        $hashtagTokens = $this->extractHashtagTokens($payload['content'] ?? '');
+        $hashtagMap = [];
+
+        foreach ($hashtagTokens as $token) {
+            $hashtagName = (string) $token['name'];
+            if (isset($hashtagMap[$hashtagName])) {
+                continue;
+            }
+
+            $hashtagMap[$hashtagName] = [
+                'name' => $hashtagName,
+                'start' => $token['start'],
+                'end' => $token['end'],
+            ];
+        }
+
+        foreach ($explicitHashtags as $hashtagName) {
+            $hashtagMap[$hashtagName] = $hashtagMap[$hashtagName] ?? [
+                'name' => $hashtagName,
+                'start' => null,
+                'end' => null,
+            ];
+        }
+
+        return array_values($hashtagMap);
+    }
+
+    /**
+     * Extract mention tokens with positions from content.
+     *
+     * @param string $content
+     * @return array<int, array{username: string, start: int, end: int}>
+     */
+    private function extractMentionTokens(string $content): array
+    {
+        $tokens = $this->extractTokenMatches($content, (string) config('regex.social.mention_token'));
+
+        return collect($tokens)
+            ->map(fn ($token) => [
+                'username' => $token['value'],
+                'start' => $token['start'],
+                'end' => $token['end'],
+            ])
+            ->values()
+            ->toArray();
+    }
+
+    /**
+     * Extract hashtag tokens with positions from content.
+     *
+     * @param string $content
+     * @return array<int, array{name: string, start: int, end: int}>
+     */
+    private function extractHashtagTokens(string $content): array
+    {
+        $tokens = $this->extractTokenMatches($content, (string) config('regex.social.hashtag_token'));
+
+        return collect($tokens)
+            ->map(fn ($token) => [
+                'name' => mb_strtolower($token['value']),
+                'start' => $token['start'],
+                'end' => $token['end'],
+            ])
+            ->values()
+            ->toArray();
+    }
+
+    /**
+     * Extract first capture group matches and positions for a regex.
+     *
+     * @param string $content
+     * @param string $pattern
+     * @return array<int, array{value: string, start: int, end: int}>
+     */
+    private function extractTokenMatches(string $content, string $pattern): array
+    {
+        if ($content === '') {
+            return [];
+        }
+
+        preg_match_all($pattern, $content, $matches, PREG_OFFSET_CAPTURE);
+
+        $tokens = [];
+        foreach ($matches[1] ?? [] as $match) {
+            [$value, $offset] = $match;
+
+            $value = trim((string) $value);
+            $offset = (int) $offset;
+
+            if ($value === '' || $offset <= 0) {
+                continue;
+            }
+
+            $start = $this->byteOffsetToCharOffset($content, $offset - 1);
+            $end = $start + mb_strlen($value, 'UTF-8') + 1;
+
+            $tokens[] = [
+                'value' => $value,
+                'start' => $start,
+                'end' => $end,
+            ];
+        }
+
+        return collect($tokens)
+            ->unique()
+            ->values()
+            ->toArray();
+    }
+
+    /**
+     * Convert byte offset to UTF-8 character offset.
+     */
+    private function byteOffsetToCharOffset(string $content, int $byteOffset): int
+    {
+        if ($byteOffset <= 0) {
+            return 0;
+        }
+
+        return mb_strlen(substr($content, 0, $byteOffset), 'UTF-8');
     }
 
     /**

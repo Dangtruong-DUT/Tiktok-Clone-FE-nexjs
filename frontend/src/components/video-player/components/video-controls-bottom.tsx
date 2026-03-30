@@ -45,7 +45,7 @@ export function VideoControlsBottom({
                     </h3>
                     <span className='text-sm opacity-70'>{timeAgo({ locale, date: post.created_at })}</span>
                 </a>
-                <VideoDescription description={post.content} />
+                <VideoDescription description={post.content} mentions={post.mentions} hashtags={post.hashtags} />
             </div>
             <ProgressBar currentTime={currentTime} duration={duration} onSeek={onSeek} onActive={onProgressBarActive} />
         </div>

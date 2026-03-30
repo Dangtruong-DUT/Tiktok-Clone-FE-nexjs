@@ -38,6 +38,8 @@ export default function VideoDetailContent() {
                     author={currentVideo.author}
                     createdAt={currentVideo.author.created_at}
                     postContent={currentVideo.content}
+                    mentions={currentVideo.mentions}
+                    hashtags={currentVideo.hashtags}
                     className='mb-4'
                 />
                 <div className=' @4xl:hidden'>

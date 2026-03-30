@@ -1,4 +1,5 @@
 import { PrivacyVisibility } from '@/constants/enum'
+import { USERNAME_VALIDATION_REGEX } from '@/constants/regex'
 import z from 'zod'
 
 export const VerifyEmailReqBody = z.object({
@@ -38,10 +39,7 @@ export const UpdateUserBody = z.object({
     bio: z.string().max(300).optional(),
     location: z.string().max(100).optional(),
     website: z.string().max(100).optional(),
-    username: z
-        .string()
-        .regex(/^(?!.*\.\.)(?!.*__)[a-zA-Z0-9._]{3,20}$/)
-        .optional(),
+    username: z.string().regex(USERNAME_VALIDATION_REGEX).optional(),
     avatar_file_id: z.number().int().positive().optional()
 })
 

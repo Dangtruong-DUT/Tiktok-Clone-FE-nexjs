@@ -16,6 +16,7 @@ import { X } from 'lucide-react'
 import { useLocale } from 'next-intl'
 import { useState } from 'react'
 import { FaHeart, FaRegHeart } from 'react-icons/fa6'
+import RichTextContent from '@/components/rich-text-content'
 
 type CommentBodyProps = {
     comment: CommentType
@@ -93,7 +94,13 @@ export function CommentBody({ comment, parent_id }: CommentBodyProps) {
                             <span className='text-sm  text-brand font-semibold'> · Creator</span>
                         )}
                     </Link>
-                    <span className='text-sm'>{comment.content}</span>
+                    <span className='text-sm'>
+                        <RichTextContent
+                            text={comment.content}
+                            mentions={comment.mentions}
+                            hashtags={comment.hashtags}
+                        />
+                    </span>
                     <div className='text-sm text-muted-foreground font-semibold flex items-center gap-6'>
                         <span>{timeAgo({ locale, date: comment.created_at })}</span>
                         <span

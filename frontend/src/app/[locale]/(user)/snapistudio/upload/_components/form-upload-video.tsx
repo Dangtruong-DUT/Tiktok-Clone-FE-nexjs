@@ -9,7 +9,6 @@ import { useForm } from 'react-hook-form'
 import { CreatePostReqBody, CreatePostReqBodyType } from '@/types/dtos/post/post-request.dto'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Audience, MediaType, PosterType } from '@/constants/enum'
-import { Textarea } from '@/components/ui/textarea'
 import { Info, Loader } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import VideoPreview from '@/app/[locale]/(user)/snapistudio/upload/_components/video-preview'
@@ -26,6 +25,8 @@ import { useConfirmNavigation } from '@/hooks/shared/useConfirmNavigation'
 import AlertDialogExitPage from '@/app/[locale]/(user)/snapistudio/upload/_components/alert-confirm-leave-page'
 import { useAppDispatch } from '@/store/hooks'
 import { setLoadingByKey } from '@/store/features/appSlice'
+import { extractHashtags } from '@/utils/social-token.util'
+import MentionHashtagTextField from '@/components/mention-hashtag-text-field'
 
 const APP_LOADING_KEYS = {
     uploadVideoPost: 'upload.video-post'
@@ -146,6 +147,8 @@ export default function FormUploadVideo() {
 
             const body: CreatePostReqBodyType = {
                 ...data,
+                hashtags: extractHashtags(data.content),
+                mentions: undefined,
                 medias: [
                     {
                         type: MediaType.VIDEO,
@@ -197,11 +200,13 @@ export default function FormUploadVideo() {
                                                 {t('detail.description.label')}
                                             </FormLabel>
                                             <FormControl>
-                                                <Textarea
+                                                <MentionHashtagTextField
+                                                    as='textarea'
                                                     className='resize-none bg-accent'
-                                                    rows={5}
+                                                    rows={30}
                                                     placeholder={t('detail.description.placeholder')}
-                                                    {...field}
+                                                    value={field.value ?? ''}
+                                                    onChange={field.onChange}
                                                 />
                                             </FormControl>
                                             <FormDescription>{content?.length ?? 0}/4000</FormDescription>

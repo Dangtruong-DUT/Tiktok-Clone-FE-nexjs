@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Requests\HashTag;
+namespace App\Http\Requests\Hashtag;
 
 use App\Http\Requests\BaseListRequest;
 

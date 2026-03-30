@@ -2,15 +2,29 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import { cn } from '@/lib/utils'
+import RichTextContent from '@/components/rich-text-content'
+import type { MentionType } from '@/types/models/mention.model'
+import type { HashtagType } from '@/types/models/hashtag.model'
 
 interface ShowMoreProps {
     text: string
+    mentions?: MentionType[]
+    hashtags?: HashtagType[]
     maxHeight?: number
     className?: string
     textClassName?: string
+    enableRichText?: boolean
 }
 
-const ShowMore: React.FC<ShowMoreProps> = ({ text, maxHeight = 100, className, textClassName }) => {
+const ShowMore: React.FC<ShowMoreProps> = ({
+    text,
+    mentions,
+    hashtags,
+    maxHeight = 100,
+    className,
+    textClassName,
+    enableRichText = false
+}) => {
     const [expanded, setExpanded] = useState(false)
     const [showButton, setShowButton] = useState(false)
     const contentRef = useRef<HTMLDivElement>(null)
@@ -32,7 +46,7 @@ const ShowMore: React.FC<ShowMoreProps> = ({ text, maxHeight = 100, className, t
                 }}
                 className={cn('text-sm', textClassName)}
             >
-                {text}
+                {enableRichText ? <RichTextContent text={text} mentions={mentions} hashtags={hashtags} /> : text}
             </div>
 
             {showButton && (

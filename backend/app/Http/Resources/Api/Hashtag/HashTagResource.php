@@ -12,6 +12,8 @@ class HashtagResource extends BaseJsonResource
             'uuid' => $this->uuid,
             'name' => $this->name,
             'created_at' => $this->created_at->toDateTimeString(),
+            'start' => $this->whenPivotLoaded('posts_hashtags', fn () => $this->pivot?->start),
+            'end' => $this->whenPivotLoaded('posts_hashtags', fn () => $this->pivot?->end),
         ];
     }
 }

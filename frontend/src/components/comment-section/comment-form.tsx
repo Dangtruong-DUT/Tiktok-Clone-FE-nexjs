@@ -12,6 +12,8 @@ import { CreateCommentsReqBody, CreateCommentsReqBodyType } from '@/types/dtos/p
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
+import { extractHashtags } from '@/utils/social-token.util'
+import MentionHashtagTextField from '@/components/mention-hashtag-text-field'
 
 interface CommentFormProps {
     className?: string
@@ -51,7 +53,12 @@ function CommentForm({
         async (data: CreateCommentsReqBodyType) => {
             if (createCommentResult.isLoading) return
             try {
-                await createCommentMutate({ ...data, post_uuid: postUuid }).unwrap()
+                await createCommentMutate({
+                    ...data,
+                    hashtags: extractHashtags(data.content),
+                    mentions: undefined,
+                    post_uuid: postUuid
+                }).unwrap()
                 form.reset()
                 onClose?.()
             } catch (error) {
@@ -79,16 +86,19 @@ function CommentForm({
                         render={({ field }) => (
                             <FormItem className='flex-1'>
                                 <FormControl>
-                                    <input
-                                        type='text'
+                                    <MentionHashtagTextField
+                                        as='input'
                                         autoComplete='off'
-                                        spellCheck='false'
+                                        spellCheck={false}
+                                        suggestionPlacement='top'
                                         placeholder={placeholder}
-                                        {...field}
+                                        value={field.value ?? ''}
+                                        onChange={field.onChange}
                                         className={cn(
                                             'w-full bg-transparent border-none outline-none py-2 ',
                                             inputClassName
                                         )}
+                                        wrapperClassName='w-full'
                                     />
                                 </FormControl>
                             </FormItem>

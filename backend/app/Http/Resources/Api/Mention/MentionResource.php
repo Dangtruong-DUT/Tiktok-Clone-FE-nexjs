@@ -10,8 +10,8 @@ class MentionResource extends BaseJsonResource
         return [
             'id' => $this->id,
             'username' => $this->username,
-            'name' => $this->name,
-            'email' => $this->email,
+            'start' => $this->whenPivotLoaded('posts_mentions', fn () => $this->pivot?->start),
+            'end' => $this->whenPivotLoaded('posts_mentions', fn () => $this->pivot?->end),
         ];
     }
 }

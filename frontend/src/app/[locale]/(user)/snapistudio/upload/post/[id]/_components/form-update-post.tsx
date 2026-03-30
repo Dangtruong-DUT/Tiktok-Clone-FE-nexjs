@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form'
 import { CreatePostReqBodyType, UpdatePostReqBody, UpdatePostReqBodyType } from '@/types/dtos/post/post-request.dto'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Audience } from '@/constants/enum'
-import { Textarea } from '@/components/ui/textarea'
 import { Info, Loader } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import VideoPreview from '@/app/[locale]/(user)/snapistudio/upload/_components/video-preview'
@@ -27,6 +26,8 @@ import { useConfirmNavigation } from '@/hooks/shared/useConfirmNavigation'
 import AlertDialogExitPage from '@/app/[locale]/(user)/snapistudio/upload/_components/alert-confirm-leave-page'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
+import { extractHashtags } from '@/utils/social-token.util'
+import MentionHashtagTextField from '@/components/mention-hashtag-text-field'
 
 export default function FormUpdatePost() {
     const t = useTranslations('SnapiStudio.upload')
@@ -77,6 +78,11 @@ export default function FormUpdatePost() {
             form.setValue('content', post.content)
             form.setValue('audience', post.audience)
             form.setValue('thumbnail', post.thumbnail_file_id ?? undefined)
+            form.setValue(
+                'hashtags',
+                Array.from(new Set((post.hashtags ?? []).map((hashtag) => hashtag.name.toLowerCase())))
+            )
+            form.setValue('mentions', Array.from(new Set((post.mentions ?? []).map((mention) => mention.id))))
             setVideoUrl(post.medias?.[0]?.url || null)
             setThumbnailUrl(post.thumbnail_url || null)
         }
@@ -113,6 +119,8 @@ export default function FormUpdatePost() {
 
             const body: UpdatePostReqBodyType = {
                 ...data,
+                hashtags: extractHashtags(data.content ?? ''),
+                mentions: undefined,
                 thumbnail
             }
             await updatePostMutate({ post_uuid: post.uuid, body }).unwrap()
@@ -164,11 +172,13 @@ export default function FormUpdatePost() {
                                             {t('detail.description.label')}
                                         </FormLabel>
                                         <FormControl>
-                                            <Textarea
+                                            <MentionHashtagTextField
+                                                as='textarea'
                                                 className='resize-none bg-accent'
                                                 rows={5}
                                                 placeholder={t('detail.description.placeholder')}
-                                                {...field}
+                                                value={field.value ?? ''}
+                                                onChange={field.onChange}
                                             />
                                         </FormControl>
                                         <FormDescription>{content?.length ?? 0}/4000</FormDescription>

@@ -216,7 +216,7 @@ abstract class BaseRequest extends BaseFormRequest
             'name' => [self::STRING, self::MAX.':'.'100'],
             'role' => [self::INTEGER, new Enum(RoleTypeEnum::class)],
             'verify_status' => [self::INTEGER, new Enum(UserVerifyStatusEnum::class)],
-            'username' => [self::STRING, 'regex:/^(?!.*\.\.)(?!.*__)[a-zA-Z0-9._]{3,20}$/'],
+            'username' => [self::STRING, 'regex:' . config('regex.username_validation')],
             'phone' => [self::STRING, self::MAX.':'.'100'],
             'month' => [self::INTEGER, self::MIN.':'.'1', self::MAX.':'.'12'],
             'year' => [self::INTEGER, self::MIN.':'.'1900', self::MAX.':'.'2100'],

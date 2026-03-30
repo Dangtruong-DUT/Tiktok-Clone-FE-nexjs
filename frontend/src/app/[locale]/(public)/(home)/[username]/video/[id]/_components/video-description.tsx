@@ -11,11 +11,15 @@ import { useGetUserByUsernameQuery } from '@/store/services/user.service'
 import { UserType } from '@/types/models/user.model'
 import { timeAgo } from '@/utils/formatting/formatTime.util'
 import { useLocale } from 'next-intl'
+import type { MentionType } from '@/types/models/mention.model'
+import type { HashtagType } from '@/types/models/hashtag.model'
 
 type VideoDescriptionProps = {
     author: UserType
     createdAt: string
     postContent: string
+    mentions?: MentionType[]
+    hashtags?: HashtagType[]
     className?: string
 }
 
@@ -51,7 +55,14 @@ function FollowButton({
     )
 }
 
-export default function VideoDescription({ author, createdAt, postContent, className }: VideoDescriptionProps) {
+export default function VideoDescription({
+    author,
+    createdAt,
+    postContent,
+    mentions,
+    hashtags,
+    className
+}: VideoDescriptionProps) {
     const locale = useLocale()
     const currentUser = useCurrentUserData()
     const isCurrentUser = currentUser?.uuid === author.uuid
@@ -84,7 +95,14 @@ export default function VideoDescription({ author, createdAt, postContent, class
                     />
                 )}
             </div>
-            <ShowMore text={postContent} className='text-base' maxHeight={42} />
+            <ShowMore
+                text={postContent}
+                mentions={mentions}
+                hashtags={hashtags}
+                className='text-base'
+                maxHeight={42}
+                enableRichText
+            />
         </div>
     )
 }

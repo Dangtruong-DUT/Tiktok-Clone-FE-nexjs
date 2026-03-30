@@ -1,13 +1,18 @@
 'use client'
 import React, { useState, useEffect, useRef, memo } from 'react'
 import { cn } from '@/lib/utils'
+import RichTextContent from '@/components/rich-text-content'
+import type { MentionType } from '@/types/models/mention.model'
+import type { HashtagType } from '@/types/models/hashtag.model'
 
 interface VideoDescriptionProps {
     description: string
+    mentions?: MentionType[]
+    hashtags?: HashtagType[]
     className?: string
 }
 
-function VideoDescription({ description, className }: VideoDescriptionProps) {
+function VideoDescription({ description, mentions, hashtags, className }: VideoDescriptionProps) {
     const [expanded, setExpanded] = useState(false)
     const [canExpand, setCanExpand] = useState(false)
     const textRef = useRef<HTMLDivElement>(null)
@@ -33,7 +38,14 @@ function VideoDescription({ description, className }: VideoDescriptionProps) {
                     className
                 )}
             >
-                {description}
+                <RichTextContent
+                    text={description}
+                    mentions={mentions}
+                    hashtags={hashtags}
+                    className='text-white'
+                    mentionClassName='text-white underline'
+                    hashtagClassName='text-white underline'
+                />
             </div>
 
             {canExpand && (

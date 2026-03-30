@@ -132,7 +132,13 @@ export default function VideoDescription({ post, className }: VideoDescriptionPr
                     )}
                 </div>
 
-                <ShowMore text={post.content} maxHeight={60} />
+                <ShowMore
+                    text={post.content}
+                    mentions={post.mentions}
+                    hashtags={post.hashtags}
+                    maxHeight={60}
+                    enableRichText
+                />
             </div>
 
             {/* Video Stats and Actions */}

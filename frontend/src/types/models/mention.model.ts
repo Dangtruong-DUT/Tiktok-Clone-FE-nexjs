@@ -3,9 +3,9 @@ import { z } from 'zod'
 export const MentionSchema = z
     .object({
         id: z.number(),
-        name: z.string(),
         username: z.string(),
-        email: z.string()
+        start: z.number().int().nonnegative().nullable().optional(),
+        end: z.number().int().nonnegative().nullable().optional()
     })
     .strict()
 

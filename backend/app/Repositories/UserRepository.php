@@ -102,6 +102,44 @@ class UserRepository extends BaseRepository
     }
 
     /**
+     * Get user ids by usernames.
+     *
+     * @param array<int, string> $usernames
+     * @return array<int, int>
+     */
+    public function getIdsByUsernames(array $usernames): array
+    {
+        if (empty($usernames)) {
+            return [];
+        }
+
+        return $this->query()
+            ->whereIn('username', $usernames)
+            ->pluck('id')
+            ->map(fn ($id) => (int) $id)
+            ->toArray();
+    }
+
+    /**
+     * Get map [username => id] for given usernames.
+     *
+     * @param array<int, string> $usernames
+     * @return array<string, int>
+     */
+    public function getIdMapByUsernames(array $usernames): array
+    {
+        if (empty($usernames)) {
+            return [];
+        }
+
+        return $this->query()
+            ->whereIn('username', $usernames)
+            ->pluck('id', 'username')
+            ->mapWithKeys(fn ($id, $username) => [(string) $username => (int) $id])
+            ->toArray();
+    }
+
+    /**
      * Find a user by username
      *
      * @param string $username

@@ -14,6 +14,7 @@ import { HiOutlinePlay } from 'react-icons/hi2'
 import { FaRegHeart } from 'react-icons/fa6'
 import { timeAgo } from '@/utils/formatting/formatTime.util'
 import { useLocale } from 'next-intl'
+import RichTextContent from '@/components/rich-text-content'
 
 export default function CardVideoItem({
     post,
@@ -94,7 +95,9 @@ export default function CardVideoItem({
 
             {isDescriptionVisible && (
                 <div className='mt-2'>
-                    <p className='text-sm line-clamp-2 mb-1'>{post.content}</p>
+                    <p className='text-sm line-clamp-2 mb-1'>
+                        <RichTextContent text={post.content} mentions={post.mentions} hashtags={post.hashtags} />
+                    </p>
                     <button
                         type='button'
                         onClick={() => router.push(`/@${author.username}`)}
