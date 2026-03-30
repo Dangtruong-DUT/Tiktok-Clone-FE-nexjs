@@ -12,7 +12,7 @@ import { Info, Loader } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import VideoPreview from '@/app/[locale]/(user)/snapistudio/upload/_components/video-preview'
 import SelectThumbnailDialog from '@/app/[locale]/(user)/snapistudio/upload/_components/select-thumbnail-dialog'
-import AudienceSelect from '@/components/common/audience-select'
+import AudienceSelect from '@/components/audience-select'
 
 import { useUploadImageMutation } from '@/store/services/upload.service'
 import { useGetPostDetailQuery, useUpdatePostMutation } from '@/store/services/posts.service'

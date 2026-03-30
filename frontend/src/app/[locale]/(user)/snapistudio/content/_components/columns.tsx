@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import { ColumnDef } from '@tanstack/react-table'
-import AudienceSelect from '@/components/common/audience-select'
+import AudienceSelect from '@/components/audience-select'
 import { Audience } from '@/constants/enum'
 import Image from 'next/image'
 import { formatISOToDisplayDate } from '@/utils/formatting/formatTime.util'

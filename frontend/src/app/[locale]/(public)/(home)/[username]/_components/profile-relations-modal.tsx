@@ -1,7 +1,7 @@
 'use client'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import FollowToggleButton from '@/components/common/follow-toggle-button'
+import FollowToggleButton from '@/components/follow-toggle-button'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'
@@ -49,6 +49,9 @@ export default function ProfileRelationsModal({
     const [isOpen, setIsOpen] = useState(false)
     const [activeTab, setActiveTab] = useState<RelationTab>('followers')
     const [processingUserUuid, setProcessingUserUuid] = useState<string | null>(null)
+    const [localUsersByTab, setLocalUsersByTab] = useState<Partial<Record<RelationTab, UserType[]>>>({})
+    const [optimisticFollowingCount, setOptimisticFollowingCount] = useState(followingCount)
+    const [optimisticFollowersCount, setOptimisticFollowersCount] = useState(followersCount)
 
     const [followUser] = useFollowUserMutation()
     const [unfollowUser] = useUnfollowUserMutation()
@@ -102,6 +105,14 @@ export default function ProfileRelationsModal({
         }
     }, [activeTab, isOwnProfile])
 
+    useEffect(() => {
+        setOptimisticFollowingCount(followingCount)
+    }, [followingCount])
+
+    useEffect(() => {
+        setOptimisticFollowersCount(followersCount)
+    }, [followersCount])
+
     const activeQuery = useMemo(() => {
         switch (activeTab) {
             case 'following':
@@ -117,9 +128,33 @@ export default function ProfileRelationsModal({
         }
     }, [activeTab, followersQuery, followingQuery, friendsQuery, suggestedQuery])
 
-    const users = activeQuery.data?.data ?? []
-    const isLoading = activeQuery.isLoading || activeQuery.isFetching
+    const serverUsers = activeQuery.data?.data ?? []
+    const users = localUsersByTab[activeTab] ?? serverUsers
+    const isLoading = activeQuery.isLoading
     const isPrivateData = (activeQuery.error as { status?: number } | undefined)?.status === HTTP_STATUS.FORBIDDEN
+
+    useEffect(() => {
+        if (!isOpen) {
+            setLocalUsersByTab((prev) => (Object.keys(prev).length === 0 ? prev : {}))
+        }
+    }, [isOpen])
+
+    useEffect(() => {
+        if (!isOpen || isPrivateData || serverUsers.length === 0) {
+            return
+        }
+
+        setLocalUsersByTab((prev) => {
+            if (prev[activeTab]) {
+                return prev
+            }
+
+            return {
+                ...prev,
+                [activeTab]: serverUsers
+            }
+        })
+    }, [activeTab, isOpen, isPrivateData, serverUsers])
 
     const defaultFollowActionLabel = useMemo(() => {
         if (activeTab === 'followers') {
@@ -139,8 +174,8 @@ export default function ProfileRelationsModal({
 
     const tabs: Array<{ key: RelationTab; label: string; count?: number }> = useMemo(() => {
         const baseTabs: Array<{ key: RelationTab; label: string; count?: number }> = [
-            { key: 'following', label: t('stats.following'), count: followingCount },
-            { key: 'followers', label: t('stats.followers'), count: followersCount },
+            { key: 'following', label: t('stats.following'), count: optimisticFollowingCount },
+            { key: 'followers', label: t('stats.followers'), count: optimisticFollowersCount },
             { key: 'friends', label: t('relationsModal.tabs.friends'), count: friendsQuery.data?.meta.total }
         ]
 
@@ -155,8 +190,8 @@ export default function ProfileRelationsModal({
         return baseTabs
     }, [
         t,
-        followingCount,
-        followersCount,
+        optimisticFollowingCount,
+        optimisticFollowersCount,
         friendsQuery.data?.meta.total,
         isOwnProfile,
         suggestedQuery.data?.meta.total
@@ -170,14 +205,37 @@ export default function ProfileRelationsModal({
     const handleToggleFollow = async (user: UserType) => {
         if (processingUserUuid) return
 
+        const currentIsFollowed = user.is_followed
+        const nextIsFollowed = !currentIsFollowed
+
+        if (isOwnProfile) {
+            setOptimisticFollowingCount((prev) => Math.max(0, prev + (nextIsFollowed ? 1 : -1)))
+        }
+
+        setLocalUsersByTab((prev) => ({
+            ...prev,
+            [activeTab]: (prev[activeTab] ?? users).map((item) =>
+                item.uuid === user.uuid ? { ...item, is_followed: nextIsFollowed } : item
+            )
+        }))
         setProcessingUserUuid(user.uuid)
         try {
-            if (user.is_followed) {
+            if (currentIsFollowed) {
                 await unfollowUser(user.uuid).unwrap()
             } else {
                 await followUser({ user_uuid: user.uuid }).unwrap()
             }
-            await activeQuery.refetch()
+        } catch {
+            if (isOwnProfile) {
+                setOptimisticFollowingCount((prev) => Math.max(0, prev + (currentIsFollowed ? 1 : -1)))
+            }
+
+            setLocalUsersByTab((prev) => ({
+                ...prev,
+                [activeTab]: (prev[activeTab] ?? users).map((item) =>
+                    item.uuid === user.uuid ? { ...item, is_followed: currentIsFollowed } : item
+                )
+            }))
         } finally {
             setProcessingUserUuid(null)
         }
@@ -206,14 +264,14 @@ export default function ProfileRelationsModal({
         <>
             <div className='flex items-center gap-5'>
                 <button type='button' className='cursor-pointer' onClick={() => openWithTab('following')}>
-                    <strong className='font-bold text-lg leading-6'>{followingCount}</strong>
+                    <strong className='font-bold text-lg leading-6'>{optimisticFollowingCount}</strong>
                     <span className='text-muted-foreground font-normal text-base leading-5 inline-block ml-1.5 hover:underline'>
                         {t('stats.following')}
                     </span>
                 </button>
 
                 <button type='button' className='cursor-pointer' onClick={() => openWithTab('followers')}>
-                    <strong className='font-bold text-lg leading-6'>{followersCount}</strong>
+                    <strong className='font-bold text-lg leading-6'>{optimisticFollowersCount}</strong>
                     <span className='text-muted-foreground font-normal text-base leading-5 inline-block ml-1.5 hover:underline'>
                         {t('stats.followers')}
                     </span>

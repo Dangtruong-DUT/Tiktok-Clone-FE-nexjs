@@ -1,4 +1,4 @@
-import FollowToggleButton from '@/components/common/follow-toggle-button'
+import FollowToggleButton from '@/components/follow-toggle-button'
 import { useTranslations } from 'next-intl'
 
 interface ButtonFollowProps {
