@@ -2,11 +2,14 @@
 
 use App\Exceptions\http\BaseException;
 use App\Http\Response\ApiResponse;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
@@ -31,12 +34,20 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
 
         $exceptions->render(function (Throwable $e, $request) {
-
+                Log::error('An error occurred', [
+                    'message' => $e->getMessage(),
+                    'exception' => get_class($e),
+                ]);
             if (! is_api_request()) {
                 return null;
             }
 
             return match (true) {
+
+                $e instanceof AccessDeniedHttpException => ApiResponse::error(
+                    $e->getMessage() ?: 'Unauthorized',
+                    Response::HTTP_FORBIDDEN
+                ),
 
                 $e instanceof BaseException => ApiResponse::error(
                     $e->getMessage(),
@@ -57,6 +68,11 @@ return Application::configure(basePath: dirname(__DIR__))
                 $e instanceof AuthenticationException => ApiResponse::error(
                     'Unauthenticated',
                     Response::HTTP_UNAUTHORIZED
+                ),
+
+                $e instanceof AuthorizationException => ApiResponse::error(
+                    $e->getMessage() ?: 'Forbidden',
+                    Response::HTTP_FORBIDDEN
                 ),
 
                 $e instanceof ValidationException => ApiResponse::error(

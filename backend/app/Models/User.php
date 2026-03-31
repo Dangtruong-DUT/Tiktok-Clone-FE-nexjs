@@ -316,8 +316,23 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(UserSettings::class);
     }
 
+    /**
+     * Get the notifications associated with the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany The relationship instance.
+     */
     public function notifications(): HasMany
     {
         return $this->hasMany(Notification::class, 'notifiable_id');
+    }
+
+    /**
+     * Check if the user is a super admin.
+     *
+     * @return bool True if the user is a super admin, false otherwise.
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === RoleTypeEnum::SUPER_ADMIN;
     }
 }

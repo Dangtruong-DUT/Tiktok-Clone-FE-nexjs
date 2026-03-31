@@ -2,6 +2,8 @@
 namespace App\Http\Requests\Post;
 
 use App\Http\Requests\BaseListRequest;
+use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 
 class GetBookmarkedPostsOfUserRequest extends BaseListRequest
 {
@@ -15,6 +17,16 @@ class GetBookmarkedPostsOfUserRequest extends BaseListRequest
             $needMerge['post_type'] = $this->query('type');
         }
         $this->merge($needMerge);
+    }
+
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize(): bool
+    {
+        return Gate::allows('viewBookmarkedVideos', $this->getTargetUser());
     }
 
     /**
@@ -42,5 +54,15 @@ class GetBookmarkedPostsOfUserRequest extends BaseListRequest
                     self::REQUIRED,
                 ],
         ]);
+    }
+
+    /**
+     * Get the target user based on the route parameter.
+     *
+     * @return User
+     */
+    private function getTargetUser(): User
+    {
+        return User::where('uuid', $this->route('user_uuid'))->firstOrFail();
     }
 }

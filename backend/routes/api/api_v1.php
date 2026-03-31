@@ -105,6 +105,7 @@ Route::prefix('users')
         Route::get('{user_uuid}/followers', [UserController::class, 'followers'])->name('followers');
         Route::get('{user_uuid}/following', [UserController::class, 'following'])->name('following');
         Route::get('{user_uuid}/friends', [UserController::class, 'friends'])->name('friends');
+
         Route::get('/{username}', [UserController::class, 'showProfile'])->name('show-profile');
     });
 
