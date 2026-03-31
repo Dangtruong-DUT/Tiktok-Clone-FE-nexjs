@@ -29,7 +29,8 @@ class AuthService
         private readonly RefreshTokenRepository $refreshRepo,
         private readonly ForgotPasswordTokenRepository $forgotPasswordTokenRepo,
         private readonly VerifyEmailTokenRepository $verifyEmailTokenRepo,
-        private readonly TokenService $tokenService
+        private readonly TokenService $tokenService,
+        private readonly NotificationService $notificationService
     ) {}
 
 
@@ -47,6 +48,8 @@ class AuthService
         $user = $this->guard()->user();
         $accessToken = $this->tokenService->createAccessToken($user);
         $refreshToken = $this->tokenService->createRefreshToken($user);
+
+        $this->notificationService->notifyAuthEvent($user->id, 'login');
 
         return [
             'access_token' => $accessToken,
@@ -131,6 +134,8 @@ class AuthService
             $refreshToken = $this->tokenService->createRefreshToken($user);
             $verifyToken = $this->tokenService->createVerifyEmailToken($user);
             Mail::to($data['email'])->send(new VerifyUserEmail($user, $verifyToken));
+
+            $this->notificationService->notifyAuthEvent($user->id, 'register');
         });
 
         return [

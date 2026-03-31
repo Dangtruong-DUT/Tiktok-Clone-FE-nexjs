@@ -26,7 +26,8 @@ class PostService
         private readonly UserRepository $userRepo,
         private readonly PostRepository $postRepo,
         private readonly MediaRepository $mediaRepo,
-        private readonly HashtagRepository $hashtagRepo
+        private readonly HashtagRepository $hashtagRepo,
+        private readonly NotificationService $notificationService
     ) {}
 
     /**
@@ -87,6 +88,22 @@ class PostService
                 $this->mediaRepo->createMany($payload['medias'], $post->id);
             }
 
+            if (!empty($parentPost) && $postType === PostTypeEnum::COMMENT->value) {
+                $this->notificationService->notifyComment(
+                    actorId: $user->id,
+                    targetPost: $parentPost,
+                    commentPost: $post
+                );
+            }
+
+            if (!empty($mentionSyncData)) {
+                $this->notificationService->notifyMention(
+                    actorId: $user->id,
+                    post: $post,
+                    mentionedUserIds: array_keys($mentionSyncData)
+                );
+            }
+
             return $post;
         });
 
@@ -107,6 +124,7 @@ class PostService
     public function update(array $payload): Post
     {
         $post = $this->findPostOrFail($payload['post_uuid']);
+        $existingMentionUserIds = $post->mentions()->pluck('users.id')->map(fn ($id) => (int) $id)->toArray();
 
         $authUserId =auth_user_id();
         if ($post->user_id !== $authUserId) {
@@ -142,6 +160,15 @@ class PostService
                 $this->syncHashtags($post, $hashtagSyncData);
             }
         });
+
+        $newMentionedUserIds = array_values(array_diff(array_keys($mentionSyncData), $existingMentionUserIds));
+        if (!empty($newMentionedUserIds)) {
+            $this->notificationService->notifyMention(
+                actorId: $authUserId,
+                post: $post,
+                mentionedUserIds: $newMentionedUserIds
+            );
+        }
 
         return $this->postRepo->getByIdWithDetail($post->id, $authUserId);
     }
@@ -408,6 +435,11 @@ class PostService
             }
             $post->userLikes()->syncWithoutDetaching([auth_user_id()]);
             $post->increment('likes_count');
+
+            $this->notificationService->notifyLike(
+                actorId: auth_user_id(),
+                post: $post
+            );
         });
     }
 

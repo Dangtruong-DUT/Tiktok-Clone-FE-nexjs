@@ -2,7 +2,7 @@
 namespace App\Enums\Notification;
 use App\Enums\BaseEnumInterface;
 use App\Enums\BaseEnumTrait;
-enum EntityTypeEnum: int implements BaseEnumInterface {
+enum EntityTypeEnum: string implements BaseEnumInterface {
     use BaseEnumTrait;
 
     case POST = 'post';

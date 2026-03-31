@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\HashtagController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UserSettingsController;
 
@@ -62,6 +63,15 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::delete('{post_uuid}/bookmark', [PostController::class, 'unbookmark'])->name('unbookmark');
             Route::get('friend', [PostController::class, 'showFriendsPosts'])->name('friends');
             Route::get('following', [PostController::class, 'showFollowingPosts'])->name('following');
+        });
+
+    Route::prefix('notifications')
+        ->name('notifications.')
+        ->group(function () {
+            Route::get('/', [NotificationController::class, 'index'])->name('index');
+            Route::get('/unread-count', [NotificationController::class, 'unreadCount'])->name('unread-count');
+            Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+            Route::post('/{notification_uuid}/read', [NotificationController::class, 'markAsRead'])->name('mark-as-read');
         });
 });
 

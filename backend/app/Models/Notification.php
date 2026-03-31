@@ -6,10 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use App\Enums\Notification\NotificationTypeEnum;
+use App\Traits\HasUuidObservable;
 
 class Notification extends Model
 {
+    use HasUuidObservable;
+
     protected $fillable = [
+        'uuid',
         'actor_id',
         'notifiable_id',
         'type',
@@ -27,14 +31,14 @@ class Notification extends Model
     protected function casts(): array
     {
         return [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'data' => 'array',
-        'is_read' => 'boolean',
-        'type' => NotificationTypeEnum::class,
-        'entity_type' => EntityTypeEnum::class,
-        'entity_id' => 'integer',
-    ];
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'data' => 'array',
+            'is_read' => 'boolean',
+            'type' => NotificationTypeEnum::class,
+            'entity_type' => EntityTypeEnum::class,
+            'entity_id' => 'integer',
+        ];
     }
 
     /**
@@ -73,10 +77,6 @@ class Notification extends Model
      */
     public function entity(): MorphTo
     {
-        return $this->morphMap([
-            EntityTypeEnum::POST->value => Post::class,
-            EntityTypeEnum::USER->value => User::class,
-            EntityTypeEnum::HASHTAG->value => Hashtag::class,
-        ]);
+        return $this->morphTo(__FUNCTION__, 'entity_type', 'entity_id');
     }
 }
