@@ -4,7 +4,7 @@ namespace App\Enums\Notification;
 use App\Enums\BaseEnumInterface;
 use App\Enums\BaseEnumTrait;
 
-enum NotificationType: int implements BaseEnumInterface {
+enum NotificationTypeEnum: int implements BaseEnumInterface {
     use BaseEnumTrait;
 
     case LIKE = 1;

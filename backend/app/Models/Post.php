@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
@@ -190,6 +191,16 @@ class Post extends Model
     public function userBookmarks(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'post_bookmarks', 'post_id', 'user_id');
+    }
+
+    /**
+     * Get the notifications associated with the post.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany The relationship instance.
+     */
+    public function notifications(): MorphMany
+    {
+        return $this->morphMany(Notification::class, 'entity');
     }
 
     /**
