@@ -5,10 +5,9 @@ use App\Enums\BaseEnumTrait;
 enum EntityTypeEnum: int implements BaseEnumInterface {
     use BaseEnumTrait;
 
-    case POST = 1;
-    case COMMENT = 2;
-    case USER = 3;
-    case HASHTAG = 4;
+    case POST = 'post';
+    case USER = 'user';
+    case HASHTAG = 'hashtag';
 
     /**
      * Get the label for the entity notify type.
@@ -17,7 +16,6 @@ enum EntityTypeEnum: int implements BaseEnumInterface {
     {
         return match($this) {
             self::POST => 'Post',
-            self::COMMENT => 'Comment',
             self::USER => 'User',
             self::HASHTAG => 'Hashtag',
         };
@@ -30,7 +28,6 @@ enum EntityTypeEnum: int implements BaseEnumInterface {
     {
         return match($this) {
             self::POST => 'bài viết',
-            self::COMMENT => 'bình luận',
             self::USER => 'người dùng',
             self::HASHTAG => 'hashtag',
         };

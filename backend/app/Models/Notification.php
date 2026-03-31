@@ -73,6 +73,10 @@ class Notification extends Model
      */
     public function entity(): MorphTo
     {
-        return $this->morphTo();
+        return $this->morphMap([
+            EntityTypeEnum::POST->value => Post::class,
+            EntityTypeEnum::USER->value => User::class,
+            EntityTypeEnum::HASHTAG->value => Hashtag::class,
+        ]);
     }
 }
