@@ -608,6 +608,42 @@
                 "viewAllResults": "Xem tất cả kết quả cho \"{query}\"",
                 "searchPlaceholder": "Tìm kiếm"
             },
+            "activity": {
+                "title": "Thông báo",
+                "empty": "Chưa có thông báo nào.",
+                "labels": {
+                    "someone": "Ai đó",
+                    "total": "{count} mục"
+                },
+                "tabs": {
+                    "all": "Tất cả hoạt động",
+                    "likes": "Lượt thích",
+                    "comments": "Bình luận",
+                    "mentions": "Nhắc đến và gắn thẻ",
+                    "followers": "Người theo dõi"
+                },
+                "sections": {
+                    "new": "Mới",
+                    "this_week": "Tuần này",
+                    "this_month": "Tháng này",
+                    "previous": "Trước đó"
+                },
+                "messages": {
+                    "like": "{actor} đã thích video của bạn.",
+                    "comment": "{actor} đã bình luận video của bạn.",
+                    "mention": "{actor} đã nhắc đến bạn trong bài đăng.",
+                    "follow": "{actor} đã bắt đầu theo dõi bạn.",
+                    "authLogin": "Bạn đã đăng nhập thành công.",
+                    "authRegister": "Tài khoản của bạn đã được tạo thành công.",
+                    "default": "{actor} đã gửi cho bạn một thông báo."
+                },
+                "actions": {
+                    "markAllRead": "Đánh dấu tất cả đã đọc",
+                    "loadMore": "Tải thêm",
+                    "followBack": "Theo dõi lại",
+                    "friends": "Bạn bè"
+                }
+            },
             "auth": {
                 "login": "Đăng nhập"
             }

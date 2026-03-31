@@ -51,7 +51,11 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
 
     const handleSetActiveState = useCallback(
         (state: SidebarActiveState) => {
-            if (state.type === SidebarActiveType.SEARCH || state.type === SidebarActiveType.MORE) {
+            if (
+                state.type === SidebarActiveType.SEARCH ||
+                state.type === SidebarActiveType.MORE ||
+                state.type === SidebarActiveType.ACTIVITY
+            ) {
                 activeOldStateRef.current = activeState
             }
             setActiveState(state)

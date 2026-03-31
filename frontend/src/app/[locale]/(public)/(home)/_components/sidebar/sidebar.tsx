@@ -12,7 +12,8 @@ import { useCallback, useEffect, useState } from 'react'
 import SearchDrawerContent from '@/app/[locale]/(public)/(home)/_components/sidebar/_components/drawer/search-drawer-content'
 import DrawerSidebar from '@/app/[locale]/(public)/(home)/_components/sidebar/_components/drawer/drawer'
 import SettingsMenuDrawerContent from '@/app/[locale]/(public)/(home)/_components/sidebar/_components/drawer/settings-menu-drawer-content'
-import { MoreHorizontalIcon } from 'lucide-react'
+import ActivityDrawerContent from '@/app/[locale]/(public)/(home)/_components/sidebar/_components/drawer/activity-drawer-content'
+import { BellIcon, MoreHorizontalIcon } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store'
@@ -29,6 +30,7 @@ export default function Sidebar({ className }: SidebarProps) {
     const { isOpenDrawer, setIsOpenDrawer, activeState, setActiveState, resetToRouteActive } = useSidebar()
     const [isOpenSearch, setIsOpenSearch] = useState<boolean>(false)
     const [isOpenSettings, setIsOpenSettings] = useState<boolean>(false)
+    const [isOpenActivity, setIsOpenActivity] = useState<boolean>(false)
     const [searchValue, setSearchValue] = useState<string>('')
     const role = useSelector((state: RootState) => state.auth.role)
     const isAuth = role !== null
@@ -39,6 +41,7 @@ export default function Sidebar({ className }: SidebarProps) {
         if (isOpenDrawer === false) {
             setIsOpenSearch(false)
             setIsOpenSettings(false)
+            setIsOpenActivity(false)
         }
     }, [isOpenDrawer])
 
@@ -64,6 +67,18 @@ export default function Sidebar({ className }: SidebarProps) {
         setIsOpenSettings((prev) => !prev)
     }, [isOpenSettings, setIsOpenDrawer, setIsOpenSettings, setActiveState, resetToRouteActive])
 
+    const toggleActivityDrawer = useCallback(() => {
+        if (isOpenActivity) {
+            setIsOpenDrawer(false)
+            resetToRouteActive()
+        } else {
+            setIsOpenDrawer(true)
+            setActiveState({ type: SidebarActiveType.ACTIVITY })
+        }
+
+        setIsOpenActivity((prev) => !prev)
+    }, [isOpenActivity, setIsOpenDrawer, resetToRouteActive, setActiveState])
+
     if (authStatus === 'loading') {
         return <SidebarSkeleton />
     }
@@ -75,6 +90,9 @@ export default function Sidebar({ className }: SidebarProps) {
             </DrawerSidebar>
             <DrawerSidebar isOpen={isOpenSettings} setIsOpenDrawer={toggleSettingsDrawer}>
                 <SettingsMenuDrawerContent />
+            </DrawerSidebar>
+            <DrawerSidebar isOpen={isOpenActivity} setIsOpenDrawer={toggleActivityDrawer}>
+                <ActivityDrawerContent />
             </DrawerSidebar>
             <div
                 className={cn(
@@ -97,6 +115,38 @@ export default function Sidebar({ className }: SidebarProps) {
                 >
                     <NavItems roleUser={role} />
                     <aside className='flex flex-col gap-[0.5rem]'>
+                        {isAuth && (
+                            <button
+                                className={cn(
+                                    'flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent cursor-pointer',
+                                    activeState.type === SidebarActiveType.ACTIVITY && 'bg-accent'
+                                )}
+                                onClick={toggleActivityDrawer}
+                            >
+                                <BellIcon
+                                    size={24}
+                                    className={cn(
+                                        'transition-colors duration-200',
+                                        activeState.type === SidebarActiveType.ACTIVITY
+                                            ? 'text-brand'
+                                            : 'text-foreground'
+                                    )}
+                                />
+                                {!isOpenDrawer && (
+                                    <h2
+                                        className={cn(
+                                            'text-base font-medium transition-colors duration-200',
+                                            activeState.type === SidebarActiveType.ACTIVITY
+                                                ? 'text-brand'
+                                                : 'text-foreground'
+                                        )}
+                                    >
+                                        {t('activity')}
+                                    </h2>
+                                )}
+                            </button>
+                        )}
+
                         <ButtonGotoProfile
                             activeState={activeState}
                             setActiveState={setActiveState}

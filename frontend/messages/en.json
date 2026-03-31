@@ -608,6 +608,42 @@
                 "viewAllResults": "View all results for \"{query}\"",
                 "searchPlaceholder": "Search"
             },
+            "activity": {
+                "title": "Notifications",
+                "empty": "No notifications yet.",
+                "labels": {
+                    "someone": "Someone",
+                    "total": "{count} items"
+                },
+                "tabs": {
+                    "all": "All activity",
+                    "likes": "Likes",
+                    "comments": "Comments",
+                    "mentions": "Mentions and tags",
+                    "followers": "Followers"
+                },
+                "sections": {
+                    "new": "New",
+                    "this_week": "This week",
+                    "this_month": "This month",
+                    "previous": "Previous"
+                },
+                "messages": {
+                    "like": "{actor} liked your video.",
+                    "comment": "{actor} commented on your video.",
+                    "mention": "{actor} mentioned you in a post.",
+                    "follow": "{actor} started following you.",
+                    "authLogin": "You logged in successfully.",
+                    "authRegister": "Your account was created successfully.",
+                    "default": "{actor} sent you a notification."
+                },
+                "actions": {
+                    "markAllRead": "Mark all read",
+                    "loadMore": "Load more",
+                    "followBack": "Follow back",
+                    "friends": "Friends"
+                }
+            },
             "auth": {
                 "login": "Log in"
             }

@@ -51,3 +51,14 @@ export enum RelationshipType {
     FOLLOW,
     FRIEND
 }
+
+export enum NotificationTypeCode {
+    LIKE = 1,
+    COMMENT = 2,
+    FOLLOW = 3,
+    MENTION = 4,
+    HASHTAG = 5,
+    SYSTEM = 6,
+    ADMIN = 7,
+    SECURITY = 8
+}
