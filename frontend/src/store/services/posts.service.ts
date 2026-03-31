@@ -94,7 +94,6 @@ export const PostApi = createApi({
                 body: _.omit(payload, 'post_uuid')
             }),
             invalidatesTags: (result, error, arg) => [
-                { type: 'Posts' as const, id: `${arg.parent_id}-COMMENT-LIST` },
                 { type: 'Posts' as const, id: arg.post_uuid },
                 { type: 'Posts' as const, id: `${arg.post_uuid}-COMMENT-LIST` }
             ]

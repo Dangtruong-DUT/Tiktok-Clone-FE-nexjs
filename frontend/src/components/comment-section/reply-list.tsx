@@ -48,7 +48,12 @@ export default function ReplyList({ parentUuid }: ReplyItemProps) {
         >
             <div>
                 {comments.map((reply) => (
-                    <CommentBody key={reply.uuid} comment={reply} parent_id={reply.id} />
+                    <CommentBody
+                        key={reply.uuid}
+                        comment={reply}
+                        parent_id={reply.parent_id ?? reply.id}
+                        parent_uuid={parentUuid}
+                    />
                 ))}
                 {isFetching && (
                     <div>

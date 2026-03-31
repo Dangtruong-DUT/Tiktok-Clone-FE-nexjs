@@ -21,6 +21,7 @@ import RichTextContent from '@/components/rich-text-content'
 type CommentBodyProps = {
     comment: CommentType
     parent_id: number
+    parent_uuid: string
 }
 
 function LikeButton({
@@ -60,8 +61,8 @@ function LikeButton({
     )
 }
 
-export function CommentBody({ comment, parent_id }: CommentBodyProps) {
-    const { root_post_uuid, username } = useRootCommentsContext()
+export function CommentBody({ comment, parent_id, parent_uuid }: CommentBodyProps) {
+    const { username } = useRootCommentsContext()
     const [isOpenFormReply, setIsOpenFormReply] = useState<boolean>(false)
     const locale = useLocale()
     const { isLikedState, toggleLikeState } = useLikePost({
@@ -124,7 +125,7 @@ export function CommentBody({ comment, parent_id }: CommentBodyProps) {
             {isOpenFormReply && (
                 <div className='ml-10 flex gap-3 mb-3'>
                     <CommentForm
-                        postUuid={root_post_uuid}
+                        postUuid={parent_uuid}
                         placeholder='Add a reply...'
                         onClose={() => setIsOpenFormReply(false)}
                         parentId={parent_id}
