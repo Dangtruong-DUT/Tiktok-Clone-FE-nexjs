@@ -20,7 +20,8 @@ class UserService
 
     public function __construct(
         private readonly RelationshipRepository $relationshipRepo,
-        private readonly UserRepository $userRepo
+        private readonly UserRepository $userRepo,
+        private readonly NotificationService $notificationService
     ) {}
 
 
@@ -93,6 +94,11 @@ class UserService
             ]);
             $authUser->increment('following_count');
             $targetUser->increment('followers_count');
+
+            $this->notificationService->notifyFollow(
+                actorId: $authUser->id,
+                notifiableId: $targetUser->id
+            );
         });
 
         return true;
