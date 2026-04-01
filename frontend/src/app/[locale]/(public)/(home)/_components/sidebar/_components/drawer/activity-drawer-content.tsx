@@ -233,15 +233,21 @@ function NotificationItem({
 
             <div className='ml-2 flex items-center'>
                 {isFollowNotification ? (
-                    <FollowToggleButton
-                        isFollowed={isFollowed}
-                        onToggleFollow={() => onToggleFollow(notification)}
-                        isAuth={isAuth}
-                        followLabel={t('actions.followBack')}
-                        followedLabel={t('actions.friends')}
-                        className='h-8 min-w-24 rounded-md px-3 text-xs font-semibold'
-                        followClassName='bg-[#FF2D55] text-white hover:bg-[#ff2d55]/90'
-                    />
+                    <div
+                        onClick={(event) => {
+                            event.stopPropagation()
+                        }}
+                    >
+                        <FollowToggleButton
+                            isFollowed={isFollowed}
+                            onToggleFollow={() => onToggleFollow(notification)}
+                            isAuth={isAuth}
+                            followLabel={t('actions.followBack')}
+                            followedLabel={t('actions.friends')}
+                            className='h-8 min-w-24 rounded-md px-3 text-xs font-semibold'
+                            followClassName='bg-[#FF2D55] text-white hover:bg-[#ff2d55]/90'
+                        />
+                    </div>
                 ) : showThumbnail ? (
                     <div className='relative h-16 aspect-[9/16] overflow-hidden rounded-md bg-muted'>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
