@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\Notification\NotificationTabEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Notification\GetListNotificationRequest;
 use App\Http\Requests\Notification\GetUnreadCountNotificationRequest;
@@ -32,7 +33,8 @@ class NotificationController extends Controller
      */
     public function index(GetListNotificationRequest $request): JsonResponse
     {
-        $notifications = $this->notificationService->getMyNotifications($request->validated());
+        $payload = $request->validated();
+        $notifications = $this->notificationService->getNotifications($payload);
 
         return ApiResponse::success(
             data: NotificationResource::collection($notifications),
@@ -48,7 +50,9 @@ class NotificationController extends Controller
      */
     public function unreadCount(GetUnreadCountNotificationRequest $request): JsonResponse
     {
-        $count = $this->notificationService->getMyUnreadCount((string) $request->validated('tab', 'all'));
+        $count = $this->notificationService->getUnreadCount(
+            (string) $request->validated('tab', NotificationTabEnum::ALL->value)
+        );
 
         return ApiResponse::success(
             data: ['unread_count' => $count],
@@ -64,7 +68,9 @@ class NotificationController extends Controller
      */
     public function markAsRead(MarkNotificationAsReadRequest $request): JsonResponse
     {
-        $this->notificationService->markAsRead((string) $request->validated('notification_uuid'));
+        $this->notificationService->markAsRead(
+            (string) $request->validated('notification_uuid')
+        );
 
         return ApiResponse::success(message: 'Notification marked as read successfully');
     }
@@ -77,8 +83,8 @@ class NotificationController extends Controller
      */
     public function markAllAsRead(MarkAllNotificationsAsReadRequest $request): JsonResponse
     {
-        $updatedCount = $this->notificationService->markAllAsRead((string) $request->validated('tab', 'all'));
-
+        $updatedCount = $this->notificationService->markAllAsRead(
+            (string) $request->validated('tab', NotificationTabEnum::ALL->value));
         return ApiResponse::success(
             data: ['updated_count' => $updatedCount],
             message: 'Notifications marked as read successfully'

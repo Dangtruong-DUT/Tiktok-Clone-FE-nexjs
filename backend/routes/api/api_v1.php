@@ -65,6 +65,7 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::get('following', [PostController::class, 'showFollowingPosts'])->name('following');
         });
 
+    // notification routes
     Route::prefix('notifications')
         ->name('notifications.')
         ->group(function () {

@@ -6,6 +6,7 @@ use App\Enums\Post\AudienceTypeEnum;
 use App\Enums\Post\PostTypeEnum;
 use App\Enums\User\RoleTypeEnum;
 use App\Enums\User\UserVerifyStatusEnum;
+use App\Rules\NotifyUuid;
 use App\Rules\PostUuid;
 use App\Rules\UploadFileId;
 use App\Rules\UserId;
@@ -254,6 +255,7 @@ abstract class BaseRequest extends BaseFormRequest
             ],
             'audience'=>[new Enum(AudienceTypeEnum::class)],
             'post_type'=>[new Enum(PostTypeEnum::class)],
+            'notification_uuid' => [self::STRING, self::UUID, new NotifyUuid()],
         ];
     }
 }

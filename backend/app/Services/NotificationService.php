@@ -21,10 +21,13 @@ class NotificationService
      * Get current user notifications by tab with pagination.
      *
      * @param array<string, mixed> $filters
+     *                              - 'tab' (string): Filter notifications by tab'likes', 'comments', 'mentions', 'followers'.
+     *                              - 'per_page' (int): Number of notifications per page.
+     * @return LengthAwarePaginator
      */
-    public function getMyNotifications(array $filters): LengthAwarePaginator
+    public function getNotifications(array $filters): LengthAwarePaginator
     {
-        return $this->notificationRepository->paginateByNotifiableId(
+        return $this->notificationRepository->getByNotifiableId(
             notifiableId: auth_user_id(),
             filters: $filters,
             authUserId: auth_user_id()
@@ -33,14 +36,18 @@ class NotificationService
 
     /**
      * Get unread notification count for current user.
+     * @param string $tab
+     * @return int
      */
-    public function getMyUnreadCount(string $tab = 'all'): int
+    public function getUnreadCount(string $tab): int
     {
         return $this->notificationRepository->countUnreadByNotifiableId(auth_user_id(), $tab);
     }
 
     /**
      * Mark one notification as read by UUID for current user.
+     * @param string $notificationUuid
+     * @return void
      *
      * @throws NotFoundException
      */
@@ -58,14 +65,19 @@ class NotificationService
 
     /**
      * Mark all unread notifications as read for current user.
+     * @param string $tab
+     * @return int
      */
-    public function markAllAsRead(string $tab = 'all'): int
+    public function markAllAsRead(string $tab): int
     {
         return $this->notificationRepository->markAllAsReadByNotifiableId(auth_user_id(), $tab);
     }
 
     /**
      * Notify target user that someone followed them.
+     * @param int $actorId The ID of the user who performed the follow action.
+     * @param int $notifiableId The ID of the user to be notified.
+     * @return void
      */
     public function notifyFollow(int $actorId, int $notifiableId): void
     {
@@ -85,10 +97,13 @@ class NotificationService
 
     /**
      * Notify post owner that their post was liked.
+     * @param int $actorId The ID of the user who performed the like action.
+     * @param Post $post The post that was liked.
+     * @return void
      */
     public function notifyLike(int $actorId, Post $post): void
     {
-        $postOwnerId = (int) $post->user_id;
+        $postOwnerId =  $post->user_id;
         if ($actorId === $postOwnerId) {
             return;
         }
@@ -110,7 +125,7 @@ class NotificationService
      */
     public function notifyComment(int $actorId, Post $targetPost, Post $commentPost): void
     {
-        $postOwnerId = (int) $targetPost->user_id;
+        $postOwnerId =  $targetPost->user_id;
         if ($actorId === $postOwnerId) {
             return;
         }
@@ -139,7 +154,7 @@ class NotificationService
         $mentionedUserIds = array_values(array_unique(array_filter($mentionedUserIds, fn ($id) => (int) $id > 0)));
 
         foreach ($mentionedUserIds as $mentionedUserId) {
-            $mentionedUserId = (int) $mentionedUserId;
+            $mentionedUserId = $mentionedUserId;
             if ($actorId === $mentionedUserId) {
                 continue;
             }
@@ -160,6 +175,9 @@ class NotificationService
 
     /**
      * Notify current user for authentication-related events.
+     * @param int $userId The ID of the user to be notified.
+     * @param string $eventName The name of the authentication event (e.g., 'login', 'logout', 'password_change').
+     * @return void
      */
     public function notifyAuthEvent(int $userId, string $eventName): void
     {

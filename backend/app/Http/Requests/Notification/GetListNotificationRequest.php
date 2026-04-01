@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Notification;
 
+use App\Enums\Notification\NotificationTabEnum;
 use App\Http\Requests\BaseListRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class GetListNotificationRequest extends BaseListRequest
 {
@@ -11,7 +13,7 @@ class GetListNotificationRequest extends BaseListRequest
         parent::prepareForValidation();
 
         $this->merge([
-            'tab' => $this->query('tab', 'all'),
+            'tab' => $this->query('tab', NotificationTabEnum::ALL->value),
         ]);
     }
 
@@ -21,7 +23,7 @@ class GetListNotificationRequest extends BaseListRequest
             'tab' => [
                 self::SOMETIMES,
                 self::REQUIRED,
-                self::IN . ':all,likes,comments,mentions,followers',
+                new Enum(NotificationTabEnum::class),
             ],
             'page' => [
                 self::SOMETIMES,

@@ -20,9 +20,6 @@ class MarkNotificationAsReadRequest extends BaseRequest
         return $this->applyBaseRules([
             'notification_uuid' => [
                 self::REQUIRED,
-                self::STRING,
-                self::UUID,
-                self::EXISTS . ':notifications,uuid',
             ],
         ]);
     }
