@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\Notification\EntityTypeEnum;
 use App\Enums\Notification\NotificationTypeEnum;
+use App\Enums\Post\PostTypeEnum;
 use App\Exceptions\http\NotFoundException;
 use App\Models\Post;
 use App\Repositories\NotificationRepository;
@@ -103,9 +104,22 @@ class NotificationService
      */
     public function notifyLike(int $actorId, Post $post): void
     {
+        $videoPost = $post->getRoot();
+        $isLikeOnComment = $post->type === PostTypeEnum::COMMENT;
         $postOwnerId =  $post->user_id;
         if ($actorId === $postOwnerId) {
             return;
+        }
+
+        $data = [
+            'post_uuid' => $videoPost->uuid,
+            'liked_target_type' => $isLikeOnComment ? 'comment' : 'post',
+            'liked_target_uuid' => $post->uuid,
+        ];
+
+        if ($isLikeOnComment) {
+            $data['comment_uuid'] = $post->uuid;
+            $data['comment_excerpt'] = mb_substr((string) $post->content, 0, self::EXCERPT_LIMIT);
         }
 
         $this->notificationRepository->create([
@@ -113,10 +127,8 @@ class NotificationService
             'notifiable_id' => $postOwnerId,
             'type' => NotificationTypeEnum::LIKE->value,
             'entity_type' => EntityTypeEnum::POST->value,
-            'entity_id' => $post->id,
-            'data' => [
-                'post_uuid' => $post->uuid,
-            ],
+            'entity_id' => $videoPost->id,
+            'data' => $data,
         ]);
     }
 
@@ -125,6 +137,7 @@ class NotificationService
      */
     public function notifyComment(int $actorId, Post $targetPost, Post $commentPost): void
     {
+        $videoPost = $targetPost->getRoot();
         $postOwnerId =  $targetPost->user_id;
         if ($actorId === $postOwnerId) {
             return;
@@ -135,9 +148,9 @@ class NotificationService
             'notifiable_id' => $postOwnerId,
             'type' => NotificationTypeEnum::COMMENT->value,
             'entity_type' => EntityTypeEnum::POST->value,
-            'entity_id' => $targetPost->id,
+            'entity_id' => $videoPost->id,
             'data' => [
-                'post_uuid' => $targetPost->uuid,
+                'post_uuid' => $videoPost->uuid,
                 'comment_uuid' => $commentPost->uuid,
                 'comment_excerpt' => mb_substr((string) $commentPost->content, 0, self::EXCERPT_LIMIT),
             ],
@@ -151,6 +164,7 @@ class NotificationService
      */
     public function notifyMention(int $actorId, Post $post, array $mentionedUserIds): void
     {
+        $videoPost = $post->getRoot();
         $mentionedUserIds = array_values(array_unique(array_filter($mentionedUserIds, fn ($id) => (int) $id > 0)));
 
         foreach ($mentionedUserIds as $mentionedUserId) {
@@ -164,9 +178,9 @@ class NotificationService
                 'notifiable_id' => $mentionedUserId,
                 'type' => NotificationTypeEnum::MENTION->value,
                 'entity_type' => EntityTypeEnum::POST->value,
-                'entity_id' => $post->id,
+                'entity_id' => $videoPost->id,
                 'data' => [
-                    'post_uuid' => $post->uuid,
+                    'post_uuid' => $videoPost->uuid,
                     'content_excerpt' => mb_substr((string) $post->content, 0, self::EXCERPT_LIMIT),
                 ],
             ]);

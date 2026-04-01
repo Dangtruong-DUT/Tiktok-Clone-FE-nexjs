@@ -204,6 +204,28 @@ class Post extends Model
     }
 
     /**
+     * Get the root post of the thread. If the post is a comment, repost, or quote post, it will return the original post.
+     * If the post is already a root post, it will return itself.
+     * @return Post The root post instance.
+     */
+    public function getRoot(): Post
+    {
+        $current = $this;
+
+        while ($current->type !== PostTypeEnum::POST && !empty($current->parent_id)) {
+            $parent = $current->parent;
+
+            if (!$parent instanceof Post) {
+                break;
+            }
+
+            $current = $parent;
+        }
+
+        return $current;
+    }
+
+    /**
      * Scope a query to only include posts visible to the given user.
      *
      * @param Builder $query The query builder instance.
