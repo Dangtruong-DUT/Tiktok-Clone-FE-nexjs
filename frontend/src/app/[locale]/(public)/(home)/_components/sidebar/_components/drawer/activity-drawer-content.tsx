@@ -5,7 +5,7 @@ import DialogHeader from '@/components/dialog-header'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { useLocale, useTranslations } from 'next-intl'
-import { BellRing, MessageCircle, ShieldCheck, Sparkles, Video, Loader2 } from 'lucide-react'
+import { BellRing, MessageCircle, ShieldCheck, Sparkles, Video } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { timeAgo } from '@/utils/formatting/formatTime.util'
 import { NotificationTypeCode } from '@/constants/enum'
@@ -20,6 +20,8 @@ import { NotificationType } from '@/types/models/notification.model'
 import { useFollowUserMutation, useUnfollowUserMutation } from '@/store/services/user.service'
 import FollowToggleButton from '@/components/follow-toggle-button'
 import { useAppSelector } from '@/store/hooks'
+import { useRouter } from '@/i18n/navigation'
+import LoadingIcon from '@/components/lottie-icons/loading'
 
 type NotificationSection = 'new' | 'this_week' | 'this_month' | 'previous'
 
@@ -82,8 +84,14 @@ function getNotificationMessage(
 ): string {
     const actorName = notification.actor?.name || notification.actor?.username || t('labels.someone')
     const event = typeof notification.data?.event === 'string' ? notification.data.event : ''
+    const likedTargetType =
+        typeof notification.data?.liked_target_type === 'string' ? notification.data.liked_target_type : ''
 
     if (notification.type === NotificationTypeCode.LIKE) {
+        if (likedTargetType === 'comment') {
+            return t('messages.likeComment', { actor: actorName })
+        }
+
         return t('messages.like', { actor: actorName })
     }
 
@@ -121,6 +129,20 @@ function getNotificationSubText(notification: NotificationType): string | null {
 }
 
 function getNotificationLink(notification: NotificationType): string | null {
+    const dataPostUuid = typeof notification.data?.post_uuid === 'string' ? notification.data.post_uuid : null
+    const dataCommentUuid = typeof notification.data?.comment_uuid === 'string' ? notification.data.comment_uuid : null
+
+    if (
+        [NotificationTypeCode.COMMENT, NotificationTypeCode.MENTION, NotificationTypeCode.LIKE].includes(
+            notification.type
+        ) &&
+        dataPostUuid &&
+        notification.actor?.username
+    ) {
+        const query = dataCommentUuid ? `?comment_uuid=${dataCommentUuid}` : ''
+        return `/@${notification.actor.username}/video/${dataPostUuid}${query}`
+    }
+
     if (notification.entity?.type === 'post' && notification.entity?.uuid && notification.actor?.username) {
         return `/@${notification.actor.username}/video/${notification.entity.uuid}`
     }
@@ -283,7 +305,7 @@ function NotificationItem({
 export default function ActivityDrawerContent() {
     const t = useTranslations('HomePage.sidebar.activity')
     const translate = (key: string, values?: Record<string, string | number>) => t(key as never, values as never)
-    const locale = useLocale() as 'en' | 'vi'
+    const locale = useLocale()
     const { toggleDrawer } = useDrawerSidebar()
     const role = useAppSelector((state) => state.auth.role)
     const isAuth = role != null
@@ -347,8 +369,10 @@ export default function ActivityDrawerContent() {
         [followUser, localFollowState, unfollowUser]
     )
 
+    const router = useRouter()
     const handleNavigate = useCallback((path: string) => {
-        window.open(path, '_blank', 'noopener,noreferrer')
+        window.open(`/${locale}${path}`, '_blank')
+        toggleDrawer()
     }, [])
 
     return (
@@ -383,14 +407,14 @@ export default function ActivityDrawerContent() {
                     onClick={handleMarkAllRead}
                     disabled={isMarkAllLoading || notifications.length === 0}
                 >
-                    {isMarkAllLoading ? <Loader2 size={14} className='animate-spin' /> : t('actions.markAllRead')}
+                    {isMarkAllLoading ? <LoadingIcon className='size-5' loop /> : t('actions.markAllRead')}
                 </Button>
             </div>
 
             <div className='mt-2 flex-1 overflow-y-auto scrollbar-hidden'>
                 {isLoading && (
                     <div className='flex items-center justify-center py-8 text-muted-foreground'>
-                        <Loader2 size={18} className='animate-spin' />
+                        <LoadingIcon className='size-8' loop />
                     </div>
                 )}
 
@@ -438,7 +462,7 @@ export default function ActivityDrawerContent() {
                             onClick={() => fetchNextPage()}
                             disabled={isFetching}
                         >
-                            {isFetching ? <Loader2 size={16} className='animate-spin' /> : t('actions.loadMore')}
+                            {isFetching ? <LoadingIcon className='size-6' loop /> : t('actions.loadMore')}
                         </Button>
                     </div>
                 )}

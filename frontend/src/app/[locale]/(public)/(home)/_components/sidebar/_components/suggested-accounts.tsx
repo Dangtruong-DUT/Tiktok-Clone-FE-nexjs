@@ -50,10 +50,10 @@ export default function SuggestedAccounts({ title }: SuggestedAccountsProps) {
                     <li key={account.id}>
                         <AccountItem
                             className='
-                transition-colors duration-200 ease-in-out p-2 rounded-[4px] hover:bg-accent
-                md:block
-                max-md:w-[55px] max-md:pl-[13px]
-                max-md:[&_h4]:hidden max-md:[&_p]:hidden'
+                            transition-colors duration-200 ease-in-out p-2 rounded-[4px] hover:bg-accent
+                            md:block
+                            max-md:w-[55px] max-md:pl-[13px]
+                            max-md:[&_h4]:hidden max-md:[&_p]:hidden'
                             avatar_url={account.avatar}
                             username={account.username}
                             name={account.nameAccount}

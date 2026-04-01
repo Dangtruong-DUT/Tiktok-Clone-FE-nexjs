@@ -630,6 +630,7 @@
                 },
                 "messages": {
                     "like": "{actor} liked your video.",
+                    "likeComment": "{actor} liked your comment.",
                     "comment": "{actor} commented on your video.",
                     "mention": "{actor} mentioned you in a post.",
                     "follow": "{actor} started following you.",

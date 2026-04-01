@@ -13,13 +13,16 @@ import SearchDrawerContent from '@/app/[locale]/(public)/(home)/_components/side
 import DrawerSidebar from '@/app/[locale]/(public)/(home)/_components/sidebar/_components/drawer/drawer'
 import SettingsMenuDrawerContent from '@/app/[locale]/(public)/(home)/_components/sidebar/_components/drawer/settings-menu-drawer-content'
 import ActivityDrawerContent from '@/app/[locale]/(public)/(home)/_components/sidebar/_components/drawer/activity-drawer-content'
-import { BellIcon, MoreHorizontalIcon } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store'
 import ButtonGotoProfile from '@/app/[locale]/(public)/(home)/_components/sidebar/_components/button-goto-profile'
 import { useAppContext } from '@/provider/app-provider'
 import SidebarSkeleton from '@/app/[locale]/(public)/(home)/_components/sidebar/_components/sidebar-skeleton'
+import {
+    SIDEBAR_ACTION_MENU_ITEMS,
+    SidebarActionMenuKey
+} from '@/app/[locale]/(public)/(home)/_components/sidebar/_config/sidebar-action-items.config'
 
 export interface SidebarProps {
     className?: string
@@ -79,6 +82,14 @@ export default function Sidebar({ className }: SidebarProps) {
         setIsOpenActivity((prev) => !prev)
     }, [isOpenActivity, setIsOpenDrawer, resetToRouteActive, setActiveState])
 
+    const toggleActionMap: Record<SidebarActionMenuKey, () => void> = {
+        activity: toggleActivityDrawer,
+        more: toggleSettingsDrawer
+    }
+
+    const actionItemsBeforeProfile = SIDEBAR_ACTION_MENU_ITEMS.filter((item) => item.placement === 'before-profile')
+    const actionItemsAfterProfile = SIDEBAR_ACTION_MENU_ITEMS.filter((item) => item.placement === 'after-profile')
+
     if (authStatus === 'loading') {
         return <SidebarSkeleton />
     }
@@ -115,68 +126,86 @@ export default function Sidebar({ className }: SidebarProps) {
                 >
                     <NavItems roleUser={role} />
                     <aside className='flex flex-col gap-[0.5rem]'>
-                        {isAuth && (
-                            <button
-                                className={cn(
-                                    'flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent cursor-pointer',
-                                    activeState.type === SidebarActiveType.ACTIVITY && 'bg-accent'
-                                )}
-                                onClick={toggleActivityDrawer}
-                            >
-                                <BellIcon
-                                    size={24}
+                        {actionItemsBeforeProfile.map((item) => {
+                            if (item.requiredAuth && !isAuth) {
+                                return null
+                            }
+
+                            const isActive = activeState.type === item.activeType
+                            const Icon = isActive ? item.activeIcon : item.icon
+
+                            return (
+                                <button
+                                    key={item.key}
                                     className={cn(
-                                        'transition-colors duration-200',
-                                        activeState.type === SidebarActiveType.ACTIVITY
-                                            ? 'text-brand'
-                                            : 'text-foreground'
+                                        'flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent cursor-pointer',
+                                        isActive && 'bg-accent'
                                     )}
-                                />
-                                {!isOpenDrawer && (
-                                    <h2
+                                    onClick={toggleActionMap[item.key]}
+                                >
+                                    <Icon
+                                        size={24}
                                         className={cn(
-                                            'text-base font-medium transition-colors duration-200',
-                                            activeState.type === SidebarActiveType.ACTIVITY
-                                                ? 'text-brand'
-                                                : 'text-foreground'
+                                            'transition-colors duration-200',
+                                            isActive ? 'text-brand' : 'text-foreground'
                                         )}
-                                    >
-                                        {t('activity')}
-                                    </h2>
-                                )}
-                            </button>
-                        )}
+                                    />
+                                    {!isOpenDrawer && (
+                                        <h2
+                                            className={cn(
+                                                'text-base font-medium transition-colors duration-200',
+                                                isActive ? 'text-brand' : 'text-foreground'
+                                            )}
+                                        >
+                                            {t(item.titleKey)}
+                                        </h2>
+                                    )}
+                                </button>
+                            )
+                        })}
 
                         <ButtonGotoProfile
                             activeState={activeState}
                             setActiveState={setActiveState}
                             isOpenDrawer={isOpenDrawer}
                         />
-                        <button
-                            className={cn(
-                                'flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent',
-                                activeState.type === SidebarActiveType.MORE && 'bg-accent'
-                            )}
-                            onClick={toggleSettingsDrawer}
-                        >
-                            <MoreHorizontalIcon
-                                size={24}
-                                className={cn(
-                                    'transition-colors duration-200',
-                                    activeState.type === SidebarActiveType.MORE ? 'text-brand' : 'text-foreground'
-                                )}
-                            />
-                            {!isOpenDrawer && (
-                                <h2
+                        {actionItemsAfterProfile.map((item) => {
+                            if (item.requiredAuth && !isAuth) {
+                                return null
+                            }
+
+                            const isActive = activeState.type === item.activeType
+                            const Icon = isActive ? item.activeIcon : item.icon
+
+                            return (
+                                <button
+                                    key={item.key}
                                     className={cn(
-                                        'text-base font-medium transition-colors duration-200',
-                                        activeState.type === SidebarActiveType.MORE ? 'text-brand' : 'text-foreground'
+                                        'flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent cursor-pointer',
+                                        isActive && 'bg-accent'
                                     )}
+                                    onClick={toggleActionMap[item.key]}
                                 >
-                                    {t('more')}
-                                </h2>
-                            )}
-                        </button>
+                                    <Icon
+                                        size={24}
+                                        className={cn(
+                                            'transition-colors duration-200',
+                                            isActive ? 'text-brand' : 'text-foreground'
+                                        )}
+                                    />
+                                    {!isOpenDrawer && (
+                                        <h2
+                                            className={cn(
+                                                'text-base font-medium transition-colors duration-200',
+                                                isActive ? 'text-brand' : 'text-foreground'
+                                            )}
+                                        >
+                                            {t(item.titleKey)}
+                                        </h2>
+                                    )}
+                                </button>
+                            )
+                        })}
                     </aside>
 
                     {!isOpenDrawer && (

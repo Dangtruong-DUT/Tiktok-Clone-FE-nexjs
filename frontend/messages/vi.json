@@ -630,6 +630,7 @@
                 },
                 "messages": {
                     "like": "{actor} đã thích video của bạn.",
+                    "likeComment": "{actor} đã thích bình luận của bạn.",
                     "comment": "{actor} đã bình luận video của bạn.",
                     "mention": "{actor} đã nhắc đến bạn trong bài đăng.",
                     "follow": "{actor} đã bắt đầu theo dõi bạn.",
