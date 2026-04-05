@@ -6,6 +6,8 @@ use App\Enums\Auth\TokenTypeEnum;
 use App\Enums\User\RelationshipTypeEnum;
 use App\Enums\User\RoleTypeEnum;
 use App\Enums\User\UserVerifyStatusEnum;
+use App\Models\Conversation;
+use App\Models\Message;
 use App\Traits\HasCreateDefaultUserSettingObservable;
 use App\Traits\HasUsernameObservable;
 use App\Traits\HasUuidObservable;
@@ -324,6 +326,23 @@ class User extends Authenticatable implements JWTSubject
     public function notifications(): HasMany
     {
         return $this->hasMany(Notification::class, 'notifiable_id');
+    }
+
+    /**
+     * Get conversations that the user participates in.
+     */
+    public function conversations(): BelongsToMany
+    {
+        return $this->belongsToMany(Conversation::class, 'conversation_participants', 'user_id', 'conversation_id')
+            ->withPivot('last_read_at');
+    }
+
+    /**
+     * Get messages sent by the user.
+     */
+    public function sentMessages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'sender_id');
     }
 
     /**
