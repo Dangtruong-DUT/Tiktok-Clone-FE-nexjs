@@ -3,17 +3,11 @@
 namespace App\Mail;
 
 use App\Models\User;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Queue\SerializesModels;
 
-class VerifyUserEmail extends Mailable implements ShouldQueue
+class VerifyUserEmail extends BaseMailAble
 {
-    use Queueable;
-    use SerializesModels;
 
     /**
      * Create a new message instance.
@@ -23,7 +17,7 @@ class VerifyUserEmail extends Mailable implements ShouldQueue
         private string $token,
     )
     {
-        $this->afterCommit();
+        parent::__construct();
     }
 
     /**
