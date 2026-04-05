@@ -1,19 +1,19 @@
-import { API_ENDPOINT } from '@/config/endpoint.config'
+import { BACKEND_API_ENDPOINT } from '@/config/endpoint.config'
 import baseQueryWithReauth from '@/services/RTK/client'
-import { UserIndicatorsResponse } from '@/types/response/stats.type'
-import { GetUserProfileResType, UpdateUserResType, VerifyEmailResType } from '@/types/response/user.type'
 import {
     ForgotPasswordReqBodyType,
     ResetPasswordReqBodyType,
     verifyForgotPasswordReqBodyType
-} from '@/utils/validations/auth.schema'
+} from '@/types/dtos/auth/auth-request.dto'
+import { UserIndicatorsResponse } from '@/types/dtos/stats/stats-response.dto'
 import {
     ChangePasswordBodyType,
     FollowUserReqBodyType,
     GetUserIndicatorQueryParamsType,
     UpdateUserBodyType,
     VerifyEmailReqBodyType
-} from '@/utils/validations/user.schema'
+} from '@/types/dtos/user/user-request.dto'
+import { GetUserProfileResType, UpdateUserResType, VerifyEmailResType } from '@/types/dtos/user/user-response.dto'
 import { createApi } from '@reduxjs/toolkit/query/react'
 import queryString from 'query-string'
 
@@ -28,35 +28,35 @@ export const UserApi = createApi({
     endpoints: (builder) => ({
         verify: builder.mutation<VerifyEmailResType, VerifyEmailReqBodyType>({
             query: (data) => ({
-                url: API_ENDPOINT.API_VERIFY_EMAIL,
+                url: BACKEND_API_ENDPOINT.API_VERIFY_EMAIL,
                 method: 'POST',
                 body: data
             })
         }),
         forgotPassword: builder.mutation<{ message: string }, ForgotPasswordReqBodyType>({
             query: (data) => ({
-                url: API_ENDPOINT.API_FORGOT_PASSWORD,
+                url: BACKEND_API_ENDPOINT.API_FORGOT_PASSWORD,
                 method: 'POST',
                 body: data
             })
         }),
         verifyForgotPassword: builder.mutation<{ message: string }, verifyForgotPasswordReqBodyType>({
             query: (data) => ({
-                url: API_ENDPOINT.API_VERIFY_FORGOT_PASSWORD,
+                url: BACKEND_API_ENDPOINT.API_VERIFY_FORGOT_PASSWORD,
                 method: 'POST',
                 body: data
             })
         }),
         resetPassword: builder.mutation<{ message: string }, ResetPasswordReqBodyType>({
             query: (data) => ({
-                url: API_ENDPOINT.API_RESET_PASSWORD,
+                url: BACKEND_API_ENDPOINT.API_RESET_PASSWORD,
                 method: 'POST',
                 body: data
             })
         }),
         getMe: builder.query<GetUserProfileResType, void>({
             query: () => ({
-                url: API_ENDPOINT.API_GET_ME,
+                url: BACKEND_API_ENDPOINT.API_GET_ME,
                 method: 'GET'
             }),
             providesTags: (result) => (result ? [{ type: 'Users', id: result.data.uuid }] : [])

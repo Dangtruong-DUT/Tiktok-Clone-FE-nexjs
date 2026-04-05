@@ -53,7 +53,11 @@ export default function usePostsTabQuery({ activeTabId, userId }: UsePostsTabQue
     }
 
     const currentQuery = getCurrentQuery()
-    const isPrivate = (currentQuery.error as { status?: number } | undefined)?.status === HTTP_STATUS.FORBIDDEN
+
+    const isPrivate = useMemo(() => {
+        if (!('error' in currentQuery) || !currentQuery.error || !('status' in currentQuery.error)) return false
+        return currentQuery.error.status === HTTP_STATUS.FORBIDDEN
+    }, [currentQuery])
 
     return {
         postList,

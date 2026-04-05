@@ -3,9 +3,9 @@ import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolk
 import { Mutex } from 'async-mutex'
 import envConfig from '@/config/app.config'
 import { setLoggedOutAction, tokenReceived } from '@/store/features/authSlice'
-import { RefreshTokenRes } from '@/types/response/auth.type'
 import { HTTP_STATUS } from '@/constants/http'
 import { RootState } from '@/store'
+import { RefreshTokenRes } from '@/types/dtos/auth/auth-response.dto'
 
 // create a new mutex
 const mutex = new Mutex()

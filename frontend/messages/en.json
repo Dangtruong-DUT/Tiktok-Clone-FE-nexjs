@@ -511,7 +511,9 @@
             "following": "Following",
             "message": "Message",
             "editProfile": "Edit profile",
-            "settings": "Settings"
+            "settings": "Settings",
+            "loginRequired": "Please sign in to send messages.",
+            "messageFailed": "Could not open conversation. Please try again."
         },
         "relationsModal": {
             "title": "Connections",
@@ -576,6 +578,20 @@
                 "description": "This content is private."
             }
         }
+    },
+    "MessagesPage": {
+        "title": "Messages",
+        "conversation": "Conversation",
+        "emptyTitle": "Select a conversation",
+        "loadingConversations": "Loading conversations...",
+        "noConversations": "No conversations yet.",
+        "loadingMessages": "Loading messages...",
+        "noMessagesYet": "No messages yet.",
+        "selectConversation": "Select a conversation to start chatting.",
+        "placeholder": "Send a message...",
+        "send": "Send",
+        "sendFailed": "Failed to send message.",
+        "loginRequired": "Please sign in to access messages."
     },
     "HomePage": {
         "menu": {

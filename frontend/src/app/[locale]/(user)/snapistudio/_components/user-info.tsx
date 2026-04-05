@@ -15,7 +15,7 @@ export default function UserInfo() {
             <Link href={`/@${userData?.username}`} className=' relative'>
                 <Avatar className='size-12 shrink-0'>
                     <AvatarImage src={userData?.avatar} alt={userData?.username} className='shrink-0 object-cover' />
-                    <AvatarFallback> {userData?.name.charAt(0).toUpperCase()}</AvatarFallback>
+                    <AvatarFallback> {userData?.name?.charAt(0)?.toUpperCase() ?? 'U'}</AvatarFallback>
                 </Avatar>
                 <div className='absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 hover:opacity-100 transition'>
                     <MdOutlineShortcut size={14} />

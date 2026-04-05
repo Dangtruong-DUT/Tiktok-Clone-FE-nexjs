@@ -1,6 +1,11 @@
 import httpClient from '@/apis/client'
 import { BACKEND_API_ENDPOINT } from '@/config/endpoint.config'
-import { LoginResponseType, LogoutResType, RefreshTokenRes, RegisterResponseType } from '@/types/dtos/auth/auth-response.dto'
+import {
+    LoginResponseType,
+    LogoutResType,
+    RefreshTokenRes,
+    RegisterResponseType
+} from '@/types/dtos/auth/auth-response.dto'
 import { VerifyEmailResType } from '@/types/dtos/user/user-response.dto'
 import {
     ForgotPasswordReqBodyType,
@@ -12,11 +17,11 @@ import {
     verifyForgotPasswordReqBodyType
 } from '@/types/dtos/auth/auth-request.dto'
 import { VerifyEmailReqBodyType } from '@/types/dtos/user/user-request.dto'
-import { verify } from 'crypto'
 
 const AuthRequestApi = {
     login: (body: LoginReqBodyType) => httpClient.post<LoginResponseType>(BACKEND_API_ENDPOINT.API_LOGIN, body),
-    register: (body: RegisterReqBodyType) => httpClient.post<RegisterResponseType>(BACKEND_API_ENDPOINT.API_REGISTER, body),
+    register: (body: RegisterReqBodyType) =>
+        httpClient.post<RegisterResponseType>(BACKEND_API_ENDPOINT.API_REGISTER, body),
     logout: (data: LogoutReqBodyType & { access_token: string }) => {
         const { access_token, ...body } = data
         return httpClient.post<LogoutResType>(BACKEND_API_ENDPOINT.API_LOGOUT, body, {

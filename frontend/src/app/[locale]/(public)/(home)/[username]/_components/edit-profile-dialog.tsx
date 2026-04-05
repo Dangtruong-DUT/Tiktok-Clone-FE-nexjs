@@ -166,7 +166,7 @@ export default function EditProfileDialog() {
                         <FormField
                             control={form.control}
                             name='avatar_file_id'
-                            render={({}) => (
+                            render={() => (
                                 <FormItem>
                                     <div className='mb-6 flex flex-row items-center relative justify-center  '>
                                         <FormLabel className='text-base font-semibold absolute left-0 top-1/2 transform -translate-y-1/2'>

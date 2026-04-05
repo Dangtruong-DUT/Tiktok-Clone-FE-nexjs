@@ -183,7 +183,7 @@ export default function UpdateProfileForm() {
                         <FormField
                             control={form.control}
                             name='avatar_file_id'
-                            render={({}) => (
+                            render={() => (
                                 <FormItem>
                                     <div className='relative h-[112px] w-[112px]'>
                                         <Avatar className='h-full w-full rounded-full border-2 border-brand/20'>

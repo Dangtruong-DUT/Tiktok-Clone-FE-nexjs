@@ -29,5 +29,6 @@ export const routeToActiveType: Record<routesValuesType, SidebarActiveType> = {
     '/explore': SidebarActiveType.EXPLORE,
     '/friends': SidebarActiveType.FRIENDS,
     '/following': SidebarActiveType.FOLLOWING,
+    '/messages': SidebarActiveType.MESSAGES,
     '/snapistudio/upload': SidebarActiveType.UPLOAD
 }

@@ -1,4 +1,4 @@
-import { BACKEND_API_ENDPOINT, NEXT_API_ENDPOINT } from '@/config/endpoint.config'
+import { NEXT_API_ENDPOINT } from '@/config/endpoint.config'
 import { NextWithAuthBaseQuery } from '@/store/services/client'
 import { SetCookieBodyType } from '@/types/auth'
 import {

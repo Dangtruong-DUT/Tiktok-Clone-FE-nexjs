@@ -1,6 +1,5 @@
 import { Role, TokenType, UserVerifyStatus } from '@/constants/enum'
-import { verify } from 'crypto'
-import { uuid, z } from 'zod'
+import { z } from 'zod'
 
 export const JwtPayloadTypeSchema = z
     .object({
@@ -9,7 +8,7 @@ export const JwtPayloadTypeSchema = z
         uuid: z.string(),
         role: z.nativeEnum(Role),
         token_Type: z.nativeEnum(TokenType),
-        verify:z.nativeEnum(UserVerifyStatus),
+        verify: z.nativeEnum(UserVerifyStatus),
         iat: z.number(),
         exp: z.number()
     })

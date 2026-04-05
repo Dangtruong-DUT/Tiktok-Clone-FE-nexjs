@@ -106,7 +106,6 @@ export default function PhotoEditorDialog({ photoUrl, isVisible, setVisible, onC
 
     const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
         if (e.pointerType === 'mouse' && e.button !== 0) return
-
         ;(e.currentTarget as Element).setPointerCapture(e.pointerId)
         draggingRef.current = true
         startPointerRef.current = { x: e.clientX, y: e.clientY }
@@ -166,7 +165,6 @@ export default function PhotoEditorDialog({ photoUrl, isVisible, setVisible, onC
                 const naturalWidth = img.naturalWidth
                 const naturalHeight = img.naturalHeight
 
-                // Tính toán tỷ lệ giữa kích thước gốc và kích thước hiển thị
                 let displayRatio: number
                 let displayWidth: number
                 let displayHeight: number

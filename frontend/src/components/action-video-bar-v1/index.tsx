@@ -92,7 +92,7 @@ export default function ActionBar({ post, className }: ActionBarProps) {
                         </AvatarFallback>
                     </Avatar>
                 </Link>
-                {!!currentUser ? (
+                {currentUser ? (
                     !isCurrentUser && (
                         <Button
                             variant='secondary'

@@ -1,6 +1,6 @@
 export class HttpException extends Error {
     constructor(
-        protected _data: { message: string; [key: string]: any },
+        protected _data: { message: string; [key: string]: unknown },
         protected _status: number,
         message = 'Http Error'
     ) {

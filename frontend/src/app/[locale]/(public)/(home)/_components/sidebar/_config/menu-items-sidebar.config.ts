@@ -8,9 +8,11 @@ import {
 
 import {
     // Outline icons từ Heroicons v2
+    HiOutlineChatBubbleLeftRight,
     HiOutlineUsers,
     HiOutlineUserGroup,
     // Filled icons từ Heroicons v2
+    HiChatBubbleLeftRight,
     HiUsers,
     HiUserGroup,
     HiCloudArrowUp
@@ -23,6 +25,7 @@ export const sidebarConfig = {
         explore: '/explore',
         friends: '/friends',
         following: '/following',
+        messages: '/messages',
         upload: '/snapistudio/upload'
     }
 } as const
@@ -61,6 +64,14 @@ export const HOME_MENU_ITEMS: MenuItemConfig[] = [
         to: sidebarConfig.routes.following,
         Icon: HiOutlineUsers,
         ActiveIcon: HiUsers,
+        requiredAuth: true,
+        viewFor: 'all'
+    },
+    {
+        titleKey: 'HomePage.menu.messages',
+        to: sidebarConfig.routes.messages,
+        Icon: HiOutlineChatBubbleLeftRight,
+        ActiveIcon: HiChatBubbleLeftRight,
         requiredAuth: true,
         viewFor: 'all'
     },

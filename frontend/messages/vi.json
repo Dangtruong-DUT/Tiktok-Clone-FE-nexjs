@@ -511,7 +511,9 @@
             "following": "Đang theo dõi",
             "message": "Nhắn tin",
             "editProfile": "Sửa hồ sơ",
-            "settings": "Cài đặt"
+            "settings": "Cài đặt",
+            "loginRequired": "Vui lòng đăng nhập để nhắn tin.",
+            "messageFailed": "Không thể mở cuộc trò chuyện. Vui lòng thử lại."
         },
         "relationsModal": {
             "title": "Kết nối",
@@ -576,6 +578,20 @@
                 "description": "Nội dung này đang ở chế độ riêng tư."
             }
         }
+    },
+    "MessagesPage": {
+        "title": "Tin nhắn",
+        "conversation": "Cuộc trò chuyện",
+        "emptyTitle": "Chọn một cuộc trò chuyện",
+        "loadingConversations": "Đang tải cuộc trò chuyện...",
+        "noConversations": "Chưa có cuộc trò chuyện nào.",
+        "loadingMessages": "Đang tải tin nhắn...",
+        "noMessagesYet": "Chưa có tin nhắn nào.",
+        "selectConversation": "Chọn cuộc trò chuyện để bắt đầu nhắn tin.",
+        "placeholder": "Nhập tin nhắn...",
+        "send": "Gửi",
+        "sendFailed": "Gửi tin nhắn thất bại.",
+        "loginRequired": "Vui lòng đăng nhập để sử dụng tin nhắn."
     },
     "HomePage": {
         "menu": {

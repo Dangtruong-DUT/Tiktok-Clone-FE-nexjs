@@ -3,7 +3,6 @@ import { Check, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { MenuOption } from '@/components/nested-menu/types'
 import { Link } from '@/i18n/navigation'
-import { on } from 'events'
 
 export interface MenuItemProps {
     data: MenuOption

@@ -24,10 +24,10 @@ export class HttpError extends Error {
 
 export class EntityError extends HttpError {
     constructor(data: EntityErrorPayload, message = 'Entity Error') {
-        super(data, HTTP_STATUS.ENTITY_ERROR_STATUS, message)
+        super(data, HTTP_STATUS.UNPROCESSABLE_ENTITY, message)
     }
     override get status() {
-        return HTTP_STATUS.ENTITY_ERROR_STATUS
+        return HTTP_STATUS.UNPROCESSABLE_ENTITY
     }
     override get data(): EntityErrorPayload {
         return super.data as EntityErrorPayload

@@ -1,7 +1,7 @@
 'use client'
 
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/components/ui/dialog'
-import { Card, CardContent } from '@/components/ui/card'
+import { CardContent } from '@/components/ui/card'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 import { toast } from 'sonner'
 import { createShareItems } from '@/components/share-items'
@@ -20,7 +20,10 @@ export function ShareMenuDialog({ url, children }: ShareMenuDialogProps) {
             toast.success('Link copied to clipboard!', {
                 position: 'top-center'
             })
-        } catch (_) {}
+        } catch (_) {
+            // Fallback method for older browsers
+            console.warn('Clipboard API not supported, using fallback method.')
+        }
     }, [url])
 
     const shareItems = useMemo(() => createShareItems(url, handleCopyLink), [url, handleCopyLink])

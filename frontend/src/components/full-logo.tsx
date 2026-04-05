@@ -7,10 +7,7 @@ type Props = {
     color?: string
 }
 
-export default function FullLogo({ className, width, height, color = 'currentColor' }: Props) {
-    const logoTextOutlineShadow =
-        '0 0 1px rgba(255,255,255,0.55), 1px 0 0 rgba(153,0,255,0.35), -1px 0 0 rgba(153,0,255,0.35), 0 1px 0 rgba(255,0,204,0.28), 0 -1px 0 rgba(255,0,204,0.28), 0 0 8px rgba(153,0,255,0.22)'
-
+export default function FullLogo({ className, height, color = 'currentColor' }: Props) {
     return (
         <div className='inline-flex items-center gap-2 text-2xl'>
             <svg

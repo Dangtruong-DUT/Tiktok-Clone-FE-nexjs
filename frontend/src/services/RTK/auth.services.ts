@@ -1,7 +1,12 @@
 import { NextWithAuthBaseQuery } from '@/services/RTK/client'
 import { SetCookieBodyType } from '@/types/auth'
-import { LoginResponseType, LogoutResType, RefreshTokenRes, RegisterResponseType } from '@/types/response/auth.type'
-import { LoginReqBodyType, RegisterReqBodyType } from '@/utils/validations/auth.schema'
+import { LoginReqBodyType, RegisterReqBodyType } from '@/types/dtos/auth/auth-request.dto'
+import {
+    LoginResponseType,
+    LogoutResType,
+    RefreshTokenRes,
+    RegisterResponseType
+} from '@/types/dtos/auth/auth-response.dto'
 import { createApi } from '@reduxjs/toolkit/query/react'
 
 export const AuthApi = createApi({

@@ -5,11 +5,13 @@ import { LocalesType } from '@/i18n/config'
 import { Link } from '@/i18n/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { Metadata, ResolvingMetadata } from 'next'
+import { set } from 'lodash'
 
 export async function generateMetadata(
     { params }: { params: Promise<{ locale: LocalesType }> },
     parent: ResolvingMetadata
 ): Promise<Metadata> {
+    setRequestLocale((await params).locale)
     const t = await getTranslations('SignUpPage')
     const parentMeta = await parent
     const images = parentMeta.openGraph?.images || []

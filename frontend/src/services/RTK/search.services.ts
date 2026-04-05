@@ -1,8 +1,8 @@
 import baseQueryWithReauth from '@/services/RTK/client'
-import { SearchPostRes } from '@/types/response/post.type'
-import { GetListUserResType } from '@/types/response/user.type'
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { PosterType } from '@/constants/enum'
+import { SearchPostRes } from '@/types/dtos/post/post-response.dto'
+import { GetListUserResType } from '@/types/dtos/user/user-response.dto'
 
 export const SearchApi = createApi({
     baseQuery: baseQueryWithReauth,

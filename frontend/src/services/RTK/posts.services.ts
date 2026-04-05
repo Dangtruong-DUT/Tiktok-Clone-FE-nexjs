@@ -1,11 +1,11 @@
 import { Audience, PosterType } from '@/constants/enum'
 import baseQueryWithReauth from '@/services/RTK/client'
-import { GetListCommentRes, GetListPostRes, GetPostDetailRes } from '@/types/response/post.type'
 import {
     CreateCommentsReqBodyType,
     CreatePostReqBodyType,
     UpdatePostReqBodyType
-} from '@/utils/validations/post.schema'
+} from '@/types/dtos/post/post-request.dto'
+import { GetListCommentRes, GetListPostRes, GetPostDetailRes } from '@/types/dtos/post/post-response.dto'
 import { createApi } from '@reduxjs/toolkit/query/react'
 import _ from 'lodash'
 
@@ -54,7 +54,7 @@ export const PostApi = createApi({
                 if (result) {
                     const final = [
                         ...result.pages.flatMap((page) => {
-                            return page.data.posts.map((post) => ({
+                            return page.data.map((post) => ({
                                 type: 'Posts' as const,
                                 id: post.id
                             }))

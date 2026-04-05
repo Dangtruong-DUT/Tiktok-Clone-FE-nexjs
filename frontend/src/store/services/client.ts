@@ -9,7 +9,7 @@ import { HTTP_STATUS } from '@/constants/http'
 import { RootState } from '@/store'
 
 /**
- * Base query for backend API requests. 
+ * Base query for backend API requests.
  * It automatically includes the access token in the headers if it exists in the state.
  */
 export const BackendBaseQuery = fetchBaseQuery({
@@ -35,8 +35,8 @@ export const NextWithAuthBaseQuery = fetchBaseQuery({ baseUrl: '' })
 const mutex = new Mutex()
 
 /**
- * A custom base query that handles token refresh logic. 
- * It checks if the access token is expired and attempts to refresh it using the refresh token. 
+ * A custom base query that handles token refresh logic.
+ * It checks if the access token is expired and attempts to refresh it using the refresh token.
  * If the refresh is successful, it retries the original request with the new access token.
  * If the refresh fails, it dispatches a logout action.
  */
@@ -59,7 +59,11 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
                         api.dispatch(tokenReceived({ access_token, refresh_token }))
                         result = await BackendBaseQuery(args, api, extraOptions)
                     } else {
-                        await NextWithAuthBaseQuery({ url: NEXT_API_ENDPOINT.API_LOGOUT, method: 'POST' }, api, extraOptions)
+                        await NextWithAuthBaseQuery(
+                            { url: NEXT_API_ENDPOINT.API_LOGOUT, method: 'POST' },
+                            api,
+                            extraOptions
+                        )
                         api.dispatch(setLoggedOutAction())
                     }
                 } finally {

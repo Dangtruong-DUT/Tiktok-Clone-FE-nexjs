@@ -1,5 +1,5 @@
 import baseQueryWithReauth from '@/services/RTK/client'
-import { UploadFileResponse } from '@/types/response/upload.type'
+import { UploadFileResponse } from '@/types/dtos/upload/upload-response.dto'
 import { createApi } from '@reduxjs/toolkit/query/react'
 
 export const UploadApi = createApi({

@@ -1,5 +1,6 @@
 import { useAppSelector } from '@/store/hooks'
 import { useGetMeQuery } from '@/store/services/user.service'
+import { UserType } from '@/types/models/user.model'
 import { useMemo } from 'react'
 
 export default function useCurrentUserData() {
@@ -18,5 +19,5 @@ export default function useCurrentUserData() {
 
     if (role == null || role == undefined) return null
 
-    return user
+    return user as UserType
 }
