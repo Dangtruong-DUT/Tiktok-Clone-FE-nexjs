@@ -1,9 +1,7 @@
-import envConfig from '@/config/app.config'
 import { Link } from '@/i18n/navigation'
-import { useLocale, useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl'
 
 export default function SidebarFooter() {
-    const locale = useLocale()
     const t = useTranslations('HomePage.sidebar.footer')
 
     return (

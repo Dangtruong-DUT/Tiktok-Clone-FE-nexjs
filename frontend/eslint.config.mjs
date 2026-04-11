@@ -2,10 +2,8 @@ import globals from 'globals'
 import pluginJs from '@eslint/js'
 import tseslint from 'typescript-eslint'
 import eslintPluginPrettier from 'eslint-plugin-prettier'
-import next from 'eslint-config-next'
 
 export default [
-    ...next(),
     { files: ['**/*.{js,mjs,cjs,ts}'] },
     { languageOptions: { globals: globals.node } },
     pluginJs.configs.recommended,
@@ -18,6 +16,7 @@ export default [
             '@typescript-eslint/no-explicit-any': 'warn',
             '@typescript-eslint/no-unused-vars': 'warn',
             'no-useless-escape': 'warn',
+            'no-empty': 'warn',
             'prettier/prettier': [
                 'warn',
                 {

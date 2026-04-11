@@ -250,7 +250,6 @@ function NotificationItem({
                     </div>
                 ) : showThumbnail ? (
                     <div className='relative h-16 aspect-[9/16] overflow-hidden rounded-md bg-muted'>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                             src={notification.entity?.thumbnail_url ?? ''}
                             alt='notification-thumbnail'
