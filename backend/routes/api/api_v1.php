@@ -8,6 +8,8 @@ use App\Http\Controllers\Api\HashtagController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UserSettingsController;
+use App\Http\Controllers\Api\AdminController;
+use App\Http\Controllers\Api\AppealController;
 
 /*|--------------------------------------------------------------------------
 | Protected routes
@@ -86,6 +88,48 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::get('/{conversation_id}/messages', [ChatController::class, 'messages'])->name('messages');
             Route::post('/{conversation_id}/messages', [ChatController::class, 'sendMessage'])->name('send-message');
             Route::post('/{conversation_id}/read', [ChatController::class, 'markAsRead'])->name('mark-as-read');
+        });
+
+    // appeal routes
+    Route::prefix('appeals')
+        ->name('appeals.')
+        ->group(function () {
+            Route::post('/', [AppealController::class, 'create'])->name('create');
+            Route::get('/', [AppealController::class, 'index'])->name('list');
+        });
+
+    // admin routes (require super_admin role)
+    Route::prefix('admin')
+        ->name('admin.')
+        ->middleware(['admin'])
+        ->group(function () {
+            // User management
+            Route::get('/users', [AdminController::class, 'getUsers'])->name('list-users');
+            Route::post('/users/{user_id}/ban', [AdminController::class, 'banUser'])->name('ban-user');
+            Route::post('/users/{user_id}/unban', [AdminController::class, 'unbanUser'])->name('unban-user');
+            Route::delete('/users/{user_id}', [AdminController::class, 'deleteUser'])->name('delete-user');
+            Route::post('/users/{user_id}/delete', [AdminController::class, 'deleteUser'])->name('delete-user-post');
+
+            // Post moderation
+            Route::get('/posts', [AdminController::class, 'getPosts'])->name('list-posts');
+            Route::post('/posts/{post_uuid}/hide', [AdminController::class, 'hidePost'])->name('hide-post');
+            Route::post('/posts/{post_uuid}/unhide', [AdminController::class, 'unhidePost'])->name('unhide-post');
+            Route::delete('/posts/{post_uuid}', [AdminController::class, 'deletePost'])->name('delete-post');
+            Route::post('/posts/{post_uuid}/delete', [AdminController::class, 'deletePost'])->name('delete-post-compat');
+
+            // Comment moderation
+            Route::get('/comments', [AdminController::class, 'getComments'])->name('list-comments');
+            Route::delete('/comments/{comment_id}', [AdminController::class, 'deleteComment'])->name('delete-comment');
+            Route::post('/comments/{comment_id}/delete', [AdminController::class, 'deleteComment'])->name('delete-comment-post');
+
+            // Dashboard & Monitoring
+            Route::get('/dashboard/stats', [AdminController::class, 'getDashboardStats'])->name('dashboard-stats');
+            Route::get('/activity-logs', [AdminController::class, 'getActivityLogs'])->name('activity-logs');
+
+            // Appeal management
+            Route::get('/appeals', [AdminController::class, 'getAppeals'])->name('list-appeals');
+            Route::post('/appeals/{appeal_id}/approve', [AdminController::class, 'approveAppeal'])->name('approve-appeal');
+            Route::post('/appeals/{appeal_id}/reject', [AdminController::class, 'rejectAppeal'])->name('reject-appeal');
         });
 });
 

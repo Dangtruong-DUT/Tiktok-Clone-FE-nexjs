@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Enums\Settings\PrivacyVisibilityEnum;
 use App\Models\User;
-
 class UserPolicy extends BasePolicy
 {
     /**

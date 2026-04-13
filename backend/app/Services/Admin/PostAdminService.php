@@ -1,0 +1,210 @@
+<?php
+
+namespace App\Services\Admin;
+
+use App\Enums\Admin\AdminActionEnum;
+use App\Enums\Admin\AdminResourceEnum;
+use App\Enums\Notification\EntityTypeEnum;
+use App\Models\Post;
+use App\Models\User;
+use App\Repositories\PostRepository;
+use BadMethodCallException;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
+
+class PostAdminService
+{
+    public function __construct(
+        private readonly PostRepository $postRepository,
+        private readonly AdminLogService $adminLogService,
+        private readonly AdminModerationNoticeService $adminModerationNoticeService,
+    ) {}
+
+    /**
+     * Get paginated list of posts with filtering
+     *
+     * @param array $filters {
+     *     search?: string,
+     *     user_id?: int,
+     *     status?: 'all'|'visible'|'hidden'|'deleted',
+     *     date_from?: string (Y-m-d),
+     *     date_to?: string (Y-m-d),
+     *     page?: int,
+     *     per_page?: int,
+     *     sort_by?: string
+     * }
+    * @return LengthAwarePaginator
+     */
+    public function getFilteredPosts(array $filters = []): LengthAwarePaginator
+    {
+        return $this->postRepository->searchForAdmin($filters);
+    }
+
+    /**
+     * Get post detail
+     *
+     * @param string $uuid
+     * @return Post
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     */
+    public function getPostDetail(string $uuid): Post
+    {
+        return $this->postRepository->query()->where('uuid', $uuid)
+            ->with([
+                'user:id,username,avatar_url,verify',
+                'media:id,post_id,type,url',
+                'hashTags:id,name',
+                'mentions:id,user_id,mentioned_user_id',
+            ])
+            ->firstOrFail();
+    }
+
+    /**
+     * Hide a post from public view
+     *
+     * @param User $admin The admin performing the action
+     * @param string $postUuid The target post UUID
+     * @param array $data {reason: string}
+     * @return Post Updated post
+     * @throws \Exception
+     */
+    public function hidePost(User $admin, string $postUuid, array $data): Post
+    {
+        $post = $this->postRepository->findByUuidOrFail($postUuid);
+
+        if ($post->hidden_at !== null) {
+            throw new BadMethodCallException('Post is already hidden');
+        }
+
+        return DB::transaction(function () use ($admin, $post, $postUuid, $data) {
+            $oldData = $post->only(['hidden_at', 'hidden_reason']);
+
+            $post->update([
+                'hidden_at' => now(),
+                'hidden_reason' => $data['reason'],
+            ]);
+
+            $this->adminLogService->log(
+                admin: $admin,
+                resourceType: AdminResourceEnum::POST,
+                resourceId: $postUuid,
+                action: AdminActionEnum::HIDE_POST,
+                reason: $data['reason'],
+                oldData: $oldData,
+                newData: $post->only(['hidden_at', 'hidden_reason']),
+            );
+
+            $this->adminModerationNoticeService->send(
+                admin: $admin,
+                targetUser: $post->user,
+                action: AdminActionEnum::HIDE_POST,
+                reason: (string) $data['reason'],
+                entityType: EntityTypeEnum::POST,
+                entityId: $post->id,
+                context: [
+                    'resource_type' => AdminResourceEnum::POST->value,
+                    'resource_id' => $post->id,
+                ]
+            );
+
+            return $post;
+        });
+    }
+
+    /**
+     * Unhide a post (make it visible again)
+     *
+     * @param User $admin The admin performing the action
+     * @param string $postUuid The target post UUID
+     * @return Post Updated post
+     * @throws \Exception
+     */
+    public function unhidePost(User $admin, string $postUuid): Post
+    {
+        $post = $this->postRepository->findByUuidOrFail($postUuid);
+
+        if ($post->hidden_at === null) {
+            throw new BadMethodCallException('Post is not hidden');
+        }
+
+        return DB::transaction(function () use ($admin, $post, $postUuid) {
+            $oldData = $post->only(['hidden_at', 'hidden_reason']);
+
+            $post->update([
+                'hidden_at' => null,
+                'hidden_reason' => null,
+            ]);
+
+            $this->adminLogService->log(
+                admin: $admin,
+                resourceType: AdminResourceEnum::POST,
+                resourceId: $postUuid,
+                action: AdminActionEnum::UNHIDE_POST,
+                oldData: $oldData,
+                newData: $post->only(['hidden_at', 'hidden_reason']),
+            );
+
+            $this->adminModerationNoticeService->send(
+                admin: $admin,
+                targetUser: $post->user,
+                action: AdminActionEnum::UNHIDE_POST,
+                reason: 'Your post is visible again after admin review',
+                entityType: EntityTypeEnum::POST,
+                entityId: $post->id,
+                context: [
+                    'resource_type' => AdminResourceEnum::POST->value,
+                    'resource_id' => $post->id,
+                ]
+            );
+
+            return $post;
+        });
+    }
+
+    /**
+     * Delete a post permanently (soft delete)
+     *
+     * @param User $admin The admin performing the action
+     * @param string $postUuid The target post UUID
+     * @param array $data {reason: string}
+     * @return void
+     * @throws \Exception
+     */
+    public function deletePost(User $admin, string $postUuid, array $data): void
+    {
+        $post = $this->postRepository->findByUuidOrFail($postUuid);
+
+        DB::transaction(function () use ($admin, $post, $postUuid, $data) {
+            $oldData = [
+                'uuid' => $post->uuid,
+                'user_id' => $post->user_id,
+                'content' => $post->content,
+            ];
+
+            $post->delete();
+
+            $this->adminLogService->log(
+                admin: $admin,
+                resourceType: AdminResourceEnum::POST,
+                resourceId: $postUuid,
+                action: AdminActionEnum::DELETE_POST,
+                reason: $data['reason'],
+                oldData: $oldData,
+                newData: null,
+            );
+
+            $this->adminModerationNoticeService->send(
+                admin: $admin,
+                targetUser: $post->user,
+                action: AdminActionEnum::DELETE_POST,
+                reason: (string) $data['reason'],
+                entityType: EntityTypeEnum::POST,
+                entityId: $post->id,
+                context: [
+                    'resource_type' => AdminResourceEnum::POST->value,
+                    'resource_id' => $post->id,
+                ]
+            );
+        });
+    }
+}

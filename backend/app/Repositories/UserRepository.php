@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Repositories;
 
 use App\Enums\Post\PostTypeEnum;
@@ -11,34 +12,32 @@ use Illuminate\Support\Facades\DB;
 
 class UserRepository extends BaseRepository
 {
-
+    /**
+     * UserRepository constructor.
+     */
     public function __construct()
     {
-        $modelInstance = app()->make(User::class);
-        parent::__construct($modelInstance);
+        parent::__construct(app()->make(User::class));
     }
 
     /**
-     * Check if user exists
-     *
-     * @param int $id
-     * @return bool
+     * Check if user exists.
      */
     public function isExist(int $id): bool
     {
-        return $this->query()->where('id', $id)->exists();
+        return $this->query()->whereKey($id)->exists();
     }
 
+    /**
+     * Check if user exists by username.
+     */
     public function isExistByUsername(string $username): bool
     {
         return $this->query()->where('username', $username)->exists();
     }
 
     /**
-     * Check if user exists by uuid
-     *
-     * @param string $uuid
-     * @return bool
+     * Check if user exists by uuid.
      */
     public function isExistByUuid(string $uuid): bool
     {
@@ -46,10 +45,7 @@ class UserRepository extends BaseRepository
     }
 
     /**
-     * Find a user by uuid
-     *
-     * @param string $uuid
-     * @return User|null
+     * Find a user by uuid.
      */
     public function findByUuid(string $uuid): ?User
     {
@@ -58,10 +54,7 @@ class UserRepository extends BaseRepository
     }
 
     /**
-     * Find a user by uuid or fail
-     *
-     * @param string $uuid
-     * @return User
+     * Find a user by uuid or fail.
      */
     public function findByUuidOrFail(string $uuid): User
     {
@@ -69,10 +62,7 @@ class UserRepository extends BaseRepository
     }
 
     /**
-     * Check if user exists by email
-     *
-     * @param string $email
-     * @return bool
+     * Check if user exists by email.
      */
     public function checkExistByEmail(string $email): bool
     {
@@ -80,10 +70,7 @@ class UserRepository extends BaseRepository
     }
 
     /**
-     * Find a user by email
-     *
-     * @param string $email
-     * @return User|null
+     * Find a user by email.
      */
     public function findByEmail(string $email): ?User
     {
@@ -91,10 +78,7 @@ class UserRepository extends BaseRepository
     }
 
     /**
-     * Check if user exists by username
-     *
-     * @param string $username
-     * @return bool
+     * Check if user exists by username.
      */
     public function checkUsernameExist(string $username): bool
     {
@@ -109,7 +93,7 @@ class UserRepository extends BaseRepository
      */
     public function getIdsByUsernames(array $usernames): array
     {
-        if (empty($usernames)) {
+        if ($usernames === []) {
             return [];
         }
 
@@ -128,7 +112,7 @@ class UserRepository extends BaseRepository
      */
     public function getIdMapByUsernames(array $usernames): array
     {
-        if (empty($usernames)) {
+        if ($usernames === []) {
             return [];
         }
 
@@ -140,46 +124,84 @@ class UserRepository extends BaseRepository
     }
 
     /**
-     * Find a user by username
-     *
-     * @param string $username
-     * @return User|null
+     * Find a user by username.
      */
     public function getByUsernameWithDetail(string $username, ?int $authUserId): ?User
     {
         $query = $this->query()->where('username', $username);
+
         return $this->withDetail($query, $authUserId)->first();
     }
 
     /**
-     * Search users with filters omit super admin
+     * Search users with filters, omit super admin.
      *
-     * @param array $filters
-     *                      - q: search keyword for content and user name
-     *                      - page: page number for pagination
-     *                      - per_page: number of items per page for pagination
-     *                      - verify_status: filter by verification status, value can be: banned, verified, unverified
-     *                      - role: filter by role, value can be: user, super_admin
-     * @param ?int $authUserId
-     * @return LengthAwarePaginator
+     * @param array<string, mixed> $filters
      */
     public function search(array $filters, ?int $authUserId): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
+
         $query = $this->buildSearchQuery($filterCollection)
-        ->where('role', '!=', RoleTypeEnum::SUPER_ADMIN->value)
-        ->orderByDesc('created_at');
-        $perPage = $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
+            ->where('role', '!=', RoleTypeEnum::SUPER_ADMIN->value)
+            ->orderByDesc('created_at');
+
+        $perPage = (int) $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
+
         return $this->withDetail($query, $authUserId)->paginate($perPage);
     }
 
     /**
-     * Get user indicators grouped by date in given range.
+     * Get paginated users for admin panel.
      *
-     * @param int $userId
-     * @param string $fromDate
-     * @param string $toDate
-     * @return Collection
+     * @param array<string,mixed> $filters
+     */
+    public function searchForAdmin(array $filters): LengthAwarePaginator
+    {
+        $filterCollection = collect($filters);
+
+        $query = $this->query()
+            ->when($filterCollection->get('q'), function (Builder $query, $search) {
+                $query->where(function (Builder $builder) use ($search) {
+                    $builder->where('username', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                });
+            })
+            ->when($filterCollection->get('status'), function (Builder $query, $status) {
+                if ($status === 'banned') {
+                    $query->whereNotNull('banned_at');
+
+                    return;
+                }
+
+                if ($status === 'active') {
+                    $query->whereNull('banned_at');
+                }
+            })
+            ->when($filterCollection->get('sort_by'), function (Builder $query, $sortBy) {
+                if (str_starts_with((string) $sortBy, '-')) {
+                    $query->orderBy(substr((string) $sortBy, 1), 'desc');
+
+                    return;
+                }
+
+                $query->orderBy((string) $sortBy, 'asc');
+            });
+
+        $perPage = (int) $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
+
+        return $query
+            ->select(['id', 'username', 'email', 'avatar_url', 'created_at', 'banned_at', 'ban_reason'])
+            ->paginate($perPage);
+    }
+
+    /**
+     * Get user indicators grouped by date in given range.
+        *
+        * @param int $userId
+        * @param string $fromDate
+        * @param string $toDate
+        * @return Collection
      */
     public function getIndicatorsByUserIdAndDateRange(int $userId, string $fromDate, string $toDate): Collection
     {
@@ -200,17 +222,14 @@ class UserRepository extends BaseRepository
     /**
      * Get followers of target user.
      *
-     * @param int $targetUserId
-     * @param array $filters
-     * @param ?int $authUserId
-     * @return LengthAwarePaginator
+     * @param array<string, mixed> $filters
      */
     public function getFollowersByUserId(int $targetUserId, array $filters, ?int $authUserId): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
 
         $query = $this->query()
-            ->whereHas('followings', fn ($relationQuery) => $relationQuery->whereKey($targetUserId));
+            ->whereHas('followings', fn (Builder $relationQuery) => $relationQuery->whereKey($targetUserId));
 
         return $this->paginateListWithDetail($query, $filterCollection, $authUserId);
     }
@@ -218,17 +237,14 @@ class UserRepository extends BaseRepository
     /**
      * Get followings of target user.
      *
-     * @param int $targetUserId
-     * @param array $filters
-     * @param ?int $authUserId
-     * @return LengthAwarePaginator
+     * @param array<string, mixed> $filters
      */
     public function getFollowingByUserId(int $targetUserId, array $filters, ?int $authUserId): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
 
         $query = $this->query()
-            ->whereHas('followers', fn ($relationQuery) => $relationQuery->whereKey($targetUserId));
+            ->whereHas('followers', fn (Builder $relationQuery) => $relationQuery->whereKey($targetUserId));
 
         return $this->paginateListWithDetail($query, $filterCollection, $authUserId);
     }
@@ -236,18 +252,15 @@ class UserRepository extends BaseRepository
     /**
      * Get mutual friends of target user.
      *
-     * @param int $targetUserId
-     * @param array $filters
-     * @param ?int $authUserId
-     * @return LengthAwarePaginator
+     * @param array<string, mixed> $filters
      */
     public function getFriendsByUserId(int $targetUserId, array $filters, ?int $authUserId): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
 
         $query = $this->query()
-            ->whereHas('followings', fn ($relationQuery) => $relationQuery->whereKey($targetUserId))
-            ->whereHas('followers', fn ($relationQuery) => $relationQuery->whereKey($targetUserId));
+            ->whereHas('followings', fn (Builder $relationQuery) => $relationQuery->whereKey($targetUserId))
+            ->whereHas('followers', fn (Builder $relationQuery) => $relationQuery->whereKey($targetUserId));
 
         return $this->paginateListWithDetail($query, $filterCollection, $authUserId);
     }
@@ -255,9 +268,7 @@ class UserRepository extends BaseRepository
     /**
      * Get suggested users for authenticated user.
      *
-     * @param array $filters
-     * @param ?int $authUserId
-     * @return LengthAwarePaginator
+     * @param array<string, mixed> $filters
      */
     public function getSuggestedUsers(array $filters, ?int $authUserId): LengthAwarePaginator
     {
@@ -267,7 +278,7 @@ class UserRepository extends BaseRepository
             ->where('role', '!=', RoleTypeEnum::SUPER_ADMIN->value)
             ->when($authUserId !== null, function (Builder $query) use ($authUserId) {
                 $query->whereKeyNot($authUserId)
-                    ->whereDoesntHave('followers', fn ($relationQuery) => $relationQuery->whereKey($authUserId));
+                    ->whereDoesntHave('followers', fn (Builder $relationQuery) => $relationQuery->whereKey($authUserId));
             });
 
         return $this->paginateListWithDetail($query, $filterCollection, $authUserId);
@@ -275,8 +286,8 @@ class UserRepository extends BaseRepository
 
     /**
      * Get user with details by id.
+     *
      * @param Builder<User> $query
-     * @param ?int $userId
      * @return Builder<User>
      */
     private function withDetail(Builder $query, ?int $userId): Builder
@@ -284,14 +295,14 @@ class UserRepository extends BaseRepository
         return $query
             ->select('users.*')
             ->with(['avatarFile'])
-            ->selectSub(function ($query) {
-                $query->from('posts')
+            ->selectSub(function (Builder $subQuery) {
+                $subQuery->from('posts')
                     ->where('type', PostTypeEnum::POST->value)
                     ->selectRaw('COALESCE(SUM(likes_count), 0)')
                     ->whereColumn('posts.user_id', 'users.id');
             }, 'likes_count')
             ->withExists([
-                'followers as is_followed' => fn ($fq) => $fq->whereKey($userId),
+                'followers as is_followed' => fn (Builder $followersQuery) => $followersQuery->whereKey($userId),
             ])
             ->selectRaw('users.id = ? as is_owner', [$userId]);
     }
@@ -300,56 +311,58 @@ class UserRepository extends BaseRepository
      * Apply list filters and return paginated users with detail.
      *
      * @param Builder<User> $query
-     * @param Collection $filterCollection
-     * @param ?int $authUserId
-     * @return LengthAwarePaginator
+        * @param Collection $filterCollection
+        * @param ?int $authUserId
+        * @return LengthAwarePaginator
      */
     private function paginateListWithDetail(Builder $query, Collection $filterCollection, ?int $authUserId): LengthAwarePaginator
     {
-        $keyword = trim($filterCollection->get('q', ''));
+        $keyword = trim((string) $filterCollection->get('q', ''));
 
         $query
-            ->when($keyword !== '', function (Builder $query) use ($keyword) {
-                $query->whereRaw("\n
-                        search_vector @@ plainto_tsquery('simple', ?)\n
-                    ", [$keyword]);
-            })
+            ->when($keyword !== '', fn (Builder $builder) => $this->applySearchVector($builder, $keyword))
             ->orderByDesc('followers_count')
             ->orderByDesc('created_at');
 
-        $perPage = $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
+        $perPage = (int) $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
 
         return $this->withDetail($query, $authUserId)->paginate($perPage);
     }
 
     /**
-     * Build search query with filters
-     *
-     * @param  Collection $filterCollection
-     *                      - q: search keyword for content and user name
-     *                      - verify_status: filter by verification status, value can be: banned, verified, unverified
-     *                      - role: filter by role, value can be: user, super_admin
-     * @return Builder
+     * Build search query with filters.
+        *
+        * @param Collection $filterCollection
+        * @return Builder
      */
     private function buildSearchQuery(Collection $filterCollection): Builder
     {
-        $keyword = trim($filterCollection->get('q', ''));
-        $query = $this->query()
-        // full-text search
-            ->when($keyword !== '', function ($query) use ($keyword) {
-                $query->where(function ($searchQuery) use ($keyword) {
-                    $searchQuery->whereRaw("
-                            search_vector @@ plainto_tsquery('simple', ?)
-                        ", [$keyword]);
-                    });
-            })
-            ->when($filterCollection->get('verify_status'), function ($query, $verifyStatus) {
-                $query->where('verify', $verifyStatus);
-            })
-            ->when($filterCollection->get('role'), function ($query, $role) {
-                $query->where('role', $role);
-            });
-        return $query;
+        $keyword = trim((string) $filterCollection->get('q', ''));
+
+        return $this->query()
+            ->when($keyword !== '', fn (Builder $query) => $this->applySearchVector($query, $keyword))
+            ->when(
+                $filterCollection->has('verify_status') && $filterCollection->get('verify_status') !== null,
+                fn (Builder $query) => $query->where('verify', (int) $filterCollection->get('verify_status'))
+            )
+            ->when(
+                $filterCollection->has('role') && $filterCollection->get('role') !== null,
+                fn (Builder $query) => $query->where('role', (int) $filterCollection->get('role'))
+            );
+    }
+
+    /**
+     * Apply full-text search condition on search_vector.
+     *
+     * @param Builder $query
+     * @param string $keyword
+     * @return Builder
+     */
+    private function applySearchVector(Builder $query, string $keyword): Builder
+    {
+        return $query->whereRaw(
+            "search_vector @@ plainto_tsquery('simple', ?)",
+            [$keyword]
+        );
     }
 }
-?>

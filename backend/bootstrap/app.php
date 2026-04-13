@@ -1,6 +1,9 @@
 <?php
 
 use App\Exceptions\http\BaseException;
+use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\CheckUserStatus;
+use App\Http\Middleware\ForceJsonResponse;
 use App\Http\Response\ApiResponse;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
@@ -25,11 +28,12 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'check_user_status' => \App\Http\Middleware\CheckUserStatus::class,
+            'check_user_status' => CheckUserStatus::class,
+            'admin' => AdminMiddleware::class,
         ]);
 
         $middleware->append([
-            \App\Http\Middleware\ForceJsonResponse::class,
+            ForceJsonResponse::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

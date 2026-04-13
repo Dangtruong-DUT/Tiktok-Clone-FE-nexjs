@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Schedule;
 |
 */
 
-// Schedule the post view sync command to run every minute
 Schedule::command('posts:sync-views')
     ->everyMinute()
     ->withoutOverlapping();

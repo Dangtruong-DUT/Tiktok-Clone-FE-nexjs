@@ -206,4 +206,30 @@ class NotificationService
             ],
         ]);
     }
+
+    /**
+     * Notify user about admin moderation actions.
+     *
+     * @param array<string,mixed>|null $data
+     */
+    public function notifyAdminModerationAction(
+        int $adminId,
+        int $notifiableUserId,
+        EntityTypeEnum $entityType,
+        int $entityId,
+        ?array $data = null
+    ): void {
+        if ($adminId === $notifiableUserId) {
+            return;
+        }
+
+        $this->notificationRepository->create([
+            'actor_id' => $adminId,
+            'notifiable_id' => $notifiableUserId,
+            'type' => NotificationTypeEnum::ADMIN->value,
+            'entity_type' => $entityType->value,
+            'entity_id' => $entityId,
+            'data' => $data,
+        ]);
+    }
 }
