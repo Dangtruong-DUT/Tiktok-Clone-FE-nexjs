@@ -5,6 +5,7 @@ import { useRouter } from '@/i18n/navigation'
 import { useLoginMutation, useLogoutMutation, useRegisterMutation } from '@/store/services/auth.service'
 import { clearStore } from '@/store'
 import { startLoadingByKey, stopLoadingByKey } from '@/store/features/appSlice'
+import { Role } from '@/constants/enum'
 import { LogoutResType } from '@/types/dtos/auth/auth-response.dto'
 import { handleFormError } from '@/utils/handleErrors/handleFormErrors.util'
 import {
@@ -38,7 +39,8 @@ export function useLoginWithEmail() {
         async (data: LoginReqBodyType) => {
             try {
                 const result = await loginMutate(data).unwrap()
-                router.push('/')
+                const destination = result.data.user.role === Role.SUPER_ADMIN ? '/admin' : '/'
+                router.push(destination)
                 toast.success(result.message)
                 clearStore(dispatch)
             } catch (error) {

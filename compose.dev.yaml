@@ -108,9 +108,9 @@ services:
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-Snapi}
+      POSTGRES_DB: ${POSTGRES_DB:-snapi}
       POSTGRES_USER: ${POSTGRES_USER:-root}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Snapi_password}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-snapi_password}
     volumes:
       - postgres-data-development:/var/lib/postgresql
     networks:

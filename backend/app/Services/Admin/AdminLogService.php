@@ -53,7 +53,7 @@ class AdminLogService
     public function getRecentActions(int $limit = 50): Collection
     {
         return AdminLog::query()
-            ->with('admin:id,username,avatar_url')
+            ->with(['admin:id,username,avatar_file_id', 'admin.avatarFile:id,url'])
             ->orderBy('created_at', 'desc')
             ->limit($limit)
             ->get();

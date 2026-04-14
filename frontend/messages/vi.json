@@ -718,5 +718,210 @@
         "darkmode_light": "Chế độ sáng",
         "settings": "Cài đặt",
         "logout": "Đăng xuất"
+    },
+    "AdminPage": {
+        "breadcrumbs": {
+            "home": "Trang chủ",
+            "admin": "Quản trị"
+        },
+        "common": {
+            "perPage": "Mỗi trang",
+            "showingResults": "Hiển thị {from}-{to} trên {total}",
+            "cancel": "Hủy",
+            "loading": "Đang xử lý..."
+        },
+        "dashboard": {
+            "title": "Bảng điều khiển",
+            "description": "Tổng quan hệ thống và hoạt động kiểm duyệt",
+            "statistics": "Thống kê",
+            "recentActivity": "Hoạt động gần đây",
+            "totalUsers": "Tổng người dùng",
+            "totalPosts": "Tổng bài viết",
+            "bannedUsers": "Người dùng bị khóa",
+            "adminActions": "Hành động quản trị"
+        },
+        "moderation": {
+            "title": "Kiểm duyệt bài viết"
+        },
+        "users": {
+            "title": "Quản lý người dùng",
+            "description": "Quản lý trạng thái và thao tác kiểm duyệt người dùng",
+            "emptyState": "Không có người dùng",
+            "columns": {
+                "id": "ID",
+                "username": "Tên người dùng",
+                "email": "Email",
+                "status": "Trạng thái",
+                "joinDate": "Ngày tham gia",
+                "actions": "Thao tác"
+            },
+            "filters": {
+                "allStatuses": "Tất cả trạng thái",
+                "active": "Hoạt động",
+                "banned": "Bị khóa",
+                "recent": "Mới nhất",
+                "oldest": "Cũ nhất"
+            },
+            "actions": {
+                "ban": "Khóa",
+                "unban": "Mở khóa",
+                "delete": "Xóa",
+                "confirmBan": "Xác nhận khóa",
+                "confirmUnban": "Xác nhận mở khóa",
+                "confirmDelete": "Xác nhận xóa"
+            },
+            "labels": {
+                "reason": "Lý do",
+                "duration": "Thời hạn (ngày)"
+            },
+            "placeholders": {
+                "searchUsers": "Tìm theo tên hoặc email",
+                "banReason": "Nhập lý do khóa",
+                "deleteReason": "Nhập lý do xóa",
+                "duration": "Thời hạn tùy chọn"
+            },
+            "errors": {
+                "reasonRequired": "Lý do là bắt buộc",
+                "reasonMinLength": "Lý do tối thiểu 10 ký tự",
+                "durationInvalid": "Thời hạn phải là số dương"
+            },
+            "messages": {
+                "banSuccess": "Khóa người dùng thành công",
+                "banError": "Khóa người dùng thất bại",
+                "unbanSuccess": "Mở khóa người dùng thành công",
+                "unbanError": "Mở khóa người dùng thất bại",
+                "deleteSuccess": "Xóa người dùng thành công",
+                "deleteError": "Xóa người dùng thất bại"
+            },
+            "dialogs": {
+                "deleteTitle": "Xóa người dùng",
+                "deleteSubtitle": "Xóa tài khoản @{username}",
+                "deleteWarning": "Hành động này không thể hoàn tác.",
+                "unbanSubtitle": "Mở khóa tài khoản @{username}"
+            },
+            "banDialog": {
+                "subtitle": "Khóa tài khoản @{username}"
+            },
+            "hints": {
+                "durationHint": "Để trống nếu muốn khóa vĩnh viễn"
+            }
+        },
+        "posts": {
+            "title": "Kiểm duyệt bài viết",
+            "description": "Rà soát và kiểm duyệt bài viết",
+            "emptyState": "Không có bài viết",
+            "columns": {
+                "id": "ID",
+                "title": "Nội dung",
+                "author": "Tác giả",
+                "status": "Trạng thái",
+                "uploadDate": "Ngày tạo",
+                "actions": "Thao tác"
+            },
+            "filters": {
+                "allStatuses": "Tất cả trạng thái",
+                "visible": "Hiển thị",
+                "hidden": "Đã ẩn",
+                "recent": "Mới nhất",
+                "oldest": "Cũ nhất"
+            },
+            "actions": {
+                "hide": "Ẩn",
+                "unhide": "Bỏ ẩn",
+                "delete": "Xóa",
+                "confirmHide": "Xác nhận ẩn",
+                "confirmUnhide": "Xác nhận bỏ ẩn",
+                "confirmDelete": "Xác nhận xóa"
+            },
+            "labels": {
+                "reason": "Lý do",
+                "customReason": "Lý do tùy chỉnh"
+            },
+            "placeholders": {
+                "searchPosts": "Tìm bài viết",
+                "selectReason": "Chọn lý do",
+                "customReason": "Nhập lý do tùy chỉnh"
+            },
+            "reasons": {
+                "other": "Khác"
+            },
+            "errors": {
+                "reasonRequired": "Lý do là bắt buộc"
+            },
+            "messages": {
+                "hideSuccess": "Ẩn bài viết thành công",
+                "hideError": "Ẩn bài viết thất bại",
+                "unhideSuccess": "Bỏ ẩn bài viết thành công",
+                "unhideError": "Bỏ ẩn bài viết thất bại",
+                "deleteSuccess": "Xóa bài viết thành công",
+                "deleteError": "Xóa bài viết thất bại"
+            },
+            "dialogs": {
+                "hideSubtitle": "Ẩn bài viết của @{username}",
+                "unhideSubtitle": "Bỏ ẩn bài viết của @{username}",
+                "deleteSubtitle": "Xóa bài viết của @{username}",
+                "deleteWarning": "Bài viết này sẽ bị loại khỏi bảng tin."
+            }
+        },
+        "comments": {
+            "title": "Kiểm duyệt bình luận",
+            "description": "Rà soát và kiểm duyệt bình luận",
+            "emptyState": "Không có bình luận",
+            "columns": {
+                "id": "ID",
+                "author": "Tác giả",
+                "content": "Nội dung",
+                "parentPost": "Bài viết gốc",
+                "date": "Ngày tạo",
+                "actions": "Thao tác"
+            },
+            "filters": {
+                "recent": "Mới nhất",
+                "oldest": "Cũ nhất"
+            },
+            "actions": {
+                "delete": "Xóa",
+                "confirmDelete": "Xác nhận xóa"
+            },
+            "labels": {
+                "reason": "Lý do"
+            },
+            "placeholders": {
+                "searchComments": "Tìm bình luận",
+                "deleteReason": "Nhập lý do xóa"
+            },
+            "errors": {
+                "reasonRequired": "Lý do là bắt buộc",
+                "reasonMinLength": "Lý do tối thiểu 10 ký tự"
+            },
+            "messages": {
+                "deleteSuccess": "Xóa bình luận thành công",
+                "deleteError": "Xóa bình luận thất bại"
+            },
+            "dialogs": {
+                "deleteSubtitle": "Xóa bình luận của @{username}",
+                "deleteWarning": "Hành động này không thể hoàn tác."
+            }
+        },
+        "activity": {
+            "title": "Nhật ký hoạt động",
+            "description": "Xem hoạt động kiểm duyệt và hệ thống",
+            "emptyState": "Không có hoạt động",
+            "placeholders": {
+                "searchActivity": "Tìm hoạt động"
+            },
+            "periods": {
+                "last24h": "24 giờ qua",
+                "last7d": "7 ngày qua",
+                "last30d": "30 ngày qua",
+                "allTime": "Tất cả"
+            },
+            "filters": {
+                "allTypes": "Tất cả loại"
+            },
+            "prepositions": {
+                "on": "trên"
+            }
+        }
     }
 }

@@ -1,0 +1,317 @@
+'use client'
+
+import { useState } from 'react'
+import { useTranslations } from 'next-intl'
+import { useGetAdminPostsQuery } from '@/store/services/admin.service'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import AutoPagination from '@/components/auto-pagination'
+import { Skeleton } from '@/components/ui/skeleton'
+import { HidePostDialog } from './hide-post-dialog'
+import { UnhidePostDialog } from './unhide-post-dialog'
+import { DeletePostDialog } from './delete-post-dialog'
+import { formatAdminDate, getPostStatusColor, getPostStatus, truncateText } from '@/helpers/admin-helpers'
+import { MoreHorizontal, Search, AlertCircle } from 'lucide-react'
+import { AdminPost } from '@/types/dtos/admin/admin-response.dto'
+
+interface PostModerationTableProps {
+    onPostDeleted?: () => void
+}
+
+/**
+ * PostModerationTable - Displays paginated list of posts with moderation actions
+ * Features:
+ * - Search by title/content
+ * - Filter by status (all, hidden, visible)
+ * - Pagination with per-page selector
+ * - Actions: Hide, Unhide, Delete
+ * - Loading skeleton
+ */
+export function PostModerationTable({ onPostDeleted }: PostModerationTableProps) {
+    const t = useTranslations('AdminPage')
+
+    // State
+    const [page, setPage] = useState(1)
+    const [perPage, setPerPage] = useState(10)
+    const [searchTerm, setSearchTerm] = useState('')
+    const [statusFilter, setStatusFilter] = useState<'all' | 'hidden' | 'visible'>('all')
+    const [sortBy, setSortBy] = useState<'recent' | 'oldest'>('recent')
+
+    // Selected post for dialogs
+    const [selectedPost, setSelectedPost] = useState<AdminPost | null>(null)
+    const [dialogType, setDialogType] = useState<'hide' | 'unhide' | 'delete' | null>(null)
+
+    // Fetch data
+    const { data, isLoading, isFetching, refetch } = useGetAdminPostsQuery({
+        page,
+        per_page: perPage,
+        search: searchTerm || undefined,
+        status: statusFilter !== 'all' ? statusFilter : undefined,
+        sort_by: sortBy === 'recent' ? '-created_at' : 'created_at'
+    })
+
+    const posts = data?.data || []
+    const pagination = data?.meta
+
+    // Handlers
+    const handleSearch = (value: string) => {
+        setSearchTerm(value)
+        setPage(1)
+    }
+
+    const handleStatusFilter = (value: string) => {
+        setStatusFilter(value as 'all' | 'hidden' | 'visible')
+        setPage(1)
+    }
+
+    const handlePerPageChange = (value: string) => {
+        setPerPage(Number(value))
+        setPage(1)
+    }
+
+    const openDialog = (post: AdminPost, type: 'hide' | 'unhide' | 'delete') => {
+        setSelectedPost(post)
+        setDialogType(type)
+    }
+
+    const closeDialog = () => {
+        setSelectedPost(null)
+        setDialogType(null)
+    }
+
+    const handleActionSuccess = () => {
+        closeDialog()
+        refetch()
+        onPostDeleted?.()
+    }
+
+    // Render loading skeleton
+    if (isLoading) {
+        return (
+            <div className='space-y-4'>
+                <div className='flex gap-2'>
+                    <Skeleton className='h-10 flex-1' />
+                    <Skeleton className='h-10 w-32' />
+                </div>
+                <div className='border rounded-lg'>
+                    <div className='p-4 space-y-3'>
+                        {Array.from({ length: 5 }).map((_, i) => (
+                            <Skeleton key={i} className='h-16' />
+                        ))}
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    return (
+        <div className='space-y-4'>
+            {/* Header - Search and Filters */}
+            <div className='flex flex-col gap-3 md:flex-row md:items-end md:justify-between'>
+                <div className='flex-1 relative'>
+                    <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground' />
+                    <Input
+                        placeholder={t('posts.placeholders.searchPosts')}
+                        value={searchTerm}
+                        onChange={(e) => handleSearch(e.target.value)}
+                        className='pl-10'
+                    />
+                </div>
+
+                <div className='flex gap-2'>
+                    {/* Status Filter */}
+                    <Select value={statusFilter} onValueChange={handleStatusFilter}>
+                        <SelectTrigger className='w-40'>
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value='all'>{t('posts.filters.allStatuses')}</SelectItem>
+                            <SelectItem value='visible'>{t('posts.filters.visible')}</SelectItem>
+                            <SelectItem value='hidden'>{t('posts.filters.hidden')}</SelectItem>
+                        </SelectContent>
+                    </Select>
+
+                    {/* Sort By */}
+                    <Select
+                        value={sortBy}
+                        onValueChange={(v) => {
+                            setSortBy(v as 'recent' | 'oldest')
+                            setPage(1)
+                        }}
+                    >
+                        <SelectTrigger className='w-32'>
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value='recent'>{t('posts.filters.recent')}</SelectItem>
+                            <SelectItem value='oldest'>{t('posts.filters.oldest')}</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+            </div>
+
+            {/* Table */}
+            {posts.length === 0 ? (
+                <div className='border rounded-lg p-8 text-center'>
+                    <AlertCircle className='w-12 h-12 text-muted-foreground mx-auto mb-3' />
+                    <p className='text-muted-foreground'>{t('posts.emptyState')}</p>
+                </div>
+            ) : (
+                <div className='border rounded-lg overflow-hidden'>
+                    <Table>
+                        <TableHeader>
+                            <TableRow className='bg-muted/50'>
+                                <TableHead className='font-semibold'>{t('posts.columns.id')}</TableHead>
+                                <TableHead className='font-semibold'>{t('posts.columns.title')}</TableHead>
+                                <TableHead className='font-semibold'>{t('posts.columns.author')}</TableHead>
+                                <TableHead className='font-semibold'>{t('posts.columns.status')}</TableHead>
+                                <TableHead className='font-semibold'>{t('posts.columns.uploadDate')}</TableHead>
+                                <TableHead className='text-right font-semibold'>{t('posts.columns.actions')}</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {posts.map((post) => (
+                                <TableRow key={post.id} className='hover:bg-muted/50'>
+                                    <TableCell className='font-mono text-sm'>#{post.id}</TableCell>
+                                    <TableCell>
+                                        <div className='max-w-xs'>
+                                            <p className='font-medium truncate'>{truncateText(post.content, 60)}</p>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className='font-medium'>{post.user?.username || 'N/A'}</TableCell>
+                                    <TableCell>
+                                        <Badge
+                                            variant='outline'
+                                            className={`capitalize ${getPostStatusColor(getPostStatus(post))}`}
+                                        >
+                                            {getPostStatus(post)}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell className='text-sm'>{formatAdminDate(post.created_at)}</TableCell>
+                                    <TableCell className='text-right'>
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant='ghost' size='sm' disabled={isFetching}>
+                                                    <MoreHorizontal className='w-4 h-4' />
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent align='end' className='w-48'>
+                                                {post.hidden_at ? (
+                                                    <>
+                                                        <DropdownMenuItem
+                                                            onClick={() => openDialog(post, 'unhide')}
+                                                            className='cursor-pointer'
+                                                        >
+                                                            {t('posts.actions.unhide')}
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuSeparator />
+                                                        <DropdownMenuItem
+                                                            onClick={() => openDialog(post, 'delete')}
+                                                            className='text-red-600 cursor-pointer'
+                                                        >
+                                                            {t('posts.actions.delete')}
+                                                        </DropdownMenuItem>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <DropdownMenuItem
+                                                            onClick={() => openDialog(post, 'hide')}
+                                                            className='text-orange-600 cursor-pointer'
+                                                        >
+                                                            {t('posts.actions.hide')}
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuSeparator />
+                                                        <DropdownMenuItem
+                                                            onClick={() => openDialog(post, 'delete')}
+                                                            className='text-red-600 cursor-pointer'
+                                                        >
+                                                            {t('posts.actions.delete')}
+                                                        </DropdownMenuItem>
+                                                    </>
+                                                )}
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
+            )}
+
+            {/* Pagination Controls */}
+            {pagination && (
+                <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
+                    {/* Per Page Selector */}
+                    <div className='flex items-center gap-2'>
+                        <span className='text-sm text-muted-foreground'>{t('common.perPage')}</span>
+                        <Select value={String(perPage)} onValueChange={handlePerPageChange}>
+                            <SelectTrigger className='w-20'>
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value='5'>5</SelectItem>
+                                <SelectItem value='10'>10</SelectItem>
+                                <SelectItem value='25'>25</SelectItem>
+                                <SelectItem value='50'>50</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    {/* Info */}
+                    <div className='text-sm text-muted-foreground'>
+                        {t('common.showingResults', {
+                            from: (pagination.current_page - 1) * perPage + 1,
+                            to: Math.min(pagination.current_page * perPage, pagination.total),
+                            total: pagination.total
+                        })}
+                    </div>
+
+                    {/* Pagination */}
+                    {pagination.last_page > 1 && (
+                        <AutoPagination page={page} pageSize={pagination.last_page} onPageChange={setPage} />
+                    )}
+                </div>
+            )}
+
+            {/* Dialogs */}
+            {selectedPost && (
+                <>
+                    <HidePostDialog
+                        open={dialogType === 'hide'}
+                        postUuid={selectedPost.uuid}
+                        authorUsername={selectedPost.user?.username || 'N/A'}
+                        onOpenChange={(open) => !open && closeDialog()}
+                        onSuccess={handleActionSuccess}
+                    />
+
+                    <UnhidePostDialog
+                        open={dialogType === 'unhide'}
+                        postUuid={selectedPost.uuid}
+                        authorUsername={selectedPost.user?.username || 'N/A'}
+                        onOpenChange={(open) => !open && closeDialog()}
+                        onSuccess={handleActionSuccess}
+                    />
+
+                    <DeletePostDialog
+                        open={dialogType === 'delete'}
+                        postUuid={selectedPost.uuid}
+                        authorUsername={selectedPost.user?.username || 'N/A'}
+                        onOpenChange={(open) => !open && closeDialog()}
+                        onSuccess={handleActionSuccess}
+                    />
+                </>
+            )}
+        </div>
+    )
+}

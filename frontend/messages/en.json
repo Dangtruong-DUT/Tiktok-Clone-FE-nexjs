@@ -718,5 +718,210 @@
         "darkmode_light": "Light mode",
         "settings": "Settings",
         "logout": "Log out"
+    },
+    "AdminPage": {
+        "breadcrumbs": {
+            "home": "Home",
+            "admin": "Admin"
+        },
+        "common": {
+            "perPage": "Per page",
+            "showingResults": "Showing {from}-{to} of {total}",
+            "cancel": "Cancel",
+            "loading": "Loading..."
+        },
+        "dashboard": {
+            "title": "Admin Dashboard",
+            "description": "Overview of system state and moderation activity",
+            "statistics": "Statistics",
+            "recentActivity": "Recent Activity",
+            "totalUsers": "Total Users",
+            "totalPosts": "Total Posts",
+            "bannedUsers": "Banned Users",
+            "adminActions": "Admin Actions"
+        },
+        "moderation": {
+            "title": "Post Moderation"
+        },
+        "users": {
+            "title": "User Management",
+            "description": "Manage user status and moderation actions",
+            "emptyState": "No users found",
+            "columns": {
+                "id": "ID",
+                "username": "Username",
+                "email": "Email",
+                "status": "Status",
+                "joinDate": "Join Date",
+                "actions": "Actions"
+            },
+            "filters": {
+                "allStatuses": "All statuses",
+                "active": "Active",
+                "banned": "Banned",
+                "recent": "Recent",
+                "oldest": "Oldest"
+            },
+            "actions": {
+                "ban": "Ban",
+                "unban": "Unban",
+                "delete": "Delete",
+                "confirmBan": "Confirm Ban",
+                "confirmUnban": "Confirm Unban",
+                "confirmDelete": "Confirm Delete"
+            },
+            "labels": {
+                "reason": "Reason",
+                "duration": "Duration (days)"
+            },
+            "placeholders": {
+                "searchUsers": "Search by username or email",
+                "banReason": "Enter ban reason",
+                "deleteReason": "Enter deletion reason",
+                "duration": "Optional duration"
+            },
+            "errors": {
+                "reasonRequired": "Reason is required",
+                "reasonMinLength": "Reason must be at least 10 characters",
+                "durationInvalid": "Duration must be a positive number"
+            },
+            "messages": {
+                "banSuccess": "User banned successfully",
+                "banError": "Failed to ban user",
+                "unbanSuccess": "User unbanned successfully",
+                "unbanError": "Failed to unban user",
+                "deleteSuccess": "User deleted successfully",
+                "deleteError": "Failed to delete user"
+            },
+            "dialogs": {
+                "deleteTitle": "Delete User",
+                "deleteSubtitle": "Delete account for @{username}",
+                "deleteWarning": "This action cannot be undone.",
+                "unbanSubtitle": "Unban account for @{username}"
+            },
+            "banDialog": {
+                "subtitle": "Ban account for @{username}"
+            },
+            "hints": {
+                "durationHint": "Leave empty for permanent ban"
+            }
+        },
+        "posts": {
+            "title": "Post Moderation",
+            "description": "Review and moderate posts",
+            "emptyState": "No posts found",
+            "columns": {
+                "id": "ID",
+                "title": "Content",
+                "author": "Author",
+                "status": "Status",
+                "uploadDate": "Created At",
+                "actions": "Actions"
+            },
+            "filters": {
+                "allStatuses": "All statuses",
+                "visible": "Visible",
+                "hidden": "Hidden",
+                "recent": "Recent",
+                "oldest": "Oldest"
+            },
+            "actions": {
+                "hide": "Hide",
+                "unhide": "Unhide",
+                "delete": "Delete",
+                "confirmHide": "Confirm Hide",
+                "confirmUnhide": "Confirm Unhide",
+                "confirmDelete": "Confirm Delete"
+            },
+            "labels": {
+                "reason": "Reason",
+                "customReason": "Custom Reason"
+            },
+            "placeholders": {
+                "searchPosts": "Search posts",
+                "selectReason": "Select reason",
+                "customReason": "Enter custom reason"
+            },
+            "reasons": {
+                "other": "Other"
+            },
+            "errors": {
+                "reasonRequired": "Reason is required"
+            },
+            "messages": {
+                "hideSuccess": "Post hidden successfully",
+                "hideError": "Failed to hide post",
+                "unhideSuccess": "Post unhidden successfully",
+                "unhideError": "Failed to unhide post",
+                "deleteSuccess": "Post deleted successfully",
+                "deleteError": "Failed to delete post"
+            },
+            "dialogs": {
+                "hideSubtitle": "Hide post from @{username}",
+                "unhideSubtitle": "Unhide post from @{username}",
+                "deleteSubtitle": "Delete post from @{username}",
+                "deleteWarning": "This post will be removed from feeds."
+            }
+        },
+        "comments": {
+            "title": "Comment Moderation",
+            "description": "Review and moderate comments",
+            "emptyState": "No comments found",
+            "columns": {
+                "id": "ID",
+                "author": "Author",
+                "content": "Content",
+                "parentPost": "Parent Post",
+                "date": "Created At",
+                "actions": "Actions"
+            },
+            "filters": {
+                "recent": "Recent",
+                "oldest": "Oldest"
+            },
+            "actions": {
+                "delete": "Delete",
+                "confirmDelete": "Confirm Delete"
+            },
+            "labels": {
+                "reason": "Reason"
+            },
+            "placeholders": {
+                "searchComments": "Search comments",
+                "deleteReason": "Enter deletion reason"
+            },
+            "errors": {
+                "reasonRequired": "Reason is required",
+                "reasonMinLength": "Reason must be at least 10 characters"
+            },
+            "messages": {
+                "deleteSuccess": "Comment deleted successfully",
+                "deleteError": "Failed to delete comment"
+            },
+            "dialogs": {
+                "deleteSubtitle": "Delete comment by @{username}",
+                "deleteWarning": "This action cannot be undone."
+            }
+        },
+        "activity": {
+            "title": "Activity Logs",
+            "description": "View moderation and system activities",
+            "emptyState": "No activity found",
+            "placeholders": {
+                "searchActivity": "Search activity"
+            },
+            "periods": {
+                "last24h": "Last 24 hours",
+                "last7d": "Last 7 days",
+                "last30d": "Last 30 days",
+                "allTime": "All time"
+            },
+            "filters": {
+                "allTypes": "All types"
+            },
+            "prepositions": {
+                "on": "on"
+            }
+        }
     }
 }

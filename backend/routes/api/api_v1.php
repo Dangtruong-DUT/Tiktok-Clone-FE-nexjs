@@ -109,6 +109,8 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::post('/users/{user_id}/unban', [AdminController::class, 'unbanUser'])->name('unban-user');
             Route::delete('/users/{user_id}', [AdminController::class, 'deleteUser'])->name('delete-user');
             Route::post('/users/{user_id}/delete', [AdminController::class, 'deleteUser'])->name('delete-user-post');
+            Route::post('/users/{user_id}/reset-password', [AdminController::class, 'resetUserPassword'])->name('reset-user-password');
+            Route::post('/users/{user_id}/send-mail', [AdminController::class, 'sendUserMail'])->name('send-user-mail');
 
             // Post moderation
             Route::get('/posts', [AdminController::class, 'getPosts'])->name('list-posts');

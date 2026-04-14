@@ -34,7 +34,7 @@ class ActivityLogRepository extends BaseRepository
         $perPage = min((int) $filterCollection->get('per_page', 20), 100);
 
         return $query
-            ->with('user:id,username,avatar_url')
+            ->with(['user:id,username,avatar_file_id', 'user.avatarFile:id,url'])
             ->paginate($perPage);
     }
 

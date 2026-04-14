@@ -1,0 +1,66 @@
+'use client'
+
+import { ReactNode } from 'react'
+import Link from 'next/link'
+
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator
+} from '@/components/ui/breadcrumb'
+
+interface AdminHeaderProps {
+    title: string
+    description?: string
+    breadcrumbs?: {
+        label: string
+        href?: string
+    }[]
+    actions?: ReactNode
+}
+
+/**
+ * AdminHeader - Page header for admin pages
+ * Displays: Title, description, breadcrumbs, and actions
+ */
+export function AdminHeader({ title, description, breadcrumbs, actions }: AdminHeaderProps) {
+    return (
+        <div className='border-b bg-card'>
+            <div className='px-4 py-4 md:px-8 md:py-6'>
+                {/* Breadcrumbs */}
+                {breadcrumbs && breadcrumbs.length > 0 && (
+                    <Breadcrumb className='mb-3'>
+                        <BreadcrumbList>
+                            {breadcrumbs.map((crumb, idx) => (
+                                <BreadcrumbItem key={`${crumb.label}-${idx}`}>
+                                    {crumb.href ? (
+                                        <BreadcrumbLink asChild>
+                                            <Link href={crumb.href}>{crumb.label}</Link>
+                                        </BreadcrumbLink>
+                                    ) : (
+                                        <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+                                    )}
+                                    {idx < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
+                                </BreadcrumbItem>
+                            ))}
+                        </BreadcrumbList>
+                    </Breadcrumb>
+                )}
+
+                {/* Title and Actions */}
+                <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
+                    <div>
+                        <h1 className='text-2xl font-bold tracking-tight md:text-3xl'>{title}</h1>
+                        {description && <p className='mt-1 text-muted-foreground'>{description}</p>}
+                    </div>
+
+                    {/* Actions */}
+                    {actions && <div className='flex w-full gap-2 md:w-auto'>{actions}</div>}
+                </div>
+            </div>
+        </div>
+    )
+}

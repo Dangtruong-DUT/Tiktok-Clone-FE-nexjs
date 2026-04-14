@@ -17,6 +17,8 @@ use App\Http\Requests\Admin\System\GetDashboardStatsRequest;
 use App\Http\Requests\Admin\User\BanUserRequest;
 use App\Http\Requests\Admin\User\DeleteUserRequest;
 use App\Http\Requests\Admin\User\GetAdminUsersRequest;
+use App\Http\Requests\Admin\User\ResetUserPasswordRequest;
+use App\Http\Requests\Admin\User\SendUserMailRequest;
 use App\Http\Requests\Admin\User\UnbanUserRequest;
 use App\Http\Response\ApiResponse;
 use App\Services\Admin\CommentAdminService;
@@ -120,6 +122,34 @@ class AdminController extends Controller
         );
 
         return ApiResponse::success(message: 'User deleted successfully');
+    }
+
+    /**
+     * Reset a user password by admin.
+     */
+    public function resetUserPassword(ResetUserPasswordRequest $request): JsonResponse
+    {
+        $this->userAdminService->resetUserPassword(
+            $request->user(),
+            (int) $request->input('user_id'),
+            $request->validated()
+        );
+
+        return ApiResponse::success(message: 'User password reset successfully');
+    }
+
+    /**
+     * Send direct email from admin to user.
+     */
+    public function sendUserMail(SendUserMailRequest $request): JsonResponse
+    {
+        $this->userAdminService->sendMailToUser(
+            $request->user(),
+            (int) $request->input('user_id'),
+            $request->validated()
+        );
+
+        return ApiResponse::success(message: 'Email sent successfully');
     }
 
     // ============ POST MODERATION ============

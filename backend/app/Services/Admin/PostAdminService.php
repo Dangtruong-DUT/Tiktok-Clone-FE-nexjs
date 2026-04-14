@@ -51,8 +51,10 @@ class PostAdminService
     {
         return $this->postRepository->query()->where('uuid', $uuid)
             ->with([
-                'user:id,username,avatar_url,verify',
-                'media:id,post_id,type,url',
+                'user:id,username,avatar_file_id,verify',
+                'user.avatarFile:id,url',
+                'media:id,post_id,type,upload_file_id',
+                'media.file:id,url',
                 'hashTags:id,name',
                 'mentions:id,user_id,mentioned_user_id',
             ])

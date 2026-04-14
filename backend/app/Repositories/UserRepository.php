@@ -7,6 +7,7 @@ use App\Enums\User\RoleTypeEnum;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -191,7 +192,8 @@ class UserRepository extends BaseRepository
         $perPage = (int) $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
 
         return $query
-            ->select(['id', 'username', 'email', 'avatar_url', 'created_at', 'banned_at', 'ban_reason'])
+            ->with('avatarFile:id,url')
+            ->select(['id', 'username', 'email', 'avatar_file_id', 'created_at', 'banned_at', 'ban_reason'])
             ->paginate($perPage);
     }
 
@@ -295,7 +297,7 @@ class UserRepository extends BaseRepository
         return $query
             ->select('users.*')
             ->with(['avatarFile'])
-            ->selectSub(function (Builder $subQuery) {
+            ->selectSub(function (QueryBuilder $subQuery) {
                 $subQuery->from('posts')
                     ->where('type', PostTypeEnum::POST->value)
                     ->selectRaw('COALESCE(SUM(likes_count), 0)')

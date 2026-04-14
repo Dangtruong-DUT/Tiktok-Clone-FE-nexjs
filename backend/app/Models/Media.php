@@ -31,6 +31,15 @@ class Media extends Model
         'order',
     ];
 
+    /**
+     * The accessors to append to model's array form.
+     *
+     * @var list<string>
+     */
+    protected $appends = [
+        'url',
+    ];
+
     /*
     * Get the attributes that should be cast.
     *

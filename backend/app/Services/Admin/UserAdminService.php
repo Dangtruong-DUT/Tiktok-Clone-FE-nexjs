@@ -5,10 +5,12 @@ namespace App\Services\Admin;
 use App\Enums\Admin\AdminActionEnum;
 use App\Enums\Admin\AdminResourceEnum;
 use App\Enums\Notification\EntityTypeEnum;
+use App\Mail\AdminDirectMessageMail;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use BadMethodCallException;
 
 /**
@@ -224,6 +226,76 @@ class UserAdminService
                     'resource_type' => AdminResourceEnum::USER->value,
                     'resource_id' => $user->id,
                 ]
+            );
+        });
+    }
+
+    /**
+     * Reset a user password by admin.
+     *
+     * @param User $admin
+     * @param int $userId
+     * @param array{password:string} $data
+     * @return User
+     */
+    public function resetUserPassword(User $admin, int $userId, array $data): User
+    {
+        /** @var User $user */
+        $user = $this->userRepository->findOrFail($userId);
+
+        return DB::transaction(function () use ($admin, $user, $userId, $data) {
+            $user->password = (string) $data['password'];
+            $user->save();
+
+            $this->adminLogService->log(
+                admin: $admin,
+                resourceType: AdminResourceEnum::USER,
+                resourceId: $userId,
+                action: AdminActionEnum::RESET_USER_PASSWORD,
+                reason: 'Admin reset user password',
+                oldData: null,
+                newData: null,
+            );
+
+            return $user;
+        });
+    }
+
+    /**
+     * Send direct mail from admin to target user.
+     *
+     * @param User $admin
+     * @param int $userId
+     * @param array{subject:string,message:string} $data
+     * @return void
+     */
+    public function sendMailToUser(User $admin, int $userId, array $data): void
+    {
+        /** @var User $user */
+        $user = $this->userRepository->findOrFail($userId);
+
+        if (empty($user->email)) {
+            throw new BadMethodCallException('Target user does not have an email address');
+        }
+
+        DB::transaction(function () use ($admin, $user, $userId, $data) {
+            Mail::to($user->email)->send(new AdminDirectMessageMail(
+                admin: $admin,
+                targetUser: $user,
+                subjectLine: (string) $data['subject'],
+                messageBody: (string) $data['message'],
+            ));
+
+            $this->adminLogService->log(
+                admin: $admin,
+                resourceType: AdminResourceEnum::USER,
+                resourceId: $userId,
+                action: AdminActionEnum::SEND_EMAIL_TO_USER,
+                reason: (string) $data['subject'],
+                oldData: null,
+                newData: [
+                    'subject' => (string) $data['subject'],
+                ],
             );
         });
     }

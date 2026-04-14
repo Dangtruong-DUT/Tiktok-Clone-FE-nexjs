@@ -35,7 +35,7 @@ class AdminLogRepository extends BaseRepository
         $perPage = min((int) $filterCollection->get('per_page', 20), 100);
 
         return $query
-            ->with('admin:id,username,avatar_url')
+            ->with(['admin:id,username,avatar_file_id', 'admin.avatarFile:id,url'])
             ->paginate($perPage);
     }
 

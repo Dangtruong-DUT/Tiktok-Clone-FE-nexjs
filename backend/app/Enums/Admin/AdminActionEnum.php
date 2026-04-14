@@ -16,6 +16,8 @@ enum AdminActionEnum: string implements BaseEnumInterface
     case BAN = 'ban';
     case UNBAN = 'unban';
     case DELETE_USER = 'delete_user';
+    case RESET_USER_PASSWORD = 'reset_user_password';
+    case SEND_EMAIL_TO_USER = 'send_email_to_user';
 
     case HIDE_POST = 'hide_post';
     case UNHIDE_POST = 'unhide_post';
@@ -38,6 +40,8 @@ enum AdminActionEnum: string implements BaseEnumInterface
             self::BAN => 'Ban User',
             self::UNBAN => 'Unban User',
             self::DELETE_USER => 'Delete User',
+            self::RESET_USER_PASSWORD => 'Reset User Password',
+            self::SEND_EMAIL_TO_USER => 'Send Email To User',
             self::HIDE_POST => 'Hide Post',
             self::UNHIDE_POST => 'Unhide Post',
             self::DELETE_POST => 'Delete Post',
@@ -58,6 +62,8 @@ enum AdminActionEnum: string implements BaseEnumInterface
             self::BAN => 'Khóa tài khoản',
             self::UNBAN => 'Mở khóa tài khoản',
             self::DELETE_USER => 'Xóa người dùng',
+            self::RESET_USER_PASSWORD => 'Đặt lại mật khẩu người dùng',
+            self::SEND_EMAIL_TO_USER => 'Gửi email cho người dùng',
             self::HIDE_POST => 'Ẩn bài viết',
             self::UNHIDE_POST => 'Hiện bài viết',
             self::DELETE_POST => 'Xóa bài viết',

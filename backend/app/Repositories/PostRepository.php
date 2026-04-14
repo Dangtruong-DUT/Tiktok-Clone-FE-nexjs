@@ -5,6 +5,8 @@ namespace App\Repositories;
 use App\Models\Post;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection;
 
 class PostRepository extends BaseRepository
@@ -151,7 +153,12 @@ class PostRepository extends BaseRepository
         $perPage = min((int) $filterCollection->get('per_page', 20), 100);
 
         return $query
-            ->with(['user:id,username,avatar_url', 'media:id,post_id,type,url'])
+            ->with([
+                'user:id,username,avatar_file_id',
+                'user.avatarFile:id',
+                'media:id,post_id,type,upload_file_id',
+                'media.file:id',
+            ])
             ->select(['id', 'uuid', 'user_id', 'content', 'created_at', 'hidden_at', 'hidden_reason', 'deleted_at'])
             ->paginate($perPage);
     }
@@ -192,7 +199,8 @@ class PostRepository extends BaseRepository
 
         return $query
             ->with([
-                'user:id,username,avatar_url',
+                'user:id,username,avatar_file_id',
+                'user.avatarFile:id',
                 'parent:id,uuid,user_id,content',
                 'parent.user:id,username',
             ])
@@ -388,10 +396,10 @@ class PostRepository extends BaseRepository
             ->with([
                 'hashtags',
                 'mentions',
-                'user' => fn (Builder $userQuery) => $userQuery
+                'user' => fn (BelongsTo $userQuery) => $userQuery
                     ->select('users.*')
                     ->with('avatarFile')
-                    ->selectSub(function (Builder $subQuery) {
+                    ->selectSub(function (QueryBuilder $subQuery) {
                         $subQuery->from('posts')
                             ->selectRaw('COALESCE(SUM(likes_count), 0)')
                             ->whereColumn('posts.user_id', 'users.id');
