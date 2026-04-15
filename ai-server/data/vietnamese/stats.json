@@ -1,0 +1,9 @@
+﻿{
+    "toxic_rate":  0.2676,
+    "train":  7936,
+    "total":  9920,
+    "toxic_total":  2655,
+    "manual_overrides":  41,
+    "valid":  992,
+    "test":  992
+}

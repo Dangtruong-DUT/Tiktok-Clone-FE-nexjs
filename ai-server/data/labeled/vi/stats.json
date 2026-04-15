@@ -1,0 +1,8 @@
+﻿{
+    "toxic_rate":  0.271,
+    "train":  7000,
+    "total":  10000,
+    "test":  1000,
+    "valid":  2000,
+    "toxic_total":  2710
+}

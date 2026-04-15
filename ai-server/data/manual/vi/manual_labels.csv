@@ -1,0 +1,42 @@
+Comment,toxic,severe_toxic,obscene,threat,insult,identity_hate,labeler,notes
+"tình cha ấm áp như vầng thái dương chúc gđ anh quốc tuấn thật nhiều sức khỏe",0,0,0,0,0,0,assistant,positive-supportive
+"mừng với tin vui này mong cầu bình yên mãi mãi",0,0,0,0,0,0,assistant,neutral-positive
+"that ko the tin đuoc nho con hon pr7 vay ma thi đau 731 tran ghi 634 ban 7 lan gianh giai vua pha luoi 6 qbv 6 giay vang nhin sang pr7 oi thoi qbv thua giay vang thua du thi đau truoc 2 nam cao hon thuan 2 chan con ngoai gia thu nhieu hon mac vong bu suc đong đoi vay ma ko bang",0,0,0,0,0,0,assistant,sports-opinion
+"tuyệt vời xin chúc mừng các bệnh nhân và đội ngũ y bác sỹ",0,0,0,0,0,0,assistant,positive-healthcare
+"lý do tấn công kỳ cục nhỉ",0,0,0,0,0,0,assistant,neutral
+"ta i sao la i co nguo i me va nguo i ca u kho n na n the na y khong co n gi đe ta no i vo i loa i nguo i na y thuong ca c con qua may ma ca c cha u đa thoa t đuo c loa i kho n đo",1,0,0,0,1,0,assistant,contains-insult
+"bài hát không đặc sắc chỉ vì có một hoa nở không màu còn vương vấn mà thôi",0,0,0,0,0,0,assistant,subjective-non-toxic
+"hành trình 18 năm bên con của anh thật phi thường chúc gia đình luôn mạnh khỏe hạnh phúc vững tin trên hành trình dài",0,0,0,0,0,0,assistant,positive
+"mẹc đi bộ vuốt râu là có thật ăn hôi pen là có thật luôn",0,0,0,0,0,0,assistant,sports-banters
+"khong the chap nhan đuoc hanh vi bao luc tre em va cung nen xem lai 2 co giao kia co kieu vay thi ko ai an tam ma gui con",0,0,0,0,0,0,assistant,condemn-violence-not-toxic
+"pháp luật cần trừng trị nghiêm những kẻ như thế này rất tội cho các bé vl",0,0,0,0,0,0,assistant,contains-slang-no-targeted-abuse
+"ôi thương tâm quá sao năm nay nhiều vụ đuối nước mấy cháu một lúc vậy các bậc phụ huynh cần quan tâm hơn chứ những vùng làm nông nghiệp hay có hố tích nước rất sâu mà không có hàng rào bảo vệ vl",0,0,0,0,0,0,assistant,sadness-not-toxic
+"khổ thân các fan messi quá bài nào cũng lôi ro vào đc dù chẳng liên quan gì điều đó chứng tỏ ido của các bạn thấp kém quá thấp kém quá các bạn làm như vậy càng làm nhiều người coi thường messi của các bạn hơn mà thôi vl",1,0,0,0,1,0,assistant,targeted-insult
+"ko nên mua xe vinfast nhé bạn tôi đã mua và rất thất vọng vl",0,0,0,0,0,0,assistant,consumer-opinion
+"ông là kẻ trơ trẽn nhất mọi thời đại là vết dơ của của lịch sử barca nói riêng và thế giới bđ nói chung",1,0,0,0,1,0,assistant,targeted-insult
+"sống vậy coi bộ mà khỏe cái đầu các bạn ạ",0,0,0,0,0,0,assistant,neutral
+"đvh hát bolero nghe nhức đầu vl",0,0,0,0,0,0,assistant,style-opinion
+"vài ngày nữa mở đường bay các nước sẽ có nhiều ca nhiễm hy vọng không lây ra cộng đồng thôi vl",0,0,0,0,0,0,assistant,public-health-concern
+"cảm ơn các anh những tấm lòng lương thiện tại sao bé được 31 tuần rồi mà người mẹ nào lỡ nhẫn tâm như vậy thương con quá chúc con một đời bình yên vui vẻ",0,0,0,0,0,0,assistant,positive-empathy
+"ac qua",0,0,0,0,0,0,assistant,ambiguous-short
+"gia mat net",1,0,0,0,1,0,assistant,likely-insult
+"tôi có chị gái gom góp giành dụm cả đời rồi mua 1 căn chung cư qụận 12 tới giờ 4 năm chưa có quyển sổ hồng chán zzz",0,0,0,0,0,0,assistant,complaint-non-toxic
+"tieu nhan nay nen co bien phap cach ly xa hoi vinh vien",1,0,0,0,1,0,assistant,targeted-insult
+"vn dap dich rat tot đung nhu chi đao cung nhu su hop tac cua nguoi dan hi vong them mot lan nua chung minh cho cac nuoc khac thay kha nang đoi pho cac tinh huong nguy hiem quan trong co hoi đau tu nuoc ngoai va dich chuyen đau tu se co loi nhat cho vn",0,0,0,0,0,0,assistant,positive
+"rất nhiều nhà xe trên các tuyến vẫn chưa hoạt động chứng tỏ họ rất thận trọng có hoạt động cũng rất ít khách nhất là tuyến huế đà nẵng chưa thể hoạt động được vl",0,0,0,0,0,0,assistant,transport-news
+"xin chúc mừng các anh ca đây là cái rọ chuyên án của công an mai phục để bắt rồi nhìn lực lượng mạnh như vậy là có chuẩn bị rất kỹ",0,0,0,0,0,0,assistant,neutral-news
+"ta i sao ba n trai biê t ma không tô ca o đê no đa nh va giam giư mâ y nga y mơ i tha vl",0,0,0,0,0,0,assistant,asks-why-no-report
+"chỉ cần lấy thau chậu đường kính khoảng 30 50cm đổ đầy nước sau đó cho các bé nín thở úp mặt xuống nước nhiều lần các bé sẽ biết lấy hơi nín thở và sẽ nhanh chóng biết bơi vl",0,0,0,0,0,0,assistant,bad-advice-not-toxic
+"đã qua mỹ du học thì cần gì phải thi ielt dành giật số điểm để làm gì anh văn chỉ là công cụ làm việc chứ không phải cái nghề cái nghiệp vl",0,0,0,0,0,0,assistant,opinion
+"tai nan la chuyen binh thuong cac ban nao co y ca khia gi đo thi xin hay suy nghi ti tiep dau tren khong la 1 đieu cuc ky kho đoi hoi tay ky thuat cao va con phu thuoc vao nhieu yeu to khac nhu gio hoac vung nhieu ma trong luc huan luyen thi xay ra su co đe biet ma khac phuc luc chien tranh la 1 đieu binh thuong",0,0,0,0,0,0,assistant,neutral-argument
+"đai ly đanh vao tam ly nguoi mua xe lan đau kiem chac ti phu kien re tien vao hang gia gap đoi",0,0,0,0,0,0,assistant,consumer-complaint
+"khong biet noi gi hon chi biet chet đieng nguoi thoi sao cac be lai xau so the xin chia buon",0,0,0,0,0,0,assistant,sympathy
+"nhà em chạy attrage 2 năm thấy xuống máy khá nhiều rồi bác mua thì nên chọn máy lớn vẫn hơn vl",0,0,0,0,0,0,assistant,consumer-opinion
+"atp tuyet voi luat la luat co len cac tay vot gio thi biet tai sao nole thanh lap ptpa roi đay lam tot lam atp",0,0,0,0,0,0,assistant,sports-opinion
+"hy vọng lại thấy được một bale bùng nổ một tot đầy sức mạnh và tốc độ chứ k rệu rạc như bây giờ từ lâu đã mất niềm tin vào mou ông bây giờ chỉ có nâng tầm các đội bóng hạng trung với lối đá tử thủ đầy dũng cảm thôi chứ cho cầm đội 1 tỷ bảng cũng không ăn thua vl",0,0,0,0,0,0,assistant,sports-opinion
+"anh tùng đặt vấn đề tôi không hiểu tại sao ngân hàng có thể mở thẻ tín dụng chỉ với một chiếc chứng minh thư mà không cần sự có mặt cũng như chữ ký của tôi như vậy quy trình của ngân hàng lỏng lẻo tới vậy hay sao theo tôi trong trương hợp này ngân hàng rất chặt chẽ theo dõi biết rất rõ điểm tín dụng và khả năng tài chánh của anh đảm bảo anh sẽ thanh toán đủ các khoản chi từ người khác đảm bảo nguyên tắc vàng quyền lợi ngân hàng là trên hết vl",0,0,0,0,0,0,assistant,complaint-analysis
+"san choi nay la qua lon voi minamino đang tiec cho pha bo lo",0,0,0,0,0,0,assistant,sports-comment
+"vậy các chuyến bay thương mại chở người cách ly có 5 7 ngày liệu có an toàn không lo lắng vl",0,0,0,0,0,0,assistant,question-concern
+"các chàng trai cô gái cấp 3 hãy ngăn bố mẹ đọc dc tin này nếu ko các bạn sẽ có những bữa cơm ngập trong câu chuyện con nhà người ta",0,0,0,0,0,0,assistant,joke-non-toxic
+"mỹ mercedes lexus audi bmw khai láo chứ bmw đứng thứ 4 vn lexus mercedes audi bmw mình đã trừ các dòng xe phổ thông của mercedes ra khỏi bảng tính thân",0,0,0,0,0,0,assistant,market-opinion
+"16 năm rồi vợ chồng tôi mơ ước có một đứa con sao mà tủi thân và uất ức quá",0,0,0,0,0,0,assistant,emotional-not-toxic
