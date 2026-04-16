@@ -1,189 +1,367 @@
+import argparse
+import json
+import random
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Optional
+
 import numpy as np
 import pandas as pd
 import torch
 import torch.nn as nn
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report
-from torch.optim import optimizer
-import transformers
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support
+from torch.optim import AdamW
+from torch.utils.data import DataLoader, Dataset
 from transformers import AutoModel, AutoTokenizer
-from keras.preprocessing.sequence import pad_sequences
-import json
-from vncorenlp import VnCoreNLP
-from vncorenlp.vncorenlp import VnCoreNLP
-from sklearn.utils import shuffle
-from transformers import AdamW
-from torch.utils.data import TensorDataset, DataLoader, RandomSampler
 
-def get_data(all_path):
-  sentences=[]
-  labels=[]
-  for i in all_path:
-    with open(i,"r") as f:
-      datastore=json.load(f)
-    for item in datastore:
-      sentences.append(item["sentences"])
-      labels.append(item["toxic"])
-  return sentences, labels
 
-rdrsegmenter=VnCoreNLP("vncorenlp/VnCoreNLP-1.1.1.jar", annotators="wseg", max_heap_size='-Xmx500m')
+def set_seed(seed: int) -> None:
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
 
-def sentences_segment(sentences):
-  for i in range(len(sentences)):
-    tokens=rdrsegmenter.tokenize(sentences[i])
-    statement=""
-    for token in tokens:
-      statement+=" ".join(token)
-    sentences[i]=statement
 
-phobert=AutoModel.from_pretrained('vinai/phobert-base')
-tokenizer=AutoTokenizer.from_pretrained('vinai/phobert-base')
+class ToxicDataset(Dataset):
+    def __init__(self, texts: list[str], labels: list[int]) -> None:
+        self.texts = texts
+        self.labels = labels
 
-def shuffle_and_tokenize(sentences,labels,maxlen):
-  sentences,labels=shuffle(sentences,labels)
-  sequences=[tokenizer.encode(i) for i in sentences]
-  labels=[int(i) for i in labels]
-  padded=pad_sequences(sequences, maxlen=maxlen, padding="pre")
-  return padded, labels
+    def __len__(self) -> int:
+        return len(self.texts)
 
-def check_maxlen(sentences):
-  sentences_len=[len(i.split()) for i in sentences]
-  return max(sentences_len)
+    def __getitem__(self, idx: int) -> tuple[str, int]:
+        return self.texts[idx], self.labels[idx]
 
-def split_data(padded, labels):
-  padded=torch.tensor(padded)
-  labels=torch.tensor(labels)
-  X_train,X_,y_train,y_=train_test_split(padded, labels,random_state=2018, train_size=0.8, stratify=labels)
-  X_val,X_test, y_val, y_test=train_test_split(X_, y_, random_state=2018, train_size=0.5, stratify=y_)
-  return X_train,X_val,X_test, y_train,y_val, y_test
 
-def Data_Loader(X_train,X_val,y_train,y_val):
-  train_data=TensorDataset(X_train,y_train)
-  train_sampler=RandomSampler(train_data)
-  train_dataloader=DataLoader(train_data, sampler=train_sampler,batch_size=2)
-  val_data=TensorDataset(X_val,y_val)
-  val_sampler=RandomSampler(val_data)
-  val_dataloader=DataLoader(val_data, sampler=val_sampler,batch_size=2)
-  return train_dataloader, val_dataloader
+class PhoBERTClassifier(nn.Module):
+    def __init__(self, model_name: str, num_labels: int = 2, dropout: float = 0.2) -> None:
+        super().__init__()
+        self.encoder = AutoModel.from_pretrained(model_name)
+        self.dropout = nn.Dropout(dropout)
+        self.classifier = nn.Linear(self.encoder.config.hidden_size, num_labels)
 
-sentences,labels=get_data(['toxic_dataset.json','normal_dataset.json'])
-sentences_segment(sentences)
-padded,labels=shuffle_and_tokenize(sentences,labels,check_maxlen(sentences))
-X_train,X_val,X_test, y_train,y_val, y_test=split_data(padded, labels)
-train_dataloader, val_dataloader=Data_Loader(X_train,X_val,y_train,y_val)
+    def forward(self, input_ids: torch.Tensor, attention_mask: torch.Tensor) -> torch.Tensor:
+        outputs = self.encoder(input_ids=input_ids, attention_mask=attention_mask)
+        # PhoBERT's first token embedding acts as sentence representation.
+        pooled = outputs.last_hidden_state[:, 0, :]
+        logits = self.classifier(self.dropout(pooled))
+        return logits
 
-#freeze all the parameters
-for param in phobert.parameters():
-  param.requires_grad=False
 
-class classify(nn.Module):
-  def __init__(self, phobert, number_of_category):
-    super(classify,self).__init__()
-    self.phobert=phobert
-    self.relu=nn.ReLU()
-    self.dropout=nn.Dropout(0.1)
-    self.first_function=nn.Linear(768, 512)
-    self.second_function=nn.Linear(512, 32)
-    self.third_function=nn.Linear(32,number_of_category)
-    self.softmax=nn.LogSoftmax(dim=1)
+@dataclass
+class Metrics:
+    loss: float
+    accuracy: float
+    precision: float
+    recall: float
+    f1: float
 
-  def forward(self, input):
-    x=self.phobert(input)
-    x=self.first_function(x[1])
-    x=self.relu(x)
-    x=self.dropout(x)
-    x=self.second_function(x)
-    x=self.relu(x)
-    x=self.third_function(x)
-    x=self.softmax(x)
-    return x
 
-#loss  
-cross_entropy=nn.NLLLoss()
-model=classify(phobert,2)
-optimizer=AdamW(model.parameters(),lr=1e-5)
+def normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
+    normalized = []
+    for col in df.columns:
+        col_name = col.replace("\ufeff", "").replace('"', "").strip().lower()
+        normalized.append(col_name)
+    df.columns = normalized
 
-def train():
-  model.train()
-  total_loss,acc=0,0
-  total_preds=[]
-  for step , batch in enumerate(train_dataloader):
-    if step%50==0 and step!=0:
-      print("BATCH {} of {}".format(step, len(train_dataloader)))
-   
-    input,labels=batch
-    model.zero_grad()
-    preds=model(input)
-    loss=cross_entropy(preds, labels)
-    total_loss=total_loss+loss.item()
-    loss.backward()
-    torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-    optimizer.step()
-    preds=preds.detach().numpy()
-    total_preds.append(preds)
-  avg_loss=total_loss/len(train_dataloader)
-  total_preds=np.concatenate(total_preds,axis=0)
-  return avg_loss, total_preds
+    sentence_col = next((c for c in df.columns if "sentence" in c), None)
+    label_col = next((c for c in df.columns if "toxic" in c), None)
 
-def evaluate():
-  model.eval()
-  total_loss,acc=0,0
-  total_preds=[]
-  for step, batch in enumerate(val_dataloader):
-    if step%50==0 and step!=0:
-      print("BATCH {} of {}".format(step, len(val_dataloader)))
-    
-    input,labels=batch
-    with torch.no_grad():
-      preds=model(input)
-      loss=cross_entropy(preds, labels)
-      total_loss+=loss.item()
-      preds=preds.detach().numpy()
-      total_preds.append(preds)
-  avg_loss=total_loss/len(val_dataloader)
-  total_preds=np.concatenate(total_preds,axis=0)
-  return avg_loss, total_preds
+    if sentence_col is None or label_col is None:
+        raise ValueError(f"Cannot find sentence/toxic columns in {df.columns.tolist()}")
 
-def run(epochs):
-  best_valid_loss=float("inf")
-  train_losses=[]
-  valid_losses=[]
-  for epoch in range(epochs):
-    print("EPOCH {}/{}".format(epoch,epochs))
-    train_loss,_ =train()
-    valid_loss,_ =evaluate()
-    if valid_loss<best_valid_loss:
-      best_valid_loss=valid_loss
-      torch.save(model.state_dict(),"save_weights.pt")
-    train_losses.append(train_loss)
-    valid_losses.append(valid_loss)
-    print(train_loss)
-    print(valid_loss)
+    out = df[[sentence_col, label_col]].copy()
+    out.columns = ["sentences", "toxic"]
 
-run(200)
-path = 'save_weights.pt'
-model.load_state_dict(torch.load(path))
-sentence=input()
-def result(sentence):
-  tokens=rdrsegmenter.tokenize(sentence)
-  statement=""
-  for token in tokens:
-    statement+=" ".join(token)
-  sentence=statement
-  sequence=tokenizer.encode(sentence)
-  while(len(sequence)==20):
-    sequence.insert(0,0)
-  padded=torch.tensor([sequence])
-  with torch.no_grad():
-    preds=model(padded)
-  preds=np.argmax(preds,axis=1)
-  return preds
-print(result(sentence))
+    out["sentences"] = (
+        out["sentences"].astype(str).str.replace(r"\s+", " ", regex=True).str.strip()
+    )
+    out["toxic"] = out["toxic"].astype(str).str.replace('"', "").str.strip()
+    out = out[out["sentences"].str.len() > 0]
+    out = out[out["toxic"].isin(["0", "1"])].copy()
+    out["toxic"] = out["toxic"].astype(int)
+    return out.reset_index(drop=True)
 
-#check test
-with torch.no_grad():
-  preds=model(X_test)
-  preds=preds.detach().numpy()
 
-preds=np.argmax(preds,axis=1)
-print(classification_report(y_test, preds))
+def read_dataset(path: Path) -> pd.DataFrame:
+    if not path.exists():
+        raise FileNotFoundError(f"Dataset not found: {path}")
+
+    if path.suffix.lower() == ".csv":
+        df = pd.read_csv(path, encoding="utf-8-sig", engine="python", on_bad_lines="skip")
+        return normalize_columns(df)
+
+    if path.suffix.lower() == ".json":
+        with path.open("r", encoding="utf-8") as f:
+            raw = json.load(f)
+        df = pd.DataFrame(raw)
+        return normalize_columns(df)
+
+    raise ValueError(f"Unsupported file format: {path.suffix}")
+
+
+def create_collate_fn(tokenizer: AutoTokenizer, max_length: Optional[int]):
+    def collate_fn(batch: list[tuple[str, int]]) -> dict[str, torch.Tensor]:
+        texts, labels = zip(*batch)
+        encoded = tokenizer(
+            list(texts),
+            padding=True,
+            truncation=True,
+            max_length=max_length,
+            return_tensors="pt",
+        )
+        encoded["labels"] = torch.tensor(labels, dtype=torch.long)
+        return encoded
+
+    return collate_fn
+
+
+def build_model(model_name: str, num_labels: int) -> nn.Module:
+    return PhoBERTClassifier(model_name=model_name, num_labels=num_labels)
+
+
+def run_epoch(
+    model: nn.Module,
+    dataloader: DataLoader,
+    criterion: nn.Module,
+    device: torch.device,
+    optimizer: Optional[AdamW] = None,
+) -> Metrics:
+    training = optimizer is not None
+    model.train() if training else model.eval()
+
+    all_preds: list[int] = []
+    all_labels: list[int] = []
+    total_loss = 0.0
+
+    for batch in dataloader:
+        input_ids = batch["input_ids"].to(device)
+        attention_mask = batch["attention_mask"].to(device)
+        labels = batch["labels"].to(device)
+
+        if training:
+            optimizer.zero_grad(set_to_none=True)
+
+        with torch.set_grad_enabled(training):
+            logits = model(input_ids=input_ids, attention_mask=attention_mask)
+            loss = criterion(logits, labels)
+
+            if training:
+                loss.backward()
+                torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+                optimizer.step()
+
+        total_loss += loss.item()
+        preds = torch.argmax(logits, dim=1)
+        all_preds.extend(preds.detach().cpu().numpy().tolist())
+        all_labels.extend(labels.detach().cpu().numpy().tolist())
+
+    avg_loss = total_loss / max(len(dataloader), 1)
+    accuracy = accuracy_score(all_labels, all_preds)
+    precision, recall, f1, _ = precision_recall_fscore_support(
+        all_labels,
+        all_preds,
+        average="binary",
+        zero_division=0,
+    )
+
+    return Metrics(
+        loss=avg_loss,
+        accuracy=float(accuracy),
+        precision=float(precision),
+        recall=float(recall),
+        f1=float(f1),
+    )
+
+
+def evaluate_on_test(
+    model: nn.Module,
+    test_loader: DataLoader,
+    criterion: nn.Module,
+    device: torch.device,
+) -> Metrics:
+    return run_epoch(
+        model=model,
+        dataloader=test_loader,
+        criterion=criterion,
+        device=device,
+        optimizer=None,
+    )
+
+
+def print_metrics(prefix: str, metrics: Metrics) -> None:
+    print(
+        f"{prefix} | "
+        f"loss: {metrics.loss:.4f} | "
+        f"acc: {metrics.accuracy:.4f} | "
+        f"precision: {metrics.precision:.4f} | "
+        f"recall: {metrics.recall:.4f} | "
+        f"f1: {metrics.f1:.4f}"
+    )
+
+
+def train_pipeline(args: argparse.Namespace) -> None:
+    set_seed(args.seed)
+
+    tokenizer = AutoTokenizer.from_pretrained(args.model_name)
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    train_df = read_dataset(Path(args.train_path))
+    valid_df = read_dataset(Path(args.valid_path))
+    test_df = read_dataset(Path(args.test_path))
+
+    train_dataset = ToxicDataset(
+        texts=train_df["sentences"].tolist(),
+        labels=train_df["toxic"].tolist(),
+    )
+    valid_dataset = ToxicDataset(
+        texts=valid_df["sentences"].tolist(),
+        labels=valid_df["toxic"].tolist(),
+    )
+    test_dataset = ToxicDataset(
+        texts=test_df["sentences"].tolist(),
+        labels=test_df["toxic"].tolist(),
+    )
+
+    collate_fn = create_collate_fn(tokenizer=tokenizer, max_length=args.max_length)
+
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size=args.batch_size,
+        shuffle=True,
+        collate_fn=collate_fn,
+    )
+    valid_loader = DataLoader(
+        valid_dataset,
+        batch_size=args.batch_size,
+        shuffle=False,
+        collate_fn=collate_fn,
+    )
+    test_loader = DataLoader(
+        test_dataset,
+        batch_size=args.batch_size,
+        shuffle=False,
+        collate_fn=collate_fn,
+    )
+
+    model = build_model(model_name=args.model_name, num_labels=2).to(device)
+
+    criterion = nn.CrossEntropyLoss()
+    optimizer = AdamW(model.parameters(), lr=args.learning_rate)
+
+    print(f"Using device: {device}")
+    print("Architecture: phobert_classifier")
+
+    best_f1 = -1.0
+    output_path = Path(args.output_model_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    for epoch in range(1, args.epochs + 1):
+        print(f"Epoch {epoch}/{args.epochs}")
+        train_metrics = run_epoch(
+            model=model,
+            dataloader=train_loader,
+            criterion=criterion,
+            device=device,
+            optimizer=optimizer,
+        )
+        val_metrics = run_epoch(
+            model=model,
+            dataloader=valid_loader,
+            criterion=criterion,
+            device=device,
+            optimizer=None,
+        )
+
+        print_metrics(prefix="train", metrics=train_metrics)
+        print_metrics(prefix="valid", metrics=val_metrics)
+
+        if val_metrics.f1 > best_f1:
+            best_f1 = val_metrics.f1
+            torch.save(model.state_dict(), output_path)
+            print(f"Saved best model to: {output_path}")
+
+    print("Evaluating on test set using best checkpoint...")
+    model.load_state_dict(torch.load(output_path, map_location=device))
+    test_metrics = evaluate_on_test(
+        model=model,
+        test_loader=test_loader,
+        criterion=criterion,
+        device=device,
+    )
+    print_metrics(prefix="test", metrics=test_metrics)
+
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Train Vietnamese toxic classifier with PhoBERT")
+    parser.add_argument(
+        "--model-name",
+        type=str,
+        default="vinai/phobert-base",
+        help="HuggingFace model name",
+    )
+    parser.add_argument(
+        "--train-path",
+        type=str,
+        default="data/processed/balanced/train.csv",
+        help="Path to training dataset",
+    )
+    parser.add_argument(
+        "--valid-path",
+        type=str,
+        default="data/processed/balanced/valid.csv",
+        help="Path to validation dataset",
+    )
+    parser.add_argument(
+        "--test-path",
+        type=str,
+        default="data/processed/balanced/test.csv",
+        help="Path to test dataset",
+    )
+    parser.add_argument(
+        "--output-model-path",
+        type=str,
+        default="training/best_phobert_model.pt",
+        help="Where to save the best checkpoint",
+    )
+    parser.add_argument(
+        "--batch-size",
+        type=int,
+        default=16,
+        help="Batch size in [8, 32] recommended",
+    )
+    parser.add_argument(
+        "--epochs",
+        type=int,
+        default=4,
+        help="Number of training epochs (3-5 recommended)",
+    )
+    parser.add_argument(
+        "--learning-rate",
+        type=float,
+        default=2e-5,
+        help="AdamW learning rate",
+    )
+    parser.add_argument(
+        "--max-length",
+        type=int,
+        default=256,
+        help="Max tokenized sequence length",
+    )
+    parser.add_argument("--seed", type=int, default=42, help="Random seed")
+
+    args = parser.parse_args()
+
+    if args.batch_size < 8 or args.batch_size > 32:
+        raise ValueError("batch_size should be between 8 and 32")
+    if args.epochs < 3 or args.epochs > 5:
+        raise ValueError("epochs should be between 3 and 5")
+
+    return args
+
+
+if __name__ == "__main__":
+    train_pipeline(parse_args())

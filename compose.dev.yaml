@@ -1,8 +1,8 @@
-name: ${COMPOSE_PROJECT_NAME:-Snapi}_development
+name: ${COMPOSE_PROJECT_NAME:-snapi}_development
 
 services:
   backend-nginx:
-    container_name: ${CONTAINER_PREFIX:-Snapi}_backend_nginx
+    container_name: ${CONTAINER_PREFIX:-snapi}_backend_nginx
     image: nginx:latest
     restart: unless-stopped
     environment:
@@ -23,7 +23,7 @@ services:
         condition: service_started
 
   frontend-nginx:
-    container_name: ${CONTAINER_PREFIX:-Snapi}_frontend_nginx
+    container_name: ${CONTAINER_PREFIX:-snapi}_frontend_nginx
     image: nginx:latest
     restart: unless-stopped
     environment:
@@ -41,7 +41,7 @@ services:
         condition: service_started
 
   php-fpm:
-    container_name: ${CONTAINER_PREFIX:-Snapi}_php-fpm
+    container_name: ${CONTAINER_PREFIX:-snapi}_php-fpm
     build:
       context: .
       dockerfile: ./.docker/common/backend/php-fpm/Dockerfile
@@ -76,7 +76,7 @@ services:
         condition: service_started
 
   workspace:
-    container_name: ${CONTAINER_PREFIX:-Snapi}_workspace
+    container_name: ${CONTAINER_PREFIX:-snapi}_workspace
     build:
       context: .
       dockerfile: ./.docker/development/backend/workspace/Dockerfile
@@ -102,7 +102,7 @@ services:
       - app-development
 
   postgres:
-    container_name: ${CONTAINER_PREFIX:-Snapi}_postgres
+    container_name: ${CONTAINER_PREFIX:-snapi}_postgres
     image: postgres:12.7
     restart: unless-stopped
     ports:
@@ -117,7 +117,7 @@ services:
       - app-development
 
   redis:
-    container_name: ${CONTAINER_PREFIX:-Snapi}_redis
+    container_name: ${CONTAINER_PREFIX:-snapi}_redis
     image: redis:alpine
     restart: unless-stopped
     ports:
@@ -126,7 +126,7 @@ services:
       - app-development
 
   frontend:
-    container_name: ${CONTAINER_PREFIX:-Snapi}_frontend
+    container_name: ${CONTAINER_PREFIX:-snapi}_frontend
     build:
       context: .
       dockerfile: ./.docker/development/frontend/Dockerfile
@@ -147,7 +147,7 @@ services:
 
   mailcatcher:
     image: dockage/mailcatcher:0.7.1
-    container_name: ${CONTAINER_PREFIX:-Snapi}_mailcatcher
+    container_name: ${CONTAINER_PREFIX:-snapi}_mailcatcher
     ports:
       - ${MAILCATCHER_WEB_PORT:-1080}:1080
       - ${MAILCATCHER_SMTP_PORT:-1025}:1025
@@ -157,7 +157,7 @@ services:
 
   minio:
     image: quay.io/minio/minio:RELEASE.2025-02-03T21-03-04Z
-    container_name: ${CONTAINER_PREFIX:-Snapi}_minio
+    container_name: ${CONTAINER_PREFIX:-snapi}_minio
     command: minio server /data --console-address ":9001"
     volumes:
       - minio-data-development:/data
@@ -171,6 +171,80 @@ services:
       - app-development
     restart: unless-stopped
 
+  kafka:
+    image: confluentinc/cp-kafka:7.6.1
+    container_name: ${CONTAINER_PREFIX:-snapi}_kafka
+    restart: unless-stopped
+    ports:
+      - "${KAFKA_PORT:-9092}:9092"
+    environment:
+      CLUSTER_ID: ${KAFKA_CLUSTER_ID:-MkU3OEVBNTcwNTJENDM2Qk}
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:29093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092,CONTROLLER://0.0.0.0:29093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:${KAFKA_PORT:-9092}
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_NUM_PARTITIONS: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    volumes:
+      - kafka-data-development:/var/lib/kafka/data
+    networks:
+      - app-development
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: ${CONTAINER_PREFIX:-snapi}_kafka_ui
+    restart: unless-stopped
+    ports:
+      - "${KAFKA_UI_PORT:-8087}:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: cinemate
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+      DYNAMIC_CONFIG_ENABLED: "true"
+    depends_on:
+      kafka:
+        condition: service_started
+    networks:
+      - app-development
+
+  ai-serve:
+    container_name: ${CONTAINER_PREFIX:-snapi}_ai_serve
+    build:
+      context: .
+      dockerfile: ./.docker/common/ai/serve/Dockerfile
+    restart: unless-stopped
+    environment:
+      AI_ENABLE_KAFKA: "true"
+      AI_STRICT_SEGMENT: "false"
+      AI_MODEL_NAME: ${AI_MODEL_NAME:-vinai/phobert-base}
+      AI_MODEL_PATH: ${AI_MODEL_PATH:-training/best_phobert_model.pt}
+      AI_MAX_LENGTH: ${AI_MAX_LENGTH:-256}
+      AI_DEVICE: ${AI_DEVICE:-auto}
+      AI_VIOLATION_THRESHOLD: ${AI_VIOLATION_THRESHOLD:-0.8}
+      AI_MODERATION_API_KEY: ${AI_MODERATION_API_KEY:-}
+      VNCORENLP_JAR_PATH: ${VNCORENLP_JAR_PATH:-}
+      VNCORENLP_MAX_HEAP_SIZE: ${VNCORENLP_MAX_HEAP_SIZE:--Xmx2g}
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      KAFKA_MODERATION_REQUEST_TOPIC: moderation.request.v1
+      KAFKA_MODERATION_RESULT_TOPIC: moderation.result.v1
+      KAFKA_MODERATION_CONSUMER_GROUP: ai-moderator-v1
+    ports:
+      - "${AI_SERVE_PORT:-8001}:8001"
+    volumes:
+      - ./ai:/app
+    depends_on:
+      kafka:
+        condition: service_started
+    networks:
+      - app-development
+
 networks:
   app-development:
 
@@ -178,3 +252,4 @@ volumes:
   postgres-data-development:
   frontend_node_modules:
   minio-data-development:
+  kafka-data-development:

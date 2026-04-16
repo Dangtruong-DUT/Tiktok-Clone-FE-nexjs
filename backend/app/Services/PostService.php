@@ -27,7 +27,8 @@ class PostService
         private readonly PostRepository $postRepo,
         private readonly MediaRepository $mediaRepo,
         private readonly HashtagRepository $hashtagRepo,
-        private readonly NotificationService $notificationService
+        private readonly NotificationService $notificationService,
+        private readonly AiModerationService $aiModerationService,
     ) {}
 
     /**
@@ -106,6 +107,8 @@ class PostService
 
             return $post;
         });
+
+        $this->aiModerationService->enqueue($post);
 
         return $this->postRepo->getByIdWithDetail($post->id, $user->id);
     }

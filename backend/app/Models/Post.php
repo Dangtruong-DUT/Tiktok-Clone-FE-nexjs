@@ -43,6 +43,8 @@ class Post extends Model
         'guest_views',
         'user_views',
         'thumbnail_file_id',
+        'hidden_at',
+        'hidden_reason',
     ];
 
     /**
@@ -84,6 +86,7 @@ class Post extends Model
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
+            'hidden_at' => 'datetime',
         ];
     }
 
@@ -235,6 +238,8 @@ class Post extends Model
     #[Scope]
     public function visibleFor(Builder $query, ?int $authUserId): Builder
     {
+        $query->whereNull('hidden_at');
+
         if (!$authUserId) {
             return $query->where('audience', AudienceTypeEnum::PUBLIC->value);
         }

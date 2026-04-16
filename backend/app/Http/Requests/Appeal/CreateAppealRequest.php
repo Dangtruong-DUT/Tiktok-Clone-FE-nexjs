@@ -4,6 +4,8 @@ namespace App\Http\Requests\Appeal;
 
 use App\Enums\Admin\AdminResourceEnum;
 use App\Enums\Appeal\AppealTypeEnum;
+use App\Models\AiModerationReport;
+use Illuminate\Validation\Validator;
 
 /**
  * CreateAppealRequest - User files an appeal for ban/hidden/deleted content
@@ -37,5 +39,43 @@ class CreateAppealRequest extends BaseAppealRequest
             'reason.required' => 'Appeal reason is required',
             'reason.min' => 'Appeal reason must be at least 20 characters',
         ];
+    }
+
+    /**
+     * Attach additional validation for AI moderation appeal window.
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator): void {
+            $resourceType = (string) $this->input('resource_type');
+            if (!in_array($resourceType, [AdminResourceEnum::POST->value, AdminResourceEnum::COMMENT->value], true)) {
+                return;
+            }
+
+            $resourceId = (int) $this->input('resource_id', 0);
+            if ($resourceId <= 0) {
+                return;
+            }
+
+            $report = AiModerationReport::query()
+                ->where('resource_type', $resourceType)
+                ->where('resource_id', $resourceId)
+                ->latest('id')
+                ->first();
+
+            if (!$report) {
+                $validator->errors()->add('resource_id', 'No moderation report found for this resource.');
+                return;
+            }
+
+            if ((int) $report->user_id !== (int) auth_user_id()) {
+                $validator->errors()->add('resource_id', 'You are not allowed to appeal this moderation action.');
+                return;
+            }
+
+            if ($report->appeal_deadline_at !== null && now()->greaterThan($report->appeal_deadline_at)) {
+                $validator->errors()->add('resource_id', 'Appeal period has expired (7 days).');
+            }
+        });
     }
 }
