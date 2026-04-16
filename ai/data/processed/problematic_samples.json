@@ -1,0 +1,4432 @@
+﻿[
+    {
+        "dataset":  "ViCTSD",
+        "split":  "train",
+        "row_index":  2422,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "nói cho công bằng thì khi nhìn kỷ thì khác nhau hoàn toàn mà, chỉ giống chữ sài gòn còn lô gô hay phông chữ, kiểu in trên lon đều khác.",
+        "cleaned_text":  "nói cho công bằng thì khi nhìn kỷ thì khác nhau hoàn toàn mà, chỉ giống chữ sài gòn còn lô gô hay phông chữ, kiểu in trên lon đều khác.",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "ViCTSD",
+        "split":  "train",
+        "row_index":  2815,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Tui uống ngày phải 3 lon coca.",
+        "cleaned_text":  "toi uống ngày phải 3 lon coca.",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "ViCTSD",
+        "split":  "train",
+        "row_index":  3401,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Mình 30tNghiện nước ngọt nặng1 ngày ít phải 4 lon.",
+        "cleaned_text":  "mình 30tnghiện nước ngọt nặng1 ngày ít phải 4 lon.",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "ViCTSD",
+        "split":  "train",
+        "row_index":  3795,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Bỏ qua yếu tố thương hiệu thì mình chỉ quan tâm ông nào đóng thuế nhiều. Chứ mình có thích thì cũng chỉ làm 1-2 lon/năm, do mấy cái này nhiều đường quá.",
+        "cleaned_text":  "bỏ qua yếu tố thương hiệu thì mình chỉ quan tâm ông nào đóng thuế nhiều. chứ mình có thích thì cũng chỉ làm 1-2 lon năm, do mấy cái này nhiều đường quá.",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "ViCTSD",
+        "split":  "train",
+        "row_index":  4183,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Từ ngày đổi chủ, sai gon có diện mạo mới lon đẹp hơn nhiều dễ uống hơn nhiều và đau đầu hơn nhiều",
+        "cleaned_text":  "từ ngày đổi chủ, sai gon có diện mạo mới lon đẹp hơn nhiều dễ uống hơn nhiều và đau đầu hơn nhiều",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "ViCTSD",
+        "split":  "train",
+        "row_index":  5471,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Ai cũng như mình thì thị trường này khó tăng trưởng, 1 năm cùng lắm chỉ 1 vài lon/ cốc nước ngọt trong dịp đặc biệt vì sợ tăng cân và không tốt cho sức khỏe.",
+        "cleaned_text":  "ai cũng như mình thì thị trường này khó tăng trưởng, 1 năm cùng lắm chỉ 1 vài lon cốc nước ngọt trong dịp đặc biệt vì sợ tăng cân và không tốt cho sức khỏe.",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "ViCTSD",
+        "split":  "train",
+        "row_index":  5726,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Lâu nay toàn uống bia nhái, ko phải của sabeco... Hèn gì cứ thắc mắc sao có chỗ bán 230k/th, có chỗ bán 290k/th... Hoá ra là hai công ty khác nhau dùng hai lon bia gần giống nhau.",
+        "cleaned_text":  "lâu nay toàn uống bia nhái, khong phải của sabeco... hèn gì cứ thắc mắc sao có chỗ bán 230k th, có chỗ bán 290k th... hoá ra là hai công ty khác nhau dùng hai lon bia gần giống nhau.",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "ViCTSD",
+        "split":  "valid",
+        "row_index":  67,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Công nhận nhìn quá giống luôn. Không đọc bài viết này thì đến giờ nhìn bên ngoài lon bia vẫn không phân biệt được đâu thật đâu nhái.",
+        "cleaned_text":  "công nhận nhìn quá giống luôn. không đọc bài viết này thì đến giờ nhìn bên ngoài lon bia vẫn không phân biệt được đâu thật đâu nhái.",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  278,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Thầy làm gì cũng được đừng ra MV hát là được nha thầy. Nói chứ dm mãi yêu thầy",
+        "cleaned_text":  "thầy làm gì cũng được đừng ra mv hát là được nha thầy. nói chứ dit_me mãi yêu thầy",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  487,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "lolzzzz",
+        "cleaned_text":  "lolzz",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  525,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Ncc",
+        "cleaned_text":  "ncc",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  710,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Đoàn Quang Vinh dm quảng cáo",
+        "cleaned_text":  "đoàn quang vinh dit_me quảng cáo",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  714,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Ông bô bắn tay run vai lon - tùng sói said",
+        "cleaned_text":  "ông bô bắn tay run vai lon - tùng sói said",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  855,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Vn sao ko đề nghị bên dai lon tướt quất tịch trực khỏi dai lon về vn 1000 người sử nó",
+        "cleaned_text":  "vn sao khong đề nghị bên dai lon tướt quất tịch trực khỏi dai lon về vn 1000 người sử nó",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  1305,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Dcm chông này đến Tăng còn đứt xích, chứ nói gì lốp",
+        "cleaned_text":  "dit_me chông này đến tăng còn đứt xích, chứ nói gì lốp",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  1374,
+        "issue_type":  "empty_after_clean",
+        "original_text":  "♥♥♥♥♥♥♥",
+        "cleaned_text":  "",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  1499,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Vailon",
+        "cleaned_text":  "vailon",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  1545,
+        "issue_type":  "empty_after_clean",
+        "original_text":  "\u003e\u003e\u003e\u003e\u003e\u003e\u003e\u003e\u003e\u003e\u003e\u003e\u003e\u003e\u003e\u003e\u003e\u003e\u003e\u003e\u003e",
+        "cleaned_text":  "",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  1572,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Đmcs",
+        "cleaned_text":  "đmcs",
+        "original_label":  "2",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  2048,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Má",
+        "cleaned_text":  "má",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  2523,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Xl",
+        "cleaned_text":  "xl",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  3369,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "NOI TAM TU BI.MA CAI MO CHUI UM XUM.VE SUY NGHI LAI DI NGHE CHI 3.Y LON ANH 3",
+        "cleaned_text":  "noi tam tu bi.ma cai mo chui um xum.ve suy nghi lai di nghe chi 3.y lon anh 3",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  3439,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Cho",
+        "cleaned_text":  "cho",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  3521,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Haizzz 523i à dm tui lại có 530i nó mới đau hiccc k giúp ông đc rồi",
+        "cleaned_text":  "haizz 523i à dit_me toi lại có 530i nó mới đau hicc khong giúp ông đc rồi",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  4021,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Hà Hữu Tài dm hỏi sao t với mày chạy trống vl mà đất toàn bắn vào mặt :) được vl",
+        "cleaned_text":  "hà hữu tài dit_me hỏi sao t với mày chạy trống vai mà đất toàn bắn vào mặt :) được vai",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  4055,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Vl",
+        "cleaned_text":  "vai",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  4284,
+        "issue_type":  "empty_after_clean",
+        "original_text":  "@@",
+        "cleaned_text":  "",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  4909,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Điên",
+        "cleaned_text":  "điên",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  5165,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Ncc",
+        "cleaned_text":  "ncc",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  5525,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "địt",
+        "cleaned_text":  "địt",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  6045,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Caiditmemay",
+        "cleaned_text":  "caiditmemay",
+        "original_label":  "2",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  6074,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Thầy làm gì cũng được đừng ra MV hát là được nha thầy. Nói chứ dm mãi yêu thầy",
+        "cleaned_text":  "thầy làm gì cũng được đừng ra mv hát là được nha thầy. nói chứ dit_me mãi yêu thầy",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  6592,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "1 tỷ ko bằng miến dải chùi lozz của chị 3 =))",
+        "cleaned_text":  "1 tỷ khong bằng miến dải chùi lon của chị 3 ))",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  6721,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Vl.gắt",
+        "cleaned_text":  "vai.gắt",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  6797,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Lmcs",
+        "cleaned_text":  "lmcs",
+        "original_label":  "2",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  7182,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Trần Thị Nhung đi lon đâu cũng thấy m kêu nghỉ",
+        "cleaned_text":  "trần thị nhung đi lon đâu cũng thấy m kêu nghỉ",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  7408,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "cdm",
+        "cleaned_text":  "cdm",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  8028,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Chán",
+        "cleaned_text":  "chán",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  8228,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Một câu nói sạo lon nhưng hợp lý đến từ vị trí của Độ Phùng :))",
+        "cleaned_text":  "một câu nói sạo lon nhưng hợp lý đến từ vị trí của độ phùng :))",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  8510,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Đù",
+        "cleaned_text":  "đù",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  8725,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Láo",
+        "cleaned_text":  "láo",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  8788,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Củng là cháu của ba tu bán chao lòng cháo quyét hahaha dm chi ba bong ỏ gân kho mìn nô banh nhà lòng luon haha",
+        "cleaned_text":  "củng là cháu của ba tu bán chao lòng cháo quyét hahaha dit_me chi ba bong ỏ gân kho mìn nô banh nhà lòng luon haha",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  8798,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "cml",
+        "cleaned_text":  "cml",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  8827,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "hiếp...:)))",
+        "cleaned_text":  "hiếp...:)))",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  8932,
+        "issue_type":  "empty_after_clean",
+        "original_text":  "☹️",
+        "cleaned_text":  "",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  9004,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Điên",
+        "cleaned_text":  "điên",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  9112,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Vãi",
+        "cleaned_text":  "vãi",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  9458,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Clm @@@",
+        "cleaned_text":  "clm",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  9718,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Tởm...........",
+        "cleaned_text":  "tởm...........",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  10229,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Được vãi loz a ơiiii",
+        "cleaned_text":  "được vãi lon a ơii",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  10306,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Xem stream anh dễ ngủ vl :) hôm nào đeo tai nghe đang lim dim dm ông hét phát tôi tỉnh giấc nồng😪",
+        "cleaned_text":  "xem stream anh dễ ngủ vai :) hôm nào đeo tai nghe đang lim dim dit_me ông hét phát tôi tỉnh giấc nồng emoji",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  10316,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "CĐLCL",
+        "cleaned_text":  "cđlcl",
+        "original_label":  "2",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  10829,
+        "issue_type":  "empty_after_clean",
+        "original_text":  "☻",
+        "cleaned_text":  "",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  10950,
+        "issue_type":  "empty_after_clean",
+        "original_text":  "",
+        "cleaned_text":  "",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  11212,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Xin loi dm bang dai hoc xin chua ra truong da co dua kiem 15 20 cu roi.nhung thanh nien ra nuoc ngoai roi o lai da so la vi tien",
+        "cleaned_text":  "xin loi dit_me bang dai hoc xin chua ra truong da co dua kiem 15 20 cu roi.nhung thanh nien ra nuoc ngoai roi o lai da so la vi tien",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  11556,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Tao theo lon may tao treo len cay dua ,chi chuoi nge vui qua de thuong",
+        "cleaned_text":  "tao theo lon may tao treo len cay dua ,chi chuoi nge vui qua de thuong",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  11803,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Nhìn ghép cái mặt ôg mixi hài vãi lozzzz",
+        "cleaned_text":  "nhìn ghép cái mặt ôg mixi hài vãi lon",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  12008,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Đ**",
+        "cleaned_text":  "đ",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  12478,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Dm đéo hiểu sao giờ vẫn hỏi bác Thăng :))) báo thì 1 năm trc rồi! câu like vl ad ơi.",
+        "cleaned_text":  "dit_me đéo hiểu sao giờ vẫn hỏi bác thăng :))) báo thì 1 năm trc rồi! câu like vai ad ơi.",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  12888,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Mọe",
+        "cleaned_text":  "mọe",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  12935,
+        "issue_type":  "empty_after_clean",
+        "original_text":  "☺️☺️☺️",
+        "cleaned_text":  "",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  13195,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Dm",
+        "cleaned_text":  "dit_me",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  13463,
+        "issue_type":  "empty_after_clean",
+        "original_text":  "♡",
+        "cleaned_text":  "",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  14023,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "ngu",
+        "cleaned_text":  "ngu",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  14129,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Ccc",
+        "cleaned_text":  "cc",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  14479,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "cml",
+        "cleaned_text":  "cml",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  14523,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Cặc",
+        "cleaned_text":  "cặc",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  14751,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "L:)",
+        "cleaned_text":  "l:)",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  14769,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Nguyễn Đạt chưa dm",
+        "cleaned_text":  "nguyễn đạt chưa dit_me",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  15112,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Ngáo",
+        "cleaned_text":  "ngáo",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  15221,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "bê lon chạy xung quanh :))",
+        "cleaned_text":  "bê lon chạy xung quanh :))",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  15560,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "hinh nhu ba noi nay luc truoc chui lon voi mu noi ben my kia phai ko cac ban??",
+        "cleaned_text":  "hinh nhu ba noi nay luc truoc chui lon voi mu noi ben my kia phai khong cac ban??",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  15719,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Mọe",
+        "cleaned_text":  "mọe",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  16356,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Nói thật là em là nghề md. Hôm qua gặp 2 thằng ham lon nhanh quá thiếu tền. Anh em nghĩa hiệp 4 phương 8 hướng trả công bằng cho em với :\u0027(",
+        "cleaned_text":  "nói thật là em là nghề md. hôm qua gặp 2 thằng ham lon nhanh quá thiếu tền. anh em nghĩa hiệp 4 phương 8 hướng trả công bằng cho em với : (",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  16517,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Kinh...",
+        "cleaned_text":  "kinh...",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  16676,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Clm @@@",
+        "cleaned_text":  "clm",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  17127,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Bộ Giao Thông Đường Bộ của Úc chỉ quy định 3 loại xe sau phải có bình cứu hỏa .\n \n 1- Xe ô tô nào có đầu máy đặt nằm bên trong xe ( cùng chỗ ngồi với hành khách ) chứ không phải bên ngoài xe .\n \n 2- Xe ô tô du lịch có trang bị bếp gas nấu bằng lửa .\n \n https://www.facebook.com/Hanghy92 Hằng Híp Hay..thích nhất đoạn thủy táng, hỏa táng, hấp táng và làm rượu mận\n \n https://www.facebook.com/huynh.son.75 Pa Nippon Sao thay quen quen\n \n https://www.facebook.com/people/Ph%E1%BA%A1m-L%C3%BD/100010155273141 Phạm Lý Sau đó là ăn táng...\n \n https://www.facebook.com/tung.nguyenduc.3781 Nguyễn Đức Tùng Cười ko thở nổi!!!\n \n acc clone Đinh Đắc Vũ :v\n \n acc clone Tuan Ngo QuynhAnh Nguyen :))\n \n acc clone Kaotayto Kao Ơ..\n \n Đậu xanh..\n \n Dân đen chúng mà ko thích xài điện thì phang đèn dầu đi nhá..\n \n https://www.facebook.com/mushrooms.small Pie Pie Quản lí bóp cổ xiết chặt :(\n \n acc clone Phan Tuan Anh :3 Kinh doanh độc quyền sướng quá chỉ cần tăng giá lên là lời :v Đố thằng nào dám ko dùng điện !\n \n https://www.facebook.com/zuu.tran Trần Du Ngay xua giay bao djen con co gia gio deo thay lun chj thay moi caj tong voi vat\n \n acc clone Nguyễn Thắng :))))) nuc cuoi`\n \n acc clone Tình Lâm Điện Lù có khác\n \n https://www.facebook.com/baoloc.thai.3 Loc Bao Thai nghe đâu khảo sát dân hài lòng cho 6.9/10. má xài diện từ nhỏ tới lớn chỉ thấy tờ tiền điện hàng tháng chứ thấy cái giấy nào khác mà bao dân hài lòng\n \n https://www.facebook.com/thai.le.92351 Vinh Toan Thế mà lúc nào cũng kêu lỗ rồi lại tăng giá đấy\n \n acc clone Không Tên Độc quyền thích tăng mấy thì tăng .ko lời thì quá ngu\n \n https://www.facebook.com/thisisleo.8 Việt Nguyễn Ơ!!!! Tao có chấm điểm hả các mày???\n \n https://www.facebook.com/zuu.tran Trần Du Mấy bác thông cảm..evn sống ảo và diễn sâu ấy mà.\n \n https://www.facebook.com/dk.milano DK Milano thằng nào chấm thế?\n \n acc clone Trần Đình Duy Nhiều cái 1 thành ra cái 69 đó :)))\n \n acc clone Tình Lâm Ớ sao lại 6,9 ???\n \n acc clone Kaotayto Kao Ơ..\n \n acc clone Nguyễn Thắng Toi k biet chi het :v\n \n acc clone Bùi Thắng Nhiệm vụ evn là sản xuất điện. Và nó đã làm đc. Thế còn muốn làm gì nữa thì mới hài lòng, cấp điện miễn phí à\n \n https://www.facebook.com/people/Ty-Hoang/100006073634871 Ty Hoang Bày trò. Trò này thế nào cũng tốn của.\n \n acc clone Chánh Tâm Hãy xem người dân tây tạng khổ sở thế nào\n \n https://www.facebook.com/khanh.do.399488 Đỗ Ngọc Khánh quát i dờ Phắc gâu in on in mai can trùy...?\n \n https://www.facebook.com/minh.chau.319 Minh Chau Đây quan tu díu chai na mó nì in áo ơ can truỳ\n \n https://www.facebook.com/pham.duynghia.543 Phạm Duy Nghĩa sắp bán cmn nươc rồi\n \n https://www.facebook.com/quangtien.nguyen.31 Nguyễn Quang Tiến dm thang nao kien nghi cai nay xu ban ca ho nha no luon dj\n \n acc clone Bui Nam Tóm lại là đéo có $ mà thanh toán, cũng đúng thôi, nhập nhiều hơn xuất thì đấy đâu ra.\n \n https://www.facebook.com/people/Tony-Nguy%E1%BB%85n/100002984821564 Tony Nguyễn Thôi xong!!!\n \n https://www.facebook.com/Thaivunhatnam Nam Thái Bác Hồ sẽ tự hào về đềui này ... khi đó , tượng Hồ sẽ thay thành Tượng Mao :v\n \n acc clone Tình Lâm Các bạn có muốn trở thành nền kinh tế lớn thứ hai thế giới không?\n \n Hãy trở thành một huyện của chúng tôi!!!\n \n Phải làm gì ư? Không, các bạn không cần làm gì cả, hãy cứ ngồi yên và đừng quan tâm đến chính trị. Mọi việc chúng tôi đã thuê ĐCS VN làm hết rồi !!! :)\n \n acc clone Cường Vũ Cái địt cụ, xài ngoại tệ thì bị thu Hồ tệ thì mất giá Mao tệ lên ngôi đmcs\n \n https://www.facebook.com/taam.exc Đức Tâm nếu là thật rủ nhau đi học tiếng Trung đi. :v\n \n https://www.facebook.com/kul.stonebutch Nguyễn Hoàng Phương Anh Đi học tiếng hoa lẹ đi khi nó còn rẻ ad à :))\n \n https://www.facebook.com/kunno9 Đặng Lê Hương Xuân Đùa à\n \n https://www.facebook.com/hoang.tranviet.9 Hoàng Trần Việt Ngày một rỏ ý đồ của mấy nàng bụng bầu. Hết thực phẩm,đồ chơi,quần áo, đến đt,laptop,tivi,xe máy,khu hoa kiều, đaif radio,kênh truyền hình quốc gia, rồi giờ đến cái nước cuối cùng là đồng tiền cũng sẽ bị đồng hoá và rồi sau này Việt Nam! Chỉ còn là một ngôi sao nhỏ trên cờ trung cẩu mà thôi\n \n https://www.facebook.com/cau2.nhim Viên Quang Tuấn Yêu nước cái lồn mẹ chúng mày. Địt mẹ mấy thằng phản động. Làm thế nào thì đã có chính quyền. Chúng mày giỏi thì đéo phải ngồi đấy gõ phím\n \n acc clone Tống Nguyễn Gia Khánh Nó bán gần hết nước Việt Nam rồi\n \n https://www.facebook.com/trieuhoang.ho Shurima Amumu có khả năng phải đóng thuế thân\n \n acc clone Phan Tuan Anh Giờ tổng thuế lên tới 40 50% rồi kinh vãi -_- !\n \n acc clone Tung Le DM...thằng assmin xàm xí...ụ ẹ có giảm xuống 150 triệu 1 chiếc thì mày cũng có tiền méo đâu mà mua...DM...chửi như đúng rùi...lo kiếm tiền đóng net đi kìa...không nó cắt thì khỏi online nha mày...hơ hơ hơ...\n \n acc clone Phan Tuan Anh ad nói đúng rồi ko thấy à ,dân mua xe hơi thì phải đóng thuế gấp 2 lần giá xe còn bọn quan chức thì được đi xe công ko đóng 1 đồng nào còn có xe để chạy sau này khi nghỉ hưu được luôn chiếc xe đó .Bạn ko thấy bất công à .Số thuế người dân mua xe đóng đảng sẽ dùng vào việc gì ? nâng cấp đường xá à =)) bọn chúng chi vào những công trình ngàn tỉ rồi đưa nhau chia chác\n \n https://www.facebook.com/coste.la.125 Mạnh Mạnh Học thì ngu mà cứ so sánh vs quan\n \n https://www.facebook.com/hoang.tranviet.9 Hoàng Trần Việt Thế giới đóng thuế thấp hơn Việt Nam! Nhiều à. Tay nhanh hơn não mẹ rồi. Đọc,học,tìm,hiểu kỹ vào hãy nói\n \n acc clone Tung Anh Nguyen tay nhanh hơn não hã mày ?\n \n acc clone Tân Duy Nguyễn Đàn anh nói sao đàn em phải nghe theo thôi ad ạ. Đừng buồn vì lí do đó.\n \n acc clone Trọng Minh Thg đi xé đạp jải fong thg đi ô tô để cả 2 đi xe máy nên đừng mơ tất cả đi ô tô:))))\n \n acc clone Huy Nguyễn Thăng ad ngu vcc nói gì cũng thấy ngu =)) đùa chứ m k còn gì để tả vì đô ngu của m\n \n https://www.facebook.com/khanh.do.399488 Đỗ Ngọc Khánh phắc ga vờ mừn\n \n https://www.facebook.com/tuhip.hoa Nguyễn Trọng Tú Đéo bao giờ đéo bao giờ giữa mùa hè tuyết rơi\n \n acc clone Đào Quang Đm nhìn đường xá VN tao chỉ mong dẹp cmn oto đi cho rồi .\n \n https://www.facebook.com/people/Key-Quang/100008983842906 Key Quang Cần gì ô tô tao đi bộ cho chắc\n \n https://www.facebook.com/tructiep.tuongthuat Nhiên An đọc báo tăng thu phí đuờng bộ kéo xuống cmt trên zing nhé,nó bảo tăng thu phí để cải thiện đuờng bộ,xây đuờng mới cho dân và sẽ giảm thuế,phí ô tô rồi sau này con cháu chúng ta sẽ đuợc đi ô tô,cmn mấy bọn dlv rảnh háng cmt đây mà,thuế còn cao gấp mấy t\n \n acc clone Vũ Thắng Vcl lạm phát 3,4 con số :))) ngu còn tỏ ra ngu hẳn :))) lạm phát 4 con số thì 2 thằng + con mặt lồn đẻ ra mày đã vác tiền triệu đi ăn phở rồi chứ ngồi đấy mà sủa à :)))) còn hoàng sa :))) ơn giời,ơn bu mỹ :))) thiệu nhà mày bán cmn cho tàu từ năm 74 rồi nhá :))) cái giá là cắt viện trợ cho bắc việt và về liên minh chống soviet vs mỹ :v\n \n https://www.facebook.com/doanh.nguyen.50115161 Doanh Nguyen Quản lí yếu kém , bây h chỉ chăm chăm tìm nguồn thu bất kể chỗ nào tận thu đc ... Viện phí, phí cầu cống, bảo hiểm XH, Y tế, ... Ôi cứ ngồi nghĩ ra khối thứ có thể thu đc\n \n acc clone Thùng Cơm Biết chúng nó nổ mà đéo làm gì nổi\n \n https://www.facebook.com/coste.la.125 Mạnh Mạnh Vkl rận nó dạy mày học bảo sao ngu vl ad ạ\n \n https://www.facebook.com/hoaiphi.nguyen.9 Bác Ba Phi Để xem năm nay sẽ có bao nhiêu cái tăng nữa, bình ruồi vừa tung chiêu cướp dollar rồi, xăng thì k tăng được trong áp lực giảm, có lẽ điện nước sẽ tăng,trạm thu phí đường bộ cũng vừa tăng,mới cướp 22% lương của người xuất khẩu lao động. ..\n \n acc clone Cụ Nội Đi Hội Thiệu bán cmn ak`\n \n acc clone Johnny Trung Tran \n \n https://www.facebook.com/people/Le-Hung/100004246504509 Le Hung Khà khà ...! Thằng nào viết bài này công nhận là Ngu có đào tạo, Ngu rất có bài bản\". :v",
+        "cleaned_text":  "bộ giao thông đường bộ của úc chỉ quy định 3 loại xe sau phải có bình cứu hỏa . 1- xe ô tô nào có đầu máy đặt nằm bên trong xe ( cùng chỗ ngồi với hành khách ) chứ không phải bên ngoài xe . 2- xe ô tô du lịch có trang bị bếp gas nấu bằng lửa . hằng híp hay..thích nhất đoạn thủy táng, hỏa táng, hấp táng và làm rượu mận pa nippon sao thay quen quen phạm lý sau đó là ăn táng... nguyễn đức tùng cười khong thở nổi!!! acc clone đinh đắc vũ :v acc clone tuan ngo quynhanh nguyen :)) acc clone kaotayto kao ơ.. đậu xanh.. dân đen chúng mà khong thích xài điện thì phang đèn dầu đi nhá.. pie pie quản lí bóp cổ xiết chặt :( acc clone phan tuan anh :3 kinh doanh độc quyền sướng quá chỉ cần tăng giá lên là lời :v đố thằng nào dám khong dùng điện ! trần du ngay xua giay bao djen con co gia gio deo thay lun chj thay moi caj tong voi vat acc clone nguyễn thắng :))))) nuc cuoi acc clone tình lâm điện lù có khác loc bao thai nghe đâu khảo sát dân hài lòng cho 6.9 10. má xài diện từ nhỏ tới lớn chỉ thấy tờ tiền điện hàng tháng chứ thấy cái giấy nào khác mà bao dân hài lòng vinh toan thế mà lúc nào cũng kêu lỗ rồi lại tăng giá đấy acc clone không tên độc quyền thích tăng mấy thì tăng .khong lời thì quá ngu việt nguyễn ơ!!!! tao có chấm điểm hả các mày??? trần du mấy bác thông cảm..evn sống ảo và diễn sâu ấy mà. dk milano thằng nào chấm thế? acc clone trần đình duy nhiều cái 1 thành ra cái 69 đó :))) acc clone tình lâm ớ sao lại 6,9 ??? acc clone kaotayto kao ơ.. acc clone nguyễn thắng toi khong biet chi het :v acc clone bùi thắng nhiệm vụ evn là sản xuất điện. và nó đã làm đc. thế còn muốn làm gì nữa thì mới hài lòng, cấp điện miễn phí à ty hoang bày trò. trò này thế nào cũng tốn của. acc clone chánh tâm hãy xem người dân tây tạng khổ sở thế nào đỗ ngọc khánh quát i dờ phắc gâu in on in mai can trùy...? minh chau đây quan tu díu chai na mó nì in áo ơ can truỳ phạm duy nghĩa sắp bán cmn nươc rồi nguyễn quang tiến dit_me thang nao kien nghi cai nay xu ban ca ho nha no luon dj acc clone bui nam tóm lại là đéo có mà thanh toán, cũng đúng thôi, nhập nhiều hơn xuất thì đấy đâu ra. tony nguyễn thôi xong!!! nam thái bác hồ sẽ tự hào về đềui này ... khi đó , tượng hồ sẽ thay thành tượng mao :v acc clone tình lâm các bạn có muốn trở thành nền kinh tế lớn thứ hai thế giới không? hãy trở thành một huyện của chúng tôi!!! phải làm gì ư? không, các bạn không cần làm gì cả, hãy cứ ngồi yên và đừng quan tâm đến chính trị. mọi việc chúng tôi đã thuê đcs vn làm hết rồi !!! :) acc clone cường vũ cái địt cụ, xài ngoại tệ thì bị thu hồ tệ thì mất giá mao tệ lên ngôi đmcs đức tâm nếu là thật rủ nhau đi học tiếng trung đi. :v nguyễn hoàng phương anh đi học tiếng hoa lẹ đi khi nó còn rẻ ad à :)) đặng lê hương xuân đùa à hoàng trần việt ngày một rỏ ý đồ của mấy nàng bụng bầu. hết thực phẩm,đồ chơi,quần áo, đến đt,laptop,tivi,xe máy,khu hoa kiều, đaif radio,kênh truyền hình quốc gia, rồi giờ đến cái nước cuối cùng là đồng tiền cũng sẽ bị đồng hoá và rồi sau này việt nam! chỉ còn là một ngôi sao nhỏ trên cờ trung cẩu mà thôi viên quang tuấn yêu nước cái lồn mẹ chúng mày. địt mẹ mấy thằng phản động. làm thế nào thì đã có chính quyền. chúng mày giỏi thì đéo phải ngồi đấy gõ phím acc clone tống nguyễn gia khánh nó bán gần hết nước việt nam rồi shurima amumu có khả năng phải đóng thuế thân acc clone phan tuan anh giờ tổng thuế lên tới 40 50 rồi kinh vãi -_- ! acc clone tung le dit_me...thằng assmin xàm xí...ụ ẹ có giảm xuống 150 triệu 1 chiếc thì mày cũng có tiền méo đâu mà mua...dit_me...chửi như đúng rùi...lo kiếm tiền đóng net đi kìa...không nó cắt thì khỏi online nha mày...hơ hơ hơ... acc clone phan tuan anh ad nói đúng rồi khong thấy à ,dân mua xe hơi thì phải đóng thuế gấp 2 lần giá xe còn bọn quan chức thì được đi xe công khong đóng 1 đồng nào còn có xe để chạy sau này khi nghỉ hưu được luôn chiếc xe đó .bạn khong thấy bất công à .số thuế người dân mua xe đóng đảng sẽ dùng vào việc gì ? nâng cấp đường xá à )) bọn chúng chi vào những công trình ngàn tỉ rồi đưa nhau chia chác mạnh mạnh học thì ngu mà cứ so sánh vs quan hoàng trần việt thế giới đóng thuế thấp hơn việt nam! nhiều à. tay nhanh hơn não mẹ rồi. đọc,học,tìm,hiểu kỹ vào hãy nói acc clone tung anh nguyen tay nhanh hơn não hã mày ? acc clone tân duy nguyễn đàn anh nói sao đàn em phải nghe theo thôi ad ạ. đừng buồn vì lí do đó. acc clone trọng minh thg đi xé đạp jải fong thg đi ô tô để cả 2 đi xe máy nên đừng mơ tất cả đi ô tô:)))) acc clone huy nguyễn thăng ad ngu vai nói gì cũng thấy ngu )) đùa chứ m khong còn gì để tả vì đô ngu của m đỗ ngọc khánh phắc ga vờ mừn nguyễn trọng tú đéo bao giờ đéo bao giờ giữa mùa hè tuyết rơi acc clone đào quang đm nhìn đường xá vn tao chỉ mong dẹp cmn oto đi cho rồi . key quang cần gì ô tô tao đi bộ cho chắc nhiên an đọc báo tăng thu phí đuờng bộ kéo xuống cmt trên zing nhé,nó bảo tăng thu phí để cải thiện đuờng bộ,xây đuờng mới cho dân và sẽ giảm thuế,phí ô tô rồi sau này con cháu chúng ta sẽ đuợc đi ô tô,cmn mấy bọn dlv rảnh háng cmt đây mà,thuế còn cao gấp mấy t acc clone vũ thắng vai lạm phát 3,4 con số :))) ngu còn tỏ ra ngu hẳn :))) lạm phát 4 con số thì 2 thằng con mặt lồn đẻ ra mày đã vác tiền triệu đi ăn phở rồi chứ ngồi đấy mà sủa à :)))) còn hoàng sa :))) ơn giời,ơn bu mỹ :))) thiệu nhà mày bán cmn cho tàu từ năm 74 rồi nhá :))) cái giá là cắt viện trợ cho bắc việt và về liên minh chống soviet vs mỹ :v doanh nguyen quản lí yếu kém , bây h chỉ chăm chăm tìm nguồn thu bất kể chỗ nào tận thu đc ... viện phí, phí cầu cống, bảo hiểm xh, y tế, ... ôi cứ ngồi nghĩ ra khối thứ có thể thu đc acc clone thùng cơm biết chúng nó nổ mà đéo làm gì nổi mạnh mạnh vai rận nó dạy mày học bảo sao ngu vai ad ạ bác ba phi để xem năm nay sẽ có bao nhiêu cái tăng nữa, bình ruồi vừa tung chiêu cướp dollar rồi, xăng thì khong tăng được trong áp lực giảm, có lẽ điện nước sẽ tăng,trạm thu phí đường bộ cũng vừa tăng,mới cướp 22 lương của người xuất khẩu lao động. .. acc clone cụ nội đi hội thiệu bán cmn ak acc clone johnny trung tran le hung khà khà ...! thằng nào viết bài này công nhận là ngu có đào tạo, ngu rất có bài bản . :v",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  17253,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Vl",
+        "cleaned_text":  "vai",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  17384,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Vl",
+        "cleaned_text":  "vai",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  17538,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Ccc",
+        "cleaned_text":  "cc",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  17813,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "No banh lon  dam danh nguoi ta k chac de yen cho may danh",
+        "cleaned_text":  "no banh lon dam danh nguoi ta khong chac de yen cho may danh",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  17965,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Dmcs",
+        "cleaned_text":  "dmcs",
+        "original_label":  "2",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  18034,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "DMCSVN",
+        "cleaned_text":  "dmcsvn",
+        "original_label":  "2",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  18115,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Vãi",
+        "cleaned_text":  "vãi",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  18504,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Dm nguyên clip Tream đêm qua, gái nó Donate khen đẹp trai buồn cười thực sự 😄😄",
+        "cleaned_text":  "dit_me nguyên clip tream đêm qua, gái nó donate khen đẹp trai buồn cười thực sự emoji emoji",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  18576,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "vcl",
+        "cleaned_text":  "vai",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  18660,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "#ERROR!",
+        "cleaned_text":  "error!",
+        "original_label":  "2",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  18708,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Chán",
+        "cleaned_text":  "chán",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  19070,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Nguyễn Đăng Khoa burn real là gì dmm đọc méo hiểu",
+        "cleaned_text":  "nguyễn đăng khoa burn real là gì dit_me đọc méo hiểu",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  19096,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Nguyễn Mỹ Diễm Hoa này là hoa Lon nha 🤣😌",
+        "cleaned_text":  "nguyễn mỹ diễm hoa này là hoa lon nha emoji emoji",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  19156,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "vailonnnn",
+        "cleaned_text":  "vailonn",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  19177,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Ai cung phai lon ma phai khong?",
+        "cleaned_text":  "ai cung phai lon ma phai khong?",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  19750,
+        "issue_type":  "empty_after_clean",
+        "original_text":  "✋",
+        "cleaned_text":  "",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  19843,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Khung",
+        "cleaned_text":  "khung",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  19902,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "cc",
+        "cleaned_text":  "cc",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  20000,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Đụmámài",
+        "cleaned_text":  "đụmámài",
+        "original_label":  "2",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  20473,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Toanggg",
+        "cleaned_text":  "toangg",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  20848,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "#ERROR!",
+        "cleaned_text":  "error!",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  20880,
+        "issue_type":  "empty_after_clean",
+        "original_text":  "",
+        "cleaned_text":  "",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  21017,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Tại kỉ năng xạo loz của thầy tăng lên , nên học sinh chăm chỉ hơn á thầy 😁",
+        "cleaned_text":  "tại kỉ năng xạo lon của thầy tăng lên , nên học sinh chăm chỉ hơn á thầy emoji",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  21634,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Cc",
+        "cleaned_text":  "cc",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  21730,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Vc",
+        "cleaned_text":  "vc",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  22181,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Đm",
+        "cleaned_text":  "đm",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  22771,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Cc",
+        "cleaned_text":  "cc",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  23149,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Be lon chay xung quanh ;))",
+        "cleaned_text":  "be lon chay xung quanh ;))",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  23353,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Vcc",
+        "cleaned_text":  "vai",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  23573,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Em noi lon khong nghe đuoc em",
+        "cleaned_text":  "em noi lon khong nghe đuoc em",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  23821,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Clm...:)))",
+        "cleaned_text":  "clm...:)))",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "thầy đéo xoá kênh kêu gọi học trò report cho bay kênh thiệt luôn :))",
+        "cleaned_text":  "thầy đéo xoá kênh kêu gọi học trò report cho bay kênh thiệt luôn :))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "thầy đéo xoá kênh kêu gọi học trò report cho bay kênh thiệt luôn :))",
+        "cleaned_text":  "thầy đéo xoá kênh kêu gọi học trò report cho bay kênh thiệt luôn :))",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "anh ba láo nháo là tú xiên giờ",
+        "cleaned_text":  "anh ba láo nháo là tú xiên giờ",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "anh ba láo nháo là tú xiên giờ",
+        "cleaned_text":  "anh ba láo nháo là tú xiên giờ",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "nghe giọng nứkg quá abe :))",
+        "cleaned_text":  "nghe giọng nứkg quá abe :))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "nghe giọng nứkg quá abe :))",
+        "cleaned_text":  "nghe giọng nứkg quá abe :))",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "emoji emoji",
+        "cleaned_text":  "emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "abe có thể chiếm đoạt được trái tim của tiểu tiểu nhưng riêng blue của tiểu tiểu thì abe tuổi lol chiếm đoạt được :vv",
+        "cleaned_text":  "abe có thể chiếm đoạt được trái tim của tiểu tiểu nhưng riêng blue của tiểu tiểu thì abe tuổi lol chiếm đoạt được :vv",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "abe có thể chiếm đoạt được trái tim của tiểu tiểu nhưng riêng blue của tiểu tiểu thì abe tuổi lol chiếm đoạt được :vv",
+        "cleaned_text":  "abe có thể chiếm đoạt được trái tim của tiểu tiểu nhưng riêng blue của tiểu tiểu thì abe tuổi lol chiếm đoạt được :vv",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "lưu bảo toàn đọc hại não vai",
+        "cleaned_text":  "lưu bảo toàn đọc hại não vai",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "lưu bảo toàn đọc hại não vai",
+        "cleaned_text":  "lưu bảo toàn đọc hại não vai",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "hard làm cc gì nưax thầy. cứ đanh man phi te như vậy là ok rồi. chắc chắn lên vcsa",
+        "cleaned_text":  "hard làm cc gì nưax thầy. cứ đanh man phi te như vậy là ok rồi. chắc chắn lên vcsa",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "hard làm cc gì nưax thầy. cứ đanh man phi te như vậy là ok rồi. chắc chắn lên vcsa",
+        "cleaned_text":  "hard làm cc gì nưax thầy. cứ đanh man phi te như vậy là ok rồi. chắc chắn lên vcsa",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "đúng nghĩa bóp dái cả team thầy đánh ntn lủng hết rồi.",
+        "cleaned_text":  "đúng nghĩa bóp dái cả team thầy đánh ntn lủng hết rồi.",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "đúng nghĩa bóp dái cả team thầy đánh ntn lủng hết rồi.",
+        "cleaned_text":  "đúng nghĩa bóp dái cả team thầy đánh ntn lủng hết rồi.",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "ba gà",
+        "cleaned_text":  "ba gà",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "ba gà",
+        "cleaned_text":  "ba gà",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "già mà dơ zạy aba",
+        "cleaned_text":  "già mà dơ zạy aba",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "già mà dơ zạy aba",
+        "cleaned_text":  "già mà dơ zạy aba",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "vc",
+        "cleaned_text":  "vc",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "vc",
+        "cleaned_text":  "vc",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "ghép làm chó nha ae",
+        "cleaned_text":  "ghép làm chó nha ae",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "ghép làm chó nha ae",
+        "cleaned_text":  "ghép làm chó nha ae",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "họp thò thụt",
+        "cleaned_text":  "họp thò thụt",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "họp thò thụt",
+        "cleaned_text":  "họp thò thụt",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "ngáo thế",
+        "cleaned_text":  "ngáo thế",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "ngáo thế",
+        "cleaned_text":  "ngáo thế",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "ngáo thế",
+        "cleaned_text":  "ngáo thế",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "đập sắp mặt sena thầy ơi",
+        "cleaned_text":  "đập sắp mặt sena thầy ơi",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "đập sắp mặt sena thầy ơi",
+        "cleaned_text":  "đập sắp mặt sena thầy ơi",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "chán luôn",
+        "cleaned_text":  "chán luôn",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "chán luôn",
+        "cleaned_text":  "chán luôn",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "nứng nứng nứng à",
+        "cleaned_text":  "nứng nứng nứng à",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "nứng nứng nứng à",
+        "cleaned_text":  "nứng nứng nứng à",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "phạm nguyễn cát vy cljv con",
+        "cleaned_text":  "phạm nguyễn cát vy cljv con",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "phạm nguyễn cát vy cljv con",
+        "cleaned_text":  "phạm nguyễn cát vy cljv con",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "error!",
+        "cleaned_text":  "error!",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "error!",
+        "cleaned_text":  "error!",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "error!",
+        "cleaned_text":  "error!",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "error!",
+        "cleaned_text":  "error!",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "error!",
+        "cleaned_text":  "error!",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "error!",
+        "cleaned_text":  "error!",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "error!",
+        "cleaned_text":  "error!",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "error!",
+        "cleaned_text":  "error!",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "error!",
+        "cleaned_text":  "error!",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "error!",
+        "cleaned_text":  "error!",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "dơ vll nhưng t thích",
+        "cleaned_text":  "dơ vll nhưng t thích",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "dơ vll nhưng t thích",
+        "cleaned_text":  "dơ vll nhưng t thích",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "dơ vll nhưng t thích",
+        "cleaned_text":  "dơ vll nhưng t thích",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "thầy nhớ mang vinh quang về - nghệ sĩ hài hước clm",
+        "cleaned_text":  "thầy nhớ mang vinh quang về - nghệ sĩ hài hước clm",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "thầy nhớ mang vinh quang về - nghệ sĩ hài hước clm",
+        "cleaned_text":  "thầy nhớ mang vinh quang về - nghệ sĩ hài hước clm",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "phạm văn đại đjs :v",
+        "cleaned_text":  "phạm văn đại đjs :v",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "phạm văn đại đjs :v",
+        "cleaned_text":  "phạm văn đại đjs :v",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "loại nghiện game săm trổ khong có tương lai đâu nha",
+        "cleaned_text":  "loại nghiện game săm trổ khong có tương lai đâu nha",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "loại nghiện game săm trổ khong có tương lai đâu nha",
+        "cleaned_text":  "loại nghiện game săm trổ khong có tương lai đâu nha",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "tưởng khong có tuổi vs vong ba gà",
+        "cleaned_text":  "tưởng khong có tuổi vs vong ba gà",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "tưởng khong có tuổi vs vong ba gà",
+        "cleaned_text":  "tưởng khong có tuổi vs vong ba gà",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "abe dạo này nóng quá à hoong quạo nha abe . số abe nó mở ra zị thôi chửi cc nè abe",
+        "cleaned_text":  "abe dạo này nóng quá à hoong quạo nha abe . số abe nó mở ra zị thôi chửi cc nè abe",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "abe dạo này nóng quá à hoong quạo nha abe . số abe nó mở ra zị thôi chửi cc nè abe",
+        "cleaned_text":  "abe dạo này nóng quá à hoong quạo nha abe . số abe nó mở ra zị thôi chửi cc nè abe",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "trung bá zoe",
+        "cleaned_text":  "trung bá zoe",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "trung bá zoe",
+        "cleaned_text":  "trung bá zoe",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "mini tae cai l",
+        "cleaned_text":  "mini tae cai l",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "mini tae cai l",
+        "cleaned_text":  "mini tae cai l",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "bố láo với giang hồ đất cảng à",
+        "cleaned_text":  "bố láo với giang hồ đất cảng à",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "bố láo với giang hồ đất cảng à",
+        "cleaned_text":  "bố láo với giang hồ đất cảng à",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "giống vai :))",
+        "cleaned_text":  "giống vai :))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "giống vai :))",
+        "cleaned_text":  "giống vai :))",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "tú said: cho cái lồn nè anh ba .",
+        "cleaned_text":  "tú said: cho cái lồn nè anh ba .",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "tú said: cho cái lồn nè anh ba .",
+        "cleaned_text":  "tú said: cho cái lồn nè anh ba .",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "tuổi 17 bẻ gãy sừng trâu, lên 18 thì càng lên level. đề nghị các bạn đái nhẹ, ị khẽ, địt duyên! khéo lại bể tường... emoji emoji emoji",
+        "cleaned_text":  "tuổi 17 bẻ gãy sừng trâu, lên 18 thì càng lên level. đề nghị các bạn đái nhẹ, ị khẽ, địt duyên! khéo lại bể tường... emoji emoji emoji",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "tuổi 17 bẻ gãy sừng trâu, lên 18 thì càng lên level. đề nghị các bạn đái nhẹ, ị khẽ, địt duyên! khéo lại bể tường... emoji emoji emoji",
+        "cleaned_text":  "tuổi 17 bẻ gãy sừng trâu, lên 18 thì càng lên level. đề nghị các bạn đái nhẹ, ị khẽ, địt duyên! khéo lại bể tường... emoji emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "hài vai. buồn mà xem video của thầy là muốn tự tử :))",
+        "cleaned_text":  "hài vai. buồn mà xem video của thầy là muốn tự tử :))",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "hài vai. buồn mà xem video của thầy là muốn tự tử :))",
+        "cleaned_text":  "hài vai. buồn mà xem video của thầy là muốn tự tử :))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "này là del có tí nhân phẩm nào nên nó thế :((",
+        "cleaned_text":  "này là del có tí nhân phẩm nào nên nó thế :((",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "này là del có tí nhân phẩm nào nên nó thế :((",
+        "cleaned_text":  "này là del có tí nhân phẩm nào nên nó thế :((",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "gia minh thầy bị camp chứ đánh lủng cc đâu petland quăng mạnh vai ra ấy :))",
+        "cleaned_text":  "gia minh thầy bị camp chứ đánh lủng cc đâu petland quăng mạnh vai ra ấy :))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "gia minh thầy bị camp chứ đánh lủng cc đâu petland quăng mạnh vai ra ấy :))",
+        "cleaned_text":  "gia minh thầy bị camp chứ đánh lủng cc đâu petland quăng mạnh vai ra ấy :))",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "đẹp trai như thầy thì đ có ai mua ?",
+        "cleaned_text":  "đẹp trai như thầy thì đ có ai mua ?",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "đẹp trai như thầy thì đ có ai mua ?",
+        "cleaned_text":  "đẹp trai như thầy thì đ có ai mua ?",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "vai",
+        "cleaned_text":  "vai",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "vai",
+        "cleaned_text":  "vai",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "vai",
+        "cleaned_text":  "vai",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "vai",
+        "cleaned_text":  "vai",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "vai",
+        "cleaned_text":  "vai",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "vai",
+        "cleaned_text":  "vai",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "vai",
+        "cleaned_text":  "vai",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "cáu vai",
+        "cleaned_text":  "cáu vai",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "cáu vai",
+        "cleaned_text":  "cáu vai",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "- cả 2 cũng chỉ ngu như nhau thoii khỏi so sánh :))",
+        "cleaned_text":  "- cả 2 cũng chỉ ngu như nhau thoii khỏi so sánh :))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "- cả 2 cũng chỉ ngu như nhau thoii khỏi so sánh :))",
+        "cleaned_text":  "- cả 2 cũng chỉ ngu như nhau thoii khỏi so sánh :))",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "- cả 2 cũng chỉ ngu như nhau thoii khỏi so sánh :))",
+        "cleaned_text":  "- cả 2 cũng chỉ ngu như nhau thoii khỏi so sánh :))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "tử hình",
+        "cleaned_text":  "tử hình",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "tử hình",
+        "cleaned_text":  "tử hình",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "đuổi mẹ nó đi thầy",
+        "cleaned_text":  "đuổi mẹ nó đi thầy",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "đuổi mẹ nó đi thầy",
+        "cleaned_text":  "đuổi mẹ nó đi thầy",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "sela tuổi gì với abe :)))",
+        "cleaned_text":  "sela tuổi gì với abe :)))",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "sela tuổi gì với abe :)))",
+        "cleaned_text":  "sela tuổi gì với abe :)))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "non quá thầy ơi",
+        "cleaned_text":  "non quá thầy ơi",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "non quá thầy ơi",
+        "cleaned_text":  "non quá thầy ơi",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "non quá thầy ơi",
+        "cleaned_text":  "non quá thầy ơi",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "fan thầy lắm đấy 3 heo à",
+        "cleaned_text":  "fan thầy lắm đấy 3 heo à",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "fan thầy lắm đấy 3 heo à",
+        "cleaned_text":  "fan thầy lắm đấy 3 heo à",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "fan thầy lắm đấy 3 heo à",
+        "cleaned_text":  "fan thầy lắm đấy 3 heo à",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "nghĩ mà chán emoji",
+        "cleaned_text":  "nghĩ mà chán emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "nghĩ mà chán emoji",
+        "cleaned_text":  "nghĩ mà chán emoji",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "chán",
+        "cleaned_text":  "chán",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "chán",
+        "cleaned_text":  "chán",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "chán",
+        "cleaned_text":  "chán",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "chán",
+        "cleaned_text":  "chán",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "về chính trị, chúng tuyệt đối không cho nhân dân ta một chút tự do dân chủ nào.",
+        "cleaned_text":  "về chính trị, chúng tuyệt đối không cho nhân dân ta một chút tự do dân chủ nào.",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "về chính trị, chúng tuyệt đối không cho nhân dân ta một chút tự do dân chủ nào.",
+        "cleaned_text":  "về chính trị, chúng tuyệt đối không cho nhân dân ta một chút tự do dân chủ nào.",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "bao giờ nước ngập lên đến háng thì tp hcm sẽ được gọi sài gòn !",
+        "cleaned_text":  "bao giờ nước ngập lên đến háng thì tp hcm sẽ được gọi sài gòn !",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "bao giờ nước ngập lên đến háng thì tp hcm sẽ được gọi sài gòn !",
+        "cleaned_text":  "bao giờ nước ngập lên đến háng thì tp hcm sẽ được gọi sài gòn !",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "hieu trung ưng vai mà",
+        "cleaned_text":  "hieu trung ưng vai mà",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "hieu trung ưng vai mà",
+        "cleaned_text":  "hieu trung ưng vai mà",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "đập đá ít thôi thầy",
+        "cleaned_text":  "đập đá ít thôi thầy",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "đập đá ít thôi thầy",
+        "cleaned_text":  "đập đá ít thôi thầy",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "tú là con đĩ của abe hãy gọi abe là daddy đii",
+        "cleaned_text":  "tú là con đĩ của abe hãy gọi abe là daddy đii",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "tú là con đĩ của abe hãy gọi abe là daddy đii",
+        "cleaned_text":  "tú là con đĩ của abe hãy gọi abe là daddy đii",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "ám ảnh vai",
+        "cleaned_text":  "ám ảnh vai",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "ám ảnh vai",
+        "cleaned_text":  "ám ảnh vai",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "ám ảnh vai",
+        "cleaned_text":  "ám ảnh vai",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "tiền đâu mua thầy ơi áo đắt vãi đái",
+        "cleaned_text":  "tiền đâu mua thầy ơi áo đắt vãi đái",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "tiền đâu mua thầy ơi áo đắt vãi đái",
+        "cleaned_text":  "tiền đâu mua thầy ơi áo đắt vãi đái",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "cà khịa t chém",
+        "cleaned_text":  "cà khịa t chém",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "cà khịa t chém",
+        "cleaned_text":  "cà khịa t chém",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "lại hợp sâm wtf ?????",
+        "cleaned_text":  "lại hợp sâm wtf ?????",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "lại hợp sâm wtf ?????",
+        "cleaned_text":  "lại hợp sâm wtf ?????",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "già mà non",
+        "cleaned_text":  "già mà non",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "già mà non",
+        "cleaned_text":  "già mà non",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "già mà non",
+        "cleaned_text":  "già mà non",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "già mà non",
+        "cleaned_text":  "già mà non",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "nghe như bị hiếp dâm vậy đó :))",
+        "cleaned_text":  "nghe như bị hiếp dâm vậy đó :))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "nghe như bị hiếp dâm vậy đó :))",
+        "cleaned_text":  "nghe như bị hiếp dâm vậy đó :))",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "nghe giọng lứng quá abe",
+        "cleaned_text":  "nghe giọng lứng quá abe",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "nghe giọng lứng quá abe",
+        "cleaned_text":  "nghe giọng lứng quá abe",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "fan cứng?? thầy lồn cho tao fan cứng chúng mày ạ .. yêu thầy dấu bé ba ))",
+        "cleaned_text":  "fan cứng?? thầy lồn cho tao fan cứng chúng mày ạ .. yêu thầy dấu bé ba ))",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "fan cứng?? thầy lồn cho tao fan cứng chúng mày ạ .. yêu thầy dấu bé ba ))",
+        "cleaned_text":  "fan cứng?? thầy lồn cho tao fan cứng chúng mày ạ .. yêu thầy dấu bé ba ))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "trọng lú",
+        "cleaned_text":  "trọng lú",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "trọng lú",
+        "cleaned_text":  "trọng lú",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "thầy lồn được cái sủa dơ, yêu thầy 3",
+        "cleaned_text":  "thầy lồn được cái sủa dơ, yêu thầy 3",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "thầy lồn được cái sủa dơ, yêu thầy 3",
+        "cleaned_text":  "thầy lồn được cái sủa dơ, yêu thầy 3",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "nguyễn sơn tđn ghét thầy ba thế à mà tút cu nào cũng thấy cmt :))))",
+        "cleaned_text":  "nguyễn sơn tđn ghét thầy ba thế à mà tút cu nào cũng thấy cmt :))))",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "nguyễn sơn tđn ghét thầy ba thế à mà tút cu nào cũng thấy cmt :))))",
+        "cleaned_text":  "nguyễn sơn tđn ghét thầy ba thế à mà tút cu nào cũng thấy cmt :))))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "gia cát bị đồng bóng à",
+        "cleaned_text":  "gia cát bị đồng bóng à",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "gia cát bị đồng bóng à",
+        "cleaned_text":  "gia cát bị đồng bóng à",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "bị cô lập thì về đây với em nè abe em dẫn abe đi chơi gái nè . bao ngon",
+        "cleaned_text":  "bị cô lập thì về đây với em nè abe em dẫn abe đi chơi gái nè . bao ngon",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "bị cô lập thì về đây với em nè abe em dẫn abe đi chơi gái nè . bao ngon",
+        "cleaned_text":  "bị cô lập thì về đây với em nè abe em dẫn abe đi chơi gái nè . bao ngon",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "buồn quá,khong biết mấy cái tượng nghìn tỷ có bị ngập nc khong nữa.",
+        "cleaned_text":  "buồn quá,khong biết mấy cái tượng nghìn tỷ có bị ngập nc khong nữa.",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "buồn quá,khong biết mấy cái tượng nghìn tỷ có bị ngập nc khong nữa.",
+        "cleaned_text":  "buồn quá,khong biết mấy cái tượng nghìn tỷ có bị ngập nc khong nữa.",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "trần trung tín vãi lồn kk",
+        "cleaned_text":  "trần trung tín vãi lồn kk",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "trần trung tín vãi lồn kk",
+        "cleaned_text":  "trần trung tín vãi lồn kk",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "trung đái dầm",
+        "cleaned_text":  "trung đái dầm",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "trung đái dầm",
+        "cleaned_text":  "trung đái dầm",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "b52 ơi lứng quá b52 i",
+        "cleaned_text":  "b52 ơi lứng quá b52 i",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "b52 ơi lứng quá b52 i",
+        "cleaned_text":  "b52 ơi lứng quá b52 i",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "trèo cao ngã đau nhé thầy ngu",
+        "cleaned_text":  "trèo cao ngã đau nhé thầy ngu",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "trèo cao ngã đau nhé thầy ngu",
+        "cleaned_text":  "trèo cao ngã đau nhé thầy ngu",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "quân anh dơ v bro",
+        "cleaned_text":  "quân anh dơ v bro",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "quân anh dơ v bro",
+        "cleaned_text":  "quân anh dơ v bro",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "vãi",
+        "cleaned_text":  "vãi",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "vãi",
+        "cleaned_text":  "vãi",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "vãi",
+        "cleaned_text":  "vãi",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "được vai luôn abe ạ",
+        "cleaned_text":  "được vai luôn abe ạ",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "được vai luôn abe ạ",
+        "cleaned_text":  "được vai luôn abe ạ",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "được vai luôn abe ạ",
+        "cleaned_text":  "được vai luôn abe ạ",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "thanh trẻ trâu đm :))",
+        "cleaned_text":  "thanh trẻ trâu đm :))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "thanh trẻ trâu đm :))",
+        "cleaned_text":  "thanh trẻ trâu đm :))",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "deoo nhaa thầy emoji emoji",
+        "cleaned_text":  "deoo nhaa thầy emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "deoo nhaa thầy emoji emoji",
+        "cleaned_text":  "deoo nhaa thầy emoji emoji",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "chào cc :)))",
+        "cleaned_text":  "chào cc :)))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "chào cc :)))",
+        "cleaned_text":  "chào cc :)))",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "khó vẽ nụ cười",
+        "cleaned_text":  "khó vẽ nụ cười",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "khó vẽ nụ cười",
+        "cleaned_text":  "khó vẽ nụ cười",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "khó vẽ nụ cười",
+        "cleaned_text":  "khó vẽ nụ cười",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "nữ sinh chạm vào mà ca đi tù 9 tháng, ca chạm vào má chị bán hàng rong chảy máu tạm đình chỉ z báo còn viết thêm chị ấy chăn dắt ăn xin mới ghê",
+        "cleaned_text":  "nữ sinh chạm vào mà ca đi tù 9 tháng, ca chạm vào má chị bán hàng rong chảy máu tạm đình chỉ z báo còn viết thêm chị ấy chăn dắt ăn xin mới ghê",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "nữ sinh chạm vào mà ca đi tù 9 tháng, ca chạm vào má chị bán hàng rong chảy máu tạm đình chỉ z báo còn viết thêm chị ấy chăn dắt ăn xin mới ghê",
+        "cleaned_text":  "nữ sinh chạm vào mà ca đi tù 9 tháng, ca chạm vào má chị bán hàng rong chảy máu tạm đình chỉ z báo còn viết thêm chị ấy chăn dắt ăn xin mới ghê",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "nguyen van giang thắng tới nơi sủa bậy",
+        "cleaned_text":  "nguyen van giang thắng tới nơi sủa bậy",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "nguyen van giang thắng tới nơi sủa bậy",
+        "cleaned_text":  "nguyen van giang thắng tới nơi sủa bậy",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "má nó dơ vler emoji emoji emoji",
+        "cleaned_text":  "má nó dơ vler emoji emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "má nó dơ vler emoji emoji emoji",
+        "cleaned_text":  "má nó dơ vler emoji emoji emoji",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "gia cát ba là e cứ tưởng tế công phiên bản bóng chứ",
+        "cleaned_text":  "gia cát ba là e cứ tưởng tế công phiên bản bóng chứ",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "gia cát ba là e cứ tưởng tế công phiên bản bóng chứ",
+        "cleaned_text":  "gia cát ba là e cứ tưởng tế công phiên bản bóng chứ",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "anh 3 ngu vải ra hahaha",
+        "cleaned_text":  "anh 3 ngu vải ra hahaha",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "anh 3 ngu vải ra hahaha",
+        "cleaned_text":  "anh 3 ngu vải ra hahaha",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "bóng đỏ !!!",
+        "cleaned_text":  "bóng đỏ !!!",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "bóng đỏ !!!",
+        "cleaned_text":  "bóng đỏ !!!",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "anh trung lòi dái :))",
+        "cleaned_text":  "anh trung lòi dái :))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "anh trung lòi dái :))",
+        "cleaned_text":  "anh trung lòi dái :))",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "kick nó đi abe",
+        "cleaned_text":  "kick nó đi abe",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "kick nó đi abe",
+        "cleaned_text":  "kick nó đi abe",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "nguyễn huỳnh bạc yêu cl",
+        "cleaned_text":  "nguyễn huỳnh bạc yêu cl",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "nguyễn huỳnh bạc yêu cl",
+        "cleaned_text":  "nguyễn huỳnh bạc yêu cl",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "hôm nay tiểu sẽ sống chết vs concac abe",
+        "cleaned_text":  "hôm nay tiểu sẽ sống chết vs concac abe",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "hôm nay tiểu sẽ sống chết vs concac abe",
+        "cleaned_text":  "hôm nay tiểu sẽ sống chết vs concac abe",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "trường hợp này có cho tao cũng đéo húp levi said",
+        "cleaned_text":  "trường hợp này có cho tao cũng đéo húp levi said",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "trường hợp này có cho tao cũng đéo húp levi said",
+        "cleaned_text":  "trường hợp này có cho tao cũng đéo húp levi said",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "nhin nha que vai emoji",
+        "cleaned_text":  "nhin nha que vai emoji",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "nhin nha que vai emoji",
+        "cleaned_text":  "nhin nha que vai emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "ông thầy này muốn ngủ gầm cầu lắm rồy nè !!!!!!",
+        "cleaned_text":  "ông thầy này muốn ngủ gầm cầu lắm rồy nè !!!!!!",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "ông thầy này muốn ngủ gầm cầu lắm rồy nè !!!!!!",
+        "cleaned_text":  "ông thầy này muốn ngủ gầm cầu lắm rồy nè !!!!!!",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "con chó phải không",
+        "cleaned_text":  "con chó phải không",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "con chó phải không",
+        "cleaned_text":  "con chó phải không",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "già mà non quá aba",
+        "cleaned_text":  "già mà non quá aba",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "già mà non quá aba",
+        "cleaned_text":  "già mà non quá aba",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "già mà non quá aba",
+        "cleaned_text":  "già mà non quá aba",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "m tính chơi bê đê à",
+        "cleaned_text":  "m tính chơi bê đê à",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "m tính chơi bê đê à",
+        "cleaned_text":  "m tính chơi bê đê à",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "m tính chơi bê đê à",
+        "cleaned_text":  "m tính chơi bê đê à",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "bớt gáy lại nha abe",
+        "cleaned_text":  "bớt gáy lại nha abe",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "bớt gáy lại nha abe",
+        "cleaned_text":  "bớt gáy lại nha abe",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "yêu thầy ba vãi cẹt emoji",
+        "cleaned_text":  "yêu thầy ba vãi cẹt emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "yêu thầy ba vãi cẹt emoji",
+        "cleaned_text":  "yêu thầy ba vãi cẹt emoji",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "chịu thầy dkm ))",
+        "cleaned_text":  "chịu thầy dkm ))",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "chịu thầy dkm ))",
+        "cleaned_text":  "chịu thầy dkm ))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "bé ba vailone:)))",
+        "cleaned_text":  "bé ba vailone:)))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "bé ba vailone:)))",
+        "cleaned_text":  "bé ba vailone:)))",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "lx má cười ỉa :)))",
+        "cleaned_text":  "lx má cười ỉa :)))",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "lx má cười ỉa :)))",
+        "cleaned_text":  "lx má cười ỉa :)))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "hít hết mẹ roi còn đâu :)))))",
+        "cleaned_text":  "hít hết mẹ roi còn đâu :)))))",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "hít hết mẹ roi còn đâu :)))))",
+        "cleaned_text":  "hít hết mẹ roi còn đâu :)))))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "anh vừa nói cc gì vậy abe :d??",
+        "cleaned_text":  "anh vừa nói cc gì vậy abe :d??",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "anh vừa nói cc gì vậy abe :d??",
+        "cleaned_text":  "anh vừa nói cc gì vậy abe :d??",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "ditme mặt thầy cũng thần thái vãi l n :))",
+        "cleaned_text":  "ditme mặt thầy cũng thần thái vãi l n :))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "ditme mặt thầy cũng thần thái vãi l n :))",
+        "cleaned_text":  "ditme mặt thầy cũng thần thái vãi l n :))",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "giáo án về one champ lee bú đá và rụng mất xác",
+        "cleaned_text":  "giáo án về one champ lee bú đá và rụng mất xác",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "giáo án về one champ lee bú đá và rụng mất xác",
+        "cleaned_text":  "giáo án về one champ lee bú đá và rụng mất xác",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "giáo án về one champ lee bú đá và rụng mất xác",
+        "cleaned_text":  "giáo án về one champ lee bú đá và rụng mất xác",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "ba roi gay :",
+        "cleaned_text":  "ba roi gay :",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "ba roi gay :",
+        "cleaned_text":  "ba roi gay :",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  ". ai khịa thầy là chetme đó nha",
+        "cleaned_text":  ". ai khịa thầy là chetme đó nha",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  ". ai khịa thầy là chetme đó nha",
+        "cleaned_text":  ". ai khịa thầy là chetme đó nha",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "anh trung bóng lộn sa đéc",
+        "cleaned_text":  "anh trung bóng lộn sa đéc",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "anh trung bóng lộn sa đéc",
+        "cleaned_text":  "anh trung bóng lộn sa đéc",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "đút vào mồm thầy",
+        "cleaned_text":  "đút vào mồm thầy",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "đút vào mồm thầy",
+        "cleaned_text":  "đút vào mồm thầy",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "thôi ồn im mẹ mồm đi emoji emoji",
+        "cleaned_text":  "thôi ồn im mẹ mồm đi emoji emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "thôi ồn im mẹ mồm đi emoji emoji",
+        "cleaned_text":  "thôi ồn im mẹ mồm đi emoji emoji",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "em cầm cái này phang vào sự chu đáo của anh ba )))",
+        "cleaned_text":  "em cầm cái này phang vào sự chu đáo của anh ba )))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "em cầm cái này phang vào sự chu đáo của anh ba )))",
+        "cleaned_text":  "em cầm cái này phang vào sự chu đáo của anh ba )))",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "tại kỉ năng xạo lon của thầy tăng lên , nên học sinh chăm chỉ hơn á thầy emoji",
+        "cleaned_text":  "tại kỉ năng xạo lon của thầy tăng lên , nên học sinh chăm chỉ hơn á thầy emoji",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "tại kỉ năng xạo lon của thầy tăng lên , nên học sinh chăm chỉ hơn á thầy emoji",
+        "cleaned_text":  "tại kỉ năng xạo lon của thầy tăng lên , nên học sinh chăm chỉ hơn á thầy emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "giọng anh trung b52 thánh thót vãi lồn",
+        "cleaned_text":  "giọng anh trung b52 thánh thót vãi lồn",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "giọng anh trung b52 thánh thót vãi lồn",
+        "cleaned_text":  "giọng anh trung b52 thánh thót vãi lồn",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "ngoài những giáo án xịn sò thì đây là những gì anh em ta sẽ tiếp thu được từ thầy. cám ơn thầy và xin đuỵt mọe thầy )))",
+        "cleaned_text":  "ngoài những giáo án xịn sò thì đây là những gì anh em ta sẽ tiếp thu được từ thầy. cám ơn thầy và xin đuỵt mọe thầy )))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "ngoài những giáo án xịn sò thì đây là những gì anh em ta sẽ tiếp thu được từ thầy. cám ơn thầy và xin đuỵt mọe thầy )))",
+        "cleaned_text":  "ngoài những giáo án xịn sò thì đây là những gì anh em ta sẽ tiếp thu được từ thầy. cám ơn thầy và xin đuỵt mọe thầy )))",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "nguyễn thanh cái này dơ hơn",
+        "cleaned_text":  "nguyễn thanh cái này dơ hơn",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "nguyễn thanh cái này dơ hơn",
+        "cleaned_text":  "nguyễn thanh cái này dơ hơn",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "anh trung weeboo )))",
+        "cleaned_text":  "anh trung weeboo )))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "anh trung weeboo )))",
+        "cleaned_text":  "anh trung weeboo )))",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "thầy xạo lol . emoji",
+        "cleaned_text":  "thầy xạo lol . emoji",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "train",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "thầy xạo lol . emoji",
+        "cleaned_text":  "thầy xạo lol . emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  4,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Dm báo lá cải.. Nghĩ gì khi ở qn mà có hơn 30% hộ nghèo.. Lên google hỏi xem tỉnh nào kinh tế lớn nhất cả nước",
+        "cleaned_text":  "dit_me báo lá cải.. nghĩ gì khi ở qn mà có hơn 30 hộ nghèo.. lên google hỏi xem tỉnh nào kinh tế lớn nhất cả nước",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  140,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "SL",
+        "cleaned_text":  "sl",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  564,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Dm nhìn quả tóc cười vl. Mặt Tùng sói ngơ như kiểu đ hiểu bố mình làm clg",
+        "cleaned_text":  "dit_me nhìn quả tóc cười vai. mặt tùng sói ngơ như kiểu đ hiểu bố mình làm clg",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  654,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Dm!",
+        "cleaned_text":  "dit_me!",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  733,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Vc",
+        "cleaned_text":  "vc",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  746,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Nguyễn Đạt chưa dm",
+        "cleaned_text":  "nguyễn đạt chưa dit_me",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  836,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Nứng",
+        "cleaned_text":  "nứng",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  1110,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Nứng",
+        "cleaned_text":  "nứng",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  1271,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Vlòn.",
+        "cleaned_text":  "vlòn.",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  1501,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Thôi dmm khỏi làm đi. Để dân bọn tao đi ô tô khách cũng dc.",
+        "cleaned_text":  "thôi dit_me khỏi làm đi. để dân bọn tao đi ô tô khách cũng dc.",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  1690,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "ói",
+        "cleaned_text":  "ói",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  1796,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Hoàng Xuân Tâm sao đâu dm",
+        "cleaned_text":  "hoàng xuân tâm sao đâu dit_me",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  1800,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "vcl",
+        "cleaned_text":  "vai",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  1849,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Clm...:)))",
+        "cleaned_text":  "clm...:)))",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  1872,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Óc...",
+        "cleaned_text":  "óc...",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  1896,
+        "issue_type":  "empty_after_clean",
+        "original_text":  "☹☹☹",
+        "cleaned_text":  "",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  1997,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Lon tuoi roi kok co net gi het kok so dau voi gia dinh sui gia cuoi ha ma",
+        "cleaned_text":  "lon tuoi roi kok co net gi het kok so dau voi gia dinh sui gia cuoi ha ma",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  2263,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Hay vai lon anh à",
+        "cleaned_text":  "hay vai lon anh à",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  2379,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "vãi...",
+        "cleaned_text":  "vãi...",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  2398,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "cdm",
+        "cleaned_text":  "cdm",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  2575,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Nhảm",
+        "cleaned_text":  "nhảm",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "đc ván hay ông giáo gáy khét vc )) emoji",
+        "cleaned_text":  "đc ván hay ông giáo gáy khét vc )) emoji",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "valid",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "đc ván hay ông giáo gáy khét vc )) emoji",
+        "cleaned_text":  "đc ván hay ông giáo gáy khét vc )) emoji",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  0,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Đừng cố biện minh =)))) choi lon",
+        "cleaned_text":  "đừng cố biện minh )))) choi lon",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  147,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "vcl",
+        "cleaned_text":  "vai",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  775,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Tởm",
+        "cleaned_text":  "tởm",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  934,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Cút",
+        "cleaned_text":  "cút",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  1114,
+        "issue_type":  "empty_after_clean",
+        "original_text":  "$",
+        "cleaned_text":  "",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  1592,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Moá.",
+        "cleaned_text":  "moá.",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  2263,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Chi em ma chui lon ke cho nguoi ta nghe nguoi ta cuoi hay ho gi",
+        "cleaned_text":  "chi em ma chui lon ke cho nguoi ta nghe nguoi ta cuoi hay ho gi",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  2276,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Độ Mixi : 2 viên ốp rồi Bô ơi , yếu vãi lon rồi em ơi",
+        "cleaned_text":  "độ mixi : 2 viên ốp rồi bô ơi , yếu vãi lon rồi em ơi",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  2296,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Dm cái giọng cười Abe nghe khốn nạn vl ạ :)) nhưng mỗi lần em nghe em đều cười theo =))",
+        "cleaned_text":  "dit_me cái giọng cười abe nghe khốn nạn vai ạ :)) nhưng mỗi lần em nghe em đều cười theo ))",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  2306,
+        "issue_type":  "empty_after_clean",
+        "original_text":  "☺",
+        "cleaned_text":  "",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  2628,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Anlonroi",
+        "cleaned_text":  "anlonroi",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  2670,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Trần Ngọc Dương dm het fan cung roi nha",
+        "cleaned_text":  "trần ngọc dương dit_me het fan cung roi nha",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  2734,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Vaidai",
+        "cleaned_text":  "vaidai",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  2973,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "trời",
+        "cleaned_text":  "trời",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  3389,
+        "issue_type":  "empty_after_clean",
+        "original_text":  "❣️",
+        "cleaned_text":  "",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  3527,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Wtf",
+        "cleaned_text":  "wtf",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  3534,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Nhạc bắt tay vai lon",
+        "cleaned_text":  "nhạc bắt tay vai lon",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  3851,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Vloz",
+        "cleaned_text":  "vloz",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  4576,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "Bên Anh có vụ racist nữa, anh du học sinh Singapore bị nhóm hãm lon thượng đẳng đánh cho bờm đầu. Với cả chị này ý thức hơn hẳn chị Nhung, tôi thấy chị này chả có lỗi gì cả, quay về VN chữa trị vì rõ ràng VN đang thể hiện rất tốt phòng chống dịch",
+        "cleaned_text":  "bên anh có vụ racist nữa, anh du học sinh singapore bị nhóm hãm lon thượng đẳng đánh cho bờm đầu. với cả chị này ý thức hơn hẳn chị nhung, tôi thấy chị này chả có lỗi gì cả, quay về vn chữa trị vì rõ ràng vn đang thể hiện rất tốt phòng chống dịch",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  5538,
+        "issue_type":  "very_short_but_toxic",
+        "original_text":  "Chó",
+        "cleaned_text":  "chó",
+        "original_label":  "1",
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  5679,
+        "issue_type":  "empty_after_clean",
+        "original_text":  "^^",
+        "cleaned_text":  "",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  6036,
+        "issue_type":  "contains_profanity_but_label_0",
+        "original_text":  "dm áo vú =))",
+        "cleaned_text":  "dit_me áo vú ))",
+        "original_label":  "0",
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "dân không có giàu nhé, chỉ nó nước mạnh thôi.",
+        "cleaned_text":  "dân không có giàu nhé, chỉ nó nước mạnh thôi.",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "dân không có giàu nhé, chỉ nó nước mạnh thôi.",
+        "cleaned_text":  "dân không có giàu nhé, chỉ nó nước mạnh thôi.",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "anh em yếu sly ib",
+        "cleaned_text":  "anh em yếu sly ib",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "anh em yếu sly ib",
+        "cleaned_text":  "anh em yếu sly ib",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "làm riết thấy chán. lên cao thủ lẹ đi ông già",
+        "cleaned_text":  "làm riết thấy chán. lên cao thủ lẹ đi ông già",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "làm riết thấy chán. lên cao thủ lẹ đi ông già",
+        "cleaned_text":  "làm riết thấy chán. lên cao thủ lẹ đi ông già",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "biết bao nhiêu vụ đi bắt người bị quay xong bảo bắt bớ dân lành ? thì đm bây giờ ca nó chờ đủ hết mọi thủ tục cần thiết nó mới dám bắt chứ không thì đm cư dân mạng chửi sml ra à ?",
+        "cleaned_text":  "biết bao nhiêu vụ đi bắt người bị quay xong bảo bắt bớ dân lành ? thì đm bây giờ ca nó chờ đủ hết mọi thủ tục cần thiết nó mới dám bắt chứ không thì đm cư dân mạng chửi sml ra à ?",
+        "original_label":  0,
+        "final_label":  0
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "biết bao nhiêu vụ đi bắt người bị quay xong bảo bắt bớ dân lành ? thì đm bây giờ ca nó chờ đủ hết mọi thủ tục cần thiết nó mới dám bắt chứ không thì đm cư dân mạng chửi sml ra à ?",
+        "cleaned_text":  "biết bao nhiêu vụ đi bắt người bị quay xong bảo bắt bớ dân lành ? thì đm bây giờ ca nó chờ đủ hết mọi thủ tục cần thiết nó mới dám bắt chứ không thì đm cư dân mạng chửi sml ra à ?",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "cuốn dell nhặt đc mồm, toàn danh hài đất việt :))",
+        "cleaned_text":  "cuốn dell nhặt đc mồm, toàn danh hài đất việt :))",
+        "original_label":  1,
+        "final_label":  1
+    },
+    {
+        "dataset":  "vihsd",
+        "split":  "test",
+        "row_index":  -1,
+        "issue_type":  "duplicate_conflicting_labels",
+        "original_text":  "cuốn dell nhặt đc mồm, toàn danh hài đất việt :))",
+        "cleaned_text":  "cuốn dell nhặt đc mồm, toàn danh hài đất việt :))",
+        "original_label":  0,
+        "final_label":  0
+    }
+]
