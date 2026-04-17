@@ -72,6 +72,8 @@ COPY --from=builder /usr/local/bin/docker-php-ext-* /usr/local/bin/
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
+COPY ./.docker/common/backend/php-fpm/php.ini $PHP_INI_DIR/php.ini
+
 COPY ./.docker/common/backend/php-fpm/conf.d/*.conf /usr/local/etc/php-fpm.d/
 
 COPY --from=builder /var/www /var/www
