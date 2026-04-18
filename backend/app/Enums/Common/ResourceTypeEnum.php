@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Enums\Admin;
+namespace App\Enums\Common;
 
-use App\Enums\BaseEnumTrait;
 use App\Enums\BaseEnumInterface;
+use App\Enums\BaseEnumTrait;
+use App\Enums\Post\PostTypeEnum;
 
 /**
- * Admin resource types that can be audited
- * Used to categorize logged admin actions
+ * Business resource types used across the system.
+ * This enum represents meaningful domain resources.
  */
-enum AdminResourceEnum: string implements BaseEnumInterface
+enum ResourceTypeEnum: string implements BaseEnumInterface
 {
     use BaseEnumTrait;
 
@@ -36,13 +37,11 @@ enum AdminResourceEnum: string implements BaseEnumInterface
             self::APPEAL->value,
             self::RE_POST->value,
             self::QUOTE_POST->value,
-
         ];
     }
 
-
     /**
-     * Get the label of the enum value
+     * Get the label of the enum value.
      */
     public function label(): string
     {
@@ -57,9 +56,8 @@ enum AdminResourceEnum: string implements BaseEnumInterface
         };
     }
 
-
     /**
-     * Get the translated label of the enum value
+     * Get the translated label of the enum value.
      */
     public function translate(): string
     {
@@ -71,6 +69,22 @@ enum AdminResourceEnum: string implements BaseEnumInterface
             self::APPEAL => 'Kháng cáo',
             self::RE_POST => 'Đăng lại',
             self::QUOTE_POST => 'Trích dẫn bài viết',
+        };
+    }
+
+    /**
+     * Try to create ResourceTypeEnum from PostTypeEnum.
+     *
+     * @param PostTypeEnum $postType
+     * @return self|null
+     */
+    public static function tryFromPostType(PostTypeEnum $postType): ?self
+    {
+        return match ($postType) {
+            PostTypeEnum::POST => self::POST,
+            PostTypeEnum::RE_POST => self::RE_POST,
+            PostTypeEnum::QUOTE_POST => self::QUOTE_POST,
+            default => null,
         };
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Admin\ActivityTypeEnum;
-use App\Enums\Admin\AdminResourceEnum;
+use App\Enums\Common\ResourceTypeEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
@@ -46,7 +46,7 @@ class ActivityLog extends Model
     protected function casts(): array
     {
         return [
-            'resource_type' => AdminResourceEnum::class,
+            'resource_type' => ResourceTypeEnum::class,
             'activity_type' => ActivityTypeEnum::class,
             'metadata' => 'json',
             'created_at' => 'datetime',
@@ -94,11 +94,11 @@ class ActivityLog extends Model
      * Scope: Filter logs by resource type
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param AdminResourceEnum $resourceType
+     * @param ResourceTypeEnum $resourceType
      * @return \Illuminate\Database\Eloquent\Builder
      */
     #[Scope]
-    public function byResourceType(Builder $query, AdminResourceEnum $resourceType)
+    public function byResourceType(Builder $query, ResourceTypeEnum $resourceType)
     {
         return $query->where('resource_type', $resourceType->value);
     }

@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Enums\Admin\AdminActionEnum;
-use App\Enums\Admin\AdminResourceEnum;
-use App\Enums\Notification\EntityTypeEnum;
+use App\Enums\Common\ResourceTypeEnum;
+use App\Enums\Common\ModelEntityTypeEnum;
 use App\Models\AiModerationReport;
 use App\Models\Post;
 use App\Models\User;
@@ -37,16 +37,16 @@ class AiModerationService
         }
 
         $content = trim((string) $post->content);
+        $resourceType = ResourceTypeEnum::tryFromPostType($post->type) ??ResourceTypeEnum::POST;
         if ($content === '') {
             return;
         }
 
         $topic = (string) config('services.ai_moderation.kafka.request_topic', 'moderation.request.v1');
         $broker = (string) config('services.ai_moderation.kafka.bootstrap_servers', 'kafka:29092');
-
         $payload = [
             'task_id' => (string) Str::uuid(),
-            'resource_type' => $post->type,
+            'resource_type' => $resourceType->value,
             'resource_id' => (int) $post->id,
             'resource_uuid' => (string) $post->uuid,
             'user_id' => (int) $post->user_id,
@@ -102,7 +102,7 @@ class AiModerationService
 
         $appealDays = (int) config('services.ai_moderation.appeal_window_days', 7);
         $reason = (string) ($payload['reason'] ?? 'Violated community standards by automated moderation.');
-        $resourceType = (string) ($payload['resource_type'] ?? AdminResourceEnum::POST->value);
+        $resourceType = ResourceTypeEnum::tryFrom((string) ($payload['resource_type'] ?? 'post')) ?? ResourceTypeEnum::POST;
 
         DB::transaction(function () use ($payload, $post, $appealDays, $reason, $resourceType): void {
             $post->update([
@@ -114,7 +114,7 @@ class AiModerationService
                 ['task_id' => (string) $payload['task_id']],
                 [
                     'user_id' => (int) $post->user_id,
-                    'resource_type' => $resourceType,
+                    'resource_type' => $resourceType->value,
                     'resource_id' => (int) $post->id,
                     'resource_uuid' => (string) ($payload['resource_uuid'] ?? $post->uuid),
                     'sentence' => (string) ($payload['sentence'] ?? $post->content),
@@ -139,10 +139,10 @@ class AiModerationService
                 targetUser: $post->user,
                 action: AdminActionEnum::HIDE_POST,
                 reason: $reason,
-                entityType: EntityTypeEnum::POST,
+                entityType: ModelEntityTypeEnum::POST,
                 entityId: $post->id,
                 context: [
-                    'resource_type' => $resourceType,
+                    'resource_type' => $resourceType->value,
                     'resource_id' => $post->id,
                 ]
             );

@@ -1,8 +1,15 @@
 <?php
-namespace App\Enums\Notification;
+
+namespace App\Enums\Common;
+
 use App\Enums\BaseEnumInterface;
 use App\Enums\BaseEnumTrait;
-enum EntityTypeEnum: string implements BaseEnumInterface {
+
+/**
+ * Model entity types used for morph/entity mapping.
+ */
+enum ModelEntityTypeEnum: string implements BaseEnumInterface
+{
     use BaseEnumTrait;
 
     case POST = 'post';
@@ -10,11 +17,11 @@ enum EntityTypeEnum: string implements BaseEnumInterface {
     case HASHTAG = 'hashtag';
 
     /**
-     * Get the label for the entity notify type.
+     * Get the label for the entity type.
      */
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::POST => 'Post',
             self::USER => 'User',
             self::HASHTAG => 'Hashtag',
@@ -22,16 +29,14 @@ enum EntityTypeEnum: string implements BaseEnumInterface {
     }
 
     /**
-     * Get the translated label for the entity notify type.
+     * Get the translated label for the entity type.
      */
     public function translate(): string
     {
-        return match($this) {
+        return match ($this) {
             self::POST => 'bài viết',
             self::USER => 'người dùng',
             self::HASHTAG => 'hashtag',
         };
     }
 }
-
-?>

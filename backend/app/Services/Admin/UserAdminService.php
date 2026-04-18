@@ -3,8 +3,8 @@
 namespace App\Services\Admin;
 
 use App\Enums\Admin\AdminActionEnum;
-use App\Enums\Admin\AdminResourceEnum;
-use App\Enums\Notification\EntityTypeEnum;
+use App\Enums\Common\ResourceTypeEnum;
+use App\Enums\Common\ModelEntityTypeEnum;
 use App\Mail\AdminDirectMessageMail;
 use App\Models\User;
 use App\Repositories\UserRepository;
@@ -95,7 +95,7 @@ class UserAdminService
             // Log the action
             $this->adminLogService->log(
                 admin: $admin,
-                resourceType: AdminResourceEnum::USER,
+                resourceType: ResourceTypeEnum::USER,
                 resourceId: $userId,
                 action: AdminActionEnum::BAN,
                 reason: $data['reason'],
@@ -108,10 +108,10 @@ class UserAdminService
                 targetUser: $user,
                 action: AdminActionEnum::BAN,
                 reason: (string) $data['reason'],
-                entityType: EntityTypeEnum::USER,
+                entityType: ModelEntityTypeEnum::USER,
                 entityId: $user->id,
                 context: [
-                    'resource_type' => AdminResourceEnum::USER->value,
+                    'resource_type' => ResourceTypeEnum::USER->value,
                     'resource_id' => $user->id,
                 ]
             );
@@ -151,7 +151,7 @@ class UserAdminService
             // Log the action
             $this->adminLogService->log(
                 admin: $admin,
-                resourceType: AdminResourceEnum::USER,
+                resourceType: ResourceTypeEnum::USER,
                 resourceId: $userId,
                 action: AdminActionEnum::UNBAN,
                 oldData: $oldData,
@@ -163,10 +163,10 @@ class UserAdminService
                 targetUser: $user,
                 action: AdminActionEnum::UNBAN,
                 reason: 'Your account ban has been removed by admin',
-                entityType: EntityTypeEnum::USER,
+                entityType: ModelEntityTypeEnum::USER,
                 entityId: $user->id,
                 context: [
-                    'resource_type' => AdminResourceEnum::USER->value,
+                    'resource_type' => ResourceTypeEnum::USER->value,
                     'resource_id' => $user->id,
                 ]
             );
@@ -207,7 +207,7 @@ class UserAdminService
             // Log the action
             $this->adminLogService->log(
                 admin: $admin,
-                resourceType: AdminResourceEnum::USER,
+                resourceType: ResourceTypeEnum::USER,
                 resourceId: $userId,
                 action: AdminActionEnum::DELETE_USER,
                 reason: $data['reason'],
@@ -220,10 +220,10 @@ class UserAdminService
                 targetUser: $user,
                 action: AdminActionEnum::DELETE_USER,
                 reason: (string) $data['reason'],
-                entityType: EntityTypeEnum::USER,
+                entityType: ModelEntityTypeEnum::USER,
                 entityId: $user->id,
                 context: [
-                    'resource_type' => AdminResourceEnum::USER->value,
+                    'resource_type' => ResourceTypeEnum::USER->value,
                     'resource_id' => $user->id,
                 ]
             );
@@ -249,7 +249,7 @@ class UserAdminService
 
             $this->adminLogService->log(
                 admin: $admin,
-                resourceType: AdminResourceEnum::USER,
+                resourceType: ResourceTypeEnum::USER,
                 resourceId: $userId,
                 action: AdminActionEnum::RESET_USER_PASSWORD,
                 reason: 'Admin reset user password',
@@ -288,7 +288,7 @@ class UserAdminService
 
             $this->adminLogService->log(
                 admin: $admin,
-                resourceType: AdminResourceEnum::USER,
+                resourceType: ResourceTypeEnum::USER,
                 resourceId: $userId,
                 action: AdminActionEnum::SEND_EMAIL_TO_USER,
                 reason: (string) $data['subject'],

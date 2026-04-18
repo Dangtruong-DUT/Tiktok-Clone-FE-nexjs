@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Appeal;
 
-use App\Enums\Admin\AdminResourceEnum;
+use App\Enums\Common\ResourceTypeEnum;
 use App\Enums\Appeal\AppealTypeEnum;
 use App\Models\AiModerationReport;
 use Illuminate\Validation\Validator;
@@ -21,7 +21,7 @@ class CreateAppealRequest extends BaseAppealRequest
         return [
             'appeal_type' => ['required', 'in:' . implode(',', array_map(fn($e) => $e->value, AppealTypeEnum::cases()))],
             'resource_id' => ['nullable', 'integer'],
-            'resource_type' => ['required', 'string', 'in:' . implode(',', AdminResourceEnum::appealValues())],
+            'resource_type' => ['required', 'string', 'in:' . implode(',', ResourceTypeEnum::appealValues())],
             'reason' => ['required', 'string', 'min:20', 'max:1000'],
         ];
     }
@@ -48,7 +48,7 @@ class CreateAppealRequest extends BaseAppealRequest
     {
         $validator->after(function (Validator $validator): void {
             $resourceType = (string) $this->input('resource_type');
-            if (!in_array($resourceType, [AdminResourceEnum::POST->value, AdminResourceEnum::COMMENT->value], true)) {
+            if (!in_array($resourceType, [ResourceTypeEnum::POST->value, ResourceTypeEnum::COMMENT->value], true)) {
                 return;
             }
 

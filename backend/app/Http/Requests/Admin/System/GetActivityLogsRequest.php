@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Admin\System;
 
-use App\Enums\Admin\AdminResourceEnum;
+use App\Enums\Common\ResourceTypeEnum;
 use App\Http\Requests\Admin\BaseAdminRequest;
 use Illuminate\Validation\Rule;
 
@@ -35,7 +35,7 @@ class GetActivityLogsRequest extends BaseAdminRequest
             'resource_type' => [
                 'nullable',
                 'string',
-                'in:' . implode(',', AdminResourceEnum::values()),
+                'in:' . implode(',', ResourceTypeEnum::values()),
             ],
             'date_from' => 'nullable|date_format:Y-m-d',
             'date_to' => 'nullable|date_format:Y-m-d',

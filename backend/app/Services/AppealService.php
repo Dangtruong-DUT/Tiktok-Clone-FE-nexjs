@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Enums\Appeal\AppealStatusEnum;
 use App\Enums\Appeal\AppealTypeEnum;
 use App\Enums\Admin\AdminActionEnum;
-use App\Enums\Admin\AdminResourceEnum;
+use App\Enums\Common\ResourceTypeEnum;
 use App\Exceptions\http\BusinessException;
 use App\Exceptions\http\NotFoundException;
 use App\Models\Appeal;
@@ -124,7 +124,7 @@ class AppealService
             // Log the approval
             $this->adminLogService->log(
                 admin: $admin,
-                resourceType: AdminResourceEnum::APPEAL,
+                resourceType: ResourceTypeEnum::APPEAL,
                 resourceId: $appeal->id,
                 action: AdminActionEnum::APPROVE_APPEAL,
                 reason: 'Appeal approved for: ' . $appealType->label(),
@@ -174,7 +174,7 @@ class AppealService
             // Log the rejection
             $this->adminLogService->log(
                 admin: $admin,
-                resourceType: AdminResourceEnum::APPEAL,
+                resourceType: ResourceTypeEnum::APPEAL,
                 resourceId: $appeal->id,
                 action: AdminActionEnum::REJECT_APPEAL,
                 reason: 'Appeal rejected for: ' . $appealType->label(),
@@ -220,7 +220,7 @@ class AppealService
      */
     private function unhidePost(Appeal $appeal): void
     {
-        if ($appeal->resource_id && $appeal->resource_type === AdminResourceEnum::POST->value) {
+        if ($appeal->resource_id && $appeal->resource_type === ResourceTypeEnum::POST->value) {
             $post = $this->postRepository->find($appeal->resource_id);
             if ($post) {
                 $post->update(['hidden_at' => null, 'hidden_reason' => null]);
@@ -235,7 +235,7 @@ class AppealService
      */
     private function restorePost(Appeal $appeal): void
     {
-        if ($appeal->resource_id && $appeal->resource_type === AdminResourceEnum::POST->value) {
+        if ($appeal->resource_id && $appeal->resource_type === ResourceTypeEnum::POST->value) {
             $restored = $this->postRepository->restoreById($appeal->resource_id);
             if (!$restored) {
                 Log::warning("Post {$appeal->resource_id} not found for appeal {$appeal->id} restoration");
@@ -248,7 +248,7 @@ class AppealService
      */
     private function restoreComment(Appeal $appeal): void
     {
-        if ($appeal->resource_id && $appeal->resource_type === AdminResourceEnum::COMMENT->value) {
+        if ($appeal->resource_id && $appeal->resource_type === ResourceTypeEnum::COMMENT->value) {
             $restored = $this->postRepository->restoreById($appeal->resource_id);
             if (!$restored) {
                 Log::warning("Comment {$appeal->resource_id} not found for appeal {$appeal->id} restoration");

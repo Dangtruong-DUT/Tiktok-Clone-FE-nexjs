@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Enums\Notification\EntityTypeEnum;
+use App\Enums\Common\ModelEntityTypeEnum;
 use App\Enums\Notification\NotificationTypeEnum;
 use App\Enums\Post\PostTypeEnum;
 use App\Exceptions\http\NotFoundException;
@@ -90,7 +90,7 @@ class NotificationService
             'actor_id' => $actorId,
             'notifiable_id' => $notifiableId,
             'type' => NotificationTypeEnum::FOLLOW->value,
-            'entity_type' => EntityTypeEnum::USER->value,
+            'entity_type' => ModelEntityTypeEnum::USER->value,
             'entity_id' => $actorId,
             'data' => null,
         ]);
@@ -126,7 +126,7 @@ class NotificationService
             'actor_id' => $actorId,
             'notifiable_id' => $postOwnerId,
             'type' => NotificationTypeEnum::LIKE->value,
-            'entity_type' => EntityTypeEnum::POST->value,
+            'entity_type' => ModelEntityTypeEnum::POST->value,
             'entity_id' => $videoPost->id,
             'data' => $data,
         ]);
@@ -147,7 +147,7 @@ class NotificationService
             'actor_id' => $actorId,
             'notifiable_id' => $postOwnerId,
             'type' => NotificationTypeEnum::COMMENT->value,
-            'entity_type' => EntityTypeEnum::POST->value,
+            'entity_type' => ModelEntityTypeEnum::POST->value,
             'entity_id' => $videoPost->id,
             'data' => [
                 'post_uuid' => $videoPost->uuid,
@@ -177,7 +177,7 @@ class NotificationService
                 'actor_id' => $actorId,
                 'notifiable_id' => $mentionedUserId,
                 'type' => NotificationTypeEnum::MENTION->value,
-                'entity_type' => EntityTypeEnum::POST->value,
+                'entity_type' => ModelEntityTypeEnum::POST->value,
                 'entity_id' => $videoPost->id,
                 'data' => [
                     'post_uuid' => $videoPost->uuid,
@@ -199,7 +199,7 @@ class NotificationService
             'actor_id' => null,
             'notifiable_id' => $userId,
             'type' => NotificationTypeEnum::SECURITY->value,
-            'entity_type' => EntityTypeEnum::USER->value,
+            'entity_type' => ModelEntityTypeEnum::USER->value,
             'entity_id' => $userId,
             'data' => [
                 'event' => $eventName,
@@ -215,7 +215,7 @@ class NotificationService
     public function notifyAdminModerationAction(
         int $adminId,
         int $notifiableUserId,
-        EntityTypeEnum $entityType,
+        ModelEntityTypeEnum $entityType,
         int $entityId,
         ?array $data = null
     ): void {

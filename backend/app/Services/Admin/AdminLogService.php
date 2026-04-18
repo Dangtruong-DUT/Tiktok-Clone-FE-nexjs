@@ -3,7 +3,7 @@
 namespace App\Services\Admin;
 
 use App\Enums\Admin\AdminActionEnum;
-use App\Enums\Admin\AdminResourceEnum;
+use App\Enums\Common\ResourceTypeEnum;
 use App\Models\AdminLog;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -14,7 +14,7 @@ class AdminLogService
      * Log an admin action
      *
      * @param User $admin The admin performing the action
-    * @param AdminResourceEnum $resourceType Resource type
+    * @param ResourceTypeEnum $resourceType Resource type
      * @param int|string $resourceId The ID/UUID of the resource
      * @param AdminActionEnum $action The action performed
      * @param string|null $reason Why the action was taken
@@ -24,7 +24,7 @@ class AdminLogService
      */
     public function log(
         User $admin,
-        AdminResourceEnum $resourceType,
+        ResourceTypeEnum $resourceType,
         int|string $resourceId,
         AdminActionEnum $action,
         ?string $reason = null,
@@ -78,11 +78,11 @@ class AdminLogService
     /**
      * Get actions on a specific resource
      *
-     * @param AdminResourceEnum $resourceType
+     * @param ResourceTypeEnum $resourceType
      * @param int|string $resourceId
      * @return Collection
      */
-    public function getResourceActions(AdminResourceEnum $resourceType, int|string $resourceId): Collection
+    public function getResourceActions(ResourceTypeEnum $resourceType, int|string $resourceId): Collection
     {
         return AdminLog::query()
             ->where('resource_type', $resourceType->value)

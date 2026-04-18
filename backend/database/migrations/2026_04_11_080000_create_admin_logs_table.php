@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('admin_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('admin_id')->constrained('users')->cascadeOnDelete();
-            $table->string('resource_type');  // 'user', 'post', 'comment'
+            $table->string('resource_type');  // App\Enums\Common\ResourceTypeEnum
             $table->string('resource_id');     // User ID, Post UUID, Comment ID (string for flexibility)
             $table->string('action');          // 'ban', 'unban', 'hide', 'delete', etc
             $table->text('reason')->nullable();

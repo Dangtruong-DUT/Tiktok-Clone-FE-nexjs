@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->setOnDelete('set null');
             $table->string('activity_type'); // 'user_created', 'post_uploaded', 'post_liked', 'comment_added', etc
-            $table->string('resource_type')->nullable(); // 'user', 'post', 'comment', 'notification'
+            $table->string('resource_type')->nullable(); // App\Enums\Common\ResourceTypeEnum
             $table->string('resource_id')->nullable(); // User ID, Post UUID, Comment ID
             $table->longText('metadata')->nullable(); // JSON - additional context
             $table->ipAddress('ip_address')->nullable();

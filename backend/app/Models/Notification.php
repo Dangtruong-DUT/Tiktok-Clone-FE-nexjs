@@ -1,7 +1,7 @@
 <?php
 namespace App\Models;
 
-use App\Enums\Notification\EntityTypeEnum;
+use App\Enums\Common\ModelEntityTypeEnum;
 use App\Enums\Notification\NotificationTabEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -39,7 +39,7 @@ class Notification extends Model
             'data' => 'array',
             'is_read' => 'boolean',
             'type' => NotificationTypeEnum::class,
-            'entity_type' => EntityTypeEnum::class,
+            'entity_type' => ModelEntityTypeEnum::class,
             'entity_id' => 'integer',
         ];
     }

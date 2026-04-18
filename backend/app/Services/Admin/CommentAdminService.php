@@ -3,8 +3,8 @@
 namespace App\Services\Admin;
 
 use App\Enums\Admin\AdminActionEnum;
-use App\Enums\Admin\AdminResourceEnum;
-use App\Enums\Notification\EntityTypeEnum;
+use App\Enums\Common\ResourceTypeEnum;
+use App\Enums\Common\ModelEntityTypeEnum;
 use App\Models\User;
 use App\Repositories\PostRepository;
 use BadMethodCallException;
@@ -78,7 +78,7 @@ class CommentAdminService
 
             $this->adminLogService->log(
                 admin: $admin,
-                resourceType: AdminResourceEnum::COMMENT,
+                resourceType: ResourceTypeEnum::COMMENT,
                 resourceId: $commentId,
                 action: AdminActionEnum::DELETE_COMMENT,
                 reason: $data['reason'],
@@ -91,10 +91,10 @@ class CommentAdminService
                 targetUser: $comment->user,
                 action: AdminActionEnum::DELETE_COMMENT,
                 reason: (string) $data['reason'],
-                entityType: EntityTypeEnum::POST,
+                entityType: ModelEntityTypeEnum::POST,
                 entityId: $comment->id,
                 context: [
-                    'resource_type' => AdminResourceEnum::COMMENT->value,
+                    'resource_type' => ResourceTypeEnum::COMMENT->value,
                     'resource_id' => $comment->id,
                 ]
             );

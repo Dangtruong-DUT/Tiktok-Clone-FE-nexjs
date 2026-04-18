@@ -21,7 +21,7 @@ return new class extends Migration
                     ->nullable()
                     ->nullOnDelete();
             $table->unsignedTinyInteger('type');
-            $table->string('entity_type')->nullable();
+            $table->string('entity_type')->nullable(); // App\Enums\Common\ModelEntityTypeEnum
             $table->unsignedBigInteger('entity_id')->nullable();
             $table->boolean('is_read')->default(false);
             $table->json('data')->nullable();

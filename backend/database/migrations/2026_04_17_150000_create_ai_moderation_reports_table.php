@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('task_id')->unique();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('resource_type');
+            $table->string('resource_type'); // App\Enums\Common\ResourceTypeEnum
             $table->unsignedBigInteger('resource_id');
             $table->string('resource_uuid')->nullable();
             $table->text('sentence');

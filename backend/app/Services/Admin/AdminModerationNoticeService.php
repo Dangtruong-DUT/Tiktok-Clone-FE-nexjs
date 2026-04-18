@@ -4,7 +4,7 @@ namespace App\Services\Admin;
 
 use App\Enums\Admin\AdminActionEnum;
 use App\Enums\Appeal\AppealTypeEnum;
-use App\Enums\Notification\EntityTypeEnum;
+use App\Enums\Common\ModelEntityTypeEnum;
 use App\Mail\AdminModerationActionMail;
 use App\Models\User;
 use App\Services\NotificationService;
@@ -23,7 +23,7 @@ class AdminModerationNoticeService
      * @param User $targetUser The user receiving the notice
      * @param AdminActionEnum $action The admin action taken
      * @param string $reason The reason for the action
-     * @param EntityTypeEnum $entityType The type of entity involved (e.g. user, post, comment)
+     * @param ModelEntityTypeEnum $entityType The type of entity involved (e.g. user, post, comment)
      * @param int $entityId The ID of the entity involved
      * @param array $context Additional context for building appeal link (e.g. resource_type, resource_id)
      */
@@ -32,7 +32,7 @@ class AdminModerationNoticeService
         User $targetUser,
         AdminActionEnum $action,
         string $reason,
-        EntityTypeEnum $entityType,
+        ModelEntityTypeEnum $entityType,
         int $entityId,
         array $context = []
     ): void {

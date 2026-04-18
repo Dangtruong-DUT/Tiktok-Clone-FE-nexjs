@@ -3,8 +3,8 @@
 namespace App\Services\Admin;
 
 use App\Enums\Admin\AdminActionEnum;
-use App\Enums\Admin\AdminResourceEnum;
-use App\Enums\Notification\EntityTypeEnum;
+use App\Enums\Common\ResourceTypeEnum;
+use App\Enums\Common\ModelEntityTypeEnum;
 use App\Models\Post;
 use App\Models\User;
 use App\Repositories\PostRepository;
@@ -88,7 +88,7 @@ class PostAdminService
 
             $this->adminLogService->log(
                 admin: $admin,
-                resourceType: AdminResourceEnum::POST,
+                resourceType: ResourceTypeEnum::POST,
                 resourceId: $postUuid,
                 action: AdminActionEnum::HIDE_POST,
                 reason: $data['reason'],
@@ -101,10 +101,10 @@ class PostAdminService
                 targetUser: $post->user,
                 action: AdminActionEnum::HIDE_POST,
                 reason: (string) $data['reason'],
-                entityType: EntityTypeEnum::POST,
+                entityType: ModelEntityTypeEnum::POST,
                 entityId: $post->id,
                 context: [
-                    'resource_type' => AdminResourceEnum::POST->value,
+                    'resource_type' => ResourceTypeEnum::POST->value,
                     'resource_id' => $post->id,
                 ]
             );
@@ -139,7 +139,7 @@ class PostAdminService
 
             $this->adminLogService->log(
                 admin: $admin,
-                resourceType: AdminResourceEnum::POST,
+                resourceType: ResourceTypeEnum::POST,
                 resourceId: $postUuid,
                 action: AdminActionEnum::UNHIDE_POST,
                 oldData: $oldData,
@@ -151,10 +151,10 @@ class PostAdminService
                 targetUser: $post->user,
                 action: AdminActionEnum::UNHIDE_POST,
                 reason: 'Your post is visible again after admin review',
-                entityType: EntityTypeEnum::POST,
+                entityType: ModelEntityTypeEnum::POST,
                 entityId: $post->id,
                 context: [
-                    'resource_type' => AdminResourceEnum::POST->value,
+                    'resource_type' => ResourceTypeEnum::POST->value,
                     'resource_id' => $post->id,
                 ]
             );
@@ -187,7 +187,7 @@ class PostAdminService
 
             $this->adminLogService->log(
                 admin: $admin,
-                resourceType: AdminResourceEnum::POST,
+                resourceType: ResourceTypeEnum::POST,
                 resourceId: $postUuid,
                 action: AdminActionEnum::DELETE_POST,
                 reason: $data['reason'],
@@ -200,10 +200,10 @@ class PostAdminService
                 targetUser: $post->user,
                 action: AdminActionEnum::DELETE_POST,
                 reason: (string) $data['reason'],
-                entityType: EntityTypeEnum::POST,
+                entityType: ModelEntityTypeEnum::POST,
                 entityId: $post->id,
                 context: [
-                    'resource_type' => AdminResourceEnum::POST->value,
+                    'resource_type' => ResourceTypeEnum::POST->value,
                     'resource_id' => $post->id,
                 ]
             );
