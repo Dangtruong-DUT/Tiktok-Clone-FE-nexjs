@@ -2,15 +2,12 @@
 
 namespace App\Http\Requests\Appeal;
 
-use App\Enums\Common\ResourceTypeEnum;
-use App\Enums\Appeal\AppealTypeEnum;
-use App\Models\AiModerationReport;
-use Illuminate\Validation\Validator;
+use App\Http\Requests\BaseRequest;
 
 /**
  * CreateAppealRequest - User files an appeal for ban/hidden/deleted content
  */
-class CreateAppealRequest extends BaseAppealRequest
+class CreateAppealRequest extends BaseRequest
 {
     /**
      * Get the validation rules.
@@ -18,64 +15,10 @@ class CreateAppealRequest extends BaseAppealRequest
      */
     public function rules(): array
     {
-        return [
-            'appeal_type' => ['required', 'in:' . implode(',', array_map(fn($e) => $e->value, AppealTypeEnum::cases()))],
-            'resource_id' => ['nullable', 'integer'],
-            'resource_type' => ['required', 'string', 'in:' . implode(',', ResourceTypeEnum::appealValues())],
-            'reason' => ['required', 'string', 'min:20', 'max:1000'],
-        ];
-    }
-
-    /**
-     * Get custom messages for validation errors
-     * @return array<string, string>
-     */
-    public function messages(): array
-    {
-        return [
-            'appeal_type.required' => 'Appeal type is required',
-            'appeal_type.in' => 'Invalid appeal type',
-            'resource_type.required' => 'Resource type is required',
-            'reason.required' => 'Appeal reason is required',
-            'reason.min' => 'Appeal reason must be at least 20 characters',
-        ];
-    }
-
-    /**
-     * Attach additional validation for AI moderation appeal window.
-     */
-    public function withValidator(Validator $validator): void
-    {
-        $validator->after(function (Validator $validator): void {
-            $resourceType = (string) $this->input('resource_type');
-            if (!in_array($resourceType, [ResourceTypeEnum::POST->value, ResourceTypeEnum::COMMENT->value], true)) {
-                return;
-            }
-
-            $resourceId = (int) $this->input('resource_id', 0);
-            if ($resourceId <= 0) {
-                return;
-            }
-
-            $report = AiModerationReport::query()
-                ->where('resource_type', $resourceType)
-                ->where('resource_id', $resourceId)
-                ->latest('id')
-                ->first();
-
-            if (!$report) {
-                $validator->errors()->add('resource_id', 'No moderation report found for this resource.');
-                return;
-            }
-
-            if ((int) $report->user_id !== (int) auth_user_id()) {
-                $validator->errors()->add('resource_id', 'You are not allowed to appeal this moderation action.');
-                return;
-            }
-
-            if ($report->appeal_deadline_at !== null && now()->greaterThan($report->appeal_deadline_at)) {
-                $validator->errors()->add('resource_id', 'Appeal period has expired (7 days).');
-            }
-        });
+        return $this->applyBaseRules([
+            'appeal_type' => [self::NULLABLE],
+            'resource_id' => [self::NULLABLE],
+            'reason' => [self::REQUIRED, self::STRING, self::MIN . ':20', self::MAX . ':1000'],
+        ]);
     }
 }

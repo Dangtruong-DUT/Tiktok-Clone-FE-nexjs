@@ -1,7 +1,6 @@
 import { isProduction } from '@/config/app.config'
 import { AdminApi } from '@/store/services/admin.service'
 import { AuthApi } from '@/store/services/auth.service'
-import { ChatApi } from '@/store/services/chat.service'
 import { NotificationApi } from '@/store/services/notification.service'
 import { PostApi } from '@/store/services/posts.service'
 import { SearchApi } from '@/store/services/search.service'
@@ -25,7 +24,6 @@ export const makeStore = () => {
             [AuthApi.reducerPath]: AuthApi.reducer,
             [PostApi.reducerPath]: PostApi.reducer,
             [NotificationApi.reducerPath]: NotificationApi.reducer,
-            [ChatApi.reducerPath]: ChatApi.reducer,
             [AdminApi.reducerPath]: AdminApi.reducer,
             auth: authReducer,
             app: appReducer,
@@ -40,7 +38,6 @@ export const makeStore = () => {
                 AuthApi.middleware,
                 PostApi.middleware,
                 NotificationApi.middleware,
-                ChatApi.middleware,
                 AdminApi.middleware,
                 authMiddleware,
                 errorHandleMiddleware
@@ -61,7 +58,6 @@ export function clearStore(dispatch: AppDispatch) {
     dispatch(AuthApi.util.resetApiState())
     dispatch(PostApi.util.resetApiState())
     dispatch(NotificationApi.util.resetApiState())
-    dispatch(ChatApi.util.resetApiState())
     dispatch(AdminApi.util.resetApiState())
     dispatch(UploadApi.util.resetApiState())
     dispatch(clearAllLoading())

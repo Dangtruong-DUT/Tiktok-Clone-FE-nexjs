@@ -7,8 +7,8 @@ use App\Enums\Common\ResourceTypeEnum;
 use App\Enums\Common\ModelEntityTypeEnum;
 use App\Models\AiModerationReport;
 use App\Models\Post;
-use App\Models\User;
 use App\Repositories\PostRepository;
+use App\Repositories\UserRepository;
 use App\Services\Admin\AdminModerationNoticeService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -22,7 +22,8 @@ class AiModerationService
      */
     public function __construct(
         private readonly AdminModerationNoticeService $adminModerationNoticeService,
-        private readonly PostRepository $postRepo
+        private readonly PostRepository $postRepo,
+        private readonly UserRepository $userRepo
     ) {}
 
     /**
@@ -48,7 +49,6 @@ class AiModerationService
             'task_id' => (string) Str::uuid(),
             'resource_type' => $resourceType->value,
             'resource_id' => (int) $post->id,
-            'resource_uuid' => (string) $post->uuid,
             'user_id' => (int) $post->user_id,
             'sentence' => $content,
             'reason' => null,
@@ -116,7 +116,6 @@ class AiModerationService
                     'user_id' => (int) $post->user_id,
                     'resource_type' => $resourceType->value,
                     'resource_id' => (int) $post->id,
-                    'resource_uuid' => (string) ($payload['resource_uuid'] ?? $post->uuid),
                     'sentence' => (string) ($payload['sentence'] ?? $post->content),
                     'label' => (int) ($payload['label'] ?? 1),
                     'confidence' => (float) ($payload['confidence'] ?? 0),
@@ -129,7 +128,7 @@ class AiModerationService
                 ]
             );
 
-            $systemAdmin = $this->resolveSystemAdmin();
+            $systemAdmin = $this->userRepo->getSuperAdmin();
             if (!$systemAdmin) {
                 return;
             }
@@ -147,21 +146,5 @@ class AiModerationService
                 ]
             );
         });
-    }
-
-    /**
-     * Resolve system admin actor for automatic moderation notices.
-     * @return User|null
-     */
-    private function resolveSystemAdmin(): ?User
-    {
-        $adminId = (int) config('');
-
-        $admin = User::query()->find($adminId);
-        if ($admin) {
-            return $admin;
-        }
-
-        return User::query()->orderBy('id')->first();
     }
 }

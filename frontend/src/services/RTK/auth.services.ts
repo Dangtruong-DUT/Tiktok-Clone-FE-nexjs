@@ -1,5 +1,4 @@
 import { NextWithAuthBaseQuery } from '@/services/RTK/client'
-import { SetCookieBodyType } from '@/types/auth'
 import { LoginReqBodyType, RegisterReqBodyType } from '@/types/dtos/auth/auth-request.dto'
 import {
     LoginResponseType,
@@ -39,21 +38,8 @@ export const AuthApi = createApi({
                 url: '/api/auth/refresh-token',
                 method: 'POST'
             })
-        }),
-        setCookie: builder.mutation<void, SetCookieBodyType>({
-            query: (body) => ({
-                url: '/api/auth/token',
-                method: 'POST',
-                body
-            })
         })
     })
 })
 
-export const {
-    useLoginMutation,
-    useLogoutMutation,
-    useRegisterMutation,
-    useRefreshTokenMutation,
-    useSetCookieMutation
-} = AuthApi
+export const { useLoginMutation, useLogoutMutation, useRegisterMutation, useRefreshTokenMutation } = AuthApi

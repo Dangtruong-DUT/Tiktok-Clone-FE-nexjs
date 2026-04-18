@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Appeal\AppealStatusEnum;
+use App\Enums\Appeal\AppealTypeEnum;
+use App\Enums\Common\ResourceTypeEnum;
 use App\Enums\Post\AudienceTypeEnum;
 use App\Enums\Post\PostTypeEnum;
 use App\Enums\User\RoleTypeEnum;
@@ -256,6 +259,14 @@ abstract class BaseRequest extends BaseFormRequest
             'audience'=>[new Enum(AudienceTypeEnum::class)],
             'post_type'=>[new Enum(PostTypeEnum::class)],
             'notification_uuid' => [self::STRING, self::UUID, new NotifyUuid()],
+            'resource_id' => [self::INTEGER],
+            'resource_type' => [
+                self::STRING,
+                'in:' . implode(',', ResourceTypeEnum::values())],
+            'appeal_type' => [
+                'in:' . implode(',',  AppealTypeEnum::values())] ,
+            'appeal_status' => [
+                'in:' . implode(',', AppealStatusEnum::values())],
         ];
     }
 }

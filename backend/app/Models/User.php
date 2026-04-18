@@ -6,11 +6,11 @@ use App\Enums\Auth\TokenTypeEnum;
 use App\Enums\User\RelationshipTypeEnum;
 use App\Enums\User\RoleTypeEnum;
 use App\Enums\User\UserVerifyStatusEnum;
-use App\Models\Conversation;
-use App\Models\Message;
 use App\Traits\HasCreateDefaultUserSettingObservable;
 use App\Traits\HasUsernameObservable;
 use App\Traits\HasUuidObservable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -338,20 +338,15 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Get conversations that the user participates in.
+     * Scope a query to only include admin users.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder .
+     * @return \Illuminate\Database\Eloquent\Builder.
      */
-    public function conversations(): BelongsToMany
+    #[Scope]
+    public function admin(Builder $query): Builder
     {
-        return $this->belongsToMany(Conversation::class, 'conversation_participants', 'user_id', 'conversation_id')
-            ->withPivot('last_read_at');
-    }
-
-    /**
-     * Get messages sent by the user.
-     */
-    public function sentMessages(): HasMany
-    {
-        return $this->hasMany(Message::class, 'sender_id');
+        return $query->where('role', RoleTypeEnum::SUPER_ADMIN->value);
     }
 
     /**

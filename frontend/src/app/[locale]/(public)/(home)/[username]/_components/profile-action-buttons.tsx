@@ -3,7 +3,6 @@ import { Settings, Share } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'
 import { useGetUserByUsernameQuery } from '@/store/services/user.service'
-import { useCallback } from 'react'
 import { toast } from 'sonner'
 import { useFollowUser } from '@/hooks/data/useUser'
 import ButtonFollow from '@/app/[locale]/(public)/(home)/[username]/_components/button-follow'
@@ -15,8 +14,6 @@ import { useAppSelector } from '@/store/hooks'
 import { useLocale, useTranslations } from 'next-intl'
 import { ShareMenuDialog } from '@/components/share-menu-dialog'
 import envConfig from '@/config/app.config'
-import { useRouter } from '@/i18n/navigation'
-import { useCreatePrivateConversationMutation } from '@/store/services/chat.service'
 
 interface ProfileActionButtonsProps {
     username: string
@@ -29,29 +26,22 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
     const currentUser = useCurrentUserData()
     const isCurrentUser = currentUser?.uuid === userId
     const t = useTranslations('ProfilePage.actions')
-    const router = useRouter()
-    const [createPrivateConversation, { isLoading: isCreatingConversation }] = useCreatePrivateConversationMutation()
     const { data: userProfileRes } = useGetUserByUsernameQuery(username, { skip: isCurrentUser })
     const { isFollowedState, onToggleFollow } = useFollowUser({
         userId,
         initialFollowState: userProfileRes?.data.is_followed ?? false
     })
 
-    const handleMessage = useCallback(async () => {
-        if (!currentUser) {
-            toast.info(t('loginRequired'))
-            return
-        }
-
-        try {
-            const res = await createPrivateConversation({ user_uuid: userId }).unwrap()
-            router.push(`/messages?conversation_id=${res.data.id}`)
-        } catch {
-            toast.error(t('messageFailed'))
-        }
-    }, [createPrivateConversation, currentUser, router, t, userId])
     const local = useLocale()
     const ProfileUserUrl = `${envConfig.NEXT_PUBLIC_URL}${local}/@${username}`
+
+    const handleMessage = () => {
+        if (!currentUser) {
+            toast.error(t('loginRequired'))
+            return
+        }
+        toast.info(t('messageComingSoon'))
+    }
 
     if (authStatus === 'loading' || (role != null && currentUser == null)) {
         return (
@@ -90,7 +80,6 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
                     variant='secondary'
                     className='ml-2 h-10 font-medium rounded-sm text-base cursor-pointer'
                     onClick={handleMessage}
-                    disabled={isCreatingConversation}
                 >
                     {t('message')}
                 </Button>

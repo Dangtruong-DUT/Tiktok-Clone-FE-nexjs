@@ -48,8 +48,6 @@ class AdminController extends Controller
         private readonly AppealService $appealService,
     ) {}
 
-    // ============ USER MANAGEMENT ============
-
     /**
      * Get paginated list of users with filtering and search.
      * @param GetAdminUsersRequest $request
@@ -152,7 +150,6 @@ class AdminController extends Controller
         return ApiResponse::success(message: 'Email sent successfully');
     }
 
-    // ============ POST MODERATION ============
 
     /**
      * Get paginated list of posts with filtering.
@@ -231,7 +228,6 @@ class AdminController extends Controller
         return ApiResponse::success(message: 'Post deleted successfully');
     }
 
-    // ============ COMMENT MODERATION ============
 
     /**
      * Get paginated list of comments with filtering.
@@ -270,7 +266,6 @@ class AdminController extends Controller
         return ApiResponse::success(message: 'Comment deleted successfully');
     }
 
-    // ============ SYSTEM MONITORING ============
 
     /**
      * Get dashboard statistics for given period.
@@ -307,7 +302,6 @@ class AdminController extends Controller
         );
     }
 
-    // ============ APPEAL MANAGEMENT ============
 
     /**
      * Get paginated list of appeals with filtering.

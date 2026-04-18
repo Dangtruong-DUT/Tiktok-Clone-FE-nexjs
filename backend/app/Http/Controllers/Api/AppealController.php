@@ -55,12 +55,6 @@ class AppealController extends Controller
         return ApiResponse::success(
             data: AppealResource::collection($appeals),
             message: 'Appeals retrieved successfully',
-            meta: [
-                'current_page' => $appeals->currentPage(),
-                'last_page' => $appeals->lastPage(),
-                'total' => $appeals->total(),
-                'per_page' => $appeals->perPage(),
-            ]
         );
     }
 }

@@ -3,7 +3,6 @@ use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\HashtagController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PostController;
@@ -76,18 +75,6 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::get('/unread-count', [NotificationController::class, 'unreadCount'])->name('unread-count');
             Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
             Route::post('/{notification_uuid}/read', [NotificationController::class, 'markAsRead'])->name('mark-as-read');
-        });
-
-    // conversation routes
-    Route::prefix('conversations')
-        ->name('conversations.')
-        ->group(function () {
-            Route::get('/', [ChatController::class, 'index'])->name('index');
-            Route::post('/private', [ChatController::class, 'createPrivate'])->name('create-private');
-            Route::get('/unread-count', [ChatController::class, 'unreadCount'])->name('unread-count');
-            Route::get('/{conversation_id}/messages', [ChatController::class, 'messages'])->name('messages');
-            Route::post('/{conversation_id}/messages', [ChatController::class, 'sendMessage'])->name('send-message');
-            Route::post('/{conversation_id}/read', [ChatController::class, 'markAsRead'])->name('mark-as-read');
         });
 
     // appeal routes

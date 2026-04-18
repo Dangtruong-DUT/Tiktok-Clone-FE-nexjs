@@ -4,7 +4,6 @@ export const NEXT_API_ENDPOINT = {
     API_GOOGLE_LOGIN: '/api/auth/login/google',
     API_LOGOUT: '/api/auth/logout',
     API_REGISTER: '/api/auth/register',
-    API_SET_TOKEN: '/api/auth/token',
     API_VERIFY_EMAIL: '/api/auth/verify-email'
 } as const
 

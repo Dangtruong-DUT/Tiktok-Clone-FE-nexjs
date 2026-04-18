@@ -1,6 +1,5 @@
 import { NEXT_API_ENDPOINT } from '@/config/endpoint.config'
 import { NextWithAuthBaseQuery } from '@/store/services/client'
-import { SetCookieBodyType } from '@/types/auth'
 import {
     LoginResponseType,
     LogoutResType,
@@ -43,13 +42,6 @@ export const AuthApi = createApi({
                 method: 'POST'
             })
         }),
-        setCookie: builder.mutation<void, SetCookieBodyType>({
-            query: (body) => ({
-                url: NEXT_API_ENDPOINT.API_SET_TOKEN,
-                method: 'POST',
-                body
-            })
-        }),
         verifyEmail: builder.mutation<VerifyEmailResType, VerifyEmailReqBodyType>({
             query: (data) => ({
                 url: NEXT_API_ENDPOINT.API_VERIFY_EMAIL,
@@ -65,6 +57,5 @@ export const {
     useLogoutMutation,
     useRegisterMutation,
     useRefreshTokenMutation,
-    useSetCookieMutation,
     useVerifyEmailMutation
 } = AuthApi

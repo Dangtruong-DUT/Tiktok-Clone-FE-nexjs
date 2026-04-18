@@ -89,7 +89,7 @@ class PostAdminService
             $this->adminLogService->log(
                 admin: $admin,
                 resourceType: ResourceTypeEnum::POST,
-                resourceId: $postUuid,
+                resourceId: $post->id,
                 action: AdminActionEnum::HIDE_POST,
                 reason: $data['reason'],
                 oldData: $oldData,
@@ -140,7 +140,7 @@ class PostAdminService
             $this->adminLogService->log(
                 admin: $admin,
                 resourceType: ResourceTypeEnum::POST,
-                resourceId: $postUuid,
+                resourceId: $post->id,
                 action: AdminActionEnum::UNHIDE_POST,
                 oldData: $oldData,
                 newData: $post->only(['hidden_at', 'hidden_reason']),
@@ -188,7 +188,7 @@ class PostAdminService
             $this->adminLogService->log(
                 admin: $admin,
                 resourceType: ResourceTypeEnum::POST,
-                resourceId: $postUuid,
+                resourceId: $post->id,
                 action: AdminActionEnum::DELETE_POST,
                 reason: $data['reason'],
                 oldData: $oldData,

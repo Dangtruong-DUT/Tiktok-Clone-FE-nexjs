@@ -14,7 +14,6 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('resource_type'); // App\Enums\Common\ResourceTypeEnum
             $table->unsignedBigInteger('resource_id');
-            $table->string('resource_uuid')->nullable();
             $table->text('sentence');
             $table->unsignedTinyInteger('label');
             $table->decimal('confidence', 8, 6);

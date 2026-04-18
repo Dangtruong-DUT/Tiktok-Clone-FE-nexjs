@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id
  * @property int $admin_id FK to users
  * @property string $resource_type ('user', 'post', 'comment')
- * @property string $resource_id (User ID, Post UUID, Comment ID)
+ * @property int $resource_id (User ID, Post ID, Comment ID)
  * @property string $action (ban, unban, delete, hide, etc)
  * @property string|null $reason Why the action was taken
  * @property array|null $old_data Previous state (JSON)

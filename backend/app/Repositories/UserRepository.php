@@ -22,6 +22,14 @@ class UserRepository extends BaseRepository
     }
 
     /**
+     * Get super admin user.
+     */
+    public function getSuperAdmin(): ?User
+    {
+        return $this->query()->admin()->first();
+    }
+
+    /**
      * Check if user exists.
      */
     public function isExist(int $id): bool

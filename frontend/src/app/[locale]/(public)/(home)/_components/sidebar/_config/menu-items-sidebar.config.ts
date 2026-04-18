@@ -1,22 +1,6 @@
-import {
-    // Outline icons từ Ant Design Icons
-    AiOutlineHome,
-    AiOutlineCloudUpload,
-    // Filled icons từ Ant Design Icons
-    AiFillHome
-} from 'react-icons/ai'
+import { AiOutlineHome, AiOutlineCloudUpload, AiFillHome } from 'react-icons/ai'
 
-import {
-    // Outline icons từ Heroicons v2
-    HiOutlineChatBubbleLeftRight,
-    HiOutlineUsers,
-    HiOutlineUserGroup,
-    // Filled icons từ Heroicons v2
-    HiChatBubbleLeftRight,
-    HiUsers,
-    HiUserGroup,
-    HiCloudArrowUp
-} from 'react-icons/hi2'
+import { HiOutlineUsers, HiOutlineUserGroup, HiUsers, HiUserGroup, HiCloudArrowUp } from 'react-icons/hi2'
 
 import { IconType } from 'react-icons'
 export const sidebarConfig = {
@@ -64,14 +48,6 @@ export const HOME_MENU_ITEMS: MenuItemConfig[] = [
         to: sidebarConfig.routes.following,
         Icon: HiOutlineUsers,
         ActiveIcon: HiUsers,
-        requiredAuth: true,
-        viewFor: 'all'
-    },
-    {
-        titleKey: 'HomePage.menu.messages',
-        to: sidebarConfig.routes.messages,
-        Icon: HiOutlineChatBubbleLeftRight,
-        ActiveIcon: HiChatBubbleLeftRight,
         requiredAuth: true,
         viewFor: 'all'
     },
