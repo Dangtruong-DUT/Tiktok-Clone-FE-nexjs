@@ -8,10 +8,12 @@ use App\Enums\Notification\EntityTypeEnum;
 use App\Models\AiModerationReport;
 use App\Models\Post;
 use App\Models\User;
+use App\Repositories\PostRepository;
 use App\Services\Admin\AdminModerationNoticeService;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Junges\Kafka\Facades\Kafka;
 
 class AiModerationService
 {
@@ -20,6 +22,7 @@ class AiModerationService
      */
     public function __construct(
         private readonly AdminModerationNoticeService $adminModerationNoticeService,
+        private readonly PostRepository $postRepo
     ) {}
 
     /**
@@ -38,37 +41,31 @@ class AiModerationService
             return;
         }
 
-        $resourceType = $post->parent_id ? AdminResourceEnum::COMMENT->value : AdminResourceEnum::POST->value;
-        $baseUrl = rtrim((string) config('services.ai_moderation.base_url'), '/');
-        $apiKey = (string) config('services.ai_moderation.api_key');
-        $timeout = (int) config('services.ai_moderation.timeout_seconds', 3);
+        $topic = (string) config('services.ai_moderation.kafka.request_topic', 'moderation.request.v1');
+        $broker = (string) config('services.ai_moderation.kafka.bootstrap_servers', 'kafka:29092');
 
-        $headers = [];
-        if ($apiKey !== '') {
-            $headers['X-Moderation-Api-Key'] = $apiKey;
-        }
+        $payload = [
+            'task_id' => (string) Str::uuid(),
+            'resource_type' => $post->type,
+            'resource_id' => (int) $post->id,
+            'resource_uuid' => (string) $post->uuid,
+            'user_id' => (int) $post->user_id,
+            'sentence' => $content,
+            'reason' => null,
+            'enqueued_at' => now()->toIso8601String(),
+        ];
 
         try {
-            $response = Http::timeout($timeout)
-                ->withHeaders($headers)
-                ->post($baseUrl . '/moderation/enqueue', [
-                    'resource_type' => $resourceType,
-                    'resource_id' => $post->id,
-                    'resource_uuid' => $post->uuid,
-                    'user_id' => $post->user_id,
-                    'sentence' => $content,
-                ]);
-
-            if ($response->failed()) {
-                Log::warning('Failed to enqueue AI moderation task', [
-                    'post_id' => $post->id,
-                    'status' => $response->status(),
-                    'response' => $response->body(),
-                ]);
-            }
+            Kafka::publish($broker)
+                ->onTopic($topic)
+                ->withKafkaKey((string) $post->uuid)
+                ->withBody($payload)
+                ->send();
         } catch (\Throwable $exception) {
-            Log::warning('AI moderation enqueue error', [
+            Log::error('Failed to enqueue AI moderation request', [
                 'post_id' => $post->id,
+                'topic' => $topic,
+                'broker' => $broker,
                 'error' => $exception->getMessage(),
             ]);
         }
@@ -77,6 +74,17 @@ class AiModerationService
     /**
      * Apply verdict sent from AI worker and trigger moderation effects.
      * @param array<string,mixed> $payload
+     *                  - task_id,
+     *                  - resource_type
+     *                  - resource_id
+     *                  - resource_uuid
+     *                  - user_id
+     *                  - sentence
+     *                  - label
+     *                  - confidence
+     *                  - reason
+     *                  - moderated_at
+     *                  - raw_payload
      * @return void
      */
     public function applyVerdict(array $payload): void
@@ -86,16 +94,9 @@ class AiModerationService
             return;
         }
 
-        $post = Post::query()->find((int) $payload['resource_id']);
-        if (!$post) {
-            Log::warning('AI moderation verdict resource not found', [
-                'resource_id' => $payload['resource_id'] ?? null,
-                'task_id' => $payload['task_id'] ?? null,
-            ]);
-            return;
-        }
+        $post = $this->postRepo->find((int) $payload['resource_id']);
 
-        if ($post->hidden_at !== null || $post->deleted_at !== null) {
+        if (!$post ||$post->hidden_at !== null || $post->deleted_at !== null) {
             return;
         }
 
@@ -154,7 +155,7 @@ class AiModerationService
      */
     private function resolveSystemAdmin(): ?User
     {
-        $adminId = (int) config('services.ai_moderation.system_admin_user_id', 1);
+        $adminId = (int) config('');
 
         $admin = User::query()->find($adminId);
         if ($admin) {

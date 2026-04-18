@@ -6,7 +6,7 @@ use App\Enums\Settings\PrivacyVisibilityEnum;
 use App\Models\User;
 use Illuminate\Console\Command;
 
-class CreateMissingUserSettings extends Command
+class CreateMissingUserSettingsCommand extends Command
 {
     /**
      * The name and signature of the console command.

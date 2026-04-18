@@ -18,6 +18,8 @@ enum AdminResourceEnum: string implements BaseEnumInterface
     case COMMENT = 'comment';
     case MESSAGE = 'message';
     case APPEAL = 'appeal';
+    case RE_POST = 're-post';
+    case QUOTE_POST = 'quote-post';
 
     /**
      * Get resource values accepted for appeal creation.
@@ -30,6 +32,11 @@ enum AdminResourceEnum: string implements BaseEnumInterface
             self::USER->value,
             self::POST->value,
             self::COMMENT->value,
+            self::MESSAGE->value,
+            self::APPEAL->value,
+            self::RE_POST->value,
+            self::QUOTE_POST->value,
+
         ];
     }
 
@@ -45,6 +52,8 @@ enum AdminResourceEnum: string implements BaseEnumInterface
             self::COMMENT => 'Comment',
             self::MESSAGE => 'Message',
             self::APPEAL => 'Appeal',
+            self::RE_POST => 'Re-Post',
+            self::QUOTE_POST => 'Quote Post',
         };
     }
 
@@ -60,6 +69,8 @@ enum AdminResourceEnum: string implements BaseEnumInterface
             self::COMMENT => 'Bình luận',
             self::MESSAGE => 'Tin nhắn',
             self::APPEAL => 'Kháng cáo',
+            self::RE_POST => 'Đăng lại',
+            self::QUOTE_POST => 'Trích dẫn bài viết',
         };
     }
 }

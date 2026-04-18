@@ -241,7 +241,7 @@ services:
     ports:
       - "${KAFKA_UI_PORT:-8087}:8080"
     environment:
-      KAFKA_CLUSTERS_0_NAME: cinemate
+      KAFKA_CLUSTERS_0_NAME: snapi
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
       DYNAMIC_CONFIG_ENABLED: "true"
     depends_on:
