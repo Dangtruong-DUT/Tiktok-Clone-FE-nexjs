@@ -31,7 +31,7 @@ class PhoBERTClassifier(nn.Module):
 @dataclass
 class InferenceConfig:
     model_name: str = "vinai/phobert-base"
-    model_path: str = "training/best_phobert_model.pt"
+    model_path: str = "models/best_phobert_model.pt"
     max_length: int = 256
     device: str = "auto"
     vncorenlp_jar_path: Optional[str] = None
@@ -153,7 +153,7 @@ class ToxicInferenceService:
 def build_default_service(strict_segment: bool = False) -> ToxicInferenceService:
     config = InferenceConfig(
         model_name=os.getenv("AI_MODEL_NAME", "vinai/phobert-base"),
-        model_path=os.getenv("AI_MODEL_PATH", "training/best_phobert_model.pt"),
+        model_path=os.getenv("AI_MODEL_PATH", "models/best_phobert_model.pt"),
         max_length=int(os.getenv("AI_MAX_LENGTH", "256")),
         device=os.getenv("AI_DEVICE", "auto"),
         vncorenlp_jar_path=os.getenv("VNCORENLP_JAR_PATH"),

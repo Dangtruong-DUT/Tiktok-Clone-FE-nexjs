@@ -12,7 +12,7 @@ Production-ready inference service for Vietnamese toxic classification.
 ## Environment Variables
 
 - `AI_MODEL_NAME` (default: `vinai/phobert-base`)
-- `AI_MODEL_PATH` (default: `training/best_phobert_model.pt`)
+- `AI_MODEL_PATH` (default: `models/best_phobert_model.pt`)
 - `AI_MAX_LENGTH` (default: `256`)
 - `AI_DEVICE` (default: `auto`)
 - `VNCORENLP_JAR_PATH` (required in strict mode)

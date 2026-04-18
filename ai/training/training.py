@@ -15,6 +15,9 @@ from torch.utils.data import DataLoader, Dataset
 from transformers import AutoModel, AutoTokenizer
 
 
+BASE_DIR = Path(__file__).resolve().parents[1]
+
+
 def set_seed(seed: int) -> None:
     random.seed(seed)
     np.random.seed(seed)
@@ -256,6 +259,8 @@ def train_pipeline(args: argparse.Namespace) -> None:
 
     best_f1 = -1.0
     output_path = Path(args.output_model_path)
+    if not output_path.is_absolute():
+        output_path = BASE_DIR / output_path
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     for epoch in range(1, args.epochs + 1):
@@ -324,7 +329,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output-model-path",
         type=str,
-        default="training/best_phobert_model.pt",
+        default="models/best_phobert_model.pt",
         help="Where to save the best checkpoint",
     )
     parser.add_argument(

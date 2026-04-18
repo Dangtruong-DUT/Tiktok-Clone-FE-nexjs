@@ -11,7 +11,7 @@ MODEL_NAME = "vinai/phobert-base"
 MAX_LEN = 256
 BATCH_SIZE = 32
 BASE_DIR = Path(__file__).resolve().parents[1]
-MODEL_PATH = BASE_DIR / "training/best_phobert_model.pt"
+MODEL_PATH = BASE_DIR / "models/best_phobert_model.pt"
 TEST_PATH = BASE_DIR / "data/processed/balanced/test.csv"
 OUT_DIR = BASE_DIR / "training/eval_outputs"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
