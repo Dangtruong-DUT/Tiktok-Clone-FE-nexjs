@@ -8,7 +8,7 @@
     <style>
         .mail {
             margin: 0;
-            background: #edf2f7;
+            background: #f5f5f5;
             font-family: Arial, sans-serif;
         }
 
@@ -22,21 +22,20 @@
             max-width: 100%;
             margin: 0 auto;
             background: #ffffff;
-            border: 1px solid #d9e3f0;
-            border-radius: 8px;
-            overflow: hidden;
+            border: 1px solid #e0e0e0;
+            /* bỏ bo góc */
         }
 
         .mail__header {
             padding: 20px 32px 0;
-            color: #102542;
+            color: #000000;
             font-size: 13px;
             font-weight: 700;
         }
 
         .mail__body {
             padding: 20px 32px 28px;
-            color: #223046;
+            color: #333333;
             font-size: 14px;
             line-height: 1.65;
         }
@@ -46,7 +45,7 @@
             line-height: 1.25;
             font-weight: 700;
             margin: 0 0 16px;
-            color: #102542;
+            color: #000000;
         }
 
         .mail__text {
@@ -61,36 +60,35 @@
         .mail__button {
             display: inline-block;
             padding: 12px 22px;
-            background: #102542;
+            background: #000000;
             color: #ffffff;
             text-decoration: none;
             font-size: 14px;
             font-weight: 700;
-            border-radius: 6px;
-            letter-spacing: 0.2px;
+            /* bỏ bo góc */
         }
 
         .mail__notice {
             margin-top: 14px;
-            background: #f8fbff;
-            border: 1px solid #d7e4f8;
-            border-radius: 10px;
+            background: #fafafa;
+            border: 1px solid #e5e5e5;
             padding: 12px 14px;
-            color: #284870;
+            color: #555555;
             font-size: 13px;
+            /* bỏ bo góc */
         }
 
         .mail__link-wrap {
             margin-top: 14px;
-            background: #f7f9fc;
-            border: 1px dashed #c9d5e6;
-            border-radius: 10px;
+            background: #fafafa;
+            border: 1px dashed #d0d0d0;
             padding: 10px 12px;
+            /* bỏ bo góc */
         }
 
         .mail__link {
             font-size: 12px;
-            color: #334e75;
+            color: #444444;
             word-break: break-all;
             margin: 0;
         }
@@ -98,8 +96,8 @@
         .mail__footer {
             padding: 16px 32px 20px;
             font-size: 12px;
-            color: #7b8aa0;
-            border-top: 1px solid #e5edf7;
+            color: #888888;
+            border-top: 1px solid #e5e5e5;
             text-align: center;
         }
 
@@ -114,7 +112,7 @@
     </style>
 </head>
 
-<body class="mail" style="margin:0;background:#edf2f7;">
+<body class="mail" style="margin:0;background:#f5f5f5;">
 
 <table width="100%" cellpadding="0" cellspacing="0">
 <tr>
@@ -128,7 +126,6 @@
             </td>
         </tr>
 
-        <!-- Body -->
         <tr>
             <td class="mail__body">
 
@@ -166,7 +163,6 @@
             </td>
         </tr>
 
-        <!-- Footer -->
         <tr>
             <td class="mail__footer">
                 © {{ date('Y') }} {{ config('app.name') }}. All rights reserved.

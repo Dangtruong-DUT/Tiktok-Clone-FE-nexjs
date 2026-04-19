@@ -8,7 +8,7 @@
     <style>
         .mail {
             margin: 0;
-            background: #edf2f7;
+            background: #f5f5f5;
             font-family: Arial, sans-serif;
         }
 
@@ -22,21 +22,19 @@
             max-width: 100%;
             margin: 0 auto;
             background: #ffffff;
-            border: 1px solid #d9e3f0;
-            border-radius: 8px;
-            overflow: hidden;
+            border: 1px solid #e0e0e0;
         }
 
         .mail__header {
             padding: 20px 32px 0;
-            color: #113b27;
+            color: #000000;
             font-size: 13px;
             font-weight: 700;
         }
 
         .mail__body {
             padding: 20px 32px 28px;
-            color: #223046;
+            color: #333333;
             font-size: 14px;
             line-height: 1.65;
         }
@@ -46,7 +44,7 @@
             line-height: 1.25;
             font-weight: 700;
             margin: 0 0 16px;
-            color: #113b27;
+            color: #000000;
         }
 
         .mail__text {
@@ -61,30 +59,27 @@
         .mail__button {
             display: inline-block;
             padding: 12px 22px;
-            background: #113b27;
+            background: #000000;
             color: #ffffff;
             text-decoration: none;
             font-size: 14px;
             font-weight: 700;
-            border-radius: 6px;
-            letter-spacing: 0.2px;
         }
 
         .mail__notice {
             margin-top: 14px;
-            background: #f4fbf7;
-            border: 1px solid #d3eadc;
-            border-radius: 10px;
+            background: #fafafa;
+            border: 1px solid #e5e5e5;
             padding: 12px 14px;
-            color: #23543d;
+            color: #555555;
             font-size: 13px;
         }
 
         .mail__footer {
             padding: 16px 32px 20px;
             font-size: 12px;
-            color: #7b8aa0;
-            border-top: 1px solid #e5edf7;
+            color: #888888;
+            border-top: 1px solid #e5e5e5;
             text-align: center;
         }
 
@@ -99,7 +94,7 @@
     </style>
 </head>
 
-<body class="mail" style="margin:0;background:#edf2f7;">
+<body class="mail" style="margin:0;background:#f5f5f5;">
 
 <table width="100%" cellpadding="0" cellspacing="0">
 <tr>
@@ -107,6 +102,7 @@
 
     <table class="mail__container" cellpadding="0" cellspacing="0">
 
+        <!-- Header -->
         <tr>
             <td class="mail__header">
                 {{ config('app.name') }}
@@ -118,7 +114,7 @@
             <td class="mail__body">
 
                 <div class="mail__title">
-                    🎉 Your account has been verified!
+                    Your account has been verified
                 </div>
 
                 <p class="mail__text" style="margin-top:0;">
@@ -126,11 +122,11 @@
                 </p>
 
                 <p class="mail__text">
-                    Congratulations! Your account has been successfully verified.
+                    Your account has been successfully verified.
                 </p>
 
                 <p class="mail__text">
-                    Welcome to <strong>{{ config('app.name') }}</strong>. You can now enjoy all features of our platform.
+                    You can now access all features of <strong>{{ config('app.name') }}</strong>.
                 </p>
 
                 <div class="mail__button-wrapper">
@@ -140,11 +136,11 @@
                 </div>
 
                 <div class="mail__notice">
-                    If you have any questions or need help, feel free to contact our support team.
+                    If you have any questions, please contact our support team.
                 </div>
 
                 <p class="mail__text">
-                    We're glad to have you with us.
+                    Thank you for joining us.
                 </p>
 
             </td>

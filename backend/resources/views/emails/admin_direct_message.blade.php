@@ -5,21 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $subjectLine }}</title>
 </head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #1f2937; background: #f9fafb; margin: 0; padding: 20px;">
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 640px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px;">
+
+<body style="margin:0;background:#f5f5f5;font-family:Arial,sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td align="center" style="padding:28px 14px;">
+
+    <table width="560" style="max-width:100%;background:#ffffff;border:1px solid #e0e0e0;">
+
+        <!-- Header -->
         <tr>
-            <td style="padding: 24px;">
-                <h2 style="margin: 0 0 12px; font-size: 20px; color: #111827;">{{ $subjectLine }}</h2>
-
-                <p style="margin: 0 0 14px;">Hi {{ $targetUserName }},</p>
-                <p style="margin: 0 0 14px; white-space: pre-line;">{{ $messageBody }}</p>
-
-                <p style="margin: 16px 0 0;">Regards,<br>{{ $adminName }} (Admin Team)</p>
-
-                <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 20px 0;">
-                <p style="margin: 0; font-size: 12px; color: #6b7280;">This message was sent from {{ $appName }} admin panel.</p>
+            <td style="padding:20px 32px 0;font-size:13px;font-weight:700;color:#000000;">
+                {{ $appName }}
             </td>
         </tr>
+
+        <!-- Body -->
+        <tr>
+            <td style="padding:20px 32px 28px;font-size:14px;line-height:1.65;color:#333333;">
+
+                <div style="font-size:24px;font-weight:700;margin-bottom:16px;color:#000000;">
+                    {{ $subjectLine }}
+                </div>
+
+                <p style="margin:0 0 12px;">
+                    Hello {{ $targetUserName }},
+                </p>
+
+                <p style="margin:0 0 14px;white-space:pre-line;">
+                    {{ $messageBody }}
+                </p>
+
+                <p style="margin-top:20px;">
+                    Regards,<br>
+                    {{ $adminName }} (Admin Team)
+                </p>
+
+            </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+            <td style="padding:16px 32px 20px;font-size:12px;color:#888888;border-top:1px solid #e5e5e5;text-align:center;">
+                © {{ date('Y') }} {{ $appName }}. All rights reserved.
+            </td>
+        </tr>
+
     </table>
+
+</td>
+</tr>
+</table>
+
 </body>
 </html>
