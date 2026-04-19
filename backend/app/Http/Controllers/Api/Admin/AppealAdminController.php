@@ -8,7 +8,7 @@ use App\Http\Requests\Admin\Appeal\GetAppealsRequest;
 use App\Http\Requests\Admin\Appeal\RejectAppealRequest;
 use App\Http\Resources\Api\Appeal\AppealResource;
 use App\Http\Response\ApiResponse;
-use App\Services\AppealService;
+use App\Services\Admin\AdminAppealService;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -20,7 +20,7 @@ class AppealAdminController extends Controller
      * AppealAdminController constructor.
      */
     public function __construct(
-        private readonly AppealService $appealService,
+        private readonly AdminAppealService $appealService,
     ) {}
 
     /**
@@ -28,9 +28,9 @@ class AppealAdminController extends Controller
      * @param GetAppealsRequest $request
      * @return JsonResponse
      */
-    public function getAppeals(GetAppealsRequest $request): JsonResponse
+    public function index(GetAppealsRequest $request): JsonResponse
     {
-        $appeals = $this->appealService->getAllAppeals($request->validated());
+        $appeals = $this->appealService->getAppeals($request->validated());
 
         return ApiResponse::success(
             data: AppealResource::collection($appeals),
@@ -43,7 +43,7 @@ class AppealAdminController extends Controller
      * @param ApproveAppealRequest $request
      * @return JsonResponse
      */
-    public function approveAppeal(ApproveAppealRequest $request): JsonResponse
+    public function approve(ApproveAppealRequest $request): JsonResponse
     {
         $appeal = $this->appealService->approve($request->validated());
 
@@ -58,7 +58,7 @@ class AppealAdminController extends Controller
      * @param RejectAppealRequest $request
      * @return JsonResponse
      */
-    public function rejectAppeal(RejectAppealRequest $request): JsonResponse
+    public function reject(RejectAppealRequest $request): JsonResponse
     {
         $appeal = $this->appealService->reject($request->validated());
 

@@ -16,6 +16,7 @@ enum AppealTypeEnum: string implements BaseEnumInterface
     case POST_HIDDEN = 'post_hidden';
     case POST_DELETED = 'post_deleted';
     case COMMENT_DELETED = 'comment_deleted';
+    case COMMENT_HIDDEN = 'comment_hidden';
 
     public function label(): string
     {
@@ -24,6 +25,7 @@ enum AppealTypeEnum: string implements BaseEnumInterface
             self::POST_HIDDEN => 'Post Hidden Appeal',
             self::POST_DELETED => 'Post Deleted Appeal',
             self::COMMENT_DELETED => 'Comment Deleted Appeal',
+            self::COMMENT_HIDDEN => 'Comment Hidden Appeal',
         };
     }
 
@@ -34,6 +36,7 @@ enum AppealTypeEnum: string implements BaseEnumInterface
             self::POST_HIDDEN => 'Kháng cáo ẩn bài viết',
             self::POST_DELETED => 'Kháng cáo xóa bài viết',
             self::COMMENT_DELETED => 'Kháng cáo xóa bình luận',
+            self::COMMENT_HIDDEN => 'Kháng cáo ẩn bình luận',
         };
     }
 }

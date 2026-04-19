@@ -120,9 +120,9 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::get('/activity-logs', [SystemAdminController::class, 'getActivityLogs'])->name('activity-logs');
 
             // Appeal management
-            Route::get('/appeals', [AppealAdminController::class, 'getAppeals'])->name('list-appeals');
-            Route::post('/appeals/{appeal_uuid}/approve', [AppealAdminController::class, 'approveAppeal'])->name('approve-appeal');
-            Route::post('/appeals/{appeal_uuid}/reject', [AppealAdminController::class, 'rejectAppeal'])->name('reject-appeal');
+            Route::get('/appeals', [AppealAdminController::class, 'index'])->name('list-appeals');
+            Route::post('/appeals/{appeal_uuid}/approve', [AppealAdminController::class, 'approve'])->name('approve-appeal');
+            Route::post('/appeals/{appeal_uuid}/reject', [AppealAdminController::class, 'reject'])->name('reject-appeal');
         });
 });
 

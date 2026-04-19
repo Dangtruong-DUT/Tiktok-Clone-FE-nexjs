@@ -30,7 +30,6 @@ class AppealController extends Controller
     public function create(CreateAppealRequest $request): JsonResponse
     {
         $appeal = $this->appealService->create(
-            $request->user(),
             $request->validated()
         );
 
@@ -47,8 +46,7 @@ class AppealController extends Controller
      */
     public function index(GetMyAppealsRequest $request): JsonResponse
     {
-        $appeals = $this->appealService->getUserAppeals(
-            $request->user(),
+        $appeals = $this->appealService->getAppeals(
             $request->validated()
         );
 

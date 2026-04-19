@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Appeal;
 use App\Http\Requests\BaseRequest;
-
+use Illuminate\Validation\Rule;
 
 class GetMyAppealsRequest extends BaseRequest
 {
@@ -17,7 +17,7 @@ class GetMyAppealsRequest extends BaseRequest
             'per_page' => [self::NULLABLE],
             'appeal_status' => [self::NULLABLE],
             'appeal_type' => [self::NULLABLE],
-            'order_by' => [self::NULLABLE, 'in:recent,oldest'],
+            'order_by' => [self::NULLABLE, Rule::in(['created_at', '-created_at'])],
         ]);
     }
 }

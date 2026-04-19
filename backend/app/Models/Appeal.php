@@ -4,12 +4,16 @@ namespace App\Models;
 
 use App\Enums\Appeal\AppealStatusEnum;
 use App\Enums\Appeal\AppealTypeEnum;
+use App\Traits\HasUuidObservable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Builder;
 
 class Appeal extends Model
 {
+    use HasUuidObservable;
+
     /**
      * @var array<int, string>
      */
@@ -51,44 +55,11 @@ class Appeal extends Model
     }
 
     /**
-     * Filter appeals by user.
+     * Scope query to appeals of a specific user.
      */
-    public function scopeByUser(Builder $query, int $userId): Builder
+    #[Scope]
+    public function byUserId(Builder $query, int $userId): Builder
     {
         return $query->where('user_id', $userId);
-    }
-
-    /**
-     * Filter appeals by status.
-     */
-    public function scopeByStatus(Builder $query, AppealStatusEnum|string $status): Builder
-    {
-        $statusValue = $status instanceof AppealStatusEnum ? $status->value : $status;
-        return $query->where('status', $statusValue);
-    }
-
-    /**
-     * Filter appeals by type.
-     */
-    public function scopeByType(Builder $query, AppealTypeEnum|string $type): Builder
-    {
-        $typeValue = $type instanceof AppealTypeEnum ? $type->value : $type;
-        return $query->where('appeal_type', $typeValue);
-    }
-
-    /**
-     * Filter pending appeals.
-     */
-    public function scopePending(Builder $query): Builder
-    {
-        return $query->byStatus(AppealStatusEnum::PENDING);
-    }
-
-    /**
-     * Filter recent appeals (last 30 days).
-     */
-    public function scopeRecent(Builder $query): Builder
-    {
-        return $query->where('created_at', '>=', now()->subDays(30));
     }
 }

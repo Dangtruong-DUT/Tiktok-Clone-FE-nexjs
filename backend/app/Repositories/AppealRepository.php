@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Enums\Appeal\AppealStatusEnum;
 use App\Models\Appeal;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 
 class AppealRepository extends BaseRepository
 {
@@ -78,27 +79,23 @@ class AppealRepository extends BaseRepository
      *
      * @param int $userId
      * @param array<string,mixed> $filters
-     *                     - status: string (optional)
+     *                     - appeal_status: string (optional)
      *                     - appeal_type: string (optional)
-     *                     - sort_by: string 'recent'|'oldest' (optional, default 'recent')
+     *                     - order_by: string 'recent'|'oldest' (optional, default 'recent')
      * @return LengthAwarePaginator
      */
     public function getByUser(int $userId, array $filters): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
-        $query = $this->query()->byUser($userId);
-
-        if ($status = $filterCollection->get('status')) {
-            $query->byStatus($status);
-        }
-
-        if ($appealType = $filterCollection->get('appeal_type')) {
-            $query->byType($appealType);
-        }
-
-        $sortBy = (string) $filterCollection->get('sort_by', 'recent');
-        $query->orderBy('created_at', $sortBy === 'recent' ? 'desc' : 'asc');
-
+        $query =$this
+                ->buildSearchQuery($filters)
+                ->byUser($userId)
+                ->when($filterCollection->get('order_by'),function (Builder $query, $orderBy) {
+                    $query->orderByMultiple($orderBy);
+                },
+                function (Builder $query) {
+                    $query->orderBy('created_at', 'desc');
+                });
         return $query->paginate((int) $filterCollection->get('per_page', 15));
     }
 
@@ -113,21 +110,39 @@ class AppealRepository extends BaseRepository
     public function getForAdmin(array $filters): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
-        $query = $this->query()
-        ->when($filterCollection->get("appeal_status"), function ($query) use ($filterCollection) {
-            $query->byStatus($filterCollection->get("appeal_status"));
-        }, function ($query) {
-            $query->pending();
-        })
-        ->when($filterCollection->get("appeal_type"), function ($query) use ($filterCollection) {
-            $query->byType($filterCollection->get("appeal_type"));
+        $query = $this->buildSearchQuery($filters)
+        ->when($filterCollection->get('order_by'),function (Builder $query, $orderBy) {
+            $query->orderByMultiple($orderBy);
+        },
+        function (Builder $query) {
+            $query->orderBy('created_at', 'desc');
         });
-        $sortBy = (string) $filterCollection->get('order_by', 'recent');
-        $sortDirection = $sortBy === 'oldest' ? 'asc' : 'desc';
 
         return $query
             ->with(['user', 'reviewer'])
-            ->orderBy('created_at', $sortDirection)
             ->paginate((int) $filterCollection->get('per_page', 20));
+    }
+
+    /**
+     * Build search query for appeals with filters
+     * @param array<string,mixed> $filters
+     *                            -  appeal_status: string (optional)
+     *                            -  appeal_type: string (optional)
+     * @return Builder
+     */
+    private function buildSearchQuery(array $filters): Builder
+    {
+        $filterCollection = collect($filters);
+        $query = $this->query()
+            ->when($filterCollection->get("appeal_status"), function ($query, $appeal_status) {
+                $query->where('status', $appeal_status);
+            }, function ($query) {
+                $query->pending();
+            })
+            ->when($filterCollection->get("appeal_type"), function ($query, $appeal_type) {
+                $query->where('appeal_type', $appeal_type);
+            });
+
+        return $query;
     }
 }
