@@ -6,14 +6,16 @@ use App\Enums\Admin\AdminActionEnum;
 use App\Enums\Common\ResourceTypeEnum;
 use App\Enums\Common\ModelEntityTypeEnum;
 use App\Models\Post;
-use App\Models\User;
 use App\Repositories\PostRepository;
+use App\Traits\HasAuthUser;
 use BadMethodCallException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class PostAdminService
 {
+    use HasAuthUser;
+
     public function __construct(
         private readonly PostRepository $postRepository,
         private readonly AdminLogService $adminLogService,
@@ -24,14 +26,14 @@ class PostAdminService
      * Get paginated list of posts with filtering
      *
      * @param array $filters {
-     *     search?: string,
-     *     user_id?: int,
+     *     q?: string,
+     *     user_uuid?: string,
      *     status?: 'all'|'visible'|'hidden'|'deleted',
      *     date_from?: string (Y-m-d),
      *     date_to?: string (Y-m-d),
      *     page?: int,
      *     per_page?: int,
-     *     sort_by?: string
+     *     order_by?: string
      * }
     * @return LengthAwarePaginator
      */
@@ -64,26 +66,25 @@ class PostAdminService
     /**
      * Hide a post from public view
      *
-     * @param User $admin The admin performing the action
-     * @param string $postUuid The target post UUID
-     * @param array $data {reason: string}
+     * @param array{post_uuid:string,reason:string} $payload
      * @return Post Updated post
      * @throws \Exception
      */
-    public function hidePost(User $admin, string $postUuid, array $data): Post
+    public function hidePost(array $payload): Post
     {
-        $post = $this->postRepository->findByUuidOrFail($postUuid);
+        $admin = $this->guard()->user();
+        $post = $this->postRepository->findByUuidOrFail((string) $payload['post_uuid']);
 
         if ($post->hidden_at !== null) {
             throw new BadMethodCallException('Post is already hidden');
         }
 
-        return DB::transaction(function () use ($admin, $post, $postUuid, $data) {
+        return DB::transaction(function () use ($admin, $post, $payload) {
             $oldData = $post->only(['hidden_at', 'hidden_reason']);
 
             $post->update([
                 'hidden_at' => now(),
-                'hidden_reason' => $data['reason'],
+                'hidden_reason' => $payload['reason'],
             ]);
 
             $this->adminLogService->log(
@@ -91,7 +92,7 @@ class PostAdminService
                 resourceType: ResourceTypeEnum::POST,
                 resourceId: $post->id,
                 action: AdminActionEnum::HIDE_POST,
-                reason: $data['reason'],
+                reason: $payload['reason'],
                 oldData: $oldData,
                 newData: $post->only(['hidden_at', 'hidden_reason']),
             );
@@ -100,7 +101,7 @@ class PostAdminService
                 admin: $admin,
                 targetUser: $post->user,
                 action: AdminActionEnum::HIDE_POST,
-                reason: (string) $data['reason'],
+                reason: (string) $payload['reason'],
                 entityType: ModelEntityTypeEnum::POST,
                 entityId: $post->id,
                 context: [
@@ -116,20 +117,20 @@ class PostAdminService
     /**
      * Unhide a post (make it visible again)
      *
-     * @param User $admin The admin performing the action
-     * @param string $postUuid The target post UUID
+     * @param array{post_uuid:string} $payload
      * @return Post Updated post
      * @throws \Exception
      */
-    public function unhidePost(User $admin, string $postUuid): Post
+    public function unhidePost(array $payload): Post
     {
-        $post = $this->postRepository->findByUuidOrFail($postUuid);
+        $admin = $this->guard()->user();
+        $post = $this->postRepository->findByUuidOrFail((string) $payload['post_uuid']);
 
         if ($post->hidden_at === null) {
             throw new BadMethodCallException('Post is not hidden');
         }
 
-        return DB::transaction(function () use ($admin, $post, $postUuid) {
+        return DB::transaction(function () use ($admin, $post) {
             $oldData = $post->only(['hidden_at', 'hidden_reason']);
 
             $post->update([
@@ -166,17 +167,16 @@ class PostAdminService
     /**
      * Delete a post permanently (soft delete)
      *
-     * @param User $admin The admin performing the action
-     * @param string $postUuid The target post UUID
-     * @param array $data {reason: string}
+     * @param array{post_uuid:string,reason:string} $payload
      * @return void
      * @throws \Exception
      */
-    public function deletePost(User $admin, string $postUuid, array $data): void
+    public function deletePost(array $payload): void
     {
-        $post = $this->postRepository->findByUuidOrFail($postUuid);
+        $admin = $this->guard()->user();
+        $post = $this->postRepository->findByUuidOrFail((string) $payload['post_uuid']);
 
-        DB::transaction(function () use ($admin, $post, $postUuid, $data) {
+        DB::transaction(function () use ($admin, $post, $payload) {
             $oldData = [
                 'uuid' => $post->uuid,
                 'user_id' => $post->user_id,
@@ -190,7 +190,7 @@ class PostAdminService
                 resourceType: ResourceTypeEnum::POST,
                 resourceId: $post->id,
                 action: AdminActionEnum::DELETE_POST,
-                reason: $data['reason'],
+                reason: $payload['reason'],
                 oldData: $oldData,
                 newData: null,
             );
@@ -199,7 +199,7 @@ class PostAdminService
                 admin: $admin,
                 targetUser: $post->user,
                 action: AdminActionEnum::DELETE_POST,
-                reason: (string) $data['reason'],
+                reason: (string) $payload['reason'],
                 entityType: ModelEntityTypeEnum::POST,
                 entityId: $post->id,
                 context: [

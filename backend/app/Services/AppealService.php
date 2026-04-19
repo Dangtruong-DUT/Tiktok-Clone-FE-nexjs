@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Repositories\AppealRepository;
 use App\Repositories\PostRepository;
 use App\Services\Admin\AdminLogService;
+use App\Traits\HasAuthUser;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -22,6 +23,8 @@ use Illuminate\Support\Facades\Log;
  */
 class AppealService
 {
+    use HasAuthUser;
+
     /**
      * AppealService constructor.
      */
@@ -85,14 +88,13 @@ class AppealService
 
     /**
      * Approve an appeal and reverse the admin action
-     * @param User $admin
-     * @param int $appealId
-     * @param array $data {admin_response?: string}
+     * @param array{appeal_uuid:string,admin_response?:string} $payload
      * @return Appeal
      */
-    public function approve(User $admin, int $appealId, array $data): Appeal
+    public function approve(array $payload): Appeal
     {
-        $appeal = $this->appealRepository->findById($appealId);
+        $admin = $this->guard()->user();
+        $appeal = $this->appealRepository->findByUuid((string) $payload['appeal_uuid']);
 
         if (!$appeal) {
             throw new NotFoundException('Appeal not found');
@@ -104,7 +106,7 @@ class AppealService
             ]);
         }
 
-        return DB::transaction(function () use ($appeal, $admin, $data): Appeal {
+        return DB::transaction(function () use ($appeal, $admin, $payload): Appeal {
             $oldData = $appeal->only(['status', 'admin_response', 'reviewed_by', 'reviewed_at']);
             $appealType = $appeal->appeal_type instanceof AppealTypeEnum
                 ? $appeal->appeal_type
@@ -113,7 +115,7 @@ class AppealService
             // Update appeal status
             $appeal->update([
                 'status' => AppealStatusEnum::APPROVED->value,
-                'admin_response' => $data['admin_response'] ?? null,
+                'admin_response' => $payload['admin_response'] ?? null,
                 'reviewed_by' => $admin->id,
                 'reviewed_at' => now(),
             ]);
@@ -138,14 +140,13 @@ class AppealService
 
     /**
      * Reject an appeal
-     * @param User $admin
-     * @param int $appealId
-     * @param array $data {admin_response: string}
+     * @param array{appeal_uuid:string,admin_response:string} $payload
      * @return Appeal
      */
-    public function reject(User $admin, int $appealId, array $data): Appeal
+    public function reject(array $payload): Appeal
     {
-        $appeal = $this->appealRepository->findById($appealId);
+        $admin = $this->guard()->user();
+        $appeal = $this->appealRepository->findByUuid((string) $payload['appeal_uuid']);
 
         if (!$appeal) {
             throw new NotFoundException('Appeal not found');
@@ -157,7 +158,7 @@ class AppealService
             ]);
         }
 
-        return DB::transaction(function () use ($appeal, $admin, $data): Appeal {
+        return DB::transaction(function () use ($appeal, $admin, $payload): Appeal {
             $oldData = $appeal->only(['status', 'admin_response', 'reviewed_by', 'reviewed_at']);
             $appealType = $appeal->appeal_type instanceof AppealTypeEnum
                 ? $appeal->appeal_type
@@ -166,7 +167,7 @@ class AppealService
             // Update appeal status
             $appeal->update([
                 'status' => AppealStatusEnum::REJECTED->value,
-                'admin_response' => $data['admin_response'],
+                'admin_response' => $payload['admin_response'],
                 'reviewed_by' => $admin->id,
                 'reviewed_at' => now(),
             ]);
@@ -255,4 +256,5 @@ class AppealService
             }
         }
     }
+
 }

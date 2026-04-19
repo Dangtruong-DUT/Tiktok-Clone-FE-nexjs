@@ -122,12 +122,12 @@ class PostRepository extends BaseRepository
         $filterCollection = collect($filters);
         $query = $this->query();
 
-        if ($search = $filterCollection->get('search')) {
-            $query->where('content', 'like', "%{$search}%");
+        if ($queryText = $filterCollection->get('q')) {
+            $query->where('content', 'like', "%{$queryText}%");
         }
 
-        if ($userId = $filterCollection->get('user_id')) {
-            $query->where('user_id', $userId);
+        if ($userUuid = $filterCollection->get('user_uuid')) {
+            $query->whereHas('user', fn (Builder $userQuery) => $userQuery->where('uuid', $userUuid));
         }
 
         if ($status = $filterCollection->get('status')) {
@@ -147,14 +147,14 @@ class PostRepository extends BaseRepository
             $query->whereDate('created_at', '<=', $to);
         }
 
-        $sortBy = (string) $filterCollection->get('sort_by', '-created_at');
+        $sortBy = (string) $filterCollection->get('order_by', '-created_at');
         $this->applySort($query, $sortBy);
 
         $perPage = min((int) $filterCollection->get('per_page', 20), 100);
 
         return $query
             ->with([
-                'user:id,username,avatar_file_id',
+                'user:id,uuid,username,avatar_file_id',
                 'user.avatarFile:id',
                 'media:id,post_id,type,upload_file_id',
                 'media.file:id',
@@ -173,15 +173,15 @@ class PostRepository extends BaseRepository
 
         $query = $this->query()
             ->whereNotNull('parent_id')
-            ->when($filterCollection->get('search'), function (Builder $query, $search) {
-                $query->where('content', 'like', "%{$search}%");
+            ->when($filterCollection->get('q'), function (Builder $query, $queryText) {
+                $query->where('content', 'like', "%{$queryText}%");
             })
             ->when($filterCollection->get('post_uuid'), function (Builder $query, $postUuid) {
                 $parentPost = $this->findByUuidOrFail((string) $postUuid);
                 $query->where('parent_id', $parentPost->id);
             })
-            ->when($filterCollection->get('user_id'), function (Builder $query, $userId) {
-                $query->where('user_id', $userId);
+            ->when($filterCollection->get('user_uuid'), function (Builder $query, $userUuid) {
+                $query->whereHas('user', fn (Builder $userQuery) => $userQuery->where('uuid', $userUuid));
             })
             ->when($filterCollection->get('date_from'), function (Builder $query, $dateFrom) {
                 $query->whereDate('created_at', '>=', $dateFrom);
@@ -190,7 +190,7 @@ class PostRepository extends BaseRepository
                 $query->whereDate('created_at', '<=', $dateTo);
             })
             ->when(
-                $filterCollection->get('sort_by'),
+                $filterCollection->get('order_by'),
                 fn (Builder $query, $sortBy) => $this->applySort($query, (string) $sortBy),
                 fn (Builder $query) => $query->orderByDesc('created_at')
             );
@@ -199,10 +199,10 @@ class PostRepository extends BaseRepository
 
         return $query
             ->with([
-                'user:id,username,avatar_file_id',
+                'user:id,uuid,username,avatar_file_id',
                 'user.avatarFile:id',
                 'parent:id,uuid,user_id,content',
-                'parent.user:id,username',
+                'parent.user:id,uuid,username',
             ])
             ->select(['id', 'uuid', 'user_id', 'parent_id', 'content', 'created_at', 'likes_count'])
             ->paginate($perPage);

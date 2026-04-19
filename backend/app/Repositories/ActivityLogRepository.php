@@ -28,13 +28,13 @@ class ActivityLogRepository extends BaseRepository
 
         $query = $this->buildSearchQuery($filterCollection);
 
-        $sortBy = (string) $filterCollection->get('sort_by', '-created_at');
+        $sortBy = (string) $filterCollection->get('order_by', '-created_at');
         $this->applySort($query, $sortBy);
 
         $perPage = min((int) $filterCollection->get('per_page', 20), 100);
 
         return $query
-            ->with(['user:id,username,avatar_file_id', 'user.avatarFile:id,url'])
+            ->with(['user:id,uuid,username,avatar_file_id', 'user.avatarFile:id,url'])
             ->paginate($perPage);
     }
 
@@ -46,11 +46,11 @@ class ActivityLogRepository extends BaseRepository
     private function buildSearchQuery(Collection $filterCollection): Builder
     {
         return $this->query()
-            ->when($filterCollection->get('activity_type'), function (Builder $query, $activityType) {
+            ->when($filterCollection->get('action_type'), function (Builder $query, $activityType) {
                 $query->where('activity_type', $activityType);
             })
-            ->when($filterCollection->get('user_id'), function (Builder $query, $userId) {
-                $query->where('user_id', $userId);
+            ->when($filterCollection->get('user_uuid'), function (Builder $query, $userUuid) {
+                $query->whereHas('user', fn (Builder $userQuery) => $userQuery->where('uuid', $userUuid));
             })
             ->when($filterCollection->get('resource_type'), function (Builder $query, $resourceType) {
                 $query->where('resource_type', $resourceType);

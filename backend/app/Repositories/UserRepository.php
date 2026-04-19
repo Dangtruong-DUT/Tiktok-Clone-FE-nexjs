@@ -187,7 +187,7 @@ class UserRepository extends BaseRepository
                     $query->whereNull('banned_at');
                 }
             })
-            ->when($filterCollection->get('sort_by'), function (Builder $query, $sortBy) {
+            ->when($filterCollection->get('order_by'), function (Builder $query, $sortBy) {
                 if (str_starts_with((string) $sortBy, '-')) {
                     $query->orderBy(substr((string) $sortBy, 1), 'desc');
 
@@ -201,7 +201,7 @@ class UserRepository extends BaseRepository
 
         return $query
             ->with('avatarFile:id,url')
-            ->select(['id', 'username', 'email', 'avatar_file_id', 'created_at', 'banned_at', 'ban_reason'])
+            ->select(['id', 'uuid', 'username', 'email', 'avatar_file_id', 'created_at', 'banned_at', 'ban_reason'])
             ->paginate($perPage);
     }
 

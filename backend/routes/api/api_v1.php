@@ -7,8 +7,12 @@ use App\Http\Controllers\Api\HashtagController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UserSettingsController;
-use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AppealController;
+use App\Http\Controllers\Api\Admin\AppealAdminController;
+use App\Http\Controllers\Api\Admin\CommentAdminController;
+use App\Http\Controllers\Api\Admin\PostAdminController;
+use App\Http\Controllers\Api\Admin\SystemAdminController;
+use App\Http\Controllers\Api\Admin\UserAdminController;
 
 /*|--------------------------------------------------------------------------
 | Protected routes
@@ -91,34 +95,34 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
         ->middleware(['admin'])
         ->group(function () {
             // User management
-            Route::get('/users', [AdminController::class, 'getUsers'])->name('list-users');
-            Route::post('/users/{user_uuid}/ban', [AdminController::class, 'banUser'])->name('ban-user');
-            Route::post('/users/{user_uuid}/unban', [AdminController::class, 'unbanUser'])->name('unban-user');
-            Route::delete('/users/{user_uuid}', [AdminController::class, 'deleteUser'])->name('delete-user');
-            Route::post('/users/{user_uuid}/delete', [AdminController::class, 'deleteUser'])->name('delete-user-post');
-            Route::post('/users/{user_uuid}/reset-password', [AdminController::class, 'resetUserPassword'])->name('reset-user-password');
-            Route::post('/users/{user_uuid}/send-mail', [AdminController::class, 'sendUserMail'])->name('send-user-mail');
+            Route::get('/users', [UserAdminController::class, 'getUsers'])->name('list-users');
+            Route::post('/users/{user_uuid}/ban', [UserAdminController::class, 'banUser'])->name('ban-user');
+            Route::post('/users/{user_uuid}/unban', [UserAdminController::class, 'unbanUser'])->name('unban-user');
+            Route::delete('/users/{user_uuid}', [UserAdminController::class, 'deleteUser'])->name('delete-user');
+            Route::post('/users/{user_uuid}/delete', [UserAdminController::class, 'deleteUser'])->name('delete-user-post');
+            Route::post('/users/{user_uuid}/reset-password', [UserAdminController::class, 'resetUserPassword'])->name('reset-user-password');
+            Route::post('/users/{user_uuid}/send-mail', [UserAdminController::class, 'sendUserMail'])->name('send-user-mail');
 
             // Post moderation
-            Route::get('/posts', [AdminController::class, 'getPosts'])->name('list-posts');
-            Route::post('/posts/{post_uuid}/hide', [AdminController::class, 'hidePost'])->name('hide-post');
-            Route::post('/posts/{post_uuid}/unhide', [AdminController::class, 'unhidePost'])->name('unhide-post');
-            Route::delete('/posts/{post_uuid}', [AdminController::class, 'deletePost'])->name('delete-post');
-            Route::post('/posts/{post_uuid}/delete', [AdminController::class, 'deletePost'])->name('delete-post-compat');
+            Route::get('/posts', [PostAdminController::class, 'getPosts'])->name('list-posts');
+            Route::post('/posts/{post_uuid}/hide', [PostAdminController::class, 'hidePost'])->name('hide-post');
+            Route::post('/posts/{post_uuid}/unhide', [PostAdminController::class, 'unhidePost'])->name('unhide-post');
+            Route::delete('/posts/{post_uuid}', [PostAdminController::class, 'deletePost'])->name('delete-post');
+            Route::post('/posts/{post_uuid}/delete', [PostAdminController::class, 'deletePost'])->name('delete-post-compat');
 
             // Comment moderation
-            Route::get('/comments', [AdminController::class, 'getComments'])->name('list-comments');
-            Route::delete('/comments/{comment_uuid}', [AdminController::class, 'deleteComment'])->name('delete-comment');
-            Route::post('/comments/{comment_uuid}/delete', [AdminController::class, 'deleteComment'])->name('delete-comment-post');
+            Route::get('/comments', [CommentAdminController::class, 'getComments'])->name('list-comments');
+            Route::delete('/comments/{comment_uuid}', [CommentAdminController::class, 'deleteComment'])->name('delete-comment');
+            Route::post('/comments/{comment_uuid}/delete', [CommentAdminController::class, 'deleteComment'])->name('delete-comment-post');
 
             // Dashboard & Monitoring
-            Route::get('/dashboard/stats', [AdminController::class, 'getDashboardStats'])->name('dashboard-stats');
-            Route::get('/activity-logs', [AdminController::class, 'getActivityLogs'])->name('activity-logs');
+            Route::get('/dashboard/stats', [SystemAdminController::class, 'getDashboardStats'])->name('dashboard-stats');
+            Route::get('/activity-logs', [SystemAdminController::class, 'getActivityLogs'])->name('activity-logs');
 
             // Appeal management
-            Route::get('/appeals', [AdminController::class, 'getAppeals'])->name('list-appeals');
-            Route::post('/appeals/{appeal_uuid}/approve', [AdminController::class, 'approveAppeal'])->name('approve-appeal');
-            Route::post('/appeals/{appeal_uuid}/reject', [AdminController::class, 'rejectAppeal'])->name('reject-appeal');
+            Route::get('/appeals', [AppealAdminController::class, 'getAppeals'])->name('list-appeals');
+            Route::post('/appeals/{appeal_uuid}/approve', [AppealAdminController::class, 'approveAppeal'])->name('approve-appeal');
+            Route::post('/appeals/{appeal_uuid}/reject', [AppealAdminController::class, 'rejectAppeal'])->name('reject-appeal');
         });
 });
 

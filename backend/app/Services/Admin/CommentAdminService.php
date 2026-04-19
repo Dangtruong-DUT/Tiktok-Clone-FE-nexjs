@@ -5,14 +5,16 @@ namespace App\Services\Admin;
 use App\Enums\Admin\AdminActionEnum;
 use App\Enums\Common\ResourceTypeEnum;
 use App\Enums\Common\ModelEntityTypeEnum;
-use App\Models\User;
 use App\Repositories\PostRepository;
+use App\Traits\HasAuthUser;
 use BadMethodCallException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class CommentAdminService
 {
+    use HasAuthUser;
+
     public function __construct(
         private readonly PostRepository $postRepository,
         private readonly AdminLogService $adminLogService,
@@ -24,14 +26,14 @@ class CommentAdminService
      * Note: Comments are stored in posts table with type='comment'
      *
      * @param array $filters {
-     *     search?: string,
+     *     q?: string,
      *     post_uuid?: string,
-     *     user_id?: int,
+     *     user_uuid?: string,
      *     date_from?: string (Y-m-d),
      *     date_to?: string (Y-m-d),
      *     page?: int,
      *     per_page?: int,
-     *     sort_by?: string
+     *     order_by?: string
      * }
     * @return LengthAwarePaginator
      */
@@ -41,24 +43,23 @@ class CommentAdminService
     }
 
     /**
-     * Delete a comment
+     * Delete a comment.
      *
-     * @param User $admin The admin performing the action
-     * @param int $commentId The comment ID
-     * @param array $data {reason: string}
+     * @param array{comment_uuid:string,reason:string} $payload
      * @return void
      * @throws \Exception
      */
-    public function deleteComment(User $admin, int $commentId, array $data): void
+    public function deleteComment(array $payload): void
     {
-        $comment = $this->postRepository->findOrFail($commentId);
+        $admin = $this->guard()->user();
+        $comment = $this->postRepository->findByUuidOrFail((string) $payload['comment_uuid']);
 
         // Ensure it's actually a comment
         if ($comment->parent_id === null) {
             throw new BadMethodCallException('This is not a comment');
         }
 
-        DB::transaction(function () use ($admin, $comment, $commentId, $data) {
+        DB::transaction(function () use ($admin, $comment, $payload) {
             $oldData = [
                 'id' => $comment->id,
                 'uuid' => $comment->uuid,
@@ -79,9 +80,9 @@ class CommentAdminService
             $this->adminLogService->log(
                 admin: $admin,
                 resourceType: ResourceTypeEnum::COMMENT,
-                resourceId: $commentId,
+                resourceId: $comment->id,
                 action: AdminActionEnum::DELETE_COMMENT,
-                reason: $data['reason'],
+                reason: $payload['reason'],
                 oldData: $oldData,
                 newData: null,
             );
@@ -90,7 +91,7 @@ class CommentAdminService
                 admin: $admin,
                 targetUser: $comment->user,
                 action: AdminActionEnum::DELETE_COMMENT,
-                reason: (string) $data['reason'],
+                reason: (string) $payload['reason'],
                 entityType: ModelEntityTypeEnum::POST,
                 entityId: $comment->id,
                 context: [

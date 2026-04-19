@@ -60,13 +60,13 @@ class SystemAdminService
      *
      * @param array $filters {
      *     action_type?: string,
-     *     admin_id?: int,
+     *     admin_uuid?: string,
      *     resource_type?: string,
      *     date_from?: string (Y-m-d),
      *     date_to?: string (Y-m-d),
      *     page?: int,
      *     per_page?: int,
-     *     sort_by?: string
+     *     order_by?: string
      * }
      * @return LengthAwarePaginator
      */
@@ -79,14 +79,14 @@ class SystemAdminService
      * Get paginated activity logs with filtering
      *
      * @param array $filters {
-     *     activity_type?: string,
-     *     user_id?: int,
+     *     action_type?: string,
+     *     user_uuid?: string,
      *     resource_type?: string,
      *     date_from?: string (Y-m-d),
      *     date_to?: string (Y-m-d),
      *     page?: int,
      *     per_page?: int,
-     *     sort_by?: string
+     *     order_by?: string
      * }
      * @return LengthAwarePaginator
      */

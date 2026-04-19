@@ -29,13 +29,13 @@ class AdminLogRepository extends BaseRepository
 
         $query = $this->buildSearchQuery($filterCollection);
 
-        $sortBy = (string) $filterCollection->get('sort_by', '-created_at');
+        $sortBy = (string) $filterCollection->get('order_by', '-created_at');
         $this->applySort($query, $sortBy);
 
         $perPage = min((int) $filterCollection->get('per_page', 20), 100);
 
         return $query
-            ->with(['admin:id,username,avatar_file_id', 'admin.avatarFile:id,url'])
+            ->with(['admin:id,uuid,username,avatar_file_id', 'admin.avatarFile:id,url'])
             ->paginate($perPage);
     }
 
@@ -60,8 +60,8 @@ class AdminLogRepository extends BaseRepository
             ->when($filterCollection->get('action_type'), function (Builder $query, $actionType) {
                 $query->where('action', $actionType);
             })
-            ->when($filterCollection->get('admin_id'), function (Builder $query, $adminId) {
-                $query->where('admin_id', $adminId);
+            ->when($filterCollection->get('admin_uuid'), function (Builder $query, $adminUuid) {
+                $query->whereHas('admin', fn (Builder $adminQuery) => $adminQuery->where('uuid', $adminUuid));
             })
             ->when($filterCollection->get('resource_type'), function (Builder $query, $resourceType) {
                 $query->where('resource_type', $resourceType);

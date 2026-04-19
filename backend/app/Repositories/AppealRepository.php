@@ -27,6 +27,16 @@ class AppealRepository extends BaseRepository
     }
 
     /**
+     * Find an appeal by UUID
+     * @param string $uuid
+     * @return Appeal|null
+     */
+    public function findByUuid(string $uuid): ?Appeal
+    {
+        return $this->query()->where('uuid', $uuid)->first();
+    }
+
+    /**
      * Check if an appeal exists by ID
      * @param int $id
      * @return bool
@@ -104,15 +114,15 @@ class AppealRepository extends BaseRepository
     {
         $filterCollection = collect($filters);
         $query = $this->query()
-        ->when($filterCollection->get("status"), function ($query) use ($filterCollection) {
-            $query->byStatus($filterCollection->get("status"));
+        ->when($filterCollection->get("appeal_status"), function ($query) use ($filterCollection) {
+            $query->byStatus($filterCollection->get("appeal_status"));
         }, function ($query) {
             $query->pending();
         })
         ->when($filterCollection->get("appeal_type"), function ($query) use ($filterCollection) {
             $query->byType($filterCollection->get("appeal_type"));
         });
-        $sortBy = (string) $filterCollection->get('sort_by', 'recent');
+        $sortBy = (string) $filterCollection->get('order_by', 'recent');
         $sortDirection = $sortBy === 'oldest' ? 'asc' : 'desc';
 
         return $query

@@ -8,6 +8,7 @@ use App\Enums\Common\ModelEntityTypeEnum;
 use App\Mail\AdminDirectMessageMail;
 use App\Models\User;
 use App\Repositories\UserRepository;
+use App\Traits\HasAuthUser;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -20,28 +21,13 @@ use BadMethodCallException;
  */
 class UserAdminService
 {
+    use HasAuthUser;
+
     public function __construct(
         private readonly UserRepository $userRepository,
         private readonly AdminLogService $adminLogService,
         private readonly AdminModerationNoticeService $adminModerationNoticeService,
     ) {}
-
-    /**
-     * Get paginated list of users with filtering
-     *
-     * @param array $filters {
-     *     search?: string,
-     *     status?: 'active'|'banned'|'all',
-     *     page?: int,
-     *     per_page?: int,
-     *     sort_by?: string
-     * }
-    * @return LengthAwarePaginator
-     */
-    public function getFilteredUsers(array $filters = []): LengthAwarePaginator
-    {
-        return $this->userRepository->searchForAdmin($filters);
-    }
 
     /**
      * Get user details
@@ -59,18 +45,16 @@ class UserAdminService
     }
 
     /**
-     * Ban a user account
+     * Ban a user account.
      *
-     * @param User $admin The admin performing the action
-     * @param int $userId The target user ID
-     * @param array $data {reason: string, duration_days?: int}
+     * @param array{user_uuid:string,reason:string,duration_days?:int} $payload
      * @return User Updated user
      * @throws \Exception
      */
-    public function banUser(User $admin, int $userId, array $data): User
+    public function banUser(array $payload): User
     {
-        /** @var User $user */
-        $user = $this->userRepository->findOrFail($userId);
+        $admin = $this->guard()->user();
+        $user = $this->userRepository->findByUuidOrFail((string) $payload['user_uuid']);
 
         // Prevent banning self
         if ($admin->id === $user->id) {
@@ -82,23 +66,23 @@ class UserAdminService
             throw new BadMethodCallException('User is already banned');
         }
 
-        return DB::transaction(function () use ($admin, $user, $userId, $data) {
+        return DB::transaction(function () use ($admin, $user, $payload) {
             $oldData = $user->only(['banned_at', 'ban_reason', 'ban_duration_days']);
 
             // Update user
             $user->update([
                 'banned_at' => now(),
-                'ban_reason' => $data['reason'],
-                'ban_duration_days' => $data['duration_days'] ?? null,
+                'ban_reason' => $payload['reason'],
+                'ban_duration_days' => $payload['duration_days'] ?? null,
             ]);
 
             // Log the action
             $this->adminLogService->log(
                 admin: $admin,
                 resourceType: ResourceTypeEnum::USER,
-                resourceId: $userId,
+                resourceId: $user->id,
                 action: AdminActionEnum::BAN,
-                reason: $data['reason'],
+                reason: $payload['reason'],
                 oldData: $oldData,
                 newData: $user->only(['banned_at', 'ban_reason', 'ban_duration_days']),
             );
@@ -107,7 +91,7 @@ class UserAdminService
                 admin: $admin,
                 targetUser: $user,
                 action: AdminActionEnum::BAN,
-                reason: (string) $data['reason'],
+                reason: (string) $payload['reason'],
                 entityType: ModelEntityTypeEnum::USER,
                 entityId: $user->id,
                 context: [
@@ -121,24 +105,23 @@ class UserAdminService
     }
 
     /**
-     * Unban a user account
+     * Unban a user account.
      *
-     * @param User $admin The admin performing the action
-     * @param int $userId The target user ID
+     * @param array{user_uuid:string} $payload
      * @return User Updated user
      * @throws \Exception
      */
-    public function unbanUser(User $admin, int $userId): User
+    public function unbanUser(array $payload): User
     {
-        /** @var User $user */
-        $user = $this->userRepository->findOrFail($userId);
+        $admin = $this->guard()->user();
+        $user = $this->userRepository->findByUuidOrFail((string) $payload['user_uuid']);
 
         // Check if user is actually banned
         if ($user->banned_at === null) {
             throw new BadMethodCallException('User is not banned');
         }
 
-        return DB::transaction(function () use ($admin, $user, $userId) {
+        return DB::transaction(function () use ($admin, $user) {
             $oldData = $user->only(['banned_at', 'ban_reason', 'ban_duration_days']);
 
             // Update user
@@ -152,7 +135,7 @@ class UserAdminService
             $this->adminLogService->log(
                 admin: $admin,
                 resourceType: ResourceTypeEnum::USER,
-                resourceId: $userId,
+                resourceId: $user->id,
                 action: AdminActionEnum::UNBAN,
                 oldData: $oldData,
                 newData: $user->only(['banned_at', 'ban_reason', 'ban_duration_days']),
@@ -176,25 +159,23 @@ class UserAdminService
     }
 
     /**
-     * Delete a user account (soft delete)
+     * Delete a user account (soft delete).
      *
-     * @param User $admin The admin performing the action
-     * @param int $userId The target user ID
-     * @param array $data {reason: string}
+     * @param array{user_uuid:string,reason:string} $payload
      * @return void
      * @throws \Exception
      */
-    public function deleteUser(User $admin, int $userId, array $data): void
+    public function deleteUser(array $payload): void
     {
-        /** @var User $user */
-        $user = $this->userRepository->findOrFail($userId);
+        $admin = $this->guard()->user();
+        $user = $this->userRepository->findByUuidOrFail((string) $payload['user_uuid']);
 
         // Prevent deleting self
         if ($admin->id === $user->id) {
             throw new BadMethodCallException('You cannot delete yourself');
         }
 
-        DB::transaction(function () use ($admin, $user, $userId, $data) {
+        DB::transaction(function () use ($admin, $user, $payload) {
             $oldData = [
                 'id' => $user->id,
                 'username' => $user->username,
@@ -208,9 +189,9 @@ class UserAdminService
             $this->adminLogService->log(
                 admin: $admin,
                 resourceType: ResourceTypeEnum::USER,
-                resourceId: $userId,
+                resourceId: $user->id,
                 action: AdminActionEnum::DELETE_USER,
-                reason: $data['reason'],
+                reason: $payload['reason'],
                 oldData: $oldData,
                 newData: null,
             );
@@ -219,7 +200,7 @@ class UserAdminService
                 admin: $admin,
                 targetUser: $user,
                 action: AdminActionEnum::DELETE_USER,
-                reason: (string) $data['reason'],
+                reason: (string) $payload['reason'],
                 entityType: ModelEntityTypeEnum::USER,
                 entityId: $user->id,
                 context: [
@@ -233,24 +214,22 @@ class UserAdminService
     /**
      * Reset a user password by admin.
      *
-     * @param User $admin
-     * @param int $userId
-     * @param array{password:string} $data
+     * @param array{user_uuid:string,password:string} $payload
      * @return User
      */
-    public function resetUserPassword(User $admin, int $userId, array $data): User
+    public function resetUserPassword(array $payload): User
     {
-        /** @var User $user */
-        $user = $this->userRepository->findOrFail($userId);
+        $admin = $this->guard()->user();
+        $user = $this->userRepository->findByUuidOrFail((string) $payload['user_uuid']);
 
-        return DB::transaction(function () use ($admin, $user, $userId, $data) {
-            $user->password = (string) $data['password'];
+        return DB::transaction(function () use ($admin, $user, $payload) {
+            $user->password = (string) $payload['password'];
             $user->save();
 
             $this->adminLogService->log(
                 admin: $admin,
                 resourceType: ResourceTypeEnum::USER,
-                resourceId: $userId,
+                resourceId: $user->id,
                 action: AdminActionEnum::RESET_USER_PASSWORD,
                 reason: 'Admin reset user password',
                 oldData: null,
@@ -264,39 +243,54 @@ class UserAdminService
     /**
      * Send direct mail from admin to target user.
      *
-     * @param User $admin
-     * @param int $userId
-     * @param array{subject:string,message:string} $data
+     * @param array{user_uuid:string,subject:string,message:string} $payload
      * @return void
      */
-    public function sendMailToUser(User $admin, int $userId, array $data): void
+    public function sendMailToUser(array $payload): void
     {
-        /** @var User $user */
-        $user = $this->userRepository->findOrFail($userId);
+        $admin = $this->guard()->user();
+        $user = $this->userRepository->findByUuidOrFail((string) $payload['user_uuid']);
 
         if (empty($user->email)) {
             throw new BadMethodCallException('Target user does not have an email address');
         }
 
-        DB::transaction(function () use ($admin, $user, $userId, $data) {
+        DB::transaction(function () use ($admin, $user, $payload) {
             Mail::to($user->email)->send(new AdminDirectMessageMail(
                 admin: $admin,
                 targetUser: $user,
-                subjectLine: (string) $data['subject'],
-                messageBody: (string) $data['message'],
+                subjectLine: (string) $payload['subject'],
+                messageBody: (string) $payload['message'],
             ));
 
             $this->adminLogService->log(
                 admin: $admin,
                 resourceType: ResourceTypeEnum::USER,
-                resourceId: $userId,
+                resourceId: $user->id,
                 action: AdminActionEnum::SEND_EMAIL_TO_USER,
-                reason: (string) $data['subject'],
+                reason: (string) $payload['subject'],
                 oldData: null,
                 newData: [
-                    'subject' => (string) $data['subject'],
+                    'subject' => (string) $payload['subject'],
                 ],
             );
         });
+    }
+
+    /**
+     * Get paginated list of users with filtering
+     *
+     * @param array $filters {
+     *     q?: string,
+     *     status?: 'active'|'banned'|'all',
+     *     page?: int,
+     *     per_page?: int,
+     *     order_by?: string
+     * }
+    * @return LengthAwarePaginator
+     */
+    public function getFilteredUsers(array $filters = []): LengthAwarePaginator
+    {
+        return $this->userRepository->searchForAdmin($filters);
     }
 }
