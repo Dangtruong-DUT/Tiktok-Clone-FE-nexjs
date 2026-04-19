@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\Admin\AdminActionEnum;
 use App\Enums\Common\ResourceTypeEnum;
+use App\Traits\HasUuidObservable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,6 +17,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class AdminLog extends Model
 {
+    use HasUuidObservable;
+
     /**
      * The table associated with the model.
      *

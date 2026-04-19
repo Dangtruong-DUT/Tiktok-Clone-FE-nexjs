@@ -5,8 +5,9 @@ namespace App\Repositories;
 use App\Models\AdminLog;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Collection as SupportCollection;
 
 class AdminLogRepository extends BaseRepository
 {
@@ -50,11 +51,23 @@ class AdminLogRepository extends BaseRepository
     }
 
     /**
+     * Get actions by admin id.
+     */
+    public function getActionsByAdminId(int $adminId, int $limit = 50): EloquentCollection
+    {
+        return $this->query()
+            ->byAdmin($adminId)
+            ->orderBy('created_at', 'desc')
+            ->limit($limit)
+            ->get();
+    }
+
+    /**
      * Build search query with filters.
      *
-     * @param Collection $filterCollection
+     * @param SupportCollection $filterCollection
      */
-    private function buildSearchQuery(Collection $filterCollection): Builder
+    private function buildSearchQuery(SupportCollection $filterCollection): Builder
     {
         return $this->query()
             ->when($filterCollection->get('action_type'), function (Builder $query, $actionType) {

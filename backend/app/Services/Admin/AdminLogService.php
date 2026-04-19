@@ -6,15 +6,18 @@ use App\Enums\Admin\AdminActionEnum;
 use App\Enums\Common\ResourceTypeEnum;
 use App\Models\AdminLog;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Collection;
-
+use App\Repositories\AdminLogRepository;
 class AdminLogService
 {
+    public function __construct(
+        private readonly AdminLogRepository $adminLogRepository,
+    ) {}
+
     /**
      * Log an admin action
      *
      * @param User $admin The admin performing the action
-    * @param ResourceTypeEnum $resourceType Resource type
+     * @param ResourceTypeEnum $resourceType Resource type
      * @param int|string $resourceId The ID/UUID of the resource
      * @param AdminActionEnum $action The action performed
      * @param string|null $reason Why the action was taken
@@ -31,7 +34,7 @@ class AdminLogService
         ?array $oldData = null,
         ?array $newData = null,
     ): AdminLog {
-        return AdminLog::create([
+        return $this->adminLogRepository->create([
             'admin_id' => $admin->id,
             'resource_type' => $resourceType->value,
             'resource_id' => (string) $resourceId,
@@ -42,52 +45,5 @@ class AdminLogService
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),
         ]);
-    }
-
-    /**
-     * Get recent admin actions (last N actions)
-     *
-     * @param int $limit Number of records to fetch
-     * @return Collection
-     */
-    public function getRecentActions(int $limit = 50): Collection
-    {
-        return AdminLog::query()
-            ->with(['admin:id,username,avatar_file_id', 'admin.avatarFile:id,url'])
-            ->orderBy('created_at', 'desc')
-            ->limit($limit)
-            ->get();
-    }
-
-    /**
-     * Get actions by specific admin
-     *
-     * @param User $admin
-     * @param int $limit
-     * @return Collection
-     */
-    public function getAdminActions(User $admin, int $limit = 50): Collection
-    {
-        return AdminLog::query()
-            ->byAdmin($admin->id)
-            ->orderBy('created_at', 'desc')
-            ->limit($limit)
-            ->get();
-    }
-
-    /**
-     * Get actions on a specific resource
-     *
-     * @param ResourceTypeEnum $resourceType
-     * @param int|string $resourceId
-     * @return Collection
-     */
-    public function getResourceActions(ResourceTypeEnum $resourceType, int|string $resourceId): Collection
-    {
-        return AdminLog::query()
-            ->where('resource_type', $resourceType->value)
-            ->where('resource_id', (string) $resourceId)
-            ->orderBy('created_at', 'desc')
-            ->get();
     }
 }

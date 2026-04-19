@@ -56,12 +56,10 @@ class UserAdminService
         $admin = $this->guard()->user();
         $user = $this->userRepository->findByUuidOrFail((string) $payload['user_uuid']);
 
-        // Prevent banning self
         if ($admin->id === $user->id) {
             throw new BadMethodCallException('You cannot ban yourself');
         }
 
-        // Prevent double-banning
         if ($user->banned_at !== null) {
             throw new BadMethodCallException('User is already banned');
         }
@@ -69,14 +67,12 @@ class UserAdminService
         return DB::transaction(function () use ($admin, $user, $payload) {
             $oldData = $user->only(['banned_at', 'ban_reason', 'ban_duration_days']);
 
-            // Update user
             $user->update([
                 'banned_at' => now(),
                 'ban_reason' => $payload['reason'],
                 'ban_duration_days' => $payload['duration_days'] ?? null,
             ]);
 
-            // Log the action
             $this->adminLogService->log(
                 admin: $admin,
                 resourceType: ResourceTypeEnum::USER,

@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuidObservable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AiModerationReport extends Model
 {
     use HasFactory;
+    use HasUuidObservable;
 
     /**
      * @var list<string>
@@ -17,7 +19,6 @@ class AiModerationReport extends Model
         'user_id',
         'resource_type',
         'resource_id',
-        'resource_uuid',
         'sentence',
         'label',
         'confidence',
