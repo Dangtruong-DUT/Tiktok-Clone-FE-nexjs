@@ -11,7 +11,6 @@ enum UserVerifyStatusEnum:int implements BaseEnumInterface
 
     case UNVERIFIED = 0;
     case VERIFIED = 1;
-    case BANNED = 2;
 
 
     /**
@@ -22,7 +21,6 @@ enum UserVerifyStatusEnum:int implements BaseEnumInterface
         return match($this) {
             self::UNVERIFIED => 'Unverified',
             self::VERIFIED => 'Verified',
-            self::BANNED => 'Banned',
         };
     }
 
@@ -35,7 +33,6 @@ enum UserVerifyStatusEnum:int implements BaseEnumInterface
         return match($this) {
             self::UNVERIFIED => "Chưa xác minh",
             self::VERIFIED => "Đã xác minh",
-            self::BANNED => "Bị cấm",
         };
     }
 }

@@ -58,6 +58,9 @@ class User extends Authenticatable implements JWTSubject
         'date_of_birth',
         'verify',
         'avatar_file_id',
+        'banned_at',
+        'ban_reason',
+        'ban_duration_days',
     ];
 
     /**
@@ -106,6 +109,9 @@ class User extends Authenticatable implements JWTSubject
             'likes_count' => 'integer',
             'is_followed' => 'boolean',
             'is_owner' => 'boolean',
+            'banned_at' => 'datetime',
+            'ban_reason' => 'string',
+            'ban_duration_days' => 'integer',
             'date_of_birth' => 'date',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
@@ -140,6 +146,8 @@ class User extends Authenticatable implements JWTSubject
             'role' => $this->role->value,
             'token_Type' => $tokenType,
             'jti' => Str::uuid(),
+            'banned' => $this->isBanned(),
+            'ban_remaining_days' => $this->getBanRemainingDays(),
         ];
     }
 
@@ -220,14 +228,47 @@ class User extends Authenticatable implements JWTSubject
      */
     public function isBanned(): bool
     {
-        return $this->verify === UserVerifyStatusEnum::BANNED;
+        if (!$this->banned_at) {
+            return false;
+        }
+        // If ban_duration_days is null, it means the ban is permanent
+        if ($this->ban_duration_days === null) {
+            return true;
+        }
+        return now()->lessThan($this->banned_at->copy()->addDays($this->ban_duration_days));
     }
 
+    /**
+     * Get the remaining days of the user's ban.
+     *
+     * @return int|null The number of remaining days of the user's ban, or null if the user is not banned or the ban is permanent.
+     */
+    public function getBanRemainingDays(): ?int
+    {
+        if (!$this->banned_at || $this->ban_duration_days === null) {
+            return null;
+        }
+        $banEndDate = $this->banned_at->copy()->addDays($this->ban_duration_days);
+        $remainingDays = now()->diffInDays($banEndDate, false);
+        return $remainingDays > 0 ? $remainingDays : 0;
+    }
+
+    /**
+     * Check if the given password matches the user's current password.
+     *
+     * @param string $password The password to check.
+     * @return bool True if the given password matches the user's current password, false otherwise.
+     */
     public function isCurrentPassword(string $password): bool
     {
         return Hash::check($password, $this->password);
     }
 
+    /**
+     * Get the posts created by the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany The relationship instance.
+     */
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
