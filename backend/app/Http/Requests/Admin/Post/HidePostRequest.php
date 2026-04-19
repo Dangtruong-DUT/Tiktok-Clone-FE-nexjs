@@ -2,14 +2,9 @@
 
 namespace App\Http\Requests\Admin\Post;
 
-use App\Http\Requests\Admin\BaseAdminRequest;
-use Illuminate\Validation\Rule;
+use App\Http\Requests\BaseListRequest;
 
-/**
- * Hide a post from public view
- * Used by: POST /admin/posts/{uuid}/hide
- */
-class HidePostRequest extends BaseAdminRequest
+class HidePostRequest extends BaseListRequest
 {
     protected function prepareForValidation(): void
     {
@@ -29,11 +24,14 @@ class HidePostRequest extends BaseAdminRequest
     {
         return $this->applyBaseRules([
             'post_uuid' => [
-                'required',
-                'string',
-                Rule::exists('posts', 'uuid'),
+                self::REQUIRED,
             ],
-            'reason' => 'required|string|min:10|max:500',
+            'reason' => [
+                self::REQUIRED,
+                self::STRING,
+                self::MIN . ':10',
+                self::MAX . ':500'
+            ],
         ]);
     }
 }

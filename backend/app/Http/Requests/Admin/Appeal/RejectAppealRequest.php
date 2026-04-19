@@ -2,19 +2,20 @@
 
 namespace App\Http\Requests\Admin\Appeal;
 
-use App\Http\Requests\Admin\BaseAdminRequest;
+use App\Http\Requests\BaseRequest;
 
-/**
- * RejectAppealRequest - Admin rejects an appeal
- */
-class RejectAppealRequest extends BaseAdminRequest
+class RejectAppealRequest extends BaseRequest
 {
+    /**
+     * Prepare the data for validation.
+     * Extract appeal_id from route and merge into request data
+     */
     protected function prepareForValidation(): void
     {
         parent::prepareForValidation();
 
         $this->merge([
-            'appeal_id' => $this->route('appeal_id'),
+            'appeal_uuid' => $this->route('appeal_uuid'),
         ]);
     }
 
@@ -24,24 +25,14 @@ class RejectAppealRequest extends BaseAdminRequest
      */
     public function rules(): array
     {
-        return [
-            'appeal_id' => ['required', 'integer', 'exists:appeals,id'],
-            'admin_response' => ['required', 'string', 'min:10', 'max:500'],
-        ];
-    }
-
-    /**
-     * Get custom messages.
-     * @return array<string, string>
-     */
-    public function messages(): array
-    {
-        return [
-            'appeal_id.required' => 'Appeal ID is required',
-            'appeal_id.exists' => 'The selected appeal does not exist',
-            'admin_response.required' => 'Response is required when rejecting an appeal',
-            'admin_response.min' => 'Response must be at least 10 characters',
-            'admin_response.max' => 'Response cannot exceed 500 characters',
-        ];
+        return $this->applyBaseRules([
+            'appeal_uuid' => [self::REQUIRED],
+            'admin_response' => [
+                self::REQUIRED,
+                self::STRING,
+                self::MIN . ':10',
+                self::MAX . ':500'
+            ],
+        ]);
     }
 }

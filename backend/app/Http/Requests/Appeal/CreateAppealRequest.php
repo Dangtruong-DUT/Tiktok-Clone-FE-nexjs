@@ -4,9 +4,6 @@ namespace App\Http\Requests\Appeal;
 
 use App\Http\Requests\BaseRequest;
 
-/**
- * CreateAppealRequest - User files an appeal for ban/hidden/deleted content
- */
 class CreateAppealRequest extends BaseRequest
 {
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Admin\AdminActionEnum;
 use App\Enums\Appeal\AppealStatusEnum;
 use App\Enums\Appeal\AppealTypeEnum;
 use App\Enums\Common\ResourceTypeEnum;
@@ -9,6 +10,10 @@ use App\Enums\Post\AudienceTypeEnum;
 use App\Enums\Post\PostTypeEnum;
 use App\Enums\User\RoleTypeEnum;
 use App\Enums\User\UserVerifyStatusEnum;
+use App\Rules\AppealId;
+use App\Rules\AppealUuid;
+use App\Rules\CommentId;
+use App\Rules\CommentUuid;
 use App\Rules\NotifyUuid;
 use App\Rules\PostUuid;
 use App\Rules\UploadFileId;
@@ -19,6 +24,7 @@ use Illuminate\Validation\Rules\Enum;
 
 abstract class BaseRequest extends BaseFormRequest
 {
+
     /*
      * Laravel standard validation rules
      */
@@ -109,28 +115,6 @@ abstract class BaseRequest extends BaseFormRequest
     protected array $casts = [];
 
     /**
-     * validation data
-     */
-    public function validationData(): array
-    {
-        $validationData = parent::validationData();
-
-        // Convert string "null" to actual null for all inputs
-        array_walk_recursive($validationData, function (&$value) {
-            if ($value === 'null') {
-                $value = null;
-            }
-        });
-        $this->merge($validationData);
-
-        if ($this->has('order_by')) {
-            $validationData['order_by'] = $this->castValueOfOrderBy($this->input('order_by'));
-        }
-
-        return $validationData;
-    }
-
-    /**
      * merge base rules
      *
      * @param array $rules
@@ -161,18 +145,6 @@ abstract class BaseRequest extends BaseFormRequest
     }
 
     /**
-     * cast column and direction column in database field
-     * @param array $orderBy
-     * @return array
-     */
-    private function castValueOfOrderBy(array $orderBy): array
-    {
-        return array_map(function ($item) {
-            return $item;
-        }, $orderBy);
-    }
-
-    /**
      * check if common rules exist
      *
      * @param string $name
@@ -197,7 +169,6 @@ abstract class BaseRequest extends BaseFormRequest
         return [];
     }
 
-
     /**
      * define base rules
      * If you store common rules in the constructor, the contents of the Request will not be available.
@@ -211,7 +182,10 @@ abstract class BaseRequest extends BaseFormRequest
             'password' => [self::STRING, self::MIN.':'.'8', self::MAX.':'.'100'],
             'confirm_password'=>[self::STRING, self::MIN.':'.'8', self::MAX.':'.'100', self::SAME.':password'],
             'user_id' => [self::INTEGER, new UserId()],
+            'comment_id' => [self::INTEGER, new CommentId()],
+            'comment_uuid' => [self::STRING, self::UUID, new CommentUuid()],
             'user_ids.*' => [self::INTEGER, new UserId()],
+            'admin_uuid' => [self::STRING, self::UUID, new UserUuid()],
             'user_uuid' => [self::STRING, self::UUID, new UserUuid()],
             'user_uuids.*' => [self::STRING, self::UUID, new UserUuid()],
             'post_uuid' => [self::STRING, self::UUID, new PostUuid()],
@@ -228,14 +202,9 @@ abstract class BaseRequest extends BaseFormRequest
             'location' => [self::STRING, self::MAX.':100'],
             'website' => [self::STRING, self::URL],
             'avatar_file_id' => [self::INTEGER, new UploadFileId()],
-            'keyword' => [self::STRING, self::MAX.':'.'100'],
             'days' => [self::NUMERIC, self::MIN.':'.'0'],
-            'search' => [self::STRING, self::MAX.':'.'100'],
             'created_at' => [self::DATE_FORMAT . ':' . DateTimeInterface::ATOM],
             'updated_at' => [self::DATE_FORMAT . ':' . DateTimeInterface::ATOM],
-            'order_by' => [self::ARRAY],
-            'order_by.*.column' => [self::STRING],
-            'order_by.*.direction' => [self::STRING],
             'file_image' => [
                 self::FILE,
                 self::MAX.":".config('const.file.image.max_size_kb', 10240),
@@ -259,14 +228,19 @@ abstract class BaseRequest extends BaseFormRequest
             'audience'=>[new Enum(AudienceTypeEnum::class)],
             'post_type'=>[new Enum(PostTypeEnum::class)],
             'notification_uuid' => [self::STRING, self::UUID, new NotifyUuid()],
+            'action_type'=>[self::STRING, 'in:'.implode(',', AdminActionEnum::values())],
             'resource_id' => [self::INTEGER],
             'resource_type' => [
                 self::STRING,
                 'in:' . implode(',', ResourceTypeEnum::values())],
+            'appeal_id' => [self::INTEGER, new AppealId()],
+            'appeal_uuid' => [self::STRING, self::UUID, new AppealUuid()],
             'appeal_type' => [
                 'in:' . implode(',',  AppealTypeEnum::values())] ,
             'appeal_status' => [
                 'in:' . implode(',', AppealStatusEnum::values())],
+            'date_from' => [self::NULLABLE, self::DATE_FORMAT . ':Y-m-d'],
+            'date_to' => [self::NULLABLE, self::DATE_FORMAT . ':Y-m-d'],
         ];
     }
 }

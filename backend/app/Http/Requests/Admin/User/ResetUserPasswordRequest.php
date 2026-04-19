@@ -2,21 +2,16 @@
 
 namespace App\Http\Requests\Admin\User;
 
-use App\Http\Requests\Admin\BaseAdminRequest;
-use Illuminate\Validation\Rule;
+use App\Http\Requests\BaseRequest;
 
-/**
- * Reset user password by admin
- * Used by: POST /admin/users/{user_id}/reset-password
- */
-class ResetUserPasswordRequest extends BaseAdminRequest
+class ResetUserPasswordRequest extends BaseRequest
 {
     protected function prepareForValidation(): void
     {
         parent::prepareForValidation();
 
         $this->merge([
-            'user_id' => $this->route('user_id'),
+            'user_uuid' => $this->route('user_uuid'),
         ]);
     }
 
@@ -28,13 +23,11 @@ class ResetUserPasswordRequest extends BaseAdminRequest
     public function rules(): array
     {
         return $this->applyBaseRules([
-            'user_id' => [
-                'required',
-                'integer',
-                Rule::exists('users', 'id'),
+            'user_uuid' => [
+                self::REQUIRED,
             ],
-            'password' => 'required|string|min:8|max:100|confirmed',
-            'password_confirmation' => 'required|string|min:8|max:100',
+            'password' => [self::REQUIRED],
+            'confirm_password' => [self::REQUIRED],
         ]);
     }
 }

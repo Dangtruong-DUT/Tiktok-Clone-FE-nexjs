@@ -2,21 +2,20 @@
 
 namespace App\Http\Requests\Admin\User;
 
-use App\Http\Requests\Admin\BaseAdminRequest;
-use Illuminate\Validation\Rule;
+use App\Http\Requests\BaseRequest;
 
-/**
- * Send custom mail to a user by admin
- * Used by: POST /admin/users/{user_id}/send-mail
- */
-class SendUserMailRequest extends BaseAdminRequest
+class SendUserMailRequest extends BaseRequest
 {
+    /**
+     * Prepare the data for validation.
+     * Extract user_uuid from route and merge into request data
+     */
     protected function prepareForValidation(): void
     {
         parent::prepareForValidation();
 
         $this->merge([
-            'user_id' => $this->route('user_id'),
+            'user_uuid' => $this->route('user_uuid'),
         ]);
     }
 
@@ -28,13 +27,11 @@ class SendUserMailRequest extends BaseAdminRequest
     public function rules(): array
     {
         return $this->applyBaseRules([
-            'user_id' => [
-                'required',
-                'integer',
-                Rule::exists('users', 'id'),
+            'user_uuid' => [
+                self::REQUIRED,
             ],
-            'subject' => 'required|string|min:3|max:150',
-            'message' => 'required|string|min:10|max:5000',
+            'subject' => [self::REQUIRED, self::STRING, self::MIN . ':3', self::MAX . ':150'],
+            'message' => [self::REQUIRED, self::STRING, self::MIN . ':10', self::MAX . ':5000'],
         ]);
     }
 }

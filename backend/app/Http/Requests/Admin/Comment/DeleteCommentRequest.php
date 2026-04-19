@@ -2,21 +2,20 @@
 
 namespace App\Http\Requests\Admin\Comment;
 
-use App\Http\Requests\Admin\BaseAdminRequest;
-use Illuminate\Validation\Rule;
+use App\Http\Requests\BaseRequest;
 
-/**
- * Delete a comment
- * Used by: POST /admin/comments/{id}/delete
- */
-class DeleteCommentRequest extends BaseAdminRequest
+class DeleteCommentRequest extends BaseRequest
 {
+    /**
+     * Prepare the data for validation.
+     * Extract comment_id from route and merge into request data
+     */
     protected function prepareForValidation(): void
     {
         parent::prepareForValidation();
 
         $this->merge([
-            'comment_id' => $this->route('comment_id'),
+            'comment_uuid' => $this->route('comment_uuid'),
         ]);
     }
 
@@ -28,12 +27,15 @@ class DeleteCommentRequest extends BaseAdminRequest
     public function rules(): array
     {
         return $this->applyBaseRules([
-            'comment_id' => [
-                'required',
-                'integer',
-                Rule::exists('posts', 'id'), // Comments are stored in posts table with type='comment'
+            'comment_uuid' => [
+                self::REQUIRED,
             ],
-            'reason' => 'required|string|min:10|max:500',
+            'reason' => [
+                self::REQUIRED,
+                self::STRING,
+                self::MIN . ':10',
+                self::MAX . ':500'
+            ],
         ]);
     }
 }

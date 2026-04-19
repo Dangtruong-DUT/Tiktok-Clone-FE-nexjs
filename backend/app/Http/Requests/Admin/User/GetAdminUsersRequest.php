@@ -2,20 +2,11 @@
 
 namespace App\Http\Requests\Admin\User;
 
-use App\Http\Requests\Admin\BaseAdminRequest;
+use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rule;
 
-/**
- * Get list of users with filtering and pagination
- * Used by: GET /admin/users
- */
-class GetAdminUsersRequest extends BaseAdminRequest
+class GetAdminUsersRequest extends BaseRequest
 {
-    protected array $casts = [
-        'page' => 'int',
-        'per_page' => 'int',
-    ];
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -24,15 +15,15 @@ class GetAdminUsersRequest extends BaseAdminRequest
     public function rules(): array
     {
         return $this->applyBaseRules([
-            'search' => 'nullable|string|max:100',
+            'q' => [self::NULLABLE],
             'status' => [
-                'nullable',
+                self::NULLABLE,
                 Rule::in(['active', 'banned', 'all']),
             ],
-            'page' => 'nullable|integer|min:1',
-            'per_page' => 'nullable|integer|min:1|max:100',
-            'sort_by' => [
-                'nullable',
+            'page' => [self::NULLABLE],
+            'per_page' => [self::NULLABLE],
+            'order_by' => [
+                self::NULLABLE,
                 Rule::in(['id', 'username', 'email', 'created_at', '-id', '-username', '-email', '-created_at']),
             ],
         ]);

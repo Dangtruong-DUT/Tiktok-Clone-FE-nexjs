@@ -2,19 +2,20 @@
 
 namespace App\Http\Requests\Admin\Appeal;
 
-use App\Http\Requests\Admin\BaseAdminRequest;
+use App\Http\Requests\BaseRequest;
 
-/**
- * ApproveAppealRequest - Admin approves an appeal
- */
-class ApproveAppealRequest extends BaseAdminRequest
+class ApproveAppealRequest extends BaseRequest
 {
+    /**
+     * Prepare the data for validation.
+     * Extract appeal_uuid from route and merge into request data
+     */
     protected function prepareForValidation(): void
     {
         parent::prepareForValidation();
 
         $this->merge([
-            'appeal_id' => $this->route('appeal_id'),
+            'appeal_uuid' => $this->route('appeal_uuid'),
         ]);
     }
 
@@ -24,22 +25,9 @@ class ApproveAppealRequest extends BaseAdminRequest
      */
     public function rules(): array
     {
-        return [
-            'appeal_id' => ['required', 'integer', 'exists:appeals,id'],
-            'admin_response' => ['nullable', 'string', 'max:500'],
-        ];
-    }
-
-    /**
-     * Get custom messages.
-     * @return array<string, string>
-     */
-    public function messages(): array
-    {
-        return [
-            'appeal_id.required' => 'Appeal ID is required',
-            'appeal_id.exists' => 'The selected appeal does not exist',
-            'admin_response.max' => 'Response cannot exceed 500 characters',
-        ];
+        return $this->applyBaseRules([
+            'appeal_uuid' => [self::REQUIRED],
+            'admin_response' => [self::NULLABLE, self::STRING, self::MAX . ':500'],
+        ]);
     }
 }

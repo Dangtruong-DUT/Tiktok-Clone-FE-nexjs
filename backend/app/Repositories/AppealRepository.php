@@ -27,6 +27,26 @@ class AppealRepository extends BaseRepository
     }
 
     /**
+     * Check if an appeal exists by ID
+     * @param int $id
+     * @return bool
+     */
+    public function isExistById(int $id): bool
+    {
+        return $this->query()->where('id', $id)->exists();
+    }
+
+    /**
+    * Check if an appeal exists by UUID
+    * @param string $uuid
+    * @return bool
+    */
+    public function isExistByUuid(string $uuid): bool
+    {
+        return $this->query()->where('uuid', $uuid)->exists();
+    }
+
+    /**
      * Check if a user has a pending appeal for a specific resource and type
      * @param int $userId
      * @param string $appealType

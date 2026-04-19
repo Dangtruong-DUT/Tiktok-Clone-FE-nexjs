@@ -13,19 +13,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * AdminLog - Track all administrative actions performed
  * Stores complete audit trail for compliance and monitoring
- *
- * @property int $id
- * @property int $admin_id FK to users
- * @property string $resource_type ('user', 'post', 'comment')
- * @property int $resource_id (User ID, Post ID, Comment ID)
- * @property string $action (ban, unban, delete, hide, etc)
- * @property string|null $reason Why the action was taken
- * @property array|null $old_data Previous state (JSON)
- * @property array|null $new_data Current state (JSON)
- * @property string|null $ip_address Admin's IP
- * @property string|null $user_agent Admin's browser/device
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
  */
 class AdminLog extends Model
 {

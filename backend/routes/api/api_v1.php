@@ -85,19 +85,19 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::get('/', [AppealController::class, 'index'])->name('list');
         });
 
-    // admin routes (require super_admin role)
+    // admin routes
     Route::prefix('admin')
         ->name('admin.')
         ->middleware(['admin'])
         ->group(function () {
             // User management
             Route::get('/users', [AdminController::class, 'getUsers'])->name('list-users');
-            Route::post('/users/{user_id}/ban', [AdminController::class, 'banUser'])->name('ban-user');
-            Route::post('/users/{user_id}/unban', [AdminController::class, 'unbanUser'])->name('unban-user');
-            Route::delete('/users/{user_id}', [AdminController::class, 'deleteUser'])->name('delete-user');
-            Route::post('/users/{user_id}/delete', [AdminController::class, 'deleteUser'])->name('delete-user-post');
-            Route::post('/users/{user_id}/reset-password', [AdminController::class, 'resetUserPassword'])->name('reset-user-password');
-            Route::post('/users/{user_id}/send-mail', [AdminController::class, 'sendUserMail'])->name('send-user-mail');
+            Route::post('/users/{user_uuid}/ban', [AdminController::class, 'banUser'])->name('ban-user');
+            Route::post('/users/{user_uuid}/unban', [AdminController::class, 'unbanUser'])->name('unban-user');
+            Route::delete('/users/{user_uuid}', [AdminController::class, 'deleteUser'])->name('delete-user');
+            Route::post('/users/{user_uuid}/delete', [AdminController::class, 'deleteUser'])->name('delete-user-post');
+            Route::post('/users/{user_uuid}/reset-password', [AdminController::class, 'resetUserPassword'])->name('reset-user-password');
+            Route::post('/users/{user_uuid}/send-mail', [AdminController::class, 'sendUserMail'])->name('send-user-mail');
 
             // Post moderation
             Route::get('/posts', [AdminController::class, 'getPosts'])->name('list-posts');
@@ -108,8 +108,8 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
 
             // Comment moderation
             Route::get('/comments', [AdminController::class, 'getComments'])->name('list-comments');
-            Route::delete('/comments/{comment_id}', [AdminController::class, 'deleteComment'])->name('delete-comment');
-            Route::post('/comments/{comment_id}/delete', [AdminController::class, 'deleteComment'])->name('delete-comment-post');
+            Route::delete('/comments/{comment_uuid}', [AdminController::class, 'deleteComment'])->name('delete-comment');
+            Route::post('/comments/{comment_uuid}/delete', [AdminController::class, 'deleteComment'])->name('delete-comment-post');
 
             // Dashboard & Monitoring
             Route::get('/dashboard/stats', [AdminController::class, 'getDashboardStats'])->name('dashboard-stats');
@@ -117,8 +117,8 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
 
             // Appeal management
             Route::get('/appeals', [AdminController::class, 'getAppeals'])->name('list-appeals');
-            Route::post('/appeals/{appeal_id}/approve', [AdminController::class, 'approveAppeal'])->name('approve-appeal');
-            Route::post('/appeals/{appeal_id}/reject', [AdminController::class, 'rejectAppeal'])->name('reject-appeal');
+            Route::post('/appeals/{appeal_uuid}/approve', [AdminController::class, 'approveAppeal'])->name('approve-appeal');
+            Route::post('/appeals/{appeal_uuid}/reject', [AdminController::class, 'rejectAppeal'])->name('reject-appeal');
         });
 });
 

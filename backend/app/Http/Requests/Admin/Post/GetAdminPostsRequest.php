@@ -2,20 +2,11 @@
 
 namespace App\Http\Requests\Admin\Post;
 
-use App\Http\Requests\Admin\BaseAdminRequest;
+use App\Http\Requests\BaseListRequest;
 use Illuminate\Validation\Rule;
 
-/**
- * Get list of posts with filtering and pagination
- * Used by: GET /admin/posts
- */
-class GetAdminPostsRequest extends BaseAdminRequest
+class GetAdminPostsRequest extends BaseListRequest
 {
-    protected array $casts = [
-        'page' => 'int',
-        'per_page' => 'int',
-    ];
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -24,18 +15,18 @@ class GetAdminPostsRequest extends BaseAdminRequest
     public function rules(): array
     {
         return $this->applyBaseRules([
-            'search' => 'nullable|string|max:200',
-            'user_id' => 'nullable|integer|exists:users,id',
+            'q' => [self::NULLABLE],
+            'user_uuid' => [self::NULLABLE],
             'status' => [
-                'nullable',
+                self::NULLABLE,
                 Rule::in(['all', 'visible', 'hidden', 'deleted']),
             ],
-            'date_from' => 'nullable|date_format:Y-m-d',
-            'date_to' => 'nullable|date_format:Y-m-d',
-            'page' => 'nullable|integer|min:1',
-            'per_page' => 'nullable|integer|min:1|max:100',
-            'sort_by' => [
-                'nullable',
+            'date_from' => [self::NULLABLE],
+            'date_to' => [self::NULLABLE],
+            'page' => [self::NULLABLE],
+            'per_page' => [self::NULLABLE],
+            'order_by' => [
+                self::NULLABLE,
                 Rule::in(['id', 'created_at', 'likes_count', '-id', '-created_at', '-likes_count']),
             ],
         ]);

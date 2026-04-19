@@ -4,9 +4,6 @@ namespace App\Http\Requests\Appeal;
 use App\Http\Requests\BaseRequest;
 
 
-/**
- * GetMyAppealsRequest - User views their own appeals
- */
 class GetMyAppealsRequest extends BaseRequest
 {
     /**
@@ -20,7 +17,7 @@ class GetMyAppealsRequest extends BaseRequest
             'per_page' => [self::NULLABLE],
             'appeal_status' => [self::NULLABLE],
             'appeal_type' => [self::NULLABLE],
-            'sort_by' => [self::NULLABLE, 'in:recent,oldest'],
+            'order_by' => [self::NULLABLE, 'in:recent,oldest'],
         ]);
     }
 }

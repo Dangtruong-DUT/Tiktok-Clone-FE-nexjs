@@ -2,20 +2,15 @@
 
 namespace App\Http\Requests\Admin\System;
 
-use App\Enums\Common\ResourceTypeEnum;
-use App\Http\Requests\Admin\BaseAdminRequest;
+use App\Http\Requests\BaseListRequest;
 use Illuminate\Validation\Rule;
 
 /**
  * Get activity/admin logs with filtering
  * Used by: GET /admin/activity-logs
  */
-class GetActivityLogsRequest extends BaseAdminRequest
+class GetActivityLogsRequest extends BaseListRequest
 {
-    protected array $casts = [
-        'page' => 'int',
-        'per_page' => 'int',
-    ];
 
     /**
      * Get the validation rules that apply to the request.
@@ -26,23 +21,21 @@ class GetActivityLogsRequest extends BaseAdminRequest
     {
         return $this->applyBaseRules([
             'log_type' => [
-                'nullable',
-                Rule::in(['admin', 'activity']), // admin_logs or activity_logs
+                self::NULLABLE,
+                Rule::in(['admin', 'activity']),
             ],
-            'action_type' => 'nullable|string|max:50',
-            'admin_id' => 'nullable|integer|exists:users,id',
-            'user_id' => 'nullable|integer|exists:users,id',
+            'action_type' => [self::NULLABLE],
+            'admin_uuid' => [self::NULLABLE],
+            'user_uuid' => [self::NULLABLE],
             'resource_type' => [
-                'nullable',
-                'string',
-                'in:' . implode(',', ResourceTypeEnum::values()),
+                self::NULLABLE,
             ],
-            'date_from' => 'nullable|date_format:Y-m-d',
-            'date_to' => 'nullable|date_format:Y-m-d',
-            'page' => 'nullable|integer|min:1',
-            'per_page' => 'nullable|integer|min:1|max:100',
-            'sort_by' => [
-                'nullable',
+            'date_from' => [self::NULLABLE],
+            'date_to' => [self::NULLABLE],
+            'page' => [self::NULLABLE],
+            'per_page' => [self::NULLABLE],
+            'order_by' => [
+                self::NULLABLE,
                 Rule::in(['id', 'created_at', '-id', '-created_at']),
             ],
         ]);

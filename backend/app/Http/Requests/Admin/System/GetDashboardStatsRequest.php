@@ -2,13 +2,9 @@
 
 namespace App\Http\Requests\Admin\System;
 
-use App\Http\Requests\Admin\BaseAdminRequest;
+use App\Http\Requests\BaseRequest;
 
-/**
- * Get dashboard statistics
- * Used by: GET /admin/dashboard/stats
- */
-class GetDashboardStatsRequest extends BaseAdminRequest
+class GetDashboardStatsRequest extends BaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -18,7 +14,7 @@ class GetDashboardStatsRequest extends BaseAdminRequest
     public function rules(): array
     {
         return $this->applyBaseRules([
-            'period' => 'nullable|in:today,week,month,year',
+            'period' => [self::NULLABLE, self::IN.':today,week,month,year'],
         ]);
     }
 }

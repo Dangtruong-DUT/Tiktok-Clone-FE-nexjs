@@ -2,21 +2,20 @@
 
 namespace App\Http\Requests\Admin\User;
 
-use App\Http\Requests\Admin\BaseAdminRequest;
-use Illuminate\Validation\Rule;
+use App\Http\Requests\BaseRequest;
 
-/**
- * Unban a user account
- * Used by: POST /admin/users/{user_id}/unban
- */
-class UnbanUserRequest extends BaseAdminRequest
+class UnbanUserRequest extends BaseRequest
 {
+    /**
+     * Prepare the data for validation.
+     * Extract user_id from route and merge into request data
+     */
     protected function prepareForValidation(): void
     {
         parent::prepareForValidation();
 
         $this->merge([
-            'user_id' => $this->route('user_id'),
+            'user_uuid' => $this->route('user_uuid'),
         ]);
     }
 
@@ -28,10 +27,8 @@ class UnbanUserRequest extends BaseAdminRequest
     public function rules(): array
     {
         return $this->applyBaseRules([
-            'user_id' => [
-                'required',
-                'integer',
-                Rule::exists('users', 'id'),
+            'user_uuid' => [
+                self::REQUIRED,
             ],
         ]);
     }

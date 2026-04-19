@@ -2,25 +2,21 @@
 
 namespace App\Http\Requests\Admin\User;
 
-use App\Http\Requests\Admin\BaseAdminRequest;
+use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rule;
 
-/**
- * Ban a user account
- * Used by: POST /admin/users/{user_id}/ban
- */
-class BanUserRequest extends BaseAdminRequest
+class BanUserRequest extends BaseRequest
 {
-    protected array $casts = [
-        'duration_days' => 'int',
-    ];
-
+    /**
+     * Prepare the data for validation.
+     * Extract user_id from route and merge into request data
+     */
     protected function prepareForValidation(): void
     {
         parent::prepareForValidation();
 
         $this->merge([
-            'user_id' => $this->route('user_id'),
+            'user_uuid' => $this->route('user_uuid'),
         ]);
     }
 
@@ -32,14 +28,12 @@ class BanUserRequest extends BaseAdminRequest
     public function rules(): array
     {
         return $this->applyBaseRules([
-            'user_id' => [
-                'required',
-                'integer',
-                Rule::exists('users', 'id'),
-                Rule::notIn([$this->user()?->id]), // Can't ban self
+            'user_uuid' => [
+                self::REQUIRED,
+                Rule::notIn([$this->user()?->uuid]),
             ],
-            'reason' => 'required|string|min:10|max:500',
-            'duration_days' => 'nullable|integer|min:1|max:365',
+            'reason' => [self::REQUIRED, self::STRING, self::MIN . ':10', self::MAX . ':500'],
+            'duration_days' => [self::NULLABLE, self::INTEGER, self::MIN . ':1', self::MAX . ':365'],
         ]);
     }
 }

@@ -2,21 +2,21 @@
 
 namespace App\Http\Requests\Admin\User;
 
-use App\Http\Requests\Admin\BaseAdminRequest;
+use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rule;
 
-/**
- * Delete a user account (soft delete)
- * Used by: POST /admin/users/{user_id}/delete
- */
-class DeleteUserRequest extends BaseAdminRequest
+class DeleteUserRequest extends BaseRequest
 {
+    /**
+     * Prepare the data for validation.
+     * Extract user_id from route and merge into request data
+     */
     protected function prepareForValidation(): void
     {
         parent::prepareForValidation();
 
         $this->merge([
-            'user_id' => $this->route('user_id'),
+            'user_uuid' => $this->route('user_uuid'),
         ]);
     }
 
@@ -28,13 +28,11 @@ class DeleteUserRequest extends BaseAdminRequest
     public function rules(): array
     {
         return $this->applyBaseRules([
-            'user_id' => [
-                'required',
-                'integer',
-                Rule::exists('users', 'id'),
-                Rule::notIn([$this->user()?->id]), // Can't delete self
+            'user_uuid' => [
+                self::REQUIRED,
+                Rule::notIn([$this->user()?->uuid]),
             ],
-            'reason' => 'required|string|min:10|max:500',
+            'reason' => [self::REQUIRED, self::STRING, self::MIN . ':10', self::MAX . ':500'],
         ]);
     }
 }

@@ -60,12 +60,6 @@ class AdminController extends Controller
         return ApiResponse::success(
             data: $users->items(),
             message: 'Users retrieved successfully',
-            meta: [
-                'current_page' => $users->currentPage(),
-                'last_page' => $users->lastPage(),
-                'total' => $users->total(),
-                'per_page' => $users->perPage(),
-            ]
         );
     }
 

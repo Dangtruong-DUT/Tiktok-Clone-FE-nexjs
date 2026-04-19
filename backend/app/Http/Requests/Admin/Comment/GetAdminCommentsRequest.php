@@ -2,20 +2,11 @@
 
 namespace App\Http\Requests\Admin\Comment;
 
-use App\Http\Requests\Admin\BaseAdminRequest;
+use App\Http\Requests\BaseListRequest;
 use Illuminate\Validation\Rule;
 
-/**
- * Get list of comments with filtering and pagination
- * Used by: GET /admin/comments
- */
-class GetAdminCommentsRequest extends BaseAdminRequest
+class GetAdminCommentsRequest extends BaseListRequest
 {
-    protected array $casts = [
-        'page' => 'int',
-        'per_page' => 'int',
-    ];
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -24,15 +15,15 @@ class GetAdminCommentsRequest extends BaseAdminRequest
     public function rules(): array
     {
         return $this->applyBaseRules([
-            'search' => 'nullable|string|max:200',
-            'post_uuid' => 'nullable|string|exists:posts,uuid',
-            'user_id' => 'nullable|integer|exists:users,id',
-            'date_from' => 'nullable|date_format:Y-m-d',
-            'date_to' => 'nullable|date_format:Y-m-d',
-            'page' => 'nullable|integer|min:1',
-            'per_page' => 'nullable|integer|min:1|max:100',
-            'sort_by' => [
-                'nullable',
+            'q' => [self::NULLABLE, self::STRING, self::MAX . ':200'],
+            'post_uuid' => [self::NULLABLE],
+            'user_uuid' => [self::NULLABLE],
+            'date_from' => [self::NULLABLE, self::DATE_FORMAT . ':Y-m-d'],
+            'date_to' => [self::NULLABLE, self::DATE_FORMAT . ':Y-m-d'],
+            'page' => [self::NULLABLE],
+            'per_page' => [self::NULLABLE],
+            'order_by' => [
+                self::NULLABLE,
                 Rule::in(['id', 'created_at', 'likes_count', '-id', '-created_at', '-likes_count']),
             ],
         ]);

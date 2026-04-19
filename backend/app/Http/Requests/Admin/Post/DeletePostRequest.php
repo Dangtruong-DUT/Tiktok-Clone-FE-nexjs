@@ -2,14 +2,13 @@
 
 namespace App\Http\Requests\Admin\Post;
 
-use App\Http\Requests\Admin\BaseAdminRequest;
-use Illuminate\Validation\Rule;
+use App\Http\Requests\BaseRequest;
 
 /**
  * Delete a post permanently (soft delete)
  * Used by: POST /admin/posts/{uuid}/delete
  */
-class DeletePostRequest extends BaseAdminRequest
+class DeletePostRequest extends BaseRequest
 {
     protected function prepareForValidation(): void
     {
@@ -29,11 +28,14 @@ class DeletePostRequest extends BaseAdminRequest
     {
         return $this->applyBaseRules([
             'post_uuid' => [
-                'required',
-                'string',
-                Rule::exists('posts', 'uuid'),
+                self::REQUIRED,
             ],
-            'reason' => 'required|string|min:10|max:500',
+            'reason' => [
+                self::REQUIRED,
+                self::STRING,
+                self::MIN . ':10',
+                self::MAX . ':500'
+            ],
         ]);
     }
 }

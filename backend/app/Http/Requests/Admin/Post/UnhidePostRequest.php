@@ -2,14 +2,9 @@
 
 namespace App\Http\Requests\Admin\Post;
 
-use App\Http\Requests\Admin\BaseAdminRequest;
-use Illuminate\Validation\Rule;
+use App\Http\Requests\BaseRequest;
 
-/**
- * Unhide a post (make it visible again)
- * Used by: POST /admin/posts/{uuid}/unhide
- */
-class UnhidePostRequest extends BaseAdminRequest
+class UnhidePostRequest extends BaseRequest
 {
     protected function prepareForValidation(): void
     {
@@ -29,9 +24,7 @@ class UnhidePostRequest extends BaseAdminRequest
     {
         return $this->applyBaseRules([
             'post_uuid' => [
-                'required',
-                'string',
-                Rule::exists('posts', 'uuid'),
+                self::REQUIRED,
             ],
         ]);
     }

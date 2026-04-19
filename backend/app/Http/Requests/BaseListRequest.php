@@ -35,7 +35,10 @@ abstract class BaseListRequest extends BaseRequest
                 self::INTEGER,
                 self::MIN.':'.config('const.pagination.min_per_page', 1),
                 self::MAX.':'.config('const.pagination.max_per_page', 100)
-            ]
+            ],
+            'order_by' => [self::ARRAY],
+            'order_by.*.column' => [self::STRING],
+            'order_by.*.direction' => [self::STRING],
         ]);
     }
 
@@ -53,5 +56,39 @@ abstract class BaseListRequest extends BaseRequest
             }
         }
         $this->replace($validationData);
+    }
+
+    /**
+     * validation data
+     */
+    public function validationData(): array
+    {
+        $validationData = parent::validationData();
+
+        // Convert string "null" to actual null for all inputs
+        array_walk_recursive($validationData, function (&$value) {
+            if ($value === 'null') {
+                $value = null;
+            }
+        });
+        $this->merge($validationData);
+
+        if ($this->has('order_by')) {
+            $validationData['order_by'] = $this->castValueOfOrderBy($this->input('order_by'));
+        }
+
+        return $validationData;
+    }
+
+    /**
+     * cast column and direction column in database field
+     * @param array $orderBy
+     * @return array
+     */
+    private function castValueOfOrderBy(array $orderBy): array
+    {
+        return array_map(function ($item) {
+            return $item;
+        }, $orderBy);
     }
 }
