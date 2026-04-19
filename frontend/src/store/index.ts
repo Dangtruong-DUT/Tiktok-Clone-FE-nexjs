@@ -1,5 +1,5 @@
 import { isProduction } from '@/config/app.config'
-import { AdminApi } from '@/store/services/admin.service'
+import { AdminApi } from '@/store/services/admin/admin-api.service'
 import { AuthApi } from '@/store/services/auth.service'
 import { NotificationApi } from '@/store/services/notification.service'
 import { PostApi } from '@/store/services/posts.service'

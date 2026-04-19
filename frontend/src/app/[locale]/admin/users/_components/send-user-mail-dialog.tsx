@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useSendUserMailMutation } from '@/store/services/admin.service'
+import { useSendUserMailMutation } from '@/store/services/admin'
 import {
     Dialog,
     DialogContent,
@@ -19,13 +19,13 @@ import { Mail, Loader2 } from 'lucide-react'
 
 interface SendUserMailDialogProps {
     open: boolean
-    userId: number
+    userUuid: string
     username: string
     onOpenChange: (open: boolean) => void
     onSuccess?: () => void
 }
 
-export function SendUserMailDialog({ open, userId, username, onOpenChange, onSuccess }: SendUserMailDialogProps) {
+export function SendUserMailDialog({ open, userUuid, username, onOpenChange, onSuccess }: SendUserMailDialogProps) {
     const [sendMail, { isLoading }] = useSendUserMailMutation()
     const [subject, setSubject] = useState('')
     const [message, setMessage] = useState('')
@@ -61,7 +61,7 @@ export function SendUserMailDialog({ open, userId, username, onOpenChange, onSuc
 
         try {
             await sendMail({
-                user_id: userId,
+                user_uuid: userUuid,
                 subject: subject.trim(),
                 message: message.trim()
             }).unwrap()

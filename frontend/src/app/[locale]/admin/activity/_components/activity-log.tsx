@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
-import { useGetActivityLogsQuery } from '@/store/services/admin.service'
+import { useGetActivityLogsQuery } from '@/store/services/admin'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import AutoPagination from '@/components/auto-pagination'
@@ -13,9 +13,15 @@ import { timeAgo } from '@/utils/formatting/formatTime.util'
 import type { LocalesType } from '@/i18n/config'
 import { Search, AlertCircle } from 'lucide-react'
 import { ACTIVITY_TYPES } from '@/constants/admin.const'
+import { AdminActivityListItem, AdminListMeta } from '@/types/dtos/admin/admin-response.dto'
 
 interface ActivityLogProps {
     type?: 'all' | 'admin' | 'system'
+}
+
+interface ActivityLogsApiResponse {
+    data: AdminActivityListItem[]
+    meta?: AdminListMeta
 }
 
 const DATE_FORMATTER = new Intl.DateTimeFormat('en-CA')
@@ -53,28 +59,33 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
     }, [timePeriod])
 
     // Fetch data
-    const { data, isLoading } = useGetActivityLogsQuery({
+    const activityQuery = useGetActivityLogsQuery({
         page,
         per_page: perPage,
         log_type: type === 'system' ? 'activity' : 'admin',
         action_type: activityType !== 'all' ? activityType : undefined,
         date_from: dateFrom,
-        sort_by: '-created_at'
-    })
+        order_by: '-created_at'
+    }) as unknown as {
+        data?: ActivityLogsApiResponse
+        isLoading: boolean
+    }
+    const { isLoading } = activityQuery
+    const responseData = activityQuery.data as ActivityLogsApiResponse | undefined
 
-    const logs = data?.data || []
-    const pagination = data?.meta
+    const logs: AdminActivityListItem[] = responseData?.data ?? []
+    const pagination = responseData?.meta
     const filteredLogs = useMemo(() => {
         const normalizedSearch = searchTerm.trim().toLowerCase()
         if (!normalizedSearch) return logs
 
-        return logs.filter((log) => {
+        return logs.filter((log: AdminActivityListItem) => {
             return [
-                log.actor_name,
+                getActorName(log),
                 log.resource_type,
                 String(log.resource_id ?? ''),
-                log.activity_key,
-                log.reason ?? ''
+                'action' in log ? log.action : log.action_type,
+                'reason' in log ? (log.reason ?? '') : ''
             ]
                 .join(' ')
                 .toLowerCase()
@@ -145,8 +156,19 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
         return iconMap[activityKey] || '📋'
     }
 
-    const getActivityKey = (log: { action?: string; activity_key?: string }): string => {
-        return log.activity_key ?? log.action ?? 'unknown'
+    const getActivityKey = (log: { action?: string; action_type?: string }): string => {
+        return log.action ?? log.action_type ?? 'unknown'
+    }
+
+    const getActorName = (log: {
+        admin?: { username: string } | undefined
+        user?: { username: string } | undefined
+    }) => {
+        return log.admin?.username ?? log.user?.username
+    }
+
+    const getActivityMetadata = (log: AdminActivityListItem) => {
+        return 'metadata' in log ? log.metadata : null
     }
 
     // Render loading skeleton
@@ -231,7 +253,7 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
                 </div>
             ) : (
                 <div className='space-y-3'>
-                    {filteredLogs.map((log) => (
+                    {filteredLogs.map((log: AdminActivityListItem) => (
                         <div key={log.id} className='border rounded-lg p-4 hover:bg-muted/50 transition'>
                             <div className='flex gap-4'>
                                 {/* Avatar/Icon */}
@@ -250,9 +272,9 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
 
                                     {/* Activity Details */}
                                     <div className='text-sm'>
-                                        {log.actor_name && (
+                                        {getActorName(log) && (
                                             <p className='text-foreground'>
-                                                <span className='font-semibold'>{log.actor_name}</span>
+                                                <span className='font-semibold'>{getActorName(log)}</span>
                                                 {log.resource_type && (
                                                     <>
                                                         {' '}
@@ -264,18 +286,21 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
                                         )}
 
                                         {/* Metadata Display */}
-                                        {log.metadata && Object.keys(log.metadata).length > 0 && (
-                                            <div className='mt-2 space-y-1 text-muted-foreground'>
-                                                {Object.entries(log.metadata).map(([key, value]) => (
-                                                    <div key={key} className='text-xs'>
-                                                        <span className='font-medium'>{key}:</span>{' '}
-                                                        {typeof value === 'string'
-                                                            ? truncateText(value, 50)
-                                                            : JSON.stringify(value)}
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
+                                        {getActivityMetadata(log) &&
+                                            Object.keys(getActivityMetadata(log) || {}).length > 0 && (
+                                                <div className='mt-2 space-y-1 text-muted-foreground'>
+                                                    {Object.entries(getActivityMetadata(log) || {}).map(
+                                                        ([key, value]) => (
+                                                            <div key={key} className='text-xs'>
+                                                                <span className='font-medium'>{key}:</span>{' '}
+                                                                {typeof value === 'string'
+                                                                    ? truncateText(value, 50)
+                                                                    : JSON.stringify(value)}
+                                                            </div>
+                                                        )
+                                                    )}
+                                                </div>
+                                            )}
                                     </div>
 
                                     {/* Timestamp */}

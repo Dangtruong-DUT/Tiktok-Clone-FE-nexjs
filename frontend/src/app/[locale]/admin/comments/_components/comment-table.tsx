@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useGetAdminCommentsQuery } from '@/store/services/admin.service'
+import { useGetAdminCommentsQuery } from '@/store/services/admin'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
@@ -13,10 +13,15 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { DeleteCommentDialog } from './delete-comment-dialog'
 import { formatAdminDate, truncateText } from '@/helpers/admin-helpers'
 import { MoreHorizontal, Search, AlertCircle } from 'lucide-react'
-import { AdminComment } from '@/types/dtos/admin/admin-response.dto'
+import { AdminComment, AdminListMeta } from '@/types/dtos/admin/admin-response.dto'
 
 interface CommentTableProps {
     onCommentDeleted?: () => void
+}
+
+interface AdminCommentsApiResponse {
+    data: AdminComment[]
+    meta?: AdminListMeta
 }
 
 /**
@@ -42,15 +47,22 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
     // Fetch data
-    const { data, isLoading, isFetching, refetch } = useGetAdminCommentsQuery({
+    const commentsQuery = useGetAdminCommentsQuery({
         page,
         per_page: perPage,
-        search: searchTerm || undefined,
-        sort_by: sortBy === 'recent' ? '-created_at' : 'created_at'
-    })
+        q: searchTerm || undefined,
+        order_by: sortBy === 'recent' ? '-created_at' : 'created_at'
+    }) as unknown as {
+        data?: AdminCommentsApiResponse
+        isLoading: boolean
+        isFetching: boolean
+        refetch: () => unknown
+    }
+    const { isLoading, isFetching, refetch } = commentsQuery
+    const responseData = commentsQuery.data as AdminCommentsApiResponse | undefined
 
-    const comments = data?.data || []
-    const pagination = data?.meta
+    const comments: AdminComment[] = responseData?.data ?? []
+    const pagination = responseData?.meta
 
     // Handlers
     const handleSearch = (value: string) => {
@@ -152,23 +164,18 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {comments.map((comment) => (
+                            {comments.map((comment: AdminComment) => (
                                 <TableRow key={comment.id} className='hover:bg-muted/50'>
                                     <TableCell className='font-mono text-sm'>#{comment.id}</TableCell>
-                                    <TableCell className='font-medium'>{comment.user?.username || 'N/A'}</TableCell>
+                                    <TableCell className='font-medium'>{comment.author?.username || 'N/A'}</TableCell>
                                     <TableCell>
                                         <div className='max-w-xs'>
                                             <p className='text-sm line-clamp-2'>{truncateText(comment.content, 50)}</p>
                                         </div>
                                     </TableCell>
                                     <TableCell className='text-sm'>
-                                        {comment.parent?.content ? (
-                                            <div>
-                                                <p className='font-medium'>
-                                                    {truncateText(comment.parent.content, 25)}
-                                                </p>
-                                                <p className='text-xs text-muted-foreground'>#{comment.parent_id}</p>
-                                            </div>
+                                        {comment.parent_id ? (
+                                            <p className='text-xs text-muted-foreground'>#{comment.parent_id}</p>
                                         ) : (
                                             <span className='text-muted-foreground'>N/A</span>
                                         )}
@@ -237,8 +244,8 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
             {selectedComment && (
                 <DeleteCommentDialog
                     open={showDeleteDialog}
-                    commentId={selectedComment.id}
-                    authorUsername={selectedComment.user?.username || 'N/A'}
+                    commentUuid={selectedComment.uuid}
+                    authorUsername={selectedComment.author?.username || 'N/A'}
                     parentPostId={selectedComment.parent_id ?? undefined}
                     onOpenChange={(open) => !open && closeDeleteDialog()}
                     onSuccess={handleActionSuccess}

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useDeleteCommentMutation } from '@/store/services/admin.service'
+import { useDeleteCommentMutation } from '@/store/services/admin'
 import {
     Dialog,
     DialogContent,
@@ -19,7 +19,7 @@ import { AlertTriangle, Loader2 } from 'lucide-react'
 
 interface DeleteCommentDialogProps {
     open: boolean
-    commentId: number
+    commentUuid: string
     authorUsername: string
     parentPostId?: number
     onOpenChange: (open: boolean) => void
@@ -32,7 +32,7 @@ interface DeleteCommentDialogProps {
  */
 export function DeleteCommentDialog({
     open,
-    commentId,
+    commentUuid,
     authorUsername,
     parentPostId,
     onOpenChange,
@@ -69,7 +69,7 @@ export function DeleteCommentDialog({
 
         try {
             await deleteComment({
-                comment_id: commentId,
+                comment_uuid: commentUuid,
                 reason: reason.trim()
             }).unwrap()
 

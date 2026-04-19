@@ -1,7 +1,7 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
-import { useUnhidePostMutation } from '@/store/services/admin.service'
+import { useUnhidePostMutation } from '@/store/services/admin'
 import {
     Dialog,
     DialogContent,

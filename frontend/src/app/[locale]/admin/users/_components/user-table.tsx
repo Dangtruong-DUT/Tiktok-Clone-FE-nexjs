@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useGetAdminUsersQuery } from '@/store/services/admin.service'
+import { useGetAdminUsersQuery } from '@/store/services/admin'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import {
     DropdownMenu,
@@ -59,9 +59,9 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
     const { data, isLoading, isFetching, refetch } = useGetAdminUsersQuery({
         page,
         per_page: perPage,
-        search: searchTerm || undefined,
+        q: searchTerm || undefined,
         status: statusFilter !== 'all' ? statusFilter : undefined,
-        sort_by: sortBy === 'recent' ? '-created_at' : 'created_at'
+        order_by: sortBy === 'recent' ? '-created_at' : 'created_at'
     })
 
     const users = data?.data || []
@@ -317,7 +317,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                 <>
                     <BanUserDialog
                         open={dialogType === 'ban'}
-                        userId={selectedUser.id}
+                        userUuid={selectedUser.uuid}
                         username={selectedUser.username}
                         onOpenChange={(open) => !open && closeDialog()}
                         onSuccess={handleActionSuccess}
@@ -325,7 +325,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
 
                     <UnbanUserDialog
                         open={dialogType === 'unban'}
-                        userId={selectedUser.id}
+                        userUuid={selectedUser.uuid}
                         username={selectedUser.username}
                         onOpenChange={(open) => !open && closeDialog()}
                         onSuccess={handleActionSuccess}
@@ -333,7 +333,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
 
                     <DeleteUserDialog
                         open={dialogType === 'delete'}
-                        userId={selectedUser.id}
+                        userUuid={selectedUser.uuid}
                         username={selectedUser.username}
                         onOpenChange={(open) => !open && closeDialog()}
                         onSuccess={handleActionSuccess}
@@ -341,7 +341,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
 
                     <ResetUserPasswordDialog
                         open={dialogType === 'reset-password'}
-                        userId={selectedUser.id}
+                        userUuid={selectedUser.uuid}
                         username={selectedUser.username}
                         onOpenChange={(open) => !open && closeDialog()}
                         onSuccess={handleActionSuccess}
@@ -349,7 +349,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
 
                     <SendUserMailDialog
                         open={dialogType === 'send-mail'}
-                        userId={selectedUser.id}
+                        userUuid={selectedUser.uuid}
                         username={selectedUser.username}
                         onOpenChange={(open) => !open && closeDialog()}
                         onSuccess={handleActionSuccess}

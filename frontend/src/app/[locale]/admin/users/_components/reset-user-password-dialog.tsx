@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useResetUserPasswordMutation } from '@/store/services/admin.service'
+import { useResetUserPasswordMutation } from '@/store/services/admin'
 import {
     Dialog,
     DialogContent,
@@ -18,7 +18,7 @@ import { KeyRound, Loader2 } from 'lucide-react'
 
 interface ResetUserPasswordDialogProps {
     open: boolean
-    userId: number
+    userUuid: string
     username: string
     onOpenChange: (open: boolean) => void
     onSuccess?: () => void
@@ -26,7 +26,7 @@ interface ResetUserPasswordDialogProps {
 
 export function ResetUserPasswordDialog({
     open,
-    userId,
+    userUuid,
     username,
     onOpenChange,
     onSuccess
@@ -66,9 +66,9 @@ export function ResetUserPasswordDialog({
 
         try {
             await resetPassword({
-                user_id: userId,
+                user_uuid: userUuid,
                 password,
-                password_confirmation: passwordConfirmation
+                confirm_password: passwordConfirmation
             }).unwrap()
 
             toast.success('User password reset successfully')

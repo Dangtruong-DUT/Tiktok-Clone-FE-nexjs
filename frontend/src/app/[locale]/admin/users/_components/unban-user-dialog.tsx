@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useUnbanUserMutation } from '@/store/services/admin.service'
+import { useUnbanUserMutation } from '@/store/services/admin'
 import {
     Dialog,
     DialogContent,
@@ -17,7 +17,7 @@ import { CheckCircle, Loader2 } from 'lucide-react'
 
 interface UnbanUserDialogProps {
     open: boolean
-    userId: number
+    userUuid: string
     username: string
     onOpenChange: (open: boolean) => void
     onSuccess?: () => void
@@ -27,14 +27,14 @@ interface UnbanUserDialogProps {
  * UnbanUserDialog - Modal dialog to unban a user
  * Confirms unban action (simple confirmation only)
  */
-export function UnbanUserDialog({ open, userId, username, onOpenChange, onSuccess }: UnbanUserDialogProps) {
+export function UnbanUserDialog({ open, userUuid, username, onOpenChange, onSuccess }: UnbanUserDialogProps) {
     const t = useTranslations('AdminPage')
     const [unbanUser, { isLoading }] = useUnbanUserMutation()
 
     const handleUnban = async () => {
         try {
             await unbanUser({
-                user_id: userId
+                user_uuid: userUuid
             }).unwrap()
 
             toast.success(t('users.messages.unbanSuccess'))

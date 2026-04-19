@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useBanUserMutation } from '@/store/services/admin.service'
+import { useBanUserMutation } from '@/store/services/admin'
 import {
     Dialog,
     DialogContent,
@@ -20,7 +20,7 @@ import { AlertCircle, Loader2 } from 'lucide-react'
 
 interface BanUserDialogProps {
     open: boolean
-    userId: number
+    userUuid: string
     username: string
     onOpenChange: (open: boolean) => void
     onSuccess?: () => void
@@ -30,7 +30,7 @@ interface BanUserDialogProps {
  * BanUserDialog - Modal dialog to ban a user
  * Collects: reason (required) and optional ban duration
  */
-export function BanUserDialog({ open, userId, username, onOpenChange, onSuccess }: BanUserDialogProps) {
+export function BanUserDialog({ open, userUuid, username, onOpenChange, onSuccess }: BanUserDialogProps) {
     const t = useTranslations('AdminPage')
     const [banUser, { isLoading }] = useBanUserMutation()
 
@@ -69,7 +69,7 @@ export function BanUserDialog({ open, userId, username, onOpenChange, onSuccess 
 
         try {
             const request = {
-                user_id: userId,
+                user_uuid: userUuid,
                 reason: formData.reason.trim(),
                 duration_days: formData.durationDays ? Number(formData.durationDays) : undefined
             }

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useDeletePostMutation } from '@/store/services/admin.service'
+import { useDeletePostMutation } from '@/store/services/admin'
 import {
     Dialog,
     DialogContent,
@@ -67,7 +67,11 @@ export function DeletePostDialog({ open, postUuid, authorUsername, onOpenChange,
         if (!validateForm()) return
 
         try {
-            const finalReason = formData.reason === 'other' ? formData.customReason : formData.reason
+            const selectedReason = VIOLATION_REASONS.find((reason) => reason.value === formData.reason)
+            const finalReason =
+                formData.reason === 'other'
+                    ? formData.customReason.trim()
+                    : `Violation: ${selectedReason?.label ?? formData.reason}`
 
             await deletePost({
                 post_uuid: postUuid,

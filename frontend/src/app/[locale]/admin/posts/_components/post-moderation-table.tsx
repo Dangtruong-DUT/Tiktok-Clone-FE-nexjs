@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useGetAdminPostsQuery } from '@/store/services/admin.service'
+import { useGetAdminPostsQuery } from '@/store/services/admin'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import {
     DropdownMenu,
@@ -55,9 +55,9 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
     const { data, isLoading, isFetching, refetch } = useGetAdminPostsQuery({
         page,
         per_page: perPage,
-        search: searchTerm || undefined,
+        q: searchTerm || undefined,
         status: statusFilter !== 'all' ? statusFilter : undefined,
-        sort_by: sortBy === 'recent' ? '-created_at' : 'created_at'
+        order_by: sortBy === 'recent' ? '-created_at' : 'created_at'
     })
 
     const posts = data?.data || []
@@ -188,7 +188,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
                                             <p className='font-medium truncate'>{truncateText(post.content, 60)}</p>
                                         </div>
                                     </TableCell>
-                                    <TableCell className='font-medium'>{post.user?.username || 'N/A'}</TableCell>
+                                    <TableCell className='font-medium'>{post.author?.username || 'N/A'}</TableCell>
                                     <TableCell>
                                         <Badge
                                             variant='outline'
@@ -290,7 +290,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
                     <HidePostDialog
                         open={dialogType === 'hide'}
                         postUuid={selectedPost.uuid}
-                        authorUsername={selectedPost.user?.username || 'N/A'}
+                        authorUsername={selectedPost.author?.username || 'N/A'}
                         onOpenChange={(open) => !open && closeDialog()}
                         onSuccess={handleActionSuccess}
                     />
@@ -298,7 +298,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
                     <UnhidePostDialog
                         open={dialogType === 'unhide'}
                         postUuid={selectedPost.uuid}
-                        authorUsername={selectedPost.user?.username || 'N/A'}
+                        authorUsername={selectedPost.author?.username || 'N/A'}
                         onOpenChange={(open) => !open && closeDialog()}
                         onSuccess={handleActionSuccess}
                     />
@@ -306,7 +306,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
                     <DeletePostDialog
                         open={dialogType === 'delete'}
                         postUuid={selectedPost.uuid}
-                        authorUsername={selectedPost.user?.username || 'N/A'}
+                        authorUsername={selectedPost.author?.username || 'N/A'}
                         onOpenChange={(open) => !open && closeDialog()}
                         onSuccess={handleActionSuccess}
                     />

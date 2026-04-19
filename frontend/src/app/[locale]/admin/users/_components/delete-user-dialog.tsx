@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useDeleteUserMutation } from '@/store/services/admin.service'
+import { useDeleteUserMutation } from '@/store/services/admin'
 import {
     Dialog,
     DialogContent,
@@ -19,7 +19,7 @@ import { AlertTriangle, Loader2 } from 'lucide-react'
 
 interface DeleteUserDialogProps {
     open: boolean
-    userId: number
+    userUuid: string
     username: string
     onOpenChange: (open: boolean) => void
     onSuccess?: () => void
@@ -30,7 +30,7 @@ interface DeleteUserDialogProps {
  * Collects: reason (required)
  * Includes confirmation warning about permanent deletion
  */
-export function DeleteUserDialog({ open, userId, username, onOpenChange, onSuccess }: DeleteUserDialogProps) {
+export function DeleteUserDialog({ open, userUuid, username, onOpenChange, onSuccess }: DeleteUserDialogProps) {
     const t = useTranslations('AdminPage')
     const [deleteUser, { isLoading }] = useDeleteUserMutation()
 
@@ -62,7 +62,7 @@ export function DeleteUserDialog({ open, userId, username, onOpenChange, onSucce
 
         try {
             await deleteUser({
-                user_id: userId,
+                user_uuid: userUuid,
                 reason: reason.trim()
             }).unwrap()
 
