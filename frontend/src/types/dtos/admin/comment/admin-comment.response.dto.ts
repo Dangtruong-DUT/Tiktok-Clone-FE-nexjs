@@ -1,6 +1,7 @@
 import { z } from 'zod'
-import type { HttpResponse, HttpResponseWithMeta } from '@/types/common/http-response.type'
-import { AdminApiBaseResponseSchema, AdminListMetaSchema } from '../common/admin-common.response.dto'
+import type { ApiSuccessResponse } from '@/types/common/http-response.type'
+import { ApiSuccessResponseSchema, ApiSuccessResponseWithMetaSchema } from '@/types/common/http-response.type'
+import type { PaginationMeta } from '@/types/common/pagination-meta.type'
 
 export const AdminCommentSchema = z
     .object({
@@ -24,13 +25,10 @@ export const AdminCommentSchema = z
     })
     .strict()
 
-export const GetAdminCommentsResSchema = AdminApiBaseResponseSchema.extend({
-    data: z.array(AdminCommentSchema),
-    meta: AdminListMetaSchema
-}).strict()
+export const GetAdminCommentsResSchema = ApiSuccessResponseWithMetaSchema(z.array(AdminCommentSchema))
 
-export const DeleteCommentResSchema = AdminApiBaseResponseSchema.strict()
+export const DeleteCommentResSchema = ApiSuccessResponseSchema
 
 export type AdminComment = z.infer<typeof AdminCommentSchema>
-export type GetAdminCommentsRes = HttpResponseWithMeta<AdminComment[], z.infer<typeof AdminListMetaSchema>>
-export type DeleteCommentRes = HttpResponse
+export type GetAdminCommentsRes = ApiSuccessResponse & { data: AdminComment[]; meta: PaginationMeta }
+export type DeleteCommentRes = ApiSuccessResponse

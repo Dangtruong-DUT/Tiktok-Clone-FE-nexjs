@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useDeleteCommentMutation } from '@/store/services/admin'
+import { useDeleteCommentMutation } from '@/store/services/admin/index'
 import {
     Dialog,
     DialogContent,
@@ -34,7 +34,6 @@ export function DeleteCommentDialog({
     open,
     commentUuid,
     authorUsername,
-    parentPostId,
     onOpenChange,
     onSuccess
 }: DeleteCommentDialogProps) {

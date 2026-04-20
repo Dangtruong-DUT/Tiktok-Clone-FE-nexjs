@@ -20,7 +20,7 @@ export const GetActivityLogsParamsSchema = z
         resource_type: AdminResourceTypeSchema.optional(),
         date_from: z.string().optional(),
         date_to: z.string().optional(),
-        order_by: z.enum(['id', 'created_at', '-id', '-created_at']).optional()
+        order_by: z.array(z.enum(['id', 'created_at', '-id', '-created_at'])).optional()
     })
     .strict()
 

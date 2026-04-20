@@ -9,7 +9,7 @@ export const GetAdminPostsParamsSchema = z
         status: z.enum(['all', 'visible', 'deleted']).optional(),
         date_from: z.string().optional(),
         date_to: z.string().optional(),
-        order_by: z.enum(['id', 'created_at', 'likes_count', '-id', '-created_at', '-likes_count']).optional()
+        order_by: z.array(z.enum(['id', 'created_at', 'likes_count', '-id', '-created_at', '-likes_count'])).optional()
     })
     .strict()
 

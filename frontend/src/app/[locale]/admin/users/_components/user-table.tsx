@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useGetAdminUsersQuery } from '@/store/services/admin'
+import { useGetAdminUsersQuery } from '@/store/services/admin/index'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import {
     DropdownMenu,
@@ -61,7 +61,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
         per_page: perPage,
         q: searchTerm || undefined,
         status: statusFilter !== 'all' ? statusFilter : undefined,
-        order_by: sortBy === 'recent' ? '-created_at' : 'created_at'
+        order_by: [sortBy === 'recent' ? '-created_at' : 'created_at']
     })
 
     const users = data?.data || []

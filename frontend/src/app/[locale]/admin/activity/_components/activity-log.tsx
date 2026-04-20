@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
-import { useGetActivityLogsQuery } from '@/store/services/admin'
+import { useGetActivityLogsQuery } from '@/store/services/admin/index'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import AutoPagination from '@/components/auto-pagination'
@@ -13,7 +13,8 @@ import { timeAgo } from '@/utils/formatting/formatTime.util'
 import type { LocalesType } from '@/i18n/config'
 import { Search, AlertCircle } from 'lucide-react'
 import { ACTIVITY_TYPES } from '@/constants/admin.const'
-import { AdminActivityListItem, AdminListMeta } from '@/types/dtos/admin/admin-response.dto'
+import { AdminActivityListItem } from '@/types/dtos/admin/admin-response.dto'
+import type { PaginationMeta } from '@/types/common/pagination-meta.type'
 
 interface ActivityLogProps {
     type?: 'all' | 'admin' | 'system'
@@ -21,7 +22,7 @@ interface ActivityLogProps {
 
 interface ActivityLogsApiResponse {
     data: AdminActivityListItem[]
-    meta?: AdminListMeta
+    meta?: PaginationMeta
 }
 
 const DATE_FORMATTER = new Intl.DateTimeFormat('en-CA')
@@ -65,7 +66,7 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
         log_type: type === 'system' ? 'activity' : 'admin',
         action_type: activityType !== 'all' ? activityType : undefined,
         date_from: dateFrom,
-        order_by: '-created_at'
+        order_by: ['-created_at']
     }) as unknown as {
         data?: ActivityLogsApiResponse
         isLoading: boolean
@@ -92,6 +93,7 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
                 .includes(normalizedSearch)
         })
     }, [logs, searchTerm])
+    const totalItems = pagination?.total ?? filteredLogs.length
 
     // Handlers
     const handleSearch = (value: string) => {
@@ -342,8 +344,8 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
                     <div className='text-sm text-muted-foreground'>
                         {t('common.showingResults', {
                             from: (pagination.current_page - 1) * perPage + 1,
-                            to: Math.min(pagination.current_page * perPage, pagination.total),
-                            total: pagination.total
+                            to: Math.min(pagination.current_page * perPage, totalItems),
+                            total: totalItems
                         })}
                     </div>
 

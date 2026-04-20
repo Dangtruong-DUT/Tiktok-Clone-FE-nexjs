@@ -7,7 +7,7 @@ export const GetAdminUsersParamsSchema = z
         q: z.string().optional(),
         status: z.enum(['active', 'banned', 'all']).optional(),
         order_by: z
-            .enum(['id', 'username', 'email', 'created_at', '-id', '-username', '-email', '-created_at'])
+            .array(z.enum(['id', 'username', 'email', 'created_at', '-id', '-username', '-email', '-created_at']))
             .optional()
     })
     .strict()

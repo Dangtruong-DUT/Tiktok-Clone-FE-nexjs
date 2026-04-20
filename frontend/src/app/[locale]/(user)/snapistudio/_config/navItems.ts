@@ -1,5 +1,5 @@
 import { Role } from '@/constants/enum'
-import { Settings, LayoutPanelLeft, BookUp } from 'lucide-react'
+import { Settings, LayoutPanelLeft, BookUp, Scale } from 'lucide-react'
 
 interface NavItem {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -20,6 +20,12 @@ export const navItems: NavItem[] = [
         title: 'posts',
         href: '/snapistudio/content',
         Icon: BookUp,
+        role: [Role.USER, Role.SUPER_ADMIN]
+    },
+    {
+        title: 'appeals',
+        href: '/snapistudio/appeals',
+        Icon: Scale,
         role: [Role.USER, Role.SUPER_ADMIN]
     },
     {

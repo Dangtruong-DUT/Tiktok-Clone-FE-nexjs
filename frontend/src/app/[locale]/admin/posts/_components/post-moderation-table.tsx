@@ -49,11 +49,12 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
         per_page: perPage,
         q: searchTerm || undefined,
         status: statusFilter !== 'all' ? statusFilter : undefined,
-        order_by: sortBy === 'recent' ? '-created_at' : 'created_at'
+        order_by: [sortBy === 'recent' ? '-created_at' : 'created_at']
     })
 
     const posts = data?.data || []
     const pagination = data?.meta
+    const totalItems = pagination?.total ?? posts.length
 
     // Handlers
     const handleSearch = (value: string) => {
@@ -236,8 +237,8 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
                     <div className='text-sm text-muted-foreground'>
                         {t('common.showingResults', {
                             from: (pagination.current_page - 1) * perPage + 1,
-                            to: Math.min(pagination.current_page * perPage, pagination.total),
-                            total: pagination.total
+                            to: Math.min(pagination.current_page * perPage, totalItems),
+                            total: totalItems
                         })}
                     </div>
 

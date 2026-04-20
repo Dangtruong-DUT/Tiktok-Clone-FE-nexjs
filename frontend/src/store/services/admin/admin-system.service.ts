@@ -1,6 +1,7 @@
 import { AdminApi } from './admin-api.service'
 import type { GetActivityLogsRes, GetDashboardStatsRes } from '@/types/dtos/admin/admin-response.dto'
 import type { GetActivityLogsParams, GetDashboardStatsParams } from '@/types/dtos/admin/admin-request.dto'
+import { toQueryParamsWithOrderBy } from '@/utils/common/order-by-params.util'
 
 const adminSystemApi = AdminApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -15,7 +16,7 @@ const adminSystemApi = AdminApi.injectEndpoints({
         getActivityLogs: builder.query<GetActivityLogsRes, GetActivityLogsParams>({
             query: (params) => ({
                 url: '/admin/activity-logs',
-                params
+                params: toQueryParamsWithOrderBy(params)
             }),
             providesTags: [{ type: 'AdminActivity', id: 'LIST' }]
         })

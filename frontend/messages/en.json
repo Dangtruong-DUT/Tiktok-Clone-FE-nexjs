@@ -178,6 +178,7 @@
         "navigation": {
             "home": "Home",
             "posts": "Posts",
+            "appeals": "Appeals",
             "settings": "Settings",
             "back": "Back to Snapi"
         },
@@ -419,6 +420,61 @@
                 "post": "Post",
                 "discard": "Discard"
             }
+        },
+        "appeals": {
+            "create": {
+                "title": "File a New Appeal",
+                "description": "Submit an appeal for moderation actions applied to your content or account.",
+                "appealType": "Appeal type",
+                "resourceType": "Resource type",
+                "resourceId": "Resource ID",
+                "resourceIdPlaceholder": "Optional numeric resource id",
+                "reason": "Reason",
+                "reasonPlaceholder": "Describe why this moderation decision should be reviewed.",
+                "submit": "Submit appeal",
+                "submitting": "Submitting..."
+            },
+            "list": {
+                "title": "My Appeals",
+                "description": "Track status of your submitted appeals.",
+                "searchPlaceholder": "Search appeals",
+                "emptyState": "No appeals found",
+                "perPage": "Per page",
+                "showingResults": "Showing {from}-{to} of {total}",
+                "filters": {
+                    "allStatuses": "All statuses"
+                },
+                "columns": {
+                    "id": "ID",
+                    "type": "Type",
+                    "reason": "Reason",
+                    "status": "Status",
+                    "createdAt": "Created at"
+                }
+            },
+            "types": {
+                "user_ban": "User Ban",
+                "post_deleted": "Post Deleted",
+                "comment_deleted": "Comment Deleted"
+            },
+            "resourceTypes": {
+                "user": "User",
+                "post": "Post",
+                "comment": "Comment"
+            },
+            "statuses": {
+                "pending": "Pending",
+                "approved": "Approved",
+                "rejected": "Rejected"
+            },
+            "messages": {
+                "createSuccess": "Appeal submitted successfully",
+                "createError": "Failed to submit appeal"
+            },
+            "errors": {
+                "reasonMinLength": "Reason must be at least 20 characters",
+                "resourceIdInvalid": "Resource ID must be a valid number"
+            }
         }
     },
     "menuItems": {
@@ -639,6 +695,13 @@
                     "follow": "{actor} started following you.",
                     "authLogin": "You logged in successfully.",
                     "authRegister": "Your account was created successfully.",
+                    "adminBan": "{actor} has restricted your account.",
+                    "adminDeletePost": "{actor} removed one of your posts.",
+                    "adminDeleteComment": "{actor} removed one of your comments.",
+                    "appealApproved": "{actor} approved your appeal.",
+                    "appealRejected": "{actor} rejected your appeal.",
+                    "adminNotice": "{actor} sent you an admin notice.",
+                    "aiNotice": "AI moderation updated one of your contents.",
                     "default": "{actor} sent you a notification."
                 },
                 "actions": {
@@ -716,6 +779,14 @@
             "showingResults": "Showing {from}-{to} of {total}",
             "cancel": "Cancel",
             "loading": "Loading..."
+        },
+        "shell": {
+            "panelLabel": "Admin Panel",
+            "accountMenu": "Account menu",
+            "settings": "Settings",
+            "profile": "Profile",
+            "logout": "Log out",
+            "unknownUser": "Administrator"
         },
         "dashboard": {
             "title": "Admin Dashboard",
@@ -898,6 +969,71 @@
             "prepositions": {
                 "on": "on"
             }
+        },
+        "settings": {
+            "title": "Admin Settings",
+            "description": "Update your profile and account security settings"
+        },
+        "appeals": {
+            "title": "Appeal Moderation",
+            "description": "Review and process user appeals",
+            "emptyState": "No appeals found",
+            "columns": {
+                "id": "ID",
+                "user": "User",
+                "type": "Appeal Type",
+                "reason": "Reason",
+                "status": "Status",
+                "createdAt": "Created At",
+                "actions": "Actions"
+            },
+            "filters": {
+                "allStatuses": "All statuses",
+                "allTypes": "All types"
+            },
+            "types": {
+                "user_ban": "User Ban",
+                "post_deleted": "Post Deleted",
+                "comment_deleted": "Comment Deleted"
+            },
+            "statuses": {
+                "pending": "Pending",
+                "approved": "Approved",
+                "rejected": "Rejected"
+            },
+            "actions": {
+                "approve": "Approve",
+                "reject": "Reject"
+            },
+            "labels": {
+                "adminResponse": "Admin response"
+            },
+            "placeholders": {
+                "searchAppeals": "Search appeals",
+                "approveResponse": "Optional response for appeal approval",
+                "rejectResponse": "Required reason for rejection"
+            },
+            "dialogs": {
+                "approve": "Approve this appeal and reverse the previous moderation action.",
+                "reject": "Reject this appeal and keep the current moderation decision."
+            },
+            "messages": {
+                "approveSuccess": "Appeal approved successfully",
+                "rejectSuccess": "Appeal rejected successfully",
+                "reviewError": "Unable to process appeal",
+                "missingAppealUuid": "Appeal identifier is missing from API response"
+            },
+            "errors": {
+                "rejectReasonMin": "Reject reason must be at least 10 characters"
+            }
         }
+    },
+    "BannedPage": {
+        "title": "Account Locked",
+        "description": "This account has been suspended due to policy violations.",
+        "lockWithDays": "Your account is locked for {days} more day(s).",
+        "lockWithoutDays": "Your account is currently locked.",
+        "appealAction": "Submit an Appeal",
+        "backHome": "Back to Home"
     }
 }

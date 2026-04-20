@@ -1,6 +1,11 @@
 import { z } from 'zod'
-import type { HttpResponse, HttpResponseWithData, HttpResponseWithMeta } from '@/types/common/http-response.type'
-import { AdminApiBaseResponseSchema, AdminListMetaSchema } from '../common/admin-common.response.dto'
+import type { ApiSuccessResponse } from '@/types/common/http-response.type'
+import {
+    ApiSuccessResponseSchema,
+    ApiSuccessResponseWithDataSchema,
+    ApiSuccessResponseWithMetaSchema
+} from '@/types/common/http-response.type'
+import type { PaginationMeta } from '@/types/common/pagination-meta.type'
 
 export const AdminUserSchema = z
     .object({
@@ -15,26 +20,19 @@ export const AdminUserSchema = z
     })
     .strict()
 
-export const GetAdminUsersResSchema = AdminApiBaseResponseSchema.extend({
-    data: z.array(AdminUserSchema),
-    meta: AdminListMetaSchema
-}).strict()
+export const GetAdminUsersResSchema = ApiSuccessResponseWithMetaSchema(z.array(AdminUserSchema))
 
-export const BanUserResSchema = AdminApiBaseResponseSchema.extend({
-    data: AdminUserSchema
-}).strict()
+export const BanUserResSchema = ApiSuccessResponseWithDataSchema(AdminUserSchema)
 
-export const UnbanUserResSchema = AdminApiBaseResponseSchema.extend({
-    data: AdminUserSchema
-}).strict()
+export const UnbanUserResSchema = ApiSuccessResponseWithDataSchema(AdminUserSchema)
 
-export const DeleteUserResSchema = AdminApiBaseResponseSchema.strict()
+export const DeleteUserResSchema = ApiSuccessResponseSchema
 
-export const CommonMessageResSchema = AdminApiBaseResponseSchema.strict()
+export const CommonMessageResSchema = ApiSuccessResponseSchema
 
 export type AdminUser = z.infer<typeof AdminUserSchema>
-export type GetAdminUsersRes = HttpResponseWithMeta<AdminUser[], z.infer<typeof AdminListMetaSchema>>
-export type BanUserRes = HttpResponseWithData<AdminUser>
-export type UnbanUserRes = HttpResponseWithData<AdminUser>
-export type DeleteUserRes = HttpResponse
-export type CommonMessageRes = HttpResponse
+export type GetAdminUsersRes = ApiSuccessResponse & { data: AdminUser[]; meta: PaginationMeta }
+export type BanUserRes = ApiSuccessResponse & { data: AdminUser }
+export type UnbanUserRes = ApiSuccessResponse & { data: AdminUser }
+export type DeleteUserRes = ApiSuccessResponse
+export type CommonMessageRes = ApiSuccessResponse

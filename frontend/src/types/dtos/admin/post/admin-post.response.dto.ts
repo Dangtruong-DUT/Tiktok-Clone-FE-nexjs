@@ -1,6 +1,7 @@
 import { z } from 'zod'
-import type { HttpResponse, HttpResponseWithMeta } from '@/types/common/http-response.type'
-import { AdminApiBaseResponseSchema, AdminListMetaSchema } from '../common/admin-common.response.dto'
+import type { ApiSuccessResponse } from '@/types/common/http-response.type'
+import { ApiSuccessResponseSchema, ApiSuccessResponseWithMetaSchema } from '@/types/common/http-response.type'
+import type { PaginationMeta } from '@/types/common/pagination-meta.type'
 
 export const AdminPostSchema = z
     .object({
@@ -22,13 +23,10 @@ export const AdminPostSchema = z
     })
     .strict()
 
-export const GetAdminPostsResSchema = AdminApiBaseResponseSchema.extend({
-    data: z.array(AdminPostSchema),
-    meta: AdminListMetaSchema
-}).strict()
+export const GetAdminPostsResSchema = ApiSuccessResponseWithMetaSchema(z.array(AdminPostSchema))
 
-export const DeletePostResSchema = AdminApiBaseResponseSchema.strict()
+export const DeletePostResSchema = ApiSuccessResponseSchema
 
 export type AdminPost = z.infer<typeof AdminPostSchema>
-export type GetAdminPostsRes = HttpResponseWithMeta<AdminPost[], z.infer<typeof AdminListMetaSchema>>
-export type DeletePostRes = HttpResponse
+export type GetAdminPostsRes = ApiSuccessResponse & { data: AdminPost[]; meta: PaginationMeta }
+export type DeletePostRes = ApiSuccessResponse

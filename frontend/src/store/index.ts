@@ -1,4 +1,5 @@
 import { isProduction } from '@/config/app.config'
+import { AppealApi } from '@/store/services/appeal.service'
 import { AdminApi } from '@/store/services/admin/admin-api.service'
 import { AuthApi } from '@/store/services/auth.service'
 import { NotificationApi } from '@/store/services/notification.service'
@@ -25,6 +26,7 @@ export const makeStore = () => {
             [PostApi.reducerPath]: PostApi.reducer,
             [NotificationApi.reducerPath]: NotificationApi.reducer,
             [AdminApi.reducerPath]: AdminApi.reducer,
+            [AppealApi.reducerPath]: AppealApi.reducer,
             auth: authReducer,
             app: appReducer,
             modal: modalReducer,
@@ -39,6 +41,7 @@ export const makeStore = () => {
                 PostApi.middleware,
                 NotificationApi.middleware,
                 AdminApi.middleware,
+                AppealApi.middleware,
                 authMiddleware,
                 errorHandleMiddleware
             )
@@ -59,6 +62,7 @@ export function clearStore(dispatch: AppDispatch) {
     dispatch(PostApi.util.resetApiState())
     dispatch(NotificationApi.util.resetApiState())
     dispatch(AdminApi.util.resetApiState())
+    dispatch(AppealApi.util.resetApiState())
     dispatch(UploadApi.util.resetApiState())
     dispatch(clearAllLoading())
 }

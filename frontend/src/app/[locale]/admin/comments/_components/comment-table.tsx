@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useGetAdminCommentsQuery } from '@/store/services/admin'
+import { useGetAdminCommentsQuery } from '@/store/services/admin/index'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
@@ -13,7 +13,8 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { DeleteCommentDialog } from './delete-comment-dialog'
 import { formatAdminDate, truncateText } from '@/helpers/admin-helpers'
 import { MoreHorizontal, Search, AlertCircle } from 'lucide-react'
-import { AdminComment, AdminListMeta } from '@/types/dtos/admin/admin-response.dto'
+import { AdminComment } from '@/types/dtos/admin/admin-response.dto'
+import type { PaginationMeta } from '@/types/common/pagination-meta.type'
 
 interface CommentTableProps {
     onCommentDeleted?: () => void
@@ -21,7 +22,7 @@ interface CommentTableProps {
 
 interface AdminCommentsApiResponse {
     data: AdminComment[]
-    meta?: AdminListMeta
+    meta?: PaginationMeta
 }
 
 /**
@@ -51,7 +52,7 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
         page,
         per_page: perPage,
         q: searchTerm || undefined,
-        order_by: sortBy === 'recent' ? '-created_at' : 'created_at'
+        order_by: [sortBy === 'recent' ? '-created_at' : 'created_at']
     }) as unknown as {
         data?: AdminCommentsApiResponse
         isLoading: boolean
@@ -63,6 +64,7 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
 
     const comments: AdminComment[] = responseData?.data ?? []
     const pagination = responseData?.meta
+    const totalItems = pagination?.total ?? comments.length
 
     // Handlers
     const handleSearch = (value: string) => {
@@ -228,8 +230,8 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
                     <div className='text-sm text-muted-foreground'>
                         {t('common.showingResults', {
                             from: (pagination.current_page - 1) * perPage + 1,
-                            to: Math.min(pagination.current_page * perPage, pagination.total),
-                            total: pagination.total
+                            to: Math.min(pagination.current_page * perPage, totalItems),
+                            total: totalItems
                         })}
                     </div>
 

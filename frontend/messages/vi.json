@@ -178,6 +178,7 @@
         "navigation": {
             "home": "Trang chủ",
             "posts": "Nội dung",
+            "appeals": "Kháng cáo",
             "settings": "Cài đặt",
             "back": "Quay lại Snapi"
         },
@@ -419,6 +420,61 @@
                 "post": "Đăng",
                 "discard": "Hủy"
             }
+        },
+        "appeals": {
+            "create": {
+                "title": "Tạo kháng cáo mới",
+                "description": "Gửi kháng cáo cho các quyết định kiểm duyệt áp dụng với tài khoản hoặc nội dung của bạn.",
+                "appealType": "Loại kháng cáo",
+                "resourceType": "Loại tài nguyên",
+                "resourceId": "Mã tài nguyên",
+                "resourceIdPlaceholder": "ID số (không bắt buộc)",
+                "reason": "Lý do",
+                "reasonPlaceholder": "Mô tả vì sao quyết định kiểm duyệt này cần được xem xét lại.",
+                "submit": "Gửi kháng cáo",
+                "submitting": "Đang gửi..."
+            },
+            "list": {
+                "title": "Kháng cáo của tôi",
+                "description": "Theo dõi trạng thái các kháng cáo đã gửi.",
+                "searchPlaceholder": "Tìm kháng cáo",
+                "emptyState": "Không có kháng cáo",
+                "perPage": "Mỗi trang",
+                "showingResults": "Hiển thị {from}-{to} trên {total}",
+                "filters": {
+                    "allStatuses": "Tất cả trạng thái"
+                },
+                "columns": {
+                    "id": "ID",
+                    "type": "Loại",
+                    "reason": "Lý do",
+                    "status": "Trạng thái",
+                    "createdAt": "Ngày tạo"
+                }
+            },
+            "types": {
+                "user_ban": "Khóa tài khoản",
+                "post_deleted": "Xóa bài viết",
+                "comment_deleted": "Xóa bình luận"
+            },
+            "resourceTypes": {
+                "user": "Người dùng",
+                "post": "Bài viết",
+                "comment": "Bình luận"
+            },
+            "statuses": {
+                "pending": "Đang chờ",
+                "approved": "Đã duyệt",
+                "rejected": "Đã từ chối"
+            },
+            "messages": {
+                "createSuccess": "Gửi kháng cáo thành công",
+                "createError": "Gửi kháng cáo thất bại"
+            },
+            "errors": {
+                "reasonMinLength": "Lý do phải có ít nhất 20 ký tự",
+                "resourceIdInvalid": "Mã tài nguyên phải là số hợp lệ"
+            }
         }
     },
     "menuItems": {
@@ -638,6 +694,13 @@
                     "follow": "{actor} đã bắt đầu theo dõi bạn.",
                     "authLogin": "Bạn đã đăng nhập thành công.",
                     "authRegister": "Tài khoản của bạn đã được tạo thành công.",
+                    "adminBan": "{actor} đã giới hạn tài khoản của bạn.",
+                    "adminDeletePost": "{actor} đã xóa một bài viết của bạn.",
+                    "adminDeleteComment": "{actor} đã xóa một bình luận của bạn.",
+                    "appealApproved": "{actor} đã chấp nhận kháng cáo của bạn.",
+                    "appealRejected": "{actor} đã từ chối kháng cáo của bạn.",
+                    "adminNotice": "{actor} đã gửi thông báo quản trị cho bạn.",
+                    "aiNotice": "Kiểm duyệt AI đã cập nhật một nội dung của bạn.",
                     "default": "{actor} đã gửi cho bạn một thông báo."
                 },
                 "actions": {
@@ -715,6 +778,14 @@
             "showingResults": "Hiển thị {from}-{to} trên {total}",
             "cancel": "Hủy",
             "loading": "Đang xử lý..."
+        },
+        "shell": {
+            "panelLabel": "Bảng quản trị",
+            "accountMenu": "Menu tài khoản",
+            "settings": "Cài đặt",
+            "profile": "Hồ sơ",
+            "logout": "Đăng xuất",
+            "unknownUser": "Quản trị viên"
         },
         "dashboard": {
             "title": "Bảng điều khiển",
@@ -897,6 +968,71 @@
             "prepositions": {
                 "on": "trên"
             }
+        },
+        "settings": {
+            "title": "Cài đặt quản trị",
+            "description": "Cập nhật hồ sơ và bảo mật tài khoản quản trị"
+        },
+        "appeals": {
+            "title": "Kiểm duyệt kháng cáo",
+            "description": "Xem xét và xử lý kháng cáo từ người dùng",
+            "emptyState": "Không có kháng cáo",
+            "columns": {
+                "id": "ID",
+                "user": "Người dùng",
+                "type": "Loại kháng cáo",
+                "reason": "Lý do",
+                "status": "Trạng thái",
+                "createdAt": "Ngày tạo",
+                "actions": "Thao tác"
+            },
+            "filters": {
+                "allStatuses": "Tất cả trạng thái",
+                "allTypes": "Tất cả loại"
+            },
+            "types": {
+                "user_ban": "Khóa tài khoản",
+                "post_deleted": "Xóa bài viết",
+                "comment_deleted": "Xóa bình luận"
+            },
+            "statuses": {
+                "pending": "Đang chờ",
+                "approved": "Đã duyệt",
+                "rejected": "Đã từ chối"
+            },
+            "actions": {
+                "approve": "Phê duyệt",
+                "reject": "Từ chối"
+            },
+            "labels": {
+                "adminResponse": "Phản hồi quản trị"
+            },
+            "placeholders": {
+                "searchAppeals": "Tìm kháng cáo",
+                "approveResponse": "Phản hồi tùy chọn khi phê duyệt",
+                "rejectResponse": "Lý do bắt buộc khi từ chối"
+            },
+            "dialogs": {
+                "approve": "Phê duyệt kháng cáo này và hoàn tác hành động kiểm duyệt trước đó.",
+                "reject": "Từ chối kháng cáo này và giữ nguyên quyết định kiểm duyệt hiện tại."
+            },
+            "messages": {
+                "approveSuccess": "Phê duyệt kháng cáo thành công",
+                "rejectSuccess": "Từ chối kháng cáo thành công",
+                "reviewError": "Không thể xử lý kháng cáo",
+                "missingAppealUuid": "Thiếu mã định danh kháng cáo từ phản hồi API"
+            },
+            "errors": {
+                "rejectReasonMin": "Lý do từ chối phải có ít nhất 10 ký tự"
+            }
         }
+    },
+    "BannedPage": {
+        "title": "Tài khoản đã bị khóa",
+        "description": "Tài khoản này đã bị tạm khóa do vi phạm chính sách.",
+        "lockWithDays": "Tài khoản của bạn còn bị khóa trong {days} ngày nữa.",
+        "lockWithoutDays": "Tài khoản của bạn hiện đang bị khóa.",
+        "appealAction": "Gửi kháng cáo",
+        "backHome": "Về trang chủ"
     }
 }

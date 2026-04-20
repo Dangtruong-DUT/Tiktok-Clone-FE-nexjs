@@ -2,6 +2,7 @@
 
 import { ReactNode } from 'react'
 import { AdminSidebar } from './admin-sidebar'
+import { AdminTopbar } from './admin-topbar'
 
 interface AdminLayoutProps {
     children: ReactNode
@@ -21,10 +22,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
             {/* Main Content */}
             <div className='flex-1 flex flex-col overflow-hidden'>
-                {/* Mobile Header */}
-                <div className='md:hidden flex items-center justify-between p-4 border-b'>
-                    <h1 className='text-lg font-semibold'>Admin</h1>
-                </div>
+                <AdminTopbar />
 
                 {/* Content Area */}
                 <div className='flex-1 overflow-auto'>{children}</div>

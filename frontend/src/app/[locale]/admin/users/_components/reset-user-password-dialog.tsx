@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useResetUserPasswordMutation } from '@/store/services/admin'
+import { useResetUserPasswordMutation } from '@/store/services/admin/index'
 import {
     Dialog,
     DialogContent,

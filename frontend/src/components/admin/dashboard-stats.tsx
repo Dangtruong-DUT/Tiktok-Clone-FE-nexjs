@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { formatNumber } from '@/utils/formatting/formatNumber.util'
 import type { DashboardStats } from '@/types/dtos/admin/admin-response.dto'
-import { useGetDashboardStatsQuery } from '@/store/services/admin'
+import { useGetDashboardStatsQuery } from '@/store/services/admin/index'
 import { cn } from '@/lib/utils'
 import { Users, FileVideo, MessageSquare, Shield } from 'lucide-react'
 

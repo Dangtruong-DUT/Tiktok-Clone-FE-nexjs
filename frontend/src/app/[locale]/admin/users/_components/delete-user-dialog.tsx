@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useDeleteUserMutation } from '@/store/services/admin'
+import { useDeleteUserMutation } from '@/store/services/admin/index'
 import {
     Dialog,
     DialogContent,

@@ -84,6 +84,7 @@ function getNotificationMessage(
 ): string {
     const actorName = notification.actor?.name || notification.actor?.username || t('labels.someone')
     const event = typeof notification.data?.event === 'string' ? notification.data.event : ''
+    const action = typeof notification.data?.action === 'string' ? notification.data.action : ''
     const likedTargetType =
         typeof notification.data?.liked_target_type === 'string' ? notification.data.liked_target_type : ''
 
@@ -115,6 +116,34 @@ function getNotificationMessage(
         if (event === 'register') {
             return t('messages.authRegister')
         }
+
+        if (event.includes('ai')) {
+            return t('messages.aiNotice')
+        }
+    }
+
+    if (notification.type === NotificationTypeCode.ADMIN) {
+        if (action === 'ban_user') {
+            return t('messages.adminBan', { actor: actorName })
+        }
+
+        if (action === 'delete_post') {
+            return t('messages.adminDeletePost', { actor: actorName })
+        }
+
+        if (action === 'delete_comment') {
+            return t('messages.adminDeleteComment', { actor: actorName })
+        }
+
+        if (action === 'approve_appeal') {
+            return t('messages.appealApproved', { actor: actorName })
+        }
+
+        if (action === 'reject_appeal') {
+            return t('messages.appealRejected', { actor: actorName })
+        }
+
+        return t('messages.adminNotice', { actor: actorName })
     }
 
     return t('messages.default', { actor: actorName })
@@ -129,6 +158,18 @@ function getNotificationSubText(notification: NotificationType): string | null {
 }
 
 function getNotificationLink(notification: NotificationType): string | null {
+    const appealLink = typeof notification.data?.appeal_link === 'string' ? notification.data.appeal_link : null
+
+    if (appealLink) {
+        try {
+            const parsed = new URL(appealLink)
+            const pathWithQuery = `${parsed.pathname}${parsed.search}`
+            return pathWithQuery.replace(/^\/(en|vi)/, '') || '/'
+        } catch {
+            return appealLink.replace(/^https?:\/\/[^/]+/, '').replace(/^\/(en|vi)/, '') || '/'
+        }
+    }
+
     const dataPostUuid = typeof notification.data?.post_uuid === 'string' ? notification.data.post_uuid : null
     const dataCommentUuid = typeof notification.data?.comment_uuid === 'string' ? notification.data.comment_uuid : null
 

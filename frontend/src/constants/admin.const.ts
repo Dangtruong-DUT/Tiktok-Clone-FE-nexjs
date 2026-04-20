@@ -38,6 +38,8 @@ export const ACTIVITY_TYPES = [
     { value: 'delete_user', label: 'Delete User' },
     { value: 'delete_post', label: 'Delete Post' },
     { value: 'delete_comment', label: 'Delete Comment' },
+    { value: 'approve_appeal', label: 'Approve Appeal' },
+    { value: 'reject_appeal', label: 'Reject Appeal' },
     { value: 'reset_user_password', label: 'Reset User Password' },
     { value: 'send_email_to_user', label: 'Send Email To User' }
 ] as const
@@ -47,8 +49,20 @@ export const ADMIN_ROUTES = {
     USERS: '/admin/users',
     POSTS: '/admin/posts',
     COMMENTS: '/admin/comments',
-    ACTIVITY: '/admin/activity'
+    APPEALS: '/admin/appeals',
+    ACTIVITY: '/admin/activity',
+    SETTINGS: '/admin/settings'
 } as const
+
+export const ADMIN_RESOURCE_TYPES = {
+    USER: 'user',
+    POST: 'post',
+    COMMENT: 'comment',
+    MESSAGE: 'message',
+    APPEAL: 'appeal'
+} as const
+
+export type AdminResourceType = (typeof ADMIN_RESOURCE_TYPES)[keyof typeof ADMIN_RESOURCE_TYPES]
 
 export const PAGINATION_DEFAULTS = {
     PER_PAGE: 20,

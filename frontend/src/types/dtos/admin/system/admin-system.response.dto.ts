@@ -1,7 +1,8 @@
 import { z } from 'zod'
-import type { HttpResponseWithData, HttpResponseWithMeta } from '@/types/common/http-response.type'
+import type { ApiSuccessResponse } from '@/types/common/http-response.type'
+import { ApiSuccessResponseWithDataSchema, ApiSuccessResponseWithMetaSchema } from '@/types/common/http-response.type'
 import { AdminResourceTypeSchema } from '../common/admin-common.request.dto'
-import { AdminApiBaseResponseSchema, AdminListMetaSchema } from '../common/admin-common.response.dto'
+import type { PaginationMeta } from '@/types/common/pagination-meta.type'
 
 export const AdminLogSchema = z
     .object({
@@ -49,10 +50,9 @@ export const ActivityLogSchema = z
     })
     .strict()
 
-export const GetActivityLogsResSchema = AdminApiBaseResponseSchema.extend({
-    data: z.array(z.union([AdminLogSchema, ActivityLogSchema])),
-    meta: AdminListMetaSchema
-}).strict()
+export const GetActivityLogsResSchema = ApiSuccessResponseWithMetaSchema(
+    z.array(z.union([AdminLogSchema, ActivityLogSchema]))
+)
 
 export const DashboardStatsSchema = z
     .object({
@@ -68,13 +68,11 @@ export const DashboardStatsSchema = z
     })
     .strict()
 
-export const GetDashboardStatsResSchema = AdminApiBaseResponseSchema.extend({
-    data: DashboardStatsSchema
-}).strict()
+export const GetDashboardStatsResSchema = ApiSuccessResponseWithDataSchema(DashboardStatsSchema)
 
 export type AdminLog = z.infer<typeof AdminLogSchema>
 export type ActivityLog = z.infer<typeof ActivityLogSchema>
 export type AdminActivityListItem = AdminLog | ActivityLog
-export type GetActivityLogsRes = HttpResponseWithMeta<AdminActivityListItem[], z.infer<typeof AdminListMetaSchema>>
+export type GetActivityLogsRes = ApiSuccessResponse & { data: AdminActivityListItem[]; meta: PaginationMeta }
 export type DashboardStats = z.infer<typeof DashboardStatsSchema>
-export type GetDashboardStatsRes = HttpResponseWithData<DashboardStats>
+export type GetDashboardStatsRes = ApiSuccessResponse & { data: DashboardStats }
