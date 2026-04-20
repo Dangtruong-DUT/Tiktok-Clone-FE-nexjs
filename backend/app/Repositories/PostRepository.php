@@ -164,29 +164,18 @@ class PostRepository extends BaseRepository
     {
         $filterCollection = collect($filters);
 
-        $query = $this->query()
-            ->whereNotNull('parent_id')
-            ->when($filterCollection->get('q'), function (Builder $query, $queryText) {
-                $query->where('content', 'like', "%{$queryText}%");
-            })
+        $query = $this->buildSearchQuery($filterCollection)
             ->when($filterCollection->get('post_uuid'), function (Builder $query, $postUuid) {
-                $parentPost = $this->findByUuidOrFail((string) $postUuid);
-                $query->where('parent_id', $parentPost->id);
+                $query->whereHas('post', fn (Builder $postQuery) => $postQuery->where('uuid', $postUuid));
             })
             ->when($filterCollection->get('user_uuid'), function (Builder $query, $userUuid) {
                 $query->whereHas('user', fn (Builder $userQuery) => $userQuery->where('uuid', $userUuid));
             })
-            ->when($filterCollection->get('date_from'), function (Builder $query, $dateFrom) {
-                $query->whereDate('created_at', '>=', $dateFrom);
-            })
-            ->when($filterCollection->get('date_to'), function (Builder $query, $dateTo) {
-                $query->whereDate('created_at', '<=', $dateTo);
-            })
-            ->when(
-                $filterCollection->get('order_by'),
-                fn (Builder $query, $sortBy) => $query,
-                fn (Builder $query) => $query->orderByDesc('created_at')
-            );
+            ->when($filterCollection->get("order_by"), function (Builder $query, $orderBy) {
+                $query->orderByMultiple($orderBy);
+            }, function (Builder $query) {
+                $query->orderByDesc('created_at');
+            });
 
         $perPage = (int) ($filterCollection->get('per_page') ?? config('const.pagination.default_per_page', 10));
 
