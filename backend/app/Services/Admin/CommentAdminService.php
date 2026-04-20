@@ -5,9 +5,10 @@ namespace App\Services\Admin;
 use App\Enums\Admin\AdminActionEnum;
 use App\Enums\Common\ResourceTypeEnum;
 use App\Enums\Common\ModelEntityTypeEnum;
+use App\Enums\Post\PostTypeEnum;
+use App\Exceptions\http\BadRequestException;
 use App\Repositories\PostRepository;
 use App\Traits\HasAuthUser;
-use BadMethodCallException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
@@ -37,7 +38,7 @@ class CommentAdminService
      * }
     * @return LengthAwarePaginator
      */
-    public function getFilteredComments(array $filters = []): LengthAwarePaginator
+    public function getComments(array $filters = []): LengthAwarePaginator
     {
         return $this->postRepository->searchCommentsForAdmin($filters);
     }
@@ -54,9 +55,9 @@ class CommentAdminService
         $admin = $this->guard()->user();
         $comment = $this->postRepository->findByUuidOrFail((string) $payload['comment_uuid']);
 
-        // Ensure it's actually a comment
-        if ($comment->parent_id === null) {
-            throw new BadMethodCallException('This is not a comment');
+        if ($comment->parent_id === null || $comment->type !== PostTypeEnum::COMMENT) {
+
+            throw new BadRequestException('This is not a comment');
         }
 
         DB::transaction(function () use ($admin, $comment, $payload) {

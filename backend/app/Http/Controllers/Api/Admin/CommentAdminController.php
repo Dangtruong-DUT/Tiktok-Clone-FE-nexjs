@@ -29,7 +29,7 @@ class CommentAdminController extends Controller
      */
     public function getComments(GetAdminCommentsRequest $request): JsonResponse
     {
-        $comments = $this->commentAdminService->getFilteredComments($request->validated());
+        $comments = $this->commentAdminService->getComments($request->validated());
 
         return ApiResponse::success(
             data: AdminCommentResource::collection($comments),

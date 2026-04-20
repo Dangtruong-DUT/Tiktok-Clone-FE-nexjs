@@ -5,11 +5,12 @@ namespace App\Services\Admin;
 use App\Enums\Admin\AdminActionEnum;
 use App\Enums\Common\ResourceTypeEnum;
 use App\Enums\Common\ModelEntityTypeEnum;
-use App\Models\Post;
 use App\Repositories\PostRepository;
 use App\Traits\HasAuthUser;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use App\Exceptions\http\BadRequestException;
+use App\Enums\Post\PostTypeEnum;
 
 class PostAdminService
 {
@@ -42,27 +43,6 @@ class PostAdminService
     }
 
     /**
-     * Get post detail
-     *
-     * @param string $uuid
-     * @return Post
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
-     */
-    public function getPostDetail(string $uuid): Post
-    {
-        return $this->postRepository->query()->where('uuid', $uuid)
-            ->with([
-                'user:id,username,avatar_file_id,verify',
-                'user.avatarFile:id,url',
-                'media:id,post_id,type,upload_file_id',
-                'media.file:id,url',
-                'hashTags:id,name',
-                'mentions:id,user_id,mentioned_user_id',
-            ])
-            ->firstOrFail();
-    }
-
-    /**
      * Delete a post permanently (soft delete)
      *
      * @param array{post_uuid:string,reason:string} $payload
@@ -73,6 +53,10 @@ class PostAdminService
     {
         $admin = $this->guard()->user();
         $post = $this->postRepository->findByUuidOrFail((string) $payload['post_uuid']);
+
+        if ($post->type !==PostTypeEnum::POST) {
+            throw new BadRequestException('This is not a post');
+        }
 
         DB::transaction(function () use ($admin, $post, $payload) {
             $oldData = [
