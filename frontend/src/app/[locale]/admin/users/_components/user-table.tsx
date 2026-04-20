@@ -300,8 +300,8 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                     <div className='text-sm text-muted-foreground'>
                         {t('common.showingResults', {
                             from: (pagination.current_page - 1) * perPage + 1,
-                            to: Math.min(pagination.current_page * perPage, pagination.total),
-                            total: pagination.total
+                            to: Math.min(pagination.current_page * perPage, pagination?.total ?? 0),
+                            total: pagination?.total ?? 0
                         })}
                     </div>
 
