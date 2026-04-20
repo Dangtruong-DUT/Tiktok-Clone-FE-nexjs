@@ -1,4 +1,5 @@
 import os
+import logging
 from datetime import datetime, timezone
 from typing import Any
 
@@ -19,17 +20,39 @@ class ModerationWorker:
         self.violation_threshold = float(os.getenv("AI_VIOLATION_THRESHOLD", "0.8"))
 
     def run(self) -> None:
+        logging.basicConfig(
+            level=os.getenv("AI_LOG_LEVEL", "INFO").upper(),
+            format="%(asctime)s %(levelname)s [%(name)s] %(message)s",
+        )
+        logger = logging.getLogger("ai.serve.worker")
+
         wait_for_kafka(self.config)
         producer = build_producer(self.config)
         consumer = build_consumer(self.config)
 
-        print("[ai-worker] started")
+        logger.info("event=worker_start status=ok")
         try:
             for message in consumer:
                 payload = message.value
+                logger.info(
+                    "event=moderation_consume_request request_id=%s task_id=%s resource_type=%s resource_id=%s",
+                    payload.get("request_id"),
+                    payload.get("task_id"),
+                    payload.get("resource_type"),
+                    payload.get("resource_id"),
+                )
+
                 result = self._handle_payload(payload)
 
                 publish(producer, self.config.result_topic, result)
+                logger.info(
+                    "event=moderation_publish_result request_id=%s task_id=%s label=%s confidence=%.6f is_violation=%s",
+                    result.get("request_id"),
+                    result.get("task_id"),
+                    result.get("label"),
+                    float(result.get("confidence", 0.0)),
+                    result.get("is_violation"),
+                )
 
                 consumer.commit()
         finally:
@@ -45,6 +68,7 @@ class ModerationWorker:
         is_violation = label == 1 and confidence >= self.violation_threshold
 
         result = {
+            "request_id": payload.get("request_id"),
             "task_id": payload.get("task_id"),
             "resource_type": payload.get("resource_type"),
             "resource_id": payload.get("resource_id"),

@@ -40,6 +40,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
     libicu-dev \
     libzip-dev \
+    librdkafka-dev \
     libfcgi-bin \
     procps \
     supervisor \

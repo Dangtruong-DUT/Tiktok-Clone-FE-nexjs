@@ -5,6 +5,9 @@ server {
     root /var/www/public;
     index index.php;
 
+    resolver 127.0.0.11 ipv6=off valid=30s;
+    set $php_fpm_upstream php-fpm:9000;
+
     add_header X-Frame-Options "SAMEORIGIN";
     add_header X-Content-Type-Options "nosniff";
 
@@ -34,7 +37,7 @@ server {
 
     location ~ \.php$ {
         try_files $uri =404;
-        fastcgi_pass php-fpm:9000;
+        fastcgi_pass $php_fpm_upstream;
         fastcgi_index index.php;
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
