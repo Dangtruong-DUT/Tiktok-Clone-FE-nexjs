@@ -260,7 +260,7 @@ services:
       AI_ENABLE_KAFKA: "true"
       AI_STRICT_SEGMENT: "false"
       AI_MODEL_NAME: ${AI_MODEL_NAME:-vinai/phobert-base}
-      AI_MODEL_PATH: ${AI_MODEL_PATH:-training/best_phobert_model.pt}
+      AI_MODEL_PATH: ${AI_MODEL_PATH:-models/best_phobert_model.pt}
       AI_MAX_LENGTH: ${AI_MAX_LENGTH:-256}
       AI_DEVICE: ${AI_DEVICE:-auto}
       AI_VIOLATION_THRESHOLD: ${AI_VIOLATION_THRESHOLD:-0.8}
@@ -273,6 +273,35 @@ services:
       KAFKA_MODERATION_CONSUMER_GROUP: ai-moderator-v1
     ports:
       - "${AI_SERVE_PORT:-8001}:8001"
+    volumes:
+      - ./ai:/app
+    depends_on:
+      kafka:
+        condition: service_started
+    networks:
+      - app-development
+
+  ai-worker:
+    container_name: ${CONTAINER_PREFIX:-snapi}_ai_worker
+    build:
+      context: .
+      dockerfile: ./.docker/common/ai/serve/Dockerfile
+    restart: unless-stopped
+    command: ["python", "-m", "serve.moderation_worker"]
+    environment:
+      AI_ENABLE_KAFKA: "true"
+      AI_STRICT_SEGMENT: "false"
+      AI_MODEL_NAME: ${AI_MODEL_NAME:-vinai/phobert-base}
+      AI_MODEL_PATH: ${AI_MODEL_PATH:-models/best_phobert_model.pt}
+      AI_MAX_LENGTH: ${AI_MAX_LENGTH:-256}
+      AI_DEVICE: ${AI_DEVICE:-auto}
+      AI_VIOLATION_THRESHOLD: ${AI_VIOLATION_THRESHOLD:-0.8}
+      VNCORENLP_JAR_PATH: ${VNCORENLP_JAR_PATH:-}
+      VNCORENLP_MAX_HEAP_SIZE: ${VNCORENLP_MAX_HEAP_SIZE:--Xmx2g}
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      KAFKA_MODERATION_REQUEST_TOPIC: moderation.request.v1
+      KAFKA_MODERATION_RESULT_TOPIC: moderation.result.v1
+      KAFKA_MODERATION_CONSUMER_GROUP: ai-moderator-v1
     volumes:
       - ./ai:/app
     depends_on:
