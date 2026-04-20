@@ -18,7 +18,8 @@ class GetAppealsRequest extends BaseListRequest
             'per_page' => [self::NULLABLE],
             'appeal_status' => [self::NULLABLE],
             'appeal_type' => [self::NULLABLE],
-            'order_by' => [self::NULLABLE, Rule::in(['created_at', '-created_at'])],
+            'order_by' => [self::NULLABLE, self::ARRAY],
+            'order_by.*' => [Rule::in(['created_at', '-created_at'])],
         ]);
     }
 }

@@ -36,8 +36,9 @@ class GetActivityLogsRequest extends BaseListRequest
             'per_page' => [self::NULLABLE],
             'order_by' => [
                 self::NULLABLE,
-                Rule::in(['id', 'created_at', '-id', '-created_at']),
+                self::ARRAY,
             ],
+            'order_by.*' => [Rule::in(['id', 'created_at', '-id', '-created_at'])],
         ]);
     }
 }

@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\Admin\User;
 
-use App\Http\Requests\BaseRequest;
+use App\Http\Requests\BaseListRequest;
 use Illuminate\Validation\Rule;
 
-class GetAdminUsersRequest extends BaseRequest
+class GetAdminUsersRequest extends BaseListRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -24,8 +24,9 @@ class GetAdminUsersRequest extends BaseRequest
             'per_page' => [self::NULLABLE],
             'order_by' => [
                 self::NULLABLE,
-                Rule::in(['id', 'username', 'email', 'created_at', '-id', '-username', '-email', '-created_at']),
+                self::ARRAY,
             ],
+            'order_by.*' => [Rule::in(['id', 'username', 'email', 'created_at', '-id', '-username', '-email', '-created_at'])],
         ]);
     }
 }

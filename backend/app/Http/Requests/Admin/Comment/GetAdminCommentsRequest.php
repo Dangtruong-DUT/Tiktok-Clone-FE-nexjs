@@ -24,8 +24,9 @@ class GetAdminCommentsRequest extends BaseListRequest
             'per_page' => [self::NULLABLE],
             'order_by' => [
                 self::NULLABLE,
-                Rule::in(['id', 'created_at', 'likes_count', '-id', '-created_at', '-likes_count']),
+                self::ARRAY,
             ],
+            'order_by.*' => [Rule::in(['id', 'created_at', 'likes_count', '-id', '-created_at', '-likes_count'])],
         ]);
     }
 }

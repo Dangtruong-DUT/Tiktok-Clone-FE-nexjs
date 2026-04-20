@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Http\Requests\Appeal;
-use App\Http\Requests\BaseRequest;
+use App\Http\Requests\BaseListRequest;
 use Illuminate\Validation\Rule;
 
-class GetMyAppealsRequest extends BaseRequest
+class GetMyAppealsRequest extends BaseListRequest
 {
     /**
      * Get the validation rules.
@@ -17,7 +17,8 @@ class GetMyAppealsRequest extends BaseRequest
             'per_page' => [self::NULLABLE],
             'appeal_status' => [self::NULLABLE],
             'appeal_type' => [self::NULLABLE],
-            'order_by' => [self::NULLABLE, Rule::in(['created_at', '-created_at'])],
+            'order_by' => [self::NULLABLE, self::ARRAY],
+            'order_by.*' => [Rule::in(['created_at', '-created_at'])],
         ]);
     }
 }

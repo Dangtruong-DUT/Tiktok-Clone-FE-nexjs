@@ -26,10 +26,12 @@ class ActivityLogRepository extends BaseRepository
     {
         $filterCollection = collect($filters);
 
-        $query = $this->buildSearchQuery($filterCollection);
-
-        $sortBy = (string) $filterCollection->get('order_by', '-created_at');
-        $this->applySort($query, $sortBy);
+        $query = $this->buildSearchQuery($filterCollection)
+        ->when($filterCollection->get('order_by'), function (Builder $query, $orderBy) {
+            $query->orderByMultiple($orderBy);
+        }, function (Builder $query) {
+            $query->orderBy('created_at', 'desc');
+        });
 
         $perPage = min((int) $filterCollection->get('per_page', 20), 100);
 
@@ -61,17 +63,5 @@ class ActivityLogRepository extends BaseRepository
             ->when($filterCollection->get('date_to'), function (Builder $query, $dateTo) {
                 $query->whereDate('created_at', '<=', $dateTo);
             });
-    }
-
-    /**
-     * Apply sorting rule. Prefix '-' means DESC.
-     */
-    private function applySort(Builder $query, string $sortBy): Builder
-    {
-        if (str_starts_with($sortBy, '-')) {
-            return $query->orderBy(substr($sortBy, 1), 'desc');
-        }
-
-        return $query->orderBy($sortBy, 'asc');
     }
 }

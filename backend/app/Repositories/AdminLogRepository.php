@@ -30,8 +30,13 @@ class AdminLogRepository extends BaseRepository
 
         $query = $this->buildSearchQuery($filterCollection);
 
-        $sortBy = (string) $filterCollection->get('order_by', '-created_at');
-        $this->applySort($query, $sortBy);
+        $orderBy = $filterCollection->get('order_by');
+
+        if (is_array($orderBy) && count($orderBy) > 0) {
+            $query->orderByMultiple($orderBy);
+        } else {
+            $query->orderByDesc('created_at');
+        }
 
         $perPage = min((int) $filterCollection->get('per_page', 20), 100);
 
@@ -87,15 +92,4 @@ class AdminLogRepository extends BaseRepository
             });
     }
 
-    /**
-     * Apply sorting rule. Prefix '-' means DESC.
-     */
-    private function applySort(Builder $query, string $sortBy): Builder
-    {
-        if (str_starts_with($sortBy, '-')) {
-            return $query->orderBy(substr($sortBy, 1), 'desc');
-        }
-
-        return $query->orderBy($sortBy, 'asc');
-    }
 }

@@ -97,7 +97,7 @@ class AdminModerationNoticeService
         $baseUrl = rtrim((string) config('app.frontend_url'), '/');
 
         return $baseUrl
-            . '/en/appeals?appeal_type=' . urlencode($appealType->value)
+            . '/en/snapistudio/appeals?appeal_type=' . urlencode($appealType->value)
             . '&resource_type=' . urlencode($resourceType)
             . '&resource_id=' . urlencode((string) $resourceId);
     }
