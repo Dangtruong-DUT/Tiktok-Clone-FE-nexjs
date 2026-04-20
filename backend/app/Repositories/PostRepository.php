@@ -120,35 +120,29 @@ class PostRepository extends BaseRepository
     public function searchForAdmin(array $filters): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
-        $query = $this->query();
+        $query = $this->buildSearchQuery($filterCollection);
 
-        if ($queryText = $filterCollection->get('q')) {
-            $query->where('content', 'like', "%{$queryText}%");
+        if ($filterCollection->get("status") === 'deleted') {
+            $query->withTrashed();
         }
 
-        if ($userUuid = $filterCollection->get('user_uuid')) {
-            $query->whereHas('user', fn (Builder $userQuery) => $userQuery->where('uuid', $userUuid));
-        }
-
-        if ($status = $filterCollection->get('status')) {
-            match ($status) {
-                'hidden' => $query->whereNotNull('hidden_at'),
-                'visible' => $query->whereNull('hidden_at')->whereNull('deleted_at'),
-                'deleted' => $query->onlyTrashed(),
-                default => null,
-            };
-        }
-
-        if ($from = $filterCollection->get('date_from')) {
-            $query->whereDate('created_at', '>=', $from);
-        }
-
-        if ($to = $filterCollection->get('date_to')) {
-            $query->whereDate('created_at', '<=', $to);
-        }
-
-        $sortBy = (string) $filterCollection->get('order_by', '-created_at');
-        $this->applySort($query, $sortBy);
+        $query->when($filterCollection->get('user_uuid'), function (Builder $query, $userUuid) {
+            $query->whereHas('user',
+            fn (Builder $userQuery) => $userQuery->where('uuid', $userUuid));
+        })
+        ->when($filterCollection->get("status"), function (Builder $query, $status) {
+                return match ($status) {
+                    'visible' => $query->whereNull('hidden_at')->whereNull('deleted_at'),
+                    'hidden'  => $query->whereNotNull('hidden_at')->whereNull('deleted_at'),
+                    'deleted' => $query->whereNotNull('deleted_at'),
+                    default   => $query,
+                };
+        })
+        ->when($filterCollection->get("order_by"), function (Builder $query, $orderBy) {
+            $query->orderByMultiple($orderBy);
+        }, function (Builder $query) {
+            $query->orderByDesc('created_at');
+        });
 
         $perPage = min((int) $filterCollection->get('per_page', 20), 100);
 
@@ -191,7 +185,7 @@ class PostRepository extends BaseRepository
             })
             ->when(
                 $filterCollection->get('order_by'),
-                fn (Builder $query, $sortBy) => $this->applySort($query, (string) $sortBy),
+                fn (Builder $query, $sortBy) => $query,
                 fn (Builder $query) => $query->orderByDesc('created_at')
             );
 
@@ -462,7 +456,13 @@ class PostRepository extends BaseRepository
                     $mentionQuery->whereIn('id', $filterCollection->get('mentions'));
                 });
             })
-            ->when($keyword !== '', fn (Builder $query) => $this->applyPostAndUserSearchVector($query, $keyword));
+            ->when($keyword !== '', fn (Builder $query) => $this->applyPostAndUserSearchVector($query, $keyword))
+            ->when($filterCollection->get('date_from'), function (Builder $query, $dateFrom) {
+                $query->whereDate('created_at', '>=', $dateFrom);
+            })
+            ->when($filterCollection->get('date_to'), function (Builder $query, $dateTo) {
+                $query->whereDate('created_at', '<=', $dateTo);
+            });
     }
 
     /**
@@ -495,21 +495,5 @@ class PostRepository extends BaseRepository
             "search_vector @@ plainto_tsquery('simple', ?)",
             [$keyword]
         );
-    }
-
-    /**
-     * Apply sorting rule. Prefix '-' means DESC.
-     *
-     * @param Builder $query
-     * @param string $sortBy
-     * @return Builder
-     */
-    private function applySort(Builder $query, string $sortBy): Builder
-    {
-        if (str_starts_with($sortBy, '-')) {
-            return $query->orderBy(substr($sortBy, 1), 'desc');
-        }
-
-        return $query->orderBy($sortBy, 'asc');
     }
 }

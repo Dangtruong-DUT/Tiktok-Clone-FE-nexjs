@@ -24,6 +24,7 @@ enum AdminActionEnum: string implements BaseEnumInterface
     case DELETE_POST = 'delete_post';
 
     case DELETE_COMMENT = 'delete_comment';
+    case HIDE_COMMENT = 'hide_comment';
 
     case APPROVE_APPEAL = 'approve_appeal';
     case REJECT_APPEAL = 'reject_appeal';

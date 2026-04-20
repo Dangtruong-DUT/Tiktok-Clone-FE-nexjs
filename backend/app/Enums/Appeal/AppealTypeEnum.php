@@ -2,6 +2,7 @@
 
 namespace App\Enums\Appeal;
 
+use App\Enums\Admin\AdminActionEnum;
 use App\Enums\BaseEnumInterface;
 use App\Enums\BaseEnumTrait;
 
@@ -18,6 +19,11 @@ enum AppealTypeEnum: string implements BaseEnumInterface
     case COMMENT_DELETED = 'comment_deleted';
     case COMMENT_HIDDEN = 'comment_hidden';
 
+    /**
+     * Get a human-readable label for the appeal type
+     *
+     * @return string
+     */
     public function label(): string
     {
         return match($this) {
@@ -29,6 +35,11 @@ enum AppealTypeEnum: string implements BaseEnumInterface
         };
     }
 
+    /**
+     * Get a translated string for the appeal type (e.g. for notifications)
+     *
+     * @return string
+     */
     public function translate(): string
     {
         return match($this) {
@@ -39,4 +50,17 @@ enum AppealTypeEnum: string implements BaseEnumInterface
             self::COMMENT_HIDDEN => 'Kháng cáo ẩn bình luận',
         };
     }
+
+    public static function fromAdminAction(AdminActionEnum $action): ?self
+    {
+        return match($action) {
+            AdminActionEnum::BAN => self::USER_BAN,
+            AdminActionEnum::HIDE_POST => self::POST_HIDDEN,
+            AdminActionEnum::DELETE_POST => self::POST_DELETED,
+            AdminActionEnum::HIDE_COMMENT => self::COMMENT_HIDDEN,
+            AdminActionEnum::DELETE_COMMENT => self::COMMENT_DELETED,
+            default => null,
+        };
+    }
+
 }

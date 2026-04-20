@@ -31,7 +31,7 @@ class PostAdminController extends Controller
      */
     public function getPosts(GetAdminPostsRequest $request): JsonResponse
     {
-        $posts = $this->postAdminService->getFilteredPosts($request->validated());
+        $posts = $this->postAdminService->getPosts($request->validated());
 
         return ApiResponse::success(
             data: AdminPostResource::collection($posts),

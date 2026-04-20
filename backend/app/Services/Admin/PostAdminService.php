@@ -5,10 +5,10 @@ namespace App\Services\Admin;
 use App\Enums\Admin\AdminActionEnum;
 use App\Enums\Common\ResourceTypeEnum;
 use App\Enums\Common\ModelEntityTypeEnum;
+use App\Exceptions\http\BadRequestException;
 use App\Models\Post;
 use App\Repositories\PostRepository;
 use App\Traits\HasAuthUser;
-use BadMethodCallException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
@@ -37,7 +37,7 @@ class PostAdminService
      * }
     * @return LengthAwarePaginator
      */
-    public function getFilteredPosts(array $filters = []): LengthAwarePaginator
+    public function getPosts(array $filters = []): LengthAwarePaginator
     {
         return $this->postRepository->searchForAdmin($filters);
     }
@@ -76,7 +76,7 @@ class PostAdminService
         $post = $this->postRepository->findByUuidOrFail((string) $payload['post_uuid']);
 
         if ($post->hidden_at !== null) {
-            throw new BadMethodCallException('Post is already hidden');
+            throw new BadRequestException('Post is already hidden');
         }
 
         return DB::transaction(function () use ($admin, $post, $payload) {
@@ -127,7 +127,7 @@ class PostAdminService
         $post = $this->postRepository->findByUuidOrFail((string) $payload['post_uuid']);
 
         if ($post->hidden_at === null) {
-            throw new BadMethodCallException('Post is not hidden');
+            throw new BadRequestException('Post is not hidden');
         }
 
         return DB::transaction(function () use ($admin, $post) {

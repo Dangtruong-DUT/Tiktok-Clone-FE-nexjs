@@ -33,7 +33,7 @@ class UserAdminController extends Controller
      */
     public function getUsers(GetAdminUsersRequest $request): JsonResponse
     {
-        $users = $this->userAdminService->getFilteredUsers($request->validated());
+        $users = $this->userAdminService->getUsers($request->validated());
 
         return ApiResponse::success(
             data: AdminUserResource::collection($users),
@@ -85,6 +85,8 @@ class UserAdminController extends Controller
 
     /**
      * Reset a user password by admin.
+     * @param ResetUserPasswordRequest $request
+     * @return JsonResponse
      */
     public function resetUserPassword(ResetUserPasswordRequest $request): JsonResponse
     {
@@ -95,6 +97,8 @@ class UserAdminController extends Controller
 
     /**
      * Send direct email from admin to user.
+     * @param SendUserMailRequest $request
+     * @return JsonResponse
      */
     public function sendUserMail(SendUserMailRequest $request): JsonResponse
     {

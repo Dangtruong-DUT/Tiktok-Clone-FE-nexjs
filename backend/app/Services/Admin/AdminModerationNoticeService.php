@@ -36,23 +36,23 @@ class AdminModerationNoticeService
         int $entityId,
         array $context = []
     ): void {
-        $appealType = $this->resolveAppealType($action);
+        $appealType = AppealTypeEnum::fromAdminAction($action);
+        if ($appealType === null) {
+            throw new \InvalidArgumentException("No appeal type defined for admin action: {$action->value}");
+        }
         $resourceType = (string) ($context['resource_type'] ?? $entityType->value);
         $resourceId = (int) ($context['resource_id'] ?? $entityId);
 
-        $appealLink = $appealType !== null
-            ? $this->buildAppealLink($appealType, $resourceType, $resourceId)
-            : null;
+        $appealLink =  $this->buildAppealFrontendLink($appealType, $resourceType, $resourceId);
 
         $notificationData = [
             'action' => $action->value,
             'action_label' => $action->label(),
             'reason' => $reason,
-            'appeal_type' => $appealType?->value,
+            'appeal_type' => $appealType->value,
             'resource_type' => $resourceType,
             'resource_id' => $resourceId,
             'appeal_link' => $appealLink,
-            'appeal_api_url' => rtrim((string) config('app.url'), '/') . '/api/v1/appeals',
         ];
 
         $this->notificationService->notifyAdminModerationAction(
@@ -74,7 +74,6 @@ class AdminModerationNoticeService
                 action: $action,
                 reason: $reason,
                 appealLink: $appealLink,
-                notificationData: $notificationData,
             ));
         } catch (\Throwable $exception) {
             Log::warning('Failed to queue moderation email', [
@@ -85,18 +84,15 @@ class AdminModerationNoticeService
         }
     }
 
-    private function resolveAppealType(AdminActionEnum $action): ?AppealTypeEnum
-    {
-        return match ($action) {
-            AdminActionEnum::BAN => AppealTypeEnum::USER_BAN,
-            AdminActionEnum::HIDE_POST => AppealTypeEnum::POST_HIDDEN,
-            AdminActionEnum::DELETE_POST => AppealTypeEnum::POST_DELETED,
-            AdminActionEnum::DELETE_COMMENT => AppealTypeEnum::COMMENT_DELETED,
-            default => null,
-        };
-    }
-
-    private function buildAppealLink(AppealTypeEnum $appealType, string $resourceType, int $resourceId): string
+    /**
+     * Build the frontend appeal link based on appeal type and resource context
+     *
+     * @param AppealTypeEnum $appealType
+     * @param string $resourceType
+     * @param int $resourceId
+     * @return string
+     */
+    private function buildAppealFrontendLink(AppealTypeEnum $appealType, string $resourceType, int $resourceId): string
     {
         $baseUrl = rtrim((string) config('app.frontend_url'), '/');
 

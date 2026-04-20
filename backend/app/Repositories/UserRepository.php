@@ -169,32 +169,11 @@ class UserRepository extends BaseRepository
     {
         $filterCollection = collect($filters);
 
-        $query = $this->query()
-            ->when($filterCollection->get('q'), function (Builder $query, $search) {
-                $query->where(function (Builder $builder) use ($search) {
-                    $builder->where('username', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%");
-                });
-            })
-            ->when($filterCollection->get('status'), function (Builder $query, $status) {
-                if ($status === 'banned') {
-                    $query->whereNotNull('banned_at');
-
-                    return;
-                }
-
-                if ($status === 'active') {
-                    $query->whereNull('banned_at');
-                }
-            })
+        $query = $this->buildSearchQuery($filterCollection)
             ->when($filterCollection->get('order_by'), function (Builder $query, $sortBy) {
-                if (str_starts_with((string) $sortBy, '-')) {
-                    $query->orderBy(substr((string) $sortBy, 1), 'desc');
-
-                    return;
-                }
-
-                $query->orderBy((string) $sortBy, 'asc');
+                $query->orderByMultiple($sortBy);
+            }, function (Builder $query) {
+                $query->orderByDesc('created_at');
             });
 
         $perPage = (int) $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
@@ -343,6 +322,10 @@ class UserRepository extends BaseRepository
      * Build search query with filters.
         *
         * @param Collection $filterCollection
+        *.                  - q: string (search keyword for username and email)
+        *.                  - verify_status: int (0 for unverified, 1 for verified)
+        *.                  - role: int (0 for regular user, 1 for admin)
+        *                   - status: string ('active', 'banned', 'all')
         * @return Builder
      */
     private function buildSearchQuery(Collection $filterCollection): Builder
@@ -358,7 +341,18 @@ class UserRepository extends BaseRepository
             ->when(
                 $filterCollection->has('role') && $filterCollection->get('role') !== null,
                 fn (Builder $query) => $query->where('role', (int) $filterCollection->get('role'))
-            );
+            )
+            ->when($filterCollection->get('status'), function (Builder $query, $status) {
+                if ($status === 'banned') {
+                    $query->whereNotNull('banned_at');
+
+                    return;
+                }
+
+                if ($status === 'active') {
+                    $query->whereNull('banned_at');
+                }
+            });
     }
 
     /**

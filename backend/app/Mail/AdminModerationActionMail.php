@@ -17,8 +17,7 @@ class AdminModerationActionMail extends BaseMailAble
         private readonly User $admin,
         private readonly AdminActionEnum $action,
         private readonly string $reason,
-        private readonly ?string $appealLink = null,
-        private readonly ?array $notificationData = null,
+        private readonly string $appealLink,
     ) {
         parent::__construct();
     }
@@ -40,8 +39,6 @@ class AdminModerationActionMail extends BaseMailAble
                 'actionLabel' => $this->action->label(),
                 'reason' => $this->reason,
                 'appealLink' => $this->appealLink,
-                'appName' => config('app.name'),
-                'notificationData' => $this->notificationData,
             ],
         );
     }

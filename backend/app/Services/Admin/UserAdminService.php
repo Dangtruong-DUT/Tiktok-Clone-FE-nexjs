@@ -5,6 +5,7 @@ namespace App\Services\Admin;
 use App\Enums\Admin\AdminActionEnum;
 use App\Enums\Common\ResourceTypeEnum;
 use App\Enums\Common\ModelEntityTypeEnum;
+use App\Exceptions\http\BadRequestException;
 use App\Mail\AdminDirectMessageMail;
 use App\Models\User;
 use App\Repositories\UserRepository;
@@ -12,7 +13,6 @@ use App\Traits\HasAuthUser;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use BadMethodCallException;
 
 /**
  * UserAdminService - User management operations for admins
@@ -57,11 +57,11 @@ class UserAdminService
         $user = $this->userRepository->findByUuidOrFail((string) $payload['user_uuid']);
 
         if ($admin->id === $user->id) {
-            throw new BadMethodCallException('You cannot ban yourself');
+            throw new BadRequestException('You cannot ban yourself');
         }
 
         if ($user->banned_at !== null) {
-            throw new BadMethodCallException('User is already banned');
+            throw new BadRequestException('User is already banned');
         }
 
         return DB::transaction(function () use ($admin, $user, $payload) {
@@ -112,22 +112,19 @@ class UserAdminService
         $admin = $this->guard()->user();
         $user = $this->userRepository->findByUuidOrFail((string) $payload['user_uuid']);
 
-        // Check if user is actually banned
         if ($user->banned_at === null) {
-            throw new BadMethodCallException('User is not banned');
+            throw new BadRequestException('User is not banned');
         }
 
         return DB::transaction(function () use ($admin, $user) {
             $oldData = $user->only(['banned_at', 'ban_reason', 'ban_duration_days']);
 
-            // Update user
             $user->update([
                 'banned_at' => null,
                 'ban_reason' => null,
                 'ban_duration_days' => null,
             ]);
 
-            // Log the action
             $this->adminLogService->log(
                 admin: $admin,
                 resourceType: ResourceTypeEnum::USER,
@@ -166,9 +163,8 @@ class UserAdminService
         $admin = $this->guard()->user();
         $user = $this->userRepository->findByUuidOrFail((string) $payload['user_uuid']);
 
-        // Prevent deleting self
         if ($admin->id === $user->id) {
-            throw new BadMethodCallException('You cannot delete yourself');
+            throw new BadRequestException('You cannot delete yourself');
         }
 
         DB::transaction(function () use ($admin, $user, $payload) {
@@ -178,10 +174,8 @@ class UserAdminService
                 'email' => $user->email,
             ];
 
-            // Soft delete the user
             $user->delete();
 
-            // Log the action
             $this->adminLogService->log(
                 admin: $admin,
                 resourceType: ResourceTypeEnum::USER,
@@ -247,8 +241,8 @@ class UserAdminService
         $admin = $this->guard()->user();
         $user = $this->userRepository->findByUuidOrFail((string) $payload['user_uuid']);
 
-        if (empty($user->email)) {
-            throw new BadMethodCallException('Target user does not have an email address');
+        if (!$user->email) {
+            throw new BadRequestException('Target user does not have an email address');
         }
 
         DB::transaction(function () use ($admin, $user, $payload) {
@@ -285,7 +279,7 @@ class UserAdminService
      * }
     * @return LengthAwarePaginator
      */
-    public function getFilteredUsers(array $filters = []): LengthAwarePaginator
+    public function getUsers(array $filters = []): LengthAwarePaginator
     {
         return $this->userRepository->searchForAdmin($filters);
     }
