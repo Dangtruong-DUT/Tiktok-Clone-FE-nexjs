@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('appeals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('appeal_type'); // user_ban, post_hidden, post_deleted, comment_deleted
+            $table->string('appeal_type'); // user_ban, post_deleted, comment_deleted
             $table->unsignedBigInteger('resource_id')->nullable(); // post_id or comment_id
             $table->string('resource_type'); // App\Enums\Common\ResourceTypeEnum
             $table->text('reason'); // User's appeal reason

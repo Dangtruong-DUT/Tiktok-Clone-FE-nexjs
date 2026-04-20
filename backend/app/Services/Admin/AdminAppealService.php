@@ -140,10 +140,8 @@ class AdminAppealService
     {
         match($appeal->appeal_type) {
             AppealTypeEnum::USER_BAN => $this->unbanUser($appeal),
-            AppealTypeEnum::POST_HIDDEN => $this->unhidePost($appeal),
             AppealTypeEnum::POST_DELETED => $this->restorePost($appeal),
             AppealTypeEnum::COMMENT_DELETED => $this->restorePost($appeal),
-            AppealTypeEnum::COMMENT_HIDDEN => $this->unhidePost($appeal),
             default => null,
         };
     }
@@ -159,24 +157,6 @@ class AdminAppealService
             'ban_reason' => null,
             'ban_duration_days' => null,
         ]);
-    }
-
-    /**
-     * Unhide post when appeal approved
-     * @param Appeal $appeal
-      * @return void
-     */
-    private function unhidePost(Appeal $appeal): void
-    {
-        if ($appeal->resource_id &&
-            (
-            $appeal->resource_type === ResourceTypeEnum::POST->value
-            || $appeal->resource_type === ResourceTypeEnum::COMMENT->value
-            )
-        ) {
-            $post = $this->postRepository->findOrFail($appeal->resource_id);
-            $post->update(['hidden_at' => null, 'hidden_reason' => null]);
-        }
     }
 
     /**

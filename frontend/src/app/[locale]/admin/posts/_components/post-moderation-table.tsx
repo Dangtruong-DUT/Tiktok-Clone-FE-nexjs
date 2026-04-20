@@ -2,23 +2,15 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useGetAdminPostsQuery } from '@/store/services/admin'
+import { useGetAdminPostsQuery } from '@/store/services/admin/admin-posts.service'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import AutoPagination from '@/components/auto-pagination'
 import { Skeleton } from '@/components/ui/skeleton'
-import { HidePostDialog } from './hide-post-dialog'
-import { UnhidePostDialog } from './unhide-post-dialog'
 import { DeletePostDialog } from './delete-post-dialog'
 import { formatAdminDate, getPostStatusColor, getPostStatus, truncateText } from '@/helpers/admin-helpers'
 import { MoreHorizontal, Search, AlertCircle } from 'lucide-react'
@@ -32,9 +24,9 @@ interface PostModerationTableProps {
  * PostModerationTable - Displays paginated list of posts with moderation actions
  * Features:
  * - Search by title/content
- * - Filter by status (all, hidden, visible)
+ * - Filter by status (all, visible)
  * - Pagination with per-page selector
- * - Actions: Hide, Unhide, Delete
+ * - Actions: Delete
  * - Loading skeleton
  */
 export function PostModerationTable({ onPostDeleted }: PostModerationTableProps) {
@@ -44,12 +36,12 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
     const [page, setPage] = useState(1)
     const [perPage, setPerPage] = useState(10)
     const [searchTerm, setSearchTerm] = useState('')
-    const [statusFilter, setStatusFilter] = useState<'all' | 'hidden' | 'visible'>('all')
+    const [statusFilter, setStatusFilter] = useState<'all' | 'visible'>('all')
     const [sortBy, setSortBy] = useState<'recent' | 'oldest'>('recent')
 
     // Selected post for dialogs
     const [selectedPost, setSelectedPost] = useState<AdminPost | null>(null)
-    const [dialogType, setDialogType] = useState<'hide' | 'unhide' | 'delete' | null>(null)
+    const [dialogType, setDialogType] = useState<'delete' | null>(null)
 
     // Fetch data
     const { data, isLoading, isFetching, refetch } = useGetAdminPostsQuery({
@@ -70,7 +62,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
     }
 
     const handleStatusFilter = (value: string) => {
-        setStatusFilter(value as 'all' | 'hidden' | 'visible')
+        setStatusFilter(value as 'all' | 'visible')
         setPage(1)
     }
 
@@ -79,7 +71,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
         setPage(1)
     }
 
-    const openDialog = (post: AdminPost, type: 'hide' | 'unhide' | 'delete') => {
+    const openDialog = (post: AdminPost, type: 'delete') => {
         setSelectedPost(post)
         setDialogType(type)
     }
@@ -137,7 +129,6 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
                         <SelectContent>
                             <SelectItem value='all'>{t('posts.filters.allStatuses')}</SelectItem>
                             <SelectItem value='visible'>{t('posts.filters.visible')}</SelectItem>
-                            <SelectItem value='hidden'>{t('posts.filters.hidden')}</SelectItem>
                         </SelectContent>
                     </Select>
 
@@ -180,7 +171,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {posts.map((post) => (
+                            {posts.map((post: AdminPost) => (
                                 <TableRow key={post.id} className='hover:bg-muted/50'>
                                     <TableCell className='font-mono text-sm'>#{post.id}</TableCell>
                                     <TableCell>
@@ -206,39 +197,12 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align='end' className='w-48'>
-                                                {post.hidden_at ? (
-                                                    <>
-                                                        <DropdownMenuItem
-                                                            onClick={() => openDialog(post, 'unhide')}
-                                                            className='cursor-pointer'
-                                                        >
-                                                            {t('posts.actions.unhide')}
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuSeparator />
-                                                        <DropdownMenuItem
-                                                            onClick={() => openDialog(post, 'delete')}
-                                                            className='text-red-600 cursor-pointer'
-                                                        >
-                                                            {t('posts.actions.delete')}
-                                                        </DropdownMenuItem>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <DropdownMenuItem
-                                                            onClick={() => openDialog(post, 'hide')}
-                                                            className='text-orange-600 cursor-pointer'
-                                                        >
-                                                            {t('posts.actions.hide')}
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuSeparator />
-                                                        <DropdownMenuItem
-                                                            onClick={() => openDialog(post, 'delete')}
-                                                            className='text-red-600 cursor-pointer'
-                                                        >
-                                                            {t('posts.actions.delete')}
-                                                        </DropdownMenuItem>
-                                                    </>
-                                                )}
+                                                <DropdownMenuItem
+                                                    onClick={() => openDialog(post, 'delete')}
+                                                    className='text-red-600 cursor-pointer'
+                                                >
+                                                    {t('posts.actions.delete')}
+                                                </DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>
@@ -287,22 +251,6 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
             {/* Dialogs */}
             {selectedPost && (
                 <>
-                    <HidePostDialog
-                        open={dialogType === 'hide'}
-                        postUuid={selectedPost.uuid}
-                        authorUsername={selectedPost.author?.username || 'N/A'}
-                        onOpenChange={(open) => !open && closeDialog()}
-                        onSuccess={handleActionSuccess}
-                    />
-
-                    <UnhidePostDialog
-                        open={dialogType === 'unhide'}
-                        postUuid={selectedPost.uuid}
-                        authorUsername={selectedPost.author?.username || 'N/A'}
-                        onOpenChange={(open) => !open && closeDialog()}
-                        onSuccess={handleActionSuccess}
-                    />
-
                     <DeletePostDialog
                         open={dialogType === 'delete'}
                         postUuid={selectedPost.uuid}

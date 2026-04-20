@@ -123,9 +123,7 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
 
             // Admin actions
             admin_ban_user: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-            admin_unban_user: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-            admin_hide_post: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
-            admin_unhide_post: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+            admin_unban_user: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
         }
         return colorMap[activityKey] || 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
     }
@@ -149,9 +147,7 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
 
             // Admin
             admin_ban_user: '⛔',
-            admin_unban_user: '✅',
-            admin_hide_post: '👁️‍🗨️',
-            admin_unhide_post: '👁️'
+            admin_unban_user: '✅'
         }
         return iconMap[activityKey] || '📋'
     }

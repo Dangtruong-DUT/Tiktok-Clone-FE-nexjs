@@ -1,11 +1,6 @@
 import { AdminApi } from './admin-api.service'
-import type { GetAdminPostsRes, HidePostRes, UnhidePostRes, DeletePostRes } from '@/types/dtos/admin/admin-response.dto'
-import type {
-    GetAdminPostsParams,
-    HidePostReq,
-    UnhidePostReq,
-    DeletePostReq
-} from '@/types/dtos/admin/admin-request.dto'
+import type { GetAdminPostsRes, DeletePostRes } from '@/types/dtos/admin/admin-response.dto'
+import type { GetAdminPostsParams, DeletePostReq } from '@/types/dtos/admin/admin-request.dto'
 
 const adminPostsApi = AdminApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -15,31 +10,6 @@ const adminPostsApi = AdminApi.injectEndpoints({
                 params
             }),
             providesTags: [{ type: 'AdminPosts', id: 'LIST' }]
-        }),
-
-        hidePost: builder.mutation<HidePostRes, HidePostReq>({
-            query: ({ post_uuid, ...body }) => ({
-                url: `/admin/posts/${post_uuid}/hide`,
-                method: 'POST',
-                body
-            }),
-            invalidatesTags: (_result, _error, { post_uuid }) => [
-                { type: 'AdminPosts', id: post_uuid },
-                { type: 'AdminPosts', id: 'LIST' },
-                { type: 'AdminActivity', id: 'LIST' }
-            ]
-        }),
-
-        unhidePost: builder.mutation<UnhidePostRes, UnhidePostReq>({
-            query: ({ post_uuid }) => ({
-                url: `/admin/posts/${post_uuid}/unhide`,
-                method: 'POST'
-            }),
-            invalidatesTags: (_result, _error, { post_uuid }) => [
-                { type: 'AdminPosts', id: post_uuid },
-                { type: 'AdminPosts', id: 'LIST' },
-                { type: 'AdminActivity', id: 'LIST' }
-            ]
         }),
 
         deletePost: builder.mutation<DeletePostRes, DeletePostReq>({
@@ -57,5 +27,4 @@ const adminPostsApi = AdminApi.injectEndpoints({
     overrideExisting: false
 })
 
-export const { useGetAdminPostsQuery, useHidePostMutation, useUnhidePostMutation, useDeletePostMutation } =
-    adminPostsApi
+export const { useGetAdminPostsQuery, useDeletePostMutation } = adminPostsApi

@@ -807,16 +807,11 @@
             "filters": {
                 "allStatuses": "Tất cả trạng thái",
                 "visible": "Hiển thị",
-                "hidden": "Đã ẩn",
                 "recent": "Mới nhất",
                 "oldest": "Cũ nhất"
             },
             "actions": {
-                "hide": "Ẩn",
-                "unhide": "Bỏ ẩn",
                 "delete": "Xóa",
-                "confirmHide": "Xác nhận ẩn",
-                "confirmUnhide": "Xác nhận bỏ ẩn",
                 "confirmDelete": "Xác nhận xóa"
             },
             "labels": {
@@ -835,16 +830,10 @@
                 "reasonRequired": "Lý do là bắt buộc"
             },
             "messages": {
-                "hideSuccess": "Ẩn bài viết thành công",
-                "hideError": "Ẩn bài viết thất bại",
-                "unhideSuccess": "Bỏ ẩn bài viết thành công",
-                "unhideError": "Bỏ ẩn bài viết thất bại",
                 "deleteSuccess": "Xóa bài viết thành công",
                 "deleteError": "Xóa bài viết thất bại"
             },
             "dialogs": {
-                "hideSubtitle": "Ẩn bài viết của @{username}",
-                "unhideSubtitle": "Bỏ ẩn bài viết của @{username}",
                 "deleteSubtitle": "Xóa bài viết của @{username}",
                 "deleteWarning": "Bài viết này sẽ bị loại khỏi bảng tin."
             }

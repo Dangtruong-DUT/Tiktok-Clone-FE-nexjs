@@ -60,7 +60,6 @@ export const DashboardStatsSchema = z
         active_users: z.number().int().nonnegative(),
         banned_users: z.number().int().nonnegative(),
         total_posts: z.number().int().nonnegative(),
-        hidden_posts: z.number().int().nonnegative(),
         deleted_posts: z.number().int().nonnegative(),
         total_comments: z.number().int().nonnegative(),
         total_admin_actions: z.number().int().nonnegative(),

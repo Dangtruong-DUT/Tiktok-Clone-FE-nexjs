@@ -14,8 +14,6 @@ class AdminPostResource extends BaseJsonResource
             'user_id' => $this->user_id,
             'user_uuid' => $this->whenLoaded('user', fn () => $this->user?->uuid),
             'content' => $this->content,
-            'hidden_at' => optional($this->hidden_at)?->toDateTimeString(),
-            'hidden_reason' => $this->hidden_reason,
             'deleted_at' => optional($this->deleted_at)?->toDateTimeString(),
             'created_at' => optional($this->created_at)?->toDateTimeString(),
             'author' => $this->whenLoaded('user', function () {

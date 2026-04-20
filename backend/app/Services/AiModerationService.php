@@ -96,19 +96,19 @@ class AiModerationService
 
         $post = $this->postRepo->find((int) $payload['resource_id']);
 
-        if (!$post ||$post->hidden_at !== null || $post->deleted_at !== null) {
+        if (!$post || $post->deleted_at !== null) {
             return;
         }
 
         $appealDays = (int) config('services.ai_moderation.appeal_window_days', 7);
         $reason = (string) ($payload['reason'] ?? 'Violated community standards by automated moderation.');
         $resourceType = ResourceTypeEnum::tryFrom((string) ($payload['resource_type'] ?? 'post')) ?? ResourceTypeEnum::POST;
+        $adminAction = $resourceType === ResourceTypeEnum::COMMENT
+            ? AdminActionEnum::DELETE_COMMENT
+            : AdminActionEnum::DELETE_POST;
 
-        DB::transaction(function () use ($payload, $post, $appealDays, $reason, $resourceType): void {
-            $post->update([
-                'hidden_at' => now(),
-                'hidden_reason' => $reason,
-            ]);
+        DB::transaction(function () use ($payload, $post, $appealDays, $reason, $resourceType, $adminAction): void {
+            $post->delete();
 
             AiModerationReport::updateOrCreate(
                 ['task_id' => (string) $payload['task_id']],
@@ -136,7 +136,7 @@ class AiModerationService
             $this->adminModerationNoticeService->send(
                 admin: $systemAdmin,
                 targetUser: $post->user,
-                action: AdminActionEnum::HIDE_POST,
+                action: $adminAction,
                 reason: $reason,
                 entityType: ModelEntityTypeEnum::POST,
                 entityId: $post->id,

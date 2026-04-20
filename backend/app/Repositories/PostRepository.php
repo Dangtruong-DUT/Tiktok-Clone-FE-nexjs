@@ -132,8 +132,7 @@ class PostRepository extends BaseRepository
         })
         ->when($filterCollection->get("status"), function (Builder $query, $status) {
                 return match ($status) {
-                    'visible' => $query->whereNull('hidden_at')->whereNull('deleted_at'),
-                    'hidden'  => $query->whereNotNull('hidden_at')->whereNull('deleted_at'),
+                    'visible' => $query->whereNull('deleted_at'),
                     'deleted' => $query->whereNotNull('deleted_at'),
                     default   => $query,
                 };
@@ -153,7 +152,7 @@ class PostRepository extends BaseRepository
                 'media:id,post_id,type,upload_file_id',
                 'media.file:id',
             ])
-            ->select(['id', 'uuid', 'user_id', 'content', 'created_at', 'hidden_at', 'hidden_reason', 'deleted_at'])
+            ->select(['id', 'uuid', 'user_id', 'content', 'created_at', 'deleted_at'])
             ->paginate($perPage);
     }
 

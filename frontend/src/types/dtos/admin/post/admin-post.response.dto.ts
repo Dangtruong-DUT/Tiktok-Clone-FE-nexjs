@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type { HttpResponse, HttpResponseWithData, HttpResponseWithMeta } from '@/types/common/http-response.type'
+import type { HttpResponse, HttpResponseWithMeta } from '@/types/common/http-response.type'
 import { AdminApiBaseResponseSchema, AdminListMetaSchema } from '../common/admin-common.response.dto'
 
 export const AdminPostSchema = z
@@ -18,8 +18,6 @@ export const AdminPostSchema = z
             .optional(),
         content: z.string(),
         created_at: z.string(),
-        hidden_at: z.string().nullable(),
-        hidden_reason: z.string().nullable(),
         deleted_at: z.string().nullable()
     })
     .strict()
@@ -29,18 +27,8 @@ export const GetAdminPostsResSchema = AdminApiBaseResponseSchema.extend({
     meta: AdminListMetaSchema
 }).strict()
 
-export const HidePostResSchema = AdminApiBaseResponseSchema.extend({
-    data: AdminPostSchema
-}).strict()
-
-export const UnhidePostResSchema = AdminApiBaseResponseSchema.extend({
-    data: AdminPostSchema
-}).strict()
-
 export const DeletePostResSchema = AdminApiBaseResponseSchema.strict()
 
 export type AdminPost = z.infer<typeof AdminPostSchema>
 export type GetAdminPostsRes = HttpResponseWithMeta<AdminPost[], z.infer<typeof AdminListMetaSchema>>
-export type HidePostRes = HttpResponseWithData<AdminPost>
-export type UnhidePostRes = HttpResponseWithData<AdminPost>
 export type DeletePostRes = HttpResponse

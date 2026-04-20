@@ -19,7 +19,7 @@ class GetAdminPostsRequest extends BaseListRequest
             'user_uuid' => [self::NULLABLE],
             'status' => [
                 self::NULLABLE,
-                Rule::in(['all', 'visible', 'hidden', 'deleted']),
+                Rule::in(['all', 'visible', 'deleted']),
             ],
             'date_from' => [self::NULLABLE],
             'date_to' => [self::NULLABLE],

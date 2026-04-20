@@ -18,7 +18,7 @@ class PostViewService
         private readonly PostRepository $postRepo
     ) {}
 
-   /**
+    /**
      * Increase view count for a post, with anti-spam measures
      *
      * @param int $postId ID of the post being viewed

@@ -105,8 +105,6 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
 
             // Post moderation
             Route::get('/posts', [PostAdminController::class, 'getPosts'])->name('list-posts');
-            Route::post('/posts/{post_uuid}/hide', [PostAdminController::class, 'hidePost'])->name('hide-post');
-            Route::post('/posts/{post_uuid}/unhide', [PostAdminController::class, 'unhidePost'])->name('unhide-post');
             Route::delete('/posts/{post_uuid}', [PostAdminController::class, 'deletePost'])->name('delete-post');
             Route::post('/posts/{post_uuid}/delete', [PostAdminController::class, 'deletePost'])->name('delete-post-compat');
 

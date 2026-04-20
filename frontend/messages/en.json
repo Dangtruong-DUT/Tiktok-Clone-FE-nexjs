@@ -808,16 +808,11 @@
             "filters": {
                 "allStatuses": "All statuses",
                 "visible": "Visible",
-                "hidden": "Hidden",
                 "recent": "Recent",
                 "oldest": "Oldest"
             },
             "actions": {
-                "hide": "Hide",
-                "unhide": "Unhide",
                 "delete": "Delete",
-                "confirmHide": "Confirm Hide",
-                "confirmUnhide": "Confirm Unhide",
                 "confirmDelete": "Confirm Delete"
             },
             "labels": {
@@ -836,16 +831,10 @@
                 "reasonRequired": "Reason is required"
             },
             "messages": {
-                "hideSuccess": "Post hidden successfully",
-                "hideError": "Failed to hide post",
-                "unhideSuccess": "Post unhidden successfully",
-                "unhideError": "Failed to unhide post",
                 "deleteSuccess": "Post deleted successfully",
                 "deleteError": "Failed to delete post"
             },
             "dialogs": {
-                "hideSubtitle": "Hide post from @{username}",
-                "unhideSubtitle": "Unhide post from @{username}",
                 "deleteSubtitle": "Delete post from @{username}",
                 "deleteWarning": "This post will be removed from feeds."
             }

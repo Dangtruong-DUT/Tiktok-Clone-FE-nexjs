@@ -58,10 +58,9 @@ export function formatUserStatus(isBanned: boolean): string {
 /**
  * Get CSS class for post status badge
  */
-export function getPostStatusColor(status: 'visible' | 'hidden' | 'deleted'): string {
+export function getPostStatusColor(status: 'visible' | 'deleted'): string {
     const colors = {
         visible: 'bg-green-100 text-green-800',
-        hidden: 'bg-yellow-100 text-yellow-800',
         deleted: 'bg-red-100 text-red-800'
     }
     return colors[status]
@@ -70,12 +69,8 @@ export function getPostStatusColor(status: 'visible' | 'hidden' | 'deleted'): st
 /**
  * Determine post status from model data
  */
-export function getPostStatus(post: {
-    hidden_at?: string | null
-    deleted_at?: string | null
-}): 'visible' | 'hidden' | 'deleted' {
+export function getPostStatus(post: { deleted_at?: string | null }): 'visible' | 'deleted' {
     if (post.deleted_at) return 'deleted'
-    if (post.hidden_at) return 'hidden'
     return 'visible'
 }
 
@@ -103,8 +98,6 @@ export function getActionLabel(action: string): string {
         ban: 'Ban User',
         unban: 'Unban User',
         delete_user: 'Delete User',
-        hide_post: 'Hide Post',
-        unhide_post: 'Unhide Post',
         delete_post: 'Delete Post',
         delete_comment: 'Delete Comment'
     }
@@ -119,8 +112,6 @@ export function getActivityLabel(activity: string): string {
         ban: 'Ban User',
         unban: 'Unban User',
         delete_user: 'Delete User',
-        hide_post: 'Hide Post',
-        unhide_post: 'Unhide Post',
         delete_post: 'Delete Post',
         delete_comment: 'Delete Comment',
         reset_user_password: 'Reset User Password',
@@ -132,7 +123,6 @@ export function getActivityLabel(activity: string): string {
         user_unbanned: 'User Unbanned',
         post_uploaded: 'Post Uploaded',
         post_deleted: 'Post Deleted',
-        post_hidden: 'Post Hidden',
         post_liked: 'Post Liked',
         comment_created: 'Comment Created',
         comment_deleted: 'Comment Deleted',

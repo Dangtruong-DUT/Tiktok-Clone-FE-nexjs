@@ -29,7 +29,6 @@ class SystemAdminService
      *     active_users: int,
      *     banned_users: int,
      *     total_posts: int,
-     *     hidden_posts: int,
      *     deleted_posts: int,
      *     total_comments: int,
      *     total_admin_actions: int
@@ -46,7 +45,6 @@ class SystemAdminService
             'active_users' => User::whereNull('banned_at')->count(),
             'banned_users' => User::whereNotNull('banned_at')->count(),
             'total_posts' => Post::count(),
-            'hidden_posts' => Post::whereNotNull('hidden_at')->count(),
             'deleted_posts' => Post::onlyTrashed()->count(),
             'total_comments' => Post::whereNotNull('parent_id')->count(),
             'total_admin_actions' => $this->adminLogRepository->countSince($dateFrom),

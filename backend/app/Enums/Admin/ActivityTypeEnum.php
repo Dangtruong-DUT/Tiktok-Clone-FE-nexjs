@@ -21,7 +21,6 @@ enum ActivityTypeEnum: string implements BaseEnumInterface
 
     case POST_UPLOADED = 'post_uploaded';
     case POST_DELETED = 'post_deleted';
-    case POST_HIDDEN = 'post_hidden';
 
     case POST_LIKED = 'post_liked';
     case POST_UNLIKED = 'post_unliked';
@@ -51,7 +50,6 @@ enum ActivityTypeEnum: string implements BaseEnumInterface
             self::USER_UNBANNED => 'User Unbanned',
             self::POST_UPLOADED => 'Post Uploaded',
             self::POST_DELETED => 'Post Deleted',
-            self::POST_HIDDEN => 'Post Hidden',
             self::POST_LIKED => 'Post Liked',
             self::POST_UNLIKED => 'Post Unliked',
             self::POST_BOOKMARKED => 'Post Bookmarked',
@@ -80,7 +78,6 @@ enum ActivityTypeEnum: string implements BaseEnumInterface
             self::USER_UNBANNED => 'Người dùng được mở khóa',
             self::POST_UPLOADED => 'Bài viết được tải lên',
             self::POST_DELETED => 'Bài viết bị xóa',
-            self::POST_HIDDEN => 'Bài viết bị ẩn',
             self::POST_LIKED => 'Bài viết được thích',
             self::POST_UNLIKED => 'Bài viết bị bỏ thích',
             self::POST_BOOKMARKED => 'Bài viết được lưu',

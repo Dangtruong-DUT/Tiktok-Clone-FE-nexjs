@@ -5,7 +5,6 @@ namespace App\Services\Admin;
 use App\Enums\Admin\AdminActionEnum;
 use App\Enums\Common\ResourceTypeEnum;
 use App\Enums\Common\ModelEntityTypeEnum;
-use App\Exceptions\http\BadRequestException;
 use App\Models\Post;
 use App\Repositories\PostRepository;
 use App\Traits\HasAuthUser;
@@ -28,7 +27,7 @@ class PostAdminService
      * @param array $filters {
      *     q?: string,
      *     user_uuid?: string,
-     *     status?: 'all'|'visible'|'hidden'|'deleted',
+    *     status?: 'all'|'visible'|'deleted',
      *     date_from?: string (Y-m-d),
      *     date_to?: string (Y-m-d),
      *     page?: int,
@@ -61,107 +60,6 @@ class PostAdminService
                 'mentions:id,user_id,mentioned_user_id',
             ])
             ->firstOrFail();
-    }
-
-    /**
-     * Hide a post from public view
-     *
-     * @param array{post_uuid:string,reason:string} $payload
-     * @return Post Updated post
-     * @throws \Exception
-     */
-    public function hidePost(array $payload): Post
-    {
-        $admin = $this->guard()->user();
-        $post = $this->postRepository->findByUuidOrFail((string) $payload['post_uuid']);
-
-        if ($post->hidden_at !== null) {
-            throw new BadRequestException('Post is already hidden');
-        }
-
-        return DB::transaction(function () use ($admin, $post, $payload) {
-            $oldData = $post->only(['hidden_at', 'hidden_reason']);
-
-            $post->update([
-                'hidden_at' => now(),
-                'hidden_reason' => $payload['reason'],
-            ]);
-
-            $this->adminLogService->log(
-                admin: $admin,
-                resourceType: ResourceTypeEnum::POST,
-                resourceId: $post->id,
-                action: AdminActionEnum::HIDE_POST,
-                reason: $payload['reason'],
-                oldData: $oldData,
-                newData: $post->only(['hidden_at', 'hidden_reason']),
-            );
-
-            $this->adminModerationNoticeService->send(
-                admin: $admin,
-                targetUser: $post->user,
-                action: AdminActionEnum::HIDE_POST,
-                reason: (string) $payload['reason'],
-                entityType: ModelEntityTypeEnum::POST,
-                entityId: $post->id,
-                context: [
-                    'resource_type' => ResourceTypeEnum::POST->value,
-                    'resource_id' => $post->id,
-                ]
-            );
-
-            return $post;
-        });
-    }
-
-    /**
-     * Unhide a post (make it visible again)
-     *
-     * @param array{post_uuid:string} $payload
-     * @return Post Updated post
-     * @throws \Exception
-     */
-    public function unhidePost(array $payload): Post
-    {
-        $admin = $this->guard()->user();
-        $post = $this->postRepository->findByUuidOrFail((string) $payload['post_uuid']);
-
-        if ($post->hidden_at === null) {
-            throw new BadRequestException('Post is not hidden');
-        }
-
-        return DB::transaction(function () use ($admin, $post) {
-            $oldData = $post->only(['hidden_at', 'hidden_reason']);
-
-            $post->update([
-                'hidden_at' => null,
-                'hidden_reason' => null,
-            ]);
-
-            $this->adminLogService->log(
-                admin: $admin,
-                resourceType: ResourceTypeEnum::POST,
-                resourceId: $post->id,
-                action: AdminActionEnum::UNHIDE_POST,
-                oldData: $oldData,
-                newData: $post->only(['hidden_at', 'hidden_reason']),
-            );
-
-            $this->adminModerationNoticeService->send(
-                admin: $admin,
-                targetUser: $post->user,
-                action: AdminActionEnum::UNHIDE_POST,
-                reason: 'Your post is visible again after admin review',
-                entityType: ModelEntityTypeEnum::POST,
-                entityId: $post->id,
-                context: [
-                    'resource_type' => ResourceTypeEnum::POST->value,
-                    'resource_id' => $post->id,
-                ]
-            );
-
-            return $post;
-        });
     }
 
     /**

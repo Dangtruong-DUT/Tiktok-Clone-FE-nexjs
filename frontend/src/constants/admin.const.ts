@@ -6,7 +6,6 @@ export const ADMIN_ACTIONS = {
     BAN: 'BAN_USER',
     UNBAN: 'UNBAN_USER',
     DELETE: 'DELETE_USER',
-    HIDE_POST: 'HIDE_POST',
     DELETE_POST: 'DELETE_POST',
     DELETE_COMMENT: 'DELETE_COMMENT'
 } as const
@@ -20,7 +19,6 @@ export const USER_STATUS = {
 export const POST_STATUS = {
     ALL: 'all',
     VISIBLE: 'visible',
-    HIDDEN: 'hidden',
     DELETED: 'deleted'
 } as const
 
@@ -38,8 +36,6 @@ export const ACTIVITY_TYPES = [
     { value: 'ban', label: 'Ban User' },
     { value: 'unban', label: 'Unban User' },
     { value: 'delete_user', label: 'Delete User' },
-    { value: 'hide_post', label: 'Hide Post' },
-    { value: 'unhide_post', label: 'Unhide Post' },
     { value: 'delete_post', label: 'Delete Post' },
     { value: 'delete_comment', label: 'Delete Comment' },
     { value: 'reset_user_password', label: 'Reset User Password' },
