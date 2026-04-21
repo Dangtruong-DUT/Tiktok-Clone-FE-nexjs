@@ -24,6 +24,17 @@ Production-ready inference service for Vietnamese toxic classification.
 - `KAFKA_MODERATION_RESULT_TOPIC` (default: `moderation.result.v1`)
 - `KAFKA_MODERATION_CONSUMER_GROUP` (default: `ai-moderator-v1`)
 - `AI_VIOLATION_THRESHOLD` (default: `0.8`)
+- `AI_LOG_LEVEL` (default: `INFO`)
+
+## Logging
+
+API and worker now log request/result pairs with `request_id` so you can trace each moderation flow:
+
+- API `/predict`: `predict_request` -> `predict_result`
+- API `/moderation/enqueue`: `moderation_enqueue_request` -> `moderation_enqueue_result`
+- Worker consume/publish: `moderation_consume_request` -> `moderation_publish_result`
+
+Example log fields include: `request_id`, `task_id`, `resource_type`, `resource_id`, `label`, `confidence`, `is_violation`.
 
 ## Run API
 

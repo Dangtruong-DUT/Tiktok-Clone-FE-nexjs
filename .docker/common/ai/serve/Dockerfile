@@ -6,6 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     default-jre-headless \
+    libsnappy-dev \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
