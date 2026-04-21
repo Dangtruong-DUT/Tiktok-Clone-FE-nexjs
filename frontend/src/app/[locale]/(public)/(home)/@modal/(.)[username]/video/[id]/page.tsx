@@ -15,7 +15,7 @@ export default function CommentsPage() {
     const prevPathnameOpenDetailModal = useAppSelector((state) => state.modal.prevPathnameOpenModal)
     const dispatch = useAppDispatch()
     const pathname = usePathname()
-    const { id, username } = useParams<{ id: string; username: string }>()
+    const { id, username } = useParams<{ id: string; username: string }>() ?? { id: '', username: '' }
     const router = useRouter()
     const prevPathnameRef = useRef<string | null>(null)
 

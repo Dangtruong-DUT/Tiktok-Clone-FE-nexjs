@@ -16,7 +16,7 @@ export function AdminSidebar() {
     const t = useTranslations('AdminPage')
 
     // Extract locale from pathname (e.g., /en/admin/users -> en)
-    const locale = pathname.split('/')[1]
+    const locale = pathname?.split('/')[1]
 
     const getI18nPath = (route: string): string => {
         return `/${locale}${route}`
@@ -33,37 +33,37 @@ export function AdminSidebar() {
             title: t('users.title'),
             href: ADMIN_ROUTES.USERS,
             icon: Users,
-            active: pathname.includes(getI18nPath(ADMIN_ROUTES.USERS))
+            active: pathname?.includes(getI18nPath(ADMIN_ROUTES.USERS))
         },
         {
             title: t('moderation.title'),
             href: ADMIN_ROUTES.POSTS,
             icon: FileVideo,
-            active: pathname.includes(getI18nPath(ADMIN_ROUTES.POSTS))
+            active: pathname?.includes(getI18nPath(ADMIN_ROUTES.POSTS))
         },
         {
             title: t('comments.title'),
             href: ADMIN_ROUTES.COMMENTS,
             icon: MessageSquare,
-            active: pathname.includes(getI18nPath(ADMIN_ROUTES.COMMENTS))
+            active: pathname?.includes(getI18nPath(ADMIN_ROUTES.COMMENTS))
         },
         {
             title: t('appeals.title'),
             href: ADMIN_ROUTES.APPEALS,
             icon: Scale,
-            active: pathname.includes(getI18nPath(ADMIN_ROUTES.APPEALS))
+            active: pathname?.includes(getI18nPath(ADMIN_ROUTES.APPEALS))
         },
         {
             title: t('activity.title'),
             href: ADMIN_ROUTES.ACTIVITY,
             icon: Activity,
-            active: pathname.includes(getI18nPath(ADMIN_ROUTES.ACTIVITY))
+            active: pathname?.includes(getI18nPath(ADMIN_ROUTES.ACTIVITY))
         },
         {
             title: t('settings.title'),
             href: ADMIN_ROUTES.SETTINGS,
             icon: Settings,
-            active: pathname.includes(getI18nPath(ADMIN_ROUTES.SETTINGS))
+            active: pathname?.includes(getI18nPath(ADMIN_ROUTES.SETTINGS))
         }
     ]
 

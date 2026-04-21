@@ -14,13 +14,13 @@ export default function VideoDetailContent() {
     const { currentVideo, playVideoById } = useVideoPlaylist()
 
     useEffect(() => {
-        if (params.id && typeof params.id === 'string') {
+        if (params?.id && typeof params.id === 'string') {
             const urlVideoId = params.id
             if (currentVideo && currentVideo.uuid !== urlVideoId) {
                 playVideoById(urlVideoId)
             }
         }
-    }, [params.id, currentVideo, playVideoById])
+    }, [params?.id, currentVideo, playVideoById])
 
     if (!currentVideo) {
         return (

@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 
 export function AuthNav() {
     const pathname = usePathname()
-    const isLoginPage = pathname.includes('/login')
+    const isLoginPage = (pathname ?? '').includes('/login')
     const t = useTranslations('AuthLayout')
 
     return (

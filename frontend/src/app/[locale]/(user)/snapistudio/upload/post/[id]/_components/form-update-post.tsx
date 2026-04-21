@@ -31,7 +31,7 @@ import MentionHashtagTextField from '@/components/mention-hashtag-text-field'
 
 export default function FormUpdatePost() {
     const t = useTranslations('SnapiStudio.upload')
-    const { id } = useParams<{ id: string }>()
+    const { id } = useParams<{ id: string }>() ?? { id: '' }
     const [uploadImageMutate, uploadImageResult] = useUploadImageMutation()
     const [updatePostMutate, createPostResult] = useUpdatePostMutation()
     const { searchParams, setSearchParams } = useSearchParamsLoader()

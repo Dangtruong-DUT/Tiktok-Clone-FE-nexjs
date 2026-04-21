@@ -23,7 +23,7 @@ export function useHandleVideos(postList: TikTokPostType[]) {
         const currentPost = postList[currentIndex]
         if (!currentPost) return
         const newUrl = `/@${currentPost.author.username}/video/${currentPost.uuid}`
-        if (pathname.includes('video')) {
+        if (pathname?.includes('video')) {
             router.replace(newUrl)
         } else {
             router.push(newUrl)
@@ -33,7 +33,7 @@ export function useHandleVideos(postList: TikTokPostType[]) {
     useEffect(() => {
         if (openModalVideoDetailType === 'commentsVideoDetail') {
             handleUpdateNewPathForVideo()
-        } else if (pathname.includes('video') && openModalVideoDetailType === null) {
+        } else if (pathname?.includes('video') && openModalVideoDetailType === null) {
             handleUpdateNewPathForVideo()
         }
     }, [openModalVideoDetailType, pathname, handleUpdateNewPathForVideo])

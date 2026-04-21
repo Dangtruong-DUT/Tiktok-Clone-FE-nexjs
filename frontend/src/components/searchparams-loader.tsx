@@ -12,7 +12,7 @@ import { type ReadonlyURLSearchParams, useSearchParams } from 'next/navigation'
 import React, { Suspense, useEffect } from 'react'
 
 type SearchParamsLoaderProps = {
-    onParamsReceived: (params: ReadonlyURLSearchParams) => void
+    onParamsReceived: (params: ReadonlyURLSearchParams | null) => void
 }
 
 export const SearchParamsLoader = React.memo(Suspender)
@@ -30,13 +30,13 @@ function Suspended({ onParamsReceived }: SearchParamsLoaderProps) {
 
     useEffect(() => {
         onParamsReceived(searchParams)
-    })
+    }, [searchParams, onParamsReceived])
 
     return null
 }
 
 export function useSearchParamsLoader() {
-    const [searchParams, setSearchParams] = React.useState<ReadonlyURLSearchParams>()
+    const [searchParams, setSearchParams] = React.useState<ReadonlyURLSearchParams | null>(null)
 
     return {
         searchParams,
