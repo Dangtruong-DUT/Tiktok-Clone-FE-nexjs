@@ -13,6 +13,15 @@ from serve.kafka_queue import (
 )
 
 
+def configure_logging() -> None:
+    logging.basicConfig(
+        level=os.getenv("AI_LOG_LEVEL", "INFO").upper(),
+        format="%(asctime)s %(levelname)s [%(name)s] %(message)s",
+    )
+    logging.getLogger("transformers").setLevel(logging.WARNING)
+    logging.getLogger("httpx").setLevel(logging.WARNING)
+
+
 class ModerationWorker:
     def __init__(self, service: ToxicInferenceService) -> None:
         self.service = service
@@ -20,10 +29,6 @@ class ModerationWorker:
         self.violation_threshold = float(os.getenv("AI_VIOLATION_THRESHOLD", "0.8"))
 
     def run(self) -> None:
-        logging.basicConfig(
-            level=os.getenv("AI_LOG_LEVEL", "INFO").upper(),
-            format="%(asctime)s %(levelname)s [%(name)s] %(message)s",
-        )
         logger = logging.getLogger("ai.serve.worker")
 
         wait_for_kafka(self.config)
@@ -86,6 +91,7 @@ class ModerationWorker:
         return result
 
 def main() -> None:
+    configure_logging()
     strict_segment = os.getenv("AI_STRICT_SEGMENT", "true").lower() == "true"
     service = build_default_service(strict_segment=strict_segment)
     worker = ModerationWorker(service=service)

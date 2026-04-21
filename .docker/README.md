@@ -129,6 +129,7 @@ Loaded from root `.env` (copy from `.env.example`):
 - `CONTAINER_PREFIX=tiktok_clone`
 - `BACKEND_ENV_FILE=./backend/.env`
 - `FRONTEND_ENV_FILE=./frontend/.env`
+- `AI_ENV_FILE=./ai/.env`
 - `NGINX_BACKEND_PORT=9696`
 - `NGINX_FRONTEND_PORT=9697`
 - `POSTGRES_PORT=5432`

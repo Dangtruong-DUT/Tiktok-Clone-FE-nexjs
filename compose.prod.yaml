@@ -35,7 +35,7 @@ services:
       - "${NGINX_FRONTEND_PORT:-9697}:80"
     depends_on:
       frontend:
-        condition: service_started
+        condition: service_healthy
 
   php-fpm:
     container_name: ${CONTAINER_PREFIX:-snapi}_php-fpm
@@ -97,7 +97,7 @@ services:
       redis:
         condition: service_healthy
       kafka:
-        condition: service_started
+        condition: service_healthy
 
   postgres:
     container_name: ${CONTAINER_PREFIX:-snapi}_postgres
@@ -158,6 +158,18 @@ services:
       - "3000"
     networks:
       - app-production
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://localhost:3000').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   mailcatcher:
     image: dockage/mailcatcher:0.7.1
@@ -213,6 +225,16 @@ services:
       - kafka-data-production:/var/lib/kafka/data
     networks:
       - app-production
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "kafka-topics --bootstrap-server localhost:9092 --list >/dev/null 2>&1",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
@@ -228,7 +250,7 @@ services:
       DYNAMIC_CONFIG_ENABLED: "true"
     depends_on:
       kafka:
-        condition: service_started
+        condition: service_healthy
     networks:
       - app-production
 
@@ -238,28 +260,27 @@ services:
       context: .
       dockerfile: ./.docker/common/ai/serve/Dockerfile
     restart: unless-stopped
-    environment:
-      AI_ENABLE_KAFKA: "true"
-      AI_STRICT_SEGMENT: "true"
-      AI_MODEL_NAME: ${AI_MODEL_NAME:-vinai/phobert-base}
-      AI_MODEL_PATH: ${AI_MODEL_PATH:-models/best_phobert_model.pt}
-      AI_MAX_LENGTH: ${AI_MAX_LENGTH:-256}
-      AI_DEVICE: ${AI_DEVICE:-auto}
-      AI_VIOLATION_THRESHOLD: ${AI_VIOLATION_THRESHOLD:-0.8}
-      AI_MODERATION_API_KEY: ${AI_MODERATION_API_KEY:-}
-      VNCORENLP_JAR_PATH: ${VNCORENLP_JAR_PATH:-}
-      VNCORENLP_MAX_HEAP_SIZE: ${VNCORENLP_MAX_HEAP_SIZE:--Xmx2g}
-      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-      KAFKA_MODERATION_REQUEST_TOPIC: moderation.request.v1
-      KAFKA_MODERATION_RESULT_TOPIC: moderation.result.v1
-      KAFKA_MODERATION_CONSUMER_GROUP: ai-moderator-v1
+    env_file:
+      - ${AI_ENV_FILE:-./ai/.env}
     ports:
       - "${AI_SERVE_PORT:-8001}:8001"
     depends_on:
       kafka:
-        condition: service_started
+        condition: service_healthy
     networks:
       - app-production
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8001/health', timeout=5).read()",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   ai-worker:
     container_name: ${CONTAINER_PREFIX:-snapi}_ai_worker
@@ -268,25 +289,15 @@ services:
       dockerfile: ./.docker/common/ai/serve/Dockerfile
     restart: unless-stopped
     command: ["python", "-m", "serve.moderation_worker"]
-    environment:
-      AI_ENABLE_KAFKA: "true"
-      AI_STRICT_SEGMENT: "false"
-      AI_MODEL_NAME: ${AI_MODEL_NAME:-vinai/phobert-base}
-      AI_MODEL_PATH: ${AI_MODEL_PATH:-models/best_phobert_model.pt}
-      AI_MAX_LENGTH: ${AI_MAX_LENGTH:-256}
-      AI_DEVICE: ${AI_DEVICE:-auto}
-      AI_VIOLATION_THRESHOLD: ${AI_VIOLATION_THRESHOLD:-0.8}
-      VNCORENLP_JAR_PATH: ${VNCORENLP_JAR_PATH:-}
-      VNCORENLP_MAX_HEAP_SIZE: ${VNCORENLP_MAX_HEAP_SIZE:--Xmx2g}
-      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-      KAFKA_MODERATION_REQUEST_TOPIC: moderation.request.v1
-      KAFKA_MODERATION_RESULT_TOPIC: moderation.result.v1
-      KAFKA_MODERATION_CONSUMER_GROUP: ai-moderator-v1
+    env_file:
+      - ${AI_ENV_FILE:-./ai/.env}
     volumes:
       - ./ai:/app
     depends_on:
+      ai-serve:
+        condition: service_healthy
       kafka:
-        condition: service_started
+        condition: service_healthy
     networks:
       - app-production
 

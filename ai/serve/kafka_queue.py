@@ -36,16 +36,21 @@ def build_producer(config: KafkaConfig) -> KafkaProducer:
 
 
 def build_consumer(config: KafkaConfig) -> KafkaConsumer:
-    return KafkaConsumer(
-        config.request_topic,
-        bootstrap_servers=config.bootstrap_servers,
-        group_id=config.consumer_group,
-        auto_offset_reset="earliest",
-        enable_auto_commit=False,
-        value_deserializer=lambda value: json.loads(value.decode("utf-8")),
-        consumer_timeout_ms=1000,
-        max_poll_records=1,
-    )
+    consumer_kwargs: dict[str, Any] = {
+        "bootstrap_servers": config.bootstrap_servers,
+        "group_id": config.consumer_group,
+        "auto_offset_reset": "earliest",
+        "enable_auto_commit": False,
+        "value_deserializer": lambda value: json.loads(value.decode("utf-8")),
+        "max_poll_records": 1,
+    }
+
+    # Keep worker alive by default; set a non-negative timeout explicitly via env when needed.
+    timeout_ms = int(os.getenv("KAFKA_CONSUMER_TIMEOUT_MS", "-1"))
+    if timeout_ms >= 0:
+        consumer_kwargs["consumer_timeout_ms"] = timeout_ms
+
+    return KafkaConsumer(config.request_topic, **consumer_kwargs)
 
 
 def wait_for_kafka(config: KafkaConfig, max_attempts: int = 30, sleep_seconds: float = 2.0) -> None:

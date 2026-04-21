@@ -69,16 +69,18 @@ Default local URLs with Docker:
 
 ## Environment Strategy (Independent & Maintainable)
 
-The repository now separates environment variables into 3 layers:
+The repository now separates environment variables into 4 layers:
 
 - Root `.env`: Docker Compose infrastructure variables only (ports, container names, postgres container credentials, selected env file paths)
 - `backend/.env`: Laravel application variables only
 - `frontend/.env`: Next.js application variables only
+- `ai/.env`: AI moderation service and AI scripts variables only
 
 You can switch service env files independently by editing root `.env`:
 
 - `BACKEND_ENV_FILE=./backend/.env`
 - `FRONTEND_ENV_FILE=./frontend/.env`
+- `AI_ENV_FILE=./ai/.env`
 
 ## Quick Start (Docker)
 
@@ -88,6 +90,7 @@ You can switch service env files independently by editing root `.env`:
 Copy-Item .env.example .env
 Copy-Item backend/.env.example backend/.env
 Copy-Item frontend/.env.example frontend/.env
+Copy-Item ai/.env.example ai/.env
 ```
 
 2. Start development stack:
@@ -125,6 +128,7 @@ If you need a different env profile (for example staging/production-like), updat
 - `NEXT_APP_ENV`
 - `BACKEND_ENV_FILE`
 - `FRONTEND_ENV_FILE`
+- `AI_ENV_FILE`
 
 ## MinIO and MailCatcher
 

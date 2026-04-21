@@ -55,6 +55,8 @@ def load_service() -> None:
         level=os.getenv("AI_LOG_LEVEL", "INFO").upper(),
         format="%(asctime)s %(levelname)s [%(name)s] %(message)s",
     )
+    logging.getLogger("transformers").setLevel(logging.WARNING)
+    logging.getLogger("httpx").setLevel(logging.WARNING)
 
     try:
         # Fallback mode keeps the API available if VnCoreNLP is temporarily unavailable.
