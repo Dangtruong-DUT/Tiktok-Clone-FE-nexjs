@@ -1,6 +1,8 @@
 import os
 import re
 import unicodedata
+import contextlib
+import io
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Optional
@@ -8,6 +10,7 @@ from typing import Any, Optional
 import torch
 import torch.nn as nn
 from transformers import AutoModel, AutoTokenizer
+from transformers.utils import logging as transformers_logging
 
 try:
     from vncorenlp import VnCoreNLP
@@ -16,9 +19,24 @@ except Exception:  # pragma: no cover
 
 
 class PhoBERTClassifier(nn.Module):
-    def __init__(self, model_name: str, num_labels: int = 2, dropout: float = 0.2) -> None:
+    def __init__(
+        self,
+        model_name: str,
+        num_labels: int = 2,
+        dropout: float = 0.2,
+        hf_token: Optional[str] = None,
+    ) -> None:
         super().__init__()
-        self.encoder = AutoModel.from_pretrained(model_name)
+        pretrained_kwargs: dict[str, Any] = {}
+        if hf_token:
+            pretrained_kwargs["token"] = hf_token
+
+        suppress_hf_load_logs = os.getenv("AI_SUPPRESS_HF_LOAD_LOGS", "true").lower() == "true"
+        if suppress_hf_load_logs:
+            with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                self.encoder = AutoModel.from_pretrained(model_name, **pretrained_kwargs)
+        else:
+            self.encoder = AutoModel.from_pretrained(model_name, **pretrained_kwargs)
         self.dropout = nn.Dropout(dropout)
         self.classifier = nn.Linear(self.encoder.config.hidden_size, num_labels)
 
@@ -118,8 +136,19 @@ class ToxicInferenceService:
             strict_segment=config.strict_segment,
         )
 
-        self.tokenizer = AutoTokenizer.from_pretrained(config.model_name)
-        self.model = PhoBERTClassifier(model_name=config.model_name).to(self.device)
+        if os.getenv("HF_HUB_DISABLE_PROGRESS_BARS") is None:
+            os.environ["HF_HUB_DISABLE_PROGRESS_BARS"] = "1"
+
+        if os.getenv("HF_HUB_DISABLE_PROGRESS_BARS", "1") == "1":
+            transformers_logging.disable_progress_bar()
+
+        hf_token = os.getenv("HF_TOKEN")
+        pretrained_kwargs: dict[str, Any] = {}
+        if hf_token:
+            pretrained_kwargs["token"] = hf_token
+
+        self.tokenizer = AutoTokenizer.from_pretrained(config.model_name, **pretrained_kwargs)
+        self.model = PhoBERTClassifier(model_name=config.model_name, hf_token=hf_token).to(self.device)
         self.model.load_state_dict(torch.load(model_path, map_location=self.device))
         self.model.eval()
 
