@@ -26,5 +26,8 @@ backend/storage/framework/sessions
 backend/storage/framework/views
 backend/storage/framework/testing
 
+# Guard against accidentally-created Windows junctions/symlinks inside storage (can break BuildKit context on Windows)
+backend/storage/app/public/public
+
 backend/bootstrap/cache/*.php
 backend/public/storage
