@@ -4,12 +4,13 @@ namespace App\Services;
 
 use App\Enums\Admin\AdminActionEnum;
 use App\Enums\Common\ResourceTypeEnum;
-use App\Enums\Common\ModelEntityTypeEnum;
 use App\Models\AiModerationReport;
 use App\Models\Post;
 use App\Repositories\PostRepository;
 use App\Repositories\UserRepository;
 use App\Services\Admin\AdminModerationNoticeService;
+use App\Enums\Ai\AiModerationLabelEnum;
+use App\Enums\Common\ModelEntityTypeEnum;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -49,10 +50,11 @@ class AiModerationService
             'task_id' => (string) Str::uuid(),
             'resource_type' => $resourceType->value,
             'resource_id' => (int) $post->id,
+            "resource_updated_at"=> $post->updated_at->toDateTimeString(),
             'user_id' => (int) $post->user_id,
             'sentence' => $content,
             'reason' => null,
-            'enqueued_at' => now()->toIso8601String(),
+            'enqueued_at' => now()->toDateTimeString(),
         ];
 
         try {
@@ -89,17 +91,18 @@ class AiModerationService
      */
     public function applyVerdict(array $payload): void
     {
-        $isViolation = (bool) ($payload['is_violation'] ?? false);
-        if (!$isViolation) {
-            return;
-        }
-
         $post = $this->postRepo->find((int) $payload['resource_id']);
 
         if (!$post || $post->deleted_at !== null) {
             return;
         }
 
+        $resourceUpdatedAt = $payload['resource_updated_at'] ?? null;
+        if ($resourceUpdatedAt && check_version_conflict($post, $resourceUpdatedAt)) {
+            return;
+        }
+
+        $isViolation = (bool) ($payload['is_violation'] ?? false);
         $appealDays = (int) config('services.ai_moderation.appeal_window_days', 7);
         $reason = (string) ($payload['reason'] ?? 'Violated community standards by automated moderation.');
         $resourceType = ResourceTypeEnum::tryFrom((string) ($payload['resource_type'] ?? 'post')) ?? ResourceTypeEnum::POST;
@@ -107,9 +110,17 @@ class AiModerationService
             ? AdminActionEnum::DELETE_COMMENT
             : AdminActionEnum::DELETE_POST;
 
-        DB::transaction(function () use ($payload, $post, $appealDays, $reason, $resourceType, $adminAction): void {
-            $post->delete();
+        $label = AiModerationLabelEnum::tryFrom((int) ($payload['label'] ?? 1)) ?? AiModerationLabelEnum::TOXIC;
 
+        DB::transaction(function () use (
+            $payload,
+            $post,
+            $appealDays,
+            $reason,
+            $resourceType,
+            $adminAction,
+            $isViolation,
+            $label): void {
             AiModerationReport::updateOrCreate(
                 ['task_id' => (string) $payload['task_id']],
                 [
@@ -117,34 +128,36 @@ class AiModerationService
                     'resource_type' => $resourceType->value,
                     'resource_id' => (int) $post->id,
                     'sentence' => (string) ($payload['sentence'] ?? $post->content),
-                    'label' => (int) ($payload['label'] ?? 1),
+                    'label' => $label->value,
                     'confidence' => (float) ($payload['confidence'] ?? 0),
-                    'is_violation' => true,
-                    'violation_reason' => $reason,
+                    'is_violation' => $isViolation,
+                    'violation_reason' => $isViolation ? $reason : null,
                     'raw_payload' => $payload['raw_payload'] ?? $payload,
                     'moderated_at' => $payload['moderated_at'] ?? now(),
-                    'appeal_deadline_at' => now()->addDays($appealDays),
-                    'status' => 'open',
+                    'appeal_deadline_at' => $isViolation ? now()->addDays($appealDays) : null,
+                    'status' => $isViolation ? 'open' : 'resolved',
                 ]
             );
 
-            $systemAdmin = $this->userRepo->getSuperAdmin();
-            if (!$systemAdmin) {
-                return;
+            if ($isViolation) {
+                $post->delete();
+                $systemAdmin = $this->userRepo->getSuperAdmin();
+                if (!$systemAdmin) {
+                    return;
+                }
+                $this->adminModerationNoticeService->send(
+                    admin: $systemAdmin,
+                    targetUser: $post->user,
+                    action: $adminAction,
+                    reason: $reason,
+                    entityType: ModelEntityTypeEnum::POST,
+                    entityId: $post->id,
+                    context: [
+                        'resource_type' => $resourceType->value,
+                        'resource_id' => $post->id,
+                    ]
+                );
             }
-
-            $this->adminModerationNoticeService->send(
-                admin: $systemAdmin,
-                targetUser: $post->user,
-                action: $adminAction,
-                reason: $reason,
-                entityType: ModelEntityTypeEnum::POST,
-                entityId: $post->id,
-                context: [
-                    'resource_type' => $resourceType->value,
-                    'resource_id' => $post->id,
-                ]
-            );
         });
     }
 }

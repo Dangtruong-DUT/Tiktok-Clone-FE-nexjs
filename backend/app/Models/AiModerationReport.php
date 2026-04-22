@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Ai\AiModerationLabelEnum;
 use App\Traits\HasUuidObservable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -36,6 +37,7 @@ class AiModerationReport extends Model
     protected function casts(): array
     {
         return [
+            'label' => AiModerationLabelEnum::class,
             'confidence' => 'float',
             'is_violation' => 'boolean',
             'raw_payload' => 'array',

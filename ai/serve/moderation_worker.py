@@ -78,7 +78,7 @@ class ModerationWorker:
             "task_id": payload.get("task_id"),
             "resource_type": payload.get("resource_type"),
             "resource_id": payload.get("resource_id"),
-            "resource_uuid": payload.get("resource_uuid"),
+            "resource_updated_at": payload.get("resource_updated_at"),
             "user_id": payload.get("user_id"),
             "sentence": sentence,
             "label": label,

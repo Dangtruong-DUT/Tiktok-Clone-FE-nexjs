@@ -12,6 +12,7 @@ enum AppealStatusEnum: string implements BaseEnumInterface
 {
     use BaseEnumTrait;
 
+    case PENDING_EVIDENCE = 'pending_evidence';
     case PENDING = 'pending';
     case APPROVED = 'approved';
     case REJECTED = 'rejected';
@@ -19,6 +20,7 @@ enum AppealStatusEnum: string implements BaseEnumInterface
     public function label(): string
     {
         return match($this) {
+            self::PENDING_EVIDENCE => 'Pending Evidence',
             self::PENDING => 'Pending',
             self::APPROVED => 'Approved',
             self::REJECTED => 'Rejected',
@@ -28,6 +30,7 @@ enum AppealStatusEnum: string implements BaseEnumInterface
     public function translate(): string
     {
         return match($this) {
+            self::PENDING_EVIDENCE => 'Chờ bổ sung minh chứng',
             self::PENDING => 'Đang chờ',
             self::APPROVED => 'Đã duyệt',
             self::REJECTED => 'Đã từ chối',

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -67,5 +68,18 @@ if (!function_exists("auth_user_id")) {
         }
 
         return null;
+    }
+}
+
+if (!function_exists('check_version_conflict')) {
+    /**
+     * Check if the version conflict
+     */
+    function check_version_conflict(Model $model, string $timestamp): bool
+    {
+        $clientVersion = new \DateTime($timestamp);
+        $serverVersion = new \DateTime($model->updated_at);
+
+        return $clientVersion < $serverVersion;
     }
 }
