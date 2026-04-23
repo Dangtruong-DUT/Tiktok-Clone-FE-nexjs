@@ -31,15 +31,15 @@ class AppealService
 
     /**
      * File a new appeal (authenticated user flow)
-     * @param array $payload {appeal_type: string, resource_id: int, resource_type: string, reason: string}
+     * @param array $payload {user_id?: int, appeal_type: string, resource_id: int, resource_type: string, reason: string}
      * @return Appeal
      */
     public function create(array $payload): Appeal
     {
-        $user = $this->guard()->user();
+        $userId = $payload['user_id'] ?? $this->guard()->user()->id;
 
         $isExistPrevAppeal = $this->appealRepository->hasPendingAppeal(
-            userId: $user->id,
+            userId: $userId,
             appealType: (string) $payload['appeal_type'],
             resourceId: $payload['resource_id'] ?? null,
         );
@@ -49,45 +49,21 @@ class AppealService
                 'appeal_id' => 'A pending appeal already exists',
             ]);
         }
+
+        $token = Str::random(64);
+        $windowDays = (int) config('services.ai_moderation.appeal_window_days', 7);
+
+
         return $this->appealRepository->create([
-                'user_id' => $user->id,
+                'user_id' => $userId,
                 'appeal_type' => $payload['appeal_type'],
                 'resource_id' => $payload['resource_id'] ?? null,
                 'resource_type' => $payload['resource_type'],
                 'reason' => $payload['reason'],
                 'status' => AppealStatusEnum::PENDING->value,
+                'appeal_token' => $token,
+                'appeal_token_expires_at' => now()->addDays($windowDays),
             ]);
-    }
-
-    /**
-     * Create an appeal with a token for email-based access (called during admin moderation action).
-     * Token validity is controlled by config('services.ai_moderation.appeal_window_days').
-     *
-     * @param int $userId Target user ID
-     * @param AppealTypeEnum $appealType Type of appeal
-     * @param string $resourceType Resource type string
-     * @param int|null $resourceId Resource ID (nullable for user-level actions)
-     * @return Appeal The created appeal with token
-     */
-    public function createWithToken(
-        int $userId,
-        AppealTypeEnum $appealType,
-        string $resourceType,
-        ?int $resourceId
-    ): Appeal {
-        $token = Str::random(64);
-        $windowDays = (int) config('services.ai_moderation.appeal_window_days', 7);
-
-        return $this->appealRepository->create([
-            'user_id' => $userId,
-            'appeal_type' => $appealType->value,
-            'resource_id' => $resourceId,
-            'resource_type' => $resourceType,
-            'reason' => '',
-            'status' => AppealStatusEnum::PENDING->value,
-            'appeal_token' => $token,
-            'appeal_token_expires_at' => now()->addDays($windowDays),
-        ]);
     }
 
     /**

@@ -22,20 +22,4 @@ class SubmitAppealEvidenceRequest extends BaseRequest
             'evidence_files.*' => [self::REQUIRED, self::IMAGE, self::MAX . ':5120'],
         ]);
     }
-
-    /**
-     * Custom validation messages from lang files.
-     * @return array<string, string>
-     */
-    public function messages(): array
-    {
-        return [
-            'evidence_files.max' => __('appeal.evidence_files.max'),
-            'evidence_files.*.image' => __('appeal.evidence_files.item_image'),
-            'evidence_files.*.max' => __('appeal.evidence_files.item_max'),
-            'reason.min' => __('appeal.reason.min'),
-            'reason.max' => __('appeal.reason.max'),
-            'token.required' => __('appeal.token.required'),
-        ];
-    }
 }

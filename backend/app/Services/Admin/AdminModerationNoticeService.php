@@ -48,12 +48,13 @@ class AdminModerationNoticeService
         $resourceId = (int) ($context['resource_id'] ?? $entityId);
 
         // Create appeal record with token for email-based access
-        $appeal = $this->appealService->createWithToken(
-            userId: $targetUser->id,
-            appealType: $appealType,
-            resourceType: $resourceType,
-            resourceId: $resourceId,
-        );
+        $appeal = $this->appealService->create([
+            'user_id' => $targetUser->id,
+            'appeal_type' => $appealType->value,
+            'resource_type' => $resourceType,
+            'resource_id' => $resourceId,
+            'reason' => $reason,
+        ]);
 
         $appealLink = $this->buildAppealFrontendLink($appeal->appeal_token);
 

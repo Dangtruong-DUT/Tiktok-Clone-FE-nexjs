@@ -29,8 +29,14 @@ class AppealResource extends BaseJsonResource
             'reason' => $this->reason,
             'status' => $this->status->value,
             'admin_response' => $this->admin_response,
-            'evidence_files' => $this->formatEvidenceFiles(),
-            'reviewed_by' => $this->reviewed_by,
+            'evidence_files' => $this->whenLoaded('evidence_files', function () {
+                return $this->evidence_files->map(fn($file) => [
+                    'id' => $file->id,
+                    'url' => $file->url,
+                    'file_name' => $file->file_name,
+                ])->values()->toArray();
+            }),
+            'reviewed_by' => $this->reviewer->name,
             'reviewed_at' => $this->reviewed_at?->toDateTimeString(),
             'appeal_token_expires_at' => $this->appeal_token_expires_at?->toDateTimeString(),
             'user' => UserResource::make($this->whenLoaded('user')),
@@ -38,25 +44,5 @@ class AppealResource extends BaseJsonResource
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];
-    }
-
-    /**
-     * Resolve evidence file IDs to objects with id, url, and original file_name.
-     *
-     * @return array<int, array{id: int, url: string, file_name: string}>|null
-     */
-    private function formatEvidenceFiles(): ?array
-    {
-        $files = $this->evidence_files;
-
-        if ($files->isEmpty()) {
-            return null;
-        }
-
-        return $files->map(fn ($file) => [
-            'id' => $file->id,
-            'url' => $file->url,
-            'file_name' => $file->file_name,
-        ])->values()->toArray();
     }
 }
