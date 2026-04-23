@@ -58,6 +58,16 @@ class AppealRepository extends BaseRepository
     }
 
     /**
+     * Find an appeal by its email verification token
+     * @param string $token
+     * @return Appeal|null
+     */
+    public function findByToken(string $token): ?Appeal
+    {
+        return $this->query()->byToken($token)->first();
+    }
+
+    /**
      * Check if a user has a pending appeal for a specific resource and type
      * @param int $userId
      * @param string $appealType

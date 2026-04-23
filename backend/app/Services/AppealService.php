@@ -3,12 +3,15 @@
 namespace App\Services;
 
 use App\Enums\Appeal\AppealStatusEnum;
+use App\Enums\Appeal\AppealTypeEnum;
 use App\Exceptions\http\BusinessException;
+use App\Exceptions\http\NotFoundException;
 use App\Models\Appeal;
 use App\Repositories\AppealRepository;
 use App\Repositories\PostRepository;
 use App\Traits\HasAuthUser;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Str;
 
 /**
  * AppealService - Handles appeal business logic
@@ -23,10 +26,11 @@ class AppealService
     public function __construct(
         private readonly AppealRepository $appealRepository,
         private readonly PostRepository $postRepository,
+        private readonly UploadService $uploadService,
     ) {}
 
     /**
-     * File a new appeal
+     * File a new appeal (authenticated user flow)
      * @param array $payload {appeal_type: string, resource_id: int, resource_type: string, reason: string}
      * @return Appeal
      */
@@ -53,6 +57,94 @@ class AppealService
                 'reason' => $payload['reason'],
                 'status' => AppealStatusEnum::PENDING->value,
             ]);
+    }
+
+    /**
+     * Create an appeal with a token for email-based access (called during admin moderation action).
+     * Token validity is controlled by config('services.ai_moderation.appeal_window_days').
+     *
+     * @param int $userId Target user ID
+     * @param AppealTypeEnum $appealType Type of appeal
+     * @param string $resourceType Resource type string
+     * @param int|null $resourceId Resource ID (nullable for user-level actions)
+     * @return Appeal The created appeal with token
+     */
+    public function createWithToken(
+        int $userId,
+        AppealTypeEnum $appealType,
+        string $resourceType,
+        ?int $resourceId
+    ): Appeal {
+        $token = Str::random(64);
+        $windowDays = (int) config('services.ai_moderation.appeal_window_days', 7);
+
+        return $this->appealRepository->create([
+            'user_id' => $userId,
+            'appeal_type' => $appealType->value,
+            'resource_id' => $resourceId,
+            'resource_type' => $resourceType,
+            'reason' => '',
+            'status' => AppealStatusEnum::PENDING->value,
+            'appeal_token' => $token,
+            'appeal_token_expires_at' => now()->addDays($windowDays),
+        ]);
+    }
+
+    /**
+     * Validate an appeal token and return the appeal if valid.
+     *
+     * @param string $token The appeal token from the email link
+     * @return Appeal
+     * @throws NotFoundException If the token is invalid
+     * @throws BusinessException If the token has expired or appeal already reviewed
+     */
+    public function validateToken(string $token): Appeal
+    {
+        $appeal = $this->appealRepository->findByToken($token);
+
+        if (!$appeal) {
+            throw new NotFoundException('Invalid appeal link');
+        }
+
+        if ($appeal->isTokenExpired()) {
+            throw new BusinessException('This appeal link has expired. Please contact support for assistance.', [
+                'token' => 'Appeal link has expired',
+            ]);
+        }
+
+        if ($appeal->status !== AppealStatusEnum::PENDING) {
+            throw new BusinessException('This appeal has already been reviewed.', [
+                'status' => 'Appeal already reviewed',
+            ]);
+        }
+
+        return $appeal;
+    }
+
+    /**
+     * Submit evidence for a token-based appeal (public endpoint).
+     *
+     * @param string $token The appeal token
+     * @param string $reason User's appeal reason
+     * @param array<\Illuminate\Http\UploadedFile> $evidenceFiles Uploaded evidence images
+     * @return Appeal
+     */
+    public function submitEvidence(string $token, string $reason, array $evidenceFiles = []): Appeal
+    {
+        $appeal = $this->validateToken($token);
+
+        $evidenceFileIds = [];
+        foreach ($evidenceFiles as $file) {
+            $uploaded = $this->uploadService->image($file);
+            $evidenceFileIds[] = $uploaded['id'];
+        }
+
+        $appeal->update([
+            'reason' => $reason,
+            'evidence_file_ids' => !empty($evidenceFileIds) ? $evidenceFileIds : null,
+        ]);
+
+        return $appeal->fresh();
     }
 
     /**

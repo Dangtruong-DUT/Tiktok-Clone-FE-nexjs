@@ -671,6 +671,7 @@
                 "empty": "Chưa có thông báo nào.",
                 "labels": {
                     "someone": "Ai đó",
+                    "system": "Hệ thống",
                     "total": "{count} mục"
                 },
                 "tabs": {
@@ -1000,6 +1001,23 @@
                 "approved": "Đã duyệt",
                 "rejected": "Đã từ chối"
             },
+            "columns": {
+                "id": "ID",
+                "user": "Người dùng",
+                "type": "Loại kháng cáo",
+                "reason": "Lý do",
+                "status": "Trạng thái",
+                "createdAt": "Ngày tạo",
+                "actions": "Thao tác",
+                "evidence": "Minh chứng"
+            },
+            "evidenceDialog": {
+                "title": "Minh chứng kháng cáo",
+                "imageCount": "Ảnh {current} trên {total}",
+                "imageAlt": "Ảnh minh chứng {index}",
+                "prev": "Ảnh trước",
+                "next": "Ảnh sau"
+            },
             "actions": {
                 "approve": "Phê duyệt",
                 "reject": "Từ chối"
@@ -1034,5 +1052,67 @@
         "lockWithoutDays": "Tài khoản của bạn hiện đang bị khóa.",
         "appealAction": "Gửi kháng cáo",
         "backHome": "Về trang chủ"
+    },
+    "AppealPage": {
+        "meta": {
+            "title": "Gửi kháng cáo",
+            "description": "Gửi kháng cáo cho một hành động kiểm duyệt trên tài khoản hoặc nội dung của bạn."
+        },
+        "title": "Gửi kháng cáo",
+        "description": "Cung cấp lý do và bằng chứng để được xem xét.",
+        "steps": {
+            "verify": "Xác thực",
+            "details": "Chi tiết",
+            "upload": "Minh chứng",
+            "confirm": "Hoàn tất"
+        },
+        "token": {
+            "verifying": "Đang xác thực đường dẫn kháng cáo...",
+            "verified": "Xác thực đường dẫn thành công!",
+            "missingTitle": "Cần đường dẫn kháng cáo",
+            "missingDescription": "Vui lòng sử dụng đường dẫn kháng cáo đã được gửi đến email của bạn. Nếu chưa nhận được email, hãy kiểm tra thư mục spam.",
+            "expiredTitle": "Đường dẫn hết hạn",
+            "invalidTitle": "Đường dẫn không hợp lệ",
+            "invalidGeneric": "Đường dẫn kháng cáo này không hợp lệ. Vui lòng kiểm tra email để lấy đường dẫn chính xác.",
+            "contactSupport": "Nếu bạn cần hỗ trợ thêm, vui lòng liên hệ đội ngũ hỗ trợ."
+        },
+        "form": {
+            "appealType": "Loại kháng cáo",
+            "resourceType": "Tài nguyên",
+            "reasonLabel": "Lý do của bạn",
+            "reasonPlaceholder": "Giải thích vì sao bạn cho rằng quyết định kiểm duyệt này cần được xem xét lại. Cung cấp càng nhiều chi tiết càng tốt (tối thiểu 20 ký tự).",
+            "reasonHint": "Tối thiểu 20 ký tự",
+            "reasonMinError": "Lý do phải có ít nhất 20 ký tự.",
+            "evidenceLabel": "Bằng chứng hỗ trợ",
+            "evidenceHint": "Tải lên hình ảnh hỗ trợ kháng cáo (không bắt buộc, tối đa 5 tệp).",
+            "summaryTitle": "Tóm tắt",
+            "evidenceCount": "Tệp minh chứng",
+            "files": "tệp",
+            "back": "Quay lại",
+            "next": "Tiếp tục",
+            "submit": "Gửi kháng cáo",
+            "submitting": "Đang gửi...",
+            "submitError": "Không thể gửi kháng cáo. Vui lòng thử lại."
+        },
+        "types": {
+            "user_ban": "Khóa tài khoản",
+            "post_deleted": "Xóa bài viết",
+            "comment_deleted": "Xóa bình luận"
+        },
+        "evidence": {
+            "dropzoneLabel": "Tải lên ảnh minh chứng",
+            "dragAndDrop": "Kéo thả ảnh vào đây, hoặc nhấn để chọn",
+            "dropHere": "Thả ảnh vào đây",
+            "fileInfo": "Tối đa {maxFiles} tệp, mỗi tệp {maxSizeMb}MB • JPG, PNG, WebP",
+            "invalidType": "Chỉ chấp nhận tệp ảnh (JPG, PNG, WebP, GIF).",
+            "tooLarge": "Tệp vượt quá kích thước tối đa {maxSizeMb}MB.",
+            "removeFile": "Xóa tệp",
+            "fileCount": "Đã tải {current} trên {max} tệp"
+        },
+        "success": {
+            "title": "Đã gửi kháng cáo!",
+            "description": "Kháng cáo của bạn đã được gửi thành công. Đội kiểm duyệt sẽ xem xét và thông báo kết quả cho bạn.",
+            "notice": "Bạn sẽ nhận được email thông báo khi có quyết định."
+        }
     }
 }

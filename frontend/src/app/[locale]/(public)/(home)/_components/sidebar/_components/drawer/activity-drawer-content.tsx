@@ -123,27 +123,29 @@ function getNotificationMessage(
     }
 
     if (notification.type === NotificationTypeCode.ADMIN) {
+        const systemLabel = t('labels.system')
+
         if (action === 'ban_user') {
-            return t('messages.adminBan', { actor: actorName })
+            return t('messages.adminBan', { actor: systemLabel })
         }
 
         if (action === 'delete_post') {
-            return t('messages.adminDeletePost', { actor: actorName })
+            return t('messages.adminDeletePost', { actor: systemLabel })
         }
 
         if (action === 'delete_comment') {
-            return t('messages.adminDeleteComment', { actor: actorName })
+            return t('messages.adminDeleteComment', { actor: systemLabel })
         }
 
         if (action === 'approve_appeal') {
-            return t('messages.appealApproved', { actor: actorName })
+            return t('messages.appealApproved', { actor: systemLabel })
         }
 
         if (action === 'reject_appeal') {
-            return t('messages.appealRejected', { actor: actorName })
+            return t('messages.appealRejected', { actor: systemLabel })
         }
 
-        return t('messages.adminNotice', { actor: actorName })
+        return t('messages.adminNotice', { actor: systemLabel })
     }
 
     return t('messages.default', { actor: actorName })

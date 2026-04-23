@@ -1,0 +1,158 @@
+---
+description: Frontend coding standards for Next.js 15 App Router, React 19, TypeScript, Tailwind CSS v4, shadcn/ui, and Redux Toolkit.
+globs: ["frontend/**/*.ts", "frontend/**/*.tsx", "frontend/**/*.css"]
+---
+
+# 🖥️ Frontend — Next.js 15 & TypeScript Best Practices
+
+## 1. Project Structure
+
+```
+frontend/src/
+├── app/                    # App Router — routing ONLY, thin orchestration layers
+│   └── [locale]/           # i18n-aware routes (next-intl)
+├── apis/                   # API client functions (fetch wrappers)
+├── components/
+│   ├── ui/                 # shadcn/ui primitives (Button, Dialog, etc.) — ZERO business logic
+│   ├── comment-section/    # Feature-specific composite components
+│   ├── video-player/       # Video playback components
+│   └── ...                 # Other shared components
+├── constants/              # Application-wide constants
+├── hooks/                  # Reusable React hooks, organized by domain
+│   ├── data/               # Data-fetching hooks
+│   ├── redux/              # Redux-aware hooks
+│   ├── shared/             # General-purpose hooks
+│   ├── ui/                 # UI behavior hooks
+│   └── video/              # Video playback hooks
+├── schemas/                # Zod validation schemas
+├── services/
+│   ├── RTK/                # Redux Toolkit Query services
+│   └── storage/            # Client-side storage services
+├── store/                  # Redux Toolkit store
+│   ├── features/           # Feature slices
+│   ├── hooks/              # Typed useSelector / useDispatch
+│   ├── middlewares/        # Custom Redux middlewares
+│   └── index.ts            # Store configuration
+├── types/                  # Centralized TypeScript type definitions
+└── utils/                  # Pure utility functions
+```
+
+### Critical Rules:
+- `app/` route files (`page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`) are **thin orchestration layers**. They import and compose components — they do NOT contain business logic or complex markup.
+- Feature-specific local components should be colocated with their route in `_components/` subdirectories.
+- `components/ui/` contains **only** shadcn/ui primitives. Never put business logic here.
+
+## 2. React Server Components vs Client Components
+
+```tsx
+// ✅ CORRECT — Server Component by default (no directive)
+export default async function FeedPage() {
+  const posts = await fetchPosts()
+  return <VideoFeed posts={posts} />
+}
+
+// ✅ CORRECT — Client Component only when interactivity is needed
+'use client'
+export function LikeButton({ postId }: { postId: number }) {
+  const [liked, setLiked] = useState(false)
+  // ...
+}
+```
+
+### Rules:
+- **Default to React Server Components (RSC)** — no `'use client'` unless the component uses hooks (`useState`, `useEffect`, `useRef`) or event handlers (`onClick`, `onSubmit`).
+- Push `'use client'` boundaries as **deep** as possible into the component tree. Wrap only the interactive leaf, not the parent layout.
+- Server Components can `import` Client Components, but NOT vice versa. Pass server data to client components as serializable props.
+
+## 3. TypeScript Standards
+
+```typescript
+// ✅ Always define explicit types — never use `any`
+interface VideoCardProps {
+  video: VideoItem
+  onPlay?: (id: number) => void
+  isActive: boolean
+}
+
+// ✅ Use Zod for runtime validation of external data
+import { z } from 'zod'
+const LoginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+})
+type LoginInput = z.infer<typeof LoginSchema>
+```
+
+### Rules:
+- **`strict: true`** is enabled in `tsconfig.json` — respect it. No `@ts-ignore` or `@ts-expect-error` without an explicit comment explaining why.
+- Use `unknown` instead of `any` for untyped external data. Cast after validation.
+- Define shared types in `src/types/`. Import from there — never redefine the same type in multiple files.
+- Use Zod schemas (in `src/schemas/`) for all form validation and API response validation.
+- Prefer `interface` for object shapes that may be extended; use `type` for unions, intersections, and computed types.
+
+## 4. Styling — Tailwind CSS v4 + shadcn/ui
+
+```tsx
+// ✅ Use cn() for conditional classes
+import { cn } from '@/lib/utils'
+
+<div className={cn(
+  'flex items-center gap-2 rounded-lg p-4',
+  isActive && 'bg-primary text-primary-foreground',
+  isDisabled && 'opacity-50 pointer-events-none'
+)} />
+```
+
+### Rules:
+- **Tailwind CSS v4** uses CSS-first configuration (`@theme` in `globals.css`). Do NOT create a `tailwind.config.ts`.
+- Use `cn()` (combines `clsx` + `tailwind-merge`) for all dynamic class composition.
+- Use **CSS variables** from the design system for colors, spacing, and typography — never hardcode hex values.
+- Use `class-variance-authority` (CVA) for components with multiple visual variants.
+- Never use inline `style={{}}` when Tailwind utilities exist. Exception: truly dynamic values (e.g., `style={{ '--progress': `${percent}%` }}`).
+- Dark mode is managed via `next-themes`. Use `dark:` variants for dark mode styling.
+
+## 5. State Management — Redux Toolkit
+
+### Rules:
+- Use `@reduxjs/toolkit` with typed hooks (`useAppSelector`, `useAppDispatch`) from `src/store/hooks/`.
+- Feature slices live in `src/store/features/`. Each slice manages one bounded context (auth, video, notification).
+- For **server state** (API data), prefer `@tanstack/react-query` over Redux. Redux is for **client-only** state (UI state, auth tokens, player state).
+- Never store derived/computed values in Redux. Compute them in selectors using `createSelector`.
+
+## 6. Data Fetching
+
+### Rules:
+- Use `@tanstack/react-query` for all server-state management (fetching, caching, pagination, optimistic updates).
+- API client functions live in `src/apis/`. They are pure `async` functions that return typed data — no React hooks inside.
+- Use React Query's `useMutation` with `onMutate` for **optimistic updates** (e.g., like/unlike, follow/unfollow).
+- Use `useInfiniteQuery` for infinite scroll feeds. Never load all data at once.
+
+## 7. Internationalization (i18n)
+
+### Rules:
+- All user-facing strings MUST use `next-intl` translation keys. Never hardcode UI text.
+- Translation files live in `frontend/messages/`. Keep keys organized by page/feature.
+- Use `useTranslations('namespace')` in Client Components and `getTranslations('namespace')` in Server Components.
+
+## 8. Performance
+
+### Rules:
+- Use `next/image` for all images — never use raw `<img>` tags.
+- Use `next/dynamic` with `{ ssr: false }` for heavy client-only components (video players, editors, chart libraries).
+- Memoize expensive computations with `useMemo` and callbacks with `useCallback` — but only when there is a measurable performance benefit. Do not pre-optimize.
+- Use Skeleton loaders (`loading.tsx` or `<Suspense fallback={<Skeleton />}>`) for every async data fetch.
+- Video auto-play/pause must use `IntersectionObserver` to prevent off-screen video playback.
+
+## 9. Code Formatting
+
+### Rules:
+- **Prettier** is the formatter. Config: single quotes, no semicolons, 120 char width, 4-space tabs, trailing comma none.
+- **ESLint** is configured with `typescript-eslint` and `prettier` plugin. Run `npm run lint:fix` before committing.
+- `@typescript-eslint/no-explicit-any` is set to `warn` — treat it as an error. Eliminate all `any` types.
+
+## 10. Testing
+
+### Rules:
+- Use **Vitest** for unit tests and **Playwright** for E2E tests.
+- Use `@testing-library/react` for component tests. Test behavior, not implementation details.
+- Storybook stories (`src/stories/`) are required for all shared UI components.

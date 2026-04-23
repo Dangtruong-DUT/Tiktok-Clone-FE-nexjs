@@ -1,0 +1,216 @@
+---
+description: UX/UI design principles and best practices for a TikTok-style short-form video social media application.
+globs: ["frontend/**/*.tsx", "frontend/**/*.css"]
+---
+
+# 🎨 UX/UI Design — TikTok Clone Interface Best Practices
+
+## 1. Core Design Philosophy
+
+### Content-First, Minimal Chrome
+The interface exists to **serve the content**, not to showcase itself. Every pixel of non-content UI (buttons, overlays, navigation) must justify its existence. When in doubt, remove it.
+
+### Mobile-First, Always
+- **9:16 vertical video** is the default content format.
+- Design for one-handed thumb-reach on mobile screens first.
+- Use responsive breakpoints (`md:`, `lg:`) to enhance — never redesign — for larger screens.
+- Touch targets must be **at least 44×44px** (Apple HIG) / **48×48dp** (Material Design).
+
+---
+
+## 2. Visual Design System
+
+### Color Palette
+```css
+/* Use CSS variables defined in globals.css via @theme */
+/* Dark mode is the PRIMARY theme for video-centric UX */
+
+/* ✅ CORRECT — use semantic tokens */
+className="bg-background text-foreground"
+className="bg-primary text-primary-foreground"
+className="text-muted-foreground"
+
+/* ❌ WRONG — hardcoded colors */
+className="bg-[#1a1a1a] text-white"
+style={{ color: '#ff0050' }}
+```
+
+**Rules:**
+- **Dark mode is the default** and primary design target. Light mode is supported but secondary.
+- Never hardcode color values. Always use CSS variable tokens from the design system.
+- Primary accent color should evoke energy and engagement (inspired by TikTok's vibrant red/pink).
+- Use high contrast ratios (WCAG AA minimum: 4.5:1 for normal text, 3:1 for large text).
+
+### Typography
+- Use `next/font` for loading fonts — eliminates layout shift (CLS).
+- Body text: 14–16px on mobile, 16px on desktop.
+- Usernames and handles: semi-bold, slightly smaller than body.
+- Captions/descriptions: regular weight, use `line-clamp` for overflow with "See more" expansion.
+- Video overlay text must have a **text shadow** or **gradient overlay** to ensure readability over any video content.
+
+### Iconography
+- Standardize on **Lucide React** (`lucide-react`) for system icons — consistent with shadcn/ui.
+- Use **Lottie animations** (`lottie-react`) for complex animated icons (like, heart burst, loading).
+- Icon sizes: 20–24px for action bars, 16–18px for inline use, 28–32px for primary actions.
+
+---
+
+## 3. Video Feed UX (The Core Experience)
+
+### Full-Screen Immersive Feed
+```tsx
+// ✅ CORRECT — Full viewport video container
+<div className="h-dvh w-full snap-start relative">
+  <VideoPlayer src={video.url} />
+  <ActionBar className="absolute right-3 bottom-24" />
+  <VideoInfo className="absolute left-3 bottom-6" />
+</div>
+```
+
+**Rules:**
+- Each video occupies **100dvh** (dynamic viewport height) — accounts for mobile browser chrome.
+- Use `scroll-snap-type: y mandatory` for precise snap-to-video scrolling.
+- Action bar (like, comment, share, bookmark) is positioned on the right side, vertically stacked.
+- Video metadata (username, caption, music) is overlaid on the bottom-left with gradient background.
+
+### Auto-Play & Pause
+```tsx
+// ✅ CORRECT — IntersectionObserver for visibility-based playback
+const observer = new IntersectionObserver(
+  ([entry]) => {
+    if (entry.isIntersecting) {
+      videoRef.current?.play()
+    } else {
+      videoRef.current?.pause()
+    }
+  },
+  { threshold: 0.6 }  // Play when 60%+ visible
+)
+```
+
+**Rules:**
+- Videos MUST auto-play when scrolled into view and auto-pause when scrolled away.
+- Use `IntersectionObserver` with a threshold of 0.5–0.7.
+- Only ONE video should be playing at any time. Pause all others.
+- Support tap-to-pause/play gesture on the video itself.
+- Mute by default on first visit (browser autoplay policy). Show a clear "tap for sound" indicator.
+
+### Infinite Scroll
+- Use `useInfiniteQuery` (TanStack React Query) for paginated feed loading.
+- Pre-fetch the next page when the user is 2–3 items from the bottom.
+- Show a subtle loading indicator (spinning icon or skeleton) during fetch — never a blank screen.
+- Cache visited videos so back-navigation is instant.
+
+---
+
+## 4. Micro-Interactions & Animations
+
+### Like Button
+```tsx
+// ✅ Heart burst animation on double-tap or button press
+// Use Lottie for complex animations, Framer Motion for simple ones
+<motion.div
+  whileTap={{ scale: 1.3 }}
+  transition={{ type: 'spring', stiffness: 400 }}
+>
+  <HeartIcon filled={liked} />
+</motion.div>
+```
+
+**Rules:**
+- **Double-tap to like** on the video surface (mimics Instagram/TikTok behavior). Show a large heart animation in the center of the video.
+- Like button in the action bar should have a scale-up spring animation on tap.
+- Follow button should smoothly transition between "Follow" and "Following" states with a subtle color/width animation.
+- Comment submission should trigger an **optimistic insert** — the comment appears instantly in the list, then confirms or rolls back.
+
+### Transitions & Navigation
+- Page transitions should use `Framer Motion` `AnimatePresence` for smooth enter/exit.
+- Bottom sheet dialogs (comment panels, share menus) should use `vaul` (already in dependencies) for native-feeling drag-to-dismiss.
+- Skeleton loaders should pulse with a subtle shimmer animation.
+
+### Performance Rules for Animations:
+- Only animate `transform` and `opacity` — these are GPU-accelerated. Never animate `width`, `height`, `top`, `left`.
+- Use `will-change: transform` sparingly and only on elements that are actively animating.
+- Disable heavy animations when `prefers-reduced-motion: reduce` is set.
+
+---
+
+## 5. Responsive Layout Strategy
+
+### Breakpoint Behavior
+
+| Breakpoint | Layout | Content |
+|:---|:---|:---|
+| **Mobile** (< 768px) | Single column, full-screen video feed | Videos at 100dvh, bottom tab navigation |
+| **Tablet** (768–1024px) | Single column with wider action bar | Videos maintain 9:16 aspect ratio centered |
+| **Desktop** (> 1024px) | Multi-column: sidebar + video feed + suggestions | Videos in center column, sidebar for navigation |
+
+**Rules:**
+- Navigation: Bottom tab bar on mobile → Left sidebar on desktop.
+- Video player: Full-bleed on mobile → Centered with max-width on desktop.
+- Comment panel: Bottom sheet on mobile → Right sidebar panel on desktop.
+- Never show horizontal scroll on any viewport.
+
+---
+
+## 6. Accessibility (A11y)
+
+### Rules:
+- All interactive elements must have `aria-label` or visible text labels.
+- Video player controls must be keyboard-accessible (Space = play/pause, Arrow keys = seek, M = mute).
+- Provide **captions/subtitles** support for video content. Design for "silent consumption" — many users watch without audio.
+- Color alone must never convey meaning. Use icons + color + text together.
+- Focus indicators must be visible and follow a logical tab order.
+- Use `role="button"` on non-button clickable elements. Prefer semantic `<button>` elements.
+- All images and decorative icons must have appropriate `alt` text or `aria-hidden="true"`.
+
+---
+
+## 7. Loading States & Error Handling UX
+
+### Skeleton Loaders
+```tsx
+// ✅ CORRECT — Skeleton that matches the real content layout
+<div className="animate-pulse space-y-3">
+  <div className="h-full w-full bg-muted rounded" />         {/* Video placeholder */}
+  <div className="flex items-center gap-2">
+    <div className="h-10 w-10 rounded-full bg-muted" />      {/* Avatar */}
+    <div className="h-4 w-32 bg-muted rounded" />            {/* Username */}
+  </div>
+</div>
+
+// ❌ WRONG — Generic spinner that doesn't match content shape
+<div className="flex justify-center"><Spinner /></div>
+```
+
+**Rules:**
+- Skeleton loaders must **mirror the exact layout** of the content they replace. Users should feel the content "painting in."
+- Use `Suspense` boundaries at the page/section level with skeleton fallbacks.
+- Empty states (no posts, no comments, no results) must have an illustration + clear message + CTA (e.g., "Be the first to comment").
+- Error states must be friendly, not technical. "Something went wrong" + "Try again" button. Use `sonner` toasts for transient errors.
+
+---
+
+## 8. Optimistic UI & Perceived Performance
+
+### Rules:
+- **Like/Unlike**: Update the UI immediately. Revert on error.
+- **Follow/Unfollow**: Update the button state and follower count immediately.
+- **Comment Post**: Insert the comment into the list immediately with a "sending" indicator. Replace with confirmed comment on success.
+- **Post Delete**: Remove from feed immediately. Show undo toast for 5 seconds.
+- Navigation between tabs should feel **instant** — pre-fetch data for likely next destinations.
+
+---
+
+## 9. Design Don'ts (Anti-Patterns)
+
+| ❌ Don't | ✅ Do Instead |
+|:---|:---|
+| Use raw browser fonts (Times New Roman, serif) | Use `next/font` with Inter, Roboto, or system-ui stack |
+| Show a blank white page while loading | Show skeleton loaders that match content layout |
+| Use generic red/blue/green for UI elements | Use curated semantic color tokens from design system |
+| Put critical actions below the fold on mobile | Keep primary actions within thumb-reach zone |
+| Block the entire page for a single failed request | Show inline error with retry button |
+| Auto-play video with sound on first visit | Mute by default, show "tap for sound" indicator |
+| Use `alert()` or `confirm()` for user interactions | Use `AlertDialog` from shadcn/ui or `sonner` toasts |
+| Show raw API error messages to users | Map errors to user-friendly messages via i18n |

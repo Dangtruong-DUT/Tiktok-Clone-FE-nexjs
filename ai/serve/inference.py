@@ -100,17 +100,10 @@ class TextPipeline:
         return text.strip()
 
     def segment(self, cleaned_text: str) -> str:
-        if not cleaned_text:
-            return cleaned_text
-
-        if self._segmenter is None:
-            if self.strict_segment:
-                raise RuntimeError("VnCoreNLP segmenter is not initialized.")
-            return cleaned_text
-
-        tokenized_sentences = self._segmenter.tokenize(cleaned_text)
-        flattened_tokens = [token for sentence in tokenized_sentences for token in sentence]
-        return " ".join(flattened_tokens)
+        # We bypass VnCoreNLP segmentation here because the model was trained
+        # on unsegmented text directly utilizing AutoTokenizer.
+        # Passing segmented text to the tokenizer at inference drops the accuracy drastically.
+        return cleaned_text
 
 
 class ToxicInferenceService:

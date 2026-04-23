@@ -1,0 +1,183 @@
+---
+description: AI/ML module coding standards for Python, PyTorch, HuggingFace Transformers, FastAPI, and Kafka-based content moderation.
+globs: ["ai/**/*.py"]
+---
+
+# 🧠 AI Module — Python, PyTorch & Content Moderation Best Practices
+
+## 1. Module Structure
+
+```
+ai/
+├── data/                   # Datasets (raw, processed, balanced)
+│   └── processed/balanced/ # Train/valid/test CSV splits
+├── models/                 # Saved model checkpoints (.pt files)
+├── scripts/                # Data generation & preprocessing scripts
+├── serve/                  # Production inference & Kafka workers
+│   ├── __init__.py
+│   ├── api.py              # FastAPI HTTP endpoints
+│   ├── inference.py        # Model loading & prediction pipeline
+│   ├── kafka_queue.py      # Kafka producer/consumer utilities
+│   ├── moderation_worker.py# Kafka message handler (main worker)
+│   └── main.py             # Entry point
+├── training/               # Model training & evaluation
+│   ├── training.py         # Training pipeline
+│   ├── evaluate.py         # Evaluation & error analysis
+│   └── eval_outputs/       # Metrics JSON, false positive/negative CSVs
+├── .env                    # Runtime configuration
+└── requirements.txt        # Python dependencies
+```
+
+## 2. Training ↔ Inference Consistency (CRITICAL — Root Cause of Accuracy Bugs)
+
+This is the single most important rule in the AI module. Violations cause silent accuracy degradation that is extremely hard to debug.
+
+### The Rule:
+> **The text preprocessing pipeline during INFERENCE must EXACTLY match the pipeline used during TRAINING. No exceptions.**
+
+### What This Means in Practice:
+
+| Step | Training (`training.py`) | Inference (`inference.py`) | Must Match? |
+|:---|:---|:---|:---|
+| Text cleaning | `normalize_columns()` — basic whitespace normalization | `TextPipeline.clean_text()` — NFC normalize, strip URLs, collapse whitespace | ✅ Yes |
+| Word segmentation | **None** — raw text passed to `AutoTokenizer` | **None** — bypass VnCoreNLP, pass cleaned text directly to `AutoTokenizer` | ✅ **CRITICAL** |
+| Tokenization | `AutoTokenizer(padding=True, truncation=True, max_length=256)` | `AutoTokenizer(padding=False, truncation=True, max_length=256)` | ✅ Yes (batch vs single) |
+
+### Why VnCoreNLP Segmentation is Bypassed:
+The model was trained on **unsegmented** Vietnamese text. VnCoreNLP segments text by joining compound words with underscores (e.g., `"xin chào"` → `"xin_chào"`). The PhoBERT tokenizer produces completely different token IDs for segmented vs unsegmented text, causing massive accuracy drops at inference time.
+
+```python
+# ✅ CORRECT — inference.py TextPipeline.segment()
+def segment(self, cleaned_text: str) -> str:
+    # Bypass VnCoreNLP: model was trained on unsegmented text
+    return cleaned_text
+
+# ❌ WRONG — this destroys accuracy
+def segment(self, cleaned_text: str) -> str:
+    tokenized = self._segmenter.tokenize(cleaned_text)
+    return " ".join([t for s in tokenized for t in s])
+```
+
+### Before Changing ANY Preprocessing:
+1. Run `training/evaluate.py` on the test set with the **current** pipeline.
+2. Save the baseline metrics.
+3. Make the change.
+4. Re-run evaluation and **compare F1, precision, recall** against baseline.
+5. If any metric drops, revert.
+
+## 3. Model Architecture
+
+```python
+class PhoBERTClassifier(nn.Module):
+    """Binary classifier on top of PhoBERT encoder.
+    Uses CLS token (first token) pooling, not [MEAN] pooling.
+    """
+    def __init__(self, model_name: str, num_labels: int = 2, dropout: float = 0.2):
+        super().__init__()
+        self.encoder = AutoModel.from_pretrained(model_name)
+        self.dropout = nn.Dropout(dropout)
+        self.classifier = nn.Linear(self.encoder.config.hidden_size, num_labels)
+
+    def forward(self, input_ids, attention_mask):
+        outputs = self.encoder(input_ids=input_ids, attention_mask=attention_mask)
+        pooled = outputs.last_hidden_state[:, 0, :]  # CLS token
+        return self.classifier(self.dropout(pooled))
+```
+
+### Rules:
+- The model class (`PhoBERTClassifier`) is defined **identically** in `training.py`, `evaluate.py`, and `inference.py`. If you change the architecture, update ALL three files.
+- Always use `model.eval()` and `@torch.inference_mode()` (or `torch.no_grad()`) during inference.
+- Load checkpoints with `torch.load(path, map_location=device)` to ensure CPU/GPU compatibility.
+
+## 4. Kafka Worker (`moderation_worker.py`)
+
+### Message Contract:
+```python
+# Incoming payload (from Laravel backend):
+{
+    "task_id": "uuid",
+    "resource_type": "post" | "comment",
+    "resource_id": 123,
+    "resource_updated_at": "2026-04-22 14:00:00",  # For version conflict detection
+    "user_id": 456,
+    "sentence": "text to moderate",
+    "reason": null,
+    "enqueued_at": "2026-04-22 14:00:00"
+}
+
+# Outgoing result (to Laravel backend):
+{
+    "task_id": "uuid",
+    "resource_type": "post",
+    "resource_id": 123,
+    "resource_updated_at": "2026-04-22 14:00:00",  # Pass through unchanged
+    "user_id": 456,
+    "sentence": "text to moderate",
+    "label": 0 | 1,            # 0=NORMAL, 1=TOXIC — maps to AiModerationLabelEnum
+    "confidence": 0.95,
+    "is_violation": true | false,  # label==1 AND confidence >= threshold
+    "reason": "...",
+    "moderated_at": "ISO8601",
+    "raw_payload": { ... }     # Original request for audit trail
+}
+```
+
+### Rules:
+- `is_violation` is computed as: `label == 1 AND confidence >= AI_VIOLATION_THRESHOLD` (default 0.8).
+- Always **pass through** `resource_updated_at` from the incoming payload — the backend uses it for version conflict detection.
+- Always include `raw_payload` (the entire incoming message) in the result for audit trails.
+- The worker must **never crash** on a single bad message. Wrap `_handle_payload` in try/except and log errors with full context.
+
+## 5. Python Coding Standards
+
+### Type Hints:
+```python
+# ✅ Always use type hints
+def predict(self, sentence: str) -> dict[str, Any]:
+    ...
+
+# ✅ Use dataclasses for configuration
+@dataclass
+class InferenceConfig:
+    model_name: str = "vinai/phobert-base"
+    model_path: str = "models/best_phobert_model.pt"
+    max_length: int = 256
+```
+
+### Rules:
+- Use type hints on ALL function signatures and class attributes.
+- Use `dataclass` for configuration objects.
+- Use `pathlib.Path` for all file path operations — never use string concatenation for paths.
+- Use `logging` module — never `print()` in production code. Training scripts may use `print()`.
+- Environment variables are read via `os.getenv()` with sensible defaults. Never crash on a missing optional env var.
+
+## 6. FastAPI Endpoints (`api.py`)
+
+### Rules:
+- Use Pydantic models for all request/response schemas.
+- API key authentication via `AI_MODERATION_API_KEY` env var when set.
+- Health check endpoint must verify model is loaded and responsive.
+- Return structured JSON with `label`, `confidence`, `is_violation`, and `sentence` fields.
+
+## 7. Training Pipeline
+
+### Rules:
+- Seed everything: `random`, `numpy`, `torch` (via `set_seed()` function).
+- Save the best model checkpoint based on **validation F1 score**, not accuracy or loss.
+- Always evaluate on a held-out test set after training using the best checkpoint.
+- Log metrics (accuracy, precision, recall, F1) for every epoch.
+- Recommended hyperparameters: batch_size ∈ [8, 32], epochs ∈ [3, 5], learning_rate = 2e-5, max_length = 256.
+
+## 8. Environment Variables
+
+| Variable | Default | Description |
+|:---|:---|:---|
+| `AI_MODEL_NAME` | `vinai/phobert-base` | HuggingFace model identifier |
+| `AI_MODEL_PATH` | `models/best_phobert_model.pt` | Path to saved checkpoint |
+| `AI_MAX_LENGTH` | `256` | Max tokenized sequence length |
+| `AI_DEVICE` | `auto` | `auto`, `cpu`, or `cuda` |
+| `AI_VIOLATION_THRESHOLD` | `0.8` | Confidence threshold for violation flag |
+| `AI_STRICT_SEGMENT` | `false` | Whether VnCoreNLP is required |
+| `KAFKA_BOOTSTRAP_SERVERS` | `kafka:29092` | Kafka broker address |
+| `KAFKA_MODERATION_REQUEST_TOPIC` | `moderation.request.v1` | Incoming task topic |
+| `KAFKA_MODERATION_RESULT_TOPIC` | `moderation.result.v1` | Outgoing result topic |

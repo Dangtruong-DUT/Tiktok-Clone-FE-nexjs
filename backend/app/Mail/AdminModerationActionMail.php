@@ -10,11 +10,10 @@ use Illuminate\Mail\Mailables\Envelope;
 class AdminModerationActionMail extends BaseMailAble
 {
     /**
-     * @param array<string,mixed>|null $notificationData
+     * Admin identity is intentionally hidden from the email.
      */
     public function __construct(
         private readonly User $targetUser,
-        private readonly User $admin,
         private readonly AdminActionEnum $action,
         private readonly string $reason,
         private readonly string $appealLink,
@@ -35,7 +34,6 @@ class AdminModerationActionMail extends BaseMailAble
             view: 'emails.admin_moderation_action',
             with: [
                 'targetUserName' => $this->targetUser->name ?? $this->targetUser->username,
-                'adminName' => $this->admin->name ?? $this->admin->username,
                 'actionLabel' => $this->action->label(),
                 'reason' => $this->reason,
                 'appealLink' => $this->appealLink,

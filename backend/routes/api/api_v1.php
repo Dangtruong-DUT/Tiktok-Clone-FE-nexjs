@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UserSettingsController;
 use App\Http\Controllers\Api\AppealController;
+use App\Http\Controllers\Api\AppealTokenController;
 use App\Http\Controllers\Api\Admin\AppealAdminController;
 use App\Http\Controllers\Api\Admin\CommentAdminController;
 use App\Http\Controllers\Api\Admin\PostAdminController;
@@ -175,3 +176,12 @@ Route::prefix("search")
         Route::get('/posts', [PostController::class, 'index'])->name('posts');
         Route::get('/hashtags', [HashtagController::class, 'index'])->name('hashtags');
     });
+
+// Public appeal routes (token-based, no auth required)
+Route::prefix('appeals')
+    ->name('public-appeals.')
+    ->group(function () {
+        Route::get('/verify-token', [AppealTokenController::class, 'show'])->name('verify-token');
+        Route::post('/submit-evidence', [AppealTokenController::class, 'submit'])->name('submit-evidence');
+    });
+

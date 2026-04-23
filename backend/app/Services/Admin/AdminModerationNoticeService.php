@@ -7,6 +7,7 @@ use App\Enums\Appeal\AppealTypeEnum;
 use App\Enums\Common\ModelEntityTypeEnum;
 use App\Mail\AdminModerationActionMail;
 use App\Models\User;
+use App\Services\AppealService;
 use App\Services\NotificationService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -15,10 +16,13 @@ class AdminModerationNoticeService
 {
     public function __construct(
         private readonly NotificationService $notificationService,
+        private readonly AppealService $appealService,
     ) {}
 
     /**
-     * Send moderation notice to user with optional appeal link
+     * Send moderation notice to user with optional appeal link.
+     * Admin identity is hidden from the user in both email and notification.
+     *
      * @param User $admin The admin performing the action
      * @param User $targetUser The user receiving the notice
      * @param AdminActionEnum $action The admin action taken
@@ -43,7 +47,15 @@ class AdminModerationNoticeService
         $resourceType = (string) ($context['resource_type'] ?? $entityType->value);
         $resourceId = (int) ($context['resource_id'] ?? $entityId);
 
-        $appealLink =  $this->buildAppealFrontendLink($appealType, $resourceType, $resourceId);
+        // Create appeal record with token for email-based access
+        $appeal = $this->appealService->createWithToken(
+            userId: $targetUser->id,
+            appealType: $appealType,
+            resourceType: $resourceType,
+            resourceId: $resourceId,
+        );
+
+        $appealLink = $this->buildAppealFrontendLink($appeal->appeal_token);
 
         $notificationData = [
             'action' => $action->value,
@@ -70,7 +82,6 @@ class AdminModerationNoticeService
         try {
             Mail::to($targetUser->email)->send(new AdminModerationActionMail(
                 targetUser: $targetUser,
-                admin: $admin,
                 action: $action,
                 reason: $reason,
                 appealLink: $appealLink,
@@ -85,20 +96,15 @@ class AdminModerationNoticeService
     }
 
     /**
-     * Build the frontend appeal link based on appeal type and resource context
+     * Build the frontend appeal link using a token.
      *
-     * @param AppealTypeEnum $appealType
-     * @param string $resourceType
-     * @param int $resourceId
+     * @param string $token The appeal token
      * @return string
      */
-    private function buildAppealFrontendLink(AppealTypeEnum $appealType, string $resourceType, int $resourceId): string
+    private function buildAppealFrontendLink(string $token): string
     {
         $baseUrl = rtrim((string) config('app.frontend_url'), '/');
 
-        return $baseUrl
-            . '/en/snapistudio/appeals?appeal_type=' . urlencode($appealType->value)
-            . '&resource_type=' . urlencode($resourceType)
-            . '&resource_id=' . urlencode((string) $resourceId);
+        return $baseUrl . '/en/appeal?token=' . urlencode($token);
     }
 }

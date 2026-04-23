@@ -1,0 +1,67 @@
+---
+description: Core project architecture, stack overview, and cross-cutting concerns for the TikTok Clone monorepo.
+alwaysApply: true
+---
+
+# 🏗️ TikTok Clone — Project Architecture & Cross-Cutting Concerns
+
+## Monorepo Overview
+This is a full-stack monorepo with three independent modules:
+
+| Module | Path | Language / Framework | Purpose |
+|:---|:---|:---|:---|
+| **Frontend** | `frontend/` | Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS v4, shadcn/ui | Web client |
+| **Backend** | `backend/` | Laravel 11, PHP 8.4, Kafka | REST API, business logic |
+| **AI** | `ai/` | Python 3.12+, PyTorch, HuggingFace Transformers, FastAPI, Kafka | Content moderation ML inference |
+
+## Foundational Dependencies & Versions (DO NOT CHANGE without approval)
+- **Frontend**: Next.js 15.4, React 19.1, Tailwind CSS v4, @reduxjs/toolkit 2.8, @tanstack/react-query 5.84, Zod v4, Framer Motion 12, next-intl 4
+- **Backend**: Laravel 11, PHP 8.4, laravel/sail, kafka (junges/kafka)
+- **AI**: PyTorch ≥ 2.3, transformers ≥ 4.40, FastAPI ≥ 0.111, kafka-python ≥ 2.0.2, pydantic ≥ 2.7
+
+## Architecture Conventions
+
+### Inter-Module Communication
+- Backend ↔ AI communication is **exclusively** via Apache Kafka.
+  - Request topic: `moderation.request.v1`
+  - Result topic: `moderation.result.v1`
+- Frontend ↔ Backend communication is via REST API (JSON resources). Use Eloquent API Resources on the backend.
+
+### Version Conflict Detection (Critical Pattern)
+This project uses `updated_at` timestamps to detect stale writes and race conditions across modules:
+```php
+// helpers.php — central helper, reuse everywhere
+function check_version_conflict(Model $model, string $timestamp): bool
+{
+    $clientVersion = new \DateTime($timestamp);
+    $serverVersion = new \DateTime($model->updated_at);
+    return $clientVersion < $serverVersion;
+}
+```
+- When **enqueueing** async tasks (e.g., AI moderation), always attach `resource_updated_at` from the model's current `updated_at`.
+- When **applying** async results, compare `resource_updated_at` against the model's current `updated_at` using `check_version_conflict()`. If the model has been updated since the task was enqueued, **discard the stale result**.
+
+### Naming Conventions (Universal)
+
+| Layer | Variables / Functions | Classes / Components | Database / Config Keys |
+|:---|:---|:---|:---|
+| PHP (Backend) | `camelCase` | `PascalCase` | `snake_case` |
+| TypeScript (Frontend) | `camelCase` | `PascalCase` | `camelCase` |
+| Python (AI) | `snake_case` | `PascalCase` | `UPPER_SNAKE_CASE` (env vars) |
+
+### Enum-Driven Constants
+- **Never** use raw strings or magic integers for statuses, types, or labels.
+- PHP: Use backed `enum` classes in `app/Enums/` (e.g., `AiModerationLabelEnum`, `ResourceTypeEnum`).
+- TypeScript: Use `const` objects with `as const` or string union types in `src/types/` or `src/constants/`.
+- Python: Use Python `Enum` or integer constants with descriptive names.
+
+### Error Handling
+- Backend: Let Laravel's exception handler deal with unrecoverable errors. Use `try/catch` for external service calls (Kafka, file uploads). Always log context (`Log::error` with `post_id`, `user_id`, etc.).
+- Frontend: Use React Error Boundaries (`error.tsx`) per route segment. Use `sonner` toast for user-facing errors.
+- AI: Wrap every message handler in `try/except`. On failure, publish a structured error result back to Kafka — **never** let the consumer crash silently.
+
+### Documentation
+- Write PHPDoc for all public service/repository methods.
+- Write JSDoc for all exported React hooks and utility functions.
+- Write Python docstrings (Google style) for all public classes and functions.
+- Do not add obvious comments like `// increment counter`. Only explain *why*, not *what*.

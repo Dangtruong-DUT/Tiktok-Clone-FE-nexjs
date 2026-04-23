@@ -122,7 +122,7 @@
                 </p>
 
                 <p class="mail__text">
-                    An administrator (<strong>{{ $adminName }}</strong>) has taken the action
+                    Our moderation team has taken the action
                     <strong>{{ $actionLabel }}</strong> on your account or content.
                 </p>
 

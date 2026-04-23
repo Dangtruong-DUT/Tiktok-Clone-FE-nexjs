@@ -16,7 +16,16 @@ export const AppealSchema = z
         reason: z.string(),
         status: AppealStatusSchema,
         admin_response: z.string().nullable(),
-        reviewed_by: z.number().int().positive().nullable(),
+        evidence_files: z
+            .array(
+                z.object({
+                    id: z.number().int().positive(),
+                    url: z.string(),
+                    file_name: z.string()
+                })
+            )
+            .nullable()
+            .optional(),
         reviewed_at: z.string().nullable(),
         created_at: z.string(),
         updated_at: z.string()

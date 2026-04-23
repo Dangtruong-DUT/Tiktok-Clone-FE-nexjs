@@ -672,6 +672,7 @@
                 "empty": "No notifications yet.",
                 "labels": {
                     "someone": "Someone",
+                    "system": "System",
                     "total": "{count} items"
                 },
                 "tabs": {
@@ -1001,6 +1002,23 @@
                 "approved": "Approved",
                 "rejected": "Rejected"
             },
+            "columns": {
+                "id": "ID",
+                "user": "User",
+                "type": "Appeal Type",
+                "reason": "Reason",
+                "status": "Status",
+                "createdAt": "Created At",
+                "actions": "Actions",
+                "evidence": "Evidence"
+            },
+            "evidenceDialog": {
+                "title": "Appeal Evidence",
+                "imageCount": "Image {current} of {total}",
+                "imageAlt": "Evidence image {index}",
+                "prev": "Previous image",
+                "next": "Next image"
+            },
             "actions": {
                 "approve": "Approve",
                 "reject": "Reject"
@@ -1035,5 +1053,67 @@
         "lockWithoutDays": "Your account is currently locked.",
         "appealAction": "Submit an Appeal",
         "backHome": "Back to Home"
+    },
+    "AppealPage": {
+        "meta": {
+            "title": "Submit Appeal",
+            "description": "Submit an appeal for a moderation action on your account or content."
+        },
+        "title": "Submit Appeal",
+        "description": "Provide your reason and evidence for review.",
+        "steps": {
+            "verify": "Verify",
+            "details": "Details",
+            "upload": "Evidence",
+            "confirm": "Done"
+        },
+        "token": {
+            "verifying": "Verifying your appeal link...",
+            "verified": "Link verified successfully!",
+            "missingTitle": "Appeal Link Required",
+            "missingDescription": "Please use the appeal link sent to your email to access this page. If you haven't received an email, please check your spam folder.",
+            "expiredTitle": "Link Expired",
+            "invalidTitle": "Invalid Link",
+            "invalidGeneric": "This appeal link is invalid. Please check your email for the correct link.",
+            "contactSupport": "If you need further assistance, please contact our support team."
+        },
+        "form": {
+            "appealType": "Appeal Type",
+            "resourceType": "Resource",
+            "reasonLabel": "Your Reason",
+            "reasonPlaceholder": "Explain why you believe this moderation decision should be reviewed. Provide as much detail as possible (minimum 20 characters).",
+            "reasonHint": "Minimum 20 characters",
+            "reasonMinError": "Reason must be at least 20 characters.",
+            "evidenceLabel": "Supporting Evidence",
+            "evidenceHint": "Upload images that support your appeal (optional, max 5 files).",
+            "summaryTitle": "Summary",
+            "evidenceCount": "Evidence files",
+            "files": "file(s)",
+            "back": "Back",
+            "next": "Next",
+            "submit": "Submit Appeal",
+            "submitting": "Submitting...",
+            "submitError": "Failed to submit your appeal. Please try again."
+        },
+        "types": {
+            "user_ban": "Account Suspension",
+            "post_deleted": "Post Removal",
+            "comment_deleted": "Comment Removal"
+        },
+        "evidence": {
+            "dropzoneLabel": "Upload evidence images",
+            "dragAndDrop": "Drag & drop images here, or click to browse",
+            "dropHere": "Drop your images here",
+            "fileInfo": "Max {maxFiles} files, {maxSizeMb}MB each • JPG, PNG, WebP",
+            "invalidType": "Only image files (JPG, PNG, WebP, GIF) are accepted.",
+            "tooLarge": "File exceeds the maximum size of {maxSizeMb}MB.",
+            "removeFile": "Remove file",
+            "fileCount": "{current} of {max} files uploaded"
+        },
+        "success": {
+            "title": "Appeal Submitted!",
+            "description": "Your appeal has been submitted successfully. Our moderation team will review it and notify you of the outcome.",
+            "notice": "You'll receive an email notification once a decision has been made."
+        }
     }
 }
