@@ -39,10 +39,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
 
         $exceptions->render(function (Throwable $e, $request) {
-                Log::error('An error occurred', [
-                    'message' => $e->getMessage(),
-                    'exception' => get_class($e),
-                ]);
+            Log::error('An error occurred', [
+                'message' => $e->getMessage(),
+                'exception' => get_class($e),
+                'instance' => $e,
+            ]);
             if (! is_api_request()) {
                 return null;
             }

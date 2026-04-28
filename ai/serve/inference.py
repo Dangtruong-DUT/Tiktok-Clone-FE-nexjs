@@ -140,7 +140,11 @@ class ToxicInferenceService:
         if hf_token:
             pretrained_kwargs["token"] = hf_token
 
-        self.tokenizer = AutoTokenizer.from_pretrained(config.model_name, **pretrained_kwargs)
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            config.model_name,
+            use_fast=False,
+            **pretrained_kwargs,
+        )
         self.model = PhoBERTClassifier(model_name=config.model_name, hf_token=hf_token).to(self.device)
         self.model.load_state_dict(torch.load(model_path, map_location=self.device))
         self.model.eval()

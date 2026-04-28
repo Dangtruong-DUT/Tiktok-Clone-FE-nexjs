@@ -1,13 +1,9 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import baseQueryWithReauth from '@/store/services/client'
-import { BackendBaseQuery } from '@/store/services/client'
 import type { CreateAppealRequest, GetMyAppealsParams } from '@/types/dtos/appeal/appeal-request.dto'
 import type { CreateAppealResponse, GetMyAppealsResponse } from '@/types/dtos/appeal/appeal-response.dto'
-import type {
-    VerifyAppealTokenResponse,
-    SubmitAppealEvidenceResponse
-} from '@/types/dtos/appeal/appeal-token.dto'
-import { toQueryParamsWithOrderBy } from '@/utils/common/order-by-params.util'
+import type { VerifyAppealTokenResponse, SubmitAppealEvidenceResponse } from '@/types/dtos/appeal/appeal-token.dto'
+import { toQueryParams } from '@/utils/common/query-params.util'
 
 export const AppealApi = createApi({
     reducerPath: 'AppealApi',
@@ -17,7 +13,7 @@ export const AppealApi = createApi({
         getMyAppeals: builder.query<GetMyAppealsResponse, GetMyAppealsParams>({
             query: (params) => ({
                 url: '/appeals',
-                params: toQueryParamsWithOrderBy(params)
+                params: toQueryParams(params)
             }),
             providesTags: [{ type: 'Appeals', id: 'LIST' }]
         }),

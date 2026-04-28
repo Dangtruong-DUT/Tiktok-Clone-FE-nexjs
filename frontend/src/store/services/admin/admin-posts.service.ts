@@ -1,14 +1,14 @@
 import { AdminApi } from './admin-api.service'
 import type { GetAdminPostsRes, DeletePostRes } from '@/types/dtos/admin/admin-response.dto'
 import type { GetAdminPostsParams, DeletePostReq } from '@/types/dtos/admin/admin-request.dto'
-import { toQueryParamsWithOrderBy } from '@/utils/common/order-by-params.util'
+import { toQueryParams } from '@/utils/common/query-params.util'
 
 const adminPostsApi = AdminApi.injectEndpoints({
     endpoints: (builder) => ({
         getAdminPosts: builder.query<GetAdminPostsRes, GetAdminPostsParams>({
             query: (params) => ({
                 url: '/admin/posts',
-                params: toQueryParamsWithOrderBy(params)
+                params: toQueryParams(params)
             }),
             providesTags: [{ type: 'AdminPosts', id: 'LIST' }]
         }),

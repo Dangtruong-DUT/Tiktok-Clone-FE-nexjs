@@ -117,7 +117,7 @@ class PostRepository extends BaseRepository
     /**
      * @param array<string,mixed> $filters
      */
-    public function searchForAdmin(array $filters): LengthAwarePaginator
+    public function searchPostsForAdmin(array $filters): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
         $query = $this->buildSearchQuery($filterCollection);

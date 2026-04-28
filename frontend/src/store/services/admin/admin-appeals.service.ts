@@ -5,14 +5,14 @@ import type {
     RejectAppealRequest
 } from '@/types/dtos/admin/admin-request.dto'
 import type { GetAdminAppealsResponse, ReviewAppealResponse } from '@/types/dtos/admin/admin-response.dto'
-import { toQueryParamsWithOrderBy } from '@/utils/common/order-by-params.util'
+import { toQueryParams } from '@/utils/common/query-params.util'
 
 const adminAppealsApi = AdminApi.injectEndpoints({
     endpoints: (builder) => ({
         getAdminAppeals: builder.query<GetAdminAppealsResponse, GetAdminAppealsParams>({
             query: (params) => ({
                 url: '/admin/appeals',
-                params: toQueryParamsWithOrderBy(params)
+                params: toQueryParams(params)
             }),
             providesTags: [{ type: 'AdminAppeals', id: 'LIST' }]
         }),

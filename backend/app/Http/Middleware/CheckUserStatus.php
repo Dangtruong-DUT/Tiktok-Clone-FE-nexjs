@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Http\Response\ApiResponse;
 use Closure;
+use Illuminate\Support\Facades\Log;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class CheckUserStatus
@@ -19,6 +20,11 @@ class CheckUserStatus
     public function handle($request, Closure $next,bool $requireVerify = false)
     {
         try {
+            Log::info('Checking user status for request', [
+                'url' => $request->fullUrl(),
+                'method' => $request->method(),
+                'require_verify' => $requireVerify,
+            ]);
             $user = JWTAuth::parseToken()->authenticate();
 
             if (!$user) {

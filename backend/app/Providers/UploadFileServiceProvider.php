@@ -19,7 +19,6 @@ class UploadFileServiceProvider extends ServiceProvider
     {
         $this->app->bind(UploadFileServiceInterface::class, function ($app) {
             $storage_driver = config('filesystems.default', 'local');
-            Log::info('Binding UploadFileServiceInterface to implementation', ['storage_driver' => $storage_driver]);
             return match ($storage_driver) {
                 's3', 'minio' => new MinioUploadFileService(),
                 default => new LocalUploadFileService(),

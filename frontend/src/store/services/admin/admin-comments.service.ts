@@ -1,14 +1,14 @@
 import { AdminApi } from './admin-api.service'
 import type { GetAdminCommentsRes, DeleteCommentRes } from '@/types/dtos/admin/admin-response.dto'
 import type { GetAdminCommentsParams, DeleteCommentReq } from '@/types/dtos/admin/admin-request.dto'
-import { toQueryParamsWithOrderBy } from '@/utils/common/order-by-params.util'
+import { toQueryParams } from '@/utils/common/query-params.util'
 
 const commentsApi = AdminApi.injectEndpoints({
     endpoints: (builder) => ({
         getAdminComments: builder.query<GetAdminCommentsRes, GetAdminCommentsParams>({
             query: (params) => ({
                 url: '/admin/comments',
-                params: toQueryParamsWithOrderBy(params)
+                params: toQueryParams(params)
             }),
             providesTags: [{ type: 'AdminComments', id: 'LIST' }]
         }),

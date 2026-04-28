@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
         } else {
             return NextResponse.json(
                 { message: 'Please check your email and password.' },
-                { status: HTTP_STATUS.UNAUTHORIZED }
+                { status: HTTP_STATUS.BAD_REQUEST }
             )
         }
     }

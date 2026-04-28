@@ -208,7 +208,7 @@ def print_metrics(prefix: str, metrics: Metrics) -> None:
 def train_pipeline(args: argparse.Namespace) -> None:
     set_seed(args.seed)
 
-    tokenizer = AutoTokenizer.from_pretrained(args.model_name)
+    tokenizer = AutoTokenizer.from_pretrained(args.model_name, use_fast=False)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     train_df = read_dataset(Path(args.train_path))

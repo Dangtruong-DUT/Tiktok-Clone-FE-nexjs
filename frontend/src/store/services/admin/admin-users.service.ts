@@ -14,14 +14,14 @@ import type {
     ResetUserPasswordReq,
     SendUserMailReq
 } from '@/types/dtos/admin/admin-request.dto'
-import { toQueryParamsWithOrderBy } from '@/utils/common/order-by-params.util'
+import { toQueryParams } from '@/utils/common/query-params.util'
 
 const adminUsersApi = AdminApi.injectEndpoints({
     endpoints: (builder) => ({
         getAdminUsers: builder.query<GetAdminUsersRes, GetAdminUsersParams>({
             query: (params) => ({
                 url: '/admin/users',
-                params: toQueryParamsWithOrderBy(params)
+                params: toQueryParams(params)
             }),
             providesTags: [{ type: 'AdminUsers', id: 'LIST' }]
         }),
