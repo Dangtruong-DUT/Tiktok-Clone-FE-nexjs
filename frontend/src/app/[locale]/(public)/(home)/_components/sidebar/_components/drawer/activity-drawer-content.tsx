@@ -160,7 +160,13 @@ function getNotificationSubText(notification: NotificationType): string | null {
 }
 
 function getNotificationLink(notification: NotificationType): string | null {
+    // Appeal notifications: prefer UUID-based link (auth flow) over token link
+    const appealUuid = typeof notification.data?.appeal_uuid === 'string' ? notification.data.appeal_uuid : null
     const appealLink = typeof notification.data?.appeal_link === 'string' ? notification.data.appeal_link : null
+
+    if (appealUuid) {
+        return `/appeal?appeal_uuid=${appealUuid}`
+    }
 
     if (appealLink) {
         try {

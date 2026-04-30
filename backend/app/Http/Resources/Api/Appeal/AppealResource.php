@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources\Api\Appeal;
 
-use App\Http\Resources\BaseJsonResource;
 use App\Http\Resources\Api\User\UserResource;
+use App\Http\Resources\BaseJsonResource;
 
 /**
  * AppealResource - Format appeal data for API responses.
@@ -14,8 +14,8 @@ class AppealResource extends BaseJsonResource
 {
     /**
      * Transform the resource into an array
-     * @param mixed $request
-     * @return array
+     *
+     * @param  mixed  $request
      */
     public function toArray($request): array
     {
@@ -29,14 +29,11 @@ class AppealResource extends BaseJsonResource
             'reason' => $this->reason,
             'status' => $this->status->value,
             'admin_response' => $this->admin_response,
-            'evidence_files' => $this->whenLoaded('evidence_files', function () {
-                return $this->evidence_files->map(fn($file) => [
-                    'id' => $file->id,
-                    'url' => $file->url,
-                    'file_name' => $file->file_name,
-                ])->values()->toArray();
-            }),
-            'reviewed_by' => $this->reviewer->name,
+            'evidence_files' => $this->evidence_files->map(fn ($file) => [
+                'id' => $file->id,
+                'url' => $file->url,
+                'file_name' => $file->file_name,
+            ])->values()->toArray(),
             'reviewed_at' => $this->reviewed_at?->toDateTimeString(),
             'appeal_token_expires_at' => $this->appeal_token_expires_at?->toDateTimeString(),
             'user' => UserResource::make($this->whenLoaded('user')),

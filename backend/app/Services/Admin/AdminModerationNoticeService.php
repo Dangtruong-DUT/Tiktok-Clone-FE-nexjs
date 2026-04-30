@@ -23,13 +23,13 @@ class AdminModerationNoticeService
      * Send moderation notice to user with optional appeal link.
      * Admin identity is hidden from the user in both email and notification.
      *
-     * @param User $admin The admin performing the action
-     * @param User $targetUser The user receiving the notice
-     * @param AdminActionEnum $action The admin action taken
-     * @param string $reason The reason for the action
-     * @param ModelEntityTypeEnum $entityType The type of entity involved (e.g. user, post, comment)
-     * @param int $entityId The ID of the entity involved
-     * @param array $context Additional context for building appeal link (e.g. resource_type, resource_id)
+     * @param  User  $admin  The admin performing the action
+     * @param  User  $targetUser  The user receiving the notice
+     * @param  AdminActionEnum  $action  The admin action taken
+     * @param  string  $reason  The reason for the action
+     * @param  ModelEntityTypeEnum  $entityType  The type of entity involved (e.g. user, post, comment)
+     * @param  int  $entityId  The ID of the entity involved
+     * @param  array  $context  Additional context for building appeal link (e.g. resource_type, resource_id)
      */
     public function send(
         User $admin,
@@ -56,13 +56,14 @@ class AdminModerationNoticeService
             'reason' => $reason,
         ]);
 
-        $appealLink = $this->buildAppealFrontendLink($appeal->appeal_token);
+        $appealLink = $this->buildAppealFrontendLink($appeal->appeal_token, $appeal->uuid);
 
         $notificationData = [
             'action' => $action->value,
             'action_label' => $action->label(),
             'reason' => $reason,
             'appeal_type' => $appealType->value,
+            'appeal_uuid' => $appeal->uuid,
             'resource_type' => $resourceType,
             'resource_id' => $resourceId,
             'appeal_link' => $appealLink,
@@ -97,15 +98,15 @@ class AdminModerationNoticeService
     }
 
     /**
-     * Build the frontend appeal link using a token.
+     * Build the frontend appeal link using a token and UUID.
      *
-     * @param string $token The appeal token
-     * @return string
+     * @param  string  $token  The appeal token
+     * @param  string  $uuid  The appeal UUID
      */
-    private function buildAppealFrontendLink(string $token): string
+    private function buildAppealFrontendLink(string $token, string $uuid): string
     {
         $baseUrl = rtrim((string) config('app.frontend_url'), '/');
 
-        return $baseUrl . '/en/appeal?token=' . urlencode($token);
+        return $baseUrl.'/en/appeal?token='.urlencode($token).'&appeal_uuid='.urlencode($uuid);
     }
 }

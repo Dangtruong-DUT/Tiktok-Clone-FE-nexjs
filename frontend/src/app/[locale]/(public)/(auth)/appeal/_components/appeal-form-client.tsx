@@ -6,27 +6,26 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
-import {
-    Shield,
-    AlertTriangle,
-    Clock,
-    CheckCircle2,
-    ArrowRight,
-    ArrowLeft,
-    Loader2,
-    Scale,
-    Send
-} from 'lucide-react'
-import { useVerifyAppealTokenQuery, useSubmitAppealEvidenceMutation } from '@/store/services/appeal.service'
+import { Shield, AlertTriangle, Clock, CheckCircle2, ArrowRight, ArrowLeft, Loader2, Scale, Send, LogIn } from 'lucide-react'
+import { useGetAppealQuery, useCreateAppealMutation } from '@/store/services/appeal.service'
+import { useAppSelector } from '@/store/hooks'
 import { AppealStepper } from './appeal-stepper'
 import { EvidenceDropzone } from './evidence-dropzone'
+import { Link } from '@/i18n/navigation'
 
 interface AppealFormClientProps {
     token?: string
+    appealUuid?: string
 }
 
-const STEPS = [
+const TOKEN_STEPS = [
     { label: 'Verify', icon: 'verify' as const },
+    { label: 'Details', icon: 'details' as const },
+    { label: 'Evidence', icon: 'upload' as const },
+    { label: 'Confirm', icon: 'confirm' as const }
+]
+
+const AUTH_STEPS = [
     { label: 'Details', icon: 'details' as const },
     { label: 'Evidence', icon: 'upload' as const },
     { label: 'Confirm', icon: 'confirm' as const }
@@ -49,113 +48,175 @@ const SLIDE_VARIANTS = {
 
 /**
  * Multi-step appeal wizard with premium UI.
- * Handles token verification, reason input, evidence upload, and submission.
+ *
+ * Supports two flows:
+ * - Token flow: User arrives via email link with token + appeal_uuid.
+ *   Verifies token → fill reason → upload evidence → submit.
+ * - Auth flow: User arrives from notification with appeal_uuid (no token).
+ *   Must be authenticated. Shows appeal info → fill reason → upload evidence → submit.
  */
-export function AppealFormClient({ token }: AppealFormClientProps) {
+export function AppealFormClient({ token, appealUuid }: AppealFormClientProps) {
     const t = useTranslations('AppealPage')
+    const isAuthenticated = useAppSelector((state) => state.auth.role != null)
 
-    const [currentStep, setCurrentStep] = useState(0)
+    const isTokenFlow = !!token && !!appealUuid
+    const isAuthFlow = !token && !!appealUuid
+
+    const [currentStep, setCurrentStep] = useState(isTokenFlow ? 0 : 0)
     const [direction, setDirection] = useState(0)
     const [reason, setReason] = useState('')
     const [evidenceFiles, setEvidenceFiles] = useState<File[]>([])
 
-    // Token verification query — skip if no token
+    // Fetch appeal info — token-based or auth-based
     const {
-        data: tokenData,
-        isLoading: isVerifying,
-        isError: isTokenError,
-        error: tokenError
-    } = useVerifyAppealTokenQuery(token ?? '', {
-        skip: !token
-    })
+        data: appealData,
+        isLoading: isLoadingAppeal,
+        isError: isAppealError,
+        error: appealError
+    } = useGetAppealQuery(
+        { uuid: appealUuid ?? '', token: token || undefined },
+        { skip: !appealUuid }
+    )
 
-    const [submitEvidence, { isLoading: isSubmitting }] = useSubmitAppealEvidenceMutation()
+    const [createAppeal, { isLoading: isSubmitting }] = useCreateAppealMutation()
 
-    // No token provided state
-    const hasNoToken = !token
+    const steps = isTokenFlow ? TOKEN_STEPS : AUTH_STEPS
+    const lastStepIndex = steps.length - 1
+    const submitStepIndex = lastStepIndex - 1
 
-    // Token is valid — auto-advance to step 1
+    // Token flow: auto-advance from verify step after successful verification
     useEffect(() => {
-        if (tokenData?.data && currentStep === 0) {
+        if (isTokenFlow && appealData?.data && currentStep === 0) {
             const timer = setTimeout(() => {
                 setDirection(1)
                 setCurrentStep(1)
             }, 1200)
             return () => clearTimeout(timer)
         }
-    }, [tokenData, currentStep])
+    }, [isTokenFlow, appealData, currentStep])
 
-    const appealInfo = tokenData?.data
+    const appealInfo = appealData?.data
 
     const canProceedToEvidence = reason.trim().length >= 20
 
     const handleNext = useCallback(() => {
-        if (currentStep === 1 && !canProceedToEvidence) {
+        const detailsStep = isTokenFlow ? 1 : 0
+        if (currentStep === detailsStep && !canProceedToEvidence) {
             toast.error(t('form.reasonMinError'))
             return
         }
         setDirection(1)
-        setCurrentStep((prev) => Math.min(prev + 1, STEPS.length - 1))
-    }, [currentStep, canProceedToEvidence, t])
+        setCurrentStep((prev) => Math.min(prev + 1, lastStepIndex))
+    }, [currentStep, canProceedToEvidence, t, isTokenFlow, lastStepIndex])
 
     const handleBack = useCallback(() => {
+        const minStep = isTokenFlow ? 1 : 0
         setDirection(-1)
-        setCurrentStep((prev) => Math.max(prev - 1, 1))
-    }, [])
+        setCurrentStep((prev) => Math.max(prev - 1, minStep))
+    }, [isTokenFlow])
 
     const handleSubmit = useCallback(async () => {
-        if (!token) return
+        if (!appealUuid) return
 
         const formData = new FormData()
-        formData.append('token', token)
         formData.append('reason', reason.trim())
+
+        if (token) {
+            formData.append('token', token)
+        } else if (appealUuid) {
+            // Auth flow: send UUID so backend can verify ownership
+            formData.append('appeal_uuid', appealUuid)
+        }
 
         evidenceFiles.forEach((file) => {
             formData.append('evidence_files[]', file)
         })
 
         try {
-            await submitEvidence(formData).unwrap()
+            await createAppeal(formData).unwrap()
             setDirection(1)
-            setCurrentStep(3) // Success step
+            setCurrentStep(lastStepIndex)
         } catch (error) {
             const errorMessage = (error as { data?: { message?: string } })?.data?.message
             toast.error(errorMessage || t('form.submitError'))
         }
-    }, [token, reason, evidenceFiles, submitEvidence, t])
+    }, [appealUuid, token, reason, evidenceFiles, createAppeal, t, lastStepIndex])
 
     const stepLabels = useMemo(
         () =>
-            STEPS.map((step) => ({
+            steps.map((step) => ({
                 ...step,
                 label: t(`steps.${step.icon}`)
             })),
-        [t]
+        [t, steps]
     )
 
     const errorMessage = useMemo(() => {
-        if (!tokenError) return null
-        const err = tokenError as { data?: { message?: string } }
+        if (!appealError) return null
+        const err = appealError as { data?: { message?: string } }
         return err?.data?.message || t('token.invalidGeneric')
-    }, [tokenError, t])
+    }, [appealError, t])
 
-    // ——— NO TOKEN STATE ———
-    if (hasNoToken) {
+    // No appeal_uuid and no token — need login or invalid access
+    if (!appealUuid && !token) {
+        if (isAuthenticated) {
+            return (
+                <div className='w-full rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm md:p-10'>
+                    <div className='flex flex-col items-center text-center gap-4'>
+                        <div className='rounded-full bg-amber-50 p-4'>
+                            <AlertTriangle className='h-8 w-8 text-amber-600' />
+                        </div>
+                        <h1 className='text-2xl font-bold text-black'>{t('token.missingTitle')}</h1>
+                        <p className='text-neutral-600 max-w-md'>{t('token.missingDescription')}</p>
+                    </div>
+                </div>
+            )
+        }
+
         return (
             <div className='w-full rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm md:p-10'>
                 <div className='flex flex-col items-center text-center gap-4'>
                     <div className='rounded-full bg-amber-50 p-4'>
-                        <AlertTriangle className='h-8 w-8 text-amber-600' />
+                        <LogIn className='h-8 w-8 text-amber-600' />
                     </div>
-                    <h1 className='text-2xl font-bold text-black'>{t('token.missingTitle')}</h1>
-                    <p className='text-neutral-600 max-w-md'>{t('token.missingDescription')}</p>
+                    <h1 className='text-2xl font-bold text-black'>{t('token.loginRequired')}</h1>
+                    <p className='text-neutral-600 max-w-md'>{t('token.loginDescription')}</p>
+                    <Link
+                        href='/login'
+                        className='inline-flex items-center gap-2 rounded-full bg-black px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-neutral-800'
+                    >
+                        <LogIn className='h-4 w-4' />
+                        {t('token.loginAction')}
+                    </Link>
                 </div>
             </div>
         )
     }
 
-    // ——— TOKEN ERROR STATE ———
-    if (isTokenError) {
+    // Auth flow but not authenticated
+    if (isAuthFlow && !isAuthenticated) {
+        return (
+            <div className='w-full rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm md:p-10'>
+                <div className='flex flex-col items-center text-center gap-4'>
+                    <div className='rounded-full bg-amber-50 p-4'>
+                        <LogIn className='h-8 w-8 text-amber-600' />
+                    </div>
+                    <h1 className='text-2xl font-bold text-black'>{t('token.loginRequired')}</h1>
+                    <p className='text-neutral-600 max-w-md'>{t('token.loginDescription')}</p>
+                    <Link
+                        href={`/login?redirect=/appeal?appeal_uuid=${appealUuid}`}
+                        className='inline-flex items-center gap-2 rounded-full bg-black px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-neutral-800'
+                    >
+                        <LogIn className='h-4 w-4' />
+                        {t('token.loginAction')}
+                    </Link>
+                </div>
+            </div>
+        )
+    }
+
+    // Error state
+    if (isAppealError) {
         const isExpired = errorMessage?.toLowerCase().includes('expired')
         return (
             <div className='w-full rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm md:p-10'>
@@ -177,6 +238,24 @@ export function AppealFormClient({ token }: AppealFormClientProps) {
         )
     }
 
+    // Determine current step content based on flow
+    const getStepContent = () => {
+        if (isTokenFlow) {
+            // Token flow steps: 0=verify, 1=details, 2=evidence, 3=success
+            if (currentStep === 0) return 'verify'
+            if (currentStep === 1) return 'details'
+            if (currentStep === 2) return 'evidence'
+            return 'success'
+        }
+        // Auth flow steps: 0=details, 1=evidence, 2=success
+        if (currentStep === 0) return 'details'
+        if (currentStep === 1) return 'evidence'
+        return 'success'
+    }
+
+    const stepContent = getStepContent()
+    const detailsStep = isTokenFlow ? 1 : 0
+
     return (
         <div className='w-full rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm md:p-10'>
             {/* Header */}
@@ -196,10 +275,10 @@ export function AppealFormClient({ token }: AppealFormClientProps) {
             </div>
 
             {/* Step content */}
-            <div className='relative min-h-[280px] overflow-hidden'>
+            <div className='relative min-h-[280px]'>
                 <AnimatePresence custom={direction} mode='wait'>
-                    {/* STEP 0: Verifying token */}
-                    {currentStep === 0 && (
+                    {/* Verify step (token flow only) */}
+                    {stepContent === 'verify' && (
                         <motion.div
                             key='step-verify'
                             custom={direction}
@@ -210,12 +289,12 @@ export function AppealFormClient({ token }: AppealFormClientProps) {
                             transition={{ duration: 0.3, ease: 'easeInOut' }}
                             className='flex flex-col items-center justify-center gap-4 py-12'
                         >
-                            {isVerifying ? (
+                            {isLoadingAppeal ? (
                                 <>
                                     <Loader2 className='h-10 w-10 animate-spin text-black' />
                                     <p className='text-neutral-600 font-medium'>{t('token.verifying')}</p>
                                 </>
-                            ) : tokenData?.data ? (
+                            ) : appealInfo ? (
                                 <>
                                     <motion.div
                                         initial={{ scale: 0 }}
@@ -231,8 +310,8 @@ export function AppealFormClient({ token }: AppealFormClientProps) {
                         </motion.div>
                     )}
 
-                    {/* STEP 1: Appeal reason */}
-                    {currentStep === 1 && (
+                    {/* Details step */}
+                    {stepContent === 'details' && (
                         <motion.div
                             key='step-details'
                             custom={direction}
@@ -255,11 +334,29 @@ export function AppealFormClient({ token }: AppealFormClientProps) {
                                         </div>
                                         <div>
                                             <span className='text-neutral-500'>{t('form.resourceType')}</span>
+                                            <p className='font-medium text-black mt-0.5'>{appealInfo.resource_type}</p>
+                                        </div>
+                                        <div>
+                                            <span className='text-neutral-500'>{t('form.status')}</span>
                                             <p className='font-medium text-black mt-0.5'>
-                                                {appealInfo.resource_type}
+                                                {t(`statuses.${appealInfo.status}`)}
                                             </p>
                                         </div>
+                                        {appealInfo.appeal_token_expires_at && (
+                                            <div>
+                                                <span className='text-neutral-500'>{t('form.expiresAt')}</span>
+                                                <p className='font-medium text-black mt-0.5'>
+                                                    {new Date(appealInfo.appeal_token_expires_at).toLocaleDateString()}
+                                                </p>
+                                            </div>
+                                        )}
                                     </div>
+                                </div>
+                            )}
+
+                            {isLoadingAppeal && (
+                                <div className='flex items-center justify-center py-8'>
+                                    <Loader2 className='h-8 w-8 animate-spin text-neutral-400' />
                                 </div>
                             )}
 
@@ -275,13 +372,7 @@ export function AppealFormClient({ token }: AppealFormClientProps) {
                                     className='min-h-[140px] resize-none rounded-xl border-neutral-300 focus:border-black focus:ring-black'
                                 />
                                 <div className='flex justify-between text-xs'>
-                                    <span
-                                        className={
-                                            reason.trim().length < 20
-                                                ? 'text-red-500'
-                                                : 'text-green-600'
-                                        }
-                                    >
+                                    <span className={reason.trim().length < 20 ? 'text-red-500' : 'text-green-600'}>
                                         {reason.trim().length}/1000
                                     </span>
                                     <span className='text-neutral-400'>{t('form.reasonHint')}</span>
@@ -290,8 +381,8 @@ export function AppealFormClient({ token }: AppealFormClientProps) {
                         </motion.div>
                     )}
 
-                    {/* STEP 2: Upload evidence */}
-                    {currentStep === 2 && (
+                    {/* Evidence step */}
+                    {stepContent === 'evidence' && (
                         <motion.div
                             key='step-upload'
                             custom={direction}
@@ -327,8 +418,8 @@ export function AppealFormClient({ token }: AppealFormClientProps) {
                         </motion.div>
                     )}
 
-                    {/* STEP 3: Success */}
-                    {currentStep === 3 && (
+                    {/* Success step */}
+                    {stepContent === 'success' && (
                         <motion.div
                             key='step-success'
                             custom={direction}
@@ -370,19 +461,19 @@ export function AppealFormClient({ token }: AppealFormClientProps) {
             </div>
 
             {/* Navigation buttons */}
-            {currentStep > 0 && currentStep < 3 && (
+            {stepContent !== 'verify' && stepContent !== 'success' && (
                 <div className='mt-6 flex items-center justify-between gap-3'>
                     <Button
                         variant='outline'
                         onClick={handleBack}
-                        disabled={currentStep <= 1 || isSubmitting}
+                        disabled={currentStep <= detailsStep || isSubmitting}
                         className='rounded-full px-6'
                     >
                         <ArrowLeft className='mr-1.5 h-4 w-4' />
                         {t('form.back')}
                     </Button>
 
-                    {currentStep === 2 ? (
+                    {currentStep === submitStepIndex ? (
                         <Button
                             onClick={handleSubmit}
                             disabled={isSubmitting}
@@ -403,7 +494,7 @@ export function AppealFormClient({ token }: AppealFormClientProps) {
                     ) : (
                         <Button
                             onClick={handleNext}
-                            disabled={currentStep === 1 && !canProceedToEvidence}
+                            disabled={currentStep === detailsStep && !canProceedToEvidence}
                             className='rounded-full bg-black px-6 text-white hover:bg-neutral-800'
                         >
                             {t('form.next')}

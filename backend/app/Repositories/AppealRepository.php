@@ -19,8 +19,6 @@ class AppealRepository extends BaseRepository
 
     /**
      * Find an appeal by ID
-     * @param int $id
-     * @return Appeal|null
      */
     public function findById(int $id): ?Appeal
     {
@@ -29,8 +27,6 @@ class AppealRepository extends BaseRepository
 
     /**
      * Find an appeal by UUID
-     * @param string $uuid
-     * @return Appeal|null
      */
     public function findByUuid(string $uuid): ?Appeal
     {
@@ -39,8 +35,6 @@ class AppealRepository extends BaseRepository
 
     /**
      * Check if an appeal exists by ID
-     * @param int $id
-     * @return bool
      */
     public function isExistById(int $id): bool
     {
@@ -48,10 +42,8 @@ class AppealRepository extends BaseRepository
     }
 
     /**
-    * Check if an appeal exists by UUID
-    * @param string $uuid
-    * @return bool
-    */
+     * Check if an appeal exists by UUID
+     */
     public function isExistByUuid(string $uuid): bool
     {
         return $this->query()->where('uuid', $uuid)->exists();
@@ -59,8 +51,6 @@ class AppealRepository extends BaseRepository
 
     /**
      * Find an appeal by its email verification token
-     * @param string $token
-     * @return Appeal|null
      */
     public function findByToken(string $token): ?Appeal
     {
@@ -69,17 +59,26 @@ class AppealRepository extends BaseRepository
 
     /**
      * Check if a user has a pending appeal for a specific resource and type
-     * @param int $userId
-     * @param string $appealType
-     * @param int|null $resourceId
-     * @return bool
      */
     public function hasPendingAppeal(int $userId, string $appealType, ?int $resourceId): bool
     {
         return $this->query()
             ->byUser($userId)
             ->byStatus(AppealStatusEnum::PENDING)
-            ->where('resource_id', $resourceId ??0)
+            ->where('resource_id', $resourceId ?? 0)
+            ->where('appeal_type', $appealType)
+            ->exists();
+    }
+
+    /**
+     * Check if a user already has ANY appeal (regardless of status) for a specific resource and type.
+     * Once an appeal exists, user must edit it — not create a new one.
+     */
+    public function hasAppealForResource(int $userId, string $appealType, ?int $resourceId): bool
+    {
+        return $this->query()
+            ->byUser($userId)
+            ->where('resource_id', $resourceId ?? 0)
             ->where('appeal_type', $appealType)
             ->exists();
     }
@@ -87,46 +86,45 @@ class AppealRepository extends BaseRepository
     /**
      * Get appeals for a user with optional filters
      *
-     * @param int $userId
-     * @param array<string,mixed> $filters
-     *                     - appeal_status: string (optional)
-     *                     - appeal_type: string (optional)
-     *                     - order_by: string 'recent'|'oldest' (optional, default 'recent')
-     * @return LengthAwarePaginator
+     * @param  array<string,mixed>  $filters
+     *                                        - appeal_status: string (optional)
+     *                                        - appeal_type: string (optional)
+     *                                        - order_by: string 'recent'|'oldest' (optional, default 'recent')
      */
     public function getByUser(int $userId, array $filters): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
-        $query =$this
-                ->buildSearchQuery($filters)
-                ->byUser($userId)
-                ->when($filterCollection->get('order_by'),function (Builder $query, $orderBy) {
-                    $query->orderByMultiple($orderBy);
-                },
+        $query = $this
+            ->buildSearchQuery($filters)
+            ->byUser($userId)
+            ->when($filterCollection->get('order_by'), function (Builder $query, $orderBy) {
+                $query->orderByMultiple($orderBy);
+            },
                 function (Builder $query) {
                     $query->orderBy('created_at', 'desc');
                 });
+
         return $query->paginate((int) $filterCollection->get('per_page', 15));
     }
 
     /**
      * Get all appeals for admin view with optional filters
      *
-     * @param array<string,mixed> $filters
-     *                   - status: string (optional)
-     *                   - appeal_type: string (optional)
-     *                   - sort_by: string 'recent'|'oldest' (optional, default 'recent')
+     * @param  array<string,mixed>  $filters
+     *                                        - status: string (optional)
+     *                                        - appeal_type: string (optional)
+     *                                        - sort_by: string 'recent'|'oldest' (optional, default 'recent')
      */
     public function getForAdmin(array $filters): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
         $query = $this->buildSearchQuery($filters)
-        ->when($filterCollection->get('order_by'),function (Builder $query, $orderBy) {
-            $query->orderByMultiple($orderBy);
-        },
-        function (Builder $query) {
-            $query->orderBy('created_at', 'desc');
-        });
+            ->when($filterCollection->get('order_by'), function (Builder $query, $orderBy) {
+                $query->orderByMultiple($orderBy);
+            },
+                function (Builder $query) {
+                    $query->orderBy('created_at', 'desc');
+                });
 
         return $query
             ->with(['user', 'reviewer'])
@@ -135,21 +133,21 @@ class AppealRepository extends BaseRepository
 
     /**
      * Build search query for appeals with filters
-     * @param array<string,mixed> $filters
-     *                            -  appeal_status: string (optional)
-     *                            -  appeal_type: string (optional)
-     * @return Builder
+     *
+     * @param  array<string,mixed>  $filters
+     *                                        -  appeal_status: string (optional)
+     *                                        -  appeal_type: string (optional)
      */
     private function buildSearchQuery(array $filters): Builder
     {
         $filterCollection = collect($filters);
         $query = $this->query()
-            ->when($filterCollection->get("appeal_status"), function ($query, $appeal_status) {
+            ->when($filterCollection->get('appeal_status'), function ($query, $appeal_status) {
                 $query->where('status', $appeal_status);
             }, function ($query) {
                 $query->pending();
             })
-            ->when($filterCollection->get("appeal_type"), function ($query, $appeal_type) {
+            ->when($filterCollection->get('appeal_type'), function ($query, $appeal_type) {
                 $query->where('appeal_type', $appeal_type);
             });
 

@@ -325,7 +325,7 @@ export function AppealTable() {
                                             </TableCell>
                                             <TableCell className='max-w-[200px]'>
                                                 <span className='text-sm text-muted-foreground'>
-                                                    {truncateText(appeal.reason, 50)}
+                                                    {truncateText(appeal.reason ?? '', 50)}
                                                 </span>
                                             </TableCell>
                                             <TableCell>

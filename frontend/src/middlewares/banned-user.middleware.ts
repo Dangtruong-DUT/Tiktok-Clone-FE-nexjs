@@ -61,10 +61,9 @@ export function bannedUserMiddleware({
     }
 
     const bannedPagePath = `/${locale}/banned`
-    const appealPath = `/${locale}/snapistudio/appeals`
     const publicAppealPath = `/${locale}/appeal`
 
-    if (pathname === bannedPagePath || pathname.startsWith(appealPath) || pathname.startsWith(publicAppealPath)) {
+    if (pathname === bannedPagePath || pathname.startsWith(publicAppealPath)) {
         return null
     }
 

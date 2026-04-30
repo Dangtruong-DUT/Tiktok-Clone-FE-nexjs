@@ -2,41 +2,23 @@
 
 import { useMemo, useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useCreateAppealMutation, useGetMyAppealsQuery } from '@/store/services/appeal.service'
+import { useGetMyAppealsQuery } from '@/store/services/appeal.service'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import AutoPagination from '@/components/auto-pagination'
-import { toast } from 'sonner'
 import { formatAdminDate, truncateText } from '@/helpers/admin-helpers'
 import { AlertCircle } from 'lucide-react'
 import {
-    APPEAL_RESOURCE_TYPES,
     APPEAL_STATUSES,
     APPEAL_STATUS_VALUES,
-    APPEAL_TYPES,
-    APPEAL_TYPE_VALUES,
-    type AppealStatus,
-    type AppealType
+    type AppealStatus
 } from '@/constants/appeal.const'
 
 const FILTER_ALL = 'all' as const
-type StudioResourceType =
-    | typeof APPEAL_RESOURCE_TYPES.USER
-    | typeof APPEAL_RESOURCE_TYPES.POST
-    | typeof APPEAL_RESOURCE_TYPES.COMMENT
-
-const STUDIO_RESOURCE_TYPES: StudioResourceType[] = [
-    APPEAL_RESOURCE_TYPES.USER,
-    APPEAL_RESOURCE_TYPES.POST,
-    APPEAL_RESOURCE_TYPES.COMMENT
-]
 
 export default function StudioAppealsPage() {
     const t = useTranslations('SnapiStudio.appeals')
@@ -46,21 +28,12 @@ export default function StudioAppealsPage() {
     const [searchTerm, setSearchTerm] = useState('')
     const [statusFilter, setStatusFilter] = useState<typeof FILTER_ALL | AppealStatus>(FILTER_ALL)
 
-    const [formData, setFormData] = useState({
-        appeal_type: APPEAL_TYPES.POST_DELETED as AppealType,
-        resource_type: APPEAL_RESOURCE_TYPES.POST as StudioResourceType,
-        resource_id: '',
-        reason: ''
-    })
-
-    const { data, isLoading, refetch } = useGetMyAppealsQuery({
+    const { data, isLoading } = useGetMyAppealsQuery({
         page,
         per_page: perPage,
         appeal_status: statusFilter === FILTER_ALL ? undefined : statusFilter,
         order_by: ['-created_at']
     })
-
-    const [createAppeal, createState] = useCreateAppealMutation()
 
     const appeals = useMemo(() => {
         const list = data?.data ?? []
@@ -85,36 +58,6 @@ export default function StudioAppealsPage() {
     const pagination = data?.meta
     const totalItems = pagination?.total ?? appeals.length
 
-    const handleSubmitAppeal = async () => {
-        const resourceId = formData.resource_id.trim() === '' ? null : Number(formData.resource_id)
-
-        if (formData.reason.trim().length < 20) {
-            toast.error(t('errors.reasonMinLength'))
-            return
-        }
-
-        if (resourceId !== null && Number.isNaN(resourceId)) {
-            toast.error(t('errors.resourceIdInvalid'))
-            return
-        }
-
-        try {
-            await createAppeal({
-                appeal_type: formData.appeal_type,
-                resource_type: formData.resource_type,
-                resource_id: resourceId,
-                reason: formData.reason.trim()
-            }).unwrap()
-
-            toast.success(t('messages.createSuccess'))
-            setFormData((prev) => ({ ...prev, reason: '', resource_id: '' }))
-            refetch()
-        } catch (error) {
-            const errorMessage = (error as { data?: { message?: string } })?.data?.message
-            toast.error(errorMessage || t('messages.createError'))
-        }
-    }
-
     const getStatusVariant = (status: string) => {
         if (status === APPEAL_STATUSES.APPROVED) return 'bg-green-100 text-green-800'
         if (status === APPEAL_STATUSES.REJECTED) return 'bg-red-100 text-red-800'
@@ -123,83 +66,6 @@ export default function StudioAppealsPage() {
 
     return (
         <div className='max-w-6xl mx-auto p-4 md:p-6 space-y-6'>
-            <Card>
-                <CardHeader>
-                    <CardTitle>{t('create.title')}</CardTitle>
-                    <CardDescription>{t('create.description')}</CardDescription>
-                </CardHeader>
-                <CardContent className='space-y-4'>
-                    <div className='grid grid-cols-1 md:grid-cols-3 gap-3'>
-                        <div className='space-y-2'>
-                            <Label>{t('create.appealType')}</Label>
-                            <Select
-                                value={formData.appeal_type}
-                                onValueChange={(value: AppealType) =>
-                                    setFormData((prev) => ({ ...prev, appeal_type: value }))
-                                }
-                            >
-                                <SelectTrigger>
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {APPEAL_TYPE_VALUES.map((appealType) => (
-                                        <SelectItem key={appealType} value={appealType}>
-                                            {t(`types.${appealType}`)}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                        <div className='space-y-2'>
-                            <Label>{t('create.resourceType')}</Label>
-                            <Select
-                                value={formData.resource_type}
-                                onValueChange={(value: StudioResourceType) =>
-                                    setFormData((prev) => ({ ...prev, resource_type: value }))
-                                }
-                            >
-                                <SelectTrigger>
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {STUDIO_RESOURCE_TYPES.map((resourceType) => (
-                                        <SelectItem key={resourceType} value={resourceType}>
-                                            {t(`resourceTypes.${resourceType}`)}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                        <div className='space-y-2'>
-                            <Label>{t('create.resourceId')}</Label>
-                            <Input
-                                value={formData.resource_id}
-                                onChange={(event) =>
-                                    setFormData((prev) => ({ ...prev, resource_id: event.target.value }))
-                                }
-                                placeholder={t('create.resourceIdPlaceholder')}
-                            />
-                        </div>
-                    </div>
-
-                    <div className='space-y-2'>
-                        <Label>{t('create.reason')}</Label>
-                        <Textarea
-                            value={formData.reason}
-                            onChange={(event) => setFormData((prev) => ({ ...prev, reason: event.target.value }))}
-                            placeholder={t('create.reasonPlaceholder')}
-                            className='min-h-[120px]'
-                        />
-                    </div>
-
-                    <Button onClick={handleSubmitAppeal} disabled={createState.isLoading}>
-                        {createState.isLoading ? t('create.submitting') : t('create.submit')}
-                    </Button>
-                </CardContent>
-            </Card>
-
             <Card>
                 <CardHeader>
                     <CardTitle>{t('list.title')}</CardTitle>
@@ -268,7 +134,7 @@ export default function StudioAppealsPage() {
                                             <TableCell className='font-mono text-sm'>#{appeal.id}</TableCell>
                                             <TableCell>{t(`types.${appeal.appeal_type}`)}</TableCell>
                                             <TableCell className='max-w-lg'>
-                                                {truncateText(appeal.reason, 100)}
+                                                {truncateText(appeal.reason ?? '', 100)}
                                             </TableCell>
                                             <TableCell>
                                                 <Badge className={getStatusVariant(appeal.status)}>

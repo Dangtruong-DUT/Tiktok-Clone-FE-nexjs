@@ -13,7 +13,7 @@ export const AppealSchema = z
         appeal_type: AppealTypeSchema,
         resource_id: z.number().int().positive().nullable(),
         resource_type: AppealResourceTypeSchema,
-        reason: z.string(),
+        reason: z.string().nullable(),
         status: AppealStatusSchema,
         admin_response: z.string().nullable(),
         evidence_files: z
@@ -27,9 +27,10 @@ export const AppealSchema = z
             .nullable()
             .optional(),
         reviewed_at: z.string().nullable(),
+        appeal_token_expires_at: z.string().nullable().optional(),
         created_at: z.string(),
         updated_at: z.string()
     })
-    .strict()
+    .passthrough()
 
 export type Appeal = z.infer<typeof AppealSchema>

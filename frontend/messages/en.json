@@ -1075,11 +1075,16 @@
             "expiredTitle": "Link Expired",
             "invalidTitle": "Invalid Link",
             "invalidGeneric": "This appeal link is invalid. Please check your email for the correct link.",
-            "contactSupport": "If you need further assistance, please contact our support team."
+            "contactSupport": "If you need further assistance, please contact our support team.",
+            "loginRequired": "Login Required",
+            "loginDescription": "You need to be logged in to view and submit this appeal. Please sign in to continue.",
+            "loginAction": "Sign In"
         },
         "form": {
             "appealType": "Appeal Type",
             "resourceType": "Resource",
+            "status": "Status",
+            "expiresAt": "Expires At",
             "reasonLabel": "Your Reason",
             "reasonPlaceholder": "Explain why you believe this moderation decision should be reviewed. Provide as much detail as possible (minimum 20 characters).",
             "reasonHint": "Minimum 20 characters",
@@ -1099,6 +1104,11 @@
             "user_ban": "Account Suspension",
             "post_deleted": "Post Removal",
             "comment_deleted": "Comment Removal"
+        },
+        "statuses": {
+            "pending": "Pending Review",
+            "approved": "Approved",
+            "rejected": "Rejected"
         },
         "evidence": {
             "dropzoneLabel": "Upload evidence images",

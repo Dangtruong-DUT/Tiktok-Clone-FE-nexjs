@@ -1,19 +1,19 @@
 <?php
-use App\Http\Controllers\Api\UploadController;
-use App\Http\Controllers\Api\UserController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\HashtagController;
-use App\Http\Controllers\Api\NotificationController;
-use App\Http\Controllers\Api\PostController;
-use App\Http\Controllers\Api\UserSettingsController;
-use App\Http\Controllers\Api\AppealController;
-use App\Http\Controllers\Api\AppealTokenController;
+
 use App\Http\Controllers\Api\Admin\AppealAdminController;
 use App\Http\Controllers\Api\Admin\CommentAdminController;
 use App\Http\Controllers\Api\Admin\PostAdminController;
 use App\Http\Controllers\Api\Admin\SystemAdminController;
 use App\Http\Controllers\Api\Admin\UserAdminController;
+use App\Http\Controllers\Api\AppealController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\HashtagController;
+use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\UploadController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\UserSettingsController;
+use Illuminate\Support\Facades\Route;
 
 /*|--------------------------------------------------------------------------
 | Protected routes
@@ -26,13 +26,13 @@ use App\Http\Controllers\Api\Admin\UserAdminController;
 Route::middleware(['auth:api', 'check_user_status'])->group(function () {
     // auth routes
     Route::prefix('auth')
-    ->name('auth.')
-    ->group(function() {
-        Route::post('/logout',[AuthController::class, 'logout'])->name('logout');
-        Route::post('/logout/all',[AuthController::class, 'logoutAll'])->name('logout-all');
-        Route::get('/me', [AuthController::class, 'me'])->name('me');
-        Route::post('/resend-verify-email', [AuthController::class, 'resendVerifyEmail'])->name('resend-verify-email');
-    });
+        ->name('auth.')
+        ->group(function () {
+            Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+            Route::post('/logout/all', [AuthController::class, 'logoutAll'])->name('logout-all');
+            Route::get('/me', [AuthController::class, 'me'])->name('me');
+            Route::post('/resend-verify-email', [AuthController::class, 'resendVerifyEmail'])->name('resend-verify-email');
+        });
 
     // media routes
     Route::prefix('medias')
@@ -57,7 +57,7 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::patch('/me/settings', [UserSettingsController::class, 'update'])->name('update-settings');
         });
 
-    //post routes
+    // post routes
     Route::prefix('posts')
         ->name('posts.')
         ->group(function () {
@@ -82,11 +82,10 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::post('/{notification_uuid}/read', [NotificationController::class, 'markAsRead'])->name('mark-as-read');
         });
 
-    // appeal routes
+    // appeal routes (authenticated — list only)
     Route::prefix('appeals')
         ->name('appeals.')
         ->group(function () {
-            Route::post('/', [AppealController::class, 'create'])->name('create');
             Route::get('/', [AppealController::class, 'index'])->name('list');
         });
 
@@ -125,7 +124,6 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
         });
 });
 
-
 /*|--------------------------------------------------------------------------
 | Public routes
 |--------------------------------------------------------------------------
@@ -134,16 +132,16 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
 
 // auth routes
 Route::prefix('auth')
-->name('auth.')
-->group(function() {
-    Route::post('/login', [AuthController::class, 'login'])->name('login');
-    Route::post('/refresh-token', [AuthController::class, 'refresh'])->name('refresh');
-    Route::post('/register', [AuthController::class, 'register'])->name('register');
-    Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
-    Route::post('verify-forgot-password', [AuthController::class, 'verifyForgotPasswordToken'])->name('verify-forgot-password');
-    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
-    Route::post('/verify-email', [AuthController::class, 'verifyEmail'])->name('verify-email');
-});
+    ->name('auth.')
+    ->group(function () {
+        Route::post('/login', [AuthController::class, 'login'])->name('login');
+        Route::post('/refresh-token', [AuthController::class, 'refresh'])->name('refresh');
+        Route::post('/register', [AuthController::class, 'register'])->name('register');
+        Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
+        Route::post('verify-forgot-password', [AuthController::class, 'verifyForgotPasswordToken'])->name('verify-forgot-password');
+        Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
+        Route::post('/verify-email', [AuthController::class, 'verifyEmail'])->name('verify-email');
+    });
 
 // post routes
 Route::prefix('posts')
@@ -169,19 +167,20 @@ Route::prefix('users')
         Route::get('/{username}', [UserController::class, 'showProfile'])->name('show-profile');
     });
 
-Route::prefix("search")
-    ->name("search.")
-    ->group(function() {
+Route::prefix('search')
+    ->name('search.')
+    ->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('users');
         Route::get('/posts', [PostController::class, 'index'])->name('posts');
         Route::get('/hashtags', [HashtagController::class, 'index'])->name('hashtags');
     });
 
-// Public appeal routes (token-based, no auth required)
+// Appeal routes — public with flexible auth
+// Token-based: no auth needed. Without token: auth required (handled in controller/service).
 Route::prefix('appeals')
-    ->name('public-appeals.')
+    ->name('appeals.')
     ->group(function () {
-        Route::get('/verify-token', [AppealTokenController::class, 'show'])->name('verify-token');
-        Route::post('/submit-evidence', [AppealTokenController::class, 'submit'])->name('submit-evidence');
+        Route::post('/', [AppealController::class, 'create'])->name('create');
+        Route::put('/{appeal_uuid}', [AppealController::class, 'update'])->name('update');
+        Route::get('/{appeal_uuid}', [AppealController::class, 'show'])->name('show');
     });
-

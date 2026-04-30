@@ -1074,11 +1074,16 @@
             "expiredTitle": "Đường dẫn hết hạn",
             "invalidTitle": "Đường dẫn không hợp lệ",
             "invalidGeneric": "Đường dẫn kháng cáo này không hợp lệ. Vui lòng kiểm tra email để lấy đường dẫn chính xác.",
-            "contactSupport": "Nếu bạn cần hỗ trợ thêm, vui lòng liên hệ đội ngũ hỗ trợ."
+            "contactSupport": "Nếu bạn cần hỗ trợ thêm, vui lòng liên hệ đội ngũ hỗ trợ.",
+            "loginRequired": "Yêu cầu đăng nhập",
+            "loginDescription": "Bạn cần đăng nhập để xem và gửi kháng cáo. Vui lòng đăng nhập để tiếp tục.",
+            "loginAction": "Đăng nhập"
         },
         "form": {
             "appealType": "Loại kháng cáo",
             "resourceType": "Tài nguyên",
+            "status": "Trạng thái",
+            "expiresAt": "Hết hạn",
             "reasonLabel": "Lý do của bạn",
             "reasonPlaceholder": "Giải thích vì sao bạn cho rằng quyết định kiểm duyệt này cần được xem xét lại. Cung cấp càng nhiều chi tiết càng tốt (tối thiểu 20 ký tự).",
             "reasonHint": "Tối thiểu 20 ký tự",
@@ -1098,6 +1103,11 @@
             "user_ban": "Khóa tài khoản",
             "post_deleted": "Xóa bài viết",
             "comment_deleted": "Xóa bình luận"
+        },
+        "statuses": {
+            "pending": "Đang chờ xem xét",
+            "approved": "Đã phê duyệt",
+            "rejected": "Đã từ chối"
         },
         "evidence": {
             "dropzoneLabel": "Tải lên ảnh minh chứng",

@@ -1,10 +1,16 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import baseQueryWithReauth from '@/store/services/client'
-import type { CreateAppealRequest, GetMyAppealsParams } from '@/types/dtos/appeal/appeal-request.dto'
-import type { CreateAppealResponse, GetMyAppealsResponse } from '@/types/dtos/appeal/appeal-response.dto'
-import type { VerifyAppealTokenResponse, SubmitAppealEvidenceResponse } from '@/types/dtos/appeal/appeal-token.dto'
+import type { GetMyAppealsParams } from '@/types/dtos/appeal/appeal-request.dto'
+import type { CreateAppealResponse, GetAppealResponse, GetMyAppealsResponse } from '@/types/dtos/appeal/appeal-response.dto'
 import { toQueryParams } from '@/utils/common/query-params.util'
 
+/**
+ * Appeal API service — handles both public (token-based) and authenticated flows.
+ *
+ * - getMyAppeals: Authenticated — list user's appeals.
+ * - getAppeal: Flexible auth — fetch appeal by UUID (with optional token).
+ * - createAppeal: Flexible — token flow (public) or auth flow (authenticated).
+ */
 export const AppealApi = createApi({
     reducerPath: 'AppealApi',
     baseQuery: baseQueryWithReauth,
@@ -18,25 +24,17 @@ export const AppealApi = createApi({
             providesTags: [{ type: 'Appeals', id: 'LIST' }]
         }),
 
-        createAppeal: builder.mutation<CreateAppealResponse, CreateAppealRequest>({
-            query: (body) => ({
-                url: '/appeals',
-                method: 'POST',
-                body
+        getAppeal: builder.query<GetAppealResponse, { uuid: string; token?: string }>({
+            query: ({ uuid, token }) => ({
+                url: `/appeals/${uuid}`,
+                params: token ? { token } : undefined
             }),
-            invalidatesTags: [{ type: 'Appeals', id: 'LIST' }]
+            providesTags: (_result, _error, { uuid }) => [{ type: 'Appeals', id: uuid }]
         }),
 
-        verifyAppealToken: builder.query<VerifyAppealTokenResponse, string>({
-            query: (token) => ({
-                url: '/appeals/verify-token',
-                params: { token }
-            })
-        }),
-
-        submitAppealEvidence: builder.mutation<SubmitAppealEvidenceResponse, FormData>({
+        createAppeal: builder.mutation<CreateAppealResponse, FormData>({
             query: (formData) => ({
-                url: '/appeals/submit-evidence',
+                url: '/appeals',
                 method: 'POST',
                 body: formData
             }),
@@ -45,9 +43,4 @@ export const AppealApi = createApi({
     })
 })
 
-export const {
-    useGetMyAppealsQuery,
-    useCreateAppealMutation,
-    useVerifyAppealTokenQuery,
-    useSubmitAppealEvidenceMutation
-} = AppealApi
+export const { useGetMyAppealsQuery, useGetAppealQuery, useCreateAppealMutation } = AppealApi
