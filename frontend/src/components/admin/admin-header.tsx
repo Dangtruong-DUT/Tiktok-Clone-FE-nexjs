@@ -1,7 +1,6 @@
 'use client'
 
 import { ReactNode } from 'react'
-import Link from 'next/link'
 
 import {
     Breadcrumb,
@@ -11,6 +10,7 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
+import { Link } from '@/i18n/navigation'
 
 interface AdminHeaderProps {
     title: string
@@ -22,10 +22,6 @@ interface AdminHeaderProps {
     actions?: ReactNode
 }
 
-/**
- * AdminHeader - Page header for admin pages
- * Displays: Title, description, breadcrumbs, and actions
- */
 export function AdminHeader({ title, description, breadcrumbs, actions }: AdminHeaderProps) {
     return (
         <div className='border-b bg-card'>

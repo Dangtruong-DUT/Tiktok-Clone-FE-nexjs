@@ -7,15 +7,10 @@ import { cn } from '@/lib/utils'
 import { ADMIN_ROUTES } from '@/constants/admin.const'
 import { LayoutDashboard, Users, FileVideo, MessageSquare, Activity, Scale, Settings, ShieldUser } from 'lucide-react'
 
-/**
- * AdminSidebar - Navigation sidebar for admin dashboard
- * Shows admin sections: Dashboard, Users, Posts, Comments, Activity
- */
 export function AdminSidebar() {
     const pathname = usePathname()
     const t = useTranslations('AdminPage')
 
-    // Extract locale from pathname (e.g., /en/admin/users -> en)
     const locale = pathname?.split('/')[1]
 
     const getI18nPath = (route: string): string => {

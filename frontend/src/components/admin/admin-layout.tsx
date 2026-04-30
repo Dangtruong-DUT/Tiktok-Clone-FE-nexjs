@@ -8,10 +8,6 @@ interface AdminLayoutProps {
     children: ReactNode
 }
 
-/**
- * AdminLayout - Main layout wrapper for admin pages
- * Contains: Sidebar navigation + Main content area
- */
 export function AdminLayout({ children }: AdminLayoutProps) {
     return (
         <div className='flex h-screen bg-background'>

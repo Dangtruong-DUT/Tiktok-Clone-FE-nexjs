@@ -14,10 +14,6 @@ interface DashboardStatsProps {
     isLoading?: boolean
 }
 
-/**
- * DashboardStats - Display key statistics dashboard cards
- * Shows: total users, posts, comments, admin actions
- */
 export function DashboardStats({ stats, period = 'today', isLoading }: DashboardStatsProps) {
     const t = useTranslations('AdminPage')
     const { data, isLoading: isStatsLoading } = useGetDashboardStatsQuery({ period }, { skip: !!stats })
