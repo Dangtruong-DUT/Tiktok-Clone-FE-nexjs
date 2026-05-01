@@ -11,13 +11,31 @@ class AppealTokenRepository extends BaseRepository
         parent::__construct(app()->make(AppealToken::class));
     }
 
+    /**
+     * Find by token
+     *
+     * @param  string  $token
+     * @return AppealToken|null
+     */
     public function findByToken(string $token): ?AppealToken
     {
-        return $this->query()->where('token', $token)->first();
+        return $this->query()
+            ->where('token', $token)
+            ->where('expires_at', '>', now())
+            ->first();
     }
 
+    /**
+     * Find by tokenOrFail
+     *
+     * @param  string  $token
+     * @return AppealToken
+     */
     public function findByTokenOrFail(string $token): AppealToken
     {
-        return $this->query()->where('token', $token)->firstOrFail();
+        return $this->query()
+            ->where('token', $token)
+            ->where('expires_at', '>', now())
+            ->firstOrFail();
     }
 }

@@ -988,15 +988,6 @@
             "title": "Kiểm duyệt kháng cáo",
             "description": "Xem xét và xử lý kháng cáo từ người dùng",
             "emptyState": "Không có kháng cáo",
-            "columns": {
-                "id": "ID",
-                "user": "Người dùng",
-                "type": "Loại kháng cáo",
-                "reason": "Lý do",
-                "status": "Trạng thái",
-                "createdAt": "Ngày tạo",
-                "actions": "Thao tác"
-            },
             "filters": {
                 "allStatuses": "Tất cả trạng thái",
                 "allTypes": "Tất cả loại"

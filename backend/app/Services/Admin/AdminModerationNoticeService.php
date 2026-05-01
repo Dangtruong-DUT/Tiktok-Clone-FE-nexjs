@@ -15,8 +15,7 @@ use Illuminate\Support\Facades\Mail;
 class AdminModerationNoticeService
 {
     public function __construct(
-        private readonly NotificationService $notificationService,
-        private readonly AppealService $appealService,
+        private readonly NotificationService $notificationService
     ) {}
 
     /**
@@ -46,7 +45,6 @@ class AdminModerationNoticeService
 
         $notificationData = [
             'action' => $action->value,
-            'action_label' => $action->label(),
             'reason' => $reason,
             'resource_type' => $resourceType,
             'resource_id' => $resourceId,

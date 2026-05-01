@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('appeals', function (Blueprint $table) {
-            $table->string('appeal_token', 128)->nullable()->unique()->after('uuid');
+            $table->string('appeal_token')->nullable()->unique()->after('uuid');
             $table->timestamp('appeal_token_expires_at')->nullable()->after('appeal_token');
             $table->json('evidence_file_ids')->nullable()->after('reason');
         });

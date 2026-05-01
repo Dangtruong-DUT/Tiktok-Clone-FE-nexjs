@@ -10,14 +10,14 @@ return new class extends Migration
     {
         Schema::create('appeals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('appeal_type'); // user_ban, post_deleted, comment_deleted
-            $table->unsignedBigInteger('resource_id')->nullable(); // post_id or comment_id
+            $table->unsignedBigInteger('resource_id'); // post_id or comment_id
             $table->string('resource_type'); // App\Enums\Common\ResourceTypeEnum
             $table->text('reason'); // User's appeal reason
             $table->string('status')->default('pending'); // pending, approved, rejected
             $table->text('admin_response')->nullable(); // Admin's response
-            $table->foreignId('reviewed_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('reviewed_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamp('reviewed_at')->nullable();
             $table->timestamps();
 

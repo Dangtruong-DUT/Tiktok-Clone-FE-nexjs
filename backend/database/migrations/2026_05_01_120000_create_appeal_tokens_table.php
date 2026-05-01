@@ -10,14 +10,15 @@ return new class extends Migration
     {
         Schema::create('appeal_tokens', function (Blueprint $table) {
             $table->id();
+            $table->string('token')->unique();
             $table->string('email');
-            $table->string('token', 128)->unique();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->string('appeal_type')->nullable();
             $table->unsignedBigInteger('resource_id')->nullable();
             $table->string('resource_type')->nullable();
             $table->timestamp('expires_at')->nullable();
             $table->timestamp('used_at')->nullable();
-            $table->foreignId('appeal_id')->nullable()->constrained('appeals')->onDelete('set null');
+            $table->foreignId('appeal_id')->nullable()->constrained('appeals')->nullOnDelete();
             $table->timestamps();
 
             $table->index('email');

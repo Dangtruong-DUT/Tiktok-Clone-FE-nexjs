@@ -989,15 +989,6 @@
             "title": "Appeal Moderation",
             "description": "Review and process user appeals",
             "emptyState": "No appeals found",
-            "columns": {
-                "id": "ID",
-                "user": "User",
-                "type": "Appeal Type",
-                "reason": "Reason",
-                "status": "Status",
-                "createdAt": "Created At",
-                "actions": "Actions"
-            },
             "filters": {
                 "allStatuses": "All statuses",
                 "allTypes": "All types"
