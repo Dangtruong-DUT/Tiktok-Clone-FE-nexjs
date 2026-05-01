@@ -123,7 +123,7 @@ class AuthController extends Controller
     public function verifyForgotPasswordToken(VerifyForgotPasswordTokenRequest $request): JsonResponse
     {
         $credentials = $request->validated();
-        $this->authService->verifyForgotToken($credentials);
+        $this->authService->verifyForgotPasswordToken($credentials);
 
         return ApiResponse::success(message: 'forgot password validation email sent successfully');
     }

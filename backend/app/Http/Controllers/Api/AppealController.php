@@ -10,21 +10,9 @@ use App\Http\Requests\Appeal\ShowAppealRequest;
 use App\Http\Requests\Appeal\UpdateAppealRequest;
 use App\Http\Resources\Api\Appeal\AppealResource;
 use App\Http\Response\ApiResponse;
-use App\Mail\GuestAppealTokenMail;
 use App\Services\AppealService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Mail;
 
-/**
- * AppealController — Unified appeal endpoints.
- *
- * POST   /appeals/guest/request-token → request a new token (guest flow)
- * POST   /appeals/guest/verify-token  → verify token validity
- * POST   /appeals                     → create (token-based submit OR auth-based new appeal)
- * PUT    /appeals/{appeal_uuid}       → update (token-based OR auth-based edit, only pending)
- * GET    /appeals/{appeal_uuid}       → show (token-based OR auth-based view)
- * GET    /appeals                     → index (auth, list user's appeals)
- */
 class AppealController extends Controller
 {
     public function __construct(
@@ -33,26 +21,13 @@ class AppealController extends Controller
 
     /**
      * Request an appeal token for guest.
+     * @param GuestRequestTokenRequest $request
+     * @return JsonResponse
      */
     public function requestToken(GuestRequestTokenRequest $request): JsonResponse
     {
         $validated = $request->validated();
         $appealToken = $this->appealService->requestToken($validated);
-
-        // Send email with token
-        $baseUrl = rtrim((string) config('app.frontend_url'), '/');
-        $appealLink = $baseUrl.'/en/appeal?token='.urlencode($appealToken->token);
-
-        try {
-            Mail::to($appealToken->email)->send(new GuestAppealTokenMail($appealLink));
-        } catch (\Throwable $exception) {
-            \Illuminate\Support\Facades\Log::warning('Failed to send guest appeal token email', [
-                'email' => $appealToken->email,
-                'error' => $exception->getMessage(),
-            ]);
-            // Still return success to prevent email enumeration, or fail?
-            // Usually we return success.
-        }
 
         return ApiResponse::success(
             message: 'If the resource exists and belongs to this email, a verification link has been sent.',
@@ -140,21 +115,14 @@ class AppealController extends Controller
 
     /**
      * Show appeal details by UUID.
-     *
-     * - With token query param → public access (token verified)
-     * - Without token → auth required, must own the appeal
+     * @param ShowAppealRequest $request
+     * @return JsonResponse
      */
     public function show(ShowAppealRequest $request): JsonResponse
     {
         $validated = $request->validated();
         $uuid = $validated['appeal_uuid'];
-        $token = $validated['token'] ?? null;
-
-        if ($token) {
-            $appeal = $this->appealService->findByUuidWithToken($uuid, $token);
-        } else {
-            $appeal = $this->appealService->findByUuidForOwner($uuid);
-        }
+        $appeal = $this->appealService->findByUuidForOwner($uuid);
 
         return ApiResponse::success(
             data: new AppealResource($appeal),

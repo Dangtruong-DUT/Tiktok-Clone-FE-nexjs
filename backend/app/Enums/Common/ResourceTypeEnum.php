@@ -17,7 +17,6 @@ enum ResourceTypeEnum: string implements BaseEnumInterface
     case USER = 'user';
     case POST = 'post';
     case COMMENT = 'comment';
-    case MESSAGE = 'message';
     case APPEAL = 'appeal';
     case RE_POST = 're-post';
     case QUOTE_POST = 'quote-post';
@@ -33,7 +32,6 @@ enum ResourceTypeEnum: string implements BaseEnumInterface
             self::USER->value,
             self::POST->value,
             self::COMMENT->value,
-            self::MESSAGE->value,
             self::APPEAL->value,
             self::RE_POST->value,
             self::QUOTE_POST->value,
@@ -49,7 +47,6 @@ enum ResourceTypeEnum: string implements BaseEnumInterface
             self::USER => 'User',
             self::POST => 'Post',
             self::COMMENT => 'Comment',
-            self::MESSAGE => 'Message',
             self::APPEAL => 'Appeal',
             self::RE_POST => 'Re-Post',
             self::QUOTE_POST => 'Quote Post',
@@ -65,7 +62,6 @@ enum ResourceTypeEnum: string implements BaseEnumInterface
             self::USER => 'Người dùng',
             self::POST => 'Bài viết',
             self::COMMENT => 'Bình luận',
-            self::MESSAGE => 'Tin nhắn',
             self::APPEAL => 'Kháng cáo',
             self::RE_POST => 'Đăng lại',
             self::QUOTE_POST => 'Trích dẫn bài viết',
@@ -81,6 +77,7 @@ enum ResourceTypeEnum: string implements BaseEnumInterface
             PostTypeEnum::POST => self::POST,
             PostTypeEnum::RE_POST => self::RE_POST,
             PostTypeEnum::QUOTE_POST => self::QUOTE_POST,
+            PostTypeEnum::COMMENT => self::COMMENT,
             default => null,
         };
     }

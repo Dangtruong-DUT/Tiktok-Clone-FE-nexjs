@@ -20,7 +20,7 @@ use App\Rules\UploadFileId;
 use App\Rules\UserId;
 use App\Rules\UserUuid;
 use DateTimeInterface;
-use Illuminate\Validation\Rules\Enum;
+
 
 abstract class BaseRequest extends BaseFormRequest
 {
@@ -254,8 +254,8 @@ abstract class BaseRequest extends BaseFormRequest
             'post_uuids.*' => [self::STRING, self::UUID, new PostUuid],
             'date_of_birth' => [self::DATE],
             'name' => [self::STRING, self::MAX.':'.'100'],
-            'role' => [self::INTEGER, new Enum(RoleTypeEnum::class)],
-            'verify_status' => [self::INTEGER, new Enum(UserVerifyStatusEnum::class)],
+            'role' => [self::INTEGER, self::IN.':'.implode(',', RoleTypeEnum::values())],
+            'verify_status' => [self::INTEGER, self::IN.':'.implode(',', UserVerifyStatusEnum::values())],
             'username' => [self::STRING, 'regex:'.config('regex.username_validation')],
             'phone' => [self::STRING, self::MAX.':'.'100'],
             'month' => [self::INTEGER, self::MIN.':'.'1', self::MAX.':'.'12'],
@@ -287,8 +287,8 @@ abstract class BaseRequest extends BaseFormRequest
                 self::MAX.':'.config('const.file.video.max_size_kb', 51200),
                 self::MIMES.':'.config('const.file.video.mimes', 'mp4,mov'),
             ],
-            'audience' => [new Enum(AudienceTypeEnum::class)],
-            'post_type' => [new Enum(PostTypeEnum::class)],
+            'audience' => [self::STRING, self::IN.':'.implode(',', AudienceTypeEnum::values())],
+            'post_type' => [self::STRING, self::IN.':'.implode(',', PostTypeEnum::values())],
             'notification_uuid' => [self::STRING, self::UUID, new NotifyUuid],
             'action_type' => [self::STRING, 'in:'.implode(',', AdminActionEnum::values())],
             'resource_id' => [self::INTEGER],

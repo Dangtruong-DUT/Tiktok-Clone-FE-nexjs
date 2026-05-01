@@ -76,3 +76,16 @@ if (! function_exists('check_version_conflict')) {
         return $clientVersion < $serverVersion;
     }
 }
+
+if (! function_exists('usesSoftDeletesTrait')) {
+    /**
+     * Determine if model uses soft deletes.
+     */
+    function usesSoftDeletesTrait(string $modelClass): bool
+    {
+        return in_array(
+            'Illuminate\Database\Eloquent\SoftDeletes',
+            class_uses_recursive($modelClass)
+        );
+    }
+}

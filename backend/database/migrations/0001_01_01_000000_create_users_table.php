@@ -36,21 +36,21 @@ return new class extends Migration
         Schema::create('refresh_tokens', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('token')->unique();
+            $table->uuid('jti')->after('id')->unique();;
             $table->timestamp('expires_at');
         });
 
         Schema::create('email_verifications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('token')->unique();
+            $table->string('token_hash')->unique();
             $table->timestamp('expires_at');
         });
 
         Schema::create('password_resets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('token')->unique();
+            $table->string('token_hash')->unique();
             $table->timestamp('expires_at');
         });
     }

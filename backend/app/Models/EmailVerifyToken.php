@@ -30,8 +30,7 @@ class EmailVerifyToken extends Model
      */
     protected $fillable = [
         'user_id',
-        'token',
-        'token_fingerprint',
+        'token_hash',
         'expires_at',
     ];
 

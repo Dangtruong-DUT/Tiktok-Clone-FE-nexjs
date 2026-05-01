@@ -6,19 +6,18 @@ use App\Enums\Appeal\AppealStatusEnum;
 use App\Exceptions\http\BusinessException;
 use App\Exceptions\http\ForbiddenException;
 use App\Exceptions\http\NotFoundException;
+use App\Mail\GuestAppealTokenMail;
 use App\Models\Appeal;
 use App\Models\AppealToken;
 use App\Repositories\AppealRepository;
 use App\Repositories\AppealTokenRepository;
-use App\Repositories\PostRepository;
 use App\Traits\HasAuthUser;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
-/**
- * AppealService - Handles appeal business logic
- */
 class AppealService
 {
     use HasAuthUser;
@@ -29,23 +28,29 @@ class AppealService
     public function __construct(
         private readonly AppealRepository $appealRepository,
         private readonly AppealTokenRepository $appealTokenRepository,
-        private readonly PostRepository $postRepository,
         private readonly UploadService $uploadService,
+        private readonly AppealOwnershipService $appealOwnershipService,
     ) {}
 
     /**
      * File a new appeal (authenticated user flow)
      *
-     * @param  array  $payload  {user_id?: int, appeal_type: string, resource_id: int, resource_type: string, reason: string}
+     * @param  array  $payload
+     *              [
+     *                - appeal_type: string,
+     *                - resource_id: int,
+     *                - resource_type: string,
+     *                - reason: string
+     *             ]
+     *             $evidenceFiles Array of UploadedFile instances for evidence images
+     *
      */
     public function create(array $payload, array $evidenceFiles = []): Appeal
     {
-        $userId = $payload['user_id'] ?? $this->guard()->user()->id;
-        $email = $payload['email'] ?? $this->guard()->user()?->email;
+        $userId = $this->guard()->user()->id;
 
         $alreadyExists = $this->appealRepository->hasAppealForResource(
             userId: $userId,
-            email: $email,
             appealType: (string) $payload['appeal_type'],
             resourceId: $payload['resource_id'] ?? null,
         );
@@ -65,7 +70,6 @@ class AppealService
             'resource_type' => $payload['resource_type'],
             'reason' => $payload['reason'],
             'status' => AppealStatusEnum::PENDING->value,
-            'email' => $email,
             'evidence_file_ids' => ! empty($evidenceFileIds) ? $evidenceFileIds : null,
         ]);
     }
@@ -73,16 +77,25 @@ class AppealService
     /**
      * Request an appeal token for a given email (guest flow).
      *
-     * @param  array{email: string, appeal_type?: string, resource_id?: int|null, resource_type?: string|null}  $payload
+     * @param  array{
+     *          - email: string,
+     *          - appeal_type?: string,
+     *          - resource_id?: int|null,
+     *          - resource_type?: string|null
+     *      }  $payload
      */
-    public function requestToken(array $payload): AppealToken
+    public function requestToken(array $payload): void
     {
-        $this->validateResourceOwnership($payload['email'], $payload['resource_type'] ?? null, $payload['resource_id'] ?? null);
+        $this->appealOwnershipService->validate(
+            email: $payload['email'],
+            resourceType: $payload['resource_type'] ?? null,
+            resourceId: $payload['resource_id'] ?? null
+        );
 
         $token = Str::random(64);
         $windowDays = (int) config('services.ai_moderation.appeal_window_days', 7);
 
-        return $this->appealTokenRepository->create([
+        $appealToken = $this->appealTokenRepository->create([
             'email' => $payload['email'],
             'token' => $token,
             'appeal_type' => $payload['appeal_type'] ?? null,
@@ -90,38 +103,20 @@ class AppealService
             'resource_type' => $payload['resource_type'] ?? null,
             'expires_at' => now()->addDays($windowDays),
         ]);
-    }
 
-    /**
-     * Validate that the provided email owns the specified resource.
-     */
-    private function validateResourceOwnership(string $email, ?string $resourceType, ?int $resourceId): void
-    {
-        if (! $resourceType || ! $resourceId) {
-            throw new BusinessException('Resource information is required to verify ownership.');
-        }
+        $baseUrl = rtrim((string) config('app.frontend_url'), '/');
+        $appealLink = $baseUrl.'/en/appeal?token='.urlencode($appealToken->token);
 
-        $ownerEmail = null;
-
-        switch ($resourceType) {
-            case \App\Enums\Common\ModelEntityTypeEnum::USER->value:
-                $ownerEmail = \App\Models\User::find($resourceId)?->email;
-                break;
-            case \App\Enums\Common\ModelEntityTypeEnum::POST->value:
-                $ownerEmail = \App\Models\Post::with('user')->find($resourceId)?->user?->email;
-                break;
-            case \App\Enums\Common\ModelEntityTypeEnum::COMMENT->value:
-                // Assuming Comment model exists
-                $ownerEmail = \App\Models\Comment::with('user')->find($resourceId)?->user?->email;
-                break;
-            default:
-                throw new BusinessException("Unsupported resource type for appeal: {$resourceType}");
-        }
-
-        if (! $ownerEmail || strtolower($ownerEmail) !== strtolower($email)) {
-            throw new BusinessException('The provided email does not match the owner of this resource.');
+        try {
+            Mail::to($appealToken->email)->send(new GuestAppealTokenMail($appealLink));
+        } catch (\Throwable $exception) {
+            Log::warning('Failed to send guest appeal token email', [
+                'email' => $appealToken->email,
+                'error' => $exception->getMessage(),
+            ]);
         }
     }
+
 
     /**
      * Verify an appeal token and mark it used for the form step.
@@ -285,31 +280,6 @@ class AppealService
         $userId = $this->guard()->user()?->id;
         if (! $userId || $appeal->user_id !== $userId) {
             throw new ForbiddenException('You do not have permission to view this appeal');
-        }
-
-        return $appeal;
-    }
-
-    /**
-     * Find an appeal by UUID with token verification (public access).
-     *
-     * @throws NotFoundException
-     * @throws BusinessException
-     */
-    public function findByUuidWithToken(string $uuid, string $token): Appeal
-    {
-        $appeal = $this->appealRepository->findByUuid($uuid);
-
-        $appealToken = $this->appealTokenRepository->findByToken($token);
-
-        if (! $appeal || ! $appealToken || $appealToken->appeal_id !== $appeal->id) {
-            throw new NotFoundException('Invalid appeal link');
-        }
-
-        if ($appealToken->isExpired()) {
-            throw new BusinessException('This appeal link has expired. Please contact support for assistance.', [
-                'token' => 'Appeal link has expired',
-            ]);
         }
 
         return $appeal;

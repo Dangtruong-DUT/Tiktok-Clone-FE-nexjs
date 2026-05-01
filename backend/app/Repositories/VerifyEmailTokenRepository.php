@@ -24,10 +24,10 @@ class VerifyEmailTokenRepository extends BaseRepository
     }
 
     /**
-     * Find a verify email token by token fingerprint
+     * Find a verify email token by token hash
      */
-    public function findByTokenFingerprint(string $tokenFingerprint): ?EmailVerifyToken
+    public function findByTokenHash(string $tokenHash): ?EmailVerifyToken
     {
-        return $this->query()->where('token_fingerprint', $tokenFingerprint)->first();
+        return $this->query()->where('token_hash', $tokenHash)->first();
     }
 }

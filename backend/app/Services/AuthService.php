@@ -136,8 +136,8 @@ class AuthService
      * Handle verify email request by verifying the token and activating the user's account.
      *
      * @param  array  $credentials
-     *                              - email_verify_token: The token sent to the user's email for verification.
-     * @return bool
+     *                - email_verify_token: The token sent to the user's email for verification.
+     * @return array
      */
     public function verifyEmail(array $credentials): array
     {
@@ -145,19 +145,21 @@ class AuthService
         $validToken = $this->tokenService->verifyVerifyEmailToken($token);
         $user = null;
 
-        DB::transaction(function () use ($validToken, &$user) {
+    return DB::transaction(function () use ($validToken, &$user) {
             $user = $this->userRepo->findOrFail($validToken->user_id);
             $user->verify = UserVerifyStatusEnum::VERIFIED->value;
             $user->save();
             $this->verifyEmailTokenRepo->deleteByUserId($validToken->user_id);
             Mail::to($user->email)->send(new VerifyUserSuccess($user));
+
+            return [
+                'access_token' => $this->tokenService->createAccessToken($user),
+                'refresh_token' => $this->tokenService->createRefreshToken($user),
+                'user' => $user,
+        ];
         });
 
-        return [
-            'access_token' => $this->tokenService->createAccessToken($user),
-            'refresh_token' => $this->tokenService->createRefreshToken($user),
-            'user' => $user,
-        ];
+
     }
 
     /**
@@ -213,10 +215,10 @@ class AuthService
      * @param  array  $credentials
      *                              - forgot_password_token: The token sent to the user's email for password reset verification.
      */
-    public function verifyForgotToken(array $credentials): bool
+    public function verifyForgotPasswordToken(array $credentials): bool
     {
         $token = $credentials['forgot_password_token'];
-        $this->tokenService->verifyForgotToken($token);
+        $this->tokenService->verifyForgotPasswordToken($token);
 
         return true;
     }
@@ -226,7 +228,7 @@ class AuthService
      */
     public function resetPassword(array $credentials): bool
     {
-        $validToken = $this->tokenService->verifyForgotToken($credentials['forgot_password_token']);
+        $validToken = $this->tokenService->verifyForgotPasswordToken($credentials['forgot_password_token']);
         $this->forgotPasswordTokenRepo->deleteByUserId($validToken->user_id);
         $user = $this->userRepo->findOrFail($validToken->user_id);
         $user->password = $credentials['password'];

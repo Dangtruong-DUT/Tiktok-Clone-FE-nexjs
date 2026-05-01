@@ -2,17 +2,21 @@
 
 namespace App\Models;
 
+use App\Traits\HasToken;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AppealToken extends Model
 {
+    use HasToken;
+
     /**
      * @var array<int, string>
      */
     protected $fillable = [
+        'user_id',
         'email',
-        'token',
+        'token_hash',
         'appeal_type',
         'resource_id',
         'resource_type',
@@ -35,7 +39,19 @@ class AppealToken extends Model
     }
 
     /**
+     * Get the user who created this token, if any.
+     *
+     * @return BelongsTo<User, self>
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
      * Get the appeal created from this token, if any.
+     *
+     * @return BelongsTo<Appeal, self>
      */
     public function appeal(): BelongsTo
     {

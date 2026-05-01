@@ -7,6 +7,7 @@ use App\Enums\Appeal\AppealTypeEnum;
 use App\Traits\HasUuidObservable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -19,7 +20,6 @@ class Appeal extends Model
      */
     protected $fillable = [
         'user_id',
-        'email',
         'appeal_type',
         'resource_id',
         'resource_type',
@@ -48,6 +48,8 @@ class Appeal extends Model
 
     /**
      * Get the user who filed the appeal.
+     *
+     * @return BelongsTo<User, self>
      */
     public function user(): BelongsTo
     {
@@ -56,26 +58,27 @@ class Appeal extends Model
 
     /**
      * Get the admin who reviewed the appeal.
+     *  
+     * @return BelongsTo<User, self>
      */
     public function reviewer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'reviewed_by');
     }
 
-    /**
+    /*
      * Get the evidence files attached to this appeal.
      * Uses evidence_file_ids JSON array to look up UploadFile records.
      *
-     * @return \Illuminate\Database\Eloquent\Collection<int, UploadFile>
+     * @return Attribute<Collection<int, UploadFile>>
      */
-    public function getEvidenceFilesAttribute(): \Illuminate\Database\Eloquent\Collection
+    public function evidenceFiles(): Attribute
     {
-        $ids = $this->evidence_file_ids ?? [];
-        if (empty($ids)) {
-            return UploadFile::query()->whereRaw('1 = 0')->get();
-        }
-
-        return UploadFile::whereIn('id', $ids)->get();
+        return Attribute::make(
+            get: fn () => UploadFile::query()
+                ->whereIn('id', $this->evidence_file_ids ?? [])
+                ->get()
+        );
     }
 
     /**

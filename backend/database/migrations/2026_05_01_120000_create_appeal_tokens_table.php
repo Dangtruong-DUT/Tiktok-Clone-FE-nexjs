@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('appeal_tokens', function (Blueprint $table) {
             $table->id();
-            $table->string('token')->unique();
+            $table->string('token_hash')->unique();
             $table->string('email');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->string('appeal_type')->nullable();

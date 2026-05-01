@@ -144,7 +144,7 @@ class User extends Authenticatable implements JWTSubject
             'uuid' => $this->uuid,
             'verify' => $this->verify->value,
             'role' => $this->role->value,
-            'token_Type' => $tokenType,
+            'token_type' => $tokenType,
             'jti' => Str::uuid(),
             'banned' => $this->isBanned(),
             'ban_remaining_days' => $this->getBanRemainingDays(),

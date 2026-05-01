@@ -87,6 +87,8 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
         ->name('appeals.')
         ->group(function () {
             Route::get('/', [AppealController::class, 'index'])->name('list');
+            Route::put('/{appeal_uuid}', [AppealController::class, 'update'])->name('update');
+            Route::get('/{appeal_uuid}', [AppealController::class, 'show'])->name('show');
         });
 
     // admin routes
@@ -111,7 +113,6 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             // Comment moderation
             Route::get('/comments', [CommentAdminController::class, 'getComments'])->name('list-comments');
             Route::delete('/comments/{comment_uuid}', [CommentAdminController::class, 'deleteComment'])->name('delete-comment');
-            Route::post('/comments/{comment_uuid}/delete', [CommentAdminController::class, 'deleteComment'])->name('delete-comment-post');
 
             // Dashboard & Monitoring
             Route::get('/dashboard/stats', [SystemAdminController::class, 'getDashboardStats'])->name('dashboard-stats');
@@ -183,6 +184,4 @@ Route::prefix('appeals')
         Route::post('/guest/request-token', [AppealController::class, 'requestToken'])->name('request-token');
         Route::post('/guest/verify-token', [AppealController::class, 'verifyToken'])->name('verify-token');
         Route::post('/', [AppealController::class, 'create'])->name('create');
-        Route::put('/{appeal_uuid}', [AppealController::class, 'update'])->name('update');
-        Route::get('/{appeal_uuid}', [AppealController::class, 'show'])->name('show');
     });

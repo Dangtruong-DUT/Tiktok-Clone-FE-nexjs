@@ -9,8 +9,8 @@
 
 Response tokens:
 
-- `data.access_token`: JWT, claim `token_Type = 0`
-- `data.refresh_token`: JWT, claim `token_Type = 1`
+- `data.access_token`: JWT, claim `token_type = 0`
+- `data.refresh_token`: JWT, claim `token_type = 1`
 
 Required claims used by frontend:
 
@@ -18,7 +18,7 @@ Required claims used by frontend:
 - `uuid` (UUID string)
 - `verify` (enum int)
 - `role` (enum int)
-- `token_Type` (`0` access, `1` refresh)
+- `token_type` (`0` access, `1` refresh)
 - `exp`, `iat`
 
 Refresh-token behavior:

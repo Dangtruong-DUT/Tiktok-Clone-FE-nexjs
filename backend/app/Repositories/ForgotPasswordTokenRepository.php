@@ -24,10 +24,10 @@ class ForgotPasswordTokenRepository extends BaseRepository
     }
 
     /**
-     * Find a forgot password token by token fingerprint
+     * Find a forgot password token by token hash
      */
-    public function findByTokenFingerprint(string $tokenFingerprint): ?ForgotPasswordToken
+    public function findByTokenHash(string $tokenHash): ?ForgotPasswordToken
     {
-        return $this->query()->where('token_fingerprint', $tokenFingerprint)->first();
+        return $this->query()->where('token_hash', $tokenHash)->first();
     }
 }

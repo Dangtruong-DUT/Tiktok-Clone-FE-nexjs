@@ -7,7 +7,6 @@ use App\Enums\Appeal\AppealTypeEnum;
 use App\Enums\Common\ModelEntityTypeEnum;
 use App\Mail\AdminModerationActionMail;
 use App\Models\User;
-use App\Services\AppealService;
 use App\Services\NotificationService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
