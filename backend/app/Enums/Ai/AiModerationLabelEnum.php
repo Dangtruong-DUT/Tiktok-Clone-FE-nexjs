@@ -11,7 +11,8 @@ enum AiModerationLabelEnum: int implements BaseEnumInterface
 
     case NORMAL = 0;
     case TOXIC = 1;
- /**
+
+    /**
      * Get the label of the enum value.
      */
     public function label(): string
@@ -32,5 +33,4 @@ enum AiModerationLabelEnum: int implements BaseEnumInterface
             self::TOXIC => 'Độc hại',
         };
     }
-    
 }

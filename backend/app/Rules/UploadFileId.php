@@ -22,7 +22,7 @@ class UploadFileId implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!$this->uploadFileRepo->isExist($value)) {
+        if (! $this->uploadFileRepo->isExist($value)) {
             $fail(':attribute must be a valid upload file id.');
         }
     }

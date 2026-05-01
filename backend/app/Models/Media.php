@@ -48,7 +48,7 @@ class Media extends Model
     protected function casts(): array
     {
         return [
-            'type'=>MediaTypeEnum::class,
+            'type' => MediaTypeEnum::class,
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
@@ -82,7 +82,7 @@ class Media extends Model
     public function url(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->file?->url
+            get: fn () => $this->file?->url
         );
     }
 }

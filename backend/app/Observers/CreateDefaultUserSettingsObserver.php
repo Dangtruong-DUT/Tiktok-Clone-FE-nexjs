@@ -9,9 +9,6 @@ class CreateDefaultUserSettingsObserver
 {
     /**
      * Handle the Model "created" event.
-     *
-     * @param  \App\Models\User  $model
-     * @return void
      */
     public function created(User $model): void
     {

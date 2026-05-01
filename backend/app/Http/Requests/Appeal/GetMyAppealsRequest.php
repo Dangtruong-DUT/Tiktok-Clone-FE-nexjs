@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Requests\Appeal;
+
 use App\Http\Requests\BaseListRequest;
 use Illuminate\Validation\Rule;
 
@@ -8,6 +9,7 @@ class GetMyAppealsRequest extends BaseListRequest
 {
     /**
      * Get the validation rules.
+     *
      * @return array<string, string|array>
      */
     public function rules(): array
@@ -22,4 +24,3 @@ class GetMyAppealsRequest extends BaseListRequest
         ]);
     }
 }
-

@@ -2,9 +2,9 @@
 
 namespace App\Rules;
 
+use App\Repositories\UserRepository;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
-use App\Repositories\UserRepository;
 
 class UserUuid implements ValidationRule
 {
@@ -22,7 +22,7 @@ class UserUuid implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!$this->userRepository->isExistByUuid($value)) {
+        if (! $this->userRepository->isExistByUuid($value)) {
             $fail(':attribute must be a valid user uuid.');
         }
     }

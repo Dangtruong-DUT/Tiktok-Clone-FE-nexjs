@@ -24,8 +24,6 @@ class PostAdminController extends Controller
 
     /**
      * Get paginated list of posts with filtering.
-     * @param GetAdminPostsRequest $request
-     * @return JsonResponse
      */
     public function getPosts(GetAdminPostsRequest $request): JsonResponse
     {
@@ -39,8 +37,6 @@ class PostAdminController extends Controller
 
     /**
      * Delete a post permanently.
-     * @param DeletePostRequest $request
-     * @return JsonResponse
      */
     public function deletePost(DeletePostRequest $request): JsonResponse
     {

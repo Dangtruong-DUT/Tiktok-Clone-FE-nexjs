@@ -3,8 +3,6 @@
 namespace App\Http\Resources\Api\Notification;
 
 use App\Http\Resources\BaseJsonResource;
-use App\Http\Resources\Api\Notification\NotificationActorResource;
-use App\Http\Resources\Api\Notification\NotificationEntityResource;
 
 class NotificationResource extends BaseJsonResource
 {

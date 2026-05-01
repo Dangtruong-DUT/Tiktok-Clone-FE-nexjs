@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Requests\User;
 
 use App\Http\Requests\BaseListRequest;
@@ -17,8 +18,6 @@ class GetUserFollowingRequest extends BaseListRequest
 
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -27,8 +26,6 @@ class GetUserFollowingRequest extends BaseListRequest
 
     /**
      * set rules
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -53,8 +50,6 @@ class GetUserFollowingRequest extends BaseListRequest
 
     /**
      * Get the target user based on the route parameter.
-     *
-     * @return User
      */
     private function getTargetUser(): User
     {

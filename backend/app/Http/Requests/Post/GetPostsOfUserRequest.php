@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Requests\Post;
 
 use App\Http\Requests\BaseListRequest;
@@ -19,34 +20,32 @@ class GetPostsOfUserRequest extends BaseListRequest
 
     /**
      * set rules
-     *
-     * @return array
      */
     public function rules(): array
     {
 
         return $this->applyBaseRules([
-                'user_uuid'=>[
-                    self::REQUIRED
-                ],
-                'post_type' => [
-                    self::SOMETIMES,
-                    self::REQUIRED,
-                ],
-                'page' => [
-                    self::SOMETIMES,
-                    self::REQUIRED,
-                ],
-                'per_page' => [
-                    self::SOMETIMES,
-                    self::REQUIRED,
-                ],
-                'q' => [
-                    self::SOMETIMES,
-                ],
-                'audience' => [
-                    self::SOMETIMES,
-                ],
+            'user_uuid' => [
+                self::REQUIRED,
+            ],
+            'post_type' => [
+                self::SOMETIMES,
+                self::REQUIRED,
+            ],
+            'page' => [
+                self::SOMETIMES,
+                self::REQUIRED,
+            ],
+            'per_page' => [
+                self::SOMETIMES,
+                self::REQUIRED,
+            ],
+            'q' => [
+                self::SOMETIMES,
+            ],
+            'audience' => [
+                self::SOMETIMES,
+            ],
         ]);
     }
 }

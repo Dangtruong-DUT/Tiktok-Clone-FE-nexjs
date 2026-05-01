@@ -33,8 +33,8 @@ class DeletePostRequest extends BaseRequest
             'reason' => [
                 self::REQUIRED,
                 self::STRING,
-                self::MIN . ':10',
-                self::MAX . ':500'
+                self::MIN.':10',
+                self::MAX.':500',
             ],
         ]);
     }

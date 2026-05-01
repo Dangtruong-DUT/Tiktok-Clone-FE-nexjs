@@ -9,9 +9,13 @@ use Illuminate\Support\Facades\Redis;
 class PostViewService
 {
     private const REDIS_POST_IDS_SET_KEY = 'post:view:posts';
+
     private const USER_VIEW_KEY_PREFIX = 'post:view:user:';
+
     private const GUEST_VIEW_KEY_PREFIX = 'post:view:guest:';
+
     private const ANTISPAM_KEY_PREFIX = 'post:view:lock:';
+
     private const ANTISPAM_TTL_SECONDS = 60;
 
     public function __construct(
@@ -21,29 +25,29 @@ class PostViewService
     /**
      * Increase view count for a post, with anti-spam measures
      *
-     * @param int $postId ID of the post being viewed
-     * @param int|null $authUserId ID of the authenticated user (null for guests)
-     * @param string|null $viewerFingerprint Unique fingerprint for guest viewers
+     * @param  int  $postId  ID of the post being viewed
+     * @param  int|null  $authUserId  ID of the authenticated user (null for guests)
+     * @param  string|null  $viewerFingerprint  Unique fingerprint for guest viewers
      */
     public function increaseView(int $postId, ?int $authUserId, ?string $viewerFingerprint = null): void
     {
         $viewerKey = $authUserId
             ? "user:{$authUserId}"
-            : 'guest:' . sha1((string) $viewerFingerprint);
+            : 'guest:'.sha1((string) $viewerFingerprint);
 
-        $lockKey = self::ANTISPAM_KEY_PREFIX . $postId . ':' . $viewerKey;
+        $lockKey = self::ANTISPAM_KEY_PREFIX.$postId.':'.$viewerKey;
 
         $isFirstView = Redis::setnx($lockKey, 1);
 
-        if (!$isFirstView) {
+        if (! $isFirstView) {
             return;
         }
 
         Redis::expire($lockKey, self::ANTISPAM_TTL_SECONDS);
 
         $counterKey = $authUserId
-            ? self::USER_VIEW_KEY_PREFIX . $postId
-            : self::GUEST_VIEW_KEY_PREFIX . $postId;
+            ? self::USER_VIEW_KEY_PREFIX.$postId
+            : self::GUEST_VIEW_KEY_PREFIX.$postId;
 
         Redis::incr($counterKey);
         Redis::sadd(self::REDIS_POST_IDS_SET_KEY, (string) $postId);
@@ -71,11 +75,12 @@ class PostViewService
 
                 if ($postId <= 0) {
                     Redis::srem(self::REDIS_POST_IDS_SET_KEY, (string) $postId);
+
                     continue;
                 }
 
-                $userKey = self::USER_VIEW_KEY_PREFIX . $postId;
-                $guestKey = self::GUEST_VIEW_KEY_PREFIX . $postId;
+                $userKey = self::USER_VIEW_KEY_PREFIX.$postId;
+                $guestKey = self::GUEST_VIEW_KEY_PREFIX.$postId;
 
                 $userViews = (int) Redis::get($userKey) ?? 0;
                 $guestViews = (int) Redis::get($guestKey) ?? 0;

@@ -22,7 +22,7 @@ class AppealUuid implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!$this->appealRepository->isExistByUuid($value)) {
+        if (! $this->appealRepository->isExistByUuid($value)) {
             $fail(':attribute must be a valid appeal UUID.');
         }
     }

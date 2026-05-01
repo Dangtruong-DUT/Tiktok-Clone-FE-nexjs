@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Resources\Api\Settings;
 
 use App\Http\Resources\BaseJsonResource;
@@ -8,8 +9,7 @@ class UserSettingsResource extends BaseJsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return array
+     * @param  \Illuminate\Http\Request  $request
      */
     public function toArray($request): array
     {

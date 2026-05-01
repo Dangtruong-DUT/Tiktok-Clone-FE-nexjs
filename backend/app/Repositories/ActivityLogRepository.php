@@ -20,18 +20,18 @@ class ActivityLogRepository extends BaseRepository
     /**
      * Get paginated activity logs for admin panel.
      *
-     * @param array<string,mixed> $filters
+     * @param  array<string,mixed>  $filters
      */
     public function searchForAdmin(array $filters = []): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
 
         $query = $this->buildSearchQuery($filterCollection)
-        ->when($filterCollection->get('order_by'), function (Builder $query, $orderBy) {
-            $query->orderByMultiple($orderBy);
-        }, function (Builder $query) {
-            $query->orderBy('created_at', 'desc');
-        });
+            ->when($filterCollection->get('order_by'), function (Builder $query, $orderBy) {
+                $query->orderByMultiple($orderBy);
+            }, function (Builder $query) {
+                $query->orderBy('created_at', 'desc');
+            });
 
         $perPage = min((int) $filterCollection->get('per_page', 20), 100);
 
@@ -42,8 +42,6 @@ class ActivityLogRepository extends BaseRepository
 
     /**
      * Build search query with filters.
-     *
-     * @param Collection $filterCollection
      */
     private function buildSearchQuery(Collection $filterCollection): Builder
     {

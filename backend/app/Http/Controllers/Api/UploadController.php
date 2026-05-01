@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -15,31 +16,25 @@ class UploadController extends Controller
      */
     public function __construct(
         private readonly UploadService $uploadService
-    )
-    {
-    }
+    ) {}
 
     /**
      * handle image upload
-     *
-     * @param UploadImageRequest $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function uploadImage(UploadImageRequest $request): JsonResponse
     {
         $data = $this->uploadService->image($request->file('file'));
+
         return ApiResponse::success($data, 'Image uploaded successfully');
     }
 
     /**
      * handle video upload
-     *
-     * @param UploadVideoRequest $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function uploadVideo(UploadVideoRequest $request): JsonResponse
     {
         $data = $this->uploadService->video($request->file('file'));
+
         return ApiResponse::success($data, 'Video uploaded successfully');
     }
 }

@@ -13,8 +13,7 @@ class VerifyUserSuccess extends BaseMailAble
      */
     public function __construct(
         private User $user,
-    )
-    {
+    ) {
         parent::__construct();
     }
 

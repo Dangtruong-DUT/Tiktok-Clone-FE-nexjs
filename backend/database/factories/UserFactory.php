@@ -12,12 +12,11 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class UserFactory extends Factory
 {
-
     /**
-    * The name of the factory's corresponding model.
-    *
-    * @var class-string<\Illuminate\Database\Eloquent\Model>
-    */
+     * The name of the factory's corresponding model.
+     *
+     * @var class-string<\Illuminate\Database\Eloquent\Model>
+     */
     protected $model = User::class;
 
     /**
@@ -45,15 +44,15 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            "uuid" => fake()->uuid(),
+            'uuid' => fake()->uuid(),
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            "username" => generate_username(fake()->name()),
-            "bio" => fake()->sentence(),
-            "location" => fake()->city(),
-            "website" => fake()->url(),
-            "date_of_birth" => fake()->date(),
-            "verify" => fake()->randomElement([0, 1]),
+            'username' => generate_username(fake()->name()),
+            'bio' => fake()->sentence(),
+            'location' => fake()->city(),
+            'website' => fake()->url(),
+            'date_of_birth' => fake()->date(),
+            'verify' => fake()->randomElement([0, 1]),
             'password' => static::$password ??= 'password',
         ];
     }
@@ -64,7 +63,7 @@ class UserFactory extends Factory
     public function unverified(): static
     {
         return $this->state(fn (array $attributes) => [
-            'verify' =>UserVerifyStatusEnum::UNVERIFIED->value,
+            'verify' => UserVerifyStatusEnum::UNVERIFIED->value,
         ]);
     }
 
@@ -73,7 +72,7 @@ class UserFactory extends Factory
      */
     public function verified(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'verify' => UserVerifyStatusEnum::VERIFIED->value,
         ]);
     }
@@ -83,10 +82,8 @@ class UserFactory extends Factory
      */
     public function banned(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'verify' => UserVerifyStatusEnum::BANNED->value,
         ]);
     }
-
-
 }

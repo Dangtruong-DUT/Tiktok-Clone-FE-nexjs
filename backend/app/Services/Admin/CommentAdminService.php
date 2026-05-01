@@ -3,8 +3,8 @@
 namespace App\Services\Admin;
 
 use App\Enums\Admin\AdminActionEnum;
-use App\Enums\Common\ResourceTypeEnum;
 use App\Enums\Common\ModelEntityTypeEnum;
+use App\Enums\Common\ResourceTypeEnum;
 use App\Enums\Post\PostTypeEnum;
 use App\Exceptions\http\BadRequestException;
 use App\Repositories\PostRepository;
@@ -26,17 +26,16 @@ class CommentAdminService
      * Get paginated list of comments with filtering
      * Note: Comments are stored in posts table with type='comment'
      *
-     * @param array $filters {
-     *     q?: string,
-     *     post_uuid?: string,
-     *     user_uuid?: string,
-     *     date_from?: string (Y-m-d),
-     *     date_to?: string (Y-m-d),
-     *     page?: int,
-     *     per_page?: int,
-     *     order_by?: string
-     * }
-    * @return LengthAwarePaginator
+     * @param  array  $filters  {
+     *                          q?: string,
+     *                          post_uuid?: string,
+     *                          user_uuid?: string,
+     *                          date_from?: string (Y-m-d),
+     *                          date_to?: string (Y-m-d),
+     *                          page?: int,
+     *                          per_page?: int,
+     *                          order_by?: string
+     *                          }
      */
     public function getComments(array $filters = []): LengthAwarePaginator
     {
@@ -46,8 +45,8 @@ class CommentAdminService
     /**
      * Delete a comment.
      *
-     * @param array{comment_uuid:string,reason:string} $payload
-     * @return void
+     * @param  array{comment_uuid:string,reason:string}  $payload
+     *
      * @throws \Exception
      */
     public function deleteComment(array $payload): void

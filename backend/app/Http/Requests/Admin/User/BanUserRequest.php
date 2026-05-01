@@ -32,8 +32,8 @@ class BanUserRequest extends BaseRequest
                 self::REQUIRED,
                 Rule::notIn([$this->user()?->uuid]),
             ],
-            'reason' => [self::REQUIRED, self::STRING, self::MIN . ':10', self::MAX . ':500'],
-            'duration_days' => [self::NULLABLE, self::INTEGER, self::MIN . ':1', self::MAX . ':365'],
+            'reason' => [self::REQUIRED, self::STRING, self::MIN.':10', self::MAX.':500'],
+            'duration_days' => [self::NULLABLE, self::INTEGER, self::MIN.':1', self::MAX.':365'],
         ]);
     }
 }

@@ -7,6 +7,7 @@ use App\Enums\Common\ResourceTypeEnum;
 use App\Models\AdminLog;
 use App\Models\User;
 use App\Repositories\AdminLogRepository;
+
 class AdminLogService
 {
     public function __construct(
@@ -16,13 +17,13 @@ class AdminLogService
     /**
      * Log an admin action
      *
-     * @param User $admin The admin performing the action
-     * @param ResourceTypeEnum $resourceType Resource type
-     * @param int|string $resourceId The ID/UUID of the resource
-     * @param AdminActionEnum $action The action performed
-     * @param string|null $reason Why the action was taken
-     * @param array|null $oldData Previous state (JSON-serializable array)
-     * @param array|null $newData Current state (JSON-serializable array)
+     * @param  User  $admin  The admin performing the action
+     * @param  ResourceTypeEnum  $resourceType  Resource type
+     * @param  int|string  $resourceId  The ID/UUID of the resource
+     * @param  AdminActionEnum  $action  The action performed
+     * @param  string|null  $reason  Why the action was taken
+     * @param  array|null  $oldData  Previous state (JSON-serializable array)
+     * @param  array|null  $newData  Current state (JSON-serializable array)
      * @return AdminLog The created log entry
      */
     public function log(

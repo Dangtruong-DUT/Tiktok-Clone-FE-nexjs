@@ -20,9 +20,10 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { BanUserDialog } from './ban-user-dialog'
 import { UnbanUserDialog } from './unban-user-dialog'
 import { DeleteUserDialog } from './delete-user-dialog'
+import { RestoreUserDialog } from './restore-user-dialog'
 import { ResetUserPasswordDialog } from './reset-user-password-dialog'
 import { SendUserMailDialog } from './send-user-mail-dialog'
-import { formatAdminDate, getUserStatusColor, formatUserStatus, truncateText } from '@/helpers/admin-helpers'
+import { formatAdminDate, getUserStatus, getUserStatusColor, formatUserStatus, truncateText } from '@/helpers/admin-helpers'
 import { MoreHorizontal, Search, AlertCircle } from 'lucide-react'
 import { AdminUser } from '@/types/dtos/admin/admin-response.dto'
 
@@ -46,21 +47,21 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
     const [page, setPage] = useState(1)
     const [perPage, setPerPage] = useState(10)
     const [searchTerm, setSearchTerm] = useState('')
-    const [statusFilter, setStatusFilter] = useState<'all' | 'banned' | 'active'>('all')
+    const [statusFilter, setStatusFilter] = useState<'all' | 'banned' | 'active' | 'deleted'>('all')
     const [sortBy, setSortBy] = useState<'recent' | 'oldest'>('recent')
 
     // Selected user for dialogs
     const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null)
-    const [dialogType, setDialogType] = useState<'ban' | 'unban' | 'delete' | 'reset-password' | 'send-mail' | null>(
-        null
-    )
+    const [dialogType, setDialogType] = useState<
+        'ban' | 'unban' | 'delete' | 'restore' | 'reset-password' | 'send-mail' | null
+    >(null)
 
     // Fetch data
     const { data, isLoading, isFetching, refetch } = useGetAdminUsersQuery({
         page,
         per_page: perPage,
         q: searchTerm || undefined,
-        status: statusFilter !== 'all' ? statusFilter : undefined,
+        status: statusFilter,
         order_by: [sortBy === 'recent' ? '-created_at' : 'created_at']
     })
 
@@ -74,7 +75,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
     }
 
     const handleStatusFilter = (value: string) => {
-        setStatusFilter(value as 'all' | 'banned' | 'active')
+        setStatusFilter(value as 'all' | 'banned' | 'active' | 'deleted')
         setPage(1)
     }
 
@@ -83,7 +84,10 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
         setPage(1)
     }
 
-    const openDialog = (user: AdminUser, type: 'ban' | 'unban' | 'delete' | 'reset-password' | 'send-mail') => {
+    const openDialog = (
+        user: AdminUser,
+        type: 'ban' | 'unban' | 'delete' | 'restore' | 'reset-password' | 'send-mail'
+    ) => {
         setSelectedUser(user)
         setDialogType(type)
     }
@@ -142,6 +146,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                             <SelectItem value='all'>{t('users.filters.allStatuses')}</SelectItem>
                             <SelectItem value='active'>{t('users.filters.active')}</SelectItem>
                             <SelectItem value='banned'>{t('users.filters.banned')}</SelectItem>
+                                <SelectItem value='deleted'>{t('users.filters.deleted')}</SelectItem>
                         </SelectContent>
                     </Select>
 
@@ -184,19 +189,19 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {users.map((user) => (
-                                <TableRow key={user.id} className='hover:bg-muted/50'>
+                            {users.map((user) => {
+                                const status = getUserStatus(user)
+
+                                return (
+                                    <TableRow key={user.id} className='hover:bg-muted/50'>
                                     <TableCell className='font-mono text-sm'>#{user.id}</TableCell>
                                     <TableCell className='font-medium'>{user.username}</TableCell>
                                     <TableCell className='text-sm max-w-xs truncate'>
                                         {truncateText(user.email, 25)}
                                     </TableCell>
                                     <TableCell>
-                                        <Badge
-                                            variant='outline'
-                                            className={`capitalize ${getUserStatusColor(Boolean(user.banned_at))}`}
-                                        >
-                                            {formatUserStatus(Boolean(user.banned_at))}
+                                        <Badge className={getUserStatusColor(status)}>
+                                            {formatUserStatus(status)}
                                         </Badge>
                                     </TableCell>
                                     <TableCell className='text-sm'>{formatAdminDate(user.created_at)}</TableCell>
@@ -208,19 +213,26 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align='end' className='w-48'>
-                                                {user.banned_at ? (
+                                                {status === 'deleted' ? (
+                                                    <DropdownMenuItem
+                                                        onClick={() => openDialog(user, 'restore')}
+                                                        className='cursor-pointer'
+                                                    >
+                                                        {t('users.actions.restore')}
+                                                    </DropdownMenuItem>
+                                                ) : status === 'banned' ? (
                                                     <>
                                                         <DropdownMenuItem
                                                             onClick={() => openDialog(user, 'reset-password')}
                                                             className='cursor-pointer'
                                                         >
-                                                            Reset Password
+                                                            {t('users.actions.resetPassword')}
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem
                                                             onClick={() => openDialog(user, 'send-mail')}
                                                             className='cursor-pointer'
                                                         >
-                                                            Send Email
+                                                            {t('users.actions.sendEmail')}
                                                         </DropdownMenuItem>
                                                         <DropdownMenuSeparator />
                                                         <DropdownMenuItem
@@ -243,13 +255,13 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                                                             onClick={() => openDialog(user, 'reset-password')}
                                                             className='cursor-pointer'
                                                         >
-                                                            Reset Password
+                                                            {t('users.actions.resetPassword')}
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem
                                                             onClick={() => openDialog(user, 'send-mail')}
                                                             className='cursor-pointer'
                                                         >
-                                                            Send Email
+                                                            {t('users.actions.sendEmail')}
                                                         </DropdownMenuItem>
                                                         <DropdownMenuSeparator />
                                                         <DropdownMenuItem
@@ -333,6 +345,14 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
 
                     <DeleteUserDialog
                         open={dialogType === 'delete'}
+                        userUuid={selectedUser.uuid}
+                        username={selectedUser.username}
+                        onOpenChange={(open) => !open && closeDialog()}
+                        onSuccess={handleActionSuccess}
+                    />
+
+                    <RestoreUserDialog
+                        open={dialogType === 'restore'}
                         userUuid={selectedUser.uuid}
                         username={selectedUser.username}
                         onOpenChange={(open) => !open && closeDialog()}

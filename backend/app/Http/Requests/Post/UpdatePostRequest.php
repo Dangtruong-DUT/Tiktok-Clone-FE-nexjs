@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Requests\Post;
 
 use App\Enums\Post\AudienceTypeEnum;
@@ -20,8 +21,6 @@ class UpdatePostRequest extends BaseRequest
 
     /**
      * set rules
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -49,7 +48,7 @@ class UpdatePostRequest extends BaseRequest
             ],
             'mentions.*' => [
                 self::INTEGER,
-                new UserId(),
+                new UserId,
             ],
             'hashtags' => [
                 self::SOMETIMES,
@@ -63,7 +62,7 @@ class UpdatePostRequest extends BaseRequest
                 self::SOMETIMES,
                 self::NULLABLE,
                 self::INTEGER,
-                new UploadFileId(),
+                new UploadFileId,
             ],
         ]);
     }

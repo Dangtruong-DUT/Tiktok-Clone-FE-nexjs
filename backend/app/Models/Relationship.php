@@ -16,7 +16,7 @@ class Relationship extends Model
     protected $fillable = [
         'user_id',
         'target_user_id',
-        'type'
+        'type',
     ];
 
     /*
@@ -32,7 +32,6 @@ class Relationship extends Model
             'updated_at' => 'datetime',
         ];
     }
-
 
     /**
      * Get the user that has relationship with the target user.

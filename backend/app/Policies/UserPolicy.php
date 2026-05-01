@@ -4,31 +4,25 @@ namespace App\Policies;
 
 use App\Enums\Settings\PrivacyVisibilityEnum;
 use App\Models\User;
+
 class UserPolicy extends BasePolicy
 {
     /**
      * Create a new policy instance.
      */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * Determine if the given user can view the followers of the target user.
-     *  @param User $user
-     *  @param User $targetUser
-     *  @return bool
      */
     public function viewFollowers(?User $user, User $targetUser): bool
     {
         return $user?->id === $targetUser->id
         || $targetUser->settings?->followers_visibility === PrivacyVisibilityEnum::PUBLIC;
     }
+
     /**
      * Determine if the given user can view the followings of the target user.
-     * @param User $user
-     * @param User $targetUser
-     * @return bool
      */
     public function viewFollowings(?User $user, User $targetUser): bool
     {
@@ -45,9 +39,6 @@ class UserPolicy extends BasePolicy
 
     /**
      * Determine if the given user can view the liked videos of the target user.
-     * @param User $user
-     * @param User $targetUser
-     * @return bool
      */
     public function viewLikedVideos(?User $user, User $targetUser): bool
     {
@@ -57,9 +48,6 @@ class UserPolicy extends BasePolicy
 
     /**
      * Determine if the given user can view the bookmarked videos of the target user.
-     * @param User $user
-     * @param User $targetUser
-     * @return bool
      */
     public function viewBookmarkedVideos(?User $user, User $targetUser): bool
     {

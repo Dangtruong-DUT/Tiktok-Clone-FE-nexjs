@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Enums\Post\AudienceTypeEnum;
 use App\Enums\Post\PostTypeEnum;
 use App\Traits\HasUuidObservable;
-use App\Models\Hashtag;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -20,7 +19,6 @@ class Post extends Model
 {
     use HasUuidObservable;
     use SoftDeletes;
-
 
     /**
      * The attributes that are mass assignable.
@@ -46,9 +44,10 @@ class Post extends Model
     ];
 
     /**
-    * The default attributes for the model.
-    * @var array<string, mixed>
-    */
+     * The default attributes for the model.
+     *
+     * @var array<string, mixed>
+     */
     protected $attributes = [
         'likes_count' => 0,
         'share_count' => 0,
@@ -69,7 +68,7 @@ class Post extends Model
     {
         return [
             'audience' => AudienceTypeEnum::class,
-            'type'=>PostTypeEnum::class,
+            'type' => PostTypeEnum::class,
             'is_owner' => 'boolean',
             'is_liked' => 'boolean',
             'likes_count' => 'integer',
@@ -86,7 +85,6 @@ class Post extends Model
             'deleted_at' => 'datetime',
         ];
     }
-
 
     /**
      * Get the user that owns the post.
@@ -119,7 +117,6 @@ class Post extends Model
             get: fn () => $this->thumbnailFile?->url
         );
     }
-
 
     /**
      * Get the media associated with the post.
@@ -164,10 +161,10 @@ class Post extends Model
     }
 
     /**
-    * Get the child posts that are reposts or quote posts or comments of this post.
-    *
-    * @return \Illuminate\Database\Eloquent\Relations\HasMany The relationship instance.
-    */
+     * Get the child posts that are reposts or quote posts or comments of this post.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany The relationship instance.
+     */
     public function children(): HasMany
     {
         return $this->hasMany(Post::class, 'parent_id');
@@ -206,16 +203,17 @@ class Post extends Model
     /**
      * Get the root post of the thread. If the post is a comment, repost, or quote post, it will return the original post.
      * If the post is already a root post, it will return itself.
+     *
      * @return Post The root post instance.
      */
     public function getRoot(): Post
     {
         $current = $this;
 
-        while ($current->type !== PostTypeEnum::POST && !empty($current->parent_id)) {
+        while ($current->type !== PostTypeEnum::POST && ! empty($current->parent_id)) {
             $parent = $current->parent;
 
-            if (!$parent instanceof Post) {
+            if (! $parent instanceof Post) {
                 break;
             }
 
@@ -228,14 +226,14 @@ class Post extends Model
     /**
      * Scope a query to only include posts visible to the given user.
      *
-     * @param Builder $query The query builder instance.
-     * @param ?int $authUserId The ID of the authenticated user, or null if not authenticated.
+     * @param  Builder  $query  The query builder instance.
+     * @param  ?int  $authUserId  The ID of the authenticated user, or null if not authenticated.
      * @return Builder The modified query builder instance.
      */
     #[Scope]
     public function visibleFor(Builder $query, ?int $authUserId): Builder
     {
-        if (!$authUserId) {
+        if (! $authUserId) {
             return $query->where('audience', AudienceTypeEnum::PUBLIC->value);
         }
 
@@ -246,7 +244,7 @@ class Post extends Model
                     $q3->where('audience', AudienceTypeEnum::FRIENDS->value)
                         ->whereHas('user', function ($uq) use ($authUserId) {
                             $uq->whereHas('followings', fn ($q) => $q->whereKey($authUserId))
-                            ->whereHas('followers', fn ($q) => $q->whereKey($authUserId));
+                                ->whereHas('followers', fn ($q) => $q->whereKey($authUserId));
                         });
                 });
         });
@@ -255,8 +253,8 @@ class Post extends Model
     /**
      * Scope a query to only include posts of a given type.
      *
-     * @param Builder $query The query builder instance.
-     * @param ?int $type The type of posts to filter by (comment, post, repost, quote), or null to filter by post type.
+     * @param  Builder  $query  The query builder instance.
+     * @param  ?int  $type  The type of posts to filter by (comment, post, repost, quote), or null to filter by post type.
      * @return Builder The modified query builder instance.
      */
     #[Scope]
@@ -265,7 +263,7 @@ class Post extends Model
         if ($type !== null) {
             return $query->where('type', $type);
         }
+
         return $query->where('type', PostTypeEnum::POST->value);
     }
-
 }

@@ -454,6 +454,8 @@
             },
             "types": {
                 "user_ban": "User Ban",
+                "user_unban": "User Unban",
+                "user_deleted": "User Deleted",
                 "post_deleted": "Post Deleted",
                 "comment_deleted": "Comment Deleted"
             },
@@ -818,6 +820,7 @@
                 "allStatuses": "All statuses",
                 "active": "Active",
                 "banned": "Banned",
+                "deleted": "Deleted",
                 "recent": "Recent",
                 "oldest": "Oldest"
             },
@@ -825,9 +828,13 @@
                 "ban": "Ban",
                 "unban": "Unban",
                 "delete": "Delete",
+                "restore": "Restore",
                 "confirmBan": "Confirm Ban",
                 "confirmUnban": "Confirm Unban",
-                "confirmDelete": "Confirm Delete"
+                "confirmDelete": "Confirm Delete",
+                "confirmRestore": "Confirm Restore",
+                "resetPassword": "Reset Password",
+                "sendEmail": "Send Email"
             },
             "labels": {
                 "reason": "Reason",
@@ -850,13 +857,16 @@
                 "unbanSuccess": "User unbanned successfully",
                 "unbanError": "Failed to unban user",
                 "deleteSuccess": "User deleted successfully",
-                "deleteError": "Failed to delete user"
+                "deleteError": "Failed to delete user",
+                "restoreSuccess": "User restored successfully",
+                "restoreError": "Failed to restore user"
             },
             "dialogs": {
                 "deleteTitle": "Delete User",
                 "deleteSubtitle": "Delete account for @{username}",
                 "deleteWarning": "This action cannot be undone.",
-                "unbanSubtitle": "Unban account for @{username}"
+                "unbanSubtitle": "Unban account for @{username}",
+                "restoreSubtitle": "Restore account for @{username}"
             },
             "banDialog": {
                 "subtitle": "Ban account for @{username}"
@@ -994,6 +1004,8 @@
             },
             "types": {
                 "user_ban": "User Ban",
+                "user_unban": "User Unban",
+                "user_deleted": "User Deleted",
                 "post_deleted": "Post Deleted",
                 "comment_deleted": "Comment Deleted"
             },
@@ -1102,6 +1114,8 @@
         },
         "types": {
             "user_ban": "Account Suspension",
+            "user_unban": "Account Unban",
+            "user_deleted": "Account Deletion",
             "post_deleted": "Post Removal",
             "comment_deleted": "Comment Removal"
         },

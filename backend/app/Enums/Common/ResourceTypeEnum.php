@@ -74,9 +74,6 @@ enum ResourceTypeEnum: string implements BaseEnumInterface
 
     /**
      * Try to create ResourceTypeEnum from PostTypeEnum.
-     *
-     * @param PostTypeEnum $postType
-     * @return self|null
      */
     public static function tryFromPostType(PostTypeEnum $postType): ?self
     {

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Traits;
 
 use Illuminate\Support\Facades\Auth;
@@ -15,5 +16,4 @@ trait HasAuthUser
         // @phpstan-ignore return.type
         return Auth::guard('api');
     }
-
 }

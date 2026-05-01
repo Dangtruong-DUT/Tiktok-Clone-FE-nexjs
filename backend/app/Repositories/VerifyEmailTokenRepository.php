@@ -1,13 +1,11 @@
 <?php
+
 namespace App\Repositories;
 
 use App\Models\EmailVerifyToken;
-use App\Repositories\BaseRepository;
 
 class VerifyEmailTokenRepository extends BaseRepository
 {
-
-
     /**
      * VerifyEmailTokenRepository constructor.
      */
@@ -19,9 +17,6 @@ class VerifyEmailTokenRepository extends BaseRepository
 
     /**
      * Delete verify email tokens by user ID
-     *
-     * @param int $userId
-     * @return int
      */
     public function deleteByUserId(int $userId): int
     {
@@ -30,9 +25,6 @@ class VerifyEmailTokenRepository extends BaseRepository
 
     /**
      * Find a verify email token by token fingerprint
-     *
-     * @param string $tokenFingerprint
-     * @return EmailVerifyToken|null
      */
     public function findByTokenFingerprint(string $tokenFingerprint): ?EmailVerifyToken
     {

@@ -8,7 +8,7 @@ return new class extends Migration
     public function up(): void
     {
         // Set negative values to 0 before adding CHECK constraint
-        DB::statement("
+        DB::statement('
             UPDATE posts SET
                 likes_count = GREATEST(likes_count, 0),
                 share_count = GREATEST(share_count, 0),
@@ -18,10 +18,10 @@ return new class extends Migration
                 quote_post_count = GREATEST(quote_post_count, 0),
                 guest_views = GREATEST(guest_views, 0),
                 user_views = GREATEST(user_views, 0)
-        ");
+        ');
 
         // Add CHECK constraint
-        DB::statement("
+        DB::statement('
             ALTER TABLE posts
             ADD CONSTRAINT posts_counters_non_negative
             CHECK (
@@ -34,14 +34,14 @@ return new class extends Migration
                 guest_views >= 0 AND
                 user_views >= 0
             )
-        ");
+        ');
     }
 
     public function down(): void
     {
-        DB::statement("
+        DB::statement('
             ALTER TABLE posts
             DROP CONSTRAINT IF EXISTS posts_counters_non_negative
-        ");
+        ');
     }
 };

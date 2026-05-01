@@ -57,5 +57,3 @@ enum NotificationTabEnum: string implements BaseEnumInterface
         };
     }
 }
-
-?>

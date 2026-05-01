@@ -13,11 +13,10 @@ use Illuminate\Pagination\LengthAwarePaginator;
 abstract class BaseRepository
 {
     /**
-     * @param TModel $model
+     * @param  TModel  $model
      */
-    public function __construct(private readonly Model $model)
-    {
-    }
+    public function __construct(private readonly Model $model) {}
+
     /**
      * @return \Illuminate\Database\Eloquent\Builder<TModel>
      */
@@ -27,7 +26,7 @@ abstract class BaseRepository
     }
 
     /**
-     * @param array<int,string> $columns
+     * @param  array<int,string>  $columns
      * @return Collection<int, TModel>
      */
     public function all(array $columns = ['*']): Collection
@@ -36,8 +35,7 @@ abstract class BaseRepository
     }
 
     /**
-     * @param int $perPage
-     * @param array<int,string> $columns
+     * @param  array<int,string>  $columns
      */
     public function paginate(int $perPage = 15, array $columns = ['*']): LengthAwarePaginator
     {
@@ -53,7 +51,7 @@ abstract class BaseRepository
     }
 
     /**
-     * @param array<int,int> $ids
+     * @param  array<int,int>  $ids
      * @return Collection<int, TModel>
      */
     public function findByIds(array $ids): Collection
@@ -68,7 +66,7 @@ abstract class BaseRepository
     {
         $record = $this->query()->find($id);
 
-        if (!$record instanceof Model) {
+        if (! $record instanceof Model) {
             throw new NotFoundException('Resource not found');
         }
 
@@ -76,7 +74,7 @@ abstract class BaseRepository
     }
 
     /**
-     * @param array<string,mixed> $attributes
+     * @param  array<string,mixed>  $attributes
      * @return TModel
      */
     public function create(array $attributes): Model
@@ -85,7 +83,7 @@ abstract class BaseRepository
     }
 
     /**
-     * @param array<string,mixed> $attributes
+     * @param  array<string,mixed>  $attributes
      * @return TModel
      */
     public function update(int $id, array $attributes): Model
@@ -98,8 +96,8 @@ abstract class BaseRepository
     }
 
     /**
-     * @param array<string,mixed> $attributes
-     * @param array<string,mixed> $values
+     * @param  array<string,mixed>  $attributes
+     * @param  array<string,mixed>  $values
      * @return TModel
      */
     public function updateOrCreate(array $attributes, array $values): Model
@@ -108,8 +106,8 @@ abstract class BaseRepository
     }
 
     /**
-     * @param array<int,int> $ids
-     * @param array<string,mixed> $attributes
+     * @param  array<int,int>  $ids
+     * @param  array<string,mixed>  $attributes
      * @return Collection<int, TModel>
      */
     public function updateMultiple(array $ids, array $attributes): Collection
@@ -127,7 +125,7 @@ abstract class BaseRepository
     }
 
     /**
-     * @param array<string,mixed> $criteria
+     * @param  array<string,mixed>  $criteria
      * @return Collection<int, TModel>
      */
     public function findWhere(array $criteria): Collection
@@ -136,7 +134,7 @@ abstract class BaseRepository
     }
 
     /**
-     * @param array<string,mixed> $criteria
+     * @param  array<string,mixed>  $criteria
      * @return TModel|null
      */
     public function findWhereFirst(array $criteria): ?Model
@@ -145,14 +143,14 @@ abstract class BaseRepository
     }
 
     /**
-     * @param array<string,mixed> $criteria
+     * @param  array<string,mixed>  $criteria
      * @return TModel
      */
     public function findWhereFirstOrFail(array $criteria): Model
     {
         $record = $this->findWhereFirst($criteria);
 
-        if (!$record instanceof Model) {
+        if (! $record instanceof Model) {
             throw new NotFoundException('Resource not found with given criteria');
         }
 

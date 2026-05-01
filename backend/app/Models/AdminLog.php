@@ -62,8 +62,6 @@ class AdminLog extends Model
 
     /**
      * Get the admin who performed the action
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function admin(): BelongsTo
     {
@@ -73,8 +71,6 @@ class AdminLog extends Model
     /**
      * Scope: Filter logs by admin ID
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int $adminId
      * @return \Illuminate\Database\Eloquent\Builder
      */
     #[Scope]
@@ -86,8 +82,6 @@ class AdminLog extends Model
     /**
      * Scope: Filter logs by resource type
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param ResourceTypeEnum $resourceType
      * @return \Illuminate\Database\Eloquent\Builder
      */
     #[Scope]
@@ -99,8 +93,6 @@ class AdminLog extends Model
     /**
      * Scope: Filter logs by action
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $action
      * @return \Illuminate\Database\Eloquent\Builder
      */
     #[Scope]
@@ -112,9 +104,6 @@ class AdminLog extends Model
     /**
      * Scope: Filter logs by date range
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param \Carbon\Carbon $from
-     * @param \Carbon\Carbon $to
      * @return \Illuminate\Database\Eloquent\Builder
      */
     #[Scope]

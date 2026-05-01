@@ -8,12 +8,10 @@ if (! function_exists('is_api_request')) {
 
     /**
      * Determine if the current request is an API request.
-     *
-     * @return bool
      */
     function is_api_request(): bool
     {
-        return request()->is('api/*') || request()->expectsJson()||request()->wantsJson();
+        return request()->is('api/*') || request()->expectsJson() || request()->wantsJson();
     }
 
 }
@@ -22,13 +20,10 @@ if (! function_exists('filter_null_values')) {
 
     /**
      * Filter out null values from an array.
-     *
-     * @param array $data
-     * @return array
      */
     function filter_null_values(array $data): array
     {
-        return array_filter($data, fn($value) => !is_null($value));
+        return array_filter($data, fn ($value) => ! is_null($value));
     }
 }
 
@@ -46,7 +41,7 @@ if (! function_exists('generate_username')) {
 
         $suffix = strtolower(Str::random(5));
 
-        $username = $base . $suffix;
+        $username = $base.$suffix;
 
         $username = substr($username, 0, 20);
 
@@ -54,11 +49,9 @@ if (! function_exists('generate_username')) {
     }
 }
 
-if (!function_exists("auth_user_id")) {
+if (! function_exists('auth_user_id')) {
     /**
      * Get the authenticated user's ID.
-     *
-     * @return int|null
      */
     function auth_user_id(): ?int
     {
@@ -71,7 +64,7 @@ if (!function_exists("auth_user_id")) {
     }
 }
 
-if (!function_exists('check_version_conflict')) {
+if (! function_exists('check_version_conflict')) {
     /**
      * Check if the version conflict
      */

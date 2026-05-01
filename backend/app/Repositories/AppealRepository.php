@@ -50,14 +50,6 @@ class AppealRepository extends BaseRepository
     }
 
     /**
-     * Find an appeal by its email verification token
-     */
-    public function findByToken(string $token): ?Appeal
-    {
-        return $this->query()->byToken($token)->first();
-    }
-
-    /**
      * Check if a user has a pending appeal for a specific resource and type
      */
     public function hasPendingAppeal(int $userId, string $appealType, ?int $resourceId): bool
@@ -74,10 +66,11 @@ class AppealRepository extends BaseRepository
      * Check if a user already has ANY appeal (regardless of status) for a specific resource and type.
      * Once an appeal exists, user must edit it — not create a new one.
      */
-    public function hasAppealForResource(int $userId, string $appealType, ?int $resourceId): bool
+    public function hasAppealForResource(?int $userId, ?string $email, string $appealType, ?int $resourceId): bool
     {
         return $this->query()
-            ->byUser($userId)
+            ->when($userId, fn ($q) => $q->byUser($userId))
+            ->when(! $userId && $email, fn ($q) => $q->where('email', $email))
             ->where('resource_id', $resourceId ?? 0)
             ->where('appeal_type', $appealType)
             ->exists();

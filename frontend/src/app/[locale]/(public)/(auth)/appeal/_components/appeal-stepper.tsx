@@ -35,16 +35,8 @@ export function AppealStepper({ currentStep, steps }: AppealStepperProps) {
                                 initial={false}
                                 animate={{
                                     scale: isActive ? 1.1 : 1,
-                                    backgroundColor: isCompleted
-                                        ? '#000000'
-                                        : isActive
-                                          ? '#000000'
-                                          : '#f5f5f5',
-                                    borderColor: isCompleted
-                                        ? '#000000'
-                                        : isActive
-                                          ? '#000000'
-                                          : '#d4d4d4'
+                                    backgroundColor: isCompleted ? '#000000' : isActive ? '#000000' : '#f5f5f5',
+                                    borderColor: isCompleted ? '#000000' : isActive ? '#000000' : '#d4d4d4'
                                 }}
                                 transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                                 className={cn(

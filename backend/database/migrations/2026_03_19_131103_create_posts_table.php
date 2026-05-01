@@ -17,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->text("content")->nullable();
-            $table->smallInteger("type")->default(PostTypeEnum::POST->value);
-            $table->smallInteger("audience")->default(AudienceTypeEnum::PRIVATE->value);
+            $table->text('content')->nullable();
+            $table->smallInteger('type')->default(PostTypeEnum::POST->value);
+            $table->smallInteger('audience')->default(AudienceTypeEnum::PRIVATE->value);
             $table->foreignId('parent_id')->nullable()->constrained('posts')->nullOnDelete();
             $table->unsignedBigInteger('likes_count')->default(0);
             $table->unsignedBigInteger('share_count')->default(0);

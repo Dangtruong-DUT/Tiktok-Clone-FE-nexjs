@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId("avatar_file_id")
+            $table->foreignId('avatar_file_id')
                 ->nullable()
-                ->constrained("upload_files")
+                ->constrained('upload_files')
                 ->nullOnDelete();
         });
     }

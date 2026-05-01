@@ -7,10 +7,13 @@ use App\Exceptions\http\BusinessException;
 use App\Exceptions\http\ForbiddenException;
 use App\Exceptions\http\NotFoundException;
 use App\Models\Appeal;
+use App\Models\AppealToken;
 use App\Repositories\AppealRepository;
+use App\Repositories\AppealTokenRepository;
 use App\Repositories\PostRepository;
 use App\Traits\HasAuthUser;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 /**
@@ -25,6 +28,7 @@ class AppealService
      */
     public function __construct(
         private readonly AppealRepository $appealRepository,
+        private readonly AppealTokenRepository $appealTokenRepository,
         private readonly PostRepository $postRepository,
         private readonly UploadService $uploadService,
     ) {}
@@ -37,9 +41,11 @@ class AppealService
     public function create(array $payload, array $evidenceFiles = []): Appeal
     {
         $userId = $payload['user_id'] ?? $this->guard()->user()->id;
+        $email = $payload['email'] ?? $this->guard()->user()?->email;
 
         $alreadyExists = $this->appealRepository->hasAppealForResource(
             userId: $userId,
+            email: $email,
             appealType: (string) $payload['appeal_type'],
             resourceId: $payload['resource_id'] ?? null,
         );
@@ -50,9 +56,6 @@ class AppealService
             ]);
         }
 
-        $token = Str::random(64);
-        $windowDays = (int) config('services.ai_moderation.appeal_window_days', 7);
-
         $evidenceFileIds = $this->uploadEvidenceFiles($evidenceFiles);
 
         return $this->appealRepository->create([
@@ -62,55 +65,153 @@ class AppealService
             'resource_type' => $payload['resource_type'],
             'reason' => $payload['reason'],
             'status' => AppealStatusEnum::PENDING->value,
-            'appeal_token' => $token,
-            'appeal_token_expires_at' => now()->addDays($windowDays),
+            'email' => $email,
             'evidence_file_ids' => ! empty($evidenceFileIds) ? $evidenceFileIds : null,
         ]);
     }
 
     /**
-     * Validate an appeal token and return the appeal if valid.
+     * Request an appeal token for a given email (guest flow).
      *
-     * @param  string  $token  The appeal token from the email link
-     *
-     * @throws NotFoundException If the token is invalid
-     * @throws BusinessException If the token has expired or appeal already reviewed
+     * @param  array{email: string, appeal_type?: string, resource_id?: int|null, resource_type?: string|null}  $payload
      */
-    public function validateToken(string $token): Appeal
+    public function requestToken(array $payload): AppealToken
     {
-        $appeal = $this->appealRepository->findByToken($token);
+        $this->validateResourceOwnership($payload['email'], $payload['resource_type'] ?? null, $payload['resource_id'] ?? null);
 
-        if (! $appeal) {
+        $token = Str::random(64);
+        $windowDays = (int) config('services.ai_moderation.appeal_window_days', 7);
+
+        return $this->appealTokenRepository->create([
+            'email' => $payload['email'],
+            'token' => $token,
+            'appeal_type' => $payload['appeal_type'] ?? null,
+            'resource_id' => $payload['resource_id'] ?? null,
+            'resource_type' => $payload['resource_type'] ?? null,
+            'expires_at' => now()->addDays($windowDays),
+        ]);
+    }
+
+    /**
+     * Validate that the provided email owns the specified resource.
+     */
+    private function validateResourceOwnership(string $email, ?string $resourceType, ?int $resourceId): void
+    {
+        if (! $resourceType || ! $resourceId) {
+            throw new BusinessException('Resource information is required to verify ownership.');
+        }
+
+        $ownerEmail = null;
+
+        switch ($resourceType) {
+            case \App\Enums\Common\ModelEntityTypeEnum::USER->value:
+                $ownerEmail = \App\Models\User::find($resourceId)?->email;
+                break;
+            case \App\Enums\Common\ModelEntityTypeEnum::POST->value:
+                $ownerEmail = \App\Models\Post::with('user')->find($resourceId)?->user?->email;
+                break;
+            case \App\Enums\Common\ModelEntityTypeEnum::COMMENT->value:
+                // Assuming Comment model exists
+                $ownerEmail = \App\Models\Comment::with('user')->find($resourceId)?->user?->email;
+                break;
+            default:
+                throw new BusinessException("Unsupported resource type for appeal: {$resourceType}");
+        }
+
+        if (! $ownerEmail || strtolower($ownerEmail) !== strtolower($email)) {
+            throw new BusinessException('The provided email does not match the owner of this resource.');
+        }
+    }
+
+    /**
+     * Verify an appeal token and mark it used for the form step.
+     */
+    public function verifyToken(string $token): AppealToken
+    {
+        $appealToken = $this->appealTokenRepository->findByToken($token);
+
+        if (! $appealToken) {
             throw new NotFoundException('Invalid appeal link');
         }
 
-        if ($appeal->isTokenExpired()) {
+        if ($appealToken->isExpired()) {
             throw new BusinessException('This appeal link has expired. Please contact support for assistance.', [
                 'token' => 'Appeal link has expired',
             ]);
         }
 
-        if ($appeal->status !== AppealStatusEnum::PENDING) {
-            throw new BusinessException('This appeal has already been reviewed.', [
-                'status' => 'Appeal already reviewed',
+        if ($appealToken->appeal_id) {
+            throw new BusinessException('This appeal link has already been used.', [
+                'token' => 'Appeal link already used',
             ]);
         }
 
-        return $appeal;
+        if (! $appealToken->used_at) {
+            $appealToken->update(['used_at' => now()]);
+        }
+
+        return $appealToken->fresh();
     }
 
     /**
-     * Submit evidence for a token-based appeal (public, via POST /appeals with token).
+     * Create an appeal using a verified token (guest flow).
      *
-     * @param  string  $token  The appeal token
-     * @param  string  $reason  User's appeal reason
-     * @param  array<\Illuminate\Http\UploadedFile>  $evidenceFiles  Uploaded evidence images
+     * @param  array{appeal_type?: string, resource_id?: int|null, resource_type?: string|null, reason: string}  $payload
      */
-    public function submitEvidence(string $token, string $reason, array $evidenceFiles = []): Appeal
+    public function createFromToken(string $token, array $payload, array $evidenceFiles = []): Appeal
     {
-        $appeal = $this->validateToken($token);
+        return DB::transaction(function () use ($token, $payload, $evidenceFiles) {
+            $appealToken = $this->appealTokenRepository->query()->lockForUpdate()->where('token', $token)->first();
 
-        return $this->applyEvidence($appeal, $reason, $evidenceFiles);
+            if (! $appealToken) {
+                throw new NotFoundException('Invalid appeal link');
+            }
+
+            if ($appealToken->isExpired()) {
+                throw new BusinessException('This appeal link has expired. Please contact support for assistance.', [
+                    'token' => 'Appeal link has expired',
+                ]);
+            }
+
+            if (! $appealToken->used_at) {
+                throw new BusinessException('Please verify your email before submitting the appeal.', [
+                    'token' => 'Appeal email is not verified',
+                ]);
+            }
+
+            if ($appealToken->appeal_id) {
+                throw new BusinessException('This appeal link has already been used.', [
+                    'token' => 'Appeal link already used',
+                ]);
+            }
+
+            $appealType = $appealToken->appeal_type ?? ($payload['appeal_type'] ?? null);
+            $resourceType = $appealToken->resource_type ?? ($payload['resource_type'] ?? null);
+            $resourceId = $appealToken->resource_id ?? ($payload['resource_id'] ?? null);
+
+            if (! $appealType || ! $resourceType) {
+                throw new BusinessException('Appeal context is missing. Please contact support.', [
+                    'appeal_type' => 'Appeal type is required',
+                ]);
+            }
+
+            $evidenceFileIds = $this->uploadEvidenceFiles($evidenceFiles);
+
+            $appeal = $this->appealRepository->create([
+                'user_id' => null,
+                'email' => $appealToken->email,
+                'appeal_type' => $appealType,
+                'resource_id' => $resourceId,
+                'resource_type' => $resourceType,
+                'reason' => $payload['reason'],
+                'status' => AppealStatusEnum::PENDING->value,
+                'evidence_file_ids' => ! empty($evidenceFileIds) ? $evidenceFileIds : null,
+            ]);
+
+            $appealToken->update(['appeal_id' => $appeal->id]);
+
+            return $appeal;
+        });
     }
 
     /**
@@ -199,11 +300,13 @@ class AppealService
     {
         $appeal = $this->appealRepository->findByUuid($uuid);
 
-        if (! $appeal || $appeal->appeal_token !== $token) {
+        $appealToken = $this->appealTokenRepository->findByToken($token);
+
+        if (! $appeal || ! $appealToken || $appealToken->appeal_id !== $appeal->id) {
             throw new NotFoundException('Invalid appeal link');
         }
 
-        if ($appeal->isTokenExpired()) {
+        if ($appealToken->isExpired()) {
             throw new BusinessException('This appeal link has expired. Please contact support for assistance.', [
                 'token' => 'Appeal link has expired',
             ]);

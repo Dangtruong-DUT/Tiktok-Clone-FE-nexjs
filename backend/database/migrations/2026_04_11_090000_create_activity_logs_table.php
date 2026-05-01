@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('activity_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->setOnDelete('set null');
-            $table->string('activity_type');// App\Enums\Common\ActivityTypeEnum
+            $table->string('activity_type'); // App\Enums\Common\ActivityTypeEnum
             $table->string('resource_type')->nullable(); // App\Enums\Common\ResourceTypeEnum
             $table->string('resource_id')->nullable();
             $table->longText('metadata')->nullable();

@@ -7,7 +7,6 @@ use App\Http\Middleware\ForceJsonResponse;
 use App\Http\Response\ApiResponse;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -15,6 +14,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -109,4 +109,4 @@ return Application::configure(basePath: dirname(__DIR__))
             };
         });
 
-})->create();
+    })->create();

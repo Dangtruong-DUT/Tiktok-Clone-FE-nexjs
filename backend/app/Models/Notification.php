@@ -1,15 +1,16 @@
 <?php
+
 namespace App\Models;
 
 use App\Enums\Common\ModelEntityTypeEnum;
 use App\Enums\Notification\NotificationTabEnum;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 use App\Enums\Notification\NotificationTypeEnum;
 use App\Traits\HasUuidObservable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Notification extends Model
 {
@@ -45,10 +46,10 @@ class Notification extends Model
     }
 
     /**
-    * The default attributes for the model.
-    *
-    * @var array<string, mixed>
-    */
+     * The default attributes for the model.
+     *
+     * @var array<string, mixed>
+     */
     protected $attributes = [
         'is_read' => false,
     ];
@@ -86,8 +87,8 @@ class Notification extends Model
     /**
      * Scope a query to filter notifications by tab.
      *
-     * @param Builder $query The query builder instance.
-     * @param string $tab The tab to filter by. Supported values: 'likes', 'comments', 'mentions', 'followers', 'all'.
+     * @param  Builder  $query  The query builder instance.
+     * @param  string  $tab  The tab to filter by. Supported values: 'likes', 'comments', 'mentions', 'followers', 'all'.
      * @return Builder The modified query builder instance.
      */
     #[Scope]
@@ -104,8 +105,8 @@ class Notification extends Model
     /**
      * Scope a query to filter notifications by notifiable_id.
      *
-     * @param Builder $query The query builder instance.
-     * @param int $notifiableId The ID of the notifiable user.
+     * @param  Builder  $query  The query builder instance.
+     * @param  int  $notifiableId  The ID of the notifiable user.
      * @return Builder The modified query builder instance.
      */
     #[Scope]

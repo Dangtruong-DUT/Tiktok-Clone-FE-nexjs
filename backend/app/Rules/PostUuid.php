@@ -22,7 +22,7 @@ class PostUuid implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!$this->postRepository->isExistByUuid($value)) {
+        if (! $this->postRepository->isExistByUuid($value)) {
             $fail(':attribute must be a valid post uuid.');
         }
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Enums\Auth;
 
 use App\Enums\BaseEnumInterface;
@@ -12,8 +13,6 @@ enum TokenTypeEnum: int implements BaseEnumInterface
 
     /**
      * Get the label of the enum value.
-     *
-     * @return string
      */
     public function label(): string
     {
@@ -25,15 +24,12 @@ enum TokenTypeEnum: int implements BaseEnumInterface
 
     /**
      * Get the translated label of the enum value.
-     *
-     * @return string
      */
     public function translate(): string
     {
         return match ($this) {
-            self::ACCESS => "Access Token",
-            self::REFRESH => "Refresh Token",
+            self::ACCESS => 'Access Token',
+            self::REFRESH => 'Refresh Token',
         };
     }
-
 }

@@ -16,7 +16,7 @@ class AdminModerationActionMail extends BaseMailAble
         private readonly User $targetUser,
         private readonly AdminActionEnum $action,
         private readonly string $reason,
-        private readonly string $appealLink,
+        private readonly ?string $appealLink,
     ) {
         parent::__construct();
     }
@@ -24,7 +24,7 @@ class AdminModerationActionMail extends BaseMailAble
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Moderation Notice: ' . $this->action->label(),
+            subject: 'Moderation Notice: '.$this->action->label(),
         );
     }
 

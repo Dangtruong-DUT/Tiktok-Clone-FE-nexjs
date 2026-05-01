@@ -12,23 +12,21 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class HashtagController extends Controller
 {
     /**
-    * HashtagController constructor.
-    */
+     * HashtagController constructor.
+     */
     public function __construct(
         private readonly HashtagService $hashtagService
-    )
-    {
-    }
+    ) {}
 
     /**
      * Search for hashtags.
      *
-     * @param GetListHashtagRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(GetListHashtagRequest $request):JsonResponse
+    public function index(GetListHashtagRequest $request): JsonResponse
     {
         $hashtags = $this->hashtagService->search($request->validated());
+
         return ApiResponse::success(
             data: HashtagResource::collection($hashtags),
             message: 'Hashtags retrieved successfully',

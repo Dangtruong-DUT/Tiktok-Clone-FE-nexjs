@@ -8,15 +8,13 @@ use Illuminate\Mail\Mailables\Envelope;
 
 class VerifyUserEmail extends BaseMailAble
 {
-
     /**
      * Create a new message instance.
      */
     public function __construct(
         private User $user,
         private string $token,
-    )
-    {
+    ) {
         parent::__construct();
     }
 
@@ -40,8 +38,8 @@ class VerifyUserEmail extends BaseMailAble
             with: [
                 'name' => $this->user->name,
                 'verifyUrl' => config('app.frontend_url')
-                    . '/en/verify-email?token=' . urlencode($this->token)
-                    . '&email=' . urlencode($this->user->email),
+                    .'/en/verify-email?token='.urlencode($this->token)
+                    .'&email='.urlencode($this->user->email),
                 'expiration' => config('auth.verification.expire'),
             ],
         );

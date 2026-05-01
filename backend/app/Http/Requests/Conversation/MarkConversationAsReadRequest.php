@@ -22,7 +22,7 @@ class MarkConversationAsReadRequest extends BaseRequest
             'conversation_id' => [
                 self::REQUIRED,
                 self::INTEGER,
-                new ConversationId(),
+                new ConversationId,
             ],
         ]);
     }

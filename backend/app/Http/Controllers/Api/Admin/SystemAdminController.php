@@ -25,8 +25,6 @@ class SystemAdminController extends Controller
 
     /**
      * Get dashboard statistics for given period.
-     * @param GetDashboardStatsRequest $request
-     * @return JsonResponse
      */
     public function getDashboardStats(GetDashboardStatsRequest $request): JsonResponse
     {
@@ -42,8 +40,6 @@ class SystemAdminController extends Controller
 
     /**
      * Get activity logs (admin actions and system events).
-     * @param GetActivityLogsRequest $request
-     * @return JsonResponse
      */
     public function getActivityLogs(GetActivityLogsRequest $request): JsonResponse
     {

@@ -1,13 +1,11 @@
 <?php
+
 namespace App\Repositories;
 
 use App\Models\ForgotPasswordToken;
-use App\Repositories\BaseRepository;
 
 class ForgotPasswordTokenRepository extends BaseRepository
 {
-
-
     /**
      * ForgotPasswordTokenRepository constructor.
      */
@@ -19,9 +17,6 @@ class ForgotPasswordTokenRepository extends BaseRepository
 
     /**
      * Delete forgot password tokens by user ID
-     *
-     * @param int $userId
-     * @return int
      */
     public function deleteByUserId(int $userId): int
     {
@@ -30,9 +25,6 @@ class ForgotPasswordTokenRepository extends BaseRepository
 
     /**
      * Find a forgot password token by token fingerprint
-     *
-     * @param string $tokenFingerprint
-     * @return ForgotPasswordToken|null
      */
     public function findByTokenFingerprint(string $tokenFingerprint): ?ForgotPasswordToken
     {

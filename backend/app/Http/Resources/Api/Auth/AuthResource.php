@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Resources\Api\Auth;
 
 use App\Http\Resources\BaseJsonResource;
@@ -9,7 +10,7 @@ class AuthResource extends BaseJsonResource
     {
         return [
             'id' => $this->id,
-            "uuid" => $this->uuid,
+            'uuid' => $this->uuid,
             'avatar' => $this->avatar_url,
             'name' => $this->name,
             'username' => $this->username,

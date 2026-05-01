@@ -21,6 +21,7 @@ class RejectAppealRequest extends BaseRequest
 
     /**
      * Get the validation rules.
+     *
      * @return array<string, string|array>
      */
     public function rules(): array
@@ -30,8 +31,8 @@ class RejectAppealRequest extends BaseRequest
             'admin_response' => [
                 self::REQUIRED,
                 self::STRING,
-                self::MIN . ':10',
-                self::MAX . ':500'
+                self::MIN.':10',
+                self::MAX.':500',
             ],
         ]);
     }

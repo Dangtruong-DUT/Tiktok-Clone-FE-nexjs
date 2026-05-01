@@ -21,10 +21,9 @@ class NotificationService
     /**
      * Get current user notifications by tab with pagination.
      *
-     * @param array<string, mixed> $filters
-     *                              - 'tab' (string): Filter notifications by tab'likes', 'comments', 'mentions', 'followers'.
-     *                              - 'per_page' (int): Number of notifications per page.
-     * @return LengthAwarePaginator
+     * @param  array<string, mixed>  $filters
+     *                                         - 'tab' (string): Filter notifications by tab'likes', 'comments', 'mentions', 'followers'.
+     *                                         - 'per_page' (int): Number of notifications per page.
      */
     public function getNotifications(array $filters): LengthAwarePaginator
     {
@@ -37,8 +36,6 @@ class NotificationService
 
     /**
      * Get unread notification count for current user.
-     * @param string $tab
-     * @return int
      */
     public function getUnreadCount(string $tab): int
     {
@@ -47,8 +44,6 @@ class NotificationService
 
     /**
      * Mark one notification as read by UUID for current user.
-     * @param string $notificationUuid
-     * @return void
      *
      * @throws NotFoundException
      */
@@ -59,15 +54,13 @@ class NotificationService
             throw new NotFoundException('Notification not found');
         }
 
-        if (!$notification->is_read) {
+        if (! $notification->is_read) {
             $notification->update(['is_read' => true]);
         }
     }
 
     /**
      * Mark all unread notifications as read for current user.
-     * @param string $tab
-     * @return int
      */
     public function markAllAsRead(string $tab): int
     {
@@ -76,9 +69,9 @@ class NotificationService
 
     /**
      * Notify target user that someone followed them.
-     * @param int $actorId The ID of the user who performed the follow action.
-     * @param int $notifiableId The ID of the user to be notified.
-     * @return void
+     *
+     * @param  int  $actorId  The ID of the user who performed the follow action.
+     * @param  int  $notifiableId  The ID of the user to be notified.
      */
     public function notifyFollow(int $actorId, int $notifiableId): void
     {
@@ -98,15 +91,15 @@ class NotificationService
 
     /**
      * Notify post owner that their post was liked.
-     * @param int $actorId The ID of the user who performed the like action.
-     * @param Post $post The post that was liked.
-     * @return void
+     *
+     * @param  int  $actorId  The ID of the user who performed the like action.
+     * @param  Post  $post  The post that was liked.
      */
     public function notifyLike(int $actorId, Post $post): void
     {
         $videoPost = $post->getRoot();
         $isLikeOnComment = $post->type === PostTypeEnum::COMMENT;
-        $postOwnerId =  $post->user_id;
+        $postOwnerId = $post->user_id;
         if ($actorId === $postOwnerId) {
             return;
         }
@@ -138,7 +131,7 @@ class NotificationService
     public function notifyComment(int $actorId, Post $targetPost, Post $commentPost): void
     {
         $videoPost = $targetPost->getRoot();
-        $postOwnerId =  $targetPost->user_id;
+        $postOwnerId = $targetPost->user_id;
         if ($actorId === $postOwnerId) {
             return;
         }
@@ -160,7 +153,7 @@ class NotificationService
     /**
      * Notify mentioned users in post/comment content.
      *
-     * @param array<int, int> $mentionedUserIds
+     * @param  array<int, int>  $mentionedUserIds
      */
     public function notifyMention(int $actorId, Post $post, array $mentionedUserIds): void
     {
@@ -189,9 +182,9 @@ class NotificationService
 
     /**
      * Notify current user for authentication-related events.
-     * @param int $userId The ID of the user to be notified.
-     * @param string $eventName The name of the authentication event (e.g., 'login', 'logout', 'password_change').
-     * @return void
+     *
+     * @param  int  $userId  The ID of the user to be notified.
+     * @param  string  $eventName  The name of the authentication event (e.g., 'login', 'logout', 'password_change').
      */
     public function notifyAuthEvent(int $userId, string $eventName): void
     {
@@ -210,7 +203,7 @@ class NotificationService
     /**
      * Notify user about admin moderation actions.
      *
-     * @param array<string,mixed>|null $data
+     * @param  array<string,mixed>|null  $data
      */
     public function notifyAdminModerationAction(
         int $adminId,

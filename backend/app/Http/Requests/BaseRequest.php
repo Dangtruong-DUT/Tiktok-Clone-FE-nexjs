@@ -24,90 +24,161 @@ use Illuminate\Validation\Rules\Enum;
 
 abstract class BaseRequest extends BaseFormRequest
 {
-
     /*
      * Laravel standard validation rules
      */
     protected const ACCEPTED = 'accepted';
+
     protected const ACTIVE_URL = 'active_url';
+
     protected const AFTER = 'after';
+
     protected const AFTER_OR_EQUAL = 'after_or_equal';
+
     protected const ALPHA = 'alpha';
+
     protected const ALPHA_DASH = 'alpha_dash';
+
     protected const ALPHA_NUM = 'alpha_num';
+
     protected const ARRAY = 'array';
+
     protected const BAIL = 'bail';
+
     protected const BEFORE = 'before';
+
     protected const BEFORE_OR_EQUAL = 'before_or_equal';
+
     protected const BETWEEN = 'between';
+
     protected const BOOLEAN = 'boolean';
+
     protected const CONFIRMED = 'confirmed';
+
     protected const DATE = 'date';
+
     protected const DATE_EQUALS = 'date_equals';
+
     protected const DATE_FORMAT = 'date_format';
+
     protected const DIFFERENT = 'different';
+
     protected const DIGITS = 'digits';
+
     protected const DIGITS_BETWEEN = 'digits_between';
+
     protected const DIMENSIONS = 'dimensions';
+
     protected const DISTINCT = 'distinct';
+
     protected const EMAIL = 'email';
+
     protected const ENDS_WITH = 'ends_with';
+
     protected const EXCLUDE_IF = 'exclude_if';
+
     protected const EXCLUDE_UNLESS = 'exclude_unless';
+
     protected const EXISTS = 'exists';
+
     protected const FILE = 'file';
+
     protected const FILLED = 'filled';
+
     protected const GT = 'gt';
+
     protected const GTE = 'gte';
+
     protected const IMAGE = 'image';
+
     protected const IN = 'in';
+
     protected const IN_ARRAY = 'in_array';
+
     protected const INTEGER = 'integer';
+
     protected const IP = 'ip';
+
     protected const IPV4 = 'ipv4';
+
     protected const IPV6 = 'ipv6';
+
     protected const JSON = 'json';
+
     protected const LT = 'lt';
+
     protected const LTE = 'lte';
+
     protected const MAX = 'max';
+
     protected const MIMES = 'mimes';
+
     protected const MIMETYPES = 'mimetypes';
+
     protected const MIN = 'min';
+
     protected const MULTIPLE_OF = 'multiple_of';
+
     protected const NOT_IN = 'not_in';
+
     protected const NOT_REGEX = 'not_regex';
+
     protected const NULLABLE = 'nullable';
+
     protected const NUMERIC = 'numeric';
+
     protected const CURRENT_PASSWORD = 'current_password';
+
     protected const PRESENT = 'present';
+
     protected const PROHIBITED = 'prohibited';
+
     protected const PROHIBITED_IF = 'prohibited_if';
+
     protected const PROHIBITED_UNLESS = 'prohibited_unless';
+
     protected const PROHIBITS = 'prohibits';
+
     protected const REGEX = 'regex';
+
     protected const REQUIRED = 'required';
+
     protected const REQUIRED_IF = 'required_if';
+
     protected const REQUIRED_WITH = 'required_with';
+
     protected const REQUIRED_WITH_ALL = 'required_with_all';
+
     protected const REQUIRED_WITHOUT = 'required_without';
+
     protected const REQUIRED_WITHOUT_ALL = 'required_without_all';
+
     protected const SAME = 'same';
+
     protected const SIZE = 'size';
+
     protected const STARTS_WITH = 'starts_with';
+
     protected const STRING = 'string';
+
     protected const TIMEZONE = 'timezone';
+
     protected const SOMETIMES = 'sometimes';
+
     protected const UNIQUE = 'unique';
+
     protected const UPLOADED = 'uploaded';
+
     protected const URL = 'url';
+
     protected const UUID = 'uuid';
+
     protected const REGEX_PHONE_VN = 'regex:/^[0-9]{10}$/';
 
     /**
      * shared rules
      */
     protected array $sharedRules = [];
-
 
     /**
      * @var array cast rules
@@ -116,9 +187,6 @@ abstract class BaseRequest extends BaseFormRequest
 
     /**
      * merge base rules
-     *
-     * @param array $rules
-     * @return array
      */
     protected function applyBaseRules(array $rules): array
     {
@@ -141,14 +209,12 @@ abstract class BaseRequest extends BaseFormRequest
                 }
             }
         }
+
         return $mergedRules;
     }
 
     /**
      * check if common rules exist
-     *
-     * @param string $name
-     * @return bool
      */
     private function hasBaseRule(string $name): bool
     {
@@ -157,90 +223,86 @@ abstract class BaseRequest extends BaseFormRequest
 
     /**
      * find rule from common rules
-     *
-     * @param string $name
-     * @return array
      */
     private function getBaseRule(string $name): array
     {
         if (array_key_exists($name, $this->sharedRules)) {
             return $this->sharedRules[$name];
         }
+
         return [];
     }
 
     /**
      * define base rules
      * If you store common rules in the constructor, the contents of the Request will not be available.
-     *
-     * @return void
      */
     protected function defineBaseRules(): void
     {
         $this->sharedRules = [
             'email' => [self::EMAIL, self::MAX.':'.'100'],
             'password' => [self::STRING, self::MIN.':'.'8', self::MAX.':'.'100'],
-            'confirm_password'=>[self::STRING, self::MIN.':'.'8', self::MAX.':'.'100', self::SAME.':password'],
-            'user_id' => [self::INTEGER, new UserId()],
-            'comment_id' => [self::INTEGER, new CommentId()],
-            'comment_uuid' => [self::STRING, self::UUID, new CommentUuid()],
-            'user_ids.*' => [self::INTEGER, new UserId()],
-            'admin_uuid' => [self::STRING, self::UUID, new UserUuid()],
-            'user_uuid' => [self::STRING, self::UUID, new UserUuid()],
-            'user_uuids.*' => [self::STRING, self::UUID, new UserUuid()],
-            'post_uuid' => [self::STRING, self::UUID, new PostUuid()],
-            'post_uuids.*' => [self::STRING, self::UUID, new PostUuid()],
-            "date_of_birth" => [self::DATE],
+            'confirm_password' => [self::STRING, self::MIN.':'.'8', self::MAX.':'.'100', self::SAME.':password'],
+            'user_id' => [self::INTEGER, new UserId],
+            'comment_id' => [self::INTEGER, new CommentId],
+            'comment_uuid' => [self::STRING, self::UUID, new CommentUuid],
+            'user_ids.*' => [self::INTEGER, new UserId],
+            'admin_uuid' => [self::STRING, self::UUID, new UserUuid],
+            'user_uuid' => [self::STRING, self::UUID, new UserUuid],
+            'user_uuids.*' => [self::STRING, self::UUID, new UserUuid],
+            'post_uuid' => [self::STRING, self::UUID, new PostUuid],
+            'post_uuids.*' => [self::STRING, self::UUID, new PostUuid],
+            'date_of_birth' => [self::DATE],
             'name' => [self::STRING, self::MAX.':'.'100'],
             'role' => [self::INTEGER, new Enum(RoleTypeEnum::class)],
             'verify_status' => [self::INTEGER, new Enum(UserVerifyStatusEnum::class)],
-            'username' => [self::STRING, 'regex:' . config('regex.username_validation')],
+            'username' => [self::STRING, 'regex:'.config('regex.username_validation')],
             'phone' => [self::STRING, self::MAX.':'.'100'],
             'month' => [self::INTEGER, self::MIN.':'.'1', self::MAX.':'.'12'],
             'year' => [self::INTEGER, self::MIN.':'.'1900', self::MAX.':'.'2100'],
             'bio' => [self::STRING, self::MAX.':255'],
             'location' => [self::STRING, self::MAX.':100'],
             'website' => [self::STRING, self::URL],
-            'avatar_file_id' => [self::INTEGER, new UploadFileId()],
+            'avatar_file_id' => [self::INTEGER, new UploadFileId],
             'days' => [self::NUMERIC, self::MIN.':'.'0'],
-            'created_at' => [self::DATE_FORMAT . ':' . DateTimeInterface::ATOM],
-            'updated_at' => [self::DATE_FORMAT . ':' . DateTimeInterface::ATOM],
+            'created_at' => [self::DATE_FORMAT.':'.DateTimeInterface::ATOM],
+            'updated_at' => [self::DATE_FORMAT.':'.DateTimeInterface::ATOM],
             'file_image' => [
                 self::FILE,
-                self::MAX.":".config('const.file.image.max_size_kb', 10240),
-                self::MIMES . ':' .config('const.file.image.mimes',  'jpg,jpeg,png'),
+                self::MAX.':'.config('const.file.image.max_size_kb', 10240),
+                self::MIMES.':'.config('const.file.image.mimes', 'jpg,jpeg,png'),
             ],
             'file_images.*' => [
                 self::FILE,
-                self::MAX.":".config('const.file.image.max_size_kb', 10240),
-                self::MIMES . ':' .config('const.file.image.mimes',  'jpg,jpeg,png'),
+                self::MAX.':'.config('const.file.image.max_size_kb', 10240),
+                self::MIMES.':'.config('const.file.image.mimes', 'jpg,jpeg,png'),
             ],
             'file_video' => [
                 self::FILE,
-                self::MAX.":".config('const.file.video.max_size_kb', 51200),
-                self::MIMES . ':' .config('const.file.video.mimes',  'mp4,mov'),
+                self::MAX.':'.config('const.file.video.max_size_kb', 51200),
+                self::MIMES.':'.config('const.file.video.mimes', 'mp4,mov'),
             ],
             'file_videos.*' => [
                 self::FILE,
-                self::MAX.":".config('const.file.video.max_size_kb', 51200),
-                self::MIMES . ':' .config('const.file.video.mimes',  'mp4,mov'),
+                self::MAX.':'.config('const.file.video.max_size_kb', 51200),
+                self::MIMES.':'.config('const.file.video.mimes', 'mp4,mov'),
             ],
-            'audience'=>[new Enum(AudienceTypeEnum::class)],
-            'post_type'=>[new Enum(PostTypeEnum::class)],
-            'notification_uuid' => [self::STRING, self::UUID, new NotifyUuid()],
-            'action_type'=>[self::STRING, 'in:'.implode(',', AdminActionEnum::values())],
+            'audience' => [new Enum(AudienceTypeEnum::class)],
+            'post_type' => [new Enum(PostTypeEnum::class)],
+            'notification_uuid' => [self::STRING, self::UUID, new NotifyUuid],
+            'action_type' => [self::STRING, 'in:'.implode(',', AdminActionEnum::values())],
             'resource_id' => [self::INTEGER],
             'resource_type' => [
                 self::STRING,
-                'in:' . implode(',', ResourceTypeEnum::values())],
-            'appeal_id' => [self::INTEGER, new AppealId()],
-            'appeal_uuid' => [self::STRING, self::UUID, new AppealUuid()],
+                'in:'.implode(',', ResourceTypeEnum::values())],
+            'appeal_id' => [self::INTEGER, new AppealId],
+            'appeal_uuid' => [self::STRING, self::UUID, new AppealUuid],
             'appeal_type' => [
-                'in:' . implode(',',  AppealTypeEnum::values())] ,
+                'in:'.implode(',', AppealTypeEnum::values())],
             'appeal_status' => [
-                'in:' . implode(',', AppealStatusEnum::values())],
-            'date_from' => [self::NULLABLE, self::DATE_FORMAT . ':Y-m-d'],
-            'date_to' => [self::NULLABLE, self::DATE_FORMAT . ':Y-m-d'],
+                'in:'.implode(',', AppealStatusEnum::values())],
+            'date_from' => [self::NULLABLE, self::DATE_FORMAT.':Y-m-d'],
+            'date_to' => [self::NULLABLE, self::DATE_FORMAT.':Y-m-d'],
         ];
     }
 }

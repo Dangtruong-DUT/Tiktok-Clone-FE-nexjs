@@ -1,4 +1,5 @@
 <?php
+
 return [
     /**
      * --------------------------------------------------------------------------
@@ -8,14 +9,14 @@ return [
      * It defines the maximum file size (in kilobytes) and allowed MIME types for each file type.
      */
     'file' => [
-        "image" => [
-            'max_size_kb' => 10240,// 10MB
-            'mimes' => 'jpg,jpeg,png'
+        'image' => [
+            'max_size_kb' => 10240, // 10MB
+            'mimes' => 'jpg,jpeg,png',
         ],
-        "video" => [
-            'max_size_kb' => 51200,// 50MB
-            'mimes' => 'mp4,mov'
-        ]
+        'video' => [
+            'max_size_kb' => 51200, // 50MB
+            'mimes' => 'mp4,mov',
+        ],
     ],
     /**
      * --------------------------------------------------------------------------

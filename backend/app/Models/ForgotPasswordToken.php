@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ForgotPasswordToken extends Model
 {
     use HasToken;
+
     /*
     * The table associated with the model.
     * @var string
@@ -21,7 +22,6 @@ class ForgotPasswordToken extends Model
     * @var bool
     */
     public $timestamps = false;
-
 
     /**
      * The attributes that are mass assignable.
@@ -46,7 +46,6 @@ class ForgotPasswordToken extends Model
             'expires_at' => 'datetime',
         ];
     }
-
 
     /**
      * Get the user that owns the forgot password token.

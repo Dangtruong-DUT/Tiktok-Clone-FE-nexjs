@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Resources\Api\Hashtag;
 
 use App\Http\Resources\BaseJsonResource;

@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 class PostService
 {
     use HasAuthUser;
+
     /**
      * PostService constructor.
      */
@@ -33,8 +34,6 @@ class PostService
 
     /**
      * Create a new post.
-     * @param array $payload
-     * @return Post
      */
     public function create(array $payload): Post
     {
@@ -42,13 +41,13 @@ class PostService
         $postType = $payload['type'] ?? PostTypeEnum::POST->value;
 
         if ($postType !== PostTypeEnum::POST->value && empty($payload['parent_id'])) {
-            throw new BusinessException('Parent ID is required for this post type.',[
+            throw new BusinessException('Parent ID is required for this post type.', [
                 'type' => 'Parent ID is required for this post type.',
             ]);
         }
 
-        if ($postType === PostTypeEnum::POST->value && !empty($payload['parent_id'])) {
-            throw new BusinessException('Parent ID is not allowed for this post type.',[
+        if ($postType === PostTypeEnum::POST->value && ! empty($payload['parent_id'])) {
+            throw new BusinessException('Parent ID is not allowed for this post type.', [
                 'type' => 'Parent ID is not allowed for this post type.',
             ]);
         }
@@ -60,7 +59,7 @@ class PostService
         $post = DB::transaction(function () use ($payload, $postType, $user, $mentionSyncData, $hashtagSyncData): Post {
             $parentPost = null;
 
-            if (!empty($payload['parent_id'])) {
+            if (! empty($payload['parent_id'])) {
                 $parentPost = $this->postRepo->findById($payload['parent_id']);
                 if (empty($parentPost)) {
                     throw new NotFoundException('Parent post not found');
@@ -78,18 +77,18 @@ class PostService
                 'user_id' => $user->id,
                 'parent_id' => $payload['parent_id'] ?? null,
             ]);
-            if (!empty($mentionSyncData)) {
+            if (! empty($mentionSyncData)) {
                 $post->mentions()->sync($mentionSyncData);
             }
-            if (!empty($hashtagSyncData)) {
+            if (! empty($hashtagSyncData)) {
                 $this->syncHashtags($post, $hashtagSyncData);
             }
 
-            if (!empty($payload['medias'])) {
+            if (! empty($payload['medias'])) {
                 $this->mediaRepo->createMany($payload['medias'], $post->id);
             }
 
-            if (!empty($parentPost) && $postType === PostTypeEnum::COMMENT->value) {
+            if (! empty($parentPost) && $postType === PostTypeEnum::COMMENT->value) {
                 $this->notificationService->notifyComment(
                     actorId: $user->id,
                     targetPost: $parentPost,
@@ -97,7 +96,7 @@ class PostService
                 );
             }
 
-            if (!empty($mentionSyncData)) {
+            if (! empty($mentionSyncData)) {
                 $this->notificationService->notifyMention(
                     actorId: $user->id,
                     post: $post,
@@ -115,21 +114,21 @@ class PostService
 
     /**
      * Update a post by uuid.
-     * @param array $payload
-     *              - post_uuid: post uuid
-     *              - content: post content
-     *              - audience: post audience
-     *              - thumbnail: thumbnail file id
-     *              - mentions: array of mentioned user ids
-     *              - hashtags: array of hashtag names
-     * @return Post
+     *
+     * @param  array  $payload
+     *                          - post_uuid: post uuid
+     *                          - content: post content
+     *                          - audience: post audience
+     *                          - thumbnail: thumbnail file id
+     *                          - mentions: array of mentioned user ids
+     *                          - hashtags: array of hashtag names
      */
     public function update(array $payload): Post
     {
         $post = $this->findPostOrFail($payload['post_uuid']);
         $existingMentionUserIds = $post->mentions()->pluck('users.id')->map(fn ($id) => (int) $id)->toArray();
 
-        $authUserId =auth_user_id();
+        $authUserId = auth_user_id();
         if ($post->user_id !== $authUserId) {
             throw new ForbiddenException('You can only update your own post');
         }
@@ -140,12 +139,12 @@ class PostService
         $allowedFields = ['content', 'audience', 'thumbnail'];
         $dataToUpdate = array_intersect_key($payload, array_flip($allowedFields));
 
-        if (empty($dataToUpdate) && !array_key_exists('mentions', $payload) && !array_key_exists('hashtags', $payload)) {
+        if (empty($dataToUpdate) && ! array_key_exists('mentions', $payload) && ! array_key_exists('hashtags', $payload)) {
             throw new BusinessException('At least one field must be provided for update');
         }
 
         DB::transaction(function () use ($post, $payload, $dataToUpdate, $mentionSyncData, $hashtagSyncData): void {
-            if (!empty($dataToUpdate)) {
+            if (! empty($dataToUpdate)) {
                 $this->postRepo->update($post->id, [
                     'content' => $dataToUpdate['content'] ?? $post->content,
                     'audience' => $dataToUpdate['audience'] ?? $post->audience,
@@ -165,7 +164,7 @@ class PostService
         });
 
         $newMentionedUserIds = array_values(array_diff(array_keys($mentionSyncData), $existingMentionUserIds));
-        if (!empty($newMentionedUserIds)) {
+        if (! empty($newMentionedUserIds)) {
             $this->notificationService->notifyMention(
                 actorId: $authUserId,
                 post: $post,
@@ -178,8 +177,6 @@ class PostService
 
     /**
      * Delete a post by uuid.
-     * @param string $uuid
-     * @return void
      */
     public function delete(string $uuid): void
     {
@@ -190,10 +187,10 @@ class PostService
                 throw new ForbiddenException('You can only delete your own post');
             }
 
-            if (!empty($post->parent_id)) {
+            if (! empty($post->parent_id)) {
                 $parentPost = $this->postRepo->findById($post->parent_id);
 
-                if (!empty($parentPost)) {
+                if (! empty($parentPost)) {
                     $this->updateParentCounter($parentPost, $post->type->value, 'decrement');
                 }
             }
@@ -204,8 +201,6 @@ class PostService
 
     /**
      * Get post by uuid.
-     * @param string $uuid
-     * @return Post
      */
     public function getByUuidOrFail(string $uuid): ?Post
     {
@@ -214,19 +209,20 @@ class PostService
         if (empty($postDetail)) {
             throw new NotFoundException('Post not found');
         }
+
         return $postDetail;
     }
 
     /**
      * Get list of child posts by parent post uuid.
-      * @param array $payload
-     *                      - post_uuid: parent post uuid
-     *                      - audience: filter by audience
-     *                      - type: filter by post type
-     *                      - q: search keyword for content and user name
-     *                      - page: pagination page number
-     *                      - per_page: number of items per page for pagination
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     *
+     * @param  array  $payload
+     *                          - post_uuid: parent post uuid
+     *                          - audience: filter by audience
+     *                          - type: filter by post type
+     *                          - q: search keyword for content and user name
+     *                          - page: pagination page number
+     *                          - per_page: number of items per page for pagination
      */
     public function getChildren(array $payload): LengthAwarePaginator
     {
@@ -246,13 +242,13 @@ class PostService
 
     /**
      * Search for posts.
-      * @param array $payload
-     *                      - q: search keyword for content and user name
-     *                      - audience: filter by audience
-     *                      - type: filter by post type
-     *                      - page: pagination page number
-     *                      - per_page: number of items per page for pagination
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     *
+     * @param  array  $payload
+     *                          - q: search keyword for content and user name
+     *                          - audience: filter by audience
+     *                          - type: filter by post type
+     *                          - page: pagination page number
+     *                          - per_page: number of items per page for pagination
      */
     public function search(array $payload): LengthAwarePaginator
     {
@@ -269,12 +265,12 @@ class PostService
 
     /**
      * Get related posts by post uuid.
-     * @param array $payload
-     *                      - post_uuid: target post uuid
-     *                      - type: filter by post type
-     *                      - page: pagination page number
-     *                      - per_page: number of items per page for pagination
-     * @return LengthAwarePaginator
+     *
+     * @param  array  $payload
+     *                          - post_uuid: target post uuid
+     *                          - type: filter by post type
+     *                          - page: pagination page number
+     *                          - per_page: number of items per page for pagination
      */
     public function getRelatedPosts(array $payload): LengthAwarePaginator
     {
@@ -296,15 +292,16 @@ class PostService
 
     /**
      * Get ports of friends.
-      * @param array $payload
-     *                      - q: search keyword for content and user name
-     *                      - page: pagination page number
-     *                      - per_page: number of items per page for pagination
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     *
+     * @param  array  $payload
+     *                          - q: search keyword for content and user name
+     *                          - page: pagination page number
+     *                          - per_page: number of items per page for pagination
      */
     public function getMutualFriendsPosts(array $payload): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
+
         return $this->postRepo->getMutualFriendsPosts(
             filters: [
                 'q' => $payload['q'] ?? null,
@@ -317,15 +314,16 @@ class PostService
 
     /**
      * Get ports of following users.
-      * @param array $payload
-     *                      - q: search keyword for content and user name
-     *                      - page: pagination page number
-     *                      - per_page: number of items per page for pagination
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     *
+     * @param  array  $payload
+     *                          - q: search keyword for content and user name
+     *                          - page: pagination page number
+     *                          - per_page: number of items per page for pagination
      */
     public function getFollowingPosts(array $payload): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
+
         return $this->postRepo->getFollowingPosts(
             filters: [
                 'q' => $payload['q'] ?? null,
@@ -338,17 +336,18 @@ class PostService
 
     /**
      * Get posts of a user by user uuid.
-      * @param array $payload
-     *                      - user_uuid: user uuid
-     *                      - type: filter by post type
-     *                      - page: pagination page number
-     *                      - per_page: number of items per page for pagination
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     *
+     * @param  array  $payload
+     *                          - user_uuid: user uuid
+     *                          - type: filter by post type
+     *                          - page: pagination page number
+     *                          - per_page: number of items per page for pagination
      */
     public function getUserPosts(array $payload): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
         $targetUser = $this->userRepo->findByUuidOrFail($payload['user_uuid']);
+
         return $this->postRepo->getPostsByUserId(
             filters: [
                 'type' => $payload['post_type'] ?? null,
@@ -363,12 +362,12 @@ class PostService
 
     /**
      * Get liked posts of a user by user uuid.
-      * @param array $payload
-     *                      - user_uuid: user uuid
-     *                      - type: filter by post type
-     *                      - page: pagination page number
-     *                      - per_page: number of items per page for pagination
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     *
+     * @param  array  $payload
+     *                          - user_uuid: user uuid
+     *                          - type: filter by post type
+     *                          - page: pagination page number
+     *                          - per_page: number of items per page for pagination
      */
     public function getUserLikedPosts(array $payload): LengthAwarePaginator
     {
@@ -392,15 +391,14 @@ class PostService
         );
     }
 
-
     /**
      * Get bookmarked posts of a user by user uuid.
-      * @param array $payload
-     *                      - user_uuid: user uuid
-     *                      - type: filter by post type
-     *                      - page: pagination page number
-     *                      - per_page: number of items per page for pagination
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     *
+     * @param  array  $payload
+     *                          - user_uuid: user uuid
+     *                          - type: filter by post type
+     *                          - page: pagination page number
+     *                          - per_page: number of items per page for pagination
      */
     public function getUserBookmarkedPosts(array $payload): LengthAwarePaginator
     {
@@ -426,8 +424,6 @@ class PostService
 
     /**
      * Like a post.
-     * @param string $uuid
-     * @return void
      */
     public function like(string $uuid): void
     {
@@ -448,15 +444,13 @@ class PostService
 
     /**
      * Unlike a post.
-     * @param string $uuid
-     * @return void
      */
     public function unlike(string $uuid): void
     {
         DB::transaction(function () use ($uuid) {
             $post = $this->findPostOrFail($uuid);
 
-            if (!$post->userLikes()->where('user_id', auth_user_id())->exists()) {
+            if (! $post->userLikes()->where('user_id', auth_user_id())->exists()) {
                 return;
             }
             $post->userLikes()->detach(auth_user_id());
@@ -466,8 +460,6 @@ class PostService
 
     /**
      * Bookmark a post.
-     * @param string $uuid
-     * @return void
      */
     public function bookmark(string $uuid): void
     {
@@ -484,15 +476,13 @@ class PostService
 
     /**
      * Unbookmark a post.
-     * @param string $uuid
-     * @return void
      */
     public function unbookmark(string $uuid): void
     {
         DB::transaction(function () use ($uuid) {
             $post = $this->findPostOrFail($uuid);
 
-            if (!$post->userBookmarks()->where('user_id', auth_user_id())->exists()) {
+            if (! $post->userBookmarks()->where('user_id', auth_user_id())->exists()) {
                 return;
             }
             $post->userBookmarks()->detach(auth_user_id());
@@ -502,8 +492,6 @@ class PostService
 
     /**
      * Find post by uuid or throw not found exception.
-     * @param string $uuid
-     * @return Post
      */
     private function findPostOrFail(string $uuid): Post
     {
@@ -518,14 +506,14 @@ class PostService
 
     /**
      * Sync hashtags to post.
-     * @param Post $post
-     * @param array<int, array{name: string, start: int|null, end: int|null}> $hashtags
-     * @return void
+     *
+     * @param  array<int, array{name: string, start: int|null, end: int|null}>  $hashtags
      */
     private function syncHashtags(Post $post, array $hashtags): void
     {
         if (empty($hashtags)) {
             $post->hashtags()->sync([]);
+
             return;
         }
 
@@ -533,6 +521,7 @@ class PostService
 
         if (empty($hashtagNames)) {
             $post->hashtags()->sync([]);
+
             return;
         }
 
@@ -540,14 +529,13 @@ class PostService
             ->keyBy('name');
         $newHashtags = [];
 
-
         foreach ($hashtagNames as $hashtagName) {
-            if (!isset($existingHashtags[$hashtagName])) {
+            if (! isset($existingHashtags[$hashtagName])) {
                 $newHashtags[] = ['name' => $hashtagName];
             }
         }
 
-        if (!empty($newHashtags)) {
+        if (! empty($newHashtags)) {
             $this->hashtagRepo->createMany($newHashtags);
         }
 
@@ -557,7 +545,7 @@ class PostService
         $syncData = [];
         foreach ($hashtags as $hashtag) {
             $hashtagName = (string) $hashtag['name'];
-            if (!isset($hashtagMapByName[$hashtagName])) {
+            if (! isset($hashtagMapByName[$hashtagName])) {
                 continue;
             }
 
@@ -573,7 +561,6 @@ class PostService
     /**
      * Resolve mention sync data [userId => pivotData].
      *
-     * @param array $payload
      * @return array<int, array{start: int|null, end: int|null}>
      */
     private function resolveMentionSyncData(array $payload): array
@@ -592,7 +579,7 @@ class PostService
 
         foreach ($mentionTokens as $token) {
             $username = (string) $token['username'];
-            if (!isset($userIdMap[$username])) {
+            if (! isset($userIdMap[$username])) {
                 continue;
             }
 
@@ -620,7 +607,6 @@ class PostService
     /**
      * Resolve hashtag sync payload with positions.
      *
-     * @param array $payload
      * @return array<int, array{name: string, start: int|null, end: int|null}>
      */
     private function resolveHashtagSyncData(array $payload): array
@@ -662,7 +648,6 @@ class PostService
     /**
      * Extract mention tokens with positions from content.
      *
-     * @param string $content
      * @return array<int, array{username: string, start: int, end: int}>
      */
     private function extractMentionTokens(string $content): array
@@ -682,7 +667,6 @@ class PostService
     /**
      * Extract hashtag tokens with positions from content.
      *
-     * @param string $content
      * @return array<int, array{name: string, start: int, end: int}>
      */
     private function extractHashtagTokens(string $content): array
@@ -702,8 +686,6 @@ class PostService
     /**
      * Extract first capture group matches and positions for a regex.
      *
-     * @param string $content
-     * @param string $pattern
      * @return array<int, array{value: string, start: int, end: int}>
      */
     private function extractTokenMatches(string $content, string $pattern): array
@@ -755,12 +737,6 @@ class PostService
 
     /**
      * Ensure target user's privacy setting allows current viewer.
-     *
-     * @param \App\Models\User $targetUser
-     * @param ?int $authUserId
-     * @param string $settingField
-     * @param string $forbiddenMessage
-     * @return void
      */
     private function ensureUserSettingsVisibility(
         \App\Models\User $targetUser,
@@ -782,10 +758,6 @@ class PostService
 
     /**
      * Update parent post counter by post type.
-     * @param Post $parentPost
-     * @param int $type
-     * @param string $action
-     * @return void
      */
     private function updateParentCounter(Post $parentPost, int $type, string $action = 'increment'): void
     {
@@ -795,7 +767,7 @@ class PostService
             PostTypeEnum::COMMENT->value => 'comments_count',
         ];
 
-        if (!isset($map[$type])) {
+        if (! isset($map[$type])) {
             return;
         }
 

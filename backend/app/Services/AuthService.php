@@ -14,9 +14,9 @@ use App\Repositories\RefreshTokenRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\VerifyEmailTokenRepository;
 use App\Traits\HasAuthUser;
-use App\Services\TokenService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+
 class AuthService
 {
     use HasAuthUser;
@@ -33,16 +33,12 @@ class AuthService
         private readonly NotificationService $notificationService
     ) {}
 
-
     /**
      * Attempt to log the user in and return the access token and refresh token.
-     *
-     * @param array $credentials
-     * @return array
      */
     public function login(array $credentials): array
     {
-        if (!$this->guard()->attempt($credentials)) {
+        if (! $this->guard()->attempt($credentials)) {
             throw new UnauthorizedException('Email or password is incorrect');
         }
         $user = $this->guard()->user();
@@ -54,29 +50,24 @@ class AuthService
         return [
             'access_token' => $accessToken,
             'refresh_token' => $refreshToken,
-            'user' => $user
+            'user' => $user,
         ];
     }
 
-
     /**
      * Log the user out by invalidating the refresh token.
-     *
-     * @param string $refreshToken
-     * @return bool
      */
     public function logout(string $refreshToken): bool
     {
         $token = $this->tokenService->verifyRefreshToken($refreshToken);
         $this->guard()->logout();
         $this->refreshRepo->delete($token->id); // @phpstan-ignore-line
+
         return true;
     }
 
     /**
      * Log the user out from all devices by invalidating all refresh tokens.
-     * @param string $refreshToken
-     * @return bool
      */
     public function logoutAll(string $refreshToken): bool
     {
@@ -84,14 +75,12 @@ class AuthService
         $user = $this->guard()->user();
         $this->guard()->logout();
         $this->refreshRepo->deleteByUserId($user->id);
+
         return true;
     }
 
     /**
      * Refresh the access token using the refresh token.
-     *
-     * @param string $refreshToken
-     * @return array
      */
     public function refresh(string $refreshToken): array
     {
@@ -111,19 +100,17 @@ class AuthService
 
     /**
      * Register for new User
-     * @param array $data
-     * @return array
      */
     public function register(array $data): array
     {
         $isExist = $this->userRepo->checkExistByEmail($data['email']);
         if ($isExist) {
             throw new BusinessException(
-            'Email already exists',
-            ['email' => 'The email address is already registered. Please use a different email.']
+                'Email already exists',
+                ['email' => 'The email address is already registered. Please use a different email.']
             );
         }
-        DB::transaction(function ()use ($data, &$accessToken, &$refreshToken, &$user) {
+        DB::transaction(function () use ($data, &$accessToken, &$refreshToken, &$user) {
             $user = $this->userRepo->create([
                 'name' => $data['name'],
                 'email' => $data['email'],
@@ -141,15 +128,15 @@ class AuthService
         return [
             'access_token' => $accessToken,
             'refresh_token' => $refreshToken,
-            'user' => $user
+            'user' => $user,
         ];
     }
 
     /**
      * Handle verify email request by verifying the token and activating the user's account.
      *
-     * @param array $credentials
-     *              - email_verify_token: The token sent to the user's email for verification.
+     * @param  array  $credentials
+     *                              - email_verify_token: The token sent to the user's email for verification.
      * @return bool
      */
     public function verifyEmail(array $credentials): array
@@ -175,8 +162,6 @@ class AuthService
 
     /**
      * Resend the verification email to the user if their email is not verified.
-     *
-     * @return bool
      */
     public function resendVerifyEmail(): bool
     {
@@ -189,29 +174,25 @@ class AuthService
             $verifyToken = $this->tokenService->createVerifyEmailToken($user);
             Mail::to($user->email)->send(new VerifyUserEmail($user, $verifyToken));
         });
+
         return true;
     }
 
     /**
      * Get the authenticated user's profile.
-     *
-     * @return User|null
      */
-    public function me(): User|null
+    public function me(): ?User
     {
         return $this->guard()->user();
     }
 
     /**
      * Handle forgot password request by sending a reset link to the user's email.
-     *
-     * @param string $email
-     * @return bool
      */
     public function forgot(string $email): bool
     {
         $user = $this->userRepo->findByEmail($email);
-        if (!$user) {
+        if (! $user) {
             throw new BusinessException(
                 'Email not found',
                 ['email' => 'The email address is not registered. Please check and try again.']
@@ -220,7 +201,7 @@ class AuthService
 
         DB::transaction(function () use ($user, $email) {
             $token = $this->tokenService->createForgotPasswordToken($user);
-            Mail::to($email)->send(new ForgotPasswordMail($user,$token));
+            Mail::to($email)->send(new ForgotPasswordMail($user, $token));
         });
 
         return true;
@@ -229,30 +210,28 @@ class AuthService
     /**
      * Handle verify forgot password token request by verifying the token and allowing the user to reset the password.
      *
-     * @param array $credentials
-     *              - forgot_password_token: The token sent to the user's email for password reset verification.
-     * @return bool
+     * @param  array  $credentials
+     *                              - forgot_password_token: The token sent to the user's email for password reset verification.
      */
     public function verifyForgotToken(array $credentials): bool
     {
         $token = $credentials['forgot_password_token'];
         $this->tokenService->verifyForgotToken($token);
+
         return true;
     }
 
     /**
      * Handle reset password request by resetting the user's password.
-     *
-     * @param array $credentials
-     * @return bool
      */
     public function resetPassword(array $credentials): bool
     {
-        $validToken= $this->tokenService->verifyForgotToken($credentials['forgot_password_token']);
+        $validToken = $this->tokenService->verifyForgotToken($credentials['forgot_password_token']);
         $this->forgotPasswordTokenRepo->deleteByUserId($validToken->user_id);
         $user = $this->userRepo->findOrFail($validToken->user_id);
         $user->password = $credentials['password'];
         $user->save();
+
         return true;
     }
 }

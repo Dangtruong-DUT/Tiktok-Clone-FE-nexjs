@@ -23,6 +23,8 @@ class UserRepository extends BaseRepository
 
     /**
      * Get super admin user.
+     *
+     * @param  int  $id
      */
     public function getSuperAdmin(): ?User
     {
@@ -71,6 +73,14 @@ class UserRepository extends BaseRepository
     }
 
     /**
+     * Find a user by uuid including soft-deleted records.
+     */
+    public function findWithTrashedByUuidOrFail(string $uuid): User
+    {
+        return $this->query()->withTrashed()->where('uuid', $uuid)->firstOrFail();
+    }
+
+    /**
      * Check if user exists by email.
      */
     public function checkExistByEmail(string $email): bool
@@ -97,7 +107,7 @@ class UserRepository extends BaseRepository
     /**
      * Get user ids by usernames.
      *
-     * @param array<int, string> $usernames
+     * @param  array<int, string>  $usernames
      * @return array<int, int>
      */
     public function getIdsByUsernames(array $usernames): array
@@ -116,7 +126,7 @@ class UserRepository extends BaseRepository
     /**
      * Get map [username => id] for given usernames.
      *
-     * @param array<int, string> $usernames
+     * @param  array<int, string>  $usernames
      * @return array<string, int>
      */
     public function getIdMapByUsernames(array $usernames): array
@@ -145,7 +155,7 @@ class UserRepository extends BaseRepository
     /**
      * Search users with filters, omit super admin.
      *
-     * @param array<string, mixed> $filters
+     * @param  array<string, mixed>  $filters
      */
     public function search(array $filters, ?int $authUserId): LengthAwarePaginator
     {
@@ -163,7 +173,7 @@ class UserRepository extends BaseRepository
     /**
      * Get paginated users for admin panel.
      *
-     * @param array<string,mixed> $filters
+     * @param  array<string,mixed>  $filters
      */
     public function searchForAdmin(array $filters): LengthAwarePaginator
     {
@@ -180,17 +190,22 @@ class UserRepository extends BaseRepository
 
         return $query
             ->with('avatarFile:id,url')
-            ->select(['id', 'uuid', 'username', 'email', 'avatar_file_id', 'created_at', 'banned_at', 'ban_reason'])
+            ->select([
+                'id',
+                'uuid',
+                'username',
+                'email',
+                'avatar_file_id',
+                'created_at',
+                'banned_at',
+                'ban_reason',
+                'deleted_at',
+            ])
             ->paginate($perPage);
     }
 
     /**
      * Get user indicators grouped by date in given range.
-        *
-        * @param int $userId
-        * @param string $fromDate
-        * @param string $toDate
-        * @return Collection
      */
     public function getIndicatorsByUserIdAndDateRange(int $userId, string $fromDate, string $toDate): Collection
     {
@@ -211,7 +226,7 @@ class UserRepository extends BaseRepository
     /**
      * Get followers of target user.
      *
-     * @param array<string, mixed> $filters
+     * @param  array<string, mixed>  $filters
      */
     public function getFollowersByUserId(int $targetUserId, array $filters, ?int $authUserId): LengthAwarePaginator
     {
@@ -226,7 +241,7 @@ class UserRepository extends BaseRepository
     /**
      * Get followings of target user.
      *
-     * @param array<string, mixed> $filters
+     * @param  array<string, mixed>  $filters
      */
     public function getFollowingByUserId(int $targetUserId, array $filters, ?int $authUserId): LengthAwarePaginator
     {
@@ -241,7 +256,7 @@ class UserRepository extends BaseRepository
     /**
      * Get mutual friends of target user.
      *
-     * @param array<string, mixed> $filters
+     * @param  array<string, mixed>  $filters
      */
     public function getFriendsByUserId(int $targetUserId, array $filters, ?int $authUserId): LengthAwarePaginator
     {
@@ -257,7 +272,7 @@ class UserRepository extends BaseRepository
     /**
      * Get suggested users for authenticated user.
      *
-     * @param array<string, mixed> $filters
+     * @param  array<string, mixed>  $filters
      */
     public function getSuggestedUsers(array $filters, ?int $authUserId): LengthAwarePaginator
     {
@@ -276,7 +291,7 @@ class UserRepository extends BaseRepository
     /**
      * Get user with details by id.
      *
-     * @param Builder<User> $query
+     * @param  Builder<User>  $query
      * @return Builder<User>
      */
     private function withDetail(Builder $query, ?int $userId): Builder
@@ -299,10 +314,7 @@ class UserRepository extends BaseRepository
     /**
      * Apply list filters and return paginated users with detail.
      *
-     * @param Builder<User> $query
-        * @param Collection $filterCollection
-        * @param ?int $authUserId
-        * @return LengthAwarePaginator
+     * @param  Builder<User>  $query
      */
     private function paginateListWithDetail(Builder $query, Collection $filterCollection, ?int $authUserId): LengthAwarePaginator
     {
@@ -320,13 +332,12 @@ class UserRepository extends BaseRepository
 
     /**
      * Build search query with filters.
-        *
-        * @param Collection $filterCollection
-        *.                  - q: string (search keyword for username and email)
-        *.                  - verify_status: int (0 for unverified, 1 for verified)
-        *.                  - role: int (0 for regular user, 1 for admin)
-        *                   - status: string ('active', 'banned', 'all')
-        * @return Builder
+     *
+     * @param  Collection  $filterCollection
+     *.                  - q: string (search keyword for username and email)
+     *.                  - verify_status: int (0 for unverified, 1 for verified)
+     *.                  - role: int (0 for regular user, 1 for admin)
+     *                   - status: string ('active', 'banned', 'all')
      */
     private function buildSearchQuery(Collection $filterCollection): Builder
     {
@@ -343,6 +354,18 @@ class UserRepository extends BaseRepository
                 fn (Builder $query) => $query->where('role', (int) $filterCollection->get('role'))
             )
             ->when($filterCollection->get('status'), function (Builder $query, $status) {
+                if ($status === 'all') {
+                    $query->withTrashed();
+
+                    return;
+                }
+
+                if ($status === 'deleted') {
+                    $query->onlyTrashed();
+
+                    return;
+                }
+
                 if ($status === 'banned') {
                     $query->whereNotNull('banned_at');
 
@@ -357,10 +380,6 @@ class UserRepository extends BaseRepository
 
     /**
      * Apply full-text search condition on search_vector.
-     *
-     * @param Builder $query
-     * @param string $keyword
-     * @return Builder
      */
     private function applySearchVector(Builder $query, string $keyword): Builder
     {

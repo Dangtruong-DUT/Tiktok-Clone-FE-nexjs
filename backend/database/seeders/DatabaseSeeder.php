@@ -15,13 +15,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $adminUser = User::where('email', env('SYSTEM_ADMIN_EMAIL'))->first();
-        if (!$adminUser) {
+        if (! $adminUser) {
             $adminUser = User::factory()->create([
                 'username' => env('SYSTEM_ADMIN_USER_NAME'),
                 'password' => env('SYSTEM_ADMIN_PASSWORD'),
                 'email' => env('SYSTEM_ADMIN_EMAIL'),
                 'verify' => UserVerifyStatusEnum::VERIFIED->value,
-                'role'=> RoleTypeEnum::SUPER_ADMIN->value,
+                'role' => RoleTypeEnum::SUPER_ADMIN->value,
             ]);
         }
 

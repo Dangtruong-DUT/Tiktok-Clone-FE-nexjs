@@ -27,10 +27,10 @@ return new class extends Migration
         ");
 
         /* Create a GIN index on the search_vector column for efficient full-text search */
-        DB::statement("
+        DB::statement('
             CREATE INDEX users_search_vector_idx
             ON users USING GIN (search_vector)
-        ");
+        ');
     }
 
     /**
@@ -38,13 +38,13 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("
+        DB::statement('
             DROP INDEX IF EXISTS users_search_vector_idx
-        ");
+        ');
 
-        DB::statement("
+        DB::statement('
             ALTER TABLE users
             DROP COLUMN IF EXISTS search_vector
-        ");
+        ');
     }
 };

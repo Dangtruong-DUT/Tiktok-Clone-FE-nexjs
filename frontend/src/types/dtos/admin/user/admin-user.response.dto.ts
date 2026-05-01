@@ -16,7 +16,8 @@ export const AdminUserSchema = z
         avatar: z.string().nullable(),
         created_at: z.string(),
         banned_at: z.string().nullable(),
-        ban_reason: z.string().nullable()
+        ban_reason: z.string().nullable(),
+        deleted_at: z.string().nullable()
     })
     .strict()
 
@@ -26,6 +27,8 @@ export const BanUserResSchema = ApiSuccessResponseWithDataSchema(AdminUserSchema
 
 export const UnbanUserResSchema = ApiSuccessResponseWithDataSchema(AdminUserSchema)
 
+export const RestoreUserResSchema = ApiSuccessResponseWithDataSchema(AdminUserSchema)
+
 export const DeleteUserResSchema = ApiSuccessResponseSchema
 
 export const CommonMessageResSchema = ApiSuccessResponseSchema
@@ -34,5 +37,6 @@ export type AdminUser = z.infer<typeof AdminUserSchema>
 export type GetAdminUsersRes = ApiSuccessResponse & { data: AdminUser[]; meta: PaginationMeta }
 export type BanUserRes = ApiSuccessResponse & { data: AdminUser }
 export type UnbanUserRes = ApiSuccessResponse & { data: AdminUser }
+export type RestoreUserRes = ApiSuccessResponse & { data: AdminUser }
 export type DeleteUserRes = ApiSuccessResponse
 export type CommonMessageRes = ApiSuccessResponse

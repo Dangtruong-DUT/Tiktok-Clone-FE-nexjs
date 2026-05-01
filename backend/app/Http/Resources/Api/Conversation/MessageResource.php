@@ -21,7 +21,7 @@ class MessageResource extends BaseJsonResource
             'sender' => ConversationUserResource::make($this->whenLoaded('sender')),
             'medias' => MessageMediaResource::collection($this->whenLoaded('medias')),
             'reply_to' => $this->whenLoaded('replyTo', function (): ?array {
-                if (!$this->replyTo) {
+                if (! $this->replyTo) {
                     return null;
                 }
 

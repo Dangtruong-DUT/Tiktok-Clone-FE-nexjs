@@ -5,8 +5,8 @@ namespace App\Repositories;
 use App\Models\AdminLog;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection as SupportCollection;
 
 class AdminLogRepository extends BaseRepository
@@ -22,7 +22,7 @@ class AdminLogRepository extends BaseRepository
     /**
      * Get paginated admin logs for admin panel.
      *
-     * @param array<string,mixed> $filters
+     * @param  array<string,mixed>  $filters
      */
     public function searchForAdmin(array $filters = []): LengthAwarePaginator
     {
@@ -69,8 +69,6 @@ class AdminLogRepository extends BaseRepository
 
     /**
      * Build search query with filters.
-     *
-     * @param SupportCollection $filterCollection
      */
     private function buildSearchQuery(SupportCollection $filterCollection): Builder
     {
@@ -91,5 +89,4 @@ class AdminLogRepository extends BaseRepository
                 $query->whereDate('created_at', '<=', $dateTo);
             });
     }
-
 }

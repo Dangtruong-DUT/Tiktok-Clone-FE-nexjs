@@ -9,11 +9,12 @@ class GetAppealsRequest extends BaseListRequest
 {
     /**
      * Get the validation rules.
+     *
      * @return array<string, string|array>
      */
     public function rules(): array
     {
-        return  $this->applyBaseRules([
+        return $this->applyBaseRules([
             'page' => [self::NULLABLE],
             'per_page' => [self::NULLABLE],
             'appeal_status' => [self::NULLABLE],
@@ -23,4 +24,3 @@ class GetAppealsRequest extends BaseListRequest
         ]);
     }
 }
-

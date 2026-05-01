@@ -14,7 +14,6 @@ abstract class BaseFormRequest extends FormRequest
      */
     protected array $casts = [];
 
-
     /*
     * prepare for validation: convert keys to snake case
     * @return void
@@ -28,8 +27,9 @@ abstract class BaseFormRequest extends FormRequest
     /**
      * override validated for cast data after validation
      *
-     * @param null|mixed $key
-     * @param null|mixed $default
+     * @param  null|mixed  $key
+     * @param  null|mixed  $default
+     *
      * @throws ValidationException
      */
     public function validated($key = null, $default = null): mixed
@@ -42,6 +42,7 @@ abstract class BaseFormRequest extends FormRequest
         if (empty($this->casts)) {
             return $validatedData;
         }
+
         return DataCaster::nestedCast($validatedData, $this->casts);
     }
 }

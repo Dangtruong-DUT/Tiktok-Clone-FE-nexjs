@@ -18,7 +18,7 @@ class GetAdminUsersRequest extends BaseListRequest
             'q' => [self::NULLABLE],
             'status' => [
                 self::NULLABLE,
-                Rule::in(['active', 'banned', 'all']),
+                Rule::in(['active', 'banned', 'deleted', 'all']),
             ],
             'page' => [self::NULLABLE],
             'per_page' => [self::NULLABLE],

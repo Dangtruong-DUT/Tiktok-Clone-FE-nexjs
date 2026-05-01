@@ -41,8 +41,9 @@ class ModerationResultProcessorCommand extends Command
      */
     public function handle(): int
     {
-        if (!config('services.ai_moderation.enabled')) {
+        if (! config('services.ai_moderation.enabled')) {
             $this->warn('AI moderation is disabled. Kafka consumer will not start.');
+
             return self::SUCCESS;
         }
 
@@ -60,6 +61,7 @@ class ModerationResultProcessorCommand extends Command
                     $payload = $this->jsonPayloadParser->parse($message->getBody());
                     if ($payload === null) {
                         $consumer->commit($message);
+
                         return;
                     }
                     $this->aiModerationService->applyVerdict($payload);
@@ -73,7 +75,8 @@ class ModerationResultProcessorCommand extends Command
                 'error' => $exception->getMessage(),
             ]);
 
-            $this->error('Kafka moderation consumer failed: ' . $exception->getMessage());
+            $this->error('Kafka moderation consumer failed: '.$exception->getMessage());
+
             return self::FAILURE;
         }
 

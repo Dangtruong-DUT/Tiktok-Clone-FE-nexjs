@@ -44,15 +44,39 @@ export function formatAdminDateShort(dateString: string): string {
 /**
  * Get CSS class for user status badge
  */
-export function getUserStatusColor(isBanned: boolean): string {
-    return isBanned ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+export function getUserStatus(user: {
+    deleted_at?: string | null
+    banned_at?: string | null
+}): 'active' | 'banned' | 'deleted' {
+    if (user.deleted_at) return 'deleted'
+    if (user.banned_at) return 'banned'
+    return 'active'
+}
+
+/**
+ * Get CSS class for user status badge
+ */
+export function getUserStatusColor(status: 'active' | 'banned' | 'deleted'): string {
+    const colors: Record<typeof status, string> = {
+        active: 'bg-green-100 text-green-800',
+        banned: 'bg-red-100 text-red-800',
+        deleted: 'bg-neutral-100 text-neutral-800'
+    }
+
+    return colors[status]
 }
 
 /**
  * Get display text for user status
  */
-export function formatUserStatus(isBanned: boolean): string {
-    return isBanned ? 'Banned' : 'Active'
+export function formatUserStatus(status: 'active' | 'banned' | 'deleted'): string {
+    const labels: Record<typeof status, string> = {
+        active: 'Active',
+        banned: 'Banned',
+        deleted: 'Deleted'
+    }
+
+    return labels[status]
 }
 
 /**
@@ -98,6 +122,7 @@ export function getActionLabel(action: string): string {
         ban: 'Ban User',
         unban: 'Unban User',
         delete_user: 'Delete User',
+        restore_user: 'Restore User',
         delete_post: 'Delete Post',
         delete_comment: 'Delete Comment'
     }
@@ -112,6 +137,7 @@ export function getActivityLabel(activity: string): string {
         ban: 'Ban User',
         unban: 'Unban User',
         delete_user: 'Delete User',
+        restore_user: 'Restore User',
         delete_post: 'Delete Post',
         delete_comment: 'Delete Comment',
         reset_user_password: 'Reset User Password',

@@ -2,9 +2,9 @@
 
 namespace App\Rules;
 
+use App\Repositories\UserRepository;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
-use App\Repositories\UserRepository;
 
 class Username implements ValidationRule
 {
@@ -22,7 +22,7 @@ class Username implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!$this->userRepository->isExistByUsername($value)) {
+        if (! $this->userRepository->isExistByUsername($value)) {
             $fail(':attribute must be a valid username.');
         }
     }

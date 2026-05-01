@@ -22,7 +22,7 @@ class AppealId implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!$this->appealRepository->isExistById($value)) {
+        if (! $this->appealRepository->isExistById($value)) {
             $fail(':attribute must be a valid appeal ID.');
         }
     }

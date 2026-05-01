@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Enums\Notification;
 
 use App\Enums\BaseEnumInterface;
 use App\Enums\BaseEnumTrait;
 
-enum NotificationTypeEnum: int implements BaseEnumInterface {
+enum NotificationTypeEnum: int implements BaseEnumInterface
+{
     use BaseEnumTrait;
 
     case LIKE = 1;
@@ -21,7 +23,7 @@ enum NotificationTypeEnum: int implements BaseEnumInterface {
      */
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::LIKE => 'Like',
             self::COMMENT => 'Comment',
             self::FOLLOW => 'Follow',
@@ -38,7 +40,7 @@ enum NotificationTypeEnum: int implements BaseEnumInterface {
      */
     public function translate(): string
     {
-        return match($this) {
+        return match ($this) {
             self::LIKE => 'like',
             self::COMMENT => 'comment',
             self::FOLLOW => 'follow',
@@ -50,4 +52,3 @@ enum NotificationTypeEnum: int implements BaseEnumInterface {
         };
     }
 }
-?>

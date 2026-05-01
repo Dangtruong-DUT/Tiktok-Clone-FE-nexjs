@@ -13,11 +13,9 @@ class CheckUserStatus
      * Check the user's status for the incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @param  bool  $requireVerify
      * @return mixed
      */
-    public function handle($request, Closure $next,bool $requireVerify = false)
+    public function handle($request, Closure $next, bool $requireVerify = false)
     {
         try {
             Log::info('Checking user status for request', [
@@ -27,7 +25,7 @@ class CheckUserStatus
             ]);
             $user = JWTAuth::parseToken()->authenticate();
 
-            if (!$user) {
+            if (! $user) {
                 return ApiResponse::notFound('User not found');
             }
 
@@ -36,9 +34,10 @@ class CheckUserStatus
             }
 
             $requireVerify = filter_var($requireVerify, FILTER_VALIDATE_BOOLEAN);
-            if ($requireVerify && !$user->isVerified()) {
+            if ($requireVerify && ! $user->isVerified()) {
                 return ApiResponse::forbidden('Your account is not verified');
             }
+
             return $next($request);
         } catch (\Exception $e) {
             return ApiResponse::unauthorized('Unauthorized');

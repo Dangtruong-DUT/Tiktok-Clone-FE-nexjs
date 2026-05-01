@@ -21,13 +21,14 @@ class ApproveAppealRequest extends BaseRequest
 
     /**
      * Get the validation rules.
+     *
      * @return array<string, string|array>
      */
     public function rules(): array
     {
         return $this->applyBaseRules([
             'appeal_uuid' => [self::REQUIRED],
-            'admin_response' => [self::NULLABLE, self::STRING, self::MAX . ':500'],
+            'admin_response' => [self::NULLABLE, self::STRING, self::MAX.':500'],
         ]);
     }
 }

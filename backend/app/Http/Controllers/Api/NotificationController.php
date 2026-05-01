@@ -18,18 +18,12 @@ use Illuminate\Http\JsonResponse;
  */
 class NotificationController extends Controller
 {
-    /**
-     * @param NotificationService $notificationService
-     */
     public function __construct(
         private readonly NotificationService $notificationService
     ) {}
 
     /**
      * Get paginated notifications for current user.
-     *
-     * @param GetListNotificationRequest $request
-     * @return JsonResponse
      */
     public function index(GetListNotificationRequest $request): JsonResponse
     {
@@ -44,9 +38,6 @@ class NotificationController extends Controller
 
     /**
      * Get unread notification count for current user by tab.
-     *
-     * @param GetUnreadCountNotificationRequest $request
-     * @return JsonResponse
      */
     public function unreadCount(GetUnreadCountNotificationRequest $request): JsonResponse
     {
@@ -62,9 +53,6 @@ class NotificationController extends Controller
 
     /**
      * Mark one notification as read by UUID.
-     *
-     * @param MarkNotificationAsReadRequest $request
-     * @return JsonResponse
      */
     public function markAsRead(MarkNotificationAsReadRequest $request): JsonResponse
     {
@@ -77,14 +65,12 @@ class NotificationController extends Controller
 
     /**
      * Mark all notifications as read for current user by tab.
-     *
-     * @param MarkAllNotificationsAsReadRequest $request
-     * @return JsonResponse
      */
     public function markAllAsRead(MarkAllNotificationsAsReadRequest $request): JsonResponse
     {
         $updatedCount = $this->notificationService->markAllAsRead(
             (string) $request->validated('tab', NotificationTabEnum::ALL->value));
+
         return ApiResponse::success(
             data: ['updated_count' => $updatedCount],
             message: 'Notifications marked as read successfully'

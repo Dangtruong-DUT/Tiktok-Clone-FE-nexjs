@@ -160,12 +160,30 @@ function getNotificationSubText(notification: NotificationType): string | null {
 }
 
 function getNotificationLink(notification: NotificationType): string | null {
-    // Appeal notifications: prefer UUID-based link (auth flow) over token link
-    const appealUuid = typeof notification.data?.appeal_uuid === 'string' ? notification.data.appeal_uuid : null
+    const action = typeof notification.data?.action === 'string' ? notification.data.action : ''
+    const blockedAppealActions = new Set([
+        'unban',
+        'unban_user',
+        'restore_user',
+        'restore_post',
+        'restore_comment',
+        'approve_appeal',
+        'reject_appeal'
+    ])
+
+    if (notification.type === NotificationTypeCode.ADMIN && blockedAppealActions.has(action)) {
+        return null
+    }
+
+    // Appeal notifications: prefer resource-based link (auth flow) over token link
+    const appealAvailable = notification.data?.appeal_available === true
+    const appealType = typeof notification.data?.appeal_type === 'string' ? notification.data.appeal_type : null
+    const resourceType = typeof notification.data?.resource_type === 'string' ? notification.data.resource_type : null
+    const resourceId = typeof notification.data?.resource_id === 'number' ? notification.data.resource_id : null
     const appealLink = typeof notification.data?.appeal_link === 'string' ? notification.data.appeal_link : null
 
-    if (appealUuid) {
-        return `/appeal?appeal_uuid=${appealUuid}`
+    if (appealAvailable && appealType && resourceType && resourceId !== null) {
+        return `/appeal?appeal_type=${appealType}&resource_type=${resourceType}&resource_id=${resourceId}`
     }
 
     if (appealLink) {

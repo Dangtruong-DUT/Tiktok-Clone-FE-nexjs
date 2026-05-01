@@ -11,7 +11,6 @@ use Illuminate\Validation\Rule;
  */
 class GetActivityLogsRequest extends BaseListRequest
 {
-
     /**
      * Get the validation rules that apply to the request.
      *

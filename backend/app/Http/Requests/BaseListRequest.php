@@ -17,24 +17,24 @@ abstract class BaseListRequest extends BaseRequest
     ];
 
     /**
-    * set common rules
-    */
+     * set common rules
+     */
     protected function defineBaseRules(): void
     {
         parent::defineBaseRules();
 
         $this->sharedRules = array_merge($this->sharedRules, [
-            'q' => [self::STRING, self::MAX . ':' . '100'],
-            'created_date_from' => [self::DATE_FORMAT . ':' . DateTimeInterface::ATOM],
-            'created_date_to' => [self::DATE_FORMAT . ':' . DateTimeInterface::ATOM],
+            'q' => [self::STRING, self::MAX.':'.'100'],
+            'created_date_from' => [self::DATE_FORMAT.':'.DateTimeInterface::ATOM],
+            'created_date_to' => [self::DATE_FORMAT.':'.DateTimeInterface::ATOM],
             'page' => [
                 self::INTEGER,
-                self::MIN . ':' . config('const.pagination.min_page', 1)
+                self::MIN.':'.config('const.pagination.min_page', 1),
             ],
             'per_page' => [
                 self::INTEGER,
                 self::MIN.':'.config('const.pagination.min_per_page', 1),
-                self::MAX.':'.config('const.pagination.max_per_page', 100)
+                self::MAX.':'.config('const.pagination.max_per_page', 100),
             ],
             'order_by' => [self::ARRAY],
             'order_by.*.column' => [self::STRING],
@@ -44,6 +44,7 @@ abstract class BaseListRequest extends BaseRequest
 
     /**
      * prepare for validation: remove null values
+     *
      * @return void
      */
     protected function prepareForValidation()
@@ -82,8 +83,6 @@ abstract class BaseListRequest extends BaseRequest
 
     /**
      * cast column and direction column in database field
-     * @param array $orderBy
-     * @return array
      */
     private function castValueOfOrderBy(array $orderBy): array
     {

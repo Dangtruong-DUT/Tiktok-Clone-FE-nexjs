@@ -454,6 +454,8 @@
             },
             "types": {
                 "user_ban": "Khóa tài khoản",
+                "user_unban": "Mở khóa tài khoản",
+                "user_deleted": "Xóa tài khoản",
                 "post_deleted": "Xóa bài viết",
                 "comment_deleted": "Xóa bình luận"
             },
@@ -817,6 +819,7 @@
                 "allStatuses": "Tất cả trạng thái",
                 "active": "Hoạt động",
                 "banned": "Bị khóa",
+                "deleted": "Đã xóa",
                 "recent": "Mới nhất",
                 "oldest": "Cũ nhất"
             },
@@ -824,9 +827,13 @@
                 "ban": "Khóa",
                 "unban": "Mở khóa",
                 "delete": "Xóa",
+                "restore": "Khôi phục",
                 "confirmBan": "Xác nhận khóa",
                 "confirmUnban": "Xác nhận mở khóa",
-                "confirmDelete": "Xác nhận xóa"
+                "confirmDelete": "Xác nhận xóa",
+                "confirmRestore": "Xác nhận khôi phục",
+                "resetPassword": "Đặt lại mật khẩu",
+                "sendEmail": "Gửi Email"
             },
             "labels": {
                 "reason": "Lý do",
@@ -849,13 +856,16 @@
                 "unbanSuccess": "Mở khóa người dùng thành công",
                 "unbanError": "Mở khóa người dùng thất bại",
                 "deleteSuccess": "Xóa người dùng thành công",
-                "deleteError": "Xóa người dùng thất bại"
+                "deleteError": "Xóa người dùng thất bại",
+                "restoreSuccess": "Khôi phục người dùng thành công",
+                "restoreError": "Khôi phục người dùng thất bại"
             },
             "dialogs": {
                 "deleteTitle": "Xóa người dùng",
                 "deleteSubtitle": "Xóa tài khoản @{username}",
                 "deleteWarning": "Hành động này không thể hoàn tác.",
-                "unbanSubtitle": "Mở khóa tài khoản @{username}"
+                "unbanSubtitle": "Mở khóa tài khoản @{username}",
+                "restoreSubtitle": "Khôi phục tài khoản @{username}"
             },
             "banDialog": {
                 "subtitle": "Khóa tài khoản @{username}"
@@ -993,6 +1003,8 @@
             },
             "types": {
                 "user_ban": "Khóa tài khoản",
+                "user_unban": "Mở khóa tài khoản",
+                "user_deleted": "Xóa tài khoản",
                 "post_deleted": "Xóa bài viết",
                 "comment_deleted": "Xóa bình luận"
             },
@@ -1101,6 +1113,8 @@
         },
         "types": {
             "user_ban": "Khóa tài khoản",
+            "user_unban": "Mở khóa tài khoản",
+            "user_deleted": "Xóa tài khoản",
             "post_deleted": "Xóa bài viết",
             "comment_deleted": "Xóa bình luận"
         },

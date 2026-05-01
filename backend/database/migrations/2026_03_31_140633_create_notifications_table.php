@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('notifiable_id')
-                    ->constrained('users')
-                    ->nullOnDelete();
+                ->constrained('users')
+                ->nullOnDelete();
             $table->foreignId('actor_id')
-                    ->constrained('users')
-                    ->nullable()
-                    ->nullOnDelete();
+                ->constrained('users')
+                ->nullable()
+                ->nullOnDelete();
             $table->unsignedTinyInteger('type');
             $table->string('entity_type')->nullable(); // App\Enums\Common\ModelEntityTypeEnum
             $table->unsignedBigInteger('entity_id')->nullable();

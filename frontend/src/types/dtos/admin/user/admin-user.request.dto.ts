@@ -5,7 +5,7 @@ export const GetAdminUsersParamsSchema = z
         page: z.number().int().positive().optional(),
         per_page: z.number().int().positive().optional(),
         q: z.string().optional(),
-        status: z.enum(['active', 'banned', 'all']).optional(),
+        status: z.enum(['active', 'banned', 'deleted', 'all']).optional(),
         order_by: z
             .array(z.enum(['id', 'username', 'email', 'created_at', '-id', '-username', '-email', '-created_at']))
             .optional()
@@ -33,6 +33,12 @@ export const DeleteUserReqSchema = z
     })
     .strict()
 
+export const RestoreUserReqSchema = z
+    .object({
+        user_uuid: z.string()
+    })
+    .strict()
+
 export const ResetUserPasswordReqSchema = z
     .object({
         user_uuid: z.string(),
@@ -53,5 +59,6 @@ export type GetAdminUsersParams = z.infer<typeof GetAdminUsersParamsSchema>
 export type BanUserReq = z.infer<typeof BanUserReqSchema>
 export type UnbanUserReq = z.infer<typeof UnbanUserReqSchema>
 export type DeleteUserReq = z.infer<typeof DeleteUserReqSchema>
+export type RestoreUserReq = z.infer<typeof RestoreUserReqSchema>
 export type ResetUserPasswordReq = z.infer<typeof ResetUserPasswordReqSchema>
 export type SendUserMailReq = z.infer<typeof SendUserMailReqSchema>

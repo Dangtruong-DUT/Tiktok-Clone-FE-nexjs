@@ -3,14 +3,14 @@
 namespace App\Services\Admin;
 
 use App\Enums\Admin\AdminActionEnum;
-use App\Enums\Common\ResourceTypeEnum;
 use App\Enums\Common\ModelEntityTypeEnum;
+use App\Enums\Common\ResourceTypeEnum;
+use App\Enums\Post\PostTypeEnum;
+use App\Exceptions\http\BadRequestException;
 use App\Repositories\PostRepository;
 use App\Traits\HasAuthUser;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
-use App\Exceptions\http\BadRequestException;
-use App\Enums\Post\PostTypeEnum;
 
 class PostAdminService
 {
@@ -25,29 +25,29 @@ class PostAdminService
     /**
      * Get paginated list of posts with filtering
      *
-     * @param array $filters {
-     *     q?: string,
-     *     user_uuid?: string,
-    *     status?: 'all'|'visible'|'deleted',
-     *     date_from?: string (Y-m-d),
-     *     date_to?: string (Y-m-d),
-     *     page?: int,
-     *     per_page?: int,
-     *     order_by?: string
-     * }
-    * @return LengthAwarePaginator
+     * @param  array  $filters  {
+     *                          q?: string,
+     *                          user_uuid?: string,
+     *                          status?: 'all'|'visible'|'deleted',
+     *                          date_from?: string (Y-m-d),
+     *                          date_to?: string (Y-m-d),
+     *                          page?: int,
+     *                          per_page?: int,
+     *                          order_by?: string
+     *                          }
      */
     public function getPosts(array $filters = []): LengthAwarePaginator
     {
         $filters['type'] = PostTypeEnum::POST->value;
+
         return $this->postRepository->searchPostsForAdmin($filters);
     }
 
     /**
      * Delete a post permanently (soft delete)
      *
-     * @param array{post_uuid:string,reason:string} $payload
-     * @return void
+     * @param  array{post_uuid:string,reason:string}  $payload
+     *
      * @throws \Exception
      */
     public function deletePost(array $payload): void
@@ -55,7 +55,7 @@ class PostAdminService
         $admin = $this->guard()->user();
         $post = $this->postRepository->findByUuidOrFail((string) $payload['post_uuid']);
 
-        if ($post->type !==PostTypeEnum::POST) {
+        if ($post->type !== PostTypeEnum::POST) {
             throw new BadRequestException('This is not a post');
         }
 

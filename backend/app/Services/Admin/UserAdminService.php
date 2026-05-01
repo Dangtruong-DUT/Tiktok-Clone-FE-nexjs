@@ -3,8 +3,8 @@
 namespace App\Services\Admin;
 
 use App\Enums\Admin\AdminActionEnum;
-use App\Enums\Common\ResourceTypeEnum;
 use App\Enums\Common\ModelEntityTypeEnum;
+use App\Enums\Common\ResourceTypeEnum;
 use App\Exceptions\http\BadRequestException;
 use App\Mail\AdminDirectMessageMail;
 use App\Models\User;
@@ -27,8 +27,6 @@ class UserAdminService
     /**
      * Get user details
      *
-     * @param int $userId
-     * @return User
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
     public function getUserDetail(int $userId): User
@@ -42,8 +40,9 @@ class UserAdminService
     /**
      * Ban a user account.
      *
-     * @param array{user_uuid:string,reason:string,duration_days?:int} $payload
+     * @param  array{user_uuid:string,reason:string,duration_days?:int}  $payload
      * @return User Updated user
+     *
      * @throws \Exception
      */
     public function banUser(array $payload): User
@@ -98,8 +97,9 @@ class UserAdminService
     /**
      * Unban a user account.
      *
-     * @param array{user_uuid:string} $payload
+     * @param  array{user_uuid:string}  $payload
      * @return User Updated user
+     *
      * @throws \Exception
      */
     public function unbanUser(array $payload): User
@@ -149,8 +149,8 @@ class UserAdminService
     /**
      * Delete a user account (soft delete).
      *
-     * @param array{user_uuid:string,reason:string} $payload
-     * @return void
+     * @param  array{user_uuid:string,reason:string}  $payload
+     *
      * @throws \Exception
      */
     public function deleteUser(array $payload): void
@@ -197,10 +197,52 @@ class UserAdminService
     }
 
     /**
+     * Restore a deleted user account.
+     *
+     * @param  array{user_uuid:string}  $payload
+     * @return User Updated user
+     *
+     * @throws \Exception
+     */
+    public function restoreUser(array $payload): User
+    {
+        $admin = $this->guard()->user();
+        $user = $this->userRepository->findWithTrashedByUuidOrFail((string) $payload['user_uuid']);
+
+        if ($user->deleted_at === null) {
+            throw new BadRequestException('User is not deleted');
+        }
+
+        return DB::transaction(function () use ($admin, $user) {
+            $oldData = [
+                'id' => $user->id,
+                'username' => $user->username,
+                'email' => $user->email,
+                'deleted_at' => $user->deleted_at?->toDateTimeString(),
+            ];
+
+            $user->restore();
+
+            $this->adminLogService->log(
+                admin: $admin,
+                resourceType: ResourceTypeEnum::USER,
+                resourceId: $user->id,
+                action: AdminActionEnum::RESTORE_USER,
+                reason: 'Restore deleted user account',
+                oldData: $oldData,
+                newData: [
+                    'deleted_at' => null,
+                ],
+            );
+
+            return $user->refresh();
+        });
+    }
+
+    /**
      * Reset a user password by admin.
      *
-     * @param array{user_uuid:string,password:string} $payload
-     * @return User
+     * @param  array{user_uuid:string,password:string}  $payload
      */
     public function resetUserPassword(array $payload): User
     {
@@ -228,15 +270,14 @@ class UserAdminService
     /**
      * Send direct mail from admin to target user.
      *
-     * @param array{user_uuid:string,subject:string,message:string} $payload
-     * @return void
+     * @param  array{user_uuid:string,subject:string,message:string}  $payload
      */
     public function sendMailToUser(array $payload): void
     {
         $admin = $this->guard()->user();
         $user = $this->userRepository->findByUuidOrFail((string) $payload['user_uuid']);
 
-        if (!$user->email) {
+        if (! $user->email) {
             throw new BadRequestException('Target user does not have an email address');
         }
 
@@ -265,14 +306,13 @@ class UserAdminService
     /**
      * Get paginated list of users with filtering
      *
-     * @param array $filters {
-     *     q?: string,
-     *     status?: 'active'|'banned'|'all',
-     *     page?: int,
-     *     per_page?: int,
-     *     order_by?: string
-     * }
-    * @return LengthAwarePaginator
+     * @param  array  $filters  {
+     *                          q?: string,
+     *                          status?: 'active'|'banned'|'all',
+     *                          page?: int,
+     *                          per_page?: int,
+     *                          order_by?: string
+     *                          }
      */
     public function getUsers(array $filters = []): LengthAwarePaginator
     {

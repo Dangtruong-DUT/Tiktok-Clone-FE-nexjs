@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ActivityLog extends Model
 {
     use HasUuidObservable;
+
     /**
      * The table associated with the model.
      *
@@ -58,8 +59,6 @@ class ActivityLog extends Model
 
     /**
      * Get the user associated with the activity
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user(): BelongsTo
     {
@@ -69,8 +68,6 @@ class ActivityLog extends Model
     /**
      * Scope: Filter logs by user ID
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int $userId
      * @return \Illuminate\Database\Eloquent\Builder
      */
     #[Scope]
@@ -82,8 +79,6 @@ class ActivityLog extends Model
     /**
      * Scope: Filter logs by activity type
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $activityType
      * @return \Illuminate\Database\Eloquent\Builder
      */
     #[Scope]
@@ -95,8 +90,6 @@ class ActivityLog extends Model
     /**
      * Scope: Filter logs by resource type
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param ResourceTypeEnum $resourceType
      * @return \Illuminate\Database\Eloquent\Builder
      */
     #[Scope]
@@ -108,9 +101,6 @@ class ActivityLog extends Model
     /**
      * Scope: Filter logs by date range
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param \Carbon\Carbon $from
-     * @param \Carbon\Carbon $to
      * @return \Illuminate\Database\Eloquent\Builder
      */
     #[Scope]
@@ -122,8 +112,6 @@ class ActivityLog extends Model
     /**
      * Scope: Filter logs for last N days
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int $days
      * @return \Illuminate\Database\Eloquent\Builder
      */
     #[Scope]

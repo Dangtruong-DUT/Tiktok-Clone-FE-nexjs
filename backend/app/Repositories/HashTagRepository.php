@@ -1,14 +1,12 @@
 <?php
+
 namespace App\Repositories;
 
 use App\Models\Hashtag;
-use App\Repositories\BaseRepository;
 use Illuminate\Database\Eloquent\Collection;
 
 class HashtagRepository extends BaseRepository
 {
-
-
     /**
      * HashtagRepository constructor.
      */
@@ -20,8 +18,6 @@ class HashtagRepository extends BaseRepository
 
     /**
      * Find a hashtag by name.
-     * @param string $name
-     * @return Hashtag|null
      */
     public function findByName(string $name): ?Hashtag
     {
@@ -30,18 +26,14 @@ class HashtagRepository extends BaseRepository
 
     /**
      * Get hashtags by an array of names.
-     * @param array $names
-     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getByNames(array $names):Collection
+    public function getByNames(array $names): Collection
     {
         return $this->query()->whereIn('name', $names)->get();
     }
 
     /**
      * Create multiple hashtags.
-     * @param array $data
-     * @return array
      */
     public function createMany(array $data): array
     {
@@ -49,6 +41,7 @@ class HashtagRepository extends BaseRepository
         foreach ($data as $item) {
             $createdHashtags[] = $this->query()->create($item);
         }
+
         return $createdHashtags;
     }
 }

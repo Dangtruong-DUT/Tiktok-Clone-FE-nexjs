@@ -127,9 +127,7 @@ export function EvidenceDropzone({ files, onFilesChange, maxFiles = 5, maxSizeMB
                     <p className='text-sm font-medium text-neutral-700'>
                         {isDragging ? t('dropHere') : t('dragAndDrop')}
                     </p>
-                    <p className='mt-1 text-xs text-neutral-500'>
-                        {t('fileInfo', { maxFiles, maxSizeMb: maxSizeMB })}
-                    </p>
+                    <p className='mt-1 text-xs text-neutral-500'>{t('fileInfo', { maxFiles, maxSizeMb: maxSizeMB })}</p>
                 </div>
 
                 <input

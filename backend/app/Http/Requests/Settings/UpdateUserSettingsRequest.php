@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Requests\Settings;
 
 use App\Enums\Settings\PrivacyVisibilityEnum;
@@ -9,8 +10,6 @@ class UpdateUserSettingsRequest extends BaseRequest
 {
     /**
      * set rules
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -18,22 +17,22 @@ class UpdateUserSettingsRequest extends BaseRequest
             'liked_videos_visibility' => [
                 self::SOMETIMES,
                 self::REQUIRED,
-                new Enum(PrivacyVisibilityEnum::class)
+                new Enum(PrivacyVisibilityEnum::class),
             ],
             'bookmarked_videos_visibility' => [
                 self::SOMETIMES,
                 self::REQUIRED,
-                new Enum(PrivacyVisibilityEnum::class)
+                new Enum(PrivacyVisibilityEnum::class),
             ],
             'followers_visibility' => [
                 self::SOMETIMES,
                 self::REQUIRED,
-                new Enum(PrivacyVisibilityEnum::class)
+                new Enum(PrivacyVisibilityEnum::class),
             ],
             'following_visibility' => [
                 self::SOMETIMES,
                 self::REQUIRED,
-                new Enum(PrivacyVisibilityEnum::class)
+                new Enum(PrivacyVisibilityEnum::class),
             ],
         ]);
     }

@@ -115,33 +115,33 @@ class PostRepository extends BaseRepository
     }
 
     /**
-     * @param array<string,mixed> $filters
+     * @param  array<string,mixed>  $filters
      */
     public function searchPostsForAdmin(array $filters): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
         $query = $this->buildSearchQuery($filterCollection);
 
-        if ($filterCollection->get("status") === 'deleted') {
+        if ($filterCollection->get('status') === 'deleted') {
             $query->withTrashed();
         }
 
         $query->when($filterCollection->get('user_uuid'), function (Builder $query, $userUuid) {
             $query->whereHas('user',
-            fn (Builder $userQuery) => $userQuery->where('uuid', $userUuid));
+                fn (Builder $userQuery) => $userQuery->where('uuid', $userUuid));
         })
-        ->when($filterCollection->get("status"), function (Builder $query, $status) {
+            ->when($filterCollection->get('status'), function (Builder $query, $status) {
                 return match ($status) {
                     'visible' => $query->whereNull('deleted_at'),
                     'deleted' => $query->whereNotNull('deleted_at'),
-                    default   => $query,
+                    default => $query,
                 };
-        })
-        ->when($filterCollection->get("order_by"), function (Builder $query, $orderBy) {
-            $query->orderByMultiple($orderBy);
-        }, function (Builder $query) {
-            $query->orderByDesc('created_at');
-        });
+            })
+            ->when($filterCollection->get('order_by'), function (Builder $query, $orderBy) {
+                $query->orderByMultiple($orderBy);
+            }, function (Builder $query) {
+                $query->orderByDesc('created_at');
+            });
 
         $perPage = min((int) $filterCollection->get('per_page', 20), 100);
 
@@ -158,7 +158,8 @@ class PostRepository extends BaseRepository
 
     /**
      * Search comments for admin view with filters.
-     * @param array<string,mixed> $filters
+     *
+     * @param  array<string,mixed>  $filters
      */
     public function searchCommentsForAdmin(array $filters): LengthAwarePaginator
     {
@@ -171,7 +172,7 @@ class PostRepository extends BaseRepository
             ->when($filterCollection->get('user_uuid'), function (Builder $query, $userUuid) {
                 $query->whereHas('user', fn (Builder $userQuery) => $userQuery->where('uuid', $userUuid));
             })
-            ->when($filterCollection->get("order_by"), function (Builder $query, $orderBy) {
+            ->when($filterCollection->get('order_by'), function (Builder $query, $orderBy) {
                 $query->orderByMultiple($orderBy);
             }, function (Builder $query) {
                 $query->orderByDesc('created_at');
@@ -193,7 +194,7 @@ class PostRepository extends BaseRepository
     /**
      * Get posts of target user by id.
      *
-     * @param array<string,mixed> $filters
+     * @param  array<string,mixed>  $filters
      */
     public function getPostsByUserId(array $filters, int $targetUserId, ?int $authUserId): LengthAwarePaginator
     {
@@ -219,7 +220,7 @@ class PostRepository extends BaseRepository
     /**
      * Get liked posts of target user by id.
      *
-     * @param array<string,mixed> $filters
+     * @param  array<string,mixed>  $filters
      */
     public function getLikedPostsByUserId(array $filters, int $targetUserId, ?int $authUserId): LengthAwarePaginator
     {
@@ -241,7 +242,7 @@ class PostRepository extends BaseRepository
     /**
      * Get bookmarked posts of target user by id.
      *
-     * @param array<string,mixed> $filters
+     * @param  array<string,mixed>  $filters
      */
     public function getBookmarkedPostsByUserId(array $filters, int $targetUserId, ?int $authUserId): LengthAwarePaginator
     {
@@ -263,7 +264,7 @@ class PostRepository extends BaseRepository
     /**
      * Get posts of mutual friends.
      *
-     * @param array<string,mixed> $filters
+     * @param  array<string,mixed>  $filters
      */
     public function getMutualFriendsPosts(array $filters, ?int $authUserId): LengthAwarePaginator
     {
@@ -286,7 +287,7 @@ class PostRepository extends BaseRepository
     /**
      * Get posts of following users.
      *
-     * @param array<string,mixed> $filters
+     * @param  array<string,mixed>  $filters
      */
     public function getFollowingPosts(array $filters, ?int $authUserId): LengthAwarePaginator
     {
@@ -307,8 +308,8 @@ class PostRepository extends BaseRepository
     /**
      * Get related posts by target post, prioritizing same hashtags.
      *
-     * @param array<int, int> $hashtagIds
-     * @param array<string,mixed> $filters
+     * @param  array<int, int>  $hashtagIds
+     * @param  array<string,mixed>  $filters
      */
     public function getRelatedPosts(
         int $targetPostId,
@@ -349,9 +350,9 @@ class PostRepository extends BaseRepository
     /**
      * Search posts with filters and keyword.
      *
-     * @param array<string,mixed> $filters
+     * @param  array<string,mixed>  $filters
      */
-    public function search(array $filters = [], ?int $authUserId): LengthAwarePaginator
+    public function search(array $filters, ?int $authUserId): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
 
@@ -367,7 +368,7 @@ class PostRepository extends BaseRepository
     /**
      * Get post with details by id.
      *
-     * @param Builder<Post> $query
+     * @param  Builder<Post>  $query
      * @return Builder<Post>
      */
     private function withDetail(Builder $query, ?int $authUserId): Builder
@@ -401,9 +402,6 @@ class PostRepository extends BaseRepository
 
     /**
      * Build search query with filters.
-        *
-        * @param Collection $filterCollection
-        * @return Builder
      */
     private function buildSearchQuery(Collection $filterCollection): Builder
     {
@@ -434,12 +432,12 @@ class PostRepository extends BaseRepository
                 fn (Builder $query) => $query->where('parent_id', $filterCollection->get('parent_id'))
             )
             ->typeOf($filterCollection->get('type'))
-            ->when(!empty($filterCollection->get('hashtags')), function (Builder $query) use ($filterCollection) {
+            ->when(! empty($filterCollection->get('hashtags')), function (Builder $query) use ($filterCollection) {
                 $query->whereHas('hashtags', function (Builder $hashtagQuery) use ($filterCollection) {
                     $hashtagQuery->whereIn('name', $filterCollection->get('hashtags'));
                 });
             })
-            ->when(!empty($filterCollection->get('mentions')), function (Builder $query) use ($filterCollection) {
+            ->when(! empty($filterCollection->get('mentions')), function (Builder $query) use ($filterCollection) {
                 $query->whereHas('mentions', function (Builder $mentionQuery) use ($filterCollection) {
                     $mentionQuery->whereIn('id', $filterCollection->get('mentions'));
                 });
@@ -455,10 +453,6 @@ class PostRepository extends BaseRepository
 
     /**
      * Apply full-text search on post and related user search vectors.
-     *
-     * @param Builder $query
-     * @param string $keyword
-     * @return Builder
      */
     private function applyPostAndUserSearchVector(Builder $query, string $keyword): Builder
     {
@@ -472,10 +466,6 @@ class PostRepository extends BaseRepository
 
     /**
      * Apply full-text search condition on search_vector.
-     *
-     * @param Builder $query
-     * @param string $keyword
-     * @return Builder
      */
     private function applySearchVector(Builder $query, string $keyword): Builder
     {

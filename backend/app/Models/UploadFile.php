@@ -40,10 +40,10 @@ class UploadFile extends Model
         ];
     }
 
-
     /**
      * et the user whose avatar is this file.
-     *  @return \Illuminate\Database\Eloquent\Relations\HasOne The relationship instance.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne The relationship instance.
      */
     public function user(): HasOne
     {

@@ -1,10 +1,11 @@
 <?php
+
 namespace App\Enums\Settings;
 
 use App\Enums\BaseEnumInterface;
 use App\Enums\BaseEnumTrait;
 
-enum PrivacyVisibilityEnum:int implements BaseEnumInterface
+enum PrivacyVisibilityEnum: int implements BaseEnumInterface
 {
     use BaseEnumTrait;
 
@@ -16,7 +17,7 @@ enum PrivacyVisibilityEnum:int implements BaseEnumInterface
      */
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::PUBLIC => 'Public',
             self::PRIVATE => 'Private',
         };
@@ -27,10 +28,9 @@ enum PrivacyVisibilityEnum:int implements BaseEnumInterface
      */
     public function translate(): string
     {
-        return match($this) {
-            self::PUBLIC => "Công khai",
-            self::PRIVATE => "Riêng tư",
+        return match ($this) {
+            self::PUBLIC => 'Công khai',
+            self::PRIVATE => 'Riêng tư',
         };
     }
 }
-?>

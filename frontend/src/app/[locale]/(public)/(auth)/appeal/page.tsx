@@ -4,11 +4,7 @@ import { LocalesType } from '@/i18n/config'
 import { Suspense } from 'react'
 import { AppealFormClient } from './_components/appeal-form-client'
 
-export async function generateMetadata({
-    params
-}: {
-    params: Promise<{ locale: LocalesType }>
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ locale: LocalesType }> }): Promise<Metadata> {
     const { locale } = await params
     setRequestLocale(locale)
     const t = await getTranslations('AppealPage')
@@ -24,11 +20,11 @@ export default async function PublicAppealPage({
     searchParams
 }: {
     params: Promise<{ locale: LocalesType }>
-    searchParams: Promise<{ token?: string; appeal_uuid?: string }>
+    searchParams: Promise<{ token?: string; appeal_uuid?: string; appeal_type?: string; resource_type?: string; resource_id?: string }>
 }) {
     const { locale } = await params
     setRequestLocale(locale)
-    const { token, appeal_uuid } = await searchParams
+    const { token, appeal_uuid, appeal_type, resource_type, resource_id } = await searchParams
 
     return (
         <section className='mx-auto flex min-h-[60vh] w-full max-w-2xl items-center justify-center px-4 py-10'>
@@ -45,9 +41,14 @@ export default async function PublicAppealPage({
                     </div>
                 }
             >
-                <AppealFormClient token={token} appealUuid={appeal_uuid} />
+                <AppealFormClient 
+                    token={token} 
+                    appealUuid={appeal_uuid}
+                    appealType={appeal_type} 
+                    resourceType={resource_type} 
+                    resourceId={resource_id} 
+                />
             </Suspense>
         </section>
     )
 }
-

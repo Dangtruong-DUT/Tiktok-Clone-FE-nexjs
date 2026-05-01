@@ -24,8 +24,6 @@ class CommentAdminController extends Controller
 
     /**
      * Get paginated list of comments with filtering.
-     * @param GetAdminCommentsRequest $request
-     * @return JsonResponse
      */
     public function getComments(GetAdminCommentsRequest $request): JsonResponse
     {
@@ -39,8 +37,6 @@ class CommentAdminController extends Controller
 
     /**
      * Delete a comment permanently.
-     * @param DeleteCommentRequest $request
-     * @return JsonResponse
      */
     public function deleteComment(DeleteCommentRequest $request): JsonResponse
     {

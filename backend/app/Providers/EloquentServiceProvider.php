@@ -22,7 +22,6 @@ class EloquentServiceProvider extends ServiceProvider
     {
         Builder::macro('orderByMultiple', function (array $orderBy) {
             /** @var \Illuminate\Database\Eloquent\Builder $this */
-
             foreach ($orderBy as $column) {
                 // Handle array format: ['column' => 'name', 'direction' => 'asc']
                 if (is_array($column)) {
@@ -42,6 +41,7 @@ class EloquentServiceProvider extends ServiceProvider
                     }
                 }
             }
+
             return $this;
         });
     }

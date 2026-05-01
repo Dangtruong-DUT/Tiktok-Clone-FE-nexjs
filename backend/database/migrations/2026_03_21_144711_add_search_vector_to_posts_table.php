@@ -21,21 +21,21 @@ return new class extends Migration
         ");
 
         // Create GIN index for fast search
-        DB::statement("
+        DB::statement('
             CREATE INDEX IF NOT EXISTS posts_search_vector_idx
             ON posts USING GIN (search_vector)
-        ");
+        ');
     }
 
     public function down(): void
     {
-        DB::statement("
+        DB::statement('
             DROP INDEX IF EXISTS posts_search_vector_idx
-        ");
+        ');
 
-        DB::statement("
+        DB::statement('
             ALTER TABLE posts
             DROP COLUMN IF EXISTS search_vector
-        ");
+        ');
     }
 };

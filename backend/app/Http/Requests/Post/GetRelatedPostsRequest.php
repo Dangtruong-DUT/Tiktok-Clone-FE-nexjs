@@ -1,8 +1,9 @@
 <?php
+
 namespace App\Http\Requests\Post;
 
-use App\Http\Requests\BaseListRequest;
 use App\Enums\Post\PostTypeEnum;
+use App\Http\Requests\BaseListRequest;
 
 class GetRelatedPostsRequest extends BaseListRequest
 {
@@ -17,8 +18,6 @@ class GetRelatedPostsRequest extends BaseListRequest
 
     /**
      * set rules
-     *
-     * @return array
      */
     public function rules(): array
     {

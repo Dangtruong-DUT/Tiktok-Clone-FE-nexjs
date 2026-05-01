@@ -18,7 +18,7 @@ enum AppealStatusEnum: string implements BaseEnumInterface
 
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::PENDING => 'Pending',
             self::APPROVED => 'Approved',
             self::REJECTED => 'Rejected',
@@ -27,7 +27,7 @@ enum AppealStatusEnum: string implements BaseEnumInterface
 
     public function translate(): string
     {
-        return match($this) {
+        return match ($this) {
             self::PENDING => 'Đang chờ',
             self::APPROVED => 'Đã duyệt',
             self::REJECTED => 'Đã từ chối',

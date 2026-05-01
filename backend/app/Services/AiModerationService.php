@@ -3,14 +3,14 @@
 namespace App\Services;
 
 use App\Enums\Admin\AdminActionEnum;
+use App\Enums\Ai\AiModerationLabelEnum;
+use App\Enums\Common\ModelEntityTypeEnum;
 use App\Enums\Common\ResourceTypeEnum;
 use App\Models\AiModerationReport;
 use App\Models\Post;
 use App\Repositories\PostRepository;
 use App\Repositories\UserRepository;
 use App\Services\Admin\AdminModerationNoticeService;
-use App\Enums\Ai\AiModerationLabelEnum;
-use App\Enums\Common\ModelEntityTypeEnum;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -29,17 +29,15 @@ class AiModerationService
 
     /**
      * Enqueue post/comment content to AI moderation queue.
-     * @param Post $post
-     * @return void
      */
     public function enqueue(Post $post): void
     {
-        if (!config('services.ai_moderation.enabled')) {
+        if (! config('services.ai_moderation.enabled')) {
             return;
         }
 
         $content = trim((string) $post->content);
-        $resourceType = ResourceTypeEnum::tryFromPostType($post->type) ??ResourceTypeEnum::POST;
+        $resourceType = ResourceTypeEnum::tryFromPostType($post->type) ?? ResourceTypeEnum::POST;
         if ($content === '') {
             return;
         }
@@ -50,7 +48,7 @@ class AiModerationService
             'task_id' => (string) Str::uuid(),
             'resource_type' => $resourceType->value,
             'resource_id' => (int) $post->id,
-            "resource_updated_at"=> $post->updated_at->toDateTimeString(),
+            'resource_updated_at' => $post->updated_at->toDateTimeString(),
             'user_id' => (int) $post->user_id,
             'sentence' => $content,
             'reason' => null,
@@ -75,25 +73,25 @@ class AiModerationService
 
     /**
      * Apply verdict sent from AI worker and trigger moderation effects.
-     * @param array<string,mixed> $payload
-     *                  - task_id,
-     *                  - resource_type
-     *                  - resource_id
-     *                  - resource_uuid
-     *                  - user_id
-     *                  - sentence
-     *                  - label
-     *                  - confidence
-     *                  - reason
-     *                  - moderated_at
-     *                  - raw_payload
-     * @return void
+     *
+     * @param  array<string,mixed>  $payload
+     *                                        - task_id,
+     *                                        - resource_type
+     *                                        - resource_id
+     *                                        - resource_uuid
+     *                                        - user_id
+     *                                        - sentence
+     *                                        - label
+     *                                        - confidence
+     *                                        - reason
+     *                                        - moderated_at
+     *                                        - raw_payload
      */
     public function applyVerdict(array $payload): void
     {
         $post = $this->postRepo->find((int) $payload['resource_id']);
 
-        if (!$post || $post->deleted_at !== null) {
+        if (! $post || $post->deleted_at !== null) {
             return;
         }
 
@@ -142,7 +140,7 @@ class AiModerationService
             if ($isViolation) {
                 $post->delete();
                 $systemAdmin = $this->userRepo->getSuperAdmin();
-                if (!$systemAdmin) {
+                if (! $systemAdmin) {
                     return;
                 }
                 $this->adminModerationNoticeService->send(

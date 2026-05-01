@@ -24,27 +24,24 @@ class UserService
         private readonly NotificationService $notificationService
     ) {}
 
-
     /**
      * Search users by keyword.
      *
-     * @param array $payload
-     *              - keyword: the keyword to search for (name, username)
-     *              - role: filter by role
-     *              - verify_status: filter by verify status
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @param  array  $payload
+     *                          - keyword: the keyword to search for (name, username)
+     *                          - role: filter by role
+     *                          - verify_status: filter by verify status
      */
     public function search(array $payload): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
+
         return $this->userRepo->search($payload, $authUserId);
     }
 
     /**
      * Change the password of the authenticated user.
      *
-     * @param array $payload
-     * @return bool
      * @throws BusinessException
      */
     public function changePassword(array $payload): bool
@@ -52,21 +49,22 @@ class UserService
         $authUser = $this->guard()->user();
         if (! $authUser->isCurrentPassword($payload['current_password'])) {
             throw new BusinessException('Current password is incorrect',
-            [
-                'current_password' => ['Current password is incorrect']
-            ]);
+                [
+                    'current_password' => ['Current password is incorrect'],
+                ]);
         }
         $authUser->password = $payload['password'];
         $authUser->save();
+
         return true;
     }
 
     /**
      * Follow someone
      *
-     * @param array $payload
-     *              - user_uuid: the uuid of the user to follow
-     * @return bool
+     * @param  array  $payload
+     *                          - user_uuid: the uuid of the user to follow
+     *
      * @throws BadRequestException
      * @throws BusinessException
      */
@@ -74,7 +72,7 @@ class UserService
     {
         $targetUserUuid = $payload['user_uuid'];
         $targetUser = $this->userRepo->findByUuid($targetUserUuid);
-        if (!$targetUser) {
+        if (! $targetUser) {
             throw new BusinessException('The user you are trying to follow does not exist');
         }
 
@@ -90,7 +88,7 @@ class UserService
             $this->relationshipRepo->create([
                 'user_id' => $authUser->id,
                 'target_user_id' => $targetUser->id,
-                'type' => RelationshipTypeEnum::FOLLOW->value
+                'type' => RelationshipTypeEnum::FOLLOW->value,
             ]);
             $authUser->increment('following_count');
             $targetUser->increment('followers_count');
@@ -107,16 +105,15 @@ class UserService
     /**
      * Unfollow someone
      *
-     * @param array $payload
-     *            - user_uuid: the uuid of the user to unfollow
-     * @return bool
+     * @param  array  $payload
+     *                          - user_uuid: the uuid of the user to unfollow
      */
     public function unfollow(array $payload): bool
     {
         $targetUserUuid = $payload['user_uuid'];
         $targetUser = $this->userRepo->findByUuid($targetUserUuid);
         $authUser = $this->guard()->user();
-        if (!$this->relationshipRepo->isFollowing($authUser->id, $targetUser->id)) {
+        if (! $this->relationshipRepo->isFollowing($authUser->id, $targetUser->id)) {
             return true;
         }
         DB::transaction(function () use ($authUser, $targetUser) {
@@ -124,14 +121,12 @@ class UserService
             $authUser->decrement('following_count');
             $targetUser->decrement('followers_count');
         });
+
         return true;
     }
 
     /**
      * Update the profile of the authenticated user.
-     *
-     * @param array $payload
-     * @return User
      */
     public function update(array $payload): User
     {
@@ -143,7 +138,7 @@ class UserService
             'location',
             'website',
             'username',
-            'avatar_file_id'
+            'avatar_file_id',
         ];
         $updateData = array_intersect_key($payload, array_flip($allowedFields));
 
@@ -167,8 +162,6 @@ class UserService
 
     /**
      * Get the authenticated user.
-     *
-     * @return User
      */
     public function me(): User
     {
@@ -177,22 +170,16 @@ class UserService
 
     /**
      * Get user profile by username.
-     *
-     * @param string $username
-     * @return User
      */
     public function getByUsername(string $username): User
     {
         $authUserId = auth_user_id();
+
         return $this->userRepo->getByUsernameWithDetail($username, $authUserId);
     }
 
     /**
      * Get paginated followers of target user.
-     *
-     * @param string $userUuid
-     * @param array $filters
-     * @return LengthAwarePaginator
      */
     public function getFollowers(string $userUuid, array $filters): LengthAwarePaginator
     {
@@ -204,10 +191,6 @@ class UserService
 
     /**
      * Get paginated following users of target user.
-     *
-     * @param string $userUuid
-     * @param array $filters
-     * @return LengthAwarePaginator
      */
     public function getFollowing(string $userUuid, array $filters): LengthAwarePaginator
     {
@@ -219,10 +202,6 @@ class UserService
 
     /**
      * Get paginated mutual friends of target user.
-     *
-     * @param string $userUuid
-     * @param array $filters
-     * @return LengthAwarePaginator
      */
     public function getFriends(string $userUuid, array $filters): LengthAwarePaginator
     {
@@ -234,9 +213,6 @@ class UserService
 
     /**
      * Get paginated suggested users for authenticated user.
-     *
-     * @param array $filters
-     * @return LengthAwarePaginator
      */
     public function getSuggestedUsers(array $filters): LengthAwarePaginator
     {
@@ -248,7 +224,6 @@ class UserService
     /**
      * Get indicators of authenticated user in date range.
      *
-     * @param array $payload
      * @return array<string, mixed>
      */
     public function getIndicators(array $payload): array

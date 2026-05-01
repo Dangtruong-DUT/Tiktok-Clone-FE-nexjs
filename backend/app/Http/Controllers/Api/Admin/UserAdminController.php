@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\User\BanUserRequest;
 use App\Http\Requests\Admin\User\DeleteUserRequest;
 use App\Http\Requests\Admin\User\GetAdminUsersRequest;
 use App\Http\Requests\Admin\User\ResetUserPasswordRequest;
+use App\Http\Requests\Admin\User\RestoreUserRequest;
 use App\Http\Requests\Admin\User\SendUserMailRequest;
 use App\Http\Requests\Admin\User\UnbanUserRequest;
 use App\Http\Resources\Api\Admin\User\AdminUserResource;
@@ -28,8 +29,6 @@ class UserAdminController extends Controller
 
     /**
      * Get paginated list of users with filtering and search.
-     * @param GetAdminUsersRequest $request
-     * @return JsonResponse
      */
     public function getUsers(GetAdminUsersRequest $request): JsonResponse
     {
@@ -43,8 +42,6 @@ class UserAdminController extends Controller
 
     /**
      * Ban a user account.
-     * @param BanUserRequest $request
-     * @return JsonResponse
      */
     public function banUser(BanUserRequest $request): JsonResponse
     {
@@ -58,8 +55,6 @@ class UserAdminController extends Controller
 
     /**
      * Unban a user account.
-     * @param UnbanUserRequest $request
-     * @return JsonResponse
      */
     public function unbanUser(UnbanUserRequest $request): JsonResponse
     {
@@ -73,8 +68,6 @@ class UserAdminController extends Controller
 
     /**
      * Delete a user account.
-     * @param DeleteUserRequest $request
-     * @return JsonResponse
      */
     public function deleteUser(DeleteUserRequest $request): JsonResponse
     {
@@ -84,9 +77,20 @@ class UserAdminController extends Controller
     }
 
     /**
+     * Restore a deleted user account.
+     */
+    public function restoreUser(RestoreUserRequest $request): JsonResponse
+    {
+        $user = $this->userAdminService->restoreUser($request->validated());
+
+        return ApiResponse::success(
+            data: AdminUserResource::make($user),
+            message: 'User restored successfully'
+        );
+    }
+
+    /**
      * Reset a user password by admin.
-     * @param ResetUserPasswordRequest $request
-     * @return JsonResponse
      */
     public function resetUserPassword(ResetUserPasswordRequest $request): JsonResponse
     {
@@ -97,8 +101,6 @@ class UserAdminController extends Controller
 
     /**
      * Send direct email from admin to user.
-     * @param SendUserMailRequest $request
-     * @return JsonResponse
      */
     public function sendUserMail(SendUserMailRequest $request): JsonResponse
     {

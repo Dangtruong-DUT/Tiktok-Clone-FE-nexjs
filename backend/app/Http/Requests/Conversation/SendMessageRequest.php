@@ -27,13 +27,13 @@ class SendMessageRequest extends BaseRequest
             'conversation_id' => [
                 self::REQUIRED,
                 self::INTEGER,
-                new ConversationId(),
+                new ConversationId,
             ],
             'content' => [
                 self::REQUIRED,
                 self::STRING,
-                self::MIN . ':1',
-                self::MAX . ':4000',
+                self::MIN.':1',
+                self::MAX.':4000',
             ],
             'type' => [
                 self::REQUIRED,
@@ -43,17 +43,17 @@ class SendMessageRequest extends BaseRequest
                 self::SOMETIMES,
                 self::NULLABLE,
                 self::INTEGER,
-                new MessageId(),
+                new MessageId,
             ],
             'medias' => [
                 self::SOMETIMES,
                 self::ARRAY,
-                self::MAX . ':10',
+                self::MAX.':10',
             ],
             'medias.*.file_id' => [
                 self::REQUIRED,
                 self::INTEGER,
-                new UploadFileId(),
+                new UploadFileId,
             ],
             'medias.*.type' => [
                 self::REQUIRED,
@@ -62,7 +62,7 @@ class SendMessageRequest extends BaseRequest
             'medias.*.order' => [
                 self::SOMETIMES,
                 self::INTEGER,
-                self::MIN . ':0',
+                self::MIN.':0',
             ],
         ]);
     }

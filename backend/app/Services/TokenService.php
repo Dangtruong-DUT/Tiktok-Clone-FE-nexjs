@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Enums\Auth\TokenTypeEnum;
@@ -11,8 +12,8 @@ use App\Repositories\ForgotPasswordTokenRepository;
 use App\Repositories\RefreshTokenRepository;
 use App\Repositories\VerifyEmailTokenRepository;
 use Illuminate\Support\Str;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class TokenService
 {
@@ -24,16 +25,13 @@ class TokenService
 
     /**
      * Handle verify email verification token by verifying the token and returning the associated user.
-     *
-     * @param string $verifyEmailToken
-     * @return EmailVerifyToken
      */
     public function verifyVerifyEmailToken(string $verifyEmailToken): EmailVerifyToken
     {
         $fingerprint = hash('sha256', $verifyEmailToken);
         $validToken = $this->verifyEmailTokenRepo->findByTokenFingerprint($fingerprint);
 
-        if (!$validToken||!$validToken->isValidToken($verifyEmailToken)) {
+        if (! $validToken || ! $validToken->isValidToken($verifyEmailToken)) {
             throw new BadRequestException('Invalid token');
         }
 
@@ -41,35 +39,30 @@ class TokenService
             $this->verifyEmailTokenRepo->delete($validToken->id);
             throw new BadRequestException('Token has expired');
         }
+
         return $validToken;
     }
 
-
     /**
      * Handle verify forgot password request by verifying the token and resetting the password.
-     *
-     * @param string $forgotPasswordToken
-     * @return ForgotPasswordToken
      */
     public function verifyForgotToken(string $forgotPasswordToken): ForgotPasswordToken
     {
         $fingerprint = hash('sha256', $forgotPasswordToken);
         $validToken = $this->forgotPasswordTokenRepo->findByTokenFingerprint($fingerprint);
-        if (!$validToken||!$validToken->isValidToken($forgotPasswordToken)) {
+        if (! $validToken || ! $validToken->isValidToken($forgotPasswordToken)) {
             throw new BadRequestException('Invalid token');
         }
         if ($validToken->isExpired()) {
             $this->forgotPasswordTokenRepo->delete($validToken->id);
             throw new BadRequestException('Token has expired');
         }
+
         return $validToken;
     }
 
     /**
      * Handle refresh token verification by verifying the token and returning the associated user.
-     *
-     * @param string $refreshToken
-     * @return RefreshToken
      */
     public function verifyRefreshToken(string $refreshToken): RefreshToken
     {
@@ -85,11 +78,11 @@ class TokenService
         }
 
         $token = $this->refreshRepo->findByJti($payload->get('jti'));
-        if (!$token||!$token->isValidToken($refreshToken)) {
+        if (! $token || ! $token->isValidToken($refreshToken)) {
             throw new UnauthorizedException('Invalid refresh token');
         }
 
-        $sub = (int)$payload->get('sub');
+        $sub = (int) $payload->get('sub');
         if ($sub !== $token->user_id) {
             throw new UnauthorizedException('Invalid refresh token');
         }
@@ -98,13 +91,12 @@ class TokenService
             $this->refreshRepo->delete($token->id);
             throw new UnauthorizedException('Refresh token has expired');
         }
+
         return $token;
     }
 
     /**
      * Create refreshtoken.
-     * @param $user
-     * @return string
      */
     public function createRefreshToken($user): string
     {
@@ -117,61 +109,61 @@ class TokenService
                 'jti' => $claims['jti'],
                 'user_id' => $user->id,
                 'token' => $refreshToken,
-                'expires_at' => now()->addMinutes((int)config('jwt.refresh_ttl', 20160))
+                'expires_at' => now()->addMinutes((int) config('jwt.refresh_ttl', 20160)),
             ]
         );
+
         return $refreshToken;
     }
 
     /**
      * Create access token.
-     * @param mixed $user
-     * @return string
+     *
+     * @param  mixed  $user
      */
     public function createAccessToken($user): string
     {
         JWTAuth::factory()->setTTL((int) config('jwt.ttl', 60));
         $claims = $user->getJWTCustomClaims(TokenTypeEnum::ACCESS->value);
+
         return JWTAuth::claims($claims)->fromUser($user);
     }
 
     /**
      * Create forgot password token.
-     * @param $user
-     * @return string
      */
     public function createForgotPasswordToken($user): string
     {
-        $token = Str::random((int)config('auth.reset_password.token_length', 64));
+        $token = Str::random((int) config('auth.reset_password.token_length', 64));
         $hashedToken = hash('sha256', $token);
         $this->forgotPasswordTokenRepo->create(
             [
                 'token_fingerprint' => $hashedToken,
                 'user_id' => $user->id,
                 'token' => $token,
-                'expires_at' => now()->addMinutes((int)config('auth.reset_password.expire', 60))
+                'expires_at' => now()->addMinutes((int) config('auth.reset_password.expire', 60)),
             ]
         );
+
         return $token;
     }
 
     /**
      * Create verify email token.
-     * @param $user
-     * @return string
      */
     public function createVerifyEmailToken($user): string
     {
-        $token = Str::random((int)config('auth.verification.token_length', 64));
+        $token = Str::random((int) config('auth.verification.token_length', 64));
         $hashedToken = hash('sha256', $token);
         $this->verifyEmailTokenRepo->create(
             [
                 'token_fingerprint' => $hashedToken,
                 'user_id' => $user->id,
                 'token' => $token,
-                'expires_at' => now()->addMinutes((int)config('auth.verification.expire', 60))
+                'expires_at' => now()->addMinutes((int) config('auth.verification.expire', 60)),
             ]
         );
+
         return $token;
     }
 }

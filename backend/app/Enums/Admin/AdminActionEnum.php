@@ -2,8 +2,8 @@
 
 namespace App\Enums\Admin;
 
-use App\Enums\BaseEnumTrait;
 use App\Enums\BaseEnumInterface;
+use App\Enums\BaseEnumTrait;
 
 /**
  * Admin actions that can be performed on resources
@@ -16,18 +16,14 @@ enum AdminActionEnum: string implements BaseEnumInterface
     case BAN = 'ban';
     case UNBAN = 'unban';
     case DELETE_USER = 'delete_user';
+    case RESTORE_USER = 'restore_user';
     case RESET_USER_PASSWORD = 'reset_user_password';
     case SEND_EMAIL_TO_USER = 'send_email_to_user';
-
     case DELETE_POST = 'delete_post';
-
     case DELETE_COMMENT = 'delete_comment';
-
     case APPROVE_APPEAL = 'approve_appeal';
     case REJECT_APPEAL = 'reject_appeal';
-
     case UPDATE = 'update';
-
 
     /**
      * Get the label of the enum value
@@ -38,6 +34,7 @@ enum AdminActionEnum: string implements BaseEnumInterface
             self::BAN => 'Ban User',
             self::UNBAN => 'Unban User',
             self::DELETE_USER => 'Delete User',
+            self::RESTORE_USER => 'Restore User',
             self::RESET_USER_PASSWORD => 'Reset User Password',
             self::SEND_EMAIL_TO_USER => 'Send Email To User',
             self::DELETE_POST => 'Delete Post',
@@ -48,7 +45,6 @@ enum AdminActionEnum: string implements BaseEnumInterface
         };
     }
 
-
     /**
      * Get the translated label of the enum value
      */
@@ -58,6 +54,7 @@ enum AdminActionEnum: string implements BaseEnumInterface
             self::BAN => 'Khóa tài khoản',
             self::UNBAN => 'Mở khóa tài khoản',
             self::DELETE_USER => 'Xóa người dùng',
+            self::RESTORE_USER => 'Khôi phục người dùng',
             self::RESET_USER_PASSWORD => 'Đặt lại mật khẩu người dùng',
             self::SEND_EMAIL_TO_USER => 'Gửi email cho người dùng',
             self::DELETE_POST => 'Xóa bài viết',

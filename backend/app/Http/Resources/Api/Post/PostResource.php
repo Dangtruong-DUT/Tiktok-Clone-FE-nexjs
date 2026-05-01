@@ -1,22 +1,22 @@
 <?php
+
 namespace App\Http\Resources\Api\Post;
 
-use App\Http\Resources\BaseJsonResource;
 use App\Http\Resources\Api\Hashtag\HashtagResource;
 use App\Http\Resources\Api\Media\MediaResource;
 use App\Http\Resources\Api\Mention\MentionResource;
 use App\Http\Resources\Api\User\UserResource;
+use App\Http\Resources\BaseJsonResource;
 
 class PostResource extends BaseJsonResource
 {
-
     public function toArray($request): array
     {
         return [
             'id' => $this->id,
             'uuid' => $this->uuid,
             'user_id' => $this->user_id,
-            'user_uuid' => $this->whenLoaded("user", fn() => $this->user->uuid),
+            'user_uuid' => $this->whenLoaded('user', fn () => $this->user->uuid),
             'type' => $this->type->value,
             'audience' => $this->audience->value,
             'content' => $this->content,

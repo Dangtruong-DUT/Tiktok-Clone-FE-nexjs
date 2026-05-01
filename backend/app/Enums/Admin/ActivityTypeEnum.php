@@ -2,8 +2,8 @@
 
 namespace App\Enums\Admin;
 
-use App\Enums\BaseEnumTrait;
 use App\Enums\BaseEnumInterface;
+use App\Enums\BaseEnumTrait;
 
 /**
  * System activity types for monitoring and auditing
@@ -35,10 +35,8 @@ enum ActivityTypeEnum: string implements BaseEnumInterface
     case LOGOUT = 'logout';
     case PASSWORD_CHANGED = 'password_changed';
 
-
     /**
      * Get the label of the enum value
-     * @return string
      */
     public function label(): string
     {
@@ -63,10 +61,8 @@ enum ActivityTypeEnum: string implements BaseEnumInterface
         };
     }
 
-
     /**
      * Get the translated label of the enum value
-     * @return string
      */
     public function translate(): string
     {

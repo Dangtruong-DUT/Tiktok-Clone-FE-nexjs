@@ -38,8 +38,8 @@ class ForgotPasswordMail extends BaseMailAble
             with: [
                 'name' => $this->user->name,
                 'resetUrl' => config('app.frontend_url')
-                . '/en/reset-password?token=' . urlencode($this->token)
-                . '&email=' . urlencode($this->user->email),
+                .'/en/reset-password?token='.urlencode($this->token)
+                .'&email='.urlencode($this->user->email),
                 'expiration' => config('auth.reset_password.expire'),
             ],
         );
@@ -57,6 +57,6 @@ class ForgotPasswordMail extends BaseMailAble
 
     public function failed(Throwable $exception): void
     {
-        Log::error('Failed to send forgot password email: ' . $exception->getMessage());
+        Log::error('Failed to send forgot password email: '.$exception->getMessage());
     }
 }

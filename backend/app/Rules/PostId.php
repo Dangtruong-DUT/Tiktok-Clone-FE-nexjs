@@ -22,7 +22,7 @@ class PostId implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!$this->postRepository->isExist($value)) {
+        if (! $this->postRepository->isExist($value)) {
             $fail(':attribute must be a valid post id.');
         }
     }

@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 class GetUserIndicatorsRequest extends BaseRequest
 {
-
     protected function prepareForValidation(): void
     {
         $this->merge([
@@ -14,10 +13,9 @@ class GetUserIndicatorsRequest extends BaseRequest
             'toDate' => $this->query('toDate'),
         ]);
     }
+
     /**
      * Set rules
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -25,17 +23,17 @@ class GetUserIndicatorsRequest extends BaseRequest
             'fromDate' => [
                 self::REQUIRED,
                 self::STRING,
-                self::MIN . ':10',
-                self::MAX . ':30',
+                self::MIN.':10',
+                self::MAX.':30',
                 self::DATE,
             ],
             'toDate' => [
                 self::REQUIRED,
                 self::STRING,
-                self::MIN . ':10',
-                self::MAX . ':30',
+                self::MIN.':10',
+                self::MAX.':30',
                 self::DATE,
-                self::AFTER_OR_EQUAL . ':fromDate',
+                self::AFTER_OR_EQUAL.':fromDate',
             ],
         ]);
     }

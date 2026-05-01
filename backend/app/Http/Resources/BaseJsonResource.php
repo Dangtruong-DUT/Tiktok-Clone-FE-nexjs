@@ -2,10 +2,10 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Log;
 
 class BaseJsonResource extends JsonResource
 {
@@ -20,8 +20,7 @@ class BaseJsonResource extends JsonResource
     /**
      * Create a new anonymous resource collection.
      *
-     * @param mixed $resource
-     * @return AnonymousResourceCollection
+     * @param  mixed  $resource
      */
     public static function collection($resource): AnonymousResourceCollection
     {
@@ -37,7 +36,7 @@ class BaseJsonResource extends JsonResource
 
     protected function requireAttribute(string $key)
     {
-        if (!array_key_exists($key, $this->resource->getAttributes())) {
+        if (! array_key_exists($key, $this->resource->getAttributes())) {
             Log::warning("Missing attribute: {$key}");
         }
     }

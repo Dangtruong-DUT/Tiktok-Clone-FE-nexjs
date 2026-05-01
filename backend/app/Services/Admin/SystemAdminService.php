@@ -23,16 +23,16 @@ class SystemAdminService
     /**
      * Get dashboard statistics
      *
-     * @param string $period 'today'|'week'|'month'|'year'
+     * @param  string  $period  'today'|'week'|'month'|'year'
      * @return array {
-     *     total_users: int,
-     *     active_users: int,
-     *     banned_users: int,
-     *     total_posts: int,
-     *     deleted_posts: int,
-     *     total_comments: int,
-     *     total_admin_actions: int
-     * }
+     *               total_users: int,
+     *               active_users: int,
+     *               banned_users: int,
+     *               total_posts: int,
+     *               deleted_posts: int,
+     *               total_comments: int,
+     *               total_admin_actions: int
+     *               }
      */
     public function getDashboardStats(string $period = 'today'): array
     {
@@ -56,17 +56,16 @@ class SystemAdminService
     /**
      * Get paginated admin logs with filtering
      *
-     * @param array $filters {
-     *     action_type?: string,
-     *     admin_uuid?: string,
-     *     resource_type?: string,
-     *     date_from?: string (Y-m-d),
-     *     date_to?: string (Y-m-d),
-     *     page?: int,
-     *     per_page?: int,
-     *     order_by?: string
-     * }
-     * @return LengthAwarePaginator
+     * @param  array  $filters  {
+     *                          action_type?: string,
+     *                          admin_uuid?: string,
+     *                          resource_type?: string,
+     *                          date_from?: string (Y-m-d),
+     *                          date_to?: string (Y-m-d),
+     *                          page?: int,
+     *                          per_page?: int,
+     *                          order_by?: string
+     *                          }
      */
     public function getAdminLogs(array $filters = []): LengthAwarePaginator
     {
@@ -76,17 +75,16 @@ class SystemAdminService
     /**
      * Get paginated activity logs with filtering
      *
-     * @param array $filters {
-     *     action_type?: string,
-     *     user_uuid?: string,
-     *     resource_type?: string,
-     *     date_from?: string (Y-m-d),
-     *     date_to?: string (Y-m-d),
-     *     page?: int,
-     *     per_page?: int,
-     *     order_by?: string
-     * }
-     * @return LengthAwarePaginator
+     * @param  array  $filters  {
+     *                          action_type?: string,
+     *                          user_uuid?: string,
+     *                          resource_type?: string,
+     *                          date_from?: string (Y-m-d),
+     *                          date_to?: string (Y-m-d),
+     *                          page?: int,
+     *                          per_page?: int,
+     *                          order_by?: string
+     *                          }
      */
     public function getActivityLogs(array $filters = []): LengthAwarePaginator
     {
@@ -96,21 +94,17 @@ class SystemAdminService
     /**
      * Validate period parameter
      *
-     * @param string $period
      * @throws \InvalidArgumentException
      */
     private function validatePeriod(string $period): void
     {
-        if (!in_array($period, ['today', 'week', 'month', 'year'])) {
+        if (! in_array($period, ['today', 'week', 'month', 'year'])) {
             throw new \InvalidArgumentException("Invalid period: {$period}");
         }
     }
 
     /**
      * Get date from based on period
-     *
-     * @param string $period
-     * @return Carbon
      */
     private function getDateFrom(string $period): Carbon
     {

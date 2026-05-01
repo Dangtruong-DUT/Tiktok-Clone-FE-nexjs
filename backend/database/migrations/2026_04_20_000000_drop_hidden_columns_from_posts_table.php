@@ -22,11 +22,11 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('posts', function (Blueprint $table) {
-            if (!Schema::hasColumn('posts', 'hidden_at')) {
+            if (! Schema::hasColumn('posts', 'hidden_at')) {
                 $table->timestamp('hidden_at')->nullable();
             }
 
-            if (!Schema::hasColumn('posts', 'hidden_reason')) {
+            if (! Schema::hasColumn('posts', 'hidden_reason')) {
                 $table->text('hidden_reason')->nullable();
             }
 

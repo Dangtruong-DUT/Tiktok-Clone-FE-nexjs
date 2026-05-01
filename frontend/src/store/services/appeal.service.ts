@@ -39,8 +39,33 @@ export const AppealApi = createApi({
                 body: formData
             }),
             invalidatesTags: [{ type: 'Appeals', id: 'LIST' }]
+        }),
+
+        verifyAppealToken: builder.mutation<{ data: { email: string; appeal_type: string; resource_id: number; resource_type: string } }, { token: string }>({
+            query: (data) => ({
+                url: '/appeals/guest/verify-token',
+                method: 'POST',
+                body: data
+            })
+        }),
+
+        requestAppealToken: builder.mutation<{ message: string }, { email: string; appeal_type: string; resource_type: string; resource_id?: number }>({
+            query: (data) => ({
+                url: '/appeals/guest/request-token',
+                method: 'POST',
+                body: data
+            })
+        }),
+
+        updateAppeal: builder.mutation<CreateAppealResponse, { uuid: string; data: FormData }>({
+            query: ({ uuid, data }) => ({
+                url: `/appeals/${uuid}`,
+                method: 'POST', // Send as POST with _method=PUT in FormData
+                body: data
+            }),
+            invalidatesTags: (_result, _error, { uuid }) => [{ type: 'Appeals', id: 'LIST' }, { type: 'Appeals', id: uuid }]
         })
     })
 })
 
-export const { useGetMyAppealsQuery, useGetAppealQuery, useCreateAppealMutation } = AppealApi
+export const { useGetMyAppealsQuery, useGetAppealQuery, useCreateAppealMutation, useVerifyAppealTokenMutation, useRequestAppealTokenMutation, useUpdateAppealMutation } = AppealApi

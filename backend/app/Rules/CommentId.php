@@ -22,7 +22,7 @@ class CommentId implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!$this->commentRepository->isExist($value)) {
+        if (! $this->commentRepository->isExist($value)) {
             $fail(':attribute must be a valid comment ID.');
         }
     }

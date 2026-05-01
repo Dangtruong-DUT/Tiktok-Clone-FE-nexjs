@@ -17,10 +17,10 @@ return new class extends Migration
             $table->smallInteger('type');
             $table->integer('order')->default(0);
             $table->foreignId('post_id')
-                ->constrained("posts")
+                ->constrained('posts')
                 ->cascadeOnDelete();
             $table->foreignId('upload_file_id')
-                ->constrained("upload_files")
+                ->constrained('upload_files')
                 ->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();

@@ -53,10 +53,10 @@ class UserSettings extends Model
         'following_visibility' => PrivacyVisibilityEnum::PUBLIC->value,
     ];
 
-
     /**
      * Get the user whose avatar is this file.
-     *  @return \Illuminate\Database\Eloquent\Relations\BelongsTo The relationship instance.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo The relationship instance.
      */
     public function user(): BelongsTo
     {

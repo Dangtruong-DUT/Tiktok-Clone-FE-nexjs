@@ -17,6 +17,7 @@ class AdminUserResource extends BaseJsonResource
             'banned_at' => optional($this->banned_at)?->toDateTimeString(),
             'ban_reason' => $this->ban_reason,
             'created_at' => optional($this->created_at)?->toDateTimeString(),
+            'deleted_at' => optional($this->deleted_at)?->toDateTimeString(),
         ];
     }
 }

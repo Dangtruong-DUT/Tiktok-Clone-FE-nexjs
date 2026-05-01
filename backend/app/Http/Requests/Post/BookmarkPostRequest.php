@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Requests\Post;
 
 use App\Http\Requests\BaseRequest;
@@ -15,15 +16,13 @@ class BookmarkPostRequest extends BaseRequest
 
     /**
      * set rules
-     *
-     * @return array
      */
     public function rules(): array
     {
         return $this->applyBaseRules([
-                'post_uuid' => [
-                    self::REQUIRED,
-                ],
+            'post_uuid' => [
+                self::REQUIRED,
+            ],
         ]);
     }
 }

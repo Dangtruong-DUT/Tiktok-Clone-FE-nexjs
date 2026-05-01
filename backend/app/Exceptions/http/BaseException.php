@@ -9,16 +9,17 @@ use Symfony\Component\HttpFoundation\Response;
 abstract class BaseException extends Exception
 {
     protected string $errorCode;
+
     protected int $httpStatusCode;
+
     protected array $errors;
 
     public function __construct(
         string $message = 'Internal server error',
-        string $errorCode = "BASE_ERROR",
+        string $errorCode = 'BASE_ERROR',
         array $errors = [],
         int $httpStatusCode = Response::HTTP_INTERNAL_SERVER_ERROR
-    )
-    {
+    ) {
         $this->message = $message;
         $this->errorCode = $errorCode;
         $this->errors = $errors;
@@ -43,13 +44,12 @@ abstract class BaseException extends Exception
     }
 
     /**
-    * Report the exception.
-    */
+     * Report the exception.
+     */
     public function report(): void
     {
         // Log if needed
     }
-
 
     /**
      * Render the exception into an HTTP response.

@@ -32,7 +32,7 @@ class DeleteUserRequest extends BaseRequest
                 self::REQUIRED,
                 Rule::notIn([$this->user()?->uuid]),
             ],
-            'reason' => [self::REQUIRED, self::STRING, self::MIN . ':10', self::MAX . ':500'],
+            'reason' => [self::REQUIRED, self::STRING, self::MIN.':10', self::MAX.':500'],
         ]);
     }
 }

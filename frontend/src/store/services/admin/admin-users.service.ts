@@ -4,6 +4,7 @@ import type {
     BanUserRes,
     UnbanUserRes,
     DeleteUserRes,
+    RestoreUserRes,
     CommonMessageRes
 } from '@/types/dtos/admin/admin-response.dto'
 import type {
@@ -11,6 +12,7 @@ import type {
     BanUserReq,
     UnbanUserReq,
     DeleteUserReq,
+    RestoreUserReq,
     ResetUserPasswordReq,
     SendUserMailReq
 } from '@/types/dtos/admin/admin-request.dto'
@@ -63,6 +65,18 @@ const adminUsersApi = AdminApi.injectEndpoints({
             ]
         }),
 
+        restoreUser: builder.mutation<RestoreUserRes, RestoreUserReq>({
+            query: ({ user_uuid }) => ({
+                url: `/admin/users/${user_uuid}/restore`,
+                method: 'POST'
+            }),
+            invalidatesTags: (_result, _error, { user_uuid }) => [
+                { type: 'AdminUsers', id: user_uuid },
+                { type: 'AdminUsers', id: 'LIST' },
+                { type: 'AdminActivity', id: 'LIST' }
+            ]
+        }),
+
         resetUserPassword: builder.mutation<CommonMessageRes, ResetUserPasswordReq>({
             query: ({ user_uuid, ...body }) => ({
                 url: `/admin/users/${user_uuid}/reset-password`,
@@ -89,6 +103,7 @@ export const {
     useBanUserMutation,
     useUnbanUserMutation,
     useDeleteUserMutation,
+    useRestoreUserMutation,
     useResetUserPasswordMutation,
     useSendUserMailMutation
 } = adminUsersApi

@@ -5,11 +5,11 @@ namespace App\Enums;
 trait BaseEnumTrait
 {
     /**
-    * Get the label of the enum value.
-    */
+     * Get the label of the enum value.
+     */
     public static function values(): array
     {
-        return array_map(fn($case) => $case->value, self::cases());
+        return array_map(fn ($case) => $case->value, self::cases());
     }
 
     /**
@@ -17,6 +17,6 @@ trait BaseEnumTrait
      */
     public static function labels(): array
     {
-        return array_map(fn($case) => $case->label(), self::cases());
+        return array_map(fn ($case) => $case->label(), self::cases());
     }
 }

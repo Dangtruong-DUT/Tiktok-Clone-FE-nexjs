@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Requests\Post;
 
 use App\Http\Requests\BaseListRequest;
@@ -21,8 +22,6 @@ class GetLikedPostsOfUserRequest extends BaseListRequest
 
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -31,35 +30,31 @@ class GetLikedPostsOfUserRequest extends BaseListRequest
 
     /**
      * set rules
-     *
-     * @return array
      */
     public function rules(): array
     {
 
         return $this->applyBaseRules([
-                'user_uuid'=>[
-                    self::REQUIRED
-                ],
-                'post_type' => [
-                    self::SOMETIMES,
-                    self::REQUIRED,
-                ],
-                'page' => [
-                    self::SOMETIMES,
-                    self::REQUIRED,
-                ],
-                'per_page' => [
-                    self::SOMETIMES,
-                    self::REQUIRED,
-                ],
+            'user_uuid' => [
+                self::REQUIRED,
+            ],
+            'post_type' => [
+                self::SOMETIMES,
+                self::REQUIRED,
+            ],
+            'page' => [
+                self::SOMETIMES,
+                self::REQUIRED,
+            ],
+            'per_page' => [
+                self::SOMETIMES,
+                self::REQUIRED,
+            ],
         ]);
     }
 
     /**
      * Get the target user based on the route parameter.
-     *
-     * @return User
      */
     private function getTargetUser(): User
     {

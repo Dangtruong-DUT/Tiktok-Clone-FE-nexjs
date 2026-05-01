@@ -22,7 +22,7 @@ class GetConversationMessagesRequest extends BaseListRequest
             'conversation_id' => [
                 self::REQUIRED,
                 self::INTEGER,
-                new ConversationId(),
+                new ConversationId,
             ],
             'page' => [
                 self::SOMETIMES,

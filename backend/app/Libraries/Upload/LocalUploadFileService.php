@@ -13,19 +13,18 @@ class LocalUploadFileService implements UploadFileServiceInterface
     /**
      * Upload a file and create a record in the upload_files table.
      *
-     * @param  UploadedFile $file        The uploaded file
-     * @param  string       $directory   The directory to store the file in
-     * @param  Relation|null   $relation  The Relation to associate the file with
-     * @return UploadFile   The created UploadFile record
+     * @param  UploadedFile  $file  The uploaded file
+     * @param  string  $directory  The directory to store the file in
+     * @param  Relation|null  $relation  The Relation to associate the file with
+     * @return UploadFile The created UploadFile record
      */
     public function uploadFile(
         UploadedFile $file,
         string $directory,
         ?Relation $relation = null
-    ): UploadFile
-    {
+    ): UploadFile {
 
-        $filename = Str::uuid()->toString() . '.' . $file->getClientOriginalExtension();
+        $filename = Str::uuid()->toString().'.'.$file->getClientOriginalExtension();
 
         $path = $file->storeAs($directory, $filename, 'public');
 
@@ -49,8 +48,8 @@ class LocalUploadFileService implements UploadFileServiceInterface
     /**
      * Delete a file and its record.
      *
-     * @param  UploadFile $uploadFile The file to delete
-     * @return bool       True if the file was deleted
+     * @param  UploadFile  $uploadFile  The file to delete
+     * @return bool True if the file was deleted
      */
     public function deleteFile(UploadFile $uploadFile): bool
     {

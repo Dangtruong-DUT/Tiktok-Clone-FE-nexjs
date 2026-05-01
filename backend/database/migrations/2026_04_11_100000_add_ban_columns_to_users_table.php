@@ -14,17 +14,17 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->timestamp('banned_at')
-                    ->nullable()
-                    ->after('verify')
-                    ->comment('When the user was banned, NULL if not banned');
+                ->nullable()
+                ->after('verify')
+                ->comment('When the user was banned, NULL if not banned');
             $table->text('ban_reason')
-                    ->nullable()
-                    ->after('banned_at')
-                    ->comment('Reason for banning the user');
+                ->nullable()
+                ->after('banned_at')
+                ->comment('Reason for banning the user');
             $table->integer('ban_duration_days')
-                    ->nullable()
-                    ->after('ban_reason')
-                    ->comment('Duration of the ban in days, NULL = permanent');
+                ->nullable()
+                ->after('ban_reason')
+                ->comment('Duration of the ban in days, NULL = permanent');
 
             $table->index('banned_at');
         });

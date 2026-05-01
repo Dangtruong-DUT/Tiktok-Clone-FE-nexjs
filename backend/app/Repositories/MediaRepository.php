@@ -1,13 +1,11 @@
 <?php
+
 namespace App\Repositories;
 
 use App\Models\Media;
-use App\Repositories\BaseRepository;
 
 class MediaRepository extends BaseRepository
 {
-
-
     /**
      * MediaRepository constructor.
      */
@@ -20,8 +18,8 @@ class MediaRepository extends BaseRepository
     /**
      * Create or update multiple media records for a post.
      *
-     * @param array $mediaItems Array of media data, each containing 'file_id' and 'type'.
-     * @param int $postId The ID of the post to associate the media with.
+     * @param  array  $mediaItems  Array of media data, each containing 'file_id' and 'type'.
+     * @param  int  $postId  The ID of the post to associate the media with.
      */
     public function createMany(array $mediaItems, int $postId): void
     {

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Requests\User;
 
 use App\Http\Requests\BaseRequest;
@@ -14,16 +15,14 @@ class GetUserProfileRequest extends BaseRequest
 
     /**
      * set rules
-     *
-     * @return array
      */
     public function rules(): array
     {
 
         return $this->applyBaseRules([
-                'username'=>[
-                    self::REQUIRED
-                ]
+            'username' => [
+                self::REQUIRED,
+            ],
         ]);
     }
 }

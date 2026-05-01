@@ -40,34 +40,42 @@ class AdminModerationNoticeService
         int $entityId,
         array $context = []
     ): void {
-        $appealType = AppealTypeEnum::fromAdminAction($action);
-        if ($appealType === null) {
-            throw new \InvalidArgumentException("No appeal type defined for admin action: {$action->value}");
-        }
         $resourceType = (string) ($context['resource_type'] ?? $entityType->value);
         $resourceId = (int) ($context['resource_id'] ?? $entityId);
-
-        // Create appeal record with token for email-based access
-        $appeal = $this->appealService->create([
-            'user_id' => $targetUser->id,
-            'appeal_type' => $appealType->value,
-            'resource_type' => $resourceType,
-            'resource_id' => $resourceId,
-            'reason' => $reason,
-        ]);
-
-        $appealLink = $this->buildAppealFrontendLink($appeal->appeal_token, $appeal->uuid);
+        $appealLink = null;
 
         $notificationData = [
             'action' => $action->value,
             'action_label' => $action->label(),
             'reason' => $reason,
-            'appeal_type' => $appealType->value,
-            'appeal_uuid' => $appeal->uuid,
             'resource_type' => $resourceType,
             'resource_id' => $resourceId,
-            'appeal_link' => $appealLink,
         ];
+
+        if ($this->isAppealableAction($action)) {
+            $appealType = AppealTypeEnum::fromAdminAction($action);
+            if ($appealType === null) {
+                throw new \InvalidArgumentException("No appeal type defined for admin action: {$action->value}");
+            }
+
+            $notificationData['appeal_type'] = $appealType->value;
+            $notificationData['appeal_available'] = true;
+
+            if (! empty($targetUser->email)) {
+                $tokenStr = \Illuminate\Support\Str::random(64);
+                app(\App\Repositories\AppealTokenRepository::class)->create([
+                    'email' => $targetUser->email,
+                    'token' => $tokenStr,
+                    'appeal_type' => $appealType->value,
+                    'resource_id' => $resourceId,
+                    'resource_type' => $resourceType,
+                    'expires_at' => now()->addDays((int) config('services.ai_moderation.appeal_window_days', 7)),
+                ]);
+
+                $appealLink = $this->buildAppealFrontendLink($tokenStr);
+                $notificationData['appeal_link'] = $appealLink;
+            }
+        }
 
         $this->notificationService->notifyAdminModerationAction(
             adminId: $admin->id,
@@ -98,15 +106,27 @@ class AdminModerationNoticeService
     }
 
     /**
-     * Build the frontend appeal link using a token and UUID.
+     * Build the frontend appeal link using a token.
      *
      * @param  string  $token  The appeal token
-     * @param  string  $uuid  The appeal UUID
      */
-    private function buildAppealFrontendLink(string $token, string $uuid): string
+    private function buildAppealFrontendLink(string $token): string
     {
         $baseUrl = rtrim((string) config('app.frontend_url'), '/');
 
-        return $baseUrl.'/en/appeal?token='.urlencode($token).'&appeal_uuid='.urlencode($uuid);
+        return $baseUrl.'/en/appeal?token='.urlencode($token);
+    }
+
+    /**
+     * Determine if the admin action should allow appeals.
+     */
+    private function isAppealableAction(AdminActionEnum $action): bool
+    {
+        return in_array($action, [
+            AdminActionEnum::BAN,
+            AdminActionEnum::DELETE_USER,
+            AdminActionEnum::DELETE_POST,
+            AdminActionEnum::DELETE_COMMENT,
+        ], true);
     }
 }

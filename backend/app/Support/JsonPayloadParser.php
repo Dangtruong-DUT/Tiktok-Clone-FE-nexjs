@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Support;
 
 class JsonPayloadParser
@@ -9,7 +10,7 @@ class JsonPayloadParser
             return $input;
         }
 
-        if (!is_string($input)) {
+        if (! is_string($input)) {
             return null;
         }
 

@@ -11,18 +11,18 @@ use App\Traits\HasUsernameObservable;
 use App\Traits\HasUuidObservable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * @property int $id
@@ -33,13 +33,14 @@ use Illuminate\Support\Str;
  */
 class User extends Authenticatable implements JWTSubject
 {
+    use HasCreateDefaultUserSettingObservable;
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
+    use HasUsernameObservable;
+    use HasUuidObservable;
     use Notifiable;
     use SoftDeletes;
-    use HasUuidObservable;
-    use HasUsernameObservable;
-    use HasCreateDefaultUserSettingObservable;
 
     /**
      * The attributes that are mass assignable.
@@ -64,15 +65,15 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     /**
-    * The default attributes for the model.
-    *
-    * @var array<string, mixed>
-    */
+     * The default attributes for the model.
+     *
+     * @var array<string, mixed>
+     */
     protected $attributes = [
-    'verify' => UserVerifyStatusEnum::UNVERIFIED->value,
-    'role' => RoleTypeEnum::USER->value,
-    'following_count' => 0,
-    'followers_count' => 0,
+        'verify' => UserVerifyStatusEnum::UNVERIFIED->value,
+        'role' => RoleTypeEnum::USER->value,
+        'following_count' => 0,
+        'followers_count' => 0,
     ];
 
     /**
@@ -82,7 +83,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $hidden = [
         'password',
-        "deleted_at",
+        'deleted_at',
     ];
 
     /**
@@ -132,13 +133,12 @@ class User extends Authenticatable implements JWTSubject
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.
      *
-     * @param int $tokenType The type of the token (access or refresh).
+     * @param  int  $tokenType  The type of the token (access or refresh).
      * @return array
      */
     public function getJWTCustomClaims(
         int $tokenType = TokenTypeEnum::ACCESS->value
-    )
-    {
+    ) {
         return [
             'user_id' => $this->id,
             'uuid' => $this->uuid,
@@ -181,11 +181,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(EmailVerifyToken::class);
     }
 
-    public function password():Attribute
+    public function password(): Attribute
     {
         return Attribute::make(
-            set: fn($value) => Hash::make($value),
-            get: fn($value) => $value
+            set: fn ($value) => Hash::make($value),
+            get: fn ($value) => $value
         );
     }
 
@@ -194,7 +194,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo The relationship instance.
      */
-    public function avatarFile():BelongsTo
+    public function avatarFile(): BelongsTo
     {
         return $this->belongsTo(UploadFile::class, 'avatar_file_id');
     }
@@ -207,7 +207,7 @@ class User extends Authenticatable implements JWTSubject
     public function avatarUrl(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->avatarFile?->url
+            get: fn () => $this->avatarFile?->url
         );
     }
 
@@ -228,13 +228,14 @@ class User extends Authenticatable implements JWTSubject
      */
     public function isBanned(): bool
     {
-        if (!$this->banned_at) {
+        if (! $this->banned_at) {
             return false;
         }
         // If ban_duration_days is null, it means the ban is permanent
         if ($this->ban_duration_days === null) {
             return true;
         }
+
         return now()->lessThan($this->banned_at->copy()->addDays($this->ban_duration_days));
     }
 
@@ -245,18 +246,19 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getBanRemainingDays(): ?int
     {
-        if (!$this->banned_at || $this->ban_duration_days === null) {
+        if (! $this->banned_at || $this->ban_duration_days === null) {
             return null;
         }
         $banEndDate = $this->banned_at->copy()->addDays($this->ban_duration_days);
         $remainingDays = now()->diffInDays($banEndDate, false);
+
         return $remainingDays > 0 ? $remainingDays : 0;
     }
 
     /**
      * Check if the given password matches the user's current password.
      *
-     * @param string $password The password to check.
+     * @param  string  $password  The password to check.
      * @return bool True if the given password matches the user's current password, false otherwise.
      */
     public function isCurrentPassword(string $password): bool
@@ -286,14 +288,14 @@ class User extends Authenticatable implements JWTSubject
             'relationships',
             'target_user_id',
             'user_id'
-            )
+        )
             ->wherePivot('type', RelationshipTypeEnum::FOLLOW);
     }
 
     /**
      * Check if the user is followed by another user.
      *
-     * @param User $user The user to check.
+     * @param  User  $user  The user to check.
      * @return bool True if the user is followed by the given user, false otherwise.
      */
     public function isFollowedBy(User $user): bool
@@ -304,14 +306,13 @@ class User extends Authenticatable implements JWTSubject
     /**
      * Check if the user is following another user.
      *
-     * @param User $user The user to check.
+     * @param  User  $user  The user to check.
      * @return bool True if the user is following the given user, false otherwise.
      */
     public function isFollowed(User $user): bool
     {
         return $this->followings()->whereKey($user->id)->exists();
     }
-
 
     /**
      * Get the users that the user follows.
@@ -325,7 +326,7 @@ class User extends Authenticatable implements JWTSubject
             'relationships',
             'user_id',
             'target_user_id'
-            )->wherePivot('type', RelationshipTypeEnum::FOLLOW);
+        )->wherePivot('type', RelationshipTypeEnum::FOLLOW);
     }
 
     /**

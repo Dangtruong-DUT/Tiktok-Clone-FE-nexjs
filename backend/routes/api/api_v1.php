@@ -99,6 +99,7 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::post('/users/{user_uuid}/ban', [UserAdminController::class, 'banUser'])->name('ban-user');
             Route::delete('/users/{user_uuid}/ban', [UserAdminController::class, 'unbanUser'])->name('unban-user');
             Route::delete('/users/{user_uuid}', [UserAdminController::class, 'deleteUser'])->name('delete-user');
+            Route::post('/users/{user_uuid}/restore', [UserAdminController::class, 'restoreUser'])->name('restore-user');
             Route::post('/users/{user_uuid}/reset-password', [UserAdminController::class, 'resetUserPassword'])->name('reset-user-password');
             Route::post('/users/{user_uuid}/send-mail', [UserAdminController::class, 'sendUserMail'])->name('send-user-mail');
 
@@ -179,6 +180,8 @@ Route::prefix('search')
 Route::prefix('appeals')
     ->name('appeals.')
     ->group(function () {
+        Route::post('/guest/request-token', [AppealController::class, 'requestToken'])->name('request-token');
+        Route::post('/guest/verify-token', [AppealController::class, 'verifyToken'])->name('verify-token');
         Route::post('/', [AppealController::class, 'create'])->name('create');
         Route::put('/{appeal_uuid}', [AppealController::class, 'update'])->name('update');
         Route::get('/{appeal_uuid}', [AppealController::class, 'show'])->name('show');

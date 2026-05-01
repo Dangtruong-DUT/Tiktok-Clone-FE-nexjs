@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\UploadFile;
 
 class Appeal extends Model
 {
@@ -20,6 +19,7 @@ class Appeal extends Model
      */
     protected $fillable = [
         'user_id',
+        'email',
         'appeal_type',
         'resource_id',
         'resource_type',
@@ -28,8 +28,6 @@ class Appeal extends Model
         'admin_response',
         'reviewed_by',
         'reviewed_at',
-        'appeal_token',
-        'appeal_token_expires_at',
         'evidence_file_ids',
     ];
 
@@ -44,7 +42,6 @@ class Appeal extends Model
             'appeal_type' => AppealTypeEnum::class,
             'status' => AppealStatusEnum::class,
             'reviewed_at' => 'datetime',
-            'appeal_token_expires_at' => 'datetime',
             'evidence_file_ids' => 'array',
         ];
     }
@@ -77,19 +74,8 @@ class Appeal extends Model
         if (empty($ids)) {
             return UploadFile::query()->whereRaw('1 = 0')->get();
         }
+
         return UploadFile::whereIn('id', $ids)->get();
-    }
-
-    /**
-     * Check if the appeal token has expired.
-     */
-    public function isTokenExpired(): bool
-    {
-        if (!$this->appeal_token_expires_at) {
-            return true;
-        }
-
-        return $this->appeal_token_expires_at->isPast();
     }
 
     /**
@@ -112,7 +98,6 @@ class Appeal extends Model
 
     /**
      * Scope query to appeals by status.
-     * @param AppealStatusEnum|string $status
      */
     #[Scope]
     public function byStatus(Builder $query, AppealStatusEnum|string $status): Builder
@@ -129,14 +114,5 @@ class Appeal extends Model
     public function pending(Builder $query): Builder
     {
         return $this->byStatus($query, AppealStatusEnum::PENDING);
-    }
-
-    /**
-     * Scope query to find appeal by token.
-     */
-    #[Scope]
-    public function byToken(Builder $query, string $token): Builder
-    {
-        return $query->where('appeal_token', $token);
     }
 }

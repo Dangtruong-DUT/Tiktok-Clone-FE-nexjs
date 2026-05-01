@@ -30,8 +30,8 @@ class SendUserMailRequest extends BaseRequest
             'user_uuid' => [
                 self::REQUIRED,
             ],
-            'subject' => [self::REQUIRED, self::STRING, self::MIN . ':3', self::MAX . ':150'],
-            'message' => [self::REQUIRED, self::STRING, self::MIN . ':10', self::MAX . ':5000'],
+            'subject' => [self::REQUIRED, self::STRING, self::MIN.':3', self::MAX.':150'],
+            'message' => [self::REQUIRED, self::STRING, self::MIN.':10', self::MAX.':5000'],
         ]);
     }
 }

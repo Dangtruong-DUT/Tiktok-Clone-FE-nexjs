@@ -8,7 +8,6 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class NotifyUuid implements ValidationRule
 {
-
     private readonly NotificationRepository $notificationRepository;
 
     public function __construct()
@@ -23,7 +22,7 @@ class NotifyUuid implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!$this->notificationRepository->isExistByUuid($value)) {
+        if (! $this->notificationRepository->isExistByUuid($value)) {
             $fail(':attribute must be a valid notification uuid.');
         }
     }
