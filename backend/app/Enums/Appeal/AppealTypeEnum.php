@@ -14,6 +14,7 @@ enum AppealTypeEnum: string implements BaseEnumInterface
     use BaseEnumTrait;
 
     case USER_BAN = 'user_ban';
+    case USER_UNBAN = 'user_unban';
     case POST_DELETED = 'post_deleted';
     case COMMENT_DELETED = 'comment_deleted';
 
@@ -26,6 +27,7 @@ enum AppealTypeEnum: string implements BaseEnumInterface
     {
         return match($this) {
             self::USER_BAN => 'User Ban Appeal',
+            self::USER_UNBAN => 'User Unban Appeal',
             self::POST_DELETED => 'Post Deleted Appeal',
             self::COMMENT_DELETED => 'Comment Deleted Appeal',
         };
@@ -40,6 +42,7 @@ enum AppealTypeEnum: string implements BaseEnumInterface
     {
         return match($this) {
             self::USER_BAN => 'Kháng cáo khóa tài khoản',
+            self::USER_UNBAN => 'Kháng cáo mở khóa tài khoản',
             self::POST_DELETED => 'Kháng cáo xóa bài viết',
             self::COMMENT_DELETED => 'Kháng cáo xóa bình luận',
         };
@@ -49,6 +52,7 @@ enum AppealTypeEnum: string implements BaseEnumInterface
     {
         return match($action) {
             AdminActionEnum::BAN => self::USER_BAN,
+            AdminActionEnum::UNBAN => self::USER_UNBAN,
             AdminActionEnum::DELETE_POST => self::POST_DELETED,
             AdminActionEnum::DELETE_COMMENT => self::COMMENT_DELETED,
             default => null,

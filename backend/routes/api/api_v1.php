@@ -97,9 +97,8 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             // User management
             Route::get('/users', [UserAdminController::class, 'getUsers'])->name('list-users');
             Route::post('/users/{user_uuid}/ban', [UserAdminController::class, 'banUser'])->name('ban-user');
-            Route::post('/users/{user_uuid}/unban', [UserAdminController::class, 'unbanUser'])->name('unban-user');
+            Route::delete('/users/{user_uuid}/ban', [UserAdminController::class, 'unbanUser'])->name('unban-user');
             Route::delete('/users/{user_uuid}', [UserAdminController::class, 'deleteUser'])->name('delete-user');
-            Route::post('/users/{user_uuid}/delete', [UserAdminController::class, 'deleteUser'])->name('delete-user-post');
             Route::post('/users/{user_uuid}/reset-password', [UserAdminController::class, 'resetUserPassword'])->name('reset-user-password');
             Route::post('/users/{user_uuid}/send-mail', [UserAdminController::class, 'sendUserMail'])->name('send-user-mail');
 

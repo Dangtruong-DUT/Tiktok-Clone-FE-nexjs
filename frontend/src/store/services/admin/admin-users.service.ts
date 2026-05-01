@@ -41,8 +41,8 @@ const adminUsersApi = AdminApi.injectEndpoints({
 
         unbanUser: builder.mutation<UnbanUserRes, UnbanUserReq>({
             query: ({ user_uuid }) => ({
-                url: `/admin/users/${user_uuid}/unban`,
-                method: 'POST'
+                url: `/admin/users/${user_uuid}/ban`,
+                method: 'DELETE'
             }),
             invalidatesTags: (_result, _error, { user_uuid }) => [
                 { type: 'AdminUsers', id: user_uuid },

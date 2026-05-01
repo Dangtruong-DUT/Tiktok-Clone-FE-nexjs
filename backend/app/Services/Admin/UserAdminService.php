@@ -14,11 +14,6 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
-/**
- * UserAdminService - User management operations for admins
- * Handles: ban, unban, delete users
- * All operations are logged via AdminLogService
- */
 class UserAdminService
 {
     use HasAuthUser;
