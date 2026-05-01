@@ -16,7 +16,7 @@ use Illuminate\Support\Str;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-class TokenService
+class AuthTokenService
 {
     public function __construct(
         private readonly RefreshTokenRepository $refreshRepo,

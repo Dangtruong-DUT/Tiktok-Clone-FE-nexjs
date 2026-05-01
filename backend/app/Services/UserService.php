@@ -46,6 +46,7 @@ class UserService
      */
     public function changePassword(array $payload): bool
     {
+        /** @var User $authUser */
         $authUser = $this->guard()->user();
         if (! $authUser->isCurrentPassword($payload['current_password'])) {
             throw new BusinessException('Current password is incorrect',
@@ -75,7 +76,7 @@ class UserService
         if (! $targetUser) {
             throw new BusinessException('The user you are trying to follow does not exist');
         }
-
+        /** @var User $authUser */
         $authUser = $this->guard()->user();
         if ($authUser->uuid === $targetUserUuid) {
             throw new BadRequestException('You cannot follow yourself');
@@ -112,6 +113,7 @@ class UserService
     {
         $targetUserUuid = $payload['user_uuid'];
         $targetUser = $this->userRepo->findByUuid($targetUserUuid);
+        /** @var User $authUser */
         $authUser = $this->guard()->user();
         if (! $this->relationshipRepo->isFollowing($authUser->id, $targetUser->id)) {
             return true;

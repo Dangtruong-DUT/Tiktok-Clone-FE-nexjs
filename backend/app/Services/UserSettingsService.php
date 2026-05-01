@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\User;
 use App\Models\UserSettings;
 use App\Traits\HasAuthUser;
 
@@ -35,6 +36,8 @@ class UserSettingsService
      */
     public function update(array $data): UserSettings
     {
+
+        /** @var User $user */
         $user = $this->guard()->user();
         $user->settings()->update([
             'liked_videos_visibility' => $data['liked_videos_visibility'] ?? $user->settings->liked_videos_visibility,

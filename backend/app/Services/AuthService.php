@@ -29,7 +29,7 @@ class AuthService
         private readonly RefreshTokenRepository $refreshRepo,
         private readonly ForgotPasswordTokenRepository $forgotPasswordTokenRepo,
         private readonly VerifyEmailTokenRepository $verifyEmailTokenRepo,
-        private readonly TokenService $tokenService,
+        private readonly AuthTokenService $tokenService,
         private readonly NotificationService $notificationService
     ) {}
 
