@@ -283,7 +283,8 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                                         </DropdownMenu>
                                     </TableCell>
                                 </TableRow>
-                            ))}
+                            )
+                        })}
                         </TableBody>
                     </Table>
                 </div>
