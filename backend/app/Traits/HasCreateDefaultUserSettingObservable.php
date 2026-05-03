@@ -4,6 +4,10 @@ namespace App\Traits;
 
 use App\Observers\CreateDefaultUserSettingsObserver;
 
+/**
+ * @mixin \Illuminate\Database\Eloquent\Model
+ * @method static void observe(string|object $classes)
+ */
 trait HasCreateDefaultUserSettingObservable
 {
     /**
@@ -11,6 +15,6 @@ trait HasCreateDefaultUserSettingObservable
      */
     public static function bootHasCreateDefaultUserSettingObservable(): void
     {
-        self::observe(CreateDefaultUserSettingsObserver::class);
+        static::observe(CreateDefaultUserSettingsObserver::class);
     }
 }

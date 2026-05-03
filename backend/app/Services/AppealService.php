@@ -79,17 +79,17 @@ class AppealService
      *
      * @param  array{
      *          - email: string,
-     *          - appeal_type?: string,
-     *          - resource_id?: int|null,
-     *          - resource_type?: string|null
+     *          - appeal_type: string,
+     *          - resource_id: int,
+     *          - resource_type: string
      *      }  $payload
      */
     public function requestToken(array $payload): void
     {
         $this->appealOwnershipService->validate(
             email: $payload['email'],
-            resourceType: $payload['resource_type'] ?? null,
-            resourceId: $payload['resource_id'] ?? null
+            resourceType: $payload['resource_type'],
+            resourceId: $payload['resource_id']
         );
 
         $token = Str::random(64);
@@ -97,10 +97,10 @@ class AppealService
 
         $appealToken = $this->appealTokenRepository->create([
             'email' => $payload['email'],
-            'token' => $token,
-            'appeal_type' => $payload['appeal_type'] ?? null,
-            'resource_id' => $payload['resource_id'] ?? null,
-            'resource_type' => $payload['resource_type'] ?? null,
+            'token_hash' => hash('sha256', $token),
+            'appeal_type' => $payload['appeal_type'],
+            'resource_id' => $payload['resource_id'],
+            'resource_type' => $payload['resource_type'],
             'expires_at' => now()->addDays($windowDays),
         ]);
 

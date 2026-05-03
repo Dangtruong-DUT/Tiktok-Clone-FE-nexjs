@@ -26,8 +26,7 @@ class AppealController extends Controller
      */
     public function requestToken(GuestRequestTokenRequest $request): JsonResponse
     {
-        $validated = $request->validated();
-        $appealToken = $this->appealService->requestToken($validated);
+        $this->appealService->requestToken($request->validated());
 
         return ApiResponse::success(
             message: 'If the resource exists and belongs to this email, a verification link has been sent.',

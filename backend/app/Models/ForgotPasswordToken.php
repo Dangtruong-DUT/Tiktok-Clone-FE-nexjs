@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use App\Traits\HasToken;
+use App\Traits\HasHashedToken;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ForgotPasswordToken extends Model
 {
-    use HasToken;
+    use HasHashedToken;
 
     /*
     * The table associated with the model.

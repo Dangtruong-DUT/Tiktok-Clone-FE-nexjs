@@ -4,10 +4,14 @@ namespace App\Traits;
 
 use App\Observers\HasUuidObserver;
 
+/**
+ * @mixin \Illuminate\Database\Eloquent\Model
+ * @method static void observe(string|object $classes)
+ */
 trait HasUuidObservable
 {
     protected static function bootHasUuidObservable()
     {
-        self::observe(HasUuidObserver::class);
+        static::observe(HasUuidObserver::class);
     }
 }
