@@ -32,4 +32,9 @@ return [
         'min_per_page' => 1,
         'min_page' => 1,
     ],
+
+    'appeal_token' => [
+        'length' => 60,
+        'ttl_days' => 7,
+    ],
 ];

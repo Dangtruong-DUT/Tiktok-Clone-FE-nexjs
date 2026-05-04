@@ -15,6 +15,11 @@ class AppealOwnershipService
 
     /**
      * Validate ownership of a resource by email.
+     * @param string $email The email to validate against the resource owner
+     * @param string $resourceType The type of the resource (e.g., 'user', 'post')
+     * @param int $resourceId The ID of the resource
+     * @return void
+     * @throws BusinessException if the email does not match the resource owner or resource not found
      */
     public function validate(
         string $email,
@@ -85,6 +90,8 @@ class AppealOwnershipService
 
     /**
      * Build query with required relations.
+     * @param string $modelClass The model class to build the query for
+     * @return Builder The query builder instance with necessary relations loaded
      */
     private function buildResourceQuery(string $modelClass): Builder
     {
