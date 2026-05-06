@@ -82,15 +82,6 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::post('/{notification_uuid}/read', [NotificationController::class, 'markAsRead'])->name('mark-as-read');
         });
 
-    // appeal routes (authenticated — list only)
-    Route::prefix('appeals')
-        ->name('appeals.')
-        ->group(function () {
-            Route::get('/', [AppealController::class, 'index'])->name('list');
-            Route::put('/{appeal_uuid}', [AppealController::class, 'update'])->name('update');
-            Route::get('/{appeal_uuid}', [AppealController::class, 'show'])->name('show');
-        });
-
     // admin routes
     Route::prefix('admin')
         ->name('admin.')
@@ -124,6 +115,23 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::post('/appeals/{appeal_uuid}/reject', [AppealAdminController::class, 'reject'])->name('reject-appeal');
         });
 });
+
+/*|--------------------------------------------------------------------------
+| Appeal routes — Auth required, banned users CAN access
+|--------------------------------------------------------------------------
+| These routes require authentication but bypass check_user_status,
+| allowing banned users to create and manage their appeals.
+*/
+
+Route::middleware(['auth:api'])
+    ->prefix('appeals')
+    ->name('appeals.')
+    ->group(function () {
+        Route::get('/', [AppealController::class, 'index'])->name('list');
+        Route::post('/', [AppealController::class, 'create'])->name('create');
+        Route::put('/{appeal_uuid}', [AppealController::class, 'update'])->name('update');
+        Route::get('/{appeal_uuid}', [AppealController::class, 'show'])->name('show');
+    });
 
 /*|--------------------------------------------------------------------------
 | Public routes
@@ -174,14 +182,4 @@ Route::prefix('search')
         Route::get('/users', [UserController::class, 'index'])->name('users');
         Route::get('/posts', [PostController::class, 'index'])->name('posts');
         Route::get('/hashtags', [HashtagController::class, 'index'])->name('hashtags');
-    });
-
-// Appeal routes — public with flexible auth
-// Token-based: no auth needed. Without token: auth required (handled in controller/service).
-Route::prefix('appeals')
-    ->name('appeals.')
-    ->group(function () {
-        Route::post('/guest/request-token', [AppealController::class, 'requestToken'])->name('request-token');
-        Route::post('/guest/verify-token', [AppealController::class, 'verifyToken'])->name('verify-token');
-        Route::post('/', [AppealController::class, 'create'])->name('create');
     });

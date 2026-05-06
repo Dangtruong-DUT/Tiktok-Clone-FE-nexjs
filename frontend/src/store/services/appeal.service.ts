@@ -5,11 +5,12 @@ import type { CreateAppealResponse, GetAppealResponse, GetMyAppealsResponse } fr
 import { toQueryParams } from '@/utils/common/query-params.util'
 
 /**
- * Appeal API service — handles both public (token-based) and authenticated flows.
+ * Appeal API service — handles authenticated appeal flows only.
  *
- * - getMyAppeals: Authenticated — list user's appeals.
- * - getAppeal: Flexible auth — fetch appeal by UUID (with optional token).
- * - createAppeal: Flexible — token flow (public) or auth flow (authenticated).
+ * - getMyAppeals: List user's appeals.
+ * - getAppeal: Fetch appeal by UUID.
+ * - createAppeal: Create a new appeal (auth required).
+ * - updateAppeal: Update an existing appeal (auth required).
  */
 export const AppealApi = createApi({
     reducerPath: 'AppealApi',
@@ -24,10 +25,9 @@ export const AppealApi = createApi({
             providesTags: [{ type: 'Appeals', id: 'LIST' }]
         }),
 
-        getAppeal: builder.query<GetAppealResponse, { uuid: string; token?: string }>({
-            query: ({ uuid, token }) => ({
-                url: `/appeals/${uuid}`,
-                params: token ? { token } : undefined
+        getAppeal: builder.query<GetAppealResponse, { uuid: string }>({
+            query: ({ uuid }) => ({
+                url: `/appeals/${uuid}`
             }),
             providesTags: (_result, _error, { uuid }) => [{ type: 'Appeals', id: uuid }]
         }),
@@ -41,22 +41,6 @@ export const AppealApi = createApi({
             invalidatesTags: [{ type: 'Appeals', id: 'LIST' }]
         }),
 
-        verifyAppealToken: builder.mutation<{ data: { email: string; appeal_type: string; resource_id: number; resource_type: string } }, { token: string }>({
-            query: (data) => ({
-                url: '/appeals/guest/verify-token',
-                method: 'POST',
-                body: data
-            })
-        }),
-
-        requestAppealToken: builder.mutation<{ message: string }, { email: string; appeal_type: string; resource_type: string; resource_id?: number }>({
-            query: (data) => ({
-                url: '/appeals/guest/request-token',
-                method: 'POST',
-                body: data
-            })
-        }),
-
         updateAppeal: builder.mutation<CreateAppealResponse, { uuid: string; data: FormData }>({
             query: ({ uuid, data }) => ({
                 url: `/appeals/${uuid}`,
@@ -68,4 +52,4 @@ export const AppealApi = createApi({
     })
 })
 
-export const { useGetMyAppealsQuery, useGetAppealQuery, useCreateAppealMutation, useVerifyAppealTokenMutation, useRequestAppealTokenMutation, useUpdateAppealMutation } = AppealApi
+export const { useGetMyAppealsQuery, useGetAppealQuery, useCreateAppealMutation, useUpdateAppealMutation } = AppealApi

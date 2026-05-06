@@ -27,7 +27,6 @@ export const AppealSchema = z
             .nullable()
             .optional(),
         reviewed_at: z.string().nullable(),
-        appeal_token_expires_at: z.string().nullable().optional(),
         created_at: z.string(),
         updated_at: z.string()
     })

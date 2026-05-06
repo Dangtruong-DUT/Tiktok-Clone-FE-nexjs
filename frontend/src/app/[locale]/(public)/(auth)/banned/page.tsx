@@ -50,7 +50,7 @@ export default async function BannedPage({ searchParams }: BannedPageProps) {
 
                 <div className='mt-6 flex flex-wrap items-center gap-3'>
                     <Link
-                        href='/appeal'
+                        href='/appeal?appeal_type=user_ban&resource_type=user'
                         className='inline-flex items-center gap-2 rounded-full bg-black px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-neutral-800'
                     >
                         <Scale className='h-4 w-4' />

@@ -2,7 +2,6 @@ export const getAppealTypeLabel = (type: string | undefined, t: (key: any) => st
     if (!type) return ''
     switch (type) {
         case 'user_ban': return t('types.user_ban')
-        case 'user_unban': return t('types.user_unban')
         case 'user_deleted': return t('types.user_deleted')
         case 'post_deleted': return t('types.post_deleted')
         case 'comment_deleted': return t('types.comment_deleted')

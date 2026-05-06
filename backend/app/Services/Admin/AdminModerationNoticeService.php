@@ -58,20 +58,8 @@ class AdminModerationNoticeService
             $notificationData['appeal_type'] = $appealType->value;
             $notificationData['appeal_available'] = true;
 
-            if (! empty($targetUser->email)) {
-                $tokenStr = \Illuminate\Support\Str::random(64);
-                app(\App\Repositories\AppealTokenRepository::class)->create([
-                    'email' => $targetUser->email,
-                    'token' => $tokenStr,
-                    'appeal_type' => $appealType->value,
-                    'resource_id' => $resourceId,
-                    'resource_type' => $resourceType,
-                    'expires_at' => now()->addDays((int) config('services.ai_moderation.appeal_window_days', 7)),
-                ]);
-
-                $appealLink = $this->buildAppealFrontendLink($tokenStr);
-                $notificationData['appeal_link'] = $appealLink;
-            }
+            $appealLink = $this->buildAppealFrontendLink($appealType, $resourceType, $resourceId);
+            $notificationData['appeal_link'] = $appealLink;
         }
 
         $this->notificationService->notifyAdminModerationAction(
@@ -103,15 +91,18 @@ class AdminModerationNoticeService
     }
 
     /**
-     * Build the frontend appeal link using a token.
-     *
-     * @param  string  $token  The appeal token
+     * Build the frontend appeal link with query parameters.
+     * User must be logged in to access this link.
      */
-    private function buildAppealFrontendLink(string $token): string
+    private function buildAppealFrontendLink(AppealTypeEnum $appealType, string $resourceType, int $resourceId): string
     {
         $baseUrl = rtrim((string) config('app.frontend_url'), '/');
 
-        return $baseUrl.'/en/appeal?token='.urlencode($token);
+        return $baseUrl.'/en/appeal?'.http_build_query([
+            'appeal_type' => $appealType->value,
+            'resource_type' => $resourceType,
+            'resource_id' => $resourceId,
+        ]);
     }
 
     /**
@@ -121,7 +112,6 @@ class AdminModerationNoticeService
     {
         return in_array($action, [
             AdminActionEnum::BAN,
-            AdminActionEnum::DELETE_USER,
             AdminActionEnum::DELETE_POST,
             AdminActionEnum::DELETE_COMMENT,
         ], true);

@@ -35,7 +35,6 @@ class AppealResource extends BaseJsonResource
                 'file_name' => $file->file_name,
             ])->values()->toArray(),
             'reviewed_at' => $this->reviewed_at?->toDateTimeString(),
-            'appeal_token_expires_at' => $this->appeal_token_expires_at?->toDateTimeString(),
             'user' => UserResource::make($this->whenLoaded('user')),
             'reviewer' => UserResource::make($this->whenLoaded('reviewer')),
             'created_at' => $this->created_at->toDateTimeString(),

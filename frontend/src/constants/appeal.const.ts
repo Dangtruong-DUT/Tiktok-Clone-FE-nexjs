@@ -1,6 +1,5 @@
 export const APPEAL_TYPES = {
     USER_BAN: 'user_ban',
-    USER_UNBAN: 'user_unban',
     USER_DELETED: 'user_deleted',
     POST_DELETED: 'post_deleted',
     COMMENT_DELETED: 'comment_deleted'

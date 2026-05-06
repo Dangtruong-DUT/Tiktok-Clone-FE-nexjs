@@ -20,11 +20,11 @@ export default async function PublicAppealPage({
     searchParams
 }: {
     params: Promise<{ locale: LocalesType }>
-    searchParams: Promise<{ token?: string; appeal_uuid?: string; appeal_type?: string; resource_type?: string; resource_id?: string }>
+    searchParams: Promise<{ appeal_uuid?: string; appeal_type?: string; resource_type?: string; resource_id?: string }>
 }) {
     const { locale } = await params
     setRequestLocale(locale)
-    const { token, appeal_uuid, appeal_type, resource_type, resource_id } = await searchParams
+    const { appeal_uuid, appeal_type, resource_type, resource_id } = await searchParams
 
     return (
         <section className='mx-auto flex min-h-[60vh] w-full max-w-2xl items-center justify-center px-4 py-10'>
@@ -42,7 +42,6 @@ export default async function PublicAppealPage({
                 }
             >
                 <AppealFormClient 
-                    token={token} 
                     appealUuid={appeal_uuid}
                     appealType={appeal_type} 
                     resourceType={resource_type} 
