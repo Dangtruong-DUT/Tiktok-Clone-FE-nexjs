@@ -56,12 +56,6 @@ export default async function BannedPage({ searchParams }: BannedPageProps) {
                         <Scale className='h-4 w-4' />
                         {t('appealAction')}
                     </Link>
-                    <Link
-                        href='/'
-                        className='inline-flex items-center rounded-full border border-neutral-300 px-5 py-2.5 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-100'
-                    >
-                        {t('backHome')}
-                    </Link>
                 </div>
             </div>
         </section>

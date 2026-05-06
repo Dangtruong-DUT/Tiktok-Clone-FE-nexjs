@@ -9,6 +9,7 @@ use App\Exceptions\http\BadRequestException;
 use App\Mail\AdminDirectMessageMail;
 use App\Models\User;
 use App\Repositories\UserRepository;
+use App\Repositories\RefreshTokenRepository;
 use App\Traits\HasAuthUser;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +21,7 @@ class UserAdminService
 
     public function __construct(
         private readonly UserRepository $userRepository,
+        private readonly RefreshTokenRepository $refreshTokenRepository,
         private readonly AdminLogService $adminLogService,
         private readonly AdminModerationNoticeService $adminModerationNoticeService,
     ) {}
@@ -66,6 +68,8 @@ class UserAdminService
                 'ban_reason' => $payload['reason'],
                 'ban_duration_days' => $payload['duration_days'] ?? null,
             ]);
+
+                $this->refreshTokenRepository->deleteByUserId($user->id);
 
             $this->adminLogService->log(
                 admin: $admin,
@@ -119,6 +123,8 @@ class UserAdminService
                 'ban_reason' => null,
                 'ban_duration_days' => null,
             ]);
+
+                $this->refreshTokenRepository->deleteByUserId($user->id);
 
             $this->adminLogService->log(
                 admin: $admin,

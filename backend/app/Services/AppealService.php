@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\Appeal\AppealStatusEnum;
+use App\Enums\Appeal\AppealTypeEnum;
 use App\Exceptions\http\BusinessException;
 use App\Exceptions\http\ForbiddenException;
 use App\Exceptions\http\NotFoundException;
@@ -31,6 +32,13 @@ class AppealService
      */
     public function create(array $payload, array $evidenceFiles = []): Appeal
     {
+        if ($payload['appeal_type']!=AppealTypeEnum::USER_BAN->value && empty($payload['resource_id'])) {
+            throw new BusinessException('Resource ID is required for this appeal type.', [
+                'resource_id' => 'Resource ID is required',
+            ]);
+        }
+
+
         $userId = $this->guard()->user()->id;
 
         $alreadyExists = $this->appealRepository->hasAppealForResource(
@@ -50,7 +58,7 @@ class AppealService
         return $this->appealRepository->create([
             'user_id' => $userId,
             'appeal_type' => $payload['appeal_type'],
-            'resource_id' => $payload['resource_id'] ?? null,
+            'resource_id' => $payload['resource_id'] ??  $userId,
             'resource_type' => $payload['resource_type'],
             'reason' => $payload['reason'],
             'status' => AppealStatusEnum::PENDING->value,

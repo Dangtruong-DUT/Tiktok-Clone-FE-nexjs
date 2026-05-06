@@ -25,8 +25,8 @@ function toIsoString(value: unknown): string | null {
 
 function getBannedUntil(payload: JwtPayloadType): string | null {
     return (
-        toIsoString(payload.banned_until) ||
         toIsoString(payload.ban_until) ||
+        toIsoString(payload.banned_until) ||
         toIsoString(payload.ban_expires_at) ||
         toIsoString(payload.locked_until)
     )
@@ -56,7 +56,9 @@ export function bannedUserMiddleware({
 }: BannedUserMiddlewareParams): NextResponse | null {
     const payload = decodeJwt<JwtPayloadType>(refreshToken)
 
-    if (payload.verify !== UserVerifyStatus.BANNED) {
+    const isBanned = payload.banned === true || payload.verify === UserVerifyStatus.BANNED
+
+    if (!isBanned) {
         return null
     }
 
@@ -69,13 +71,15 @@ export function bannedUserMiddleware({
 
     const bannedUntil = getBannedUntil(payload)
     const remainingDays = getRemainingBannedDays(bannedUntil)
+    const tokenRemainingDays = typeof payload.ban_remaining_days === 'number' ? payload.ban_remaining_days : null
 
     const targetUrl = new URL(bannedPagePath, request.url)
     if (bannedUntil) {
         targetUrl.searchParams.set('ban_until', bannedUntil)
     }
-    if (remainingDays !== null) {
-        targetUrl.searchParams.set('days', String(remainingDays))
+    const resolvedRemainingDays = tokenRemainingDays ?? remainingDays
+    if (resolvedRemainingDays !== null) {
+        targetUrl.searchParams.set('days', String(resolvedRemainingDays))
     }
 
     return NextResponse.redirect(targetUrl)

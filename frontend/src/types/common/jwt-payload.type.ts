@@ -9,6 +9,8 @@ export const JwtPayloadTypeSchema = z
         role: z.nativeEnum(Role),
         token_type: z.nativeEnum(TokenType),
         verify: z.nativeEnum(UserVerifyStatus),
+        banned: z.boolean().optional(),
+        ban_remaining_days: z.number().optional(),
         banned_until: z.string().optional(),
         ban_until: z.string().optional(),
         ban_expires_at: z.string().optional(),

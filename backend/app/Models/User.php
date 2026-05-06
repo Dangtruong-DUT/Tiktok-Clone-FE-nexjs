@@ -148,6 +148,8 @@ class User extends Authenticatable implements JWTSubject
             'jti' => Str::uuid(),
             'banned' => $this->isBanned(),
             'ban_remaining_days' => $this->getBanRemainingDays(),
+            'ban_until' => $this->getBanUntilIso(),
+            'ban_reason' => $this->ban_reason,
         ];
     }
 
@@ -253,6 +255,23 @@ class User extends Authenticatable implements JWTSubject
         $remainingDays = now()->diffInDays($banEndDate, false);
 
         return $remainingDays > 0 ? $remainingDays : 0;
+    }
+
+    /**
+     * Get the ISO-8601 timestamp when the ban ends.
+     *
+     * @return string|null The ban end timestamp, or null if not banned or permanent.
+     */
+    public function getBanUntilIso(): ?string
+    {
+        if (! $this->banned_at || $this->ban_duration_days === null) {
+            return null;
+        }
+
+        return $this->banned_at
+            ->copy()
+            ->addDays($this->ban_duration_days)
+            ->toIso8601String();
     }
 
     /**
