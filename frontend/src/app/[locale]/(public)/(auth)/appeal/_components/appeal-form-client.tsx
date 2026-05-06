@@ -6,14 +6,7 @@ import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
-import {
-    AlertTriangle,
-    CheckCircle2,
-    Loader2,
-    Scale,
-    Send,
-    LogIn
-} from 'lucide-react'
+import { AlertTriangle, CheckCircle2, Loader2, Scale, Send, LogIn } from 'lucide-react'
 import {
     useGetAppealQuery,
     useCreateAppealMutation,
@@ -22,8 +15,6 @@ import {
 import { useAppSelector } from '@/store/hooks'
 import { EvidenceDropzone } from './evidence-dropzone'
 import { Link } from '@/i18n/navigation'
-import { getAppealTypeLabel, getAppealStatusLabel } from '@/helpers/appeal-helpers'
-
 interface AppealFormClientProps {
     appealUuid?: string
     appealType?: string
@@ -33,6 +24,8 @@ interface AppealFormClientProps {
 
 export function AppealFormClient({ appealUuid, appealType, resourceType, resourceId }: AppealFormClientProps) {
     const t = useTranslations('AppealPage')
+    const tTypes = useTranslations('AppealPage.types')
+    const tStatuses = useTranslations('AppealPage.statuses')
     const isAuthenticated = useAppSelector((state) => state.auth.role != null)
 
     const isEditFlow = !!appealUuid
@@ -92,7 +85,7 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
                 formData.append('resource_id', resourceId)
             }
         } else if (isEditFlow && appealUuid) {
-            formData.append('_method', 'PUT') // Laravel spoofing for PUT multipart
+            formData.append('_method', 'PUT')
         }
 
         evidenceFiles.forEach((file) => {
@@ -140,14 +133,14 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
                     <div className='rounded-full bg-amber-50 p-4'>
                         <LogIn className='h-8 w-8 text-amber-600' />
                     </div>
-                    <h1 className='text-2xl font-bold text-black'>{t('token.loginRequired')}</h1>
-                    <p className='text-neutral-600 max-w-md'>{t('token.loginDescription')}</p>
+                    <h1 className='text-2xl font-bold text-black'>{t('auth.loginRequired')}</h1>
+                    <p className='text-neutral-600 max-w-md'>{t('auth.loginDescription')}</p>
                     <Link
                         href={`/login?redirect=${encodeURIComponent(redirectUrl)}`}
                         className='inline-flex items-center gap-2 rounded-full bg-black px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-neutral-800'
                     >
                         <LogIn className='h-4 w-4' />
-                        {t('token.loginAction')}
+                        {t('auth.loginAction')}
                     </Link>
                 </div>
             </div>
@@ -162,8 +155,8 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
                     <div className='rounded-full bg-amber-50 p-4'>
                         <AlertTriangle className='h-8 w-8 text-amber-600' />
                     </div>
-                    <h1 className='text-2xl font-bold text-black'>{t('token.missingTitle')}</h1>
-                    <p className='text-neutral-600 max-w-md'>{t('token.missingDescription')}</p>
+                    <h1 className='text-2xl font-bold text-black'>{t('error.missingTitle')}</h1>
+                    <p className='text-neutral-600 max-w-md'>{t('error.missingDescription')}</p>
                 </div>
             </div>
         )
@@ -172,14 +165,14 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
     // Error state
     if (isFetchError) {
         const err = fetchError as { data?: { message?: string } }
-        const errorMessage = err?.data?.message || t('token.invalidGeneric')
+        const errorMessage = err?.data?.message || t('error.invalidGeneric')
         return (
             <div className='w-full rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm md:p-10'>
                 <div className='flex flex-col items-center text-center gap-4'>
                     <div className='rounded-full bg-red-50 p-4'>
                         <AlertTriangle className='h-8 w-8 text-red-600' />
                     </div>
-                    <h1 className='text-2xl font-bold text-black'>{t('token.invalidTitle')}</h1>
+                    <h1 className='text-2xl font-bold text-black'>{t('error.invalidTitle')}</h1>
                     <p className='text-neutral-600 max-w-md'>{errorMessage}</p>
                 </div>
             </div>
@@ -192,7 +185,7 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
             <div className='w-full rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm md:p-10'>
                 <div className='flex flex-col items-center justify-center gap-4 py-12'>
                     <Loader2 className='h-10 w-10 animate-spin text-black' />
-                    <p className='text-neutral-600 font-medium'>{t('form.loading')}</p>
+                    <p className='text-neutral-600 font-medium'>{t('error.loading')}</p>
                 </div>
             </div>
         )
@@ -260,7 +253,7 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
                             <div>
                                 <span className='text-neutral-500'>{t('form.appealType')}</span>
                                 <p className='font-medium text-black mt-0.5'>
-                                    {getAppealTypeLabel(appealInfo.appeal_type, t as any)}
+                                    {appealInfo.appeal_type ? tTypes(appealInfo.appeal_type as any) : '—'}
                                 </p>
                             </div>
                             <div>
@@ -271,7 +264,7 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
                                 <div>
                                     <span className='text-neutral-500'>{t('form.status')}</span>
                                     <p className='font-medium text-black mt-0.5'>
-                                        {getAppealStatusLabel(appealInfo.status, t as any)}
+                                        {appealInfo.status ? tStatuses(appealInfo.status as any) : '—'}
                                     </p>
                                 </div>
                             )}

@@ -1064,48 +1064,34 @@
         },
         "title": "Submit Appeal",
         "description": "Provide your reason and evidence for review.",
-        "steps": {
-            "verify": "Verify",
-            "details": "Details",
-            "upload": "Evidence",
-            "confirm": "Done"
-        },
-        "token": {
-            "verifying": "Verifying your appeal link...",
-            "verified": "Link verified successfully!",
-            "missingTitle": "Appeal Link Required",
-            "missingDescription": "Please use the appeal link sent to your email to access this page. If you haven't received an email, please check your spam folder.",
-            "expiredTitle": "Link Expired",
-            "invalidTitle": "Invalid Link",
-            "invalidGeneric": "This appeal link is invalid. Please check your email for the correct link.",
-            "contactSupport": "If you need further assistance, please contact our support team.",
+        "auth": {
             "loginRequired": "Login Required",
-            "loginDescription": "You need to be logged in to view and submit this appeal. Please sign in to continue.",
+            "loginDescription": "You need to be logged in to submit an appeal. Please sign in to continue.",
             "loginAction": "Sign In"
+        },
+        "error": {
+            "missingTitle": "Missing Information",
+            "missingDescription": "This page requires appeal context (appeal type and resource). Please use the link from your notification or email.",
+            "invalidTitle": "Error",
+            "invalidGeneric": "Something went wrong while loading the appeal. Please try again.",
+            "loading": "Loading appeal details..."
         },
         "form": {
             "appealType": "Appeal Type",
             "resourceType": "Resource",
             "status": "Status",
-            "expiresAt": "Expires At",
             "reasonLabel": "Your Reason",
             "reasonPlaceholder": "Explain why you believe this moderation decision should be reviewed. Provide as much detail as possible (minimum 20 characters).",
             "reasonHint": "Minimum 20 characters",
             "reasonMinError": "Reason must be at least 20 characters.",
             "evidenceLabel": "Supporting Evidence",
             "evidenceHint": "Upload images that support your appeal (optional, max 5 files).",
-            "summaryTitle": "Summary",
-            "evidenceCount": "Evidence files",
-            "files": "file(s)",
-            "back": "Back",
-            "next": "Next",
             "submit": "Submit Appeal",
             "submitting": "Submitting...",
             "submitError": "Failed to submit your appeal. Please try again."
         },
         "types": {
             "user_ban": "Account Suspension",
-            "user_unban": "Account Unban",
             "user_deleted": "Account Deletion",
             "post_deleted": "Post Removal",
             "comment_deleted": "Comment Removal"

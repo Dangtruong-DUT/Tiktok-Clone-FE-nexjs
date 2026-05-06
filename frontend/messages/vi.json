@@ -1063,48 +1063,34 @@
         },
         "title": "Gửi kháng cáo",
         "description": "Cung cấp lý do và bằng chứng để được xem xét.",
-        "steps": {
-            "verify": "Xác thực",
-            "details": "Chi tiết",
-            "upload": "Minh chứng",
-            "confirm": "Hoàn tất"
-        },
-        "token": {
-            "verifying": "Đang xác thực đường dẫn kháng cáo...",
-            "verified": "Xác thực đường dẫn thành công!",
-            "missingTitle": "Cần đường dẫn kháng cáo",
-            "missingDescription": "Vui lòng sử dụng đường dẫn kháng cáo đã được gửi đến email của bạn. Nếu chưa nhận được email, hãy kiểm tra thư mục spam.",
-            "expiredTitle": "Đường dẫn hết hạn",
-            "invalidTitle": "Đường dẫn không hợp lệ",
-            "invalidGeneric": "Đường dẫn kháng cáo này không hợp lệ. Vui lòng kiểm tra email để lấy đường dẫn chính xác.",
-            "contactSupport": "Nếu bạn cần hỗ trợ thêm, vui lòng liên hệ đội ngũ hỗ trợ.",
+        "auth": {
             "loginRequired": "Yêu cầu đăng nhập",
-            "loginDescription": "Bạn cần đăng nhập để xem và gửi kháng cáo. Vui lòng đăng nhập để tiếp tục.",
+            "loginDescription": "Bạn cần đăng nhập để gửi kháng cáo. Vui lòng đăng nhập để tiếp tục.",
             "loginAction": "Đăng nhập"
+        },
+        "error": {
+            "missingTitle": "Thiếu thông tin",
+            "missingDescription": "Trang này yêu cầu thông tin kháng cáo (loại kháng cáo và tài nguyên). Vui lòng sử dụng đường dẫn từ thông báo hoặc email.",
+            "invalidTitle": "Lỗi",
+            "invalidGeneric": "Đã xảy ra lỗi khi tải kháng cáo. Vui lòng thử lại.",
+            "loading": "Đang tải thông tin kháng cáo..."
         },
         "form": {
             "appealType": "Loại kháng cáo",
             "resourceType": "Tài nguyên",
             "status": "Trạng thái",
-            "expiresAt": "Hết hạn",
             "reasonLabel": "Lý do của bạn",
             "reasonPlaceholder": "Giải thích vì sao bạn cho rằng quyết định kiểm duyệt này cần được xem xét lại. Cung cấp càng nhiều chi tiết càng tốt (tối thiểu 20 ký tự).",
             "reasonHint": "Tối thiểu 20 ký tự",
             "reasonMinError": "Lý do phải có ít nhất 20 ký tự.",
             "evidenceLabel": "Bằng chứng hỗ trợ",
             "evidenceHint": "Tải lên hình ảnh hỗ trợ kháng cáo (không bắt buộc, tối đa 5 tệp).",
-            "summaryTitle": "Tóm tắt",
-            "evidenceCount": "Tệp minh chứng",
-            "files": "tệp",
-            "back": "Quay lại",
-            "next": "Tiếp tục",
             "submit": "Gửi kháng cáo",
             "submitting": "Đang gửi...",
             "submitError": "Không thể gửi kháng cáo. Vui lòng thử lại."
         },
         "types": {
             "user_ban": "Khóa tài khoản",
-            "user_unban": "Mở khóa tài khoản",
             "user_deleted": "Xóa tài khoản",
             "post_deleted": "Xóa bài viết",
             "comment_deleted": "Xóa bình luận"

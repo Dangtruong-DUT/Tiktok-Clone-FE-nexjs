@@ -1,7 +1,11 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import baseQueryWithReauth from '@/store/services/client'
 import type { GetMyAppealsParams } from '@/types/dtos/appeal/appeal-request.dto'
-import type { CreateAppealResponse, GetAppealResponse, GetMyAppealsResponse } from '@/types/dtos/appeal/appeal-response.dto'
+import type {
+    CreateAppealResponse,
+    GetAppealResponse,
+    GetMyAppealsResponse
+} from '@/types/dtos/appeal/appeal-response.dto'
 import { toQueryParams } from '@/utils/common/query-params.util'
 
 /**
@@ -44,10 +48,13 @@ export const AppealApi = createApi({
         updateAppeal: builder.mutation<CreateAppealResponse, { uuid: string; data: FormData }>({
             query: ({ uuid, data }) => ({
                 url: `/appeals/${uuid}`,
-                method: 'POST', // Send as POST with _method=PUT in FormData
+                method: 'POST',
                 body: data
             }),
-            invalidatesTags: (_result, _error, { uuid }) => [{ type: 'Appeals', id: 'LIST' }, { type: 'Appeals', id: uuid }]
+            invalidatesTags: (_result, _error, { uuid }) => [
+                { type: 'Appeals', id: 'LIST' },
+                { type: 'Appeals', id: uuid }
+            ]
         })
     })
 })
