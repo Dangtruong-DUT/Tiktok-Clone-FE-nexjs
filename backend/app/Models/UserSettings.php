@@ -3,13 +3,11 @@
 namespace App\Models;
 
 use App\Enums\Settings\PrivacyVisibilityEnum;
-use App\Traits\HasToken;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserSettings extends Model
 {
-    use HasToken;
 
     /**
      * The attributes that are mass assignable.

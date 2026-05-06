@@ -12,6 +12,6 @@ trait HasUuidObservable
 {
     protected static function bootHasUuidObservable()
     {
-        static::observe(HasUuidObserver::class);
+        self::observe(HasUuidObserver::class);
     }
 }

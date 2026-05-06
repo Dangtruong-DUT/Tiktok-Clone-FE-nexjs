@@ -15,6 +15,6 @@ trait HasCreateDefaultUserSettingObservable
      */
     public static function bootHasCreateDefaultUserSettingObservable(): void
     {
-        static::observe(CreateDefaultUserSettingsObserver::class);
+        self::observe(CreateDefaultUserSettingsObserver::class);
     }
 }

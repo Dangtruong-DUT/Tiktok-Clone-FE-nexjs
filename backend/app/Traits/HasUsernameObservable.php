@@ -13,6 +13,6 @@ trait HasUsernameObservable
 {
     protected static function bootHasUsernameObservable()
     {
-        static::observe(HasUsernameObserver::class);
+        self::observe(HasUsernameObserver::class);
     }
 }
