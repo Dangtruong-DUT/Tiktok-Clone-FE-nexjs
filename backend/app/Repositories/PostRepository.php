@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Enums\Post\PostTypeEnum;
 use App\Models\Post;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -176,7 +177,7 @@ class PostRepository extends BaseRepository
                 'media:id,post_id,type,upload_file_id',
                 'media.file:id',
             ])
-            ->select(['id', 'uuid', 'user_id', 'content', 'created_at', 'deleted_at'])
+            ->select(['id', 'uuid', 'user_id', 'content', 'created_at', 'deleted_at','thumbnail_file_id'])
             ->paginate($perPage);
     }
 
@@ -189,6 +190,7 @@ class PostRepository extends BaseRepository
      */
     public function searchCommentsForAdmin(array $filters): LengthAwarePaginator
     {
+        $filters['type']= PostTypeEnum::COMMENT->value;
         $filterCollection = collect($filters);
 
         $query = $this->buildSearchQuery($filterCollection)
@@ -213,7 +215,7 @@ class PostRepository extends BaseRepository
                 'parent:id,uuid,user_id,content',
                 'parent.user:id,uuid,username',
             ])
-            ->select(['id', 'uuid', 'user_id', 'parent_id', 'content', 'created_at', 'likes_count'])
+            ->select(['id', 'uuid', 'user_id', 'parent_id', 'content', 'created_at', 'likes_count','thumbnail_file_id'])
             ->paginate($perPage);
     }
 

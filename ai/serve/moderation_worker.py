@@ -84,7 +84,7 @@ class ModerationWorker:
             "label": label,
             "confidence": confidence,
             "is_violation": is_violation,
-            "reason": payload.get("reason") or "Potential toxic content detected by AI moderation.",
+            "reason": "Potential toxic content detected by AI moderation." if label == 1 else None,
             "moderated_at": datetime.now(timezone.utc).isoformat(),
             "raw_payload": payload,
         }
@@ -93,8 +93,7 @@ class ModerationWorker:
 
 def main() -> None:
     configure_logging()
-    strict_segment = os.getenv("AI_STRICT_SEGMENT", "true").lower() == "true"
-    service = build_default_service(strict_segment=strict_segment)
+    service = build_default_service()
     worker = ModerationWorker(service=service)
     worker.run()
 

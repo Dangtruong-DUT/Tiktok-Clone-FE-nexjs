@@ -6,6 +6,7 @@ use App\Http\Resources\BaseJsonResource;
 
 class AdminPostResource extends BaseJsonResource
 {
+
     public function toArray($request): array
     {
         return [
@@ -14,8 +15,8 @@ class AdminPostResource extends BaseJsonResource
             'user_id' => $this->user_id,
             'user_uuid' => $this->whenLoaded('user', fn () => $this->user?->uuid),
             'content' => $this->content,
-            'deleted_at' => optional($this->deleted_at)?->toDateTimeString(),
-            'created_at' => optional($this->created_at)?->toDateTimeString(),
+            'deleted_at' => $this->deleted_at?->toDateTimeString(),
+            'created_at' => $this->created_at?->toDateTimeString(),
             'author' => $this->whenLoaded('user', function () {
                 return [
                     'id' => $this->user?->id,

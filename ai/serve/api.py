@@ -60,8 +60,7 @@ def load_service() -> None:
     logging.getLogger("kafka").setLevel(logging.WARNING)
 
     try:
-        # Fallback mode keeps the API available if VnCoreNLP is temporarily unavailable.
-        _service = build_default_service(strict_segment=False)
+        _service = build_default_service()
         _service_error = None
         _logger.info("event=service_startup status=ok")
     except Exception as exc:  # pragma: no cover
@@ -110,63 +109,3 @@ def predict_api(req: PredictRequest) -> PredictResponse:
         float(result.get("confidence", 0.0)),
     )
     return PredictResponse(**result)
-
-
-@app.post("/moderation/enqueue", response_model=EnqueueModerationResponse)
-def enqueue_moderation(
-    req: EnqueueModerationRequest,
-    x_moderation_api_key: Optional[str] = Header(default=None, alias="X-Moderation-Api-Key"),
-) -> EnqueueModerationResponse:
-    request_id = str(uuid4())
-
-    if _producer is None:
-        _logger.error("event=moderation_enqueue status=producer_not_ready request_id=%s", request_id)
-        raise HTTPException(status_code=503, detail="Kafka producer not ready")
-
-    expected_api_key = os.getenv("AI_MODERATION_API_KEY", "")
-    if expected_api_key and x_moderation_api_key != expected_api_key:
-        _logger.warning("event=moderation_enqueue status=unauthorized request_id=%s", request_id)
-        raise HTTPException(status_code=401, detail="Invalid moderation API key")
-
-    task_id = str(uuid4())
-    payload = {
-        "task_id": task_id,
-        "request_id": request_id,
-        "resource_type": req.resource_type,
-        "resource_id": req.resource_id,
-        "resource_uuid": req.resource_uuid,
-        "user_id": req.user_id,
-        "sentence": req.sentence,
-        "reason": req.reason,
-        "enqueued_at": datetime.now(timezone.utc).isoformat(),
-    }
-
-    _logger.info(
-        "event=moderation_enqueue_request request_id=%s task_id=%s resource_type=%s resource_id=%s sentence=%s",
-        request_id,
-        task_id,
-        req.resource_type,
-        req.resource_id,
-        _truncate_text(req.sentence),
-    )
-
-    kafka_config = build_kafka_config()
-    try:
-        publish(_producer, kafka_config.request_topic, payload)
-    except Exception as exc:
-        _logger.exception(
-            "event=moderation_enqueue_result request_id=%s task_id=%s status=error detail=%s",
-            request_id,
-            task_id,
-            exc,
-        )
-        raise HTTPException(status_code=500, detail=f"Failed to enqueue moderation task: {exc}")
-
-    _logger.info(
-        "event=moderation_enqueue_result request_id=%s task_id=%s status=queued topic=%s",
-        request_id,
-        task_id,
-        kafka_config.request_topic,
-    )
-
-    return EnqueueModerationResponse(task_id=task_id, status="queued")

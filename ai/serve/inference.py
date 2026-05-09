@@ -9,6 +9,7 @@ from typing import Any, Optional
 
 import torch
 import torch.nn as nn
+from dotenv import load_dotenv
 from transformers import AutoModel, AutoTokenizer
 from transformers.utils import logging as transformers_logging
 
@@ -16,6 +17,14 @@ try:
     from vncorenlp import VnCoreNLP
 except Exception:  # pragma: no cover
     VnCoreNLP = None
+
+
+def _load_env() -> None:
+    env_path = Path(__file__).resolve().parents[1] / ".env"
+    load_dotenv(dotenv_path=env_path, override=False)
+
+
+_load_env()
 
 
 class PhoBERTClassifier(nn.Module):
@@ -176,7 +185,10 @@ class ToxicInferenceService:
         }
 
 
-def build_default_service(strict_segment: bool = False) -> ToxicInferenceService:
+def build_default_service(strict_segment: Optional[bool] = None) -> ToxicInferenceService:
+    if strict_segment is None:
+        strict_segment = os.getenv("AI_STRICT_SEGMENT", "false").lower() == "true"
+
     config = InferenceConfig(
         model_name=os.getenv("AI_MODEL_NAME", "vinai/phobert-base"),
         model_path=os.getenv("AI_MODEL_PATH", "models/best_phobert_model.pt"),
@@ -195,5 +207,5 @@ _DEFAULT_SERVICE: Optional[ToxicInferenceService] = None
 def predict(sentence: str) -> dict[str, Any]:
     global _DEFAULT_SERVICE
     if _DEFAULT_SERVICE is None:
-        _DEFAULT_SERVICE = build_default_service(strict_segment=True)
+        _DEFAULT_SERVICE = build_default_service()
     return _DEFAULT_SERVICE.predict(sentence)
