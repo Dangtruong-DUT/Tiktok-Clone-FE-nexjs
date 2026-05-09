@@ -20,7 +20,7 @@ use App\Rules\UploadFileId;
 use App\Rules\UserId;
 use App\Rules\UserUuid;
 use DateTimeInterface;
-
+use Illuminate\Validation\Rules\Enum;
 
 abstract class BaseRequest extends BaseFormRequest
 {
@@ -254,8 +254,8 @@ abstract class BaseRequest extends BaseFormRequest
             'post_uuids.*' => [self::STRING, self::UUID, new PostUuid],
             'date_of_birth' => [self::DATE],
             'name' => [self::STRING, self::MAX.':'.'100'],
-            'role' => [self::INTEGER, self::IN.':'.implode(',', RoleTypeEnum::values())],
-            'verify_status' => [self::INTEGER, self::IN.':'.implode(',', UserVerifyStatusEnum::values())],
+            'role' => [new Enum(RoleTypeEnum::class)],
+            'verify_status' => [new Enum(UserVerifyStatusEnum::class)],
             'username' => [self::STRING, 'regex:'.config('regex.username_validation')],
             'phone' => [self::STRING, self::MAX.':'.'100'],
             'month' => [self::INTEGER, self::MIN.':'.'1', self::MAX.':'.'12'],
@@ -287,20 +287,19 @@ abstract class BaseRequest extends BaseFormRequest
                 self::MAX.':'.config('const.file.video.max_size_kb', 51200),
                 self::MIMES.':'.config('const.file.video.mimes', 'mp4,mov'),
             ],
-            'audience' => [self::STRING, self::IN.':'.implode(',', AudienceTypeEnum::values())],
-            'post_type' => [self::STRING, self::IN.':'.implode(',', PostTypeEnum::values())],
+            'audience' => [ new Enum(AudienceTypeEnum::class) ],
+            'post_type' => [new Enum(PostTypeEnum::class)],
             'notification_uuid' => [self::STRING, self::UUID, new NotifyUuid],
-            'action_type' => [self::STRING, 'in:'.implode(',', AdminActionEnum::values())],
+            'action_type' => [new Enum(AdminActionEnum::class)],
             'resource_id' => [self::INTEGER],
             'resource_type' => [
-                self::STRING,
-                'in:'.implode(',', ResourceTypeEnum::values())],
+                new Enum(ResourceTypeEnum::class)],
             'appeal_id' => [self::INTEGER, new AppealId],
             'appeal_uuid' => [self::STRING, self::UUID, new AppealUuid],
             'appeal_type' => [
-                'in:'.implode(',', AppealTypeEnum::values())],
+                new Enum(AppealTypeEnum::class)],
             'appeal_status' => [
-                'in:'.implode(',', AppealStatusEnum::values())],
+                new Enum(AppealStatusEnum::class)],
             'date_from' => [self::NULLABLE, self::DATE_FORMAT.':Y-m-d'],
             'date_to' => [self::NULLABLE, self::DATE_FORMAT.':Y-m-d'],
         ];

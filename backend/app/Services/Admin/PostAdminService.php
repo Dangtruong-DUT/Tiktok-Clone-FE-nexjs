@@ -39,7 +39,6 @@ class PostAdminService
     public function getPosts(array $filters = []): LengthAwarePaginator
     {
         $filters['type'] = PostTypeEnum::POST->value;
-
         return $this->postRepository->searchPostsForAdmin($filters);
     }
 
