@@ -93,7 +93,6 @@ export function EvidenceDropzone({ files, onFilesChange, maxFiles = 5, maxSizeMB
 
     return (
         <div className='space-y-3'>
-            {/* Dropzone */}
             <div
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
@@ -106,28 +105,28 @@ export function EvidenceDropzone({ files, onFilesChange, maxFiles = 5, maxSizeMB
                 className={cn(
                     'relative flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed px-6 py-8 transition-all duration-300 cursor-pointer',
                     isDragging
-                        ? 'border-black bg-neutral-50 scale-[1.01]'
-                        : 'border-neutral-300 bg-white hover:border-neutral-400 hover:bg-neutral-50/50',
+                        ? 'border-slate-900 bg-slate-50 scale-[1.01]'
+                        : 'border-slate-300 bg-white hover:border-slate-400 hover:bg-slate-50/50',
                     files.length >= maxFiles && 'opacity-50 cursor-not-allowed pointer-events-none'
                 )}
             >
                 <motion.div
                     animate={{ y: isDragging ? -4 : 0 }}
                     transition={{ type: 'spring', stiffness: 300 }}
-                    className='rounded-full bg-neutral-100 p-3'
+                    className='rounded-full bg-slate-100 p-3'
                 >
                     {isDragging ? (
-                        <Upload className='h-6 w-6 text-black' />
+                        <Upload className='h-6 w-6 text-slate-900' />
                     ) : (
-                        <ImagePlus className='h-6 w-6 text-neutral-500' />
+                        <ImagePlus className='h-6 w-6 text-slate-500' />
                     )}
                 </motion.div>
 
                 <div className='text-center'>
-                    <p className='text-sm font-medium text-neutral-700'>
+                    <p className='text-sm font-medium text-slate-700'>
                         {isDragging ? t('dropHere') : t('dragAndDrop')}
                     </p>
-                    <p className='mt-1 text-xs text-neutral-500'>{t('fileInfo', { maxFiles, maxSizeMb: maxSizeMB })}</p>
+                    <p className='mt-1 text-xs text-slate-500'>{t('fileInfo', { maxFiles, maxSizeMb: maxSizeMB })}</p>
                 </div>
 
                 <input
@@ -141,7 +140,6 @@ export function EvidenceDropzone({ files, onFilesChange, maxFiles = 5, maxSizeMB
                 />
             </div>
 
-            {/* Error message */}
             <AnimatePresence>
                 {error && (
                     <motion.div
@@ -156,7 +154,6 @@ export function EvidenceDropzone({ files, onFilesChange, maxFiles = 5, maxSizeMB
                 )}
             </AnimatePresence>
 
-            {/* Thumbnail preview grid */}
             <AnimatePresence>
                 {files.length > 0 && (
                     <motion.div
@@ -172,7 +169,7 @@ export function EvidenceDropzone({ files, onFilesChange, maxFiles = 5, maxSizeMB
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.8 }}
                                 transition={{ delay: index * 0.05 }}
-                                className='group relative aspect-square overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50'
+                                className='group relative aspect-square overflow-hidden rounded-xl border border-slate-200 bg-slate-50'
                             >
                                 <Image
                                     src={URL.createObjectURL(file)}
@@ -187,12 +184,12 @@ export function EvidenceDropzone({ files, onFilesChange, maxFiles = 5, maxSizeMB
                                         e.stopPropagation()
                                         removeFile(index)
                                     }}
-                                    className='absolute right-1 top-1 rounded-full bg-black/60 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100 hover:bg-black/80'
+                                    className='absolute right-1 top-1 rounded-full bg-slate-900/70 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100 hover:bg-slate-900'
                                     aria-label={t('removeFile')}
                                 >
                                     <X className='h-3 w-3' />
                                 </button>
-                                <div className='absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/50 to-transparent px-1.5 pb-1 pt-4'>
+                                <div className='absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-900/70 to-transparent px-1.5 pb-1 pt-4'>
                                     <p className='truncate text-[10px] text-white'>{file.name}</p>
                                 </div>
                             </motion.div>
@@ -201,9 +198,8 @@ export function EvidenceDropzone({ files, onFilesChange, maxFiles = 5, maxSizeMB
                 )}
             </AnimatePresence>
 
-            {/* File count indicator */}
             {files.length > 0 && (
-                <p className='text-xs text-neutral-500 text-center'>
+                <p className='text-xs text-slate-500 text-center'>
                     {t('fileCount', { current: files.length, max: maxFiles })}
                 </p>
             )}

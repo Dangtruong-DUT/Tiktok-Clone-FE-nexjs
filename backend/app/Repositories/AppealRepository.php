@@ -52,13 +52,22 @@ class AppealRepository extends BaseRepository
     /**
      * Check if a user has a pending appeal for a specific resource and type
      */
-    public function hasPendingAppeal(int $userId, string $appealType, ?int $resourceId): bool
-    {
+    public function hasPendingAppeal(
+        int $userId,
+        string $appealType,
+        string $resourceType,
+        ?int $resourceId
+    ): bool {
         return $this->query()
             ->byUser($userId)
             ->byStatus(AppealStatusEnum::PENDING)
-            ->where('resource_id', $resourceId ?? 0)
             ->where('appeal_type', $appealType)
+            ->where('resource_type', $resourceType)
+            ->when(
+                $resourceId !== null,
+                fn ($query) => $query->where('resource_id', $resourceId),
+                fn ($query) => $query->whereNull('resource_id')
+            )
             ->exists();
     }
 
@@ -66,12 +75,21 @@ class AppealRepository extends BaseRepository
      * Check if a user already has ANY appeal (regardless of status) for a specific resource and type.
      * Once an appeal exists, user must edit it — not create a new one.
      */
-    public function hasAppealForResource(?int $userId, string $appealType, ?int $resourceId): bool
-    {
+    public function hasAppealForResource(
+        ?int $userId,
+        string $appealType,
+        string $resourceType,
+        ?int $resourceId
+    ): bool {
         return $this->query()
             ->when($userId, fn ($q) => $q->byUser($userId))
-            ->where('resource_id', $resourceId ?? 0)
             ->where('appeal_type', $appealType)
+            ->where('resource_type', $resourceType)
+            ->when(
+                $resourceId !== null,
+                fn ($query) => $query->where('resource_id', $resourceId),
+                fn ($query) => $query->whereNull('resource_id')
+            )
             ->exists();
     }
 
@@ -96,7 +114,12 @@ class AppealRepository extends BaseRepository
                     $query->orderBy('created_at', 'desc');
                 });
 
-        return $query->paginate((int) $filterCollection->get('per_page', 15));
+        return $query
+            ->with([
+                'user:id,uuid,username,name,avatar_file_id',
+                'reviewer:id,uuid,username,name,avatar_file_id',
+            ])
+            ->paginate((int) $filterCollection->get('per_page', 15));
     }
 
     /**
@@ -119,7 +142,10 @@ class AppealRepository extends BaseRepository
                 });
 
         return $query
-            ->with(['user', 'reviewer'])
+            ->with([
+                'user:id,uuid,username,name,avatar_file_id',
+                'reviewer:id,uuid,username,name,avatar_file_id',
+            ])
             ->paginate((int) $filterCollection->get('per_page', 20));
     }
 

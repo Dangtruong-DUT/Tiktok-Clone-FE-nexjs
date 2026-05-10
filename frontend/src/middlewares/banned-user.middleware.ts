@@ -1,53 +1,14 @@
-import { UserVerifyStatus } from '@/constants/enum'
+import { BANNED_ROUTE_PREFIXES, PUBLIC_ROUTE_PREFIXES } from '@/config/route-access.config'
 import { JwtPayloadType } from '@/types/common/jwt-payload.type'
 import { decodeJwt } from '@/utils/auth/jwt.util'
+import { isPathMatched } from '@/utils/auth/path-check.util'
 import { NextRequest, NextResponse } from 'next/server'
-
-type BannedUserMiddlewareParams = {
+interface BannedUserMiddlewareParams {
     refreshToken: string
     pathname: string
     request: NextRequest
     locale: string
 }
-
-function toIsoString(value: unknown): string | null {
-    if (typeof value !== 'string' || value.trim() === '') {
-        return null
-    }
-
-    const parsedDate = new Date(value)
-    if (Number.isNaN(parsedDate.getTime())) {
-        return null
-    }
-
-    return parsedDate.toISOString()
-}
-
-function getBannedUntil(payload: JwtPayloadType): string | null {
-    return (
-        toIsoString(payload.ban_until) ||
-        toIsoString(payload.banned_until) ||
-        toIsoString(payload.ban_expires_at) ||
-        toIsoString(payload.locked_until)
-    )
-}
-
-function getRemainingBannedDays(bannedUntilIso: string | null): number | null {
-    if (!bannedUntilIso) {
-        return null
-    }
-
-    const bannedUntil = new Date(bannedUntilIso)
-    const now = new Date()
-    const milliseconds = bannedUntil.getTime() - now.getTime()
-
-    if (milliseconds <= 0) {
-        return 0
-    }
-
-    return Math.ceil(milliseconds / (1000 * 60 * 60 * 24))
-}
-
 export function bannedUserMiddleware({
     refreshToken,
     pathname,
@@ -56,31 +17,31 @@ export function bannedUserMiddleware({
 }: BannedUserMiddlewareParams): NextResponse | null {
     const payload = decodeJwt<JwtPayloadType>(refreshToken)
 
-    const isBanned = payload.banned === true || payload.verify === UserVerifyStatus.BANNED
+    const isBanned = payload.banned === true
+    const isBannedRoute = isPathMatched(BANNED_ROUTE_PREFIXES, pathname)
+    const isPublicRoute = isPathMatched(PUBLIC_ROUTE_PREFIXES, pathname)
+    const isAppealRoute = pathname.endsWith('/appeal')
 
-    if (!isBanned) {
-        return null
+    if (!isBanned && isBannedRoute) {
+        return NextResponse.redirect(new URL(`/${locale}`, request.url))
     }
 
-    const bannedPagePath = `/${locale}/banned`
-    const publicAppealPath = `/${locale}/appeal`
+    if (!isBanned) return null
 
-    if (pathname === bannedPagePath || pathname.startsWith(publicAppealPath)) {
-        return null
+    if (isBanned && !isPublicRoute && !isBannedRoute && !isAppealRoute) {
+        const bannedUntil = payload.ban_until
+        const remainingDays = payload.ban_remaining_days
+
+        const targetUrl = new URL(`${locale}/banned`, request.url)
+        if (bannedUntil) {
+            targetUrl.searchParams.set('ban_until', bannedUntil)
+        }
+        if (remainingDays !== null) {
+            targetUrl.searchParams.set('days', String(remainingDays))
+        }
+
+        return NextResponse.redirect(targetUrl)
     }
 
-    const bannedUntil = getBannedUntil(payload)
-    const remainingDays = getRemainingBannedDays(bannedUntil)
-    const tokenRemainingDays = typeof payload.ban_remaining_days === 'number' ? payload.ban_remaining_days : null
-
-    const targetUrl = new URL(bannedPagePath, request.url)
-    if (bannedUntil) {
-        targetUrl.searchParams.set('ban_until', bannedUntil)
-    }
-    const resolvedRemainingDays = tokenRemainingDays ?? remainingDays
-    if (resolvedRemainingDays !== null) {
-        targetUrl.searchParams.set('days', String(resolvedRemainingDays))
-    }
-
-    return NextResponse.redirect(targetUrl)
+    return null
 }

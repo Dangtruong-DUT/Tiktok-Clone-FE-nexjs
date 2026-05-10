@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Api\Appeal;
 
-use App\Http\Resources\Api\User\UserResource;
 use App\Http\Resources\BaseJsonResource;
 
 /**
@@ -35,8 +34,20 @@ class AppealResource extends BaseJsonResource
                 'file_name' => $file->file_name,
             ])->values()->toArray(),
             'reviewed_at' => $this->reviewed_at?->toDateTimeString(),
-            'user' => UserResource::make($this->whenLoaded('user')),
-            'reviewer' => UserResource::make($this->whenLoaded('reviewer')),
+            'user' => $this->when($this->relationLoaded('user'), fn () => [
+                'id' => $this->user->id,
+                'uuid' => $this->user->uuid,
+                'username' => $this->user->username,
+                'name' => $this->user->name,
+                'avatar' => $this->user->avatar_url,
+            ]),
+            'reviewer' => $this->when($this->relationLoaded('reviewer') && $this->reviewer, fn () => [
+                'id' => $this->reviewer->id,
+                'uuid' => $this->reviewer->uuid,
+                'username' => $this->reviewer->username,
+                'name' => $this->reviewer->name,
+                'avatar' => $this->reviewer->avatar_url,
+            ]),
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];

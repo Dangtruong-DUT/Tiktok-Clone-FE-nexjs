@@ -10,6 +10,8 @@ use App\Http\Resources\Api\Appeal\AppealResource;
 use App\Http\Response\ApiResponse;
 use App\Services\Admin\AdminAppealService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 /**
  * Appeal admin operations controller.
@@ -30,12 +32,18 @@ class AppealAdminController extends Controller
      */
     public function index(GetAppealsRequest $request): JsonResponse
     {
-        $appeals = $this->appealService->getAppeals($request->validated());
+        try {
+            $appeals = $this->appealService->getAppeals($request->validated());
 
-        return ApiResponse::success(
-            data: AppealResource::collection($appeals),
-            message: 'Appeals retrieved successfully'
-        );
+            return ApiResponse::success(
+                data: AppealResource::collection($appeals),
+                message: 'Appeals retrieved successfully'
+            );
+
+        } catch (Throwable $e) {
+            Log::error('Failed to retrieve appeals', ['exception' => $e]);
+            throw $e;
+        }
     }
 
     /**

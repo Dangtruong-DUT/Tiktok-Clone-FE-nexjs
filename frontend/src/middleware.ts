@@ -30,7 +30,13 @@ export function middleware(request: NextRequest) {
     const privateRouteRedirect = privateRouteMiddleware({ pathname, isAuthenticated, request, locale })
     if (privateRouteRedirect) return privateRouteRedirect
 
-    const guestRouteRedirect = guestRouteMiddleware({ pathname, isAuthenticated, request, refreshToken: refresh_token })
+    const guestRouteRedirect = guestRouteMiddleware({
+        pathname,
+        isAuthenticated,
+        request,
+        refreshToken: refresh_token,
+        locale
+    })
     if (guestRouteRedirect) return guestRouteRedirect
 
     if (isAuthenticated) {
@@ -42,7 +48,12 @@ export function middleware(request: NextRequest) {
         })
         if (bannedRedirect) return bannedRedirect
 
-        const roleRedirect = roleCheckMiddleware({ refreshToken: refresh_token!, pathname, request })
+        const roleRedirect = roleCheckMiddleware({
+            refreshToken: refresh_token!,
+            pathname,
+            request,
+            locale
+        })
         if (roleRedirect) return roleRedirect
     }
 

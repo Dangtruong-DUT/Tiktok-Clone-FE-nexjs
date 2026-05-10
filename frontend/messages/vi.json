@@ -1054,7 +1054,18 @@
         "lockWithDays": "Tài khoản của bạn còn bị khóa trong {days} ngày nữa.",
         "lockWithoutDays": "Tài khoản của bạn hiện đang bị khóa.",
         "appealAction": "Gửi kháng cáo",
-        "backHome": "Về trang chủ"
+        "backHome": "Về trang chủ",
+        "statusBadge": "Tài khoản bị hạn chế",
+        "statusSummary": "Trạng thái hiện tại",
+        "banUntil": "Ngày xem xét: {date}",
+        "nextStepsTitle": "Chuyện gì sẽ diễn ra tiếp theo?",
+        "nextStepOne": "Đội ngũ của chúng tôi sẽ xem xét thông tin của bạn. Hãy quay lại trang này để cập nhật.",
+        "nextStepTwo": "Nếu tài khoản tuân thủ tiêu chuẩn, quyền truy cập sẽ được khôi phục.",
+        "nextStepThree": "Nếu quyết định được giữ nguyên, hạn chế có thể tiếp tục áp dụng.",
+        "appealCardTitle": "Cần xem xét lại?",
+        "appealCardBody": "Gửi kháng cáo ngắn gọn kèm bằng chứng để chúng tôi xử lý nhanh hơn.",
+        "headerHelp": "Trợ giúp",
+        "logoutAction": "Đăng xuất"
     },
     "AppealPage": {
         "meta": {

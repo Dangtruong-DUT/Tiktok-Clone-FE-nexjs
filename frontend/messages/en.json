@@ -1055,7 +1055,18 @@
         "lockWithDays": "Your account is locked for {days} more day(s).",
         "lockWithoutDays": "Your account is currently locked.",
         "appealAction": "Submit an Appeal",
-        "backHome": "Back to Home"
+        "backHome": "Back to Home",
+        "statusBadge": "Account restricted",
+        "statusSummary": "Current status",
+        "banUntil": "Review date: {date}",
+        "nextStepsTitle": "What happens next?",
+        "nextStepOne": "Our team will review your information. Check this page for updates.",
+        "nextStepTwo": "If your account follows our standards, access will be restored.",
+        "nextStepThree": "If the decision is upheld, the restriction may remain in place.",
+        "appealCardTitle": "Need a review?",
+        "appealCardBody": "Submit a concise appeal with supporting evidence so we can review your case faster.",
+        "headerHelp": "Help",
+        "logoutAction": "Log out"
     },
     "AppealPage": {
         "meta": {

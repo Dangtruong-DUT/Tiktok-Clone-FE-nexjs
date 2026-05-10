@@ -4,11 +4,14 @@ namespace App\Services;
 
 use App\Enums\Appeal\AppealStatusEnum;
 use App\Enums\Appeal\AppealTypeEnum;
+use App\Enums\Common\ResourceTypeEnum;
+use App\Enums\Post\PostTypeEnum;
 use App\Exceptions\http\BusinessException;
 use App\Exceptions\http\ForbiddenException;
 use App\Exceptions\http\NotFoundException;
 use App\Models\Appeal;
 use App\Repositories\AppealRepository;
+use App\Repositories\PostRepository;
 use App\Traits\HasAuthUser;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
@@ -21,6 +24,7 @@ class AppealService
      */
     public function __construct(
         private readonly AppealRepository $appealRepository,
+        private readonly PostRepository $postRepository,
         private readonly UploadService $uploadService,
     ) {}
 
@@ -32,24 +36,30 @@ class AppealService
      */
     public function create(array $payload, array $evidenceFiles = []): Appeal
     {
-        if ($payload['appeal_type']!=AppealTypeEnum::USER_BAN->value && empty($payload['resource_id'])) {
-            throw new BusinessException('Resource ID is required for this appeal type.', [
-                'resource_id' => 'Resource ID is required',
-            ]);
-        }
+        $user = $this->guard()->user();
+        $userId = $user->id;
 
+        $appealType = AppealTypeEnum::from((string) $payload['appeal_type']);
+        $resourceType = ResourceTypeEnum::from((string) $payload['resource_type']);
+        $resourceId = $payload['resource_id'] ?? null;
 
-        $userId = $this->guard()->user()->id;
-
-        $alreadyExists = $this->appealRepository->hasAppealForResource(
+        $resourceId = $this->validateAppealResource(
+            appealType: $appealType,
+            resourceType: $resourceType,
+            resourceId: $resourceId,
             userId: $userId,
-            appealType: (string) $payload['appeal_type'],
-            resourceId: $payload['resource_id'] ?? null,
         );
 
-        if ($alreadyExists) {
-            throw new BusinessException('An appeal already exists for this resource. Please edit your existing appeal instead.', [
-                'appeal_type' => 'An appeal already exists for this resource',
+        $hasPending = $this->appealRepository->hasPendingAppeal(
+            userId: $userId,
+            appealType: $appealType->value,
+            resourceType: $resourceType->value,
+            resourceId: $resourceId,
+        );
+
+        if ($hasPending) {
+            throw new BusinessException('A pending appeal already exists for this resource.', [
+                'appeal_type' => 'Pending appeal exists for this resource',
             ]);
         }
 
@@ -57,13 +67,150 @@ class AppealService
 
         return $this->appealRepository->create([
             'user_id' => $userId,
-            'appeal_type' => $payload['appeal_type'],
-            'resource_id' => $payload['resource_id'] ??  $userId,
-            'resource_type' => $payload['resource_type'],
+            'appeal_type' => $appealType->value,
+            'resource_id' => $resourceId,
+            'resource_type' => $resourceType->value,
             'reason' => $payload['reason'],
             'status' => AppealStatusEnum::PENDING->value,
             'evidence_file_ids' => ! empty($evidenceFileIds) ? $evidenceFileIds : null,
         ]);
+    }
+
+    /**
+     * Ensure appeal resource exists and belongs to the current user.
+     */
+    private function validateAppealResource(
+        AppealTypeEnum $appealType,
+        ResourceTypeEnum $resourceType,
+        ?int $resourceId,
+        int $userId
+    ): ?int {
+        return match ($appealType) {
+            AppealTypeEnum::USER_BAN => $this->validateUserBanAppeal($resourceType, $resourceId, $userId),
+            AppealTypeEnum::USER_DELETED => $this->validateUserDeletionAppeal($resourceType, $resourceId, $userId),
+            AppealTypeEnum::POST_DELETED => $this->validatePostAppeal($resourceType, $resourceId, $userId),
+            AppealTypeEnum::COMMENT_DELETED => $this->validateCommentAppeal($resourceType, $resourceId, $userId),
+        };
+    }
+
+    private function validateUserBanAppeal(
+        ResourceTypeEnum $resourceType,
+        ?int $resourceId,
+        int $userId
+    ): int {
+        if ($resourceType !== ResourceTypeEnum::USER) {
+            throw new BusinessException('Invalid resource type for user ban appeal.', [
+                'resource_type' => 'Resource type must be user for account appeals',
+            ]);
+        }
+
+        $user = $this->guard()->user();
+        if (! $user->isBanned()) {
+            throw new BusinessException('Your account is not currently banned.', [
+                'appeal_type' => 'User is not banned',
+            ]);
+        }
+
+        if ($resourceId !== null && $resourceId !== $userId) {
+            throw new ForbiddenException('You can only appeal your own account.');
+        }
+
+        return $userId;
+    }
+
+    private function validateUserDeletionAppeal(
+        ResourceTypeEnum $resourceType,
+        ?int $resourceId,
+        int $userId
+    ): int {
+        if ($resourceType !== ResourceTypeEnum::USER) {
+            throw new BusinessException('Invalid resource type for user deletion appeal.', [
+                'resource_type' => 'Resource type must be user for account appeals',
+            ]);
+        }
+
+        if ($resourceId !== null && $resourceId !== $userId) {
+            throw new ForbiddenException('You can only appeal your own account.');
+        }
+
+        return $userId;
+    }
+
+    private function validatePostAppeal(
+        ResourceTypeEnum $resourceType,
+        ?int $resourceId,
+        int $userId
+    ): int {
+        if (! $resourceId) {
+            throw new BusinessException('Resource ID is required for this appeal type.', [
+                'resource_id' => 'Resource ID is required',
+            ]);
+        }
+
+        $expectedType = match ($resourceType) {
+            ResourceTypeEnum::POST => PostTypeEnum::POST,
+            ResourceTypeEnum::RE_POST => PostTypeEnum::RE_POST,
+            ResourceTypeEnum::QUOTE_POST => PostTypeEnum::QUOTE_POST,
+            default => null,
+        };
+
+        if ($expectedType === null) {
+            throw new BusinessException('Invalid resource type for post appeal.', [
+                'resource_type' => 'Resource type must be post, re-post, or quote-post',
+            ]);
+        }
+
+        $post = $this->postRepository->findWithTrashedById($resourceId);
+        if (! $post) {
+            throw new NotFoundException('Post not found for appeal');
+        }
+
+        if ($post->user_id !== $userId) {
+            throw new ForbiddenException('You can only appeal your own posts.');
+        }
+
+        if ($post->type !== $expectedType) {
+            throw new BusinessException('Resource type does not match the post.', [
+                'resource_type' => 'Resource type mismatch',
+            ]);
+        }
+
+        return $resourceId;
+    }
+
+    private function validateCommentAppeal(
+        ResourceTypeEnum $resourceType,
+        ?int $resourceId,
+        int $userId
+    ): int {
+        if ($resourceType !== ResourceTypeEnum::COMMENT) {
+            throw new BusinessException('Invalid resource type for comment appeal.', [
+                'resource_type' => 'Resource type must be comment for comment appeals',
+            ]);
+        }
+
+        if (! $resourceId) {
+            throw new BusinessException('Resource ID is required for this appeal type.', [
+                'resource_id' => 'Resource ID is required',
+            ]);
+        }
+
+        $comment = $this->postRepository->findWithTrashedById($resourceId);
+        if (! $comment) {
+            throw new NotFoundException('Comment not found for appeal');
+        }
+
+        if ($comment->user_id !== $userId) {
+            throw new ForbiddenException('You can only appeal your own comments.');
+        }
+
+        if ($comment->type !== PostTypeEnum::COMMENT) {
+            throw new BusinessException('Resource type does not match the comment.', [
+                'resource_type' => 'Resource type mismatch',
+            ]);
+        }
+
+        return $resourceId;
     }
 
     /**

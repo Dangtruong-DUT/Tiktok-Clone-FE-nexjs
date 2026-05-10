@@ -5,19 +5,22 @@ import { getSafeInternalRedirectPath } from '@/utils/auth/redirect-path.util'
 import { JwtPayloadType } from '@/types/common/jwt-payload.type'
 import { decodeJwt } from '@/utils/auth/jwt.util'
 import { NextRequest, NextResponse } from 'next/server'
+import { LocalesType } from '@/i18n/config'
 
 type GuestRouteMiddlewareParams = {
     pathname: string
     isAuthenticated: boolean
     request: NextRequest
-    refreshToken?: string | null
+    refreshToken: string | null | undefined
+    locale: LocalesType
 }
 
 export function guestRouteMiddleware({
     pathname,
     isAuthenticated,
     request,
-    refreshToken
+    refreshToken,
+    locale
 }: GuestRouteMiddlewareParams): NextResponse | null {
     const isGuestOnlyPath = isPathMatched(GUEST_ONLY_ROUTE_PREFIXES, pathname)
 
@@ -27,10 +30,10 @@ export function guestRouteMiddleware({
             return NextResponse.redirect(new URL(redirectFrom, request.url))
         }
 
-        const decodedRefreshToken = refreshToken ? decodeJwt<JwtPayloadType>(refreshToken) : null
-        const defaultRedirect = decodedRefreshToken?.role === Role.SUPER_ADMIN ? '/admin' : '/'
+        const { role } = decodeJwt<JwtPayloadType>(refreshToken!)
+        const defaultRedirect = role === Role.SUPER_ADMIN ? 'admin' : ''
 
-        return NextResponse.redirect(new URL(defaultRedirect, request.url))
+        return NextResponse.redirect(new URL(`/${locale}/${defaultRedirect}`, request.url))
     }
 
     return null
