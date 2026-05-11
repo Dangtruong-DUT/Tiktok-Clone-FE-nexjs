@@ -13,7 +13,7 @@ class UserSettingsController extends Controller
 {
     /**
      * UserSettingsController constructor.
-     */
+ */
     public function __construct(
         private readonly UserSettingsService $userSettingsService
     ) {}

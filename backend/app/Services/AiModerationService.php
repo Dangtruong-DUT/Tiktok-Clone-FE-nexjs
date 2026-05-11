@@ -20,7 +20,7 @@ class AiModerationService
 {
     /**
      * AiModerationService constructor.
-     */
+ */
     public function __construct(
         private readonly AdminModerationNoticeService $adminModerationNoticeService,
         private readonly PostRepository $postRepo,
@@ -29,7 +29,7 @@ class AiModerationService
 
     /**
      * Enqueue post/comment content to AI moderation queue.
-     */
+ */
     public function enqueue(Post $post): void
     {
         if (! config('services.ai_moderation.enabled')) {
@@ -73,20 +73,8 @@ class AiModerationService
 
     /**
      * Apply verdict sent from AI worker and trigger moderation effects.
-     *
      * @param  array<string,mixed>  $payload
-     *                                        - task_id,
-     *                                        - resource_type
-     *                                        - resource_id
-     *                                        - resource_uuid
-     *                                        - user_id
-     *                                        - sentence
-     *                                        - label
-     *                                        - confidence
-     *                                        - reason
-     *                                        - moderated_at
-     *                                        - raw_payload
-     */
+ */
     public function applyVerdict(array $payload): void
     {
         $post = $this->postRepo->find((int) $payload['resource_id']);

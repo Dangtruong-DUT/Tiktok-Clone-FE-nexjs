@@ -1,0 +1,336 @@
+{
+  "SnapiStudio": {
+    "footer": {
+      "copyright": "Copyright © 2025 Snapi",
+      "privacyPolicy": "Privacy Policy",
+      "termsOfService": "Terms of Service"
+    },
+    "navigation": {
+      "home": "Home",
+      "posts": "Posts",
+      "appeals": "Appeals",
+      "settings": "Settings",
+      "back": "Back to Snapi"
+    },
+    "common": {
+      "audience": {
+        "selectPlaceholder": "Select audience",
+        "all": "All audiences",
+        "public": "Public",
+        "friends": "Friends",
+        "private": "Private",
+        "unknown": "Unknown"
+      }
+    },
+    "content": {
+      "table": {
+        "columns": {
+          "content": "Content",
+          "privacy": "Privacy",
+          "views": "Views",
+          "comments": "Comments",
+          "actions": "Actions"
+        },
+        "actions": {
+          "edit": "Edit",
+          "delete": "Delete"
+        }
+      },
+      "search": {
+        "placeholder": "Search...",
+        "clearButton": "Clear",
+        "clearingButton": "Clearing...",
+        "searchButton": "Search",
+        "searchingButton": "Searching..."
+      },
+      "filter": {
+        "audiencePlaceholder": "Filter by audience",
+        "allAudience": "All audiences",
+        "audience": {
+          "public": "Public",
+          "friends": "Friends",
+          "private": "Private",
+          "unknown": "Unknown"
+        }
+      },
+      "emptyState": "No posts found.",
+      "showingResults": "Showing {from}-{to} of {total} posts"
+    },
+    "dashboard": {
+      "knowledgeForYou": {
+        "title": "Knowledge for you"
+      },
+      "userInfo": {
+        "likes": "{count} Likes",
+        "followers": "{count} Followers",
+        "following": "{count} Following"
+      },
+      "recentPosts": {
+        "title": "Recent Posts",
+        "createdAt": "Posted on {date}",
+        "metrics": {
+          "views": "Views",
+          "likes": "Likes",
+          "comments": "Comments"
+        }
+      },
+      "directorChart": {
+        "keyMetrics": "Key Metrics",
+        "selectTimeRange": "Select Time Range",
+        "interactStats": "Interaction Statistics",
+        "metrics": {
+          "userViews": "User Views",
+          "guestViews": "Guest Views",
+          "likes": "Likes",
+          "comments": "Comments",
+          "views": "Views"
+        },
+        "timeRanges": {
+          "last7Days": "Last 7 Days",
+          "last28Days": "Last 28 Days",
+          "last60Days": "Last 60 Days",
+          "last365Days": "Last 365 Days"
+        }
+      }
+    },
+    "header": {
+      "profile": "Profile",
+      "logout": "Logout"
+    },
+    "settings": {
+      "page": {
+        "title": "Settings",
+        "description": "Manage your account settings and security preferences",
+        "userBadge": "User"
+      },
+      "updateProfile": {
+        "title": "Update Profile",
+        "description": "Update your personal information and profile picture",
+        "upload": "Upload",
+        "defaultUser": "USER",
+        "fullNameLabel": "Full Name",
+        "cancel": "Cancel",
+        "save": "Save",
+        "validation": {
+          "invalidType": "Invalid image format. Only {accepted} files are supported.",
+          "tooLarge": "Image is too large. Maximum allowed size is {maxSizeMb} MB."
+        }
+      },
+      "changePassword": {
+        "title": "Change Password",
+        "description": "Keep your account secure by updating your password regularly",
+        "oldPassword": "Old Password",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm Password",
+        "forgotPassword": "Forgot password?",
+        "cancel": "Cancel",
+        "save": "Save"
+      },
+      "verifyEmail": {
+        "title": "Verify Email",
+        "description": "Verify your email to secure your account and unlock full features",
+        "notice": "Your account is not verified yet. We will send a verification email to {email}.",
+        "verifiedTitle": "Email Verified",
+        "verifiedDescription": "Your email has already been verified",
+        "verifiedNotice": "This account is verified with email: {email}.",
+        "emailLabel": "Email",
+        "resendButton": "Resend Email",
+        "resendError": "Unable to resend verification email. Please try again."
+      },
+      "privacy": {
+        "title": "Privacy",
+        "description": "Control who can view your social activity.",
+        "public": "Public",
+        "private": "Private",
+        "cancel": "Cancel",
+        "save": "Save",
+        "updateError": "Unable to update privacy settings. Please try again.",
+        "fields": {
+          "likedVideos": {
+            "label": "Liked videos",
+            "description": "Allow others to see videos you liked."
+          },
+          "bookmarkedVideos": {
+            "label": "Bookmarked videos",
+            "description": "Allow others to see your bookmarked videos."
+          },
+          "followers": {
+            "label": "Followers list",
+            "description": "Allow others to view your followers."
+          },
+          "following": {
+            "label": "Following list",
+            "description": "Allow others to view who you follow."
+          }
+        }
+      }
+    },
+    "upload": {
+      "selectVideo": "Select Video to Upload",
+      "dragAndDrop": "Or drag and drop files",
+      "mp4OrWebmOnly": "Only MP4 or MOV supported",
+      "fileInfo": {
+        "size": "{size} MB",
+        "replace": "Replace"
+      },
+      "validation": {
+        "invalidType": "Invalid file format. Only {accepted} files are supported.",
+        "tooLarge": "File is too large. Maximum allowed size is {maxSizeMb} MB."
+      },
+      "exitDialog": {
+        "title": "Are you sure you want to exit?",
+        "description": "Your changes will not be saved.",
+        "exit": "Exit",
+        "backToEdits": "Back to Edits"
+      },
+      "selectThumbnail": {
+        "title": "Select Thumbnail",
+        "edit": "Edit",
+        "selectCover": "Select Cover",
+        "uploadCover": "Upload Cover"
+      },
+      "guidelines": {
+        "sizeAndDuration": {
+          "title": "Size and Duration",
+          "description": "Maximum size: 50 MB, video length: 60 minutes."
+        },
+        "fileFormats": {
+          "title": "File Formats",
+          "description": "Supported formats: '.mp4', '.mov'."
+        },
+        "videoResolutions": {
+          "title": "Video Resolutions",
+          "description": "High resolution recommended: 1080p, 1440p, 4K."
+        },
+        "aspectRatios": {
+          "title": "Aspect Ratios",
+          "description": "Recommended: 16:9 for landscape, 9:16 for portrait."
+        }
+      },
+      "tooltips": {
+        "play": "Play",
+        "pause": "Pause",
+        "mute": "Mute",
+        "unmute": "Unmute"
+      },
+      "resolutionReq": "Resolution 720x1280 or higher",
+      "maxFileSize": "Maximum size 50 MB",
+      "maxDuration": "Maximum duration 60 minutes",
+      "selectFile": "Select File",
+      "selectedFile": "Selected File",
+      "thumbnailUpload": {
+        "dragAndDrop": "Drag and drop a file here",
+        "or": "or",
+        "selectFile": "select file",
+        "supportedFormats": "Supported formats: JPG, JPEG and PNG.",
+        "uploadNew": "Upload new",
+        "confirm": "Confirm",
+        "validation": {
+          "invalidType": "Invalid image format. Only {accepted} files are supported.",
+          "tooLarge": "Image is too large. Maximum allowed size is {maxSizeMb} MB."
+        }
+      },
+      "detail": {
+        "title": "Details",
+        "description": {
+          "label": "Description",
+          "placeholder": "Share more about your video here..."
+        },
+        "cover": {
+          "label": "Cover",
+          "tooltip": "Select a cover image or upload from your device. An attractive cover can make a strong impression on viewers."
+        }
+      },
+      "settings": {
+        "title": "Settings",
+        "audience": {
+          "label": "Who can view this video",
+          "placeholder": "Select audience"
+        }
+      },
+      "buttons": {
+        "post": "Post",
+        "discard": "Discard"
+      }
+    },
+    "appeals": {
+      "create": {
+        "title": "File a New Appeal",
+        "description": "Submit an appeal for moderation actions applied to your content or account.",
+        "appealType": "Appeal type",
+        "resourceType": "Resource type",
+        "resourceId": "Resource ID",
+        "resourceIdPlaceholder": "Optional numeric resource id",
+        "reason": "Reason",
+        "reasonPlaceholder": "Describe why this moderation decision should be reviewed.",
+        "submit": "Submit appeal",
+        "submitting": "Submitting..."
+      },
+      "list": {
+        "title": "My Appeals",
+        "description": "Track status of your submitted appeals.",
+        "searchPlaceholder": "Search appeals",
+        "emptyState": "No appeals found",
+        "perPage": "Per page",
+        "showingResults": "Showing {from}-{to} of {total}",
+        "filters": {
+          "allStatuses": "All statuses"
+        },
+        "columns": {
+          "id": "ID",
+          "type": "Type",
+          "reason": "Reason",
+          "status": "Status",
+          "createdAt": "Created at",
+          "response": "Admin Response",
+          "resource": "Resource",
+          "evidence": "Evidence"
+        },
+        "viewDetail": "View Detail",
+        "resourcePreview": "Resource Preview"
+      },
+      "types": {
+        "user_ban": "User Ban",
+        "user_unban": "User Unban",
+        "user_deleted": "User Deleted",
+        "post_deleted": "Post Deleted",
+        "comment_deleted": "Comment Deleted"
+      },
+      "resourceTypes": {
+        "user": "User",
+        "post": "Post",
+        "comment": "Comment"
+      },
+      "statuses": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "messages": {
+        "createSuccess": "Appeal submitted successfully",
+        "createError": "Failed to submit appeal"
+      },
+      "errors": {
+        "reasonMinLength": "Reason must be at least 20 characters",
+        "resourceIdInvalid": "Resource ID must be a valid number"
+      },
+      "detail": {
+        "title": "Appeal Detail",
+        "fields": {
+          "type": "Type",
+          "status": "Status",
+          "reason": "Your Reason",
+          "response": "Admin Response",
+          "createdAt": "Submitted",
+          "reviewedAt": "Reviewed",
+          "resource": "Resource",
+          "evidence": "Evidence Files"
+        },
+        "noResponse": "Awaiting review...",
+        "noEvidence": "No evidence attached",
+        "resourceUnavailable": "Resource no longer available",
+        "resourceTitle": "Related Resource"
+      }
+    }
+  }
+}

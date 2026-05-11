@@ -14,7 +14,7 @@ class CheckUserStatus
      *
      * @param  \Illuminate\Http\Request  $request
      * @return mixed
-     */
+ */
     public function handle($request, Closure $next, bool $requireVerify = false)
     {
         try {

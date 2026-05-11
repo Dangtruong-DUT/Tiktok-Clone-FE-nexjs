@@ -17,7 +17,7 @@ class Appeal extends Model
 
     /**
      * @var array<int, string>
-     */
+ */
     protected $fillable = [
         'user_id',
         'appeal_type',
@@ -35,7 +35,7 @@ class Appeal extends Model
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
-     */
+ */
     protected function casts(): array
     {
         return [
@@ -50,7 +50,7 @@ class Appeal extends Model
      * Get the user who filed the appeal.
      *
      * @return BelongsTo<User, self>
-     */
+ */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -60,7 +60,7 @@ class Appeal extends Model
      * Get the admin who reviewed the appeal.
      *  
      * @return BelongsTo<User, self>
-     */
+ */
     public function reviewer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'reviewed_by');
@@ -83,7 +83,7 @@ class Appeal extends Model
 
     /**
      * Scope query to appeals of a specific user.
-     */
+ */
     #[Scope]
     public function byUserId(Builder $query, int $userId): Builder
     {
@@ -92,7 +92,7 @@ class Appeal extends Model
 
     /**
      * Scope query to appeals of a specific user (alias).
-     */
+ */
     #[Scope]
     public function byUser(Builder $query, int $userId): Builder
     {
@@ -101,7 +101,7 @@ class Appeal extends Model
 
     /**
      * Scope query to appeals by status.
-     */
+ */
     #[Scope]
     public function byStatus(Builder $query, AppealStatusEnum|string $status): Builder
     {
@@ -112,7 +112,7 @@ class Appeal extends Model
 
     /**
      * Scope query to pending appeals.
-     */
+ */
     #[Scope]
     public function pending(Builder $query): Builder
     {

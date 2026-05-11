@@ -8,7 +8,7 @@ class HasUsernameObserver
 {
     /**
      * Handle the Model "creating" event.
-     */
+ */
     public function creating(Model $model): void
     {
         if (empty($model->username)) {

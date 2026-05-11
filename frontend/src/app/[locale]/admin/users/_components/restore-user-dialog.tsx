@@ -21,10 +21,6 @@ interface RestoreUserDialogProps {
     onSuccess?: () => void
 }
 
-/**
- * RestoreUserDialog - Modal dialog to restore a deleted user
- * Confirms restore action (simple confirmation only)
- */
 export function RestoreUserDialog({ open, userUuid, username, onOpenChange, onSuccess }: RestoreUserDialogProps) {
     const t = useTranslations('AdminPage')
     const [restoreUser, { isLoading }] = useRestoreUserMutation()

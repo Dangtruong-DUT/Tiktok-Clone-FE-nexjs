@@ -8,7 +8,7 @@ class VerifyEmailRequest extends BaseRequest
 {
     /**
      * set rules
-     */
+ */
     public function rules(): array
     {
 

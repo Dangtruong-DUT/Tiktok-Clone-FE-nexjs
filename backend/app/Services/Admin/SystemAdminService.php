@@ -10,7 +10,6 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
- * SystemAdminService - System monitoring and dashboard operations
  * Handles: activity logs, statistics, audit trail
  */
 class SystemAdminService
@@ -22,7 +21,6 @@ class SystemAdminService
 
     /**
      * Get dashboard statistics
-     *
      * @param  string  $period  'today'|'week'|'month'|'year'
      * @return array {
      *               total_users: int,
@@ -33,7 +31,7 @@ class SystemAdminService
      *               total_comments: int,
      *               total_admin_actions: int
      *               }
-     */
+ */
     public function getDashboardStats(string $period = 'today'): array
     {
         $this->validatePeriod($period);
@@ -55,7 +53,6 @@ class SystemAdminService
 
     /**
      * Get paginated admin logs with filtering
-     *
      * @param  array  $filters  {
      *                          action_type?: string,
      *                          admin_uuid?: string,
@@ -66,7 +63,7 @@ class SystemAdminService
      *                          per_page?: int,
      *                          order_by?: string
      *                          }
-     */
+ */
     public function getAdminLogs(array $filters = []): LengthAwarePaginator
     {
         return $this->adminLogRepository->searchForAdmin($filters);
@@ -74,7 +71,6 @@ class SystemAdminService
 
     /**
      * Get paginated activity logs with filtering
-     *
      * @param  array  $filters  {
      *                          action_type?: string,
      *                          user_uuid?: string,
@@ -85,7 +81,7 @@ class SystemAdminService
      *                          per_page?: int,
      *                          order_by?: string
      *                          }
-     */
+ */
     public function getActivityLogs(array $filters = []): LengthAwarePaginator
     {
         return $this->activityLogRepository->searchForAdmin($filters);
@@ -93,9 +89,8 @@ class SystemAdminService
 
     /**
      * Validate period parameter
-     *
      * @throws \InvalidArgumentException
-     */
+ */
     private function validatePeriod(string $period): void
     {
         if (! in_array($period, ['today', 'week', 'month', 'year'])) {
@@ -105,7 +100,7 @@ class SystemAdminService
 
     /**
      * Get date from based on period
-     */
+ */
     private function getDateFrom(string $period): Carbon
     {
         return match ($period) {

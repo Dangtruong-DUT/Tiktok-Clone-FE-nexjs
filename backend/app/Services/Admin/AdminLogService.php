@@ -16,7 +16,6 @@ class AdminLogService
 
     /**
      * Log an admin action
-     *
      * @param  User  $admin  The admin performing the action
      * @param  ResourceTypeEnum  $resourceType  Resource type
      * @param  int|string  $resourceId  The ID/UUID of the resource
@@ -25,7 +24,7 @@ class AdminLogService
      * @param  array|null  $oldData  Previous state (JSON-serializable array)
      * @param  array|null  $newData  Current state (JSON-serializable array)
      * @return AdminLog The created log entry
-     */
+ */
     public function log(
         User $admin,
         ResourceTypeEnum $resourceType,

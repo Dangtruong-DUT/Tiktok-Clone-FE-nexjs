@@ -10,15 +10,6 @@ export const metadata: Metadata = {
     description: 'View system activity and events'
 }
 
-/**
- * AdminActivityPage - System activity monitoring page
- * Features:
- * - View all system events and admin actions
- * - Filter by activity type
- * - Filter by time period (24h, 7d, 30d, all)
- * - Search activity logs
- * - Timeline view with detailed information
- */
 export default async function AdminActivityPage() {
     const t = await getTranslations('AdminPage')
 

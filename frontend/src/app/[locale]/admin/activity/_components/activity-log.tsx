@@ -29,16 +29,6 @@ interface ActivityLogsApiResponse {
 
 const DATE_FORMATTER = new Intl.DateTimeFormat('en-CA')
 
-/**
- * ActivityLog - Displays paginated list of system activity and admin actions
- * Features:
- * - Filter by activity type
- * - Time period filter (24h, 7d, 30d, all)
- * - Search by resource
- * - Pagination
- * - Activity type badges
- * - Relative time display (e.g., "2h ago")
- */
 export function ActivityLog({ type = 'all' }: ActivityLogProps) {
     const t = useTranslations('AdminPage')
     const locale = useLocale()

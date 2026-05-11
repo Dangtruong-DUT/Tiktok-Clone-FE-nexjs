@@ -8,7 +8,7 @@ class NotFoundException extends BaseException
 {
     /**
      * Create a new Notfound exception instance.
-     */
+ */
     public function __construct(string $message = 'Resource not found', array $errors = [])
     {
         parent::__construct(

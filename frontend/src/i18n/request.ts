@@ -2,13 +2,17 @@ import { getRequestConfig } from 'next-intl/server'
 import { hasLocale } from 'next-intl'
 import { routing } from './routing'
 
+const NAMESPACES = ['common', 'auth', 'home', 'profile', 'admin', 'studio', 'appeal', 'legal'] as const
+
 export default getRequestConfig(async ({ requestLocale }) => {
-    // Typically corresponds to the `[locale]` segment
     const requested = await requestLocale
     const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale
 
-    return {
-        locale,
-        messages: (await import(`../../messages/${locale}.json`)).default
-    }
+    const parts = await Promise.all(
+        NAMESPACES.map((ns) =>
+            import(`../../messages/${locale}/${ns}.json`).then((m) => m.default)
+        )
+    )
+
+    return { locale, messages: Object.assign({}, ...parts) }
 })

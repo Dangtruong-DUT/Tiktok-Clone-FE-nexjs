@@ -16,7 +16,7 @@ class UploadFile extends Model
      * The attributes that are mass assignable.
      *
      * @var list<string>
-     */
+ */
     protected $fillable = [
         'file_name',
         'mime_type',
@@ -42,7 +42,7 @@ class UploadFile extends Model
      * et the user whose avatar is this file.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne The relationship instance.
-     */
+ */
     public function user(): HasOne
     {
         return $this->hasOne(User::class, 'avatar_file_id');
@@ -52,7 +52,7 @@ class UploadFile extends Model
      * Check if the file is expired.
      *
      * @return bool True if the file is expired, false otherwise.
-     */
+ */
     public function isExpired(): bool
     {
         return $this->expires_at !== null && $this->expires_at->isPast();
@@ -62,7 +62,7 @@ class UploadFile extends Model
      * Get the URL of the file.
      *
      * @return string The URL of the file.
-     */
+ */
     public function url(): Attribute
     {
         return Attribute::make(

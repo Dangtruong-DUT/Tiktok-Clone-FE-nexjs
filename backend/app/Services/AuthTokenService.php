@@ -27,7 +27,7 @@ class AuthTokenService
      * Verify email verification token.
      * @param string $verifyEmailToken The plain email verification token to verify.
      * @return EmailVerifyToken The valid email verification token model instance.
-     */
+ */
     public function verifyVerifyEmailToken(string $verifyEmailToken): EmailVerifyToken
     {
         $fingerprint = EmailVerifyToken::hashToken($verifyEmailToken);
@@ -52,7 +52,7 @@ class AuthTokenService
      * Verify forgot password token.
      * @param string $forgotPasswordToken The plain forgot password token to verify.
      * @return ForgotPasswordToken The valid forgot password token model instance.
-     */
+ */
     public function verifyForgotPasswordToken(
         string $forgotPasswordToken
     ): ForgotPasswordToken {
@@ -80,7 +80,7 @@ class AuthTokenService
      * Verify refresh token.
      * @param string $refreshToken The plain refresh token to verify.
      * @return RefreshToken The valid refresh token model instance.
-     */
+ */
     public function verifyRefreshToken(
         string $refreshToken
     ): RefreshToken {
@@ -125,7 +125,7 @@ class AuthTokenService
      * Create refresh token.
      * @param User $user The user for whom the refresh token is being created.
      * @return string The generated refresh token.
-     */
+ */
     public function createRefreshToken(User $user): string
     {
         JWTAuth::factory()->setTTL(
@@ -153,7 +153,7 @@ class AuthTokenService
      * Create access token.
      * @param User $user The user for whom the access token is being created.
      * @return string The generated access token.
-     */
+ */
     public function createAccessToken(User $user): string
     {
         JWTAuth::factory()->setTTL(
@@ -171,7 +171,7 @@ class AuthTokenService
      * Create forgot password token.
      * @param User $user The user for whom the forgot password token is being created.
      * @return string The generated forgot password token.
-     */
+ */
     public function createForgotPasswordToken(User $user): string
     {
         $token = ForgotPasswordToken::generatePlainToken(
@@ -193,7 +193,7 @@ class AuthTokenService
      * Create verify email token.
      * @param User $user The user for whom the email verification token is being created.
      * @return string The generated email verification token.
-     */
+ */
     public function createVerifyEmailToken(User $user): string
     {
         $token = EmailVerifyToken::generatePlainToken(

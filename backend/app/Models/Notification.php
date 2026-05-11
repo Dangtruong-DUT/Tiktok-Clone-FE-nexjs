@@ -31,7 +31,7 @@ class Notification extends Model
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
-     */
+ */
     protected function casts(): array
     {
         return [
@@ -49,7 +49,7 @@ class Notification extends Model
      * The default attributes for the model.
      *
      * @var array<string, mixed>
-     */
+ */
     protected $attributes = [
         'is_read' => false,
     ];
@@ -58,7 +58,7 @@ class Notification extends Model
      * Get the user who performed the action that triggered the notification.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo The relationship instance.
-     */
+ */
     public function actor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'actor_id');
@@ -68,7 +68,7 @@ class Notification extends Model
      * Get the user who is the recipient of the notification.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo The relationship instance.
-     */
+ */
     public function notifiable(): BelongsTo
     {
         return $this->belongsTo(User::class, 'notifiable_id');
@@ -78,7 +78,7 @@ class Notification extends Model
      * Get the entity associated with the notification.
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo The relationship instance.
-     */
+ */
     public function entity(): MorphTo
     {
         // withTrashed ensures soft-deleted posts/users still resolve
@@ -92,7 +92,7 @@ class Notification extends Model
      * @param  Builder  $query  The query builder instance.
      * @param  string  $tab  The tab to filter by. Supported values: 'likes', 'comments', 'mentions', 'followers', 'all'.
      * @return Builder The modified query builder instance.
-     */
+ */
     #[Scope]
     public function ofTypeByTab(Builder $query, string $tab): Builder
     {
@@ -110,7 +110,7 @@ class Notification extends Model
      * @param  Builder  $query  The query builder instance.
      * @param  int  $notifiableId  The ID of the notifiable user.
      * @return Builder The modified query builder instance.
-     */
+ */
     #[Scope]
     public function ofNotifiable(Builder $query, int $notifiableId): Builder
     {

@@ -16,7 +16,7 @@ enum PostTypeEnum: int implements BaseEnumInterface
 
     /**
      * Get the label of the enum value.
-     */
+ */
     public function label(): string
     {
         return match ($this) {
@@ -29,7 +29,7 @@ enum PostTypeEnum: int implements BaseEnumInterface
 
     /**
      * Get the translated label of the enum value.
-     */
+ */
     public function translate(): string
     {
         return match ($this) {

@@ -11,7 +11,7 @@ class GetMyAppealsRequest extends BaseListRequest
      * Get the validation rules.
      *
      * @return array<string, string|array>
-     */
+ */
     public function rules(): array
     {
         return $this->applyBaseRules([

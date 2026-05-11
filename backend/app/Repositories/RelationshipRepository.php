@@ -9,7 +9,7 @@ class RelationshipRepository extends BaseRepository
 {
     /**
      * RelationshipRepository constructor.
-     */
+ */
     public function __construct()
     {
         $modelInstance = app()->make(Relationship::class);
@@ -18,7 +18,7 @@ class RelationshipRepository extends BaseRepository
 
     /**
      * Delete relationships by user ID
-     */
+ */
     public function deleteRelationship(int $userId, int $targetUserId, RelationshipTypeEnum $type): int
     {
         return $this->query()->where('user_id', $userId)
@@ -29,9 +29,8 @@ class RelationshipRepository extends BaseRepository
 
     /**
      * Check if the user is following the target user
-     *
      * @return bool the relationship exists or not
-     */
+ */
     public function isFollowing(int $userId, int $targetUserId): bool
     {
         return $this->query()

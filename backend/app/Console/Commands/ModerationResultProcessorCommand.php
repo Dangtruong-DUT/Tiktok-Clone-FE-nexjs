@@ -16,19 +16,19 @@ class ModerationResultProcessorCommand extends Command
      * The name and signature of the console command.
      *
      * @var string
-     */
+ */
     protected $signature = 'moderation:process-results';
 
     /**
      * The console command description.
      *
      * @var string
-     */
+ */
     protected $description = 'Consume AI moderation results from Kafka and apply moderation verdicts.';
 
     /**
      * ModerationResultProcessorCommand constructor.
-     */
+ */
     public function __construct(
         private readonly AiModerationService $aiModerationService,
         private readonly JsonPayloadParser $jsonPayloadParser,
@@ -38,7 +38,7 @@ class ModerationResultProcessorCommand extends Command
 
     /**
      * Execute the console command.
-     */
+ */
     public function handle(): int
     {
         if (! config('services.ai_moderation.enabled')) {

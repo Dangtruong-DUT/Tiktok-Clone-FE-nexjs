@@ -17,7 +17,7 @@ enum NotificationTabEnum: string implements BaseEnumInterface
 
     /**
      * Get the label for the notification tab.
-     */
+ */
     public function label(): string
     {
         return match ($this) {
@@ -31,7 +31,7 @@ enum NotificationTabEnum: string implements BaseEnumInterface
 
     /**
      * Get the translated label for the notification tab.
-     */
+ */
     public function translate(): string
     {
         return match ($this) {
@@ -45,7 +45,7 @@ enum NotificationTabEnum: string implements BaseEnumInterface
 
     /**
      * Map tab to notification type id for query filtering.
-     */
+ */
     public function notificationTypeValue(): ?int
     {
         return match ($this) {

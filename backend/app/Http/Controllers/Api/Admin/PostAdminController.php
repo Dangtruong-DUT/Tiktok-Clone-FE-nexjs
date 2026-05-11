@@ -17,7 +17,7 @@ class PostAdminController extends Controller
 {
     /**
      * PostAdminController constructor.
-     */
+ */
     public function __construct(
         private readonly PostAdminService $postAdminService,
     ) {}
@@ -26,7 +26,7 @@ class PostAdminController extends Controller
      * Get paginated list of posts with filtering.
      * @param GetAdminPostsRequest $request
      * @return JsonResponse
-     */
+ */
     public function getPosts(GetAdminPostsRequest $request): JsonResponse
     {
         $posts = $this->postAdminService->getPosts($request->validated());
@@ -41,7 +41,7 @@ class PostAdminController extends Controller
      * Delete a post permanently.
      * @param DeletePostRequest $request
      * @return JsonResponse
-     */
+ */
     public function deletePost(DeletePostRequest $request): JsonResponse
     {
         $this->postAdminService->deletePost($request->validated());

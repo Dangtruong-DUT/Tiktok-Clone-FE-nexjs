@@ -1,78 +1,55 @@
-import { z } from 'zod'
 import type { ApiSuccessResponse } from '@/types/common/http-response.type'
-import { ApiSuccessResponseWithDataSchema, ApiSuccessResponseWithMetaSchema } from '@/types/common/http-response.type'
-import { AdminResourceTypeSchema } from '../common/admin-common.request.dto'
+import type { AdminResourceType } from '@/constants/admin.const'
 import type { PaginationMeta } from '@/types/common/pagination-meta.type'
 
-export const AdminLogSchema = z
-    .object({
-        id: z.number().int().positive(),
-        admin_id: z.number().int().positive(),
-        admin_uuid: z.string().nullable().optional(),
-        admin: z
-            .object({
-                id: z.number().int().positive(),
-                uuid: z.string().nullable(),
-                username: z.string(),
-                avatar: z.string().nullable()
-            })
-            .optional(),
-        resource_type: AdminResourceTypeSchema.nullable(),
-        resource_id: z.union([z.string(), z.number()]),
-        action: z.string(),
-        reason: z.string().nullable(),
-        old_data: z.record(z.string(), z.unknown()).nullable(),
-        new_data: z.record(z.string(), z.unknown()).nullable(),
-        ip_address: z.string().nullable().optional(),
-        created_at: z.string()
-    })
-    .strict()
+type LogActor = {
+    readonly id: number
+    readonly uuid?: string | null
+    readonly username: string
+    readonly avatar: string | null
+}
 
-export const ActivityLogSchema = z
-    .object({
-        id: z.number().int().positive(),
-        user_id: z.number().int().positive().nullable(),
-        user_uuid: z.string().nullable().optional(),
-        user: z
-            .object({
-                id: z.number().int().positive(),
-                uuid: z.string().nullable(),
-                username: z.string(),
-                avatar: z.string().nullable()
-            })
-            .optional(),
-        action_type: z.string(),
-        resource_type: AdminResourceTypeSchema.nullable(),
-        resource_id: z.union([z.string(), z.number()]).nullable(),
-        metadata: z.record(z.string(), z.unknown()).nullable(),
-        ip_address: z.string().nullable().optional(),
-        created_at: z.string()
-    })
-    .strict()
+export type AdminLog = {
+    readonly id: number
+    readonly admin_id: number
+    readonly admin_uuid?: string | null
+    readonly admin?: LogActor
+    readonly resource_type: AdminResourceType | null
+    readonly resource_id: string | number
+    readonly action: string
+    readonly reason: string | null
+    readonly old_data: Record<string, unknown> | null
+    readonly new_data: Record<string, unknown> | null
+    readonly ip_address?: string | null
+    readonly created_at: string
+}
 
-export const GetActivityLogsResSchema = ApiSuccessResponseWithMetaSchema(
-    z.array(z.union([AdminLogSchema, ActivityLogSchema]))
-)
+export type ActivityLog = {
+    readonly id: number
+    readonly user_id: number | null
+    readonly user_uuid?: string | null
+    readonly user?: LogActor
+    readonly action_type: string
+    readonly resource_type: AdminResourceType | null
+    readonly resource_id: string | number | null
+    readonly metadata: Record<string, unknown> | null
+    readonly ip_address?: string | null
+    readonly created_at: string
+}
 
-export const DashboardStatsSchema = z
-    .object({
-        total_users: z.number().int().nonnegative(),
-        active_users: z.number().int().nonnegative(),
-        banned_users: z.number().int().nonnegative(),
-        total_posts: z.number().int().nonnegative(),
-        deleted_posts: z.number().int().nonnegative(),
-        total_comments: z.number().int().nonnegative(),
-        total_admin_actions: z.number().int().nonnegative(),
-        new_users_this_period: z.number().int().nonnegative(),
-        new_posts_this_period: z.number().int().nonnegative()
-    })
-    .strict()
-
-export const GetDashboardStatsResSchema = ApiSuccessResponseWithDataSchema(DashboardStatsSchema)
-
-export type AdminLog = z.infer<typeof AdminLogSchema>
-export type ActivityLog = z.infer<typeof ActivityLogSchema>
 export type AdminActivityListItem = AdminLog | ActivityLog
+
+export type DashboardStats = {
+    readonly total_users: number
+    readonly active_users: number
+    readonly banned_users: number
+    readonly total_posts: number
+    readonly deleted_posts: number
+    readonly total_comments: number
+    readonly total_admin_actions: number
+    readonly new_users_this_period: number
+    readonly new_posts_this_period: number
+}
+
 export type GetActivityLogsRes = ApiSuccessResponse & { data: AdminActivityListItem[]; meta: PaginationMeta }
-export type DashboardStats = z.infer<typeof DashboardStatsSchema>
 export type GetDashboardStatsRes = ApiSuccessResponse & { data: DashboardStats }

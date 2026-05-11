@@ -1,14 +1,14 @@
 /**
- * Admin Helper Functions - Utility functions for formatting and styling admin data
+ * Admin Helper Functions
+ * Formatting, styling, and label utilities for admin UI.
+ * Action/label values must match backend AdminActionEnum and ActivityTypeEnum.
  */
 
+import { ADMIN_ACTIONS } from '@/constants/admin.const'
 import { formatNumber } from '@/utils/formatting/formatNumber.util'
 
-/**
- * Format date to readable format with time
- * @param dateString - ISO date string
- * @returns Formatted date string
- */
+// ─── Date Formatting ─────────────────────────────────────────────────────────
+
 export function formatAdminDate(dateString: string): string {
     if (!dateString) return '-'
     try {
@@ -25,9 +25,6 @@ export function formatAdminDate(dateString: string): string {
     }
 }
 
-/**
- * Format date to short format (MM/DD/YYYY)
- */
 export function formatAdminDateShort(dateString: string): string {
     if (!dateString) return '-'
     try {
@@ -41,9 +38,8 @@ export function formatAdminDateShort(dateString: string): string {
     }
 }
 
-/**
- * Get CSS class for user status badge
- */
+// ─── User Status ─────────────────────────────────────────────────────────────
+
 export function getUserStatus(user: {
     deleted_at?: string | null
     banned_at?: string | null
@@ -53,120 +49,98 @@ export function getUserStatus(user: {
     return 'active'
 }
 
-/**
- * Get CSS class for user status badge
- */
 export function getUserStatusColor(status: 'active' | 'banned' | 'deleted'): string {
     const colors: Record<typeof status, string> = {
         active: 'bg-green-100 text-green-800',
         banned: 'bg-red-100 text-red-800',
         deleted: 'bg-neutral-100 text-neutral-800'
     }
-
     return colors[status]
 }
 
-/**
- * Get display text for user status
- */
 export function formatUserStatus(status: 'active' | 'banned' | 'deleted'): string {
     const labels: Record<typeof status, string> = {
         active: 'Active',
         banned: 'Banned',
         deleted: 'Deleted'
     }
-
     return labels[status]
 }
 
-/**
- * Get CSS class for post status badge
- */
+// ─── Post Status ─────────────────────────────────────────────────────────────
+
 export function getPostStatusColor(status: 'visible' | 'deleted'): string {
-    const colors = {
-        visible: 'bg-green-100 text-green-800',
-        deleted: 'bg-red-100 text-red-800'
-    }
-    return colors[status]
+    return status === 'deleted'
+        ? 'bg-red-100 text-red-800'
+        : 'bg-green-100 text-green-800'
 }
 
-/**
- * Determine post status from model data
- */
 export function getPostStatus(post: { deleted_at?: string | null }): 'visible' | 'deleted' {
-    if (post.deleted_at) return 'deleted'
-    return 'visible'
+    return post.deleted_at ? 'deleted' : 'visible'
 }
 
-/**
- * Truncate text to maximum length with ellipsis
- */
+// ─── Text ─────────────────────────────────────────────────────────────────────
+
 export function truncateText(text: string, maxLength: number = 100): string {
     if (!text) return ''
     return text.length > maxLength ? text.slice(0, maxLength) + '...' : text
 }
 
-/**
- * Format reason for display
- */
 export function formatReason(reason: string | null | undefined): string {
     if (!reason) return 'No reason provided'
     return truncateText(reason, 150)
 }
 
-/**
- * Get action label for display
- */
-export function getActionLabel(action: string): string {
-    const actionLabels: Record<string, string> = {
-        ban: 'Ban User',
-        unban: 'Unban User',
-        delete_user: 'Delete User',
-        restore_user: 'Restore User',
-        delete_post: 'Delete Post',
-        delete_comment: 'Delete Comment'
-    }
-    return actionLabels[action] || action
+// ─── Activity / Action Labels ─────────────────────────────────────────────────
+// Keys match backend AdminActionEnum and ActivityTypeEnum values exactly.
+
+const ACTIVITY_LABEL_MAP: Record<string, string> = {
+    // Admin actions (AdminActionEnum)
+    [ADMIN_ACTIONS.BAN]: 'Ban User',
+    [ADMIN_ACTIONS.UNBAN]: 'Unban User',
+    [ADMIN_ACTIONS.DELETE_USER]: 'Delete User',
+    [ADMIN_ACTIONS.RESTORE_USER]: 'Restore User',
+    [ADMIN_ACTIONS.DELETE_POST]: 'Delete Post',
+    [ADMIN_ACTIONS.RESTORE_POST]: 'Restore Post',
+    [ADMIN_ACTIONS.DELETE_COMMENT]: 'Delete Comment',
+    [ADMIN_ACTIONS.RESTORE_COMMENT]: 'Restore Comment',
+    [ADMIN_ACTIONS.RESET_USER_PASSWORD]: 'Reset User Password',
+    [ADMIN_ACTIONS.SEND_EMAIL_TO_USER]: 'Send Email',
+    [ADMIN_ACTIONS.APPROVE_APPEAL]: 'Approve Appeal',
+    [ADMIN_ACTIONS.REJECT_APPEAL]: 'Reject Appeal',
+    [ADMIN_ACTIONS.UPDATE]: 'Update',
+    // System activity types (ActivityTypeEnum)
+    user_created: 'User Created',
+    user_registered: 'User Registered',
+    user_verified: 'User Verified',
+    user_banned: 'User Banned',
+    user_unbanned: 'User Unbanned',
+    post_uploaded: 'Post Uploaded',
+    post_deleted: 'Post Deleted',
+    post_liked: 'Post Liked',
+    post_unliked: 'Post Unliked',
+    post_bookmarked: 'Post Bookmarked',
+    comment_created: 'Comment Created',
+    comment_deleted: 'Comment Deleted',
+    user_followed: 'User Followed',
+    user_unfollowed: 'User Unfollowed',
+    password_changed: 'Password Changed',
+    login: 'Login',
+    logout: 'Logout'
 }
 
-/**
- * Get activity label for display
- */
 export function getActivityLabel(activity: string): string {
-    const labels: Record<string, string> = {
-        ban: 'Ban User',
-        unban: 'Unban User',
-        delete_user: 'Delete User',
-        restore_user: 'Restore User',
-        delete_post: 'Delete Post',
-        delete_comment: 'Delete Comment',
-        reset_user_password: 'Reset User Password',
-        send_email_to_user: 'Send Email To User',
-        user_created: 'User Created',
-        user_registered: 'User Registered',
-        user_verified: 'User Verified',
-        user_banned: 'User Banned',
-        user_unbanned: 'User Unbanned',
-        post_uploaded: 'Post Uploaded',
-        post_deleted: 'Post Deleted',
-        post_liked: 'Post Liked',
-        comment_created: 'Comment Created',
-        comment_deleted: 'Comment Deleted',
-        user_followed: 'User Followed',
-        login: 'Login',
-        logout: 'Logout'
-    }
-    return labels[activity] || activity
+    return ACTIVITY_LABEL_MAP[activity] ?? activity
 }
 
-/**
- * Check if need refresh attention (recent ban/deletion)
- */
-export function isRecentAction(dateString: string | null, hoursThreshold: number = 24): boolean {
+/** Alias kept for backward compatibility */
+export const getActionLabel = getActivityLabel
+
+// ─── Misc ─────────────────────────────────────────────────────────────────────
+
+export function isRecentAction(dateString: string | null, hoursThreshold = 24): boolean {
     if (!dateString) return false
-    const actionDate = new Date(dateString)
-    const now = new Date()
-    const diffInHours = (now.getTime() - actionDate.getTime()) / (1000 * 60 * 60)
+    const diffInHours = (Date.now() - new Date(dateString).getTime()) / (1000 * 60 * 60)
     return diffInHours < hoursThreshold
 }
 

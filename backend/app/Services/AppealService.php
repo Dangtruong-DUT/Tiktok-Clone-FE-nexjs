@@ -21,7 +21,7 @@ class AppealService
 
     /**
      * AppealService constructor.
-     */
+ */
     public function __construct(
         private readonly AppealRepository $appealRepository,
         private readonly PostRepository $postRepository,
@@ -30,10 +30,9 @@ class AppealService
 
     /**
      * File a new appeal (authenticated user only).
-     *
      * @param  array{appeal_type: string, resource_type: string, resource_id?: int|null, reason: string}  $payload
      * @param  array<\Illuminate\Http\UploadedFile>  $evidenceFiles
-     */
+ */
     public function create(array $payload, array $evidenceFiles = []): Appeal
     {
         $user = $this->guard()->user();
@@ -79,7 +78,7 @@ class AppealService
 
     /**
      * Ensure appeal resource exists and belongs to the current user.
-     */
+ */
     private function validateAppealResource(
         AppealTypeEnum $appealType,
         ResourceTypeEnum $resourceType,
@@ -216,17 +215,14 @@ class AppealService
 
     /**
      * Update an existing appeal (authenticated user only).
-     *
      * Only pending appeals can be updated.
-     *
      * @param  string  $uuid  The appeal UUID
      * @param  string  $reason  Updated reason
      * @param  array<\Illuminate\Http\UploadedFile>  $evidenceFiles  New evidence images
-     *
      * @throws NotFoundException
      * @throws ForbiddenException
      * @throws BusinessException If the appeal has already been reviewed
-     */
+ */
     public function updateAppeal(string $uuid, string $reason, array $evidenceFiles = []): Appeal
     {
         $appeal = $this->findByUuidForOwner($uuid);
@@ -242,9 +238,8 @@ class AppealService
 
     /**
      * Apply reason and evidence files to an appeal.
-     *
      * @param  array<\Illuminate\Http\UploadedFile>  $evidenceFiles
-     */
+ */
     private function applyEvidence(Appeal $appeal, string $reason, array $evidenceFiles = []): Appeal
     {
         $evidenceFileIds = $this->uploadEvidenceFiles($evidenceFiles);
@@ -263,10 +258,9 @@ class AppealService
 
     /**
      * Find an appeal by UUID for the authenticated owner.
-     *
      * @throws NotFoundException
      * @throws ForbiddenException
-     */
+ */
     public function findByUuidForOwner(string $uuid): Appeal
     {
         $appeal = $this->appealRepository->findByUuid($uuid);
@@ -285,10 +279,9 @@ class AppealService
 
     /**
      * Upload evidence files and return their IDs.
-     *
      * @param  array<\Illuminate\Http\UploadedFile>  $evidenceFiles
      * @return array<int>
-     */
+ */
     private function uploadEvidenceFiles(array $evidenceFiles): array
     {
         $fileIds = [];
@@ -302,7 +295,7 @@ class AppealService
 
     /**
      * Get appeals for authenticated user
-     */
+ */
     public function getAppeals(array $filters): LengthAwarePaginator
     {
         $user = $this->guard()->user();

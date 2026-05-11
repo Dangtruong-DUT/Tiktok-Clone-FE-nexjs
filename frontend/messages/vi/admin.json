@@ -1,0 +1,369 @@
+{
+    "AdminPage": {
+        "breadcrumbs": {
+            "home": "Trang chủ",
+            "admin": "Quản trị"
+        },
+        "common": {
+            "perPage": "Mỗi trang",
+            "showingResults": "Hiển thị {from}-{to} trên {total}",
+            "cancel": "Hủy",
+            "loading": "Đang xử lý..."
+        },
+        "shell": {
+            "panelLabel": "Bảng quản trị",
+            "accountMenu": "Menu tài khoản",
+            "settings": "Cài đặt",
+            "profile": "Hồ sơ",
+            "logout": "Đăng xuất",
+            "unknownUser": "Quản trị viên"
+        },
+        "dashboard": {
+            "title": "Bảng điều khiển",
+            "description": "Tổng quan hệ thống và hoạt động kiểm duyệt",
+            "statistics": "Thống kê",
+            "recentActivity": "Hoạt động gần đây",
+            "totalUsers": "Tổng người dùng",
+            "totalPosts": "Tổng bài viết",
+            "bannedUsers": "Người dùng bị khóa",
+            "adminActions": "Hành động quản trị",
+            "quickActions": {
+                "title": "Thao tác nhanh",
+                "reviewAppeals": "Xem kháng cáo",
+                "manageUsers": "Quản lý người dùng",
+                "moderatePosts": "Kiểm duyệt bài viết",
+                "moderateComments": "Kiểm duyệt bình luận"
+            }
+        },
+        "moderation": {
+            "title": "Kiểm duyệt bài viết"
+        },
+        "users": {
+            "title": "Quản lý người dùng",
+            "description": "Quản lý trạng thái và thao tác kiểm duyệt người dùng",
+            "emptyState": "Không có người dùng",
+            "columns": {
+                "id": "ID",
+                "username": "Tên người dùng",
+                "email": "Email",
+                "status": "Trạng thái",
+                "joinDate": "Ngày tham gia",
+                "actions": "Thao tác"
+            },
+            "filters": {
+                "allStatuses": "Tất cả trạng thái",
+                "active": "Hoạt động",
+                "banned": "Bị khóa",
+                "deleted": "Đã xóa",
+                "recent": "Mới nhất",
+                "oldest": "Cũ nhất"
+            },
+            "actions": {
+                "ban": "Khóa",
+                "unban": "Mở khóa",
+                "delete": "Xóa",
+                "restore": "Khôi phục",
+                "confirmBan": "Xác nhận khóa",
+                "confirmUnban": "Xác nhận mở khóa",
+                "confirmDelete": "Xác nhận xóa",
+                "confirmRestore": "Xác nhận khôi phục",
+                "resetPassword": "Đặt lại mật khẩu",
+                "sendEmail": "Gửi Email",
+                "viewDetails": "Xem chi tiết"
+            },
+            "detail": {
+                "title": "Chi tiết người dùng",
+                "stats": {
+                    "followers": "Follower",
+                    "following": "Đang theo dõi",
+                    "likes": "Lượt thích",
+                    "posts": "Bài đăng"
+                },
+                "fields": {
+                    "email": "Email",
+                    "role": "Vai trò",
+                    "verify": "Xác thực",
+                    "createdAt": "Ngày tạo",
+                    "bannedAt": "Bị khóa lúc",
+                    "deletedAt": "Đã xóa lúc",
+                    "banReason": "Lý do khóa",
+                    "status": "Trạng thái"
+                }
+            },
+            "labels": {
+                "reason": "Lý do",
+                "duration": "Thời hạn (ngày)"
+            },
+            "placeholders": {
+                "searchUsers": "Tìm theo tên hoặc email",
+                "banReason": "Nhập lý do khóa",
+                "deleteReason": "Nhập lý do xóa",
+                "duration": "Thời hạn tùy chọn"
+            },
+            "errors": {
+                "reasonRequired": "Lý do là bắt buộc",
+                "reasonMinLength": "Lý do tối thiểu 10 ký tự",
+                "durationInvalid": "Thời hạn phải là số dương"
+            },
+            "messages": {
+                "banSuccess": "Khóa người dùng thành công",
+                "banError": "Khóa người dùng thất bại",
+                "unbanSuccess": "Mở khóa người dùng thành công",
+                "unbanError": "Mở khóa người dùng thất bại",
+                "deleteSuccess": "Xóa người dùng thành công",
+                "deleteError": "Xóa người dùng thất bại",
+                "restoreSuccess": "Khôi phục người dùng thành công",
+                "restoreError": "Khôi phục người dùng thất bại"
+            },
+            "dialogs": {
+                "deleteTitle": "Xóa người dùng",
+                "deleteSubtitle": "Xóa tài khoản @{username}",
+                "deleteWarning": "Hành động này không thể hoàn tác.",
+                "unbanSubtitle": "Mở khóa tài khoản @{username}",
+                "restoreSubtitle": "Khôi phục tài khoản @{username}"
+            },
+            "banDialog": {
+                "subtitle": "Khóa tài khoản @{username}"
+            },
+            "hints": {
+                "durationHint": "Để trống nếu muốn khóa vĩnh viễn"
+            }
+        },
+        "posts": {
+            "title": "Kiểm duyệt bài viết",
+            "description": "Rà soát và kiểm duyệt bài viết",
+            "emptyState": "Không có bài viết",
+            "columns": {
+                "id": "ID",
+                "title": "Nội dung",
+                "author": "Tác giả",
+                "status": "Trạng thái",
+                "uploadDate": "Ngày tạo",
+                "actions": "Thao tác"
+            },
+            "filters": {
+                "allStatuses": "Tất cả trạng thái",
+                "visible": "Hiển thị",
+                "recent": "Mới nhất",
+                "oldest": "Cũ nhất"
+            },
+            "actions": {
+                "delete": "Xóa",
+                "confirmDelete": "Xác nhận xóa",
+                "preview": "Xem trước"
+            },
+            "preview": {
+                "title": "Xem trước bài viết",
+                "loading": "Đang tải xem trước...",
+                "noMedia": "Không có media",
+                "stats": {
+                    "likes": "Lượt thích",
+                    "comments": "Bình luận",
+                    "bookmarks": "Đã lưu",
+                    "views": "Lượt xem"
+                },
+                "fields": {
+                    "content": "Nội dung"
+                }
+            },
+            "labels": {
+                "reason": "Lý do",
+                "customReason": "Lý do tùy chỉnh"
+            },
+            "placeholders": {
+                "searchPosts": "Tìm bài viết",
+                "selectReason": "Chọn lý do",
+                "customReason": "Nhập lý do tùy chỉnh"
+            },
+            "reasons": {
+                "other": "Khác"
+            },
+            "errors": {
+                "reasonRequired": "Lý do là bắt buộc"
+            },
+            "messages": {
+                "deleteSuccess": "Xóa bài viết thành công",
+                "deleteError": "Xóa bài viết thất bại"
+            },
+            "dialogs": {
+                "deleteSubtitle": "Xóa bài viết của @{username}",
+                "deleteWarning": "Bài viết này sẽ bị loại khỏi bảng tin."
+            }
+        },
+        "comments": {
+            "title": "Kiểm duyệt bình luận",
+            "description": "Rà soát và kiểm duyệt bình luận",
+            "emptyState": "Không có bình luận",
+            "columns": {
+                "id": "ID",
+                "author": "Tác giả",
+                "content": "Nội dung",
+                "parentPost": "Bài viết gốc",
+                "date": "Ngày tạo",
+                "actions": "Thao tác"
+            },
+            "filters": {
+                "recent": "Mới nhất",
+                "oldest": "Cũ nhất"
+            },
+            "actions": {
+                "delete": "Xóa",
+                "confirmDelete": "Xác nhận xóa",
+                "view": "Xem"
+            },
+            "detail": {
+                "title": "Chi tiết bình luận",
+                "fields": {
+                    "content": "Nội dung",
+                    "likes": "Lượt thích",
+                    "parentId": "Bình luận gốc",
+                    "createdAt": "Ngày tạo",
+                    "author": "Tác giả"
+                }
+            },
+            "labels": {
+                "reason": "Lý do"
+            },
+            "placeholders": {
+                "searchComments": "Tìm bình luận",
+                "deleteReason": "Nhập lý do xóa"
+            },
+            "errors": {
+                "reasonRequired": "Lý do là bắt buộc",
+                "reasonMinLength": "Lý do tối thiểu 10 ký tự"
+            },
+            "messages": {
+                "deleteSuccess": "Xóa bình luận thành công",
+                "deleteError": "Xóa bình luận thất bại"
+            },
+            "dialogs": {
+                "deleteSubtitle": "Xóa bình luận của @{username}",
+                "deleteWarning": "Hành động này không thể hoàn tác."
+            }
+        },
+        "activity": {
+            "title": "Nhật ký hoạt động",
+            "description": "Xem hoạt động kiểm duyệt và hệ thống",
+            "emptyState": "Không có hoạt động",
+            "placeholders": {
+                "searchActivity": "Tìm hoạt động"
+            },
+            "periods": {
+                "last24h": "24 giờ qua",
+                "last7d": "7 ngày qua",
+                "last30d": "30 ngày qua",
+                "allTime": "Tất cả"
+            },
+            "filters": {
+                "allTypes": "Tất cả loại"
+            },
+            "prepositions": {
+                "on": "trên"
+            },
+            "actions": {
+                "viewDetails": "Xem chi tiết"
+            },
+            "detail": {
+                "title": "Chi tiết hoạt động",
+                "fields": {
+                    "action": "Hành động",
+                    "actor": "Người thực hiện",
+                    "resourceType": "Loại tài nguyên",
+                    "resourceId": "ID tài nguyên",
+                    "timestamp": "Thời điểm",
+                    "reason": "Lý do",
+                    "metadata": "Metadata"
+                }
+            }
+        },
+        "settings": {
+            "title": "Cài đặt quản trị",
+            "description": "Cập nhật hồ sơ và bảo mật tài khoản quản trị"
+        },
+        "appeals": {
+            "title": "Kiểm duyệt kháng cáo",
+            "description": "Xem xét và xử lý kháng cáo từ người dùng",
+            "emptyState": "Không có kháng cáo",
+            "filters": {
+                "allStatuses": "Tất cả trạng thái",
+                "allTypes": "Tất cả loại"
+            },
+            "types": {
+                "user_ban": "Khóa tài khoản",
+                "user_unban": "Mở khóa tài khoản",
+                "user_deleted": "Xóa tài khoản",
+                "post_deleted": "Xóa bài viết",
+                "comment_deleted": "Xóa bình luận"
+            },
+            "statuses": {
+                "pending": "Đang chờ",
+                "approved": "Đã duyệt",
+                "rejected": "Đã từ chối"
+            },
+            "columns": {
+                "id": "ID",
+                "user": "Người dùng",
+                "type": "Loại kháng cáo",
+                "reason": "Lý do",
+                "status": "Trạng thái",
+                "createdAt": "Ngày tạo",
+                "actions": "Thao tác",
+                "evidence": "Minh chứng"
+            },
+            "actions": {
+                "approve": "Duyệt",
+                "reject": "Từ chối",
+                "viewDetails": "Xem chi tiết"
+            },
+            "detail": {
+                "title": "Chi tiết kháng cáo",
+                "resourceTitle": "Tài nguyên",
+                "evidenceTitle": "Minh chứng",
+                "noEvidence": "Không có minh chứng",
+                "resourceUnavailable": "Tài nguyên đã bị xóa hoặc không còn khả dụng",
+                "fields": {
+                    "status": "Trạng thái",
+                    "type": "Loại",
+                    "reason": "Lý do",
+                    "response": "Phản hồi admin",
+                    "reviewer": "Người duyệt",
+                    "createdAt": "Ngày tạo",
+                    "reviewedAt": "Ngày duyệt",
+                    "resourceType": "Loại tài nguyên",
+                    "resourceId": "ID tài nguyên"
+                }
+            },
+            "evidenceDialog": {
+                "title": "Minh chứng kháng cáo",
+                "imageCount": "Ảnh {current} trên {total}",
+                "imageAlt": "Ảnh minh chứng {index}",
+                "prev": "Ảnh trước",
+                "next": "Ảnh sau",
+                "zoomIn": "Phóng to",
+                "zoomOut": "Thu nhỏ",
+                "download": "Tải về"
+            },
+            "labels": {
+                "adminResponse": "Phản hồi quản trị"
+            },
+            "placeholders": {
+                "searchAppeals": "Tìm kháng cáo",
+                "approveResponse": "Phản hồi tùy chọn khi phê duyệt",
+                "rejectResponse": "Lý do bắt buộc khi từ chối"
+            },
+            "dialogs": {
+                "approve": "Phê duyệt kháng cáo này và hoàn tác hành động kiểm duyệt trước đó.",
+                "reject": "Từ chối kháng cáo này và giữ nguyên quyết định kiểm duyệt hiện tại."
+            },
+            "messages": {
+                "approveSuccess": "Phê duyệt kháng cáo thành công",
+                "rejectSuccess": "Từ chối kháng cáo thành công",
+                "reviewError": "Không thể xử lý kháng cáo",
+                "missingAppealUuid": "Thiếu mã định danh kháng cáo từ phản hồi API"
+            },
+            "errors": {
+                "rejectReasonMin": "Lý do từ chối phải có ít nhất 10 ký tự"
+            }
+        }
+    }
+}

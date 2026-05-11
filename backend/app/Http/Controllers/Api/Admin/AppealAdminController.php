@@ -20,7 +20,7 @@ class AppealAdminController extends Controller
 {
     /**
      * AppealAdminController constructor.
-     */
+ */
     public function __construct(
         private readonly AdminAppealService $appealService,
     ) {}
@@ -29,7 +29,7 @@ class AppealAdminController extends Controller
      * Get paginated list of appeals with filtering.
      * @param GetAppealsRequest $request
      * @return JsonResponse
-     */
+ */
     public function index(GetAppealsRequest $request): JsonResponse
     {
         try {
@@ -50,7 +50,7 @@ class AppealAdminController extends Controller
      * Approve an appeal and reverse the admin action.
      * @param ApproveAppealRequest $request
      * @return JsonResponse
-     */
+ */
     public function approve(ApproveAppealRequest $request): JsonResponse
     {
         $appeal = $this->appealService->approve($request->validated());
@@ -65,7 +65,7 @@ class AppealAdminController extends Controller
      * Reject an appeal.
      * @param RejectAppealRequest $request
      * @return JsonResponse
-     */
+ */
     public function reject(RejectAppealRequest $request): JsonResponse
     {
         $appeal = $this->appealService->reject($request->validated());

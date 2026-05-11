@@ -46,7 +46,7 @@ class User extends Authenticatable implements JWTSubject
      * The attributes that are mass assignable.
      *
      * @var list<string>
-     */
+ */
     protected $fillable = [
         'uuid',
         'name',
@@ -68,7 +68,7 @@ class User extends Authenticatable implements JWTSubject
      * The default attributes for the model.
      *
      * @var array<string, mixed>
-     */
+ */
     protected $attributes = [
         'verify' => UserVerifyStatusEnum::UNVERIFIED->value,
         'role' => RoleTypeEnum::USER->value,
@@ -80,7 +80,7 @@ class User extends Authenticatable implements JWTSubject
      * The attributes that should be hidden for serialization.
      *
      * @var list<string>
-     */
+ */
     protected $hidden = [
         'password',
         'deleted_at',
@@ -90,7 +90,7 @@ class User extends Authenticatable implements JWTSubject
      * The accessors to append to model's array form.
      *
      * @var list<string>
-     */
+ */
     protected $appends = [
         'avatar_url',
     ];
@@ -99,7 +99,7 @@ class User extends Authenticatable implements JWTSubject
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
-     */
+ */
     protected function casts(): array
     {
         return [
@@ -124,7 +124,7 @@ class User extends Authenticatable implements JWTSubject
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
      * @return mixed
-     */
+ */
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -135,7 +135,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @param  int  $tokenType  The type of the token (access or refresh).
      * @return array
-     */
+ */
     public function getJWTCustomClaims(
         int $tokenType = TokenTypeEnum::ACCESS->value
     ) {
@@ -157,7 +157,7 @@ class User extends Authenticatable implements JWTSubject
      * Get the refresh tokens associated with the user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany The relationship instance.
-     */
+ */
     public function refreshTokens(): HasMany
     {
         return $this->hasMany(RefreshToken::class);
@@ -167,7 +167,7 @@ class User extends Authenticatable implements JWTSubject
      * Get the forgot password tokens associated with the user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany The relationship instance.
-     */
+ */
     public function forgotPasswordTokens(): HasMany
     {
         return $this->hasMany(ForgotPasswordToken::class);
@@ -177,7 +177,7 @@ class User extends Authenticatable implements JWTSubject
      * Get the email verification tokens associated with the user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany The relationship instance.
-     */
+ */
     public function emailVerifyTokens(): HasMany
     {
         return $this->hasMany(EmailVerifyToken::class);
@@ -195,7 +195,7 @@ class User extends Authenticatable implements JWTSubject
      * Get the avatar file associated with the user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo The relationship instance.
-     */
+ */
     public function avatarFile(): BelongsTo
     {
         return $this->belongsTo(UploadFile::class, 'avatar_file_id');
@@ -205,7 +205,7 @@ class User extends Authenticatable implements JWTSubject
      * Get the URL of the user's avatar.
      *
      * @return string|null The URL of the user's avatar, or null if not set.
-     */
+ */
     public function avatarUrl(): Attribute
     {
         return Attribute::make(
@@ -217,7 +217,7 @@ class User extends Authenticatable implements JWTSubject
      * Check if the user is verified.
      *
      * @return bool True if the user is verified, false otherwise.
-     */
+ */
     public function isVerified(): bool
     {
         return $this->verify === UserVerifyStatusEnum::VERIFIED;
@@ -227,7 +227,7 @@ class User extends Authenticatable implements JWTSubject
      * Check if the user is banned.
      *
      * @return bool True if the user is banned, false otherwise.
-     */
+ */
     public function isBanned(): bool
     {
         if (! $this->banned_at) {
@@ -245,7 +245,7 @@ class User extends Authenticatable implements JWTSubject
      * Get the remaining days of the user's ban.
      *
      * @return int|null The number of remaining days of the user's ban, or null if the user is not banned or the ban is permanent.
-     */
+ */
     public function getBanRemainingDays(): ?int
     {
         if (! $this->banned_at || $this->ban_duration_days === null) {
@@ -261,7 +261,7 @@ class User extends Authenticatable implements JWTSubject
      * Get the ISO-8601 timestamp when the ban ends.
      *
      * @return string|null The ban end timestamp, or null if not banned or permanent.
-     */
+ */
     public function getBanUntilIso(): ?string
     {
         if (! $this->banned_at || $this->ban_duration_days === null) {
@@ -279,7 +279,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @param  string  $password  The password to check.
      * @return bool True if the given password matches the user's current password, false otherwise.
-     */
+ */
     public function isCurrentPassword(string $password): bool
     {
         return Hash::check($password, $this->password);
@@ -289,7 +289,7 @@ class User extends Authenticatable implements JWTSubject
      * Get the posts created by the user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany The relationship instance.
-     */
+ */
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
@@ -299,7 +299,7 @@ class User extends Authenticatable implements JWTSubject
      * Get the users that follow the user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany The relationship instance.
-     */
+ */
     public function followers(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -316,7 +316,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @param  User  $user  The user to check.
      * @return bool True if the user is followed by the given user, false otherwise.
-     */
+ */
     public function isFollowedBy(User $user): bool
     {
         return $this->followers()->whereKey($user->id)->exists();
@@ -327,7 +327,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @param  User  $user  The user to check.
      * @return bool True if the user is following the given user, false otherwise.
-     */
+ */
     public function isFollowed(User $user): bool
     {
         return $this->followings()->whereKey($user->id)->exists();
@@ -337,7 +337,7 @@ class User extends Authenticatable implements JWTSubject
      * Get the users that the user follows.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany The relationship instance.
-     */
+ */
     public function followings(): belongsToMany
     {
         return $this->belongsToMany(
@@ -352,7 +352,7 @@ class User extends Authenticatable implements JWTSubject
      * Get the posts that the user is mentioned in.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany The relationship instance.
-     */
+ */
     public function postMentions(): BelongsToMany
     {
         return $this->belongsToMany(Post::class, 'post_mentions', 'user_id', 'post_id');
@@ -362,7 +362,7 @@ class User extends Authenticatable implements JWTSubject
      * Get the posts that the user has liked.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany The relationship instance.
-     */
+ */
     public function likedPosts(): BelongsToMany
     {
         return $this->belongsToMany(Post::class, 'post_likes', 'user_id', 'post_id');
@@ -372,7 +372,7 @@ class User extends Authenticatable implements JWTSubject
      * Get the posts that the user has bookmarked.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany The relationship instance.
-     */
+ */
     public function bookmarkedPosts(): BelongsToMany
     {
         return $this->belongsToMany(Post::class, 'post_bookmarks', 'user_id', 'post_id');
@@ -382,7 +382,7 @@ class User extends Authenticatable implements JWTSubject
      * Get the user settings associated with the user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne The relationship instance.
-     */
+ */
     public function settings(): HasOne
     {
         return $this->hasOne(UserSettings::class);
@@ -392,7 +392,7 @@ class User extends Authenticatable implements JWTSubject
      * Get the notifications associated with the user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany The relationship instance.
-     */
+ */
     public function notifications(): HasMany
     {
         return $this->hasMany(Notification::class, 'notifiable_id');
@@ -403,7 +403,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @param \Illuminate\Database\Eloquent\Builder .
      * @return \Illuminate\Database\Eloquent\Builder.
-     */
+ */
     #[Scope]
     public function admin(Builder $query): Builder
     {
@@ -414,7 +414,7 @@ class User extends Authenticatable implements JWTSubject
      * Check if the user is a super admin.
      *
      * @return bool True if the user is a super admin, false otherwise.
-     */
+ */
     public function isSuperAdmin(): bool
     {
         return $this->role === RoleTypeEnum::SUPER_ADMIN;

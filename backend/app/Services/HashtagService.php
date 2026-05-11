@@ -9,12 +9,8 @@ class HashtagService
 {
     /**
      * Search for hashtags.
-     *
      * @param  array  $data
-     *                       - q: The search query for hashtags.
-     *                       - page: The page number for pagination (optional).
-     *                       - per_page: The number of results per page for pagination (optional).
-     */
+ */
     public function search(array $data): LengthAwarePaginator
     {
         $query = $data['q'] ?? '';

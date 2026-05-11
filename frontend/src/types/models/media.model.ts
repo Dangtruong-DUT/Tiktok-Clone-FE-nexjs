@@ -1,11 +1,9 @@
 import { MediaType } from '@/constants/enum'
-import { z } from 'zod'
 
-export const MediaSchema = z
-    .object({
-        url: z.string(),
-        type: z.nativeEnum(MediaType)
-    })
-    .strict()
+export type Media = {
+    readonly url: string
+    readonly type: MediaType
+}
 
-export type Media = z.infer<typeof MediaSchema>
+/** @deprecated use Media */
+export type MediaSchema = Media

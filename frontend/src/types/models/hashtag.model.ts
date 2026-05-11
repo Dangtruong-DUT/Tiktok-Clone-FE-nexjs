@@ -1,14 +1,11 @@
-import { z } from 'zod'
+export type HashtagType = {
+    readonly id: number
+    readonly uuid?: string
+    readonly name: string
+    readonly created_at?: string
+    readonly start?: number | null
+    readonly end?: number | null
+}
 
-export const HashtagSchema = z
-    .object({
-        id: z.number(),
-        uuid: z.string().optional(),
-        name: z.string(),
-        created_at: z.string().optional(),
-        start: z.number().int().nonnegative().nullable().optional(),
-        end: z.number().int().nonnegative().nullable().optional()
-    })
-    .strict()
-
-export type HashtagType = z.infer<typeof HashtagSchema>
+/** @deprecated use HashtagType */
+export type HashtagSchema = HashtagType

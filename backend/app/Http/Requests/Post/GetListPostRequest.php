@@ -16,7 +16,7 @@ class GetListPostRequest extends BaseListRequest
 
     /**
      * set rules
-     */
+ */
     public function rules(): array
     {
         return $this->applyBaseRules([

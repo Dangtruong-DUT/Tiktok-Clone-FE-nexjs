@@ -18,7 +18,7 @@ class FollowSomeOneRequest extends BaseRequest
 
     /**
      * set rules
-     */
+ */
     public function rules(): array
     {
 

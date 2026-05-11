@@ -10,14 +10,6 @@ export const metadata: Metadata = {
     description: 'Moderate and manage posts'
 }
 
-/**
- * AdminPostsPage - Post moderation page
- * Features:
- * - View all posts
- * - Search and filter posts
- * - Hide/Unhide posts
- * - Delete posts
- */
 export default async function AdminPostsPage() {
     const t = await getTranslations('AdminPage')
 

@@ -184,8 +184,8 @@ export default function TableContent() {
                     <p className='text-sm text-muted-foreground'>
                         {t('showingResults', {
                             from: (queryData.meta.current_page - 1) * pagination.pageSize + 1,
-                            to: Math.min(queryData.meta.current_page * pagination.pageSize, queryData.meta.total),
-                            total: queryData.meta.total
+                            to: Math.min(queryData.meta.current_page * pagination.pageSize, queryData.meta.total ?? 0),
+                            total: queryData.meta.total ?? 0
                         })}
                     </p>
                     <AutoPagination

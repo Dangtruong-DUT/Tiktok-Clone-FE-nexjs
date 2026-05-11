@@ -24,7 +24,7 @@ class NotificationController extends Controller
 
     /**
      * Get paginated notifications for current user.
-     */
+ */
     public function index(GetListNotificationRequest $request): JsonResponse
     {
         $payload = $request->validated();
@@ -38,7 +38,7 @@ class NotificationController extends Controller
 
     /**
      * Get unread notification count for current user by tab.
-     */
+ */
     public function unreadCount(GetUnreadCountNotificationRequest $request): JsonResponse
     {
         $count = $this->notificationService->getUnreadCount(
@@ -53,7 +53,7 @@ class NotificationController extends Controller
 
     /**
      * Mark one notification as read by UUID.
-     */
+ */
     public function markAsRead(MarkNotificationAsReadRequest $request): JsonResponse
     {
         $this->notificationService->markAsRead(
@@ -65,7 +65,7 @@ class NotificationController extends Controller
 
     /**
      * Mark all notifications as read for current user by tab.
-     */
+ */
     public function markAllAsRead(MarkAllNotificationsAsReadRequest $request): JsonResponse
     {
         $updatedCount = $this->notificationService->markAllAsRead(

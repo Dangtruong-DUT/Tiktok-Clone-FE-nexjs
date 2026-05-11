@@ -8,7 +8,7 @@ class VerifyEmailTokenRepository extends BaseRepository
 {
     /**
      * VerifyEmailTokenRepository constructor.
-     */
+ */
     public function __construct()
     {
         $modelInstance = app()->make(EmailVerifyToken::class);
@@ -17,7 +17,7 @@ class VerifyEmailTokenRepository extends BaseRepository
 
     /**
      * Delete verify email tokens by user ID
-     */
+ */
     public function deleteByUserId(int $userId): int
     {
         return $this->query()->where('user_id', $userId)->delete();
@@ -25,7 +25,7 @@ class VerifyEmailTokenRepository extends BaseRepository
 
     /**
      * Find a verify email token by token hash
-     */
+ */
     public function findByTokenHash(string $tokenHash): ?EmailVerifyToken
     {
         return $this->query()->where('token_hash', $tokenHash)->first();

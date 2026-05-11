@@ -5,58 +5,64 @@ export const AppealTypeSchema = z.enum(APPEAL_TYPE_VALUES)
 export const AppealStatusSchema = z.enum(APPEAL_STATUS_VALUES)
 export const AppealResourceTypeSchema = z.enum(APPEAL_RESOURCE_TYPE_VALUES)
 
-const ResourcePreviewSchema = z.union([
-    z.object({
-        type: z.literal('post'),
-        uuid: z.string().nullable().optional(),
-        content: z.string().nullable(),
-        thumbnail_url: z.string().nullable().optional(),
-        likes_count: z.number().optional(),
-        comments_count: z.number().optional(),
-        is_deleted: z.boolean().optional(),
-        author: z.object({ username: z.string(), avatar: z.string().nullable() }).nullable().optional(),
-        created_at: z.string().nullable().optional()
-    }),
-    z.object({
-        type: z.literal('comment'),
-        uuid: z.string().nullable().optional(),
-        content: z.string().nullable(),
-        is_deleted: z.boolean().optional(),
-        author: z.object({ username: z.string(), avatar: z.string().nullable() }).nullable().optional(),
-        created_at: z.string().nullable().optional()
-    }),
-    z.object({
-        type: z.literal('user'),
-        uuid: z.string().nullable().optional(),
-        username: z.string(),
-        avatar: z.string().nullable().optional(),
-        is_banned: z.boolean().optional(),
-        is_deleted: z.boolean().optional()
-    })
-])
+export type AppealType = (typeof APPEAL_TYPE_VALUES)[number]
+export type AppealStatus = (typeof APPEAL_STATUS_VALUES)[number]
+export type AppealResourceType = (typeof APPEAL_RESOURCE_TYPE_VALUES)[number]
 
-export type ResourcePreview = z.infer<typeof ResourcePreviewSchema>
+type ResourcePreviewAuthor = {
+    readonly username: string
+    readonly avatar: string | null
+}
 
-export const AppealSchema = z
-    .object({
-        id: z.number().int().positive(),
-        uuid: z.string().nullable().optional(),
-        user_id: z.number().int().positive(),
-        appeal_type: AppealTypeSchema,
-        resource_id: z.number().int().positive().nullable(),
-        resource_type: AppealResourceTypeSchema,
-        reason: z.string().nullable(),
-        status: AppealStatusSchema,
-        admin_response: z.string().nullable(),
-        evidence_files: z
-            .array(z.object({ id: z.number().int().positive(), url: z.string(), file_name: z.string() }))
-            .nullable()
-            .optional(),
-        resource_preview: ResourcePreviewSchema.nullable().optional(),
-        reviewed_at: z.string().nullable(),
-        created_at: z.string(),
-        updated_at: z.string()
-    })
-    .passthrough()
+export type ResourcePreview =
+    | {
+          readonly type: 'post'
+          readonly uuid?: string | null
+          readonly content: string | null
+          readonly thumbnail_url?: string | null
+          readonly likes_count?: number
+          readonly comments_count?: number
+          readonly is_deleted?: boolean
+          readonly author?: ResourcePreviewAuthor | null
+          readonly created_at?: string | null
+      }
+    | {
+          readonly type: 'comment'
+          readonly uuid?: string | null
+          readonly content: string | null
+          readonly is_deleted?: boolean
+          readonly author?: ResourcePreviewAuthor | null
+          readonly created_at?: string | null
+      }
+    | {
+          readonly type: 'user'
+          readonly uuid?: string | null
+          readonly username: string
+          readonly avatar?: string | null
+          readonly is_banned?: boolean
+          readonly is_deleted?: boolean
+      }
 
-export type Appeal = z.infer<typeof AppealSchema>
+type EvidenceFile = {
+    readonly id: number
+    readonly url: string
+    readonly file_name: string
+}
+
+export type Appeal = {
+    readonly id: number
+    readonly uuid?: string | null
+    readonly user_id: number
+    readonly appeal_type: AppealType
+    readonly resource_id: number | null
+    readonly resource_type: AppealResourceType
+    readonly reason: string | null
+    readonly status: AppealStatus
+    readonly admin_response: string | null
+    readonly evidence_files?: EvidenceFile[] | null
+    readonly resource_preview?: ResourcePreview | null
+    readonly reviewed_at: string | null
+    readonly created_at: string
+    readonly updated_at: string
+    readonly [key: string]: unknown
+}

@@ -26,7 +26,7 @@ class AuthController extends Controller
 
     /**
      * Handle a registration request for the application.
-     */
+ */
     public function register(RegisterRequest $request): JsonResponse
     {
         $credentials = $request->validated();
@@ -42,7 +42,7 @@ class AuthController extends Controller
 
     /**
      * Handle a login request to the application.
-     */
+ */
     public function login(LoginRequest $request): JsonResponse
     {
         $credentials = $request->validated();
@@ -58,7 +58,7 @@ class AuthController extends Controller
 
     /**
      * Get the authenticated User
-     */
+ */
     public function me(): JsonResponse
     {
         $user = $this->authService->me();
@@ -71,7 +71,7 @@ class AuthController extends Controller
 
     /**
      * Log the user out (Invalidate the token)
-     */
+ */
     public function logout(LogoutRequest $request): JsonResponse
     {
         $refreshToken = $request->input('refresh_token');
@@ -82,7 +82,7 @@ class AuthController extends Controller
 
     /**
      * Log the user out from all devices (Invalidate all tokens)
-     */
+ */
     public function logoutAll(LogoutRequest $request): JsonResponse
     {
         $refreshToken = $request->input('refresh_token');
@@ -93,7 +93,7 @@ class AuthController extends Controller
 
     /**
      * Refresh a token.
-     */
+ */
     public function refresh(RefreshTokenRequest $request): JsonResponse
     {
         $refreshToken = $request->input('refresh_token');
@@ -109,7 +109,7 @@ class AuthController extends Controller
 
     /**
      * Handle forgot password request by sending a reset link to the user's email.
-     */
+ */
     public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
     {
         $this->authService->forgot($request->input('email'));
@@ -119,7 +119,7 @@ class AuthController extends Controller
 
     /**
      * Handle verify forgot password request by verifying the token and resetting the password.
-     */
+ */
     public function verifyForgotPasswordToken(VerifyForgotPasswordTokenRequest $request): JsonResponse
     {
         $credentials = $request->validated();
@@ -130,7 +130,7 @@ class AuthController extends Controller
 
     /**
      * Handle reset password request by resetting the user's password.
-     */
+ */
     public function resetPassword(ResetPasswordRequest $request): JsonResponse
     {
         $credentials = $request->validated();
@@ -141,7 +141,7 @@ class AuthController extends Controller
 
     /**
      * Handle verify email request by verifying the token and activating the user's account.
-     */
+ */
     public function verifyEmail(VerifyEmailRequest $request): JsonResponse
     {
         $credentials = $request->validated();
@@ -157,7 +157,7 @@ class AuthController extends Controller
 
     /**
      * Resend the verification email to the user if their email is not verified.
-     */
+ */
     public function resendVerifyEmail(Request $request): JsonResponse
     {
         $this->authService->resendVerifyEmail();
@@ -167,7 +167,7 @@ class AuthController extends Controller
 
     /**
      * Get the token array structure.
-     */
+ */
     protected function respondWithToken(
         string $accessToken,
         ?string $refreshToken = null,

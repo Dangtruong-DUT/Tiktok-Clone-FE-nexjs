@@ -1,38 +1,36 @@
 import { Audience, PosterType } from '@/constants/enum'
-import { HashtagSchema } from '@/types/models/hashtag.model'
-import { MediaSchema } from '@/types/models/media.model'
-import { MentionSchema } from '@/types/models/mention.model'
-import { UserSchema } from '@/types/models/user.model'
-import { z } from 'zod'
+import type { HashtagType } from '@/types/models/hashtag.model'
+import type { Media } from '@/types/models/media.model'
+import type { MentionType } from '@/types/models/mention.model'
+import type { UserType } from '@/types/models/user.model'
 
-export const TikTokPostSchema = z
-    .object({
-        id: z.number(),
-        uuid: z.string(),
-        user_id: z.number(),
-        user_uuid: z.string().optional(),
-        type: z.nativeEnum(PosterType),
-        audience: z.nativeEnum(Audience),
-        content: z.string(),
-        parent_id: z.number().nullable(),
-        hashtags: z.array(HashtagSchema),
-        created_at: z.string(),
-        updated_at: z.string(),
-        medias: z.array(MediaSchema),
-        mentions: z.array(MentionSchema),
-        likes_count: z.number(),
-        bookmarks_count: z.number(),
-        repost_count: z.number(),
-        comments_count: z.number(),
-        quote_post_count: z.number(),
-        is_liked: z.boolean(),
-        is_bookmarked: z.boolean(),
-        guest_views: z.number(),
-        user_views: z.number(),
-        author: UserSchema,
-        thumbnail_url: z.string(),
-        thumbnail_file_id: z.number().nullable().optional()
-    })
-    .strict()
+export type TikTokPostType = {
+    readonly id: number
+    readonly uuid: string
+    readonly user_id: number
+    readonly user_uuid?: string
+    readonly type: PosterType
+    readonly audience: Audience
+    readonly content: string
+    readonly parent_id: number | null
+    readonly hashtags: HashtagType[]
+    readonly created_at: string
+    readonly updated_at: string
+    readonly medias: Media[]
+    readonly mentions: MentionType[]
+    readonly likes_count: number
+    readonly bookmarks_count: number
+    readonly repost_count: number
+    readonly comments_count: number
+    readonly quote_post_count: number
+    readonly is_liked: boolean
+    readonly is_bookmarked: boolean
+    readonly guest_views: number
+    readonly user_views: number
+    readonly author: UserType
+    readonly thumbnail_url: string
+    readonly thumbnail_file_id?: number | null
+}
 
-export type TikTokPostType = z.infer<typeof TikTokPostSchema>
+/** @deprecated use TikTokPostType */
+export type TikTokPostSchema = TikTokPostType

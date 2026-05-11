@@ -13,14 +13,14 @@ class UploadController extends Controller
 {
     /**
      * UploadController constructor.
-     */
+ */
     public function __construct(
         private readonly UploadService $uploadService
     ) {}
 
     /**
      * handle image upload
-     */
+ */
     public function uploadImage(UploadImageRequest $request): JsonResponse
     {
         $data = $this->uploadService->image($request->file('file'));
@@ -30,7 +30,7 @@ class UploadController extends Controller
 
     /**
      * handle video upload
-     */
+ */
     public function uploadVideo(UploadVideoRequest $request): JsonResponse
     {
         $data = $this->uploadService->video($request->file('file'));

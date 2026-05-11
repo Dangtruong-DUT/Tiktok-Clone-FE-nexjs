@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { CheckCircle2, XCircle } from 'lucide-react'
 import { formatAdminDate, formatNumber } from '@/helpers/admin-helpers'
 import { APPEAL_STATUSES } from '@/constants/appeal.const'
 import type { AdminAppeal } from '@/types/dtos/admin/admin-response.dto'
@@ -44,6 +45,30 @@ export function AppealDetailDialog({ open, appeal, onOpenChange }: AppealDetailD
                 <DialogHeader>
                     <DialogTitle>{t('appeals.detail.title')}</DialogTitle>
                 </DialogHeader>
+
+                {/* Review result banner */}
+                {appeal.status === APPEAL_STATUSES.APPROVED && (
+                    <div className='flex items-start gap-3 rounded-lg border border-emerald-200 bg-emerald-50 dark:bg-emerald-950/40 px-4 py-3'>
+                        <CheckCircle2 className='h-5 w-5 text-emerald-600 shrink-0 mt-0.5' />
+                        <div>
+                            <p className='text-sm font-semibold text-emerald-800 dark:text-emerald-300'>Appeal Approved — Action Reversed</p>
+                            {appeal.admin_response && (
+                                <p className='text-xs text-emerald-700 dark:text-emerald-400 mt-0.5'>{appeal.admin_response}</p>
+                            )}
+                        </div>
+                    </div>
+                )}
+                {appeal.status === APPEAL_STATUSES.REJECTED && (
+                    <div className='flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 dark:bg-red-950/40 px-4 py-3'>
+                        <XCircle className='h-5 w-5 text-red-600 shrink-0 mt-0.5' />
+                        <div>
+                            <p className='text-sm font-semibold text-red-800 dark:text-red-300'>Appeal Rejected</p>
+                            {appeal.admin_response && (
+                                <p className='text-xs text-red-700 dark:text-red-400 mt-0.5'>{appeal.admin_response}</p>
+                            )}
+                        </div>
+                    </div>
+                )}
 
                 <div className='grid gap-6 md:grid-cols-[1.1fr_0.9fr]'>
                     <div className='space-y-4'>

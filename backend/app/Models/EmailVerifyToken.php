@@ -27,7 +27,7 @@ class EmailVerifyToken extends Model
      * The attributes that are mass assignable.
      *
      * @var list<string>
-     */
+ */
     protected $fillable = [
         'user_id',
         'token_hash',
@@ -50,7 +50,7 @@ class EmailVerifyToken extends Model
      * Get the user that owns the email verification token.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo The relationship instance.
-     */
+ */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

@@ -13,7 +13,7 @@ class HashtagController extends Controller
 {
     /**
      * HashtagController constructor.
-     */
+ */
     public function __construct(
         private readonly HashtagService $hashtagService
     ) {}
@@ -22,7 +22,7 @@ class HashtagController extends Controller
      * Search for hashtags.
      *
      * @return \Illuminate\Http\JsonResponse
-     */
+ */
     public function index(GetListHashtagRequest $request): JsonResponse
     {
         $hashtags = $this->hashtagService->search($request->validated());

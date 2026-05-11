@@ -16,7 +16,7 @@ class UnBookmarkPostRequest extends BaseRequest
 
     /**
      * set rules
-     */
+ */
     public function rules(): array
     {
         return $this->applyBaseRules([

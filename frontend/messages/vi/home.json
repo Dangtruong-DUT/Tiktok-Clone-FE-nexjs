@@ -1,0 +1,96 @@
+{
+  "HomePage": {
+    "menu": {
+      "forYou": "Dành cho bạn",
+      "explore": "Khám phá",
+      "following": "Đang theo dõi",
+      "friends": "Bạn bè",
+      "upload": "Tải lên",
+      "activity": "Hoạt động",
+      "messages": "Tin nhắn",
+      "more": "Thêm",
+      "profile": "Hồ sơ"
+    },
+    "unfollowedFeed": {
+      "noContent": "Không có bài viết nào"
+    },
+    "sidebar": {
+      "footer": {
+        "company": "Công ty",
+        "program": "Chương trình",
+        "termsAndPolicies": "Điều khoản & Chính sách",
+        "privacyPolicy": "Chính sách bảo mật",
+        "termsOfService": "Điều khoản dịch vụ",
+        "copyright": "© 2025 Snapi."
+      },
+      "search": {
+        "title": "Tìm kiếm",
+        "placeholder": "Tìm tài khoản và video",
+        "accounts": "Tài khoản",
+        "viewAllResults": "Xem tất cả kết quả cho \"{query}\"",
+        "searchPlaceholder": "Tìm kiếm"
+      },
+      "activity": {
+        "title": "Thông báo",
+        "empty": "Chưa có thông báo nào.",
+        "labels": {
+          "someone": "Ai đó",
+          "system": "Hệ thống",
+          "total": "{count} mục"
+        },
+        "tabs": {
+          "all": "Tất cả hoạt động",
+          "likes": "Lượt thích",
+          "comments": "Bình luận",
+          "mentions": "Nhắc đến và gắn thẻ",
+          "followers": "Người theo dõi"
+        },
+        "sections": {
+          "new": "Mới",
+          "this_week": "Tuần này",
+          "this_month": "Tháng này",
+          "previous": "Trước đó"
+        },
+        "messages": {
+          "like": "{actor} đã thích video của bạn.",
+          "likeComment": "{actor} đã thích bình luận của bạn.",
+          "comment": "{actor} đã bình luận video của bạn.",
+          "mention": "{actor} đã nhắc đến bạn trong bài đăng.",
+          "follow": "{actor} đã bắt đầu theo dõi bạn.",
+          "authLogin": "Bạn đã đăng nhập thành công.",
+          "authRegister": "Tài khoản của bạn đã được tạo thành công.",
+          "adminBan": "{actor} đã giới hạn tài khoản của bạn.",
+          "adminDeletePost": "{actor} đã xóa một bài viết của bạn.",
+          "adminDeleteComment": "{actor} đã xóa một bình luận của bạn.",
+          "appealApproved": "{actor} đã chấp nhận kháng cáo của bạn.",
+          "appealRejected": "{actor} đã từ chối kháng cáo của bạn.",
+          "adminNotice": "{actor} đã gửi thông báo quản trị cho bạn.",
+          "aiNotice": "Kiểm duyệt AI đã cập nhật một nội dung của bạn.",
+          "default": "{actor} đã gửi cho bạn một thông báo."
+        },
+        "actions": {
+          "markAllRead": "Đánh dấu tất cả đã đọc",
+          "loadMore": "Tải thêm",
+          "followBack": "Theo dõi lại",
+          "friends": "Bạn bè"
+        }
+      },
+      "auth": {
+        "login": "Đăng nhập"
+      }
+    },
+    "search": {
+      "noResults": {
+        "title": "Không tìm thấy kết quả",
+        "description": "Hãy thử tìm kiếm với từ khóa khác."
+      },
+      "tabs": {
+        "users": "Người dùng",
+        "videos": "Video"
+      },
+      "userList": {
+        "followers": "{count} Người theo dõi"
+      }
+    }
+  }
+}

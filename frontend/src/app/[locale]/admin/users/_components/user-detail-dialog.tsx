@@ -105,6 +105,18 @@ export function UserDetailDialog({ open, user, onOpenChange }: UserDetailDialogP
                             label={t('users.detail.fields.deletedAt')}
                             value={user.deleted_at ? formatAdminDate(user.deleted_at) : '--'}
                         />
+                        {user.ban_duration_days != null && (
+                            <DetailRow
+                                label='Ban Duration'
+                                value={user.ban_duration_days === 0 ? 'Permanent' : `${user.ban_duration_days} days`}
+                            />
+                        )}
+                        {user.ban_expires_at && (
+                            <DetailRow
+                                label='Ban Expires'
+                                value={formatAdminDate(user.ban_expires_at)}
+                            />
+                        )}
                         <DetailRow
                             label={t('users.detail.fields.banReason')}
                             value={user.ban_reason || '--'}
@@ -136,7 +148,7 @@ function StatCard({ label, value, isLoading }: { label: string; value: string; i
     )
 }
 
-function DetailRow({ label, value, className }: { label: string; value: string; className?: string }) {
+function DetailRow({ label, value, className }: { label: string; value: string | number; className?: string }) {
     return (
         <div className={className}>
             <p className='text-xs uppercase tracking-wide text-muted-foreground'>{label}</p>

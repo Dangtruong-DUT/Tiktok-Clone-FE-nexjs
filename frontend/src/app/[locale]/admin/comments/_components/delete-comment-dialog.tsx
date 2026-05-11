@@ -25,10 +25,6 @@ interface DeleteCommentDialogProps {
     onSuccess?: () => void
 }
 
-/**
- * DeleteCommentDialog - Modal dialog to delete a comment
- * Collects: reason (required)
- */
 export function DeleteCommentDialog({
     open,
     commentUuid,

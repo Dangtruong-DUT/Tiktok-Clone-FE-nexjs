@@ -22,10 +22,6 @@ interface UnbanUserDialogProps {
     onSuccess?: () => void
 }
 
-/**
- * UnbanUserDialog - Modal dialog to unban a user
- * Confirms unban action (simple confirmation only)
- */
 export function UnbanUserDialog({ open, userUuid, username, onOpenChange, onSuccess }: UnbanUserDialogProps) {
     const t = useTranslations('AdminPage')
     const [unbanUser, { isLoading }] = useUnbanUserMutation()

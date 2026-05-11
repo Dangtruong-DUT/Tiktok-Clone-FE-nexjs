@@ -1,16 +1,11 @@
 import { PrivacyVisibility } from '@/constants/enum'
-import { z } from 'zod'
 
-export const UserSettingsSchema = z
-    .object({
-        id: z.number(),
-        liked_videos_visibility: z.nativeEnum(PrivacyVisibility),
-        bookmarked_videos_visibility: z.nativeEnum(PrivacyVisibility),
-        followers_visibility: z.nativeEnum(PrivacyVisibility),
-        following_visibility: z.nativeEnum(PrivacyVisibility),
-        updated_at: z.string(),
-        created_at: z.string()
-    })
-    .strict()
-
-export type UserSettingsType = z.infer<typeof UserSettingsSchema>
+export type UserSettingsType = {
+    readonly id: number
+    readonly liked_videos_visibility: PrivacyVisibility
+    readonly bookmarked_videos_visibility: PrivacyVisibility
+    readonly followers_visibility: PrivacyVisibility
+    readonly following_visibility: PrivacyVisibility
+    readonly updated_at: string
+    readonly created_at: string
+}

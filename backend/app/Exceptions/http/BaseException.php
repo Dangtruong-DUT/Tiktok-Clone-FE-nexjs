@@ -29,7 +29,7 @@ abstract class BaseException extends Exception
 
     /**
      * Get the HTTP status code.
-     */
+ */
     public function getHttpStatusCode(): int
     {
         return $this->httpStatusCode;
@@ -37,7 +37,7 @@ abstract class BaseException extends Exception
 
     /**
      * Get the validation errors.
-     */
+ */
     public function getErrors(): array
     {
         return $this->errors;
@@ -45,7 +45,7 @@ abstract class BaseException extends Exception
 
     /**
      * Report the exception.
-     */
+ */
     public function report(): void
     {
         // Log if needed
@@ -53,7 +53,7 @@ abstract class BaseException extends Exception
 
     /**
      * Render the exception into an HTTP response.
-     */
+ */
     public function render(): JsonResponse
     {
         return response()->json([

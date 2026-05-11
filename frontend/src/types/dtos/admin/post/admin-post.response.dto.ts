@@ -1,32 +1,23 @@
-import { z } from 'zod'
 import type { ApiSuccessResponse } from '@/types/common/http-response.type'
-import { ApiSuccessResponseSchema, ApiSuccessResponseWithMetaSchema } from '@/types/common/http-response.type'
 import type { PaginationMeta } from '@/types/common/pagination-meta.type'
 
-export const AdminPostSchema = z
-    .object({
-        id: z.number().int().positive(),
-        uuid: z.string(),
-        user_id: z.number().int().positive(),
-        user_uuid: z.string().nullable().optional(),
-        author: z
-            .object({
-                id: z.number().int().positive(),
-                uuid: z.string().nullable(),
-                username: z.string(),
-                avatar: z.string().nullable()
-            })
-            .optional(),
-        content: z.string(),
-        created_at: z.string(),
-        deleted_at: z.string().nullable()
-    })
-    .strict()
+type AdminPostAuthor = {
+    readonly id: number
+    readonly uuid?: string | null
+    readonly username: string
+    readonly avatar: string | null
+}
 
-export const GetAdminPostsResSchema = ApiSuccessResponseWithMetaSchema(z.array(AdminPostSchema))
+export type AdminPost = {
+    readonly id: number
+    readonly uuid: string
+    readonly user_id: number
+    readonly user_uuid?: string | null
+    readonly author?: AdminPostAuthor
+    readonly content: string
+    readonly created_at: string
+    readonly deleted_at: string | null
+}
 
-export const DeletePostResSchema = ApiSuccessResponseSchema
-
-export type AdminPost = z.infer<typeof AdminPostSchema>
 export type GetAdminPostsRes = ApiSuccessResponse & { data: AdminPost[]; meta: PaginationMeta }
 export type DeletePostRes = ApiSuccessResponse

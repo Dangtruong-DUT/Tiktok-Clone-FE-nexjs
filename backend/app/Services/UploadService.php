@@ -14,7 +14,7 @@ class UploadService
 
     /**
      * @return array{id: string, url: string, type: string}
-     */
+ */
     public function image(UploadedFile $file)
     {
         $uploadFile = $this->uploadFileService->uploadFile($file, 'images');
@@ -28,7 +28,7 @@ class UploadService
 
     /**
      * @return array{id: string, url: string, type: string}
-     */
+ */
     public function video(UploadedFile $file)
     {
         $uploadFile = $this->uploadFileService->uploadFile($file, 'videos');

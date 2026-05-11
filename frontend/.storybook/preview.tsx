@@ -1,7 +1,16 @@
 import type { Preview } from '@storybook/nextjs-vite'
 import '../src/app/[locale]/globals.css'
 import { NextIntlClientProvider } from 'next-intl'
-import defaultMessages from '../messages/en.json'
+import common from '../messages/en/common.json'
+import auth from '../messages/en/auth.json'
+import home from '../messages/en/home.json'
+import profile from '../messages/en/profile.json'
+import admin from '../messages/en/admin.json'
+import studio from '../messages/en/studio.json'
+import appeal from '../messages/en/appeal.json'
+import legal from '../messages/en/legal.json'
+
+const defaultMessages = Object.assign({}, common, auth, home, profile, admin, studio, appeal, legal)
 
 const preview: Preview = {
     parameters: {

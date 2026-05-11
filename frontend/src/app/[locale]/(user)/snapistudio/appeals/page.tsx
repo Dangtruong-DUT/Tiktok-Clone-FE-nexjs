@@ -14,7 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import AutoPagination from '@/components/auto-pagination'
 import { formatAdminDate } from '@/helpers/admin-helpers'
-import { AlertCircle, Eye, FileText, Search, User, X } from 'lucide-react'
+import { AlertCircle, CheckCircle2, Clock, Eye, FileText, Search, User, X, XCircle } from 'lucide-react'
 import { APPEAL_STATUSES, APPEAL_STATUS_VALUES, type AppealStatus } from '@/constants/appeal.const'
 import type { Appeal, ResourcePreview } from '@/types/models/appeal.model'
 import Image from 'next/image'
@@ -176,16 +176,67 @@ function AppealDetailDialog({ open, appeal, onClose }: { open: boolean; appeal: 
                             <p className='text-sm text-foreground whitespace-pre-wrap'>{appeal.reason || '—'}</p>
                         </div>
 
-                        {/* Admin Response */}
-                        <div className='rounded-lg border p-4 space-y-2'>
-                            <p className='text-xs uppercase tracking-wide text-muted-foreground font-medium'>
-                                {t('detail.fields.response')}
-                            </p>
-                            {appeal.admin_response ? (
-                                <p className='text-sm text-foreground whitespace-pre-wrap'>{appeal.admin_response}</p>
-                            ) : (
-                                <p className='text-sm italic text-muted-foreground'>{t('detail.noResponse')}</p>
-                            )}
+                        {/* Admin Response with status banner */}
+                        {appeal.status === APPEAL_STATUSES.APPROVED && (
+                            <div className='flex items-start gap-3 rounded-lg border border-emerald-200 bg-emerald-50 dark:bg-emerald-950/40 px-4 py-3'>
+                                <CheckCircle2 className='h-5 w-5 text-emerald-600 shrink-0 mt-0.5' />
+                                <div>
+                                    <p className='text-sm font-semibold text-emerald-800 dark:text-emerald-300'>
+                                        {t('statuses.approved')} — Action Reversed
+                                    </p>
+                                    {appeal.admin_response && (
+                                        <p className='text-xs text-emerald-700 dark:text-emerald-400 mt-0.5'>{appeal.admin_response}</p>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                        {appeal.status === APPEAL_STATUSES.REJECTED && (
+                            <div className='flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 dark:bg-red-950/40 px-4 py-3'>
+                                <XCircle className='h-5 w-5 text-red-600 shrink-0 mt-0.5' />
+                                <div>
+                                    <p className='text-sm font-semibold text-red-800 dark:text-red-300'>
+                                        {t('statuses.rejected')}
+                                    </p>
+                                    {appeal.admin_response && (
+                                        <p className='text-xs text-red-700 dark:text-red-400 mt-0.5'>{appeal.admin_response}</p>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                        {appeal.status === APPEAL_STATUSES.PENDING && !appeal.admin_response && (
+                            <div className='flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950/40 px-4 py-3'>
+                                <Clock className='h-5 w-5 text-amber-600 shrink-0 mt-0.5' />
+                                <p className='text-sm text-amber-800 dark:text-amber-300'>{t('detail.noResponse')}</p>
+                            </div>
+                        )}
+
+                        {/* Timeline */}
+                        <div className='space-y-2'>
+                            <p className='text-xs uppercase tracking-wide text-muted-foreground font-medium'>Timeline</p>
+                            <ol className='relative border-l border-border ml-3 space-y-4'>
+                                <li className='pl-5'>
+                                    <span className='absolute -left-1.5 mt-1 h-3 w-3 rounded-full border border-background bg-emerald-500' />
+                                    <p className='text-xs font-medium text-foreground'>Appeal submitted</p>
+                                    <p className='text-xs text-muted-foreground'>{formatAdminDate(appeal.created_at)}</p>
+                                </li>
+                                {appeal.reviewed_at && (
+                                    <li className='pl-5'>
+                                        <span className={`absolute -left-1.5 mt-1 h-3 w-3 rounded-full border border-background ${
+                                            appeal.status === APPEAL_STATUSES.APPROVED ? 'bg-emerald-500' : 'bg-red-500'
+                                        }`} />
+                                        <p className='text-xs font-medium text-foreground'>
+                                            Appeal {appeal.status === APPEAL_STATUSES.APPROVED ? 'approved' : 'rejected'}
+                                        </p>
+                                        <p className='text-xs text-muted-foreground'>{formatAdminDate(appeal.reviewed_at)}</p>
+                                    </li>
+                                )}
+                                {!appeal.reviewed_at && (
+                                    <li className='pl-5 opacity-50'>
+                                        <span className='absolute -left-1.5 mt-1 h-3 w-3 rounded-full border-2 border-muted-foreground bg-background' />
+                                        <p className='text-xs font-medium text-muted-foreground'>Pending review...</p>
+                                    </li>
+                                )}
+                            </ol>
                         </div>
 
                         {/* Evidence */}

@@ -23,7 +23,7 @@ class Media extends Model
      * The attributes that are mass assignable.
      *
      * @var list<string>
-     */
+ */
     protected $fillable = [
         'post_id',
         'type',
@@ -35,7 +35,7 @@ class Media extends Model
      * The accessors to append to model's array form.
      *
      * @var list<string>
-     */
+ */
     protected $appends = [
         'url',
     ];
@@ -58,7 +58,7 @@ class Media extends Model
      * Get the post that owns the media.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo The relationship instance.
-     */
+ */
     public function post()
     {
         return $this->belongsTo(Post::class);
@@ -68,7 +68,7 @@ class Media extends Model
      * Get the upload file associated with the media.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo The relationship instance.
-     */
+ */
     public function file()
     {
         return $this->belongsTo(UploadFile::class, 'upload_file_id');
@@ -78,7 +78,7 @@ class Media extends Model
      * Get the URL of the media.
      *
      * @return \Illuminate\Database\Eloquent\Casts\Attribute The URL attribute instance.
-     */
+ */
     public function url(): Attribute
     {
         return Attribute::make(

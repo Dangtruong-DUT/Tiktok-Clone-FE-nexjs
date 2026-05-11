@@ -22,7 +22,7 @@ class UserAdminController extends Controller
 {
     /**
      * UserAdminController constructor.
-     */
+ */
     public function __construct(
         private readonly UserAdminService $userAdminService,
     ) {}
@@ -31,7 +31,7 @@ class UserAdminController extends Controller
      * Get paginated list of users with filtering and search.
      * @param GetAdminUsersRequest $request
      * @return JsonResponse
-     */
+ */
     public function getUsers(GetAdminUsersRequest $request): JsonResponse
     {
         $users = $this->userAdminService->getUsers($request->validated());
@@ -46,7 +46,7 @@ class UserAdminController extends Controller
      * Ban a user account.
      * @param BanUserRequest $request
      * @return JsonResponse
-     */
+ */
     public function banUser(BanUserRequest $request): JsonResponse
     {
         $user = $this->userAdminService->banUser($request->validated());
@@ -61,7 +61,7 @@ class UserAdminController extends Controller
      * Unban a user account.
      * @param UnbanUserRequest $request
      * @return JsonResponse
-     */
+ */
     public function unbanUser(UnbanUserRequest $request): JsonResponse
     {
         $user = $this->userAdminService->unbanUser($request->validated());
@@ -78,7 +78,7 @@ class UserAdminController extends Controller
       * Permanently deleted users cannot be restored, use with caution.
      * @param DeleteUserRequest $request
      * @return JsonResponse
-     */
+ */
     public function deleteUser(DeleteUserRequest $request): JsonResponse
     {
         $this->userAdminService->deleteUser($request->validated());
@@ -91,7 +91,7 @@ class UserAdminController extends Controller
      * Only soft-deleted users can be restored, permanently deleted users cannot be restored.
       * @param RestoreUserRequest $request
       * @return JsonResponse
-     */
+ */
     public function restoreUser(RestoreUserRequest $request): JsonResponse
     {
         $user = $this->userAdminService->restoreUser($request->validated());
@@ -107,7 +107,7 @@ class UserAdminController extends Controller
      * Admin provides new password directly, no email sent to user.
       * @param ResetUserPasswordRequest $request
       * @return JsonResponse
-     */
+ */
     public function resetUserPassword(ResetUserPasswordRequest $request): JsonResponse
     {
         $this->userAdminService->resetUserPassword($request->validated());
@@ -119,7 +119,7 @@ class UserAdminController extends Controller
      * Send direct email from admin to user.
      * @param SendUserMailRequest $request
      * @return JsonResponse
-     */
+ */
     public function sendUserMail(SendUserMailRequest $request): JsonResponse
     {
         $this->userAdminService->sendMailToUser($request->validated());

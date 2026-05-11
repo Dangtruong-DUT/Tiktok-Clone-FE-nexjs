@@ -8,7 +8,7 @@ class ForbiddenException extends BaseException
 {
     /**
      * Create a new Forbidden exception instance.
-     */
+ */
     public function __construct(string $message = 'Forbidden access', array $errors = [])
     {
         parent::__construct(

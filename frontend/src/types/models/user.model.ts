@@ -1,28 +1,26 @@
 import { Role, UserVerifyStatus } from '@/constants/enum'
-import { z } from 'zod'
 
-export const UserSchema = z
-    .object({
-        id: z.number(),
-        uuid: z.string(),
-        name: z.string(),
-        email: z.string(),
-        date_of_birth: z.string(),
-        updated_at: z.string(),
-        created_at: z.string(),
-        verify: z.nativeEnum(UserVerifyStatus),
-        bio: z.string(),
-        location: z.string(),
-        website: z.string(),
-        username: z.string(),
-        avatar: z.string(),
-        following_count: z.number(),
-        followers_count: z.number(),
-        likes_count: z.number(),
-        is_followed: z.boolean(),
-        is_owner: z.boolean().optional(),
-        role: z.nativeEnum(Role)
-    })
-    .strict()
+export type UserType = {
+    readonly id: number
+    readonly uuid: string
+    readonly name: string
+    readonly email: string
+    readonly date_of_birth: string
+    readonly updated_at: string
+    readonly created_at: string
+    readonly verify: UserVerifyStatus
+    readonly bio: string
+    readonly location: string
+    readonly website: string
+    readonly username: string
+    readonly avatar: string
+    readonly following_count: number
+    readonly followers_count: number
+    readonly likes_count: number
+    readonly is_followed: boolean
+    readonly is_owner?: boolean
+    readonly role: Role
+}
 
-export type UserType = z.infer<typeof UserSchema>
+/** @deprecated use UserType */
+export type UserSchema = UserType

@@ -20,7 +20,7 @@ class GetPostsOfUserRequest extends BaseListRequest
 
     /**
      * set rules
-     */
+ */
     public function rules(): array
     {
 

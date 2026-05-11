@@ -8,7 +8,7 @@ class RegisterRequest extends BaseRequest
 {
     /**
      * set rules
-     */
+ */
     public function rules(): array
     {
 

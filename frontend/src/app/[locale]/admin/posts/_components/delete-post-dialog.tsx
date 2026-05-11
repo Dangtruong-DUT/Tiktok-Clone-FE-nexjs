@@ -26,10 +26,6 @@ interface DeletePostDialogProps {
     onSuccess?: () => void
 }
 
-/**
- * DeletePostDialog - Modal dialog to delete a post permanently
- * Collects: preset reason + optional custom reason
- */
 export function DeletePostDialog({ open, postUuid, authorUsername, onOpenChange, onSuccess }: DeletePostDialogProps) {
     const t = useTranslations('AdminPage')
     const [deletePost, { isLoading }] = useDeletePostMutation()

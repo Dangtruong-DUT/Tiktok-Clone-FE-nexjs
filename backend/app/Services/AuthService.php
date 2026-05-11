@@ -23,7 +23,7 @@ class AuthService
 
     /**
      * AuthService constructor.
-     */
+ */
     public function __construct(
         private readonly UserRepository $userRepo,
         private readonly RefreshTokenRepository $refreshRepo,
@@ -35,7 +35,7 @@ class AuthService
 
     /**
      * Attempt to log the user in and return the access token and refresh token.
-     */
+ */
     public function login(array $credentials): array
     {
         if (! $this->guard()->attempt($credentials)) {
@@ -56,7 +56,7 @@ class AuthService
 
     /**
      * Log the user out by invalidating the refresh token.
-     */
+ */
     public function logout(string $refreshToken): bool
     {
         $token = $this->tokenService->verifyRefreshToken($refreshToken);
@@ -68,7 +68,7 @@ class AuthService
 
     /**
      * Log the user out from all devices by invalidating all refresh tokens.
-     */
+ */
     public function logoutAll(string $refreshToken): bool
     {
         $this->tokenService->verifyRefreshToken($refreshToken);
@@ -81,7 +81,7 @@ class AuthService
 
     /**
      * Refresh the access token using the refresh token.
-     */
+ */
     public function refresh(string $refreshToken): array
     {
         $token = $this->tokenService->verifyRefreshToken($refreshToken);
@@ -100,7 +100,7 @@ class AuthService
 
     /**
      * Register for new User
-     */
+ */
     public function register(array $data): array
     {
         $isExist = $this->userRepo->checkExistByEmail($data['email']);
@@ -134,11 +134,9 @@ class AuthService
 
     /**
      * Handle verify email request by verifying the token and activating the user's account.
-     *
      * @param  array  $credentials
-     *                - email_verify_token: The token sent to the user's email for verification.
      * @return array
-     */
+ */
     public function verifyEmail(array $credentials): array
     {
         $token = $credentials['email_verify_token'];
@@ -159,12 +157,11 @@ class AuthService
         ];
         });
 
-
     }
 
     /**
      * Resend the verification email to the user if their email is not verified.
-     */
+ */
     public function resendVerifyEmail(): bool
     {
         $user = $this->guard()->user();
@@ -182,7 +179,7 @@ class AuthService
 
     /**
      * Get the authenticated user's profile.
-     */
+ */
     public function me(): ?User
     {
         return $this->guard()->user();
@@ -190,7 +187,7 @@ class AuthService
 
     /**
      * Handle forgot password request by sending a reset link to the user's email.
-     */
+ */
     public function forgot(string $email): bool
     {
         $user = $this->userRepo->findByEmail($email);
@@ -210,11 +207,8 @@ class AuthService
     }
 
     /**
-     * Handle verify forgot password token request by verifying the token and allowing the user to reset the password.
-     *
      * @param  array  $credentials
-     *                              - forgot_password_token: The token sent to the user's email for password reset verification.
-     */
+ */
     public function verifyForgotPasswordToken(array $credentials): bool
     {
         $token = $credentials['forgot_password_token'];
@@ -225,7 +219,7 @@ class AuthService
 
     /**
      * Handle reset password request by resetting the user's password.
-     */
+ */
     public function resetPassword(array $credentials): bool
     {
         $validToken = $this->tokenService->verifyForgotPasswordToken($credentials['forgot_password_token']);

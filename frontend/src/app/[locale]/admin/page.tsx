@@ -10,13 +10,6 @@ export const metadata: Metadata = {
     description: 'Admin panel for system management'
 }
 
-/**
- * AdminDashboardPage - Main admin dashboard
- * Displays:
- * - Dashboard statistics
- * - Recent activity log
- * - Quick overview of system state
- */
 export default async function AdminDashboardPage() {
     const t = await getTranslations('AdminPage')
 

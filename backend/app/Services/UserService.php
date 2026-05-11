@@ -26,12 +26,8 @@ class UserService
 
     /**
      * Search users by keyword.
-     *
      * @param  array  $payload
-     *                          - keyword: the keyword to search for (name, username)
-     *                          - role: filter by role
-     *                          - verify_status: filter by verify status
-     */
+ */
     public function search(array $payload): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
@@ -41,9 +37,8 @@ class UserService
 
     /**
      * Change the password of the authenticated user.
-     *
      * @throws BusinessException
-     */
+ */
     public function changePassword(array $payload): bool
     {
         /** @var User $authUser */
@@ -62,13 +57,10 @@ class UserService
 
     /**
      * Follow someone
-     *
      * @param  array  $payload
-     *                          - user_uuid: the uuid of the user to follow
-     *
      * @throws BadRequestException
      * @throws BusinessException
-     */
+ */
     public function follow(array $payload): bool
     {
         $targetUserUuid = $payload['user_uuid'];
@@ -105,10 +97,8 @@ class UserService
 
     /**
      * Unfollow someone
-     *
      * @param  array  $payload
-     *                          - user_uuid: the uuid of the user to unfollow
-     */
+ */
     public function unfollow(array $payload): bool
     {
         $targetUserUuid = $payload['user_uuid'];
@@ -129,7 +119,7 @@ class UserService
 
     /**
      * Update the profile of the authenticated user.
-     */
+ */
     public function update(array $payload): User
     {
         $authUser = $this->guard()->user();
@@ -164,7 +154,7 @@ class UserService
 
     /**
      * Get the authenticated user.
-     */
+ */
     public function me(): User
     {
         return $this->getByUsername($this->guard()->user()->username);
@@ -172,7 +162,7 @@ class UserService
 
     /**
      * Get user profile by username.
-     */
+ */
     public function getByUsername(string $username): User
     {
         $authUserId = auth_user_id();
@@ -182,7 +172,7 @@ class UserService
 
     /**
      * Get paginated followers of target user.
-     */
+ */
     public function getFollowers(string $userUuid, array $filters): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
@@ -193,7 +183,7 @@ class UserService
 
     /**
      * Get paginated following users of target user.
-     */
+ */
     public function getFollowing(string $userUuid, array $filters): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
@@ -204,7 +194,7 @@ class UserService
 
     /**
      * Get paginated mutual friends of target user.
-     */
+ */
     public function getFriends(string $userUuid, array $filters): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
@@ -215,7 +205,7 @@ class UserService
 
     /**
      * Get paginated suggested users for authenticated user.
-     */
+ */
     public function getSuggestedUsers(array $filters): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
@@ -225,9 +215,8 @@ class UserService
 
     /**
      * Get indicators of authenticated user in date range.
-     *
      * @return array<string, mixed>
-     */
+ */
     public function getIndicators(array $payload): array
     {
         $authUserId = auth_user_id();

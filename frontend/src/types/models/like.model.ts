@@ -1,12 +1,6 @@
-import { z } from 'zod'
-
-export const LikeSchema = z
-    .object({
-        id: z.string(),
-        user_id: z.string(),
-        post_id: z.string(),
-        created_at: z.string()
-    })
-    .strict()
-
-export type LikesType = z.infer<typeof LikeSchema>
+export type LikesType = {
+    readonly id: string
+    readonly user_id: string
+    readonly post_id: string
+    readonly created_at: string
+}

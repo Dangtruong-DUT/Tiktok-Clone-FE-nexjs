@@ -56,7 +56,7 @@ class AppealResource extends BaseJsonResource
      * Resolve a lightweight preview of the appeal resource (post, comment, or user).
      * Uses withTrashed for post/comment since the resource may have been deleted.
      * Returns null when the resource cannot be found or type is unsupported.
-     */
+ */
     private function resolveResourcePreview(): ?array
     {
         if (! $this->resource_id) {

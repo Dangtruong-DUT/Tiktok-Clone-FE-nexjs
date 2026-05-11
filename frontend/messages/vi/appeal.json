@@ -1,0 +1,86 @@
+{
+  "AppealPage": {
+    "meta": {
+      "title": "Gửi kháng cáo",
+      "description": "Gửi kháng cáo cho một hành động kiểm duyệt trên tài khoản hoặc nội dung của bạn."
+    },
+    "title": "Gửi kháng cáo",
+    "description": "Cung cấp lý do và bằng chứng để được xem xét.",
+    "auth": {
+      "loginRequired": "Yêu cầu đăng nhập",
+      "loginDescription": "Bạn cần đăng nhập để gửi kháng cáo. Vui lòng đăng nhập để tiếp tục.",
+      "loginAction": "Đăng nhập"
+    },
+    "error": {
+      "missingTitle": "Thiếu thông tin",
+      "missingDescription": "Trang này yêu cầu thông tin kháng cáo (loại kháng cáo và tài nguyên). Vui lòng sử dụng đường dẫn từ thông báo hoặc email.",
+      "invalidTitle": "Lỗi",
+      "invalidGeneric": "Đã xảy ra lỗi khi tải kháng cáo. Vui lòng thử lại.",
+      "loading": "Đang tải thông tin kháng cáo..."
+    },
+    "form": {
+      "appealType": "Loại kháng cáo",
+      "resourceType": "Tài nguyên",
+      "status": "Trạng thái",
+      "reasonLabel": "Lý do của bạn",
+      "reasonPlaceholder": "Giải thích vì sao bạn cho rằng quyết định kiểm duyệt này cần được xem xét lại. Cung cấp càng nhiều chi tiết càng tốt (tối thiểu 20 ký tự).",
+      "reasonHint": "Tối thiểu 20 ký tự",
+      "reasonMinError": "Lý do phải có ít nhất 20 ký tự.",
+      "evidenceLabel": "Bằng chứng hỗ trợ",
+      "evidenceHint": "Tải lên hình ảnh hỗ trợ kháng cáo (không bắt buộc, tối đa 5 tệp).",
+      "submit": "Gửi kháng cáo",
+      "submitting": "Đang gửi...",
+      "submitError": "Không thể gửi kháng cáo. Vui lòng thử lại."
+    },
+    "types": {
+      "user_ban": "Khóa tài khoản",
+      "user_deleted": "Xóa tài khoản",
+      "post_deleted": "Xóa bài viết",
+      "comment_deleted": "Xóa bình luận"
+    },
+    "statuses": {
+      "pending": "Đang chờ xem xét",
+      "approved": "Đã phê duyệt",
+      "rejected": "Đã từ chối"
+    },
+    "evidence": {
+      "dropzoneLabel": "Tải lên ảnh minh chứng",
+      "dragAndDrop": "Kéo thả ảnh vào đây, hoặc nhấn để chọn",
+      "dropHere": "Thả ảnh vào đây",
+      "fileInfo": "Tối đa {maxFiles} tệp, mỗi tệp {maxSizeMb}MB • JPG, PNG, WebP",
+      "invalidType": "Chỉ chấp nhận tệp ảnh (JPG, PNG, WebP, GIF).",
+      "tooLarge": "Tệp vượt quá kích thước tối đa {maxSizeMb}MB.",
+      "removeFile": "Xóa tệp",
+      "fileCount": "Đã tải {current} trên {max} tệp"
+    },
+    "success": {
+      "title": "Đã gửi kháng cáo!",
+      "description": "Kháng cáo của bạn đã được gửi thành công. Đội kiểm duyệt sẽ xem xét và thông báo kết quả cho bạn.",
+      "notice": "Bạn sẽ nhận được email thông báo khi có quyết định."
+    },
+    "pending": {
+      "title": "Đã Có Kháng Cáo Đang Chờ",
+      "description": "Bạn đã có một kháng cáo đang chờ xét duyệt cho vấn đề này. Vui lòng đợi kết quả trước khi gửi kháng cáo mới.",
+      "viewAppeal": "Xem Kháng Cáo Của Tôi"
+    }
+  },
+  "BannedPage": {
+    "title": "Tài khoản đã bị khóa",
+    "description": "Tài khoản này đã bị tạm khóa do vi phạm chính sách.",
+    "lockWithDays": "Tài khoản của bạn còn bị khóa trong {days} ngày nữa.",
+    "lockWithoutDays": "Tài khoản của bạn hiện đang bị khóa.",
+    "appealAction": "Gửi kháng cáo",
+    "backHome": "Về trang chủ",
+    "statusBadge": "Tài khoản bị hạn chế",
+    "statusSummary": "Trạng thái hiện tại",
+    "banUntil": "Ngày xem xét: {date}",
+    "nextStepsTitle": "Chuyện gì sẽ diễn ra tiếp theo?",
+    "nextStepOne": "Đội ngũ của chúng tôi sẽ xem xét thông tin của bạn. Hãy quay lại trang này để cập nhật.",
+    "nextStepTwo": "Nếu tài khoản tuân thủ tiêu chuẩn, quyền truy cập sẽ được khôi phục.",
+    "nextStepThree": "Nếu quyết định được giữ nguyên, hạn chế có thể tiếp tục áp dụng.",
+    "appealCardTitle": "Cần xem xét lại?",
+    "appealCardBody": "Gửi kháng cáo ngắn gọn kèm bằng chứng để chúng tôi xử lý nhanh hơn.",
+    "headerHelp": "Trợ giúp",
+    "logoutAction": "Đăng xuất"
+  }
+}

@@ -1,19 +1,14 @@
-import { z } from 'zod'
-import { AppealSchema } from '@/types/models/appeal.model'
+import type { Appeal } from '@/types/models/appeal.model'
 
-const AppealUserSummarySchema = z
-    .object({
-        id: z.number().int().positive(),
-        uuid: z.string(),
-        username: z.string(),
-        email: z.string().email().nullable().optional(),
-        avatar: z.string().nullable().optional()
-    })
-    .strict()
+type AppealUserSummary = {
+    readonly id: number
+    readonly uuid: string
+    readonly username: string
+    readonly email?: string | null
+    readonly avatar?: string | null
+}
 
-export const AdminAppealSchema = AppealSchema.extend({
-    user: AppealUserSummarySchema.nullable().optional(),
-    reviewer: AppealUserSummarySchema.nullable().optional()
-}).strict()
-
-export type AdminAppeal = z.infer<typeof AdminAppealSchema>
+export type AdminAppeal = Appeal & {
+    readonly user?: AppealUserSummary | null
+    readonly reviewer?: AppealUserSummary | null
+}

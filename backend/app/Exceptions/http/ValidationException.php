@@ -8,7 +8,7 @@ class ValidationException extends BaseException
 {
     /**
      * Create a new validation exception instance.
-     */
+ */
     public function __construct(string $message = 'Validation failed', protected array $errors = [])
     {
         parent::__construct(

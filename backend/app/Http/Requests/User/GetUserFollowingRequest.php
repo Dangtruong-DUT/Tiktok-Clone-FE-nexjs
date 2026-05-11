@@ -18,7 +18,7 @@ class GetUserFollowingRequest extends BaseListRequest
 
     /**
      * Determine if the user is authorized to make this request.
-     */
+ */
     public function authorize(): bool
     {
         return Gate::allows('viewFollowings', $this->getTargetUser());
@@ -26,7 +26,7 @@ class GetUserFollowingRequest extends BaseListRequest
 
     /**
      * set rules
-     */
+ */
     public function rules(): array
     {
         return $this->applyBaseRules([
@@ -50,7 +50,7 @@ class GetUserFollowingRequest extends BaseListRequest
 
     /**
      * Get the target user based on the route parameter.
-     */
+ */
     private function getTargetUser(): User
     {
         return User::where('uuid', $this->route('user_uuid'))->firstOrFail();

@@ -20,11 +20,8 @@ class NotificationService
 
     /**
      * Get current user notifications by tab with pagination.
-     *
      * @param  array<string, mixed>  $filters
-     *                                         - 'tab' (string): Filter notifications by tab'likes', 'comments', 'mentions', 'followers'.
-     *                                         - 'per_page' (int): Number of notifications per page.
-     */
+ */
     public function getNotifications(array $filters): LengthAwarePaginator
     {
         return $this->notificationRepository->getByNotifiableId(
@@ -36,7 +33,7 @@ class NotificationService
 
     /**
      * Get unread notification count for current user.
-     */
+ */
     public function getUnreadCount(string $tab): int
     {
         return $this->notificationRepository->countUnreadByNotifiableId(auth_user_id(), $tab);
@@ -44,9 +41,8 @@ class NotificationService
 
     /**
      * Mark one notification as read by UUID for current user.
-     *
      * @throws NotFoundException
-     */
+ */
     public function markAsRead(string $notificationUuid): void
     {
         $notification = $this->notificationRepository->findByUuidAndNotifiableId($notificationUuid, auth_user_id());
@@ -61,7 +57,7 @@ class NotificationService
 
     /**
      * Mark all unread notifications as read for current user.
-     */
+ */
     public function markAllAsRead(string $tab): int
     {
         return $this->notificationRepository->markAllAsReadByNotifiableId(auth_user_id(), $tab);
@@ -69,10 +65,9 @@ class NotificationService
 
     /**
      * Notify target user that someone followed them.
-     *
      * @param  int  $actorId  The ID of the user who performed the follow action.
      * @param  int  $notifiableId  The ID of the user to be notified.
-     */
+ */
     public function notifyFollow(int $actorId, int $notifiableId): void
     {
         if ($actorId === $notifiableId) {
@@ -91,10 +86,9 @@ class NotificationService
 
     /**
      * Notify post owner that their post was liked.
-     *
      * @param  int  $actorId  The ID of the user who performed the like action.
      * @param  Post  $post  The post that was liked.
-     */
+ */
     public function notifyLike(int $actorId, Post $post): void
     {
         $videoPost = $post->getRoot();
@@ -127,7 +121,7 @@ class NotificationService
 
     /**
      * Notify post owner that someone commented on their post.
-     */
+ */
     public function notifyComment(int $actorId, Post $targetPost, Post $commentPost): void
     {
         $videoPost = $targetPost->getRoot();
@@ -152,9 +146,8 @@ class NotificationService
 
     /**
      * Notify mentioned users in post/comment content.
-     *
      * @param  array<int, int>  $mentionedUserIds
-     */
+ */
     public function notifyMention(int $actorId, Post $post, array $mentionedUserIds): void
     {
         $videoPost = $post->getRoot();
@@ -182,10 +175,9 @@ class NotificationService
 
     /**
      * Notify current user for authentication-related events.
-     *
      * @param  int  $userId  The ID of the user to be notified.
      * @param  string  $eventName  The name of the authentication event (e.g., 'login', 'logout', 'password_change').
-     */
+ */
     public function notifyAuthEvent(int $userId, string $eventName): void
     {
         $this->notificationRepository->create([
@@ -202,9 +194,8 @@ class NotificationService
 
     /**
      * Notify user about admin moderation actions.
-     *
      * @param  array<string,mixed>|null  $data
-     */
+ */
     public function notifyAdminModerationAction(
         int $adminId,
         int $notifiableUserId,

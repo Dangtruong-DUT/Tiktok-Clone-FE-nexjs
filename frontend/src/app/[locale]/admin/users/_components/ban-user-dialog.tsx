@@ -25,10 +25,6 @@ interface BanUserDialogProps {
     onSuccess?: () => void
 }
 
-/**
- * BanUserDialog - Modal dialog to ban a user
- * Collects: reason (required) and optional ban duration
- */
 export function BanUserDialog({ open, userUuid, username, onOpenChange, onSuccess }: BanUserDialogProps) {
     const t = useTranslations('AdminPage')
     const [banUser, { isLoading }] = useBanUserMutation()

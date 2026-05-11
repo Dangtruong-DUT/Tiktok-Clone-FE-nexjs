@@ -10,14 +10,6 @@ export const metadata: Metadata = {
     description: 'Manage users in the system'
 }
 
-/**
- * AdminUsersPage - User management page
- * Features:
- * - View all users
- * - Search and filter users
- * - Ban/Unban users
- * - Delete users
- */
 export default async function AdminUsersPage() {
     const t = await getTranslations('AdminPage')
 

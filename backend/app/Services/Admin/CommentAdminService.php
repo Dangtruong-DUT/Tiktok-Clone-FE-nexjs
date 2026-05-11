@@ -24,8 +24,6 @@ class CommentAdminService
 
     /**
      * Get paginated list of comments with filtering
-     * Note: Comments are stored in posts table with type='comment'
-     *
      * @param  array  $filters  {
      *                          q?: string,
      *                          post_uuid?: string,
@@ -36,7 +34,7 @@ class CommentAdminService
      *                          per_page?: int,
      *                          order_by?: string
      *                          }
-     */
+ */
     public function getComments(array $filters = []): LengthAwarePaginator
     {
         return $this->postRepository->searchCommentsForAdmin($filters);
@@ -44,11 +42,9 @@ class CommentAdminService
 
     /**
      * Delete a comment.
-     *
      * @param  array{comment_uuid:string,reason:string}  $payload
-     *
      * @throws \Exception
-     */
+ */
     public function deleteComment(array $payload): void
     {
         $admin = $this->guard()->user();

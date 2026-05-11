@@ -14,7 +14,7 @@ class AiModerationReport extends Model
 
     /**
      * @var list<string>
-     */
+ */
     protected $fillable = [
         'task_id',
         'user_id',
@@ -33,7 +33,7 @@ class AiModerationReport extends Model
 
     /**
      * @return array<string, string>
-     */
+ */
     protected function casts(): array
     {
         return [

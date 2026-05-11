@@ -9,7 +9,7 @@ class CreateDefaultUserSettingsObserver
 {
     /**
      * Handle the Model "created" event.
-     */
+ */
     public function created(User $model): void
     {
         if (! $model->settings) {

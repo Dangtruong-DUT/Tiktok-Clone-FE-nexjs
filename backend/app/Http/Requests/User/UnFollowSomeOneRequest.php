@@ -16,7 +16,7 @@ class UnFollowSomeOneRequest extends BaseRequest
 
     /**
      * set rules
-     */
+ */
     public function rules(): array
     {
 

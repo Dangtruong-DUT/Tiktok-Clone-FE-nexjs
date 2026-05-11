@@ -10,14 +10,6 @@ export const metadata: Metadata = {
     description: 'Moderate and manage comments'
 }
 
-/**
- * AdminCommentsPage - Comment moderation page
- * Features:
- * - View all comments
- * - Search comments by content or author
- * - Delete comments
- * - View parent post context
- */
 export default async function AdminCommentsPage() {
     const t = await getTranslations('AdminPage')
 

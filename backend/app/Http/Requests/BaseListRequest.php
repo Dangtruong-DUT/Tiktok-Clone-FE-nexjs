@@ -8,7 +8,7 @@ abstract class BaseListRequest extends BaseRequest
 {
     /**
      * @var array casts
-     */
+ */
     protected array $casts = [
         'limit' => 'integer',
         'offset' => 'integer',
@@ -18,7 +18,7 @@ abstract class BaseListRequest extends BaseRequest
 
     /**
      * set common rules
-     */
+ */
     protected function defineBaseRules(): void
     {
         parent::defineBaseRules();
@@ -46,7 +46,7 @@ abstract class BaseListRequest extends BaseRequest
      * prepare for validation: remove null values
      *
      * @return void
-     */
+ */
     protected function prepareForValidation()
     {
         parent::prepareForValidation();
@@ -61,7 +61,7 @@ abstract class BaseListRequest extends BaseRequest
 
     /**
      * validation data
-     */
+ */
     public function validationData(): array
     {
         $validationData = parent::validationData();
@@ -83,7 +83,7 @@ abstract class BaseListRequest extends BaseRequest
 
     /**
      * cast column and direction column in database field
-     */
+ */
     private function castValueOfOrderBy(array $orderBy): array
     {
         return array_map(function ($item) {

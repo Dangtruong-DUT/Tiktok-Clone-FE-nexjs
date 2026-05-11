@@ -11,9 +11,10 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Search, X } from 'lucide-react'
+import { Search, X, Trash2, ShieldOff, ShieldCheck, MoreHorizontal } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import AutoPagination from '@/components/auto-pagination'
@@ -38,15 +39,6 @@ interface UserTableProps {
     onUserDeleted?: () => void
 }
 
-/**
- * UserTable - Displays paginated list of users with filtering and actions
- * Features:
- * - Search by username/email
- * - Filter by status (all, banned, active)
- * - Pagination with per-page selector
- * - Actions: Ban, Unban, Delete
- * - Loading skeleton
- */
 export function UserTable({ onUserDeleted }: UserTableProps) {
     const t = useTranslations('AdminPage')
 
@@ -130,6 +122,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
     }
 
     return (
+        <TooltipProvider>
         <div className='space-y-4'>
             {/* Header - Search and Filters */}
             <div className='flex flex-col gap-3 md:flex-row md:items-center md:justify-between'>
@@ -232,88 +225,103 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                                         </TableCell>
                                         <TableCell className='text-sm'>{formatAdminDate(user.created_at)}</TableCell>
                                         <TableCell className='text-right'>
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <Button variant='ghost' size='sm' disabled={isFetching}>
-                                                        ...
-                                                    </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent align='end' className='w-48'>
-                                                    <DropdownMenuItem
-                                                        onClick={() => openDialog(user, 'detail')}
-                                                        className='cursor-pointer'
-                                                    >
-                                                        {t('users.actions.viewDetails')}
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuSeparator />
-                                                    {status === 'deleted' ? (
+                                            <div className='flex items-center justify-end gap-1'>
+                                                {status === 'deleted' ? (
+                                                    <Tooltip>
+                                                        <TooltipTrigger asChild>
+                                                            <Button
+                                                                variant='ghost'
+                                                                size='icon'
+                                                                className='h-8 w-8 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50'
+                                                                onClick={() => openDialog(user, 'restore')}
+                                                                disabled={isFetching}
+                                                            >
+                                                                <ShieldCheck className='h-4 w-4' />
+                                                            </Button>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>{t('users.actions.restore')}</TooltipContent>
+                                                    </Tooltip>
+                                                ) : status === 'banned' ? (
+                                                    <Tooltip>
+                                                        <TooltipTrigger asChild>
+                                                            <Button
+                                                                variant='ghost'
+                                                                size='icon'
+                                                                className='h-8 w-8 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50'
+                                                                onClick={() => openDialog(user, 'unban')}
+                                                                disabled={isFetching}
+                                                            >
+                                                                <ShieldCheck className='h-4 w-4' />
+                                                            </Button>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>{t('users.actions.unban')}</TooltipContent>
+                                                    </Tooltip>
+                                                ) : (
+                                                    <Tooltip>
+                                                        <TooltipTrigger asChild>
+                                                            <Button
+                                                                variant='ghost'
+                                                                size='icon'
+                                                                className='h-8 w-8 text-orange-500 hover:text-orange-600 hover:bg-orange-50'
+                                                                onClick={() => openDialog(user, 'ban')}
+                                                                disabled={isFetching}
+                                                            >
+                                                                <ShieldOff className='h-4 w-4' />
+                                                            </Button>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>{t('users.actions.ban')}</TooltipContent>
+                                                    </Tooltip>
+                                                )}
+                                                {status !== 'deleted' && (
+                                                    <Tooltip>
+                                                        <TooltipTrigger asChild>
+                                                            <Button
+                                                                variant='ghost'
+                                                                size='icon'
+                                                                className='h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10'
+                                                                onClick={() => openDialog(user, 'delete')}
+                                                                disabled={isFetching}
+                                                            >
+                                                                <Trash2 className='h-4 w-4' />
+                                                            </Button>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>{t('users.actions.delete')}</TooltipContent>
+                                                    </Tooltip>
+                                                )}
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger asChild>
+                                                        <Button
+                                                            variant='ghost'
+                                                            size='icon'
+                                                            className='h-8 w-8'
+                                                            disabled={isFetching}
+                                                        >
+                                                            <MoreHorizontal className='h-4 w-4' />
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent align='end' className='w-48'>
                                                         <DropdownMenuItem
-                                                            onClick={() => openDialog(user, 'restore')}
+                                                            onClick={() => openDialog(user, 'detail')}
                                                             className='cursor-pointer'
                                                         >
-                                                            {t('users.actions.restore')}
+                                                            {t('users.actions.viewDetails')}
                                                         </DropdownMenuItem>
-                                                    ) : status === 'banned' ? (
-                                                        <>
-                                                            <DropdownMenuItem
-                                                                onClick={() => openDialog(user, 'reset-password')}
-                                                                className='cursor-pointer'
-                                                            >
-                                                                {t('users.actions.resetPassword')}
-                                                            </DropdownMenuItem>
-                                                            <DropdownMenuItem
-                                                                onClick={() => openDialog(user, 'send-mail')}
-                                                                className='cursor-pointer'
-                                                            >
-                                                                {t('users.actions.sendEmail')}
-                                                            </DropdownMenuItem>
-                                                            <DropdownMenuSeparator />
-                                                            <DropdownMenuItem
-                                                                onClick={() => openDialog(user, 'unban')}
-                                                                className='cursor-pointer'
-                                                            >
-                                                                {t('users.actions.unban')}
-                                                            </DropdownMenuItem>
-                                                            <DropdownMenuSeparator />
-                                                            <DropdownMenuItem
-                                                                onClick={() => openDialog(user, 'delete')}
-                                                                className='text-red-600 cursor-pointer'
-                                                            >
-                                                                {t('users.actions.delete')}
-                                                            </DropdownMenuItem>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <DropdownMenuItem
-                                                                onClick={() => openDialog(user, 'reset-password')}
-                                                                className='cursor-pointer'
-                                                            >
-                                                                {t('users.actions.resetPassword')}
-                                                            </DropdownMenuItem>
-                                                            <DropdownMenuItem
-                                                                onClick={() => openDialog(user, 'send-mail')}
-                                                                className='cursor-pointer'
-                                                            >
-                                                                {t('users.actions.sendEmail')}
-                                                            </DropdownMenuItem>
-                                                            <DropdownMenuSeparator />
-                                                            <DropdownMenuItem
-                                                                onClick={() => openDialog(user, 'ban')}
-                                                                className='text-orange-600 cursor-pointer'
-                                                            >
-                                                                {t('users.actions.ban')}
-                                                            </DropdownMenuItem>
-                                                            <DropdownMenuSeparator />
-                                                            <DropdownMenuItem
-                                                                onClick={() => openDialog(user, 'delete')}
-                                                                className='text-red-600 cursor-pointer'
-                                                            >
-                                                                {t('users.actions.delete')}
-                                                            </DropdownMenuItem>
-                                                        </>
-                                                    )}
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
+                                                        <DropdownMenuSeparator />
+                                                        <DropdownMenuItem
+                                                            onClick={() => openDialog(user, 'reset-password')}
+                                                            className='cursor-pointer'
+                                                        >
+                                                            {t('users.actions.resetPassword')}
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem
+                                                            onClick={() => openDialog(user, 'send-mail')}
+                                                            className='cursor-pointer'
+                                                        >
+                                                            {t('users.actions.sendEmail')}
+                                                        </DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </div>
                                         </TableCell>
                                     </TableRow>
                                 )
@@ -416,5 +424,6 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                 </>
             )}
         </div>
+        </TooltipProvider>
     )
 }

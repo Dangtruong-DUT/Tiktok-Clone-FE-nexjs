@@ -8,7 +8,7 @@ class UploadFileRepository extends BaseRepository
 {
     /**
      * UploadFileRepository constructor.
-     */
+ */
     public function __construct()
     {
         $modelInstance = app()->make(UploadFile::class);
@@ -17,7 +17,7 @@ class UploadFileRepository extends BaseRepository
 
     /**
      * Check if upload file exists
-     */
+ */
     public function isExist(int $id): bool
     {
         return $this->query()->where('id', $id)->exists();
@@ -25,7 +25,7 @@ class UploadFileRepository extends BaseRepository
 
     /**
      * Check if upload file exists by uuid
-     */
+ */
     public function isExistByUuid(string $uuid): bool
     {
         return $this->query()->where('uuid', $uuid)->exists();
@@ -33,7 +33,7 @@ class UploadFileRepository extends BaseRepository
 
     /**
      * Find a upload file by uuid
-     */
+ */
     public function findByUuid(string $uuid): ?UploadFile
     {
         // @phpstan-ignore return.type

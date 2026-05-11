@@ -23,14 +23,14 @@ class AdminLog extends Model
      * The table associated with the model.
      *
      * @var string
-     */
+ */
     protected $table = 'admin_logs';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
-     */
+ */
     protected $fillable = [
         'admin_id',
         'resource_type',
@@ -47,7 +47,7 @@ class AdminLog extends Model
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
-     */
+ */
     protected function casts(): array
     {
         return [
@@ -62,7 +62,7 @@ class AdminLog extends Model
 
     /**
      * Get the admin who performed the action
-     */
+ */
     public function admin(): BelongsTo
     {
         return $this->belongsTo(User::class, 'admin_id');
@@ -72,7 +72,7 @@ class AdminLog extends Model
      * Scope: Filter logs by admin ID
      *
      * @return \Illuminate\Database\Eloquent\Builder
-     */
+ */
     #[Scope]
     public function byAdmin(Builder $query, int $adminId)
     {
@@ -83,7 +83,7 @@ class AdminLog extends Model
      * Scope: Filter logs by resource type
      *
      * @return \Illuminate\Database\Eloquent\Builder
-     */
+ */
     #[Scope]
     public function byResourceType(Builder $query, ResourceTypeEnum $resourceType)
     {
@@ -94,7 +94,7 @@ class AdminLog extends Model
      * Scope: Filter logs by action
      *
      * @return \Illuminate\Database\Eloquent\Builder
-     */
+ */
     #[Scope]
     public function byAction(Builder $query, string $action)
     {
@@ -105,7 +105,7 @@ class AdminLog extends Model
      * Scope: Filter logs by date range
      *
      * @return \Illuminate\Database\Eloquent\Builder
-     */
+ */
     #[Scope]
     public function dateRange(Builder $query, Carbon $from, Carbon $to)
     {

@@ -12,14 +12,14 @@ class CreateMissingUserSettings extends Command
      * The name and signature of the console command.
      *
      * @var string
-     */
+ */
     protected $signature = 'app:create-missing-user-settings';
 
     /**
      * The console command description.
      *
      * @var string
-     */
+ */
     protected $description = 'Create missing user settings for users who do not have them.';
 
     public function handle()

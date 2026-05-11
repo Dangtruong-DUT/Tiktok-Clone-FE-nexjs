@@ -11,7 +11,7 @@ class AppealRepository extends BaseRepository
 {
     /**
      * AppealRepository constructor.
-     */
+ */
     public function __construct()
     {
         parent::__construct(app()->make(Appeal::class));
@@ -19,7 +19,7 @@ class AppealRepository extends BaseRepository
 
     /**
      * Find an appeal by ID
-     */
+ */
     public function findById(int $id): ?Appeal
     {
         return $this->find($id);
@@ -27,7 +27,7 @@ class AppealRepository extends BaseRepository
 
     /**
      * Find an appeal by UUID
-     */
+ */
     public function findByUuid(string $uuid): ?Appeal
     {
         return $this->query()->where('uuid', $uuid)->first();
@@ -35,7 +35,7 @@ class AppealRepository extends BaseRepository
 
     /**
      * Check if an appeal exists by ID
-     */
+ */
     public function isExistById(int $id): bool
     {
         return $this->query()->where('id', $id)->exists();
@@ -43,7 +43,7 @@ class AppealRepository extends BaseRepository
 
     /**
      * Check if an appeal exists by UUID
-     */
+ */
     public function isExistByUuid(string $uuid): bool
     {
         return $this->query()->where('uuid', $uuid)->exists();
@@ -51,7 +51,7 @@ class AppealRepository extends BaseRepository
 
     /**
      * Check if a user has a pending appeal for a specific resource and type.
-     */
+ */
     public function hasPendingAppeal(
         int $userId,
         string $appealType,
@@ -64,7 +64,7 @@ class AppealRepository extends BaseRepository
     /**
      * Find an existing pending appeal for the same resource and type.
      * Returns the appeal model (with uuid) so it can be surfaced to the user.
-     */
+ */
     public function findPendingAppeal(
         int $userId,
         string $appealType,
@@ -87,7 +87,7 @@ class AppealRepository extends BaseRepository
     /**
      * Check if a user already has ANY appeal (regardless of status) for a specific resource and type.
      * Once an appeal exists, user must edit it — not create a new one.
-     */
+ */
     public function hasAppealForResource(
         ?int $userId,
         string $appealType,
@@ -108,12 +108,8 @@ class AppealRepository extends BaseRepository
 
     /**
      * Get appeals for a user with optional filters
-     *
      * @param  array<string,mixed>  $filters
-     *                                        - appeal_status: string (optional)
-     *                                        - appeal_type: string (optional)
-     *                                        - order_by: string 'recent'|'oldest' (optional, default 'recent')
-     */
+ */
     public function getByUser(int $userId, array $filters): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
@@ -137,12 +133,8 @@ class AppealRepository extends BaseRepository
 
     /**
      * Get all appeals for admin view with optional filters
-     *
      * @param  array<string,mixed>  $filters
-     *                                        - status: string (optional)
-     *                                        - appeal_type: string (optional)
-     *                                        - sort_by: string 'recent'|'oldest' (optional, default 'recent')
-     */
+ */
     public function getForAdmin(array $filters): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
@@ -164,11 +156,8 @@ class AppealRepository extends BaseRepository
 
     /**
      * Build search query for appeals with filters
-     *
      * @param  array<string,mixed>  $filters
-     *                                        -  appeal_status: string (optional)
-     *                                        -  appeal_type: string (optional)
-     */
+ */
     private function buildSearchQuery(array $filters): Builder
     {
         $filterCollection = collect($filters);

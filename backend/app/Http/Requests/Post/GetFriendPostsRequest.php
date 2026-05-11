@@ -13,7 +13,7 @@ class GetFriendPostsRequest extends BaseListRequest
 
     /**
      * set rules
-     */
+ */
     public function rules(): array
     {
         return $this->applyBaseRules([

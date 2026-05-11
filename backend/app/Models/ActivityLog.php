@@ -23,14 +23,14 @@ class ActivityLog extends Model
      * The table associated with the model.
      *
      * @var string
-     */
+ */
     protected $table = 'activity_logs';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
-     */
+ */
     protected $fillable = [
         'user_id',
         'activity_type',
@@ -45,7 +45,7 @@ class ActivityLog extends Model
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
-     */
+ */
     protected function casts(): array
     {
         return [
@@ -59,7 +59,7 @@ class ActivityLog extends Model
 
     /**
      * Get the user associated with the activity
-     */
+ */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -69,7 +69,7 @@ class ActivityLog extends Model
      * Scope: Filter logs by user ID
      *
      * @return \Illuminate\Database\Eloquent\Builder
-     */
+ */
     #[Scope]
     public function byUser(Builder $query, int $userId)
     {
@@ -80,7 +80,7 @@ class ActivityLog extends Model
      * Scope: Filter logs by activity type
      *
      * @return \Illuminate\Database\Eloquent\Builder
-     */
+ */
     #[Scope]
     public function byActivityType(Builder $query, string $activityType)
     {
@@ -91,7 +91,7 @@ class ActivityLog extends Model
      * Scope: Filter logs by resource type
      *
      * @return \Illuminate\Database\Eloquent\Builder
-     */
+ */
     #[Scope]
     public function byResourceType(Builder $query, ResourceTypeEnum $resourceType)
     {
@@ -102,7 +102,7 @@ class ActivityLog extends Model
      * Scope: Filter logs by date range
      *
      * @return \Illuminate\Database\Eloquent\Builder
-     */
+ */
     #[Scope]
     public function dateRange(Builder $query, Carbon $from, Carbon $to)
     {
@@ -113,7 +113,7 @@ class ActivityLog extends Model
      * Scope: Filter logs for last N days
      *
      * @return \Illuminate\Database\Eloquent\Builder
-     */
+ */
     #[Scope]
     public function lastDays(Builder $query, int $days = 7)
     {

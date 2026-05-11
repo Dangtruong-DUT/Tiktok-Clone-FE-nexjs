@@ -4,11 +4,11 @@ import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { useGetAdminCommentsQuery } from '@/store/services/admin/index'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Search, X } from 'lucide-react'
+import { Search, X, Trash2, Eye } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import AutoPagination from '@/components/auto-pagination'
 import { Skeleton } from '@/components/ui/skeleton'
 import { DeleteCommentDialog } from './delete-comment-dialog'
@@ -26,30 +26,17 @@ interface AdminCommentsApiResponse {
     meta?: PaginationMeta
 }
 
-/**
- * CommentTable - Displays paginated list of comments with moderation actions
- * Features:
- * - Search by comment content or author
- * - Pagination with per-page selector
- * - Actions: Delete
- * - Shows parent post/author context
- * - Loading skeleton
- */
 export function CommentTable({ onCommentDeleted }: CommentTableProps) {
     const t = useTranslations('AdminPage')
 
-    // State
     const [page, setPage] = useState(1)
     const [perPage, setPerPage] = useState(10)
     const [searchTerm, setSearchTerm] = useState('')
     const [sortBy, setSortBy] = useState<'recent' | 'oldest'>('recent')
-
-    // Selected comment for dialog
     const [selectedComment, setSelectedComment] = useState<AdminComment | null>(null)
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
     const [showDetailDialog, setShowDetailDialog] = useState(false)
 
-    // Fetch data
     const commentsQuery = useGetAdminCommentsQuery({
         page,
         per_page: perPage,
@@ -68,7 +55,6 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
     const pagination = responseData?.meta
     const totalItems = pagination?.total ?? comments.length
 
-    // Handlers
     const handleSearch = (value: string) => {
         setSearchTerm(value)
         setPage(1)
@@ -105,7 +91,6 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
         onCommentDeleted?.()
     }
 
-    // Render loading skeleton
     if (isLoading) {
         return (
             <div className='space-y-4'>
@@ -125,176 +110,179 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
     }
 
     return (
-        <div className='space-y-4'>
-            {/* Header - Search and Filters */}
-            <div className='flex flex-col gap-3 md:flex-row md:items-end md:justify-between'>
-                <div className='flex-1 relative md:max-w-sm'>
-                    <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
-                    <Input
-                        placeholder={t('comments.placeholders.searchComments')}
-                        value={searchTerm}
-                        onChange={(e) => handleSearch(e.target.value)}
-                        className='pl-9'
-                    />
-                    {searchTerm && (
-                        <button
-                            onClick={() => handleSearch('')}
-                            className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground'
-                        >
-                            <X className='h-3.5 w-3.5' />
-                        </button>
-                    )}
+        <TooltipProvider>
+            <div className='space-y-4'>
+                <div className='flex flex-col gap-3 md:flex-row md:items-end md:justify-between'>
+                    <div className='flex-1 relative md:max-w-sm'>
+                        <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
+                        <Input
+                            placeholder={t('comments.placeholders.searchComments')}
+                            value={searchTerm}
+                            onChange={(e) => handleSearch(e.target.value)}
+                            className='pl-9'
+                        />
+                        {searchTerm && (
+                            <button
+                                onClick={() => handleSearch('')}
+                                className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground'
+                            >
+                                <X className='h-3.5 w-3.5' />
+                            </button>
+                        )}
+                    </div>
+
+                    <Select
+                        value={sortBy}
+                        onValueChange={(v) => {
+                            setSortBy(v as 'recent' | 'oldest')
+                            setPage(1)
+                        }}
+                    >
+                        <SelectTrigger className='w-32'>
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value='recent'>{t('comments.filters.recent')}</SelectItem>
+                            <SelectItem value='oldest'>{t('comments.filters.oldest')}</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
 
-                {/* Sort By */}
-                <Select
-                    value={sortBy}
-                    onValueChange={(v) => {
-                        setSortBy(v as 'recent' | 'oldest')
-                        setPage(1)
-                    }}
-                >
-                    <SelectTrigger className='w-32'>
-                        <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value='recent'>{t('comments.filters.recent')}</SelectItem>
-                        <SelectItem value='oldest'>{t('comments.filters.oldest')}</SelectItem>
-                    </SelectContent>
-                </Select>
-            </div>
-
-            {/* Table */}
-            {comments.length === 0 ? (
-                <div className='rounded-xl border bg-background p-10 text-center'>
-                    <p className='text-muted-foreground'>{t('comments.emptyState')}</p>
-                </div>
-            ) : (
-                <div className='rounded-xl border bg-background shadow-sm overflow-hidden'>
-                    <Table>
-                        <TableHeader>
-                            <TableRow className='bg-muted/40'>
-                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
-                                    {t('comments.columns.id')}
-                                </TableHead>
-                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
-                                    {t('comments.columns.author')}
-                                </TableHead>
-                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
-                                    {t('comments.columns.content')}
-                                </TableHead>
-                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
-                                    {t('comments.columns.parentPost')}
-                                </TableHead>
-                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
-                                    {t('comments.columns.date')}
-                                </TableHead>
-                                <TableHead className='text-right text-xs uppercase tracking-wide text-muted-foreground'>
-                                    {t('comments.columns.actions')}
-                                </TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {comments.map((comment: AdminComment) => (
-                                <TableRow key={comment.id} className='hover:bg-muted/50'>
-                                    <TableCell className='font-mono text-sm'>#{comment.id}</TableCell>
-                                    <TableCell className='font-medium'>{comment.author?.username || 'N/A'}</TableCell>
-                                    <TableCell>
-                                        <div className='max-w-xs'>
-                                            <p className='text-sm line-clamp-2'>{truncateText(comment.content, 50)}</p>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell className='text-sm'>
-                                        {comment.parent_id ? (
-                                            <p className='text-xs text-muted-foreground'>#{comment.parent_id}</p>
-                                        ) : (
-                                            <span className='text-muted-foreground'>N/A</span>
-                                        )}
-                                    </TableCell>
-                                    <TableCell className='text-sm'>{formatAdminDate(comment.created_at)}</TableCell>
-                                    <TableCell className='text-right'>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant='ghost' size='sm' disabled={isFetching}>
-                                                    ...
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align='end' className='w-40'>
-                                                <DropdownMenuItem
-                                                    onClick={() => openDetailDialog(comment)}
-                                                    className='cursor-pointer'
-                                                >
-                                                    {t('comments.actions.view')}
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem
-                                                    onClick={() => openDeleteDialog(comment)}
-                                                    className='text-red-600 cursor-pointer'
-                                                >
-                                                    {t('comments.actions.delete')}
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </TableCell>
+                {comments.length === 0 ? (
+                    <div className='rounded-xl border bg-background p-10 text-center'>
+                        <p className='text-muted-foreground'>{t('comments.emptyState')}</p>
+                    </div>
+                ) : (
+                    <div className='rounded-xl border bg-background shadow-sm overflow-hidden'>
+                        <Table>
+                            <TableHeader>
+                                <TableRow className='bg-muted/40'>
+                                    <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                        {t('comments.columns.id')}
+                                    </TableHead>
+                                    <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                        {t('comments.columns.author')}
+                                    </TableHead>
+                                    <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                        {t('comments.columns.content')}
+                                    </TableHead>
+                                    <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                        {t('comments.columns.parentPost')}
+                                    </TableHead>
+                                    <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                        {t('comments.columns.date')}
+                                    </TableHead>
+                                    <TableHead className='text-right text-xs uppercase tracking-wide text-muted-foreground'>
+                                        {t('comments.columns.actions')}
+                                    </TableHead>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </div>
-            )}
-
-            {/* Pagination Controls */}
-            {pagination && (
-                <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
-                    {/* Per Page Selector */}
-                    <div className='flex items-center gap-2'>
-                        <span className='text-sm text-muted-foreground'>{t('common.perPage')}</span>
-                        <Select value={String(perPage)} onValueChange={handlePerPageChange}>
-                            <SelectTrigger className='w-20'>
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value='5'>5</SelectItem>
-                                <SelectItem value='10'>10</SelectItem>
-                                <SelectItem value='25'>25</SelectItem>
-                                <SelectItem value='50'>50</SelectItem>
-                            </SelectContent>
-                        </Select>
+                            </TableHeader>
+                            <TableBody>
+                                {comments.map((comment: AdminComment) => (
+                                    <TableRow key={comment.id} className='hover:bg-muted/50'>
+                                        <TableCell className='font-mono text-sm'>#{comment.id}</TableCell>
+                                        <TableCell className='font-medium'>{comment.author?.username || 'N/A'}</TableCell>
+                                        <TableCell>
+                                            <p className='max-w-xs text-sm line-clamp-2'>
+                                                {truncateText(comment.content, 50)}
+                                            </p>
+                                        </TableCell>
+                                        <TableCell className='text-sm'>
+                                            {comment.parent_id ? (
+                                                <p className='text-xs text-muted-foreground'>#{comment.parent_id}</p>
+                                            ) : (
+                                                <span className='text-muted-foreground'>—</span>
+                                            )}
+                                        </TableCell>
+                                        <TableCell className='text-sm'>{formatAdminDate(comment.created_at)}</TableCell>
+                                        <TableCell className='text-right'>
+                                            <div className='flex items-center justify-end gap-1'>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <Button
+                                                            variant='ghost'
+                                                            size='icon'
+                                                            className='h-8 w-8 text-muted-foreground hover:text-foreground'
+                                                            onClick={() => openDetailDialog(comment)}
+                                                            disabled={isFetching}
+                                                        >
+                                                            <Eye className='h-4 w-4' />
+                                                        </Button>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>{t('comments.actions.view')}</TooltipContent>
+                                                </Tooltip>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <Button
+                                                            variant='ghost'
+                                                            size='icon'
+                                                            className='h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10'
+                                                            onClick={() => openDeleteDialog(comment)}
+                                                            disabled={isFetching}
+                                                        >
+                                                            <Trash2 className='h-4 w-4' />
+                                                        </Button>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>{t('comments.actions.delete')}</TooltipContent>
+                                                </Tooltip>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
                     </div>
+                )}
 
-                    {/* Info */}
-                    <div className='text-sm text-muted-foreground'>
-                        {t('common.showingResults', {
-                            from: (pagination.current_page - 1) * perPage + 1,
-                            to: Math.min(pagination.current_page * perPage, totalItems),
-                            total: totalItems
-                        })}
+                {pagination && (
+                    <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
+                        <div className='flex items-center gap-2'>
+                            <span className='text-sm text-muted-foreground'>{t('common.perPage')}</span>
+                            <Select value={String(perPage)} onValueChange={handlePerPageChange}>
+                                <SelectTrigger className='w-20'>
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value='5'>5</SelectItem>
+                                    <SelectItem value='10'>10</SelectItem>
+                                    <SelectItem value='25'>25</SelectItem>
+                                    <SelectItem value='50'>50</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <div className='text-sm text-muted-foreground'>
+                            {t('common.showingResults', {
+                                from: (pagination.current_page - 1) * perPage + 1,
+                                to: Math.min(pagination.current_page * perPage, totalItems),
+                                total: totalItems
+                            })}
+                        </div>
+
+                        {pagination.last_page > 1 && (
+                            <AutoPagination page={page} pageSize={pagination.last_page} onPageChange={setPage} />
+                        )}
                     </div>
+                )}
 
-                    {/* Pagination */}
-                    {pagination.last_page > 1 && (
-                        <AutoPagination page={page} pageSize={pagination.last_page} onPageChange={setPage} />
-                    )}
-                </div>
-            )}
-
-            {/* Dialog */}
-            {selectedComment && (
-                <>
-                    <CommentDetailDialog
-                        open={showDetailDialog}
-                        comment={selectedComment}
-                        onOpenChange={(open) => !open && closeDetailDialog()}
-                    />
-                    <DeleteCommentDialog
-                        open={showDeleteDialog}
-                        commentUuid={selectedComment.uuid}
-                        authorUsername={selectedComment.author?.username || 'N/A'}
-                        parentPostId={selectedComment.parent_id ?? undefined}
-                        onOpenChange={(open) => !open && closeDeleteDialog()}
-                        onSuccess={handleActionSuccess}
-                    />
-                </>
-            )}
-        </div>
+                {selectedComment && (
+                    <>
+                        <CommentDetailDialog
+                            open={showDetailDialog}
+                            comment={selectedComment}
+                            onOpenChange={(open) => !open && closeDetailDialog()}
+                        />
+                        <DeleteCommentDialog
+                            open={showDeleteDialog}
+                            commentUuid={selectedComment.uuid}
+                            authorUsername={selectedComment.author?.username || 'N/A'}
+                            parentPostId={selectedComment.parent_id ?? undefined}
+                            onOpenChange={(open) => !open && closeDeleteDialog()}
+                            onSuccess={handleActionSuccess}
+                        />
+                    </>
+                )}
+            </div>
+        </TooltipProvider>
     )
 }

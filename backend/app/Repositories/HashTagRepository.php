@@ -9,7 +9,7 @@ class HashtagRepository extends BaseRepository
 {
     /**
      * HashtagRepository constructor.
-     */
+ */
     public function __construct()
     {
         $modelInstance = app()->make(Hashtag::class);
@@ -18,7 +18,7 @@ class HashtagRepository extends BaseRepository
 
     /**
      * Find a hashtag by name.
-     */
+ */
     public function findByName(string $name): ?Hashtag
     {
         return $this->query()->where('name', $name)->first();
@@ -26,7 +26,7 @@ class HashtagRepository extends BaseRepository
 
     /**
      * Get hashtags by an array of names.
-     */
+ */
     public function getByNames(array $names): Collection
     {
         return $this->query()->whereIn('name', $names)->get();
@@ -34,7 +34,7 @@ class HashtagRepository extends BaseRepository
 
     /**
      * Create multiple hashtags.
-     */
+ */
     public function createMany(array $data): array
     {
         $createdHashtags = [];

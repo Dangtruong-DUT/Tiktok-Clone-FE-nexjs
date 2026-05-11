@@ -24,7 +24,6 @@ class PostAdminService
 
     /**
      * Get paginated list of posts with filtering
-     *
      * @param  array  $filters  {
      *                          q?: string,
      *                          user_uuid?: string,
@@ -35,7 +34,7 @@ class PostAdminService
      *                          per_page?: int,
      *                          order_by?: string
      *                          }
-     */
+ */
     public function getPosts(array $filters = []): LengthAwarePaginator
     {
         $filters['type'] = PostTypeEnum::POST->value;
@@ -44,11 +43,9 @@ class PostAdminService
 
     /**
      * Delete a post permanently (soft delete)
-     *
      * @param  array{post_uuid:string,reason:string}  $payload
-     *
      * @throws \Exception
-     */
+ */
     public function deletePost(array $payload): void
     {
         $admin = $this->guard()->user();

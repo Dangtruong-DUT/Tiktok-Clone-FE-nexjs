@@ -11,7 +11,7 @@ abstract class BaseFormRequest extends FormRequest
 {
     /**
      * @var array casts
-     */
+ */
     protected array $casts = [];
 
     /*
@@ -31,7 +31,7 @@ abstract class BaseFormRequest extends FormRequest
      * @param  null|mixed  $default
      *
      * @throws ValidationException
-     */
+ */
     public function validated($key = null, $default = null): mixed
     {
         if ($key !== null) {

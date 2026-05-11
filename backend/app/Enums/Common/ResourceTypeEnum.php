@@ -25,7 +25,7 @@ enum ResourceTypeEnum: string implements BaseEnumInterface
      * Get resource values accepted for appeal creation.
      *
      * @return list<string>
-     */
+ */
     public static function appealValues(): array
     {
         return [
@@ -40,7 +40,7 @@ enum ResourceTypeEnum: string implements BaseEnumInterface
 
     /**
      * Get the label of the enum value.
-     */
+ */
     public function label(): string
     {
         return match ($this) {
@@ -55,7 +55,7 @@ enum ResourceTypeEnum: string implements BaseEnumInterface
 
     /**
      * Get the translated label of the enum value.
-     */
+ */
     public function translate(): string
     {
         return match ($this) {
@@ -70,7 +70,7 @@ enum ResourceTypeEnum: string implements BaseEnumInterface
 
     /**
      * Try to create ResourceTypeEnum from PostTypeEnum.
-     */
+ */
     public static function tryFromPostType(PostTypeEnum $postType): ?self
     {
         return match ($postType) {

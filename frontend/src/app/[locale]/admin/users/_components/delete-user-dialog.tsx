@@ -24,11 +24,6 @@ interface DeleteUserDialogProps {
     onSuccess?: () => void
 }
 
-/**
- * DeleteUserDialog - Modal dialog to delete a user
- * Collects: reason (required)
- * Includes confirmation warning about permanent deletion
- */
 export function DeleteUserDialog({ open, userUuid, username, onOpenChange, onSuccess }: DeleteUserDialogProps) {
     const t = useTranslations('AdminPage')
     const [deleteUser, { isLoading }] = useDeleteUserMutation()

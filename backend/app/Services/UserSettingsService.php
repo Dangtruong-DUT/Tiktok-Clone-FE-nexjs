@@ -12,12 +12,12 @@ class UserSettingsService
 
     /**
      * UserSettingsService constructor.
-     */
+ */
     public function __construct() {}
 
     /**
      * Show the user settings.
-     */
+ */
     public function show(): UserSettings
     {
         $userSettings = $this->guard()->user()->settings;
@@ -27,13 +27,8 @@ class UserSettingsService
 
     /**
      * Update the user settings.
-     *
      * @param  array  $data
-     *                       - liked_videos_visibility
-     *                       - bookmarked_videos_visibility
-     *                       - followers_visibility
-     *                       - following_visibility
-     */
+ */
     public function update(array $data): UserSettings
     {
 
