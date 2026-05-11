@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { useGetActivityLogsQuery } from '@/store/services/admin/index'
 import { Input } from '@/components/ui/input'
+import { Search, X as XIcon } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import AutoPagination from '@/components/auto-pagination'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -127,26 +128,34 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
 
     const getActivityColor = (activityKey: string): string => {
         const colorMap: Record<string, string> = {
-            // User actions
+            // System/user activity
             user_registered: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
             user_login: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
             user_logout: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200',
-
-            // Post actions
             post_created: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
             post_deleted: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
             post_liked: 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200',
-            post_unliked: 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200',
-
-            // Comment actions
+            post_unliked: 'bg-pink-50 text-pink-700 dark:bg-pink-950 dark:text-pink-300',
             comment_created: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200',
             comment_deleted: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
-
-            // Admin actions
-            admin_ban_user: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-            admin_unban_user: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+            // Admin punitive actions (red spectrum)
+            ban: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+            delete_user: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+            delete_post: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
+            delete_comment: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
+            reject_appeal: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+            // Admin positive actions (green spectrum)
+            unban: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200',
+            restore_user: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200',
+            restore_post: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200',
+            restore_comment: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200',
+            approve_appeal: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200',
+            // Neutral admin actions
+            reset_user_password: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+            send_email_to_user: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+            update: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
         }
-        return colorMap[activityKey] || 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
+        return colorMap[activityKey] ?? 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
     }
 
     const getActivityKey = (log: { action?: string; action_type?: string }): string => {
@@ -203,11 +212,21 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
                 <div className='flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between'>
                     <div className='flex-1 space-y-3'>
                         <div className='relative'>
+                            <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
                             <Input
                                 placeholder={t('activity.placeholders.searchActivity')}
                                 value={searchTerm}
                                 onChange={(e) => handleSearch(e.target.value)}
+                                className='pl-9'
                             />
+                            {searchTerm && (
+                                <button
+                                    onClick={() => handleSearch('')}
+                                    className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground'
+                                >
+                                    <XIcon className='h-3.5 w-3.5' />
+                                </button>
+                            )}
                         </div>
 
                         <div className='flex flex-wrap items-center gap-2 text-xs text-muted-foreground'>
@@ -293,7 +312,7 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
 
             {/* Timeline/List */}
             {filteredLogs.length === 0 ? (
-                <div className='border rounded-lg p-8 text-center'>
+                <div className='rounded-xl border bg-background p-10 text-center'>
                     <p className='text-muted-foreground'>{t('activity.emptyState')}</p>
                 </div>
             ) : (

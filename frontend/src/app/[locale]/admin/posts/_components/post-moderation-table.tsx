@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Search, X } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import AutoPagination from '@/components/auto-pagination'
@@ -96,7 +97,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
                     <Skeleton className='h-10 flex-1' />
                     <Skeleton className='h-10 w-32' />
                 </div>
-                <div className='border rounded-lg'>
+                <div className='rounded-xl border bg-background shadow-sm overflow-hidden'>
                     <div className='p-4 space-y-3'>
                         {Array.from({ length: 5 }).map((_, i) => (
                             <Skeleton key={i} className='h-16' />
@@ -111,12 +112,22 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
         <div className='space-y-4'>
             {/* Header - Search and Filters */}
             <div className='flex flex-col gap-3 md:flex-row md:items-end md:justify-between'>
-                <div className='flex-1 relative'>
+                <div className='flex-1 relative md:max-w-sm'>
+                    <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
                     <Input
                         placeholder={t('posts.placeholders.searchPosts')}
                         value={searchTerm}
                         onChange={(e) => handleSearch(e.target.value)}
+                        className='pl-9'
                     />
+                    {searchTerm && (
+                        <button
+                            onClick={() => handleSearch('')}
+                            className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground'
+                        >
+                            <X className='h-3.5 w-3.5' />
+                        </button>
+                    )}
                 </div>
 
                 <div className='flex gap-2'>
@@ -152,7 +163,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
 
             {/* Table */}
             {posts.length === 0 ? (
-                <div className='border rounded-lg p-8 text-center'>
+                <div className='rounded-xl border bg-background p-10 text-center'>
                     <p className='text-muted-foreground'>{t('posts.emptyState')}</p>
                 </div>
             ) : (

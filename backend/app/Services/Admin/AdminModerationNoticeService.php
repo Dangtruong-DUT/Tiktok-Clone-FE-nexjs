@@ -6,6 +6,7 @@ use App\Enums\Admin\AdminActionEnum;
 use App\Enums\Appeal\AppealTypeEnum;
 use App\Enums\Common\ModelEntityTypeEnum;
 use App\Mail\AdminModerationActionMail;
+use App\Mail\AdminPositiveActionMail;
 use App\Models\User;
 use App\Services\NotificationService;
 use Illuminate\Support\Facades\Log;
@@ -18,16 +19,8 @@ class AdminModerationNoticeService
     ) {}
 
     /**
-     * Send moderation notice to user with optional appeal link.
-     * Admin identity is hidden from the user in both email and notification.
-     *
-     * @param  User  $admin  The admin performing the action
-     * @param  User  $targetUser  The user receiving the notice
-     * @param  AdminActionEnum  $action  The admin action taken
-     * @param  string  $reason  The reason for the action
-     * @param  ModelEntityTypeEnum  $entityType  The type of entity involved (e.g. user, post, comment)
-     * @param  int  $entityId  The ID of the entity involved
-     * @param  array  $context  Additional context for building appeal link (e.g. resource_type, resource_id)
+     * Send a punitive moderation notice (ban, delete).
+     * Includes appeal link if the action is appealable.
      */
     public function send(
         User $admin,
@@ -91,8 +84,56 @@ class AdminModerationNoticeService
     }
 
     /**
+     * Send a positive/constructive admin action notice (unban, restore, approve appeal, etc.).
+     * No appeal link is included — these are restorative actions.
+     *
+     * @param  array<string,mixed>  $context  Extra data for the notification (e.g. resource info)
+     */
+    public function sendPositiveAction(
+        User $admin,
+        User $targetUser,
+        AdminActionEnum $action,
+        string $message,
+        ModelEntityTypeEnum $entityType,
+        int $entityId,
+        array $context = []
+    ): void {
+        $notificationData = array_merge([
+            'action' => $action->value,
+            'reason' => $message,
+            'resource_type' => $context['resource_type'] ?? $entityType->value,
+            'resource_id' => $context['resource_id'] ?? $entityId,
+        ], $context);
+
+        $this->notificationService->notifyAdminModerationAction(
+            adminId: $admin->id,
+            notifiableUserId: $targetUser->id,
+            entityType: $entityType,
+            entityId: $entityId,
+            data: $notificationData,
+        );
+
+        if (empty($targetUser->email)) {
+            return;
+        }
+
+        try {
+            Mail::to($targetUser->email)->send(new AdminPositiveActionMail(
+                targetUser: $targetUser,
+                action: $action,
+                message: $message,
+            ));
+        } catch (\Throwable $exception) {
+            Log::warning('Failed to queue positive action email', [
+                'target_user_id' => $targetUser->id,
+                'action' => $action->value,
+                'error' => $exception->getMessage(),
+            ]);
+        }
+    }
+
+    /**
      * Build the frontend appeal link with query parameters.
-     * User must be logged in to access this link.
      */
     private function buildAppealFrontendLink(AppealTypeEnum $appealType, string $resourceType, int $resourceId): string
     {
@@ -106,7 +147,7 @@ class AdminModerationNoticeService
     }
 
     /**
-     * Determine if the admin action should allow appeals.
+     * Determine if the admin action should allow the user to submit an appeal.
      */
     private function isAppealableAction(AdminActionEnum $action): bool
     {

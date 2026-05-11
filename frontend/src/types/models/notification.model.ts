@@ -1,43 +1,42 @@
-import { z } from 'zod'
+/**
+ * Notification domain types.
+ * Plain TypeScript — no Zod needed for API response shapes.
+ */
 
-export const NotificationActorSchema = z
-    .object({
-        id: z.number(),
-        uuid: z.string(),
-        name: z.string(),
-        username: z.string(),
-        avatar: z.string().nullable().optional(),
-        is_followed: z.boolean()
-    })
-    .strict()
+export type NotificationActor = {
+    readonly id: number
+    readonly uuid: string
+    readonly name: string
+    readonly username: string
+    readonly avatar: string | null
+    readonly is_followed: boolean
+}
 
-export const NotificationEntitySchema = z
-    .object({
-        id: z.number().optional(),
-        type: z.enum(['post', 'user', 'hashtag']).optional(),
-        uuid: z.string().optional(),
-        username: z.string().optional(),
-        avatar: z.string().nullable().optional(),
-        thumbnail_url: z.string().nullable().optional(),
-        content: z.string().nullable().optional(),
-        name: z.string().optional()
-    })
-    .strict()
+export type NotificationEntity = {
+    readonly id?: number
+    readonly type?: 'post' | 'user' | 'hashtag'
+    readonly uuid?: string
+    readonly username?: string
+    readonly avatar?: string | null
+    readonly thumbnail_url?: string | null
+    readonly content?: string | null
+    readonly name?: string
+}
 
-export const NotificationSchema = z
-    .object({
-        id: z.number(),
-        uuid: z.string(),
-        type: z.number(),
-        type_key: z.string(),
-        is_read: z.boolean(),
-        data: z.record(z.string(), z.any()).nullable().optional(),
-        created_at: z.string(),
-        actor: NotificationActorSchema.nullable().optional(),
-        entity: NotificationEntitySchema.nullable().optional()
-    })
-    .strict()
+export type NotificationType = {
+    readonly id: number
+    readonly uuid: string
+    readonly type: number
+    readonly type_key: string
+    readonly is_read: boolean
+    readonly data?: Record<string, unknown> | null
+    readonly created_at: string
+    readonly actor?: NotificationActor | null
+    readonly entity?: NotificationEntity | null
+}
 
-export type NotificationActorType = z.infer<typeof NotificationActorSchema>
-export type NotificationEntityType = z.infer<typeof NotificationEntitySchema>
-export type NotificationType = z.infer<typeof NotificationSchema>
+/** @deprecated use NotificationActor */
+export type NotificationActorType = NotificationActor
+
+/** @deprecated use NotificationEntity */
+export type NotificationEntityType = NotificationEntity

@@ -6,7 +6,12 @@ import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
-import { AlertTriangle, CheckCircle2, Loader2, Scale, Send, LogIn } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, Loader2, Scale, Send, LogIn, FileText, User, MessageCircle } from 'lucide-react'
+import LoadingIcon from '@/components/lottie-icons/loading'
+import Image from 'next/image'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { APPEAL_STATUSES } from '@/constants/appeal.const'
 import { useGetAppealQuery, useCreateAppealMutation, useUpdateAppealMutation } from '@/store/services/appeal.service'
 import { useAppSelector } from '@/store/hooks'
 import { EvidenceDropzone } from './evidence-dropzone'
@@ -16,6 +21,67 @@ interface AppealFormClientProps {
     appealType?: string
     resourceType?: string
     resourceId?: string
+}
+
+function ResourcePreviewInline({
+    preview
+}: {
+    preview: NonNullable<import('@/types/models/appeal.model').Appeal['resource_preview']>
+}) {
+    if (preview.type === 'post') {
+        return (
+            <div className='flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-3'>
+                {preview.thumbnail_url ? (
+                    <div className='relative h-14 w-10 shrink-0 overflow-hidden rounded-lg bg-slate-100'>
+                        <Image src={preview.thumbnail_url} alt='Post' fill className='object-cover' unoptimized />
+                    </div>
+                ) : (
+                    <div className='flex h-14 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100'>
+                        <FileText className='h-4 w-4 text-slate-400' />
+                    </div>
+                )}
+                <div className='min-w-0 flex-1'>
+                    <p className='text-xs font-medium text-slate-500 mb-0.5'>Related post</p>
+                    <p className='text-sm text-slate-800 line-clamp-2'>{preview.content || '—'}</p>
+                    {preview.author && <p className='text-xs text-slate-400 mt-1'>@{preview.author.username}</p>}
+                </div>
+            </div>
+        )
+    }
+
+    if (preview.type === 'comment') {
+        return (
+            <div className='flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-3'>
+                <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100'>
+                    <MessageCircle className='h-4 w-4 text-slate-400' />
+                </div>
+                <div className='min-w-0 flex-1'>
+                    <p className='text-xs font-medium text-slate-500 mb-0.5'>Related comment</p>
+                    <p className='text-sm text-slate-800 line-clamp-2'>{preview.content || '—'}</p>
+                    {preview.author && <p className='text-xs text-slate-400 mt-1'>@{preview.author.username}</p>}
+                </div>
+            </div>
+        )
+    }
+
+    if (preview.type === 'user') {
+        return (
+            <div className='flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3'>
+                <Avatar className='h-10 w-10 shrink-0'>
+                    <AvatarImage src={preview.avatar ?? undefined} />
+                    <AvatarFallback>
+                        <User className='h-4 w-4' />
+                    </AvatarFallback>
+                </Avatar>
+                <div>
+                    <p className='text-xs font-medium text-slate-500'>Your account</p>
+                    <p className='text-sm font-medium text-slate-800'>@{preview.username}</p>
+                </div>
+            </div>
+        )
+    }
+
+    return null
 }
 
 export function AppealFormClient({ appealUuid, appealType, resourceType, resourceId }: AppealFormClientProps) {
@@ -30,6 +96,7 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
     const [reason, setReason] = useState('')
     const [evidenceFiles, setEvidenceFiles] = useState<File[]>([])
     const [isSubmitted, setIsSubmitted] = useState(false)
+    const [pendingAppealUuid, setPendingAppealUuid] = useState<string | null>(null)
 
     const {
         data: appealData,
@@ -96,8 +163,13 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
             }
             setIsSubmitted(true)
         } catch (error) {
-            const errorMessage = (error as { data?: { message?: string } })?.data?.message
-            toast.error(errorMessage || t('form.submitError'))
+            const errData = (error as { data?: { message?: string; errors?: Record<string, unknown> } })?.data
+            const existingUuid = errData?.errors?.existing_appeal_uuid
+            if (typeof existingUuid === 'string') {
+                setPendingAppealUuid(existingUuid)
+                return
+            }
+            toast.error(errData?.message || t('form.submitError'))
         }
     }, [
         canSubmit,
@@ -115,6 +187,26 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
     ])
 
     const isInvalidFlow = !isNewFlow && !isEditFlow
+
+    if (pendingAppealUuid) {
+        return (
+            <div className='w-full rounded-3xl border border-amber-200 bg-amber-50 p-8 shadow-sm md:p-10'>
+                <div className='flex flex-col items-center text-center gap-4'>
+                    <div className='rounded-full bg-amber-100 p-4'>
+                        <AlertTriangle className='h-8 w-8 text-amber-600' />
+                    </div>
+                    <h1 className='text-xl font-bold text-amber-900'>{t('pending.title')}</h1>
+                    <p className='text-amber-700 max-w-md text-sm'>{t('pending.description')}</p>
+                    <Link
+                        href={`/appeal?appeal_uuid=${pendingAppealUuid}`}
+                        className='inline-flex items-center gap-2 rounded-full bg-amber-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-amber-700'
+                    >
+                        {t('pending.viewAppeal')}
+                    </Link>
+                </div>
+            </div>
+        )
+    }
 
     if (!isAuthenticated) {
         const redirectUrl = isNewFlow
@@ -175,9 +267,9 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
     if (isFetchingAppeal) {
         return (
             <div className='w-full rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-10'>
-                <div className='flex flex-col items-center justify-center gap-4 py-12'>
-                    <Loader2 className='h-10 w-10 animate-spin text-slate-900' />
-                    <p className='text-slate-600 font-medium'>{t('error.loading')}</p>
+                <div className='flex flex-col items-center justify-center gap-2 py-8'>
+                    <LoadingIcon loop className='size-20' />
+                    <p className='text-slate-500 text-sm'>{t('error.loading')}</p>
                 </div>
             </div>
         )
@@ -236,12 +328,12 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
 
             <div className='space-y-5'>
                 {appealInfo && (
-                    <div className='rounded-2xl bg-slate-50 p-4'>
+                    <div className='rounded-2xl bg-slate-50 p-4 space-y-3'>
                         <div className='grid grid-cols-2 gap-3 text-sm'>
                             <div>
                                 <span className='text-slate-500'>{t('form.appealType')}</span>
                                 <p className='font-medium text-slate-900 mt-0.5'>
-                                    {appealInfo.appeal_type ? tTypes(appealInfo.appeal_type as any) : '—'}
+                                    {appealInfo.appeal_type ? tTypes(appealInfo.appeal_type as never) : '—'}
                                 </p>
                             </div>
                             <div>
@@ -249,14 +341,28 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
                                 <p className='font-medium text-slate-900 mt-0.5'>{appealInfo.resource_type}</p>
                             </div>
                             {isEditFlow && (
-                                <div>
+                                <div className='col-span-2 flex items-center justify-between'>
                                     <span className='text-slate-500'>{t('form.status')}</span>
-                                    <p className='font-medium text-slate-900 mt-0.5'>
-                                        {appealInfo.status ? tStatuses(appealInfo.status as any) : '—'}
-                                    </p>
+                                    <Badge
+                                        variant='outline'
+                                        className={
+                                            appealInfo.status === APPEAL_STATUSES.APPROVED
+                                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                                : appealInfo.status === APPEAL_STATUSES.REJECTED
+                                                  ? 'bg-red-50 text-red-700 border-red-200'
+                                                  : 'bg-amber-50 text-amber-700 border-amber-200'
+                                        }
+                                    >
+                                        {appealInfo.status ? tStatuses(appealInfo.status as never) : '—'}
+                                    </Badge>
                                 </div>
                             )}
                         </div>
+
+                        {/* Resource Preview (edit flow only) */}
+                        {isEditFlow && existingAppealInfo?.resource_preview && (
+                            <ResourcePreviewInline preview={existingAppealInfo.resource_preview} />
+                        )}
                     </div>
                 )}
 

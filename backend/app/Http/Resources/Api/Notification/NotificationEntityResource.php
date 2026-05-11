@@ -18,6 +18,7 @@ class NotificationEntityResource extends JsonResource
                 'uuid' => $this->resource->uuid,
                 'thumbnail_url' => $this->resource->thumbnail_url,
                 'content' => $this->resource->content,
+                'is_deleted' => $this->resource->deleted_at !== null,
             ];
         }
 
@@ -28,6 +29,7 @@ class NotificationEntityResource extends JsonResource
                 'uuid' => $this->resource->uuid,
                 'username' => $this->resource->username,
                 'avatar' => $this->resource->avatar_url,
+                'is_deleted' => $this->resource->deleted_at !== null,
             ];
         }
 

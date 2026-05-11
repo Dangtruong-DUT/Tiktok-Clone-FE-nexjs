@@ -20,7 +20,9 @@ enum AdminActionEnum: string implements BaseEnumInterface
     case RESET_USER_PASSWORD = 'reset_user_password';
     case SEND_EMAIL_TO_USER = 'send_email_to_user';
     case DELETE_POST = 'delete_post';
+    case RESTORE_POST = 'restore_post';
     case DELETE_COMMENT = 'delete_comment';
+    case RESTORE_COMMENT = 'restore_comment';
     case APPROVE_APPEAL = 'approve_appeal';
     case REJECT_APPEAL = 'reject_appeal';
     case UPDATE = 'update';
@@ -38,7 +40,9 @@ enum AdminActionEnum: string implements BaseEnumInterface
             self::RESET_USER_PASSWORD => 'Reset User Password',
             self::SEND_EMAIL_TO_USER => 'Send Email To User',
             self::DELETE_POST => 'Delete Post',
+            self::RESTORE_POST => 'Restore Post',
             self::DELETE_COMMENT => 'Delete Comment',
+            self::RESTORE_COMMENT => 'Restore Comment',
             self::APPROVE_APPEAL => 'Approve Appeal',
             self::REJECT_APPEAL => 'Reject Appeal',
             self::UPDATE => 'Update',
@@ -58,7 +62,9 @@ enum AdminActionEnum: string implements BaseEnumInterface
             self::RESET_USER_PASSWORD => 'Đặt lại mật khẩu người dùng',
             self::SEND_EMAIL_TO_USER => 'Gửi email cho người dùng',
             self::DELETE_POST => 'Xóa bài viết',
+            self::RESTORE_POST => 'Khôi phục bài viết',
             self::DELETE_COMMENT => 'Xóa bình luận',
+            self::RESTORE_COMMENT => 'Khôi phục bình luận',
             self::APPROVE_APPEAL => 'Phê duyệt kháng cáo',
             self::REJECT_APPEAL => 'Từ chối kháng cáo',
             self::UPDATE => 'Cập nhật',

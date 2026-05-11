@@ -50,7 +50,7 @@ class AppealRepository extends BaseRepository
     }
 
     /**
-     * Check if a user has a pending appeal for a specific resource and type
+     * Check if a user has a pending appeal for a specific resource and type.
      */
     public function hasPendingAppeal(
         int $userId,
@@ -58,6 +58,19 @@ class AppealRepository extends BaseRepository
         string $resourceType,
         ?int $resourceId
     ): bool {
+        return $this->findPendingAppeal($userId, $appealType, $resourceType, $resourceId) !== null;
+    }
+
+    /**
+     * Find an existing pending appeal for the same resource and type.
+     * Returns the appeal model (with uuid) so it can be surfaced to the user.
+     */
+    public function findPendingAppeal(
+        int $userId,
+        string $appealType,
+        string $resourceType,
+        ?int $resourceId
+    ): ?Appeal {
         return $this->query()
             ->byUser($userId)
             ->byStatus(AppealStatusEnum::PENDING)
@@ -68,7 +81,7 @@ class AppealRepository extends BaseRepository
                 fn ($query) => $query->where('resource_id', $resourceId),
                 fn ($query) => $query->whereNull('resource_id')
             )
-            ->exists();
+            ->first();
     }
 
     /**

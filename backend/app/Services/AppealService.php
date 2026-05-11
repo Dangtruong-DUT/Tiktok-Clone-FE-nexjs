@@ -50,15 +50,16 @@ class AppealService
             userId: $userId,
         );
 
-        $hasPending = $this->appealRepository->hasPendingAppeal(
+        $pendingAppeal = $this->appealRepository->findPendingAppeal(
             userId: $userId,
             appealType: $appealType->value,
             resourceType: $resourceType->value,
             resourceId: $resourceId,
         );
 
-        if ($hasPending) {
+        if ($pendingAppeal) {
             throw new BusinessException('A pending appeal already exists for this resource.', [
+                'existing_appeal_uuid' => $pendingAppeal->uuid,
                 'appeal_type' => 'Pending appeal exists for this resource',
             ]);
         }
@@ -103,6 +104,7 @@ class AppealService
                 'resource_type' => 'Resource type must be user for account appeals',
             ]);
         }
+        /** @var \App\Models\User $user */
         $user = $this->guard()->user();
         if (! $user->isBanned()) {
             throw new BusinessException('Your account is not currently banned.', [

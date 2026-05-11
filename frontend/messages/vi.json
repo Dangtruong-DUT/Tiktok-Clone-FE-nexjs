@@ -1236,6 +1236,11 @@
       "title": "Đã gửi kháng cáo!",
       "description": "Kháng cáo của bạn đã được gửi thành công. Đội kiểm duyệt sẽ xem xét và thông báo kết quả cho bạn.",
       "notice": "Bạn sẽ nhận được email thông báo khi có quyết định."
+    },
+    "pending": {
+      "title": "Đã Có Kháng Cáo Đang Chờ",
+      "description": "Bạn đã có một kháng cáo đang chờ xét duyệt cho vấn đề này. Vui lòng đợi kết quả trước khi gửi kháng cáo mới.",
+      "viewAppeal": "Xem Kháng Cáo Của Tôi"
     }
   }
 }

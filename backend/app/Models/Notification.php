@@ -81,7 +81,9 @@ class Notification extends Model
      */
     public function entity(): MorphTo
     {
-        return $this->morphTo(__FUNCTION__, 'entity_type', 'entity_id');
+        // withTrashed ensures soft-deleted posts/users still resolve
+        // (admin moderation notifications reference deleted resources)
+        return $this->morphTo(__FUNCTION__, 'entity_type', 'entity_id')->withTrashed();
     }
 
     /**

@@ -236,9 +236,20 @@ class UserAdminService
                 action: AdminActionEnum::RESTORE_USER,
                 reason: 'Restore deleted user account',
                 oldData: $oldData,
-                newData: [
-                    'deleted_at' => null,
-                ],
+                newData: ['deleted_at' => null],
+            );
+
+            $this->adminModerationNoticeService->sendPositiveAction(
+                admin: $admin,
+                targetUser: $user,
+                action: AdminActionEnum::RESTORE_USER,
+                message: 'Your account has been restored. You can now log in again.',
+                entityType: ModelEntityTypeEnum::USER,
+                entityId: $user->id,
+                context: [
+                    'resource_type' => ResourceTypeEnum::USER->value,
+                    'resource_id' => $user->id,
+                ]
             );
 
             return $user->refresh();
