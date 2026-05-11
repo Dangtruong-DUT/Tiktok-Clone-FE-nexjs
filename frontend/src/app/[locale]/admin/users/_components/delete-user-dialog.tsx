@@ -116,7 +116,7 @@ export function DeleteUserDialog({ open, userUuid, username, onOpenChange, onSuc
                     </div>
                 </div>
 
-                <DialogFooter className='gap-2 sm:gap-0'>
+                <DialogFooter className='gap-2'>
                     <Button type='button' variant='outline' onClick={handleCloseDialog} disabled={isLoading}>
                         {t('common.cancel')}
                     </Button>

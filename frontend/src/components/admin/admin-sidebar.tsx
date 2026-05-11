@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
 import { ADMIN_ROUTES } from '@/constants/admin.const'
+import { Activity, Flag, LayoutDashboard, MessageCircle, Settings, UserRound, Video } from 'lucide-react'
 
 export function AdminSidebar() {
     const pathname = usePathname()
@@ -20,37 +21,44 @@ export function AdminSidebar() {
         {
             title: t('dashboard.title'),
             href: ADMIN_ROUTES.DASHBOARD,
-            active: pathname === getI18nPath(ADMIN_ROUTES.DASHBOARD)
+            active: pathname === getI18nPath(ADMIN_ROUTES.DASHBOARD),
+            icon: LayoutDashboard
         },
         {
             title: t('users.title'),
             href: ADMIN_ROUTES.USERS,
-            active: pathname?.includes(getI18nPath(ADMIN_ROUTES.USERS))
+            active: pathname?.includes(getI18nPath(ADMIN_ROUTES.USERS)),
+            icon: UserRound
         },
         {
             title: t('moderation.title'),
             href: ADMIN_ROUTES.POSTS,
-            active: pathname?.includes(getI18nPath(ADMIN_ROUTES.POSTS))
+            active: pathname?.includes(getI18nPath(ADMIN_ROUTES.POSTS)),
+            icon: Video
         },
         {
             title: t('comments.title'),
             href: ADMIN_ROUTES.COMMENTS,
-            active: pathname?.includes(getI18nPath(ADMIN_ROUTES.COMMENTS))
+            active: pathname?.includes(getI18nPath(ADMIN_ROUTES.COMMENTS)),
+            icon: MessageCircle
         },
         {
             title: t('appeals.title'),
             href: ADMIN_ROUTES.APPEALS,
-            active: pathname?.includes(getI18nPath(ADMIN_ROUTES.APPEALS))
+            active: pathname?.includes(getI18nPath(ADMIN_ROUTES.APPEALS)),
+            icon: Flag
         },
         {
             title: t('activity.title'),
             href: ADMIN_ROUTES.ACTIVITY,
-            active: pathname?.includes(getI18nPath(ADMIN_ROUTES.ACTIVITY))
+            active: pathname?.includes(getI18nPath(ADMIN_ROUTES.ACTIVITY)),
+            icon: Activity
         },
         {
             title: t('settings.title'),
             href: ADMIN_ROUTES.SETTINGS,
-            active: pathname?.includes(getI18nPath(ADMIN_ROUTES.SETTINGS))
+            active: pathname?.includes(getI18nPath(ADMIN_ROUTES.SETTINGS)),
+            icon: Settings
         }
     ]
 
@@ -75,6 +83,7 @@ export function AdminSidebar() {
                                 : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground'
                         )}
                     >
+                        <item.icon className='mr-2 h-4 w-4 text-muted-foreground group-hover:text-foreground' />
                         <span>{item.title}</span>
                     </Link>
                 ))}

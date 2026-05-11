@@ -833,7 +833,27 @@
                 "confirmDelete": "Xác nhận xóa",
                 "confirmRestore": "Xác nhận khôi phục",
                 "resetPassword": "Đặt lại mật khẩu",
-                "sendEmail": "Gửi Email"
+                "sendEmail": "Gửi Email",
+                "viewDetails": "Xem chi tiết"
+            },
+            "detail": {
+                "title": "Chi tiết người dùng",
+                "stats": {
+                    "followers": "Follower",
+                    "following": "Đang theo dõi",
+                    "likes": "Lượt thích",
+                    "posts": "Bài đăng"
+                },
+                "fields": {
+                    "email": "Email",
+                    "role": "Vai trò",
+                    "verify": "Xác thực",
+                    "createdAt": "Ngày tạo",
+                    "bannedAt": "Bị khóa lúc",
+                    "deletedAt": "Đã xóa lúc",
+                    "banReason": "Lý do khóa",
+                    "status": "Trạng thái"
+                }
             },
             "labels": {
                 "reason": "Lý do",
@@ -894,7 +914,22 @@
             },
             "actions": {
                 "delete": "Xóa",
-                "confirmDelete": "Xác nhận xóa"
+                "confirmDelete": "Xác nhận xóa",
+                "preview": "Xem trước"
+            },
+            "preview": {
+                "title": "Xem trước bài viết",
+                "loading": "Đang tải xem trước...",
+                "noMedia": "Không có media",
+                "stats": {
+                    "likes": "Lượt thích",
+                    "comments": "Bình luận",
+                    "bookmarks": "Đã lưu",
+                    "views": "Lượt xem"
+                },
+                "fields": {
+                    "content": "Nội dung"
+                }
             },
             "labels": {
                 "reason": "Lý do",
@@ -938,7 +973,18 @@
             },
             "actions": {
                 "delete": "Xóa",
-                "confirmDelete": "Xác nhận xóa"
+                "confirmDelete": "Xác nhận xóa",
+                "view": "Xem"
+            },
+            "detail": {
+                "title": "Chi tiết bình luận",
+                "fields": {
+                    "content": "Nội dung",
+                    "likes": "Lượt thích",
+                    "parentId": "Bình luận gốc",
+                    "createdAt": "Ngày tạo",
+                    "author": "Tác giả"
+                }
             },
             "labels": {
                 "reason": "Lý do"
@@ -978,6 +1024,21 @@
             },
             "prepositions": {
                 "on": "trên"
+            },
+            "actions": {
+                "viewDetails": "Xem chi tiết"
+            },
+            "detail": {
+                "title": "Chi tiết hoạt động",
+                "fields": {
+                    "action": "Hành động",
+                    "actor": "Người thực hiện",
+                    "resourceType": "Loại tài nguyên",
+                    "resourceId": "ID tài nguyên",
+                    "timestamp": "Thời điểm",
+                    "reason": "Lý do",
+                    "metadata": "Metadata"
+                }
             }
         },
         "settings": {
@@ -1014,16 +1075,35 @@
                 "actions": "Thao tác",
                 "evidence": "Minh chứng"
             },
+            "actions": {
+                "approve": "Duyệt",
+                "reject": "Từ chối",
+                "viewDetails": "Xem chi tiết"
+            },
+            "detail": {
+                "title": "Chi tiết kháng cáo",
+                "resourceTitle": "Tài nguyên",
+                "evidenceTitle": "Minh chứng",
+                "noEvidence": "Không có minh chứng",
+                "resourceUnavailable": "Tài nguyên đã bị xóa hoặc không còn khả dụng",
+                "fields": {
+                    "status": "Trạng thái",
+                    "type": "Loại",
+                    "reason": "Lý do",
+                    "response": "Phản hồi admin",
+                    "reviewer": "Người duyệt",
+                    "createdAt": "Ngày tạo",
+                    "reviewedAt": "Ngày duyệt",
+                    "resourceType": "Loại tài nguyên",
+                    "resourceId": "ID tài nguyên"
+                }
+            },
             "evidenceDialog": {
                 "title": "Minh chứng kháng cáo",
                 "imageCount": "Ảnh {current} trên {total}",
                 "imageAlt": "Ảnh minh chứng {index}",
                 "prev": "Ảnh trước",
                 "next": "Ảnh sau"
-            },
-            "actions": {
-                "approve": "Phê duyệt",
-                "reject": "Từ chối"
             },
             "labels": {
                 "adminResponse": "Phản hồi quản trị"

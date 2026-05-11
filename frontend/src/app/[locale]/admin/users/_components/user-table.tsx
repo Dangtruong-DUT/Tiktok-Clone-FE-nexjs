@@ -23,6 +23,7 @@ import { DeleteUserDialog } from './delete-user-dialog'
 import { RestoreUserDialog } from './restore-user-dialog'
 import { ResetUserPasswordDialog } from './reset-user-password-dialog'
 import { SendUserMailDialog } from './send-user-mail-dialog'
+import { UserDetailDialog } from './user-detail-dialog'
 import {
     formatAdminDate,
     getUserStatus,
@@ -58,7 +59,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
     // Selected user for dialogs
     const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null)
     const [dialogType, setDialogType] = useState<
-        'ban' | 'unban' | 'delete' | 'restore' | 'reset-password' | 'send-mail' | null
+        'detail' | 'ban' | 'unban' | 'delete' | 'restore' | 'reset-password' | 'send-mail' | null
     >(null)
 
     // Fetch data
@@ -91,7 +92,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
 
     const openDialog = (
         user: AdminUser,
-        type: 'ban' | 'unban' | 'delete' | 'restore' | 'reset-password' | 'send-mail'
+        type: 'detail' | 'ban' | 'unban' | 'delete' | 'restore' | 'reset-password' | 'send-mail'
     ) => {
         setSelectedUser(user)
         setDialogType(type)
@@ -178,16 +179,28 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                     <p className='text-muted-foreground'>{t('users.emptyState')}</p>
                 </div>
             ) : (
-                <div className='border rounded-lg overflow-hidden'>
+                <div className='rounded-xl border bg-background shadow-sm overflow-hidden'>
                     <Table>
                         <TableHeader>
-                            <TableRow className='bg-muted/50'>
-                                <TableHead className='font-semibold'>{t('users.columns.id')}</TableHead>
-                                <TableHead className='font-semibold'>{t('users.columns.username')}</TableHead>
-                                <TableHead className='font-semibold'>{t('users.columns.email')}</TableHead>
-                                <TableHead className='font-semibold'>{t('users.columns.status')}</TableHead>
-                                <TableHead className='font-semibold'>{t('users.columns.joinDate')}</TableHead>
-                                <TableHead className='text-right font-semibold'>{t('users.columns.actions')}</TableHead>
+                            <TableRow className='bg-muted/40'>
+                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('users.columns.id')}
+                                </TableHead>
+                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('users.columns.username')}
+                                </TableHead>
+                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('users.columns.email')}
+                                </TableHead>
+                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('users.columns.status')}
+                                </TableHead>
+                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('users.columns.joinDate')}
+                                </TableHead>
+                                <TableHead className='text-right text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('users.columns.actions')}
+                                </TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -215,6 +228,13 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align='end' className='w-48'>
+                                                    <DropdownMenuItem
+                                                        onClick={() => openDialog(user, 'detail')}
+                                                        className='cursor-pointer'
+                                                    >
+                                                        {t('users.actions.viewDetails')}
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuSeparator />
                                                     {status === 'deleted' ? (
                                                         <DropdownMenuItem
                                                             onClick={() => openDialog(user, 'restore')}
@@ -330,6 +350,11 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
             {/* Dialogs */}
             {selectedUser && (
                 <>
+                    <UserDetailDialog
+                        open={dialogType === 'detail'}
+                        user={selectedUser}
+                        onOpenChange={(open) => !open && closeDialog()}
+                    />
                     <BanUserDialog
                         open={dialogType === 'ban'}
                         userUuid={selectedUser.uuid}

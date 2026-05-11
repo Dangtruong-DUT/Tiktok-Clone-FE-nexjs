@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import AutoPagination from '@/components/auto-pagination'
 import { Skeleton } from '@/components/ui/skeleton'
 import { DeleteCommentDialog } from './delete-comment-dialog'
+import { CommentDetailDialog } from './comment-detail-dialog'
 import { formatAdminDate, truncateText } from '@/helpers/admin-helpers'
 import { AdminComment } from '@/types/dtos/admin/admin-response.dto'
 import type { PaginationMeta } from '@/types/common/pagination-meta.type'
@@ -45,6 +46,7 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
     // Selected comment for dialog
     const [selectedComment, setSelectedComment] = useState<AdminComment | null>(null)
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+    const [showDetailDialog, setShowDetailDialog] = useState(false)
 
     // Fetch data
     const commentsQuery = useGetAdminCommentsQuery({
@@ -81,9 +83,19 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
         setShowDeleteDialog(true)
     }
 
+    const openDetailDialog = (comment: AdminComment) => {
+        setSelectedComment(comment)
+        setShowDetailDialog(true)
+    }
+
     const closeDeleteDialog = () => {
         setSelectedComment(null)
         setShowDeleteDialog(false)
+    }
+
+    const closeDetailDialog = () => {
+        setSelectedComment(null)
+        setShowDetailDialog(false)
     }
 
     const handleActionSuccess = () => {
@@ -147,16 +159,26 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
                     <p className='text-muted-foreground'>{t('comments.emptyState')}</p>
                 </div>
             ) : (
-                <div className='border rounded-lg overflow-hidden'>
+                <div className='rounded-xl border bg-background shadow-sm overflow-hidden'>
                     <Table>
                         <TableHeader>
-                            <TableRow className='bg-muted/50'>
-                                <TableHead className='font-semibold'>{t('comments.columns.id')}</TableHead>
-                                <TableHead className='font-semibold'>{t('comments.columns.author')}</TableHead>
-                                <TableHead className='font-semibold'>{t('comments.columns.content')}</TableHead>
-                                <TableHead className='font-semibold'>{t('comments.columns.parentPost')}</TableHead>
-                                <TableHead className='font-semibold'>{t('comments.columns.date')}</TableHead>
-                                <TableHead className='text-right font-semibold'>
+                            <TableRow className='bg-muted/40'>
+                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('comments.columns.id')}
+                                </TableHead>
+                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('comments.columns.author')}
+                                </TableHead>
+                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('comments.columns.content')}
+                                </TableHead>
+                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('comments.columns.parentPost')}
+                                </TableHead>
+                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('comments.columns.date')}
+                                </TableHead>
+                                <TableHead className='text-right text-xs uppercase tracking-wide text-muted-foreground'>
                                     {t('comments.columns.actions')}
                                 </TableHead>
                             </TableRow>
@@ -187,6 +209,12 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align='end' className='w-40'>
+                                                <DropdownMenuItem
+                                                    onClick={() => openDetailDialog(comment)}
+                                                    className='cursor-pointer'
+                                                >
+                                                    {t('comments.actions.view')}
+                                                </DropdownMenuItem>
                                                 <DropdownMenuItem
                                                     onClick={() => openDeleteDialog(comment)}
                                                     className='text-red-600 cursor-pointer'
@@ -240,14 +268,21 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
 
             {/* Dialog */}
             {selectedComment && (
-                <DeleteCommentDialog
-                    open={showDeleteDialog}
-                    commentUuid={selectedComment.uuid}
-                    authorUsername={selectedComment.author?.username || 'N/A'}
-                    parentPostId={selectedComment.parent_id ?? undefined}
-                    onOpenChange={(open) => !open && closeDeleteDialog()}
-                    onSuccess={handleActionSuccess}
-                />
+                <>
+                    <CommentDetailDialog
+                        open={showDetailDialog}
+                        comment={selectedComment}
+                        onOpenChange={(open) => !open && closeDetailDialog()}
+                    />
+                    <DeleteCommentDialog
+                        open={showDeleteDialog}
+                        commentUuid={selectedComment.uuid}
+                        authorUsername={selectedComment.author?.username || 'N/A'}
+                        parentPostId={selectedComment.parent_id ?? undefined}
+                        onOpenChange={(open) => !open && closeDeleteDialog()}
+                        onSuccess={handleActionSuccess}
+                    />
+                </>
             )}
         </div>
     )

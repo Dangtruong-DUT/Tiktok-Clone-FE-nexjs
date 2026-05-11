@@ -37,6 +37,7 @@ import {
     type AppealType
 } from '@/constants/appeal.const'
 import { EvidenceGalleryDialog } from './evidence-gallery-dialog'
+import { AppealDetailDialog } from './appeal-detail-dialog'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -72,6 +73,7 @@ export function AppealTable() {
 
     const [expandedRowId, setExpandedRowId] = useState<number | null>(null)
     const [galleryAppeal, setGalleryAppeal] = useState<AdminAppeal | null>(null)
+    const [detailAppeal, setDetailAppeal] = useState<AdminAppeal | null>(null)
 
     const { data, isLoading, isFetching, refetch } = useGetAdminAppealsQuery({
         page,
@@ -119,6 +121,10 @@ export function AppealTable() {
         setSelectedAppeal(null)
         setActionType(null)
         setAdminResponse('')
+    }, [])
+
+    const closeDetailDialog = useCallback(() => {
+        setDetailAppeal(null)
     }, [])
 
     const toggleExpandRow = useCallback((id: number) => {
@@ -243,19 +249,35 @@ export function AppealTable() {
                     <p className='text-muted-foreground'>{t('appeals.emptyState')}</p>
                 </div>
             ) : (
-                <div className='border rounded-lg overflow-hidden'>
+                <div className='rounded-xl border bg-background shadow-sm overflow-hidden'>
                     <Table>
                         <TableHeader>
-                            <TableRow className='bg-muted/50'>
-                                <TableHead className='w-[50px]'></TableHead>
-                                <TableHead>{t('appeals.columns.id')}</TableHead>
-                                <TableHead>{t('appeals.columns.user')}</TableHead>
-                                <TableHead>{t('appeals.columns.type')}</TableHead>
-                                <TableHead>{t('appeals.columns.reason')}</TableHead>
-                                <TableHead>{t('appeals.columns.evidence')}</TableHead>
-                                <TableHead>{t('appeals.columns.status')}</TableHead>
-                                <TableHead>{t('appeals.columns.createdAt')}</TableHead>
-                                <TableHead className='text-right'>{t('appeals.columns.actions')}</TableHead>
+                            <TableRow className='bg-muted/40'>
+                                <TableHead className='w-[50px] text-xs uppercase tracking-wide text-muted-foreground'></TableHead>
+                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('appeals.columns.id')}
+                                </TableHead>
+                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('appeals.columns.user')}
+                                </TableHead>
+                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('appeals.columns.type')}
+                                </TableHead>
+                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('appeals.columns.reason')}
+                                </TableHead>
+                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('appeals.columns.evidence')}
+                                </TableHead>
+                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('appeals.columns.status')}
+                                </TableHead>
+                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('appeals.columns.createdAt')}
+                                </TableHead>
+                                <TableHead className='text-right text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('appeals.columns.actions')}
+                                </TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -330,9 +352,17 @@ export function AppealTable() {
                                             <TableCell className='text-right'>
                                                 {appeal.status === APPEAL_STATUSES.PENDING ? (
                                                     <div
-                                                        className='flex justify-end gap-2'
+                                                        className='flex flex-wrap justify-end gap-2'
                                                         onClick={(e) => e.stopPropagation()}
                                                     >
+                                                        <Button
+                                                            size='sm'
+                                                            variant='ghost'
+                                                            className='h-8'
+                                                            onClick={() => setDetailAppeal(appeal)}
+                                                        >
+                                                            {t('appeals.actions.viewDetails')}
+                                                        </Button>
                                                         <Button
                                                             size='sm'
                                                             variant='outline'
@@ -359,7 +389,19 @@ export function AppealTable() {
                                                         </Button>
                                                     </div>
                                                 ) : (
-                                                    <span className='text-muted-foreground text-sm'>—</span>
+                                                    <div
+                                                        className='flex justify-end'
+                                                        onClick={(e) => e.stopPropagation()}
+                                                    >
+                                                        <Button
+                                                            size='sm'
+                                                            variant='ghost'
+                                                            className='h-8'
+                                                            onClick={() => setDetailAppeal(appeal)}
+                                                        >
+                                                            {t('appeals.actions.viewDetails')}
+                                                        </Button>
+                                                    </div>
                                                 )}
                                             </TableCell>
                                         </TableRow>
@@ -552,6 +594,14 @@ export function AppealTable() {
                 evidenceFiles={galleryAppeal?.evidence_files ?? []}
                 appealId={galleryAppeal?.id}
             />
+
+            {detailAppeal && (
+                <AppealDetailDialog
+                    open={!!detailAppeal}
+                    appeal={detailAppeal}
+                    onOpenChange={(open) => !open && closeDetailDialog()}
+                />
+            )}
         </div>
     )
 }

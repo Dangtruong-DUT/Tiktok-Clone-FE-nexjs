@@ -56,7 +56,7 @@ export function UnbanUserDialog({ open, userUuid, username, onOpenChange, onSucc
                     </div>
                 </DialogHeader>
 
-                <DialogFooter className='gap-2 sm:gap-0 pt-4'>
+                <DialogFooter className='gap-2 pt-4'>
                     <Button type='button' variant='outline' onClick={() => onOpenChange(false)} disabled={isLoading}>
                         {t('common.cancel')}
                     </Button>

@@ -1,20 +1,50 @@
 'use client'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator
+} from '@/components/ui/breadcrumb'
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { ADMIN_ROUTES } from '@/constants/admin.const'
 import { Link } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
+import { useState } from 'react'
 import { ModeToggle } from '@/components/dark-mode-toggle'
 import SelectLanguage from '@/components/select-language'
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'
-import { useLogout } from '@/hooks/data/useAuth'
+import DialogConfirmLogout from '@/components/dialog-confirm-Logout'
+import { usePathname } from 'next/navigation'
 
 export function AdminTopbar() {
     const t = useTranslations('AdminPage')
     const currentUser = useCurrentUserData()
-    const { handleLogout, logoutResult } = useLogout()
+    const [isConfirmLogoutOpen, setIsConfirmLogoutOpen] = useState(false)
+    const pathname = usePathname()
+
+    const locale = pathname?.split('/')[1]
+    const getI18nPath = (route: string): string => `/${locale}${route}`
+
+    const routeLabels = [
+        { href: ADMIN_ROUTES.DASHBOARD, label: t('dashboard.title') },
+        { href: ADMIN_ROUTES.USERS, label: t('users.title') },
+        { href: ADMIN_ROUTES.POSTS, label: t('moderation.title') },
+        { href: ADMIN_ROUTES.COMMENTS, label: t('comments.title') },
+        { href: ADMIN_ROUTES.APPEALS, label: t('appeals.title') },
+        { href: ADMIN_ROUTES.ACTIVITY, label: t('activity.title') },
+        { href: ADMIN_ROUTES.SETTINGS, label: t('settings.title') }
+    ]
+
+    const currentRoute = routeLabels.find((route) => pathname?.includes(getI18nPath(route.href)))
+    const breadcrumbs = [
+        { label: t('breadcrumbs.admin'), href: getI18nPath(ADMIN_ROUTES.DASHBOARD) },
+        ...(currentRoute && currentRoute.href !== ADMIN_ROUTES.DASHBOARD ? [{ label: currentRoute.label }] : [])
+    ]
 
     const displayName = currentUser?.name || currentUser?.username || t('shell.unknownUser')
     const fallbackAvatar = (displayName.charAt(0) || 'A').toUpperCase()
@@ -22,8 +52,23 @@ export function AdminTopbar() {
     return (
         <header className='sticky top-0 z-30 border-b bg-background/95 px-4 md:px-8'>
             <div className='mx-auto flex h-16 w-full max-w-[1600px] items-center justify-between'>
-                <div className='flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-muted-foreground'>
-                    <span className='font-semibold'>{t('shell.panelLabel')}</span>
+                <div className='flex items-center gap-2 text-xs text-muted-foreground'>
+                    <Breadcrumb>
+                        <BreadcrumbList>
+                            {breadcrumbs.map((crumb, idx) => (
+                                <BreadcrumbItem key={`${crumb.label}-${idx}`}>
+                                    {crumb.href ? (
+                                        <BreadcrumbLink asChild>
+                                            <Link href={crumb.href}>{crumb.label}</Link>
+                                        </BreadcrumbLink>
+                                    ) : (
+                                        <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+                                    )}
+                                    {idx < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
+                                </BreadcrumbItem>
+                            ))}
+                        </BreadcrumbList>
+                    </Breadcrumb>
                 </div>
 
                 <div className='flex items-center gap-2 md:gap-3'>
@@ -69,16 +114,16 @@ export function AdminTopbar() {
                                 <Button
                                     variant='ghost'
                                     className='w-full justify-start text-destructive hover:bg-destructive/10'
-                                    onClick={handleLogout}
-                                    disabled={logoutResult.isLoading}
+                                    onClick={() => setIsConfirmLogoutOpen(true)}
                                 >
-                                    {logoutResult.isLoading ? 'Loading...' : t('shell.logout')}
+                                    {t('shell.logout')}
                                 </Button>
                             </div>
                         </PopoverContent>
                     </Popover>
                 </div>
             </div>
+            <DialogConfirmLogout isOpen={isConfirmLogoutOpen} onOpenChange={setIsConfirmLogoutOpen} />
         </header>
     )
 }

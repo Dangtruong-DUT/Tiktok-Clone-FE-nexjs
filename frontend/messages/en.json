@@ -834,7 +834,27 @@
                 "confirmDelete": "Confirm Delete",
                 "confirmRestore": "Confirm Restore",
                 "resetPassword": "Reset Password",
-                "sendEmail": "Send Email"
+                "sendEmail": "Send Email",
+                "viewDetails": "View details"
+            },
+            "detail": {
+                "title": "User Details",
+                "stats": {
+                    "followers": "Followers",
+                    "following": "Following",
+                    "likes": "Likes",
+                    "posts": "Posts"
+                },
+                "fields": {
+                    "email": "Email",
+                    "role": "Role",
+                    "verify": "Verify status",
+                    "createdAt": "Created at",
+                    "bannedAt": "Banned at",
+                    "deletedAt": "Deleted at",
+                    "banReason": "Ban reason",
+                    "status": "Status"
+                }
             },
             "labels": {
                 "reason": "Reason",
@@ -895,7 +915,22 @@
             },
             "actions": {
                 "delete": "Delete",
-                "confirmDelete": "Confirm Delete"
+                "confirmDelete": "Confirm Delete",
+                "preview": "Preview"
+            },
+            "preview": {
+                "title": "Post Preview",
+                "loading": "Loading preview...",
+                "noMedia": "No media available",
+                "stats": {
+                    "likes": "Likes",
+                    "comments": "Comments",
+                    "bookmarks": "Bookmarks",
+                    "views": "Views"
+                },
+                "fields": {
+                    "content": "Content"
+                }
             },
             "labels": {
                 "reason": "Reason",
@@ -939,7 +974,18 @@
             },
             "actions": {
                 "delete": "Delete",
-                "confirmDelete": "Confirm Delete"
+                "confirmDelete": "Confirm Delete",
+                "view": "View"
+            },
+            "detail": {
+                "title": "Comment Details",
+                "fields": {
+                    "content": "Content",
+                    "likes": "Likes",
+                    "parentId": "Parent Comment",
+                    "createdAt": "Created at",
+                    "author": "Author"
+                }
             },
             "labels": {
                 "reason": "Reason"
@@ -979,6 +1025,21 @@
             },
             "prepositions": {
                 "on": "on"
+            },
+            "actions": {
+                "viewDetails": "View details"
+            },
+            "detail": {
+                "title": "Activity Details",
+                "fields": {
+                    "action": "Action",
+                    "actor": "Actor",
+                    "resourceType": "Resource type",
+                    "resourceId": "Resource ID",
+                    "timestamp": "Timestamp",
+                    "reason": "Reason",
+                    "metadata": "Metadata"
+                }
             }
         },
         "settings": {
@@ -1015,16 +1076,35 @@
                 "actions": "Actions",
                 "evidence": "Evidence"
             },
+            "actions": {
+                "approve": "Approve",
+                "reject": "Reject",
+                "viewDetails": "View details"
+            },
+            "detail": {
+                "title": "Appeal Details",
+                "resourceTitle": "Resource",
+                "evidenceTitle": "Evidence",
+                "noEvidence": "No evidence files",
+                "resourceUnavailable": "Resource may be deleted or unavailable",
+                "fields": {
+                    "status": "Status",
+                    "type": "Type",
+                    "reason": "Reason",
+                    "response": "Admin response",
+                    "reviewer": "Reviewer",
+                    "createdAt": "Created at",
+                    "reviewedAt": "Reviewed at",
+                    "resourceType": "Resource type",
+                    "resourceId": "Resource ID"
+                }
+            },
             "evidenceDialog": {
                 "title": "Appeal Evidence",
                 "imageCount": "Image {current} of {total}",
                 "imageAlt": "Evidence image {index}",
                 "prev": "Previous image",
                 "next": "Next image"
-            },
-            "actions": {
-                "approve": "Approve",
-                "reject": "Reject"
             },
             "labels": {
                 "adminResponse": "Admin response"

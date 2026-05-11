@@ -14,6 +14,8 @@ import type { LocalesType } from '@/i18n/config'
 import { ACTIVITY_TYPES } from '@/constants/admin.const'
 import { AdminActivityListItem } from '@/types/dtos/admin/admin-response.dto'
 import type { PaginationMeta } from '@/types/common/pagination-meta.type'
+import { ActivityLogDetailDialog } from './activity-log-detail-dialog'
+import { Button } from '@/components/ui/button'
 
 interface ActivityLogProps {
     type?: 'all' | 'admin' | 'system'
@@ -52,6 +54,7 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
     const [searchTerm, setSearchTerm] = useState('')
     const [timePeriod, setTimePeriod] = useState<'24h' | '7d' | '30d' | 'all'>('7d')
     const [activityType, setActivityType] = useState('all')
+    const [detailLog, setDetailLog] = useState<AdminActivityListItem | null>(null)
 
     const dateFrom = useMemo(() => {
         if (timePeriod === 'all') return undefined
@@ -374,6 +377,14 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
                                                         <span className='font-mono'>#{log.resource_id}</span>
                                                     )}
                                                     <span>{formatAdminDate(log.created_at)}</span>
+                                                    <Button
+                                                        variant='ghost'
+                                                        size='sm'
+                                                        className='h-7 px-2 text-xs'
+                                                        onClick={() => setDetailLog(log)}
+                                                    >
+                                                        {t('activity.actions.viewDetails')}
+                                                    </Button>
                                                 </div>
                                             </div>
                                         </div>
@@ -418,6 +429,14 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
                         <AutoPagination page={page} pageSize={pagination.last_page} onPageChange={setPage} />
                     )}
                 </div>
+            )}
+
+            {detailLog && (
+                <ActivityLogDetailDialog
+                    open={!!detailLog}
+                    log={detailLog}
+                    onOpenChange={(open) => !open && setDetailLog(null)}
+                />
             )}
         </div>
     )

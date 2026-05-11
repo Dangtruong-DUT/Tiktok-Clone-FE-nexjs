@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import AutoPagination from '@/components/auto-pagination'
 import { Skeleton } from '@/components/ui/skeleton'
 import { DeletePostDialog } from './delete-post-dialog'
+import { PostPreviewDialog } from './post-preview-dialog'
 import { formatAdminDate, getPostStatusColor, getPostStatus, truncateText } from '@/helpers/admin-helpers'
 import { AdminPost } from '@/types/dtos/admin/admin-response.dto'
 
@@ -40,7 +41,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
 
     // Selected post for dialogs
     const [selectedPost, setSelectedPost] = useState<AdminPost | null>(null)
-    const [dialogType, setDialogType] = useState<'delete' | null>(null)
+    const [dialogType, setDialogType] = useState<'preview' | 'delete' | null>(null)
 
     // Fetch data
     const { data, isLoading, isFetching, refetch } = useGetAdminPostsQuery({
@@ -71,7 +72,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
         setPage(1)
     }
 
-    const openDialog = (post: AdminPost, type: 'delete') => {
+    const openDialog = (post: AdminPost, type: 'preview' | 'delete') => {
         setSelectedPost(post)
         setDialogType(type)
     }
@@ -155,16 +156,28 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
                     <p className='text-muted-foreground'>{t('posts.emptyState')}</p>
                 </div>
             ) : (
-                <div className='border rounded-lg overflow-hidden'>
+                <div className='rounded-xl border bg-background shadow-sm overflow-hidden'>
                     <Table>
                         <TableHeader>
-                            <TableRow className='bg-muted/50'>
-                                <TableHead className='font-semibold'>{t('posts.columns.id')}</TableHead>
-                                <TableHead className='font-semibold'>{t('posts.columns.title')}</TableHead>
-                                <TableHead className='font-semibold'>{t('posts.columns.author')}</TableHead>
-                                <TableHead className='font-semibold'>{t('posts.columns.status')}</TableHead>
-                                <TableHead className='font-semibold'>{t('posts.columns.uploadDate')}</TableHead>
-                                <TableHead className='text-right font-semibold'>{t('posts.columns.actions')}</TableHead>
+                            <TableRow className='bg-muted/40'>
+                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('posts.columns.id')}
+                                </TableHead>
+                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('posts.columns.title')}
+                                </TableHead>
+                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('posts.columns.author')}
+                                </TableHead>
+                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('posts.columns.status')}
+                                </TableHead>
+                                <TableHead className='text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('posts.columns.uploadDate')}
+                                </TableHead>
+                                <TableHead className='text-right text-xs uppercase tracking-wide text-muted-foreground'>
+                                    {t('posts.columns.actions')}
+                                </TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -194,6 +207,12 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align='end' className='w-48'>
+                                                <DropdownMenuItem
+                                                    onClick={() => openDialog(post, 'preview')}
+                                                    className='cursor-pointer'
+                                                >
+                                                    {t('posts.actions.preview')}
+                                                </DropdownMenuItem>
                                                 <DropdownMenuItem
                                                     onClick={() => openDialog(post, 'delete')}
                                                     className='text-red-600 cursor-pointer'
@@ -248,6 +267,11 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
             {/* Dialogs */}
             {selectedPost && (
                 <>
+                    <PostPreviewDialog
+                        open={dialogType === 'preview'}
+                        post={selectedPost}
+                        onOpenChange={(open) => !open && closeDialog()}
+                    />
                     <DeletePostDialog
                         open={dialogType === 'delete'}
                         postUuid={selectedPost.uuid}

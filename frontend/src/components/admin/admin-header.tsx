@@ -49,7 +49,7 @@ export function AdminHeader({ title, description, breadcrumbs, actions }: AdminH
                 {/* Title and Actions */}
                 <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
                     <div>
-                        <h1 className='text-2xl font-semibold tracking-tight md:text-3xl'>{title}</h1>
+                        <h1 className='text-xl font-semibold tracking-tight md:text-2xl'>{title}</h1>
                         {description && (
                             <p className='mt-1 text-sm text-muted-foreground md:text-base'>{description}</p>
                         )}

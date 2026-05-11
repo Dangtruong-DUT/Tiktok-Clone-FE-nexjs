@@ -117,7 +117,7 @@ export function SendUserMailDialog({ open, userUuid, username, onOpenChange, onS
                     {error && <p className='text-sm text-red-600'>{error}</p>}
                 </div>
 
-                <DialogFooter className='gap-2 sm:gap-0'>
+                <DialogFooter className='gap-2'>
                     <Button type='button' variant='outline' onClick={handleClose} disabled={isLoading}>
                         Cancel
                     </Button>
