@@ -40,6 +40,7 @@ import { EvidenceGalleryDialog } from './evidence-gallery-dialog'
 import { AppealDetailDialog } from './appeal-detail-dialog'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 const FILTER_ALL = 'all' as const
 
@@ -322,9 +323,21 @@ export function AppealTable() {
                                                 </span>
                                             </TableCell>
                                             <TableCell className='max-w-[200px]'>
-                                                <span className='text-sm text-muted-foreground'>
-                                                    {truncateText(appeal.reason ?? '', 50)}
-                                                </span>
+                                                <TooltipProvider>
+                                                    <Tooltip>
+                                                        <TooltipTrigger asChild>
+                                                            <span className='line-clamp-1 cursor-help text-sm text-muted-foreground'>
+                                                                {appeal.reason ?? '—'}
+                                                            </span>
+                                                        </TooltipTrigger>
+                                                        {appeal.reason && (
+                                                            <TooltipContent side='top' className='max-w-xs'>
+                                                                <p className='text-xs font-medium'>Appeal Reason:</p>
+                                                                <p className='text-xs'>{appeal.reason}</p>
+                                                            </TooltipContent>
+                                                        )}
+                                                    </Tooltip>
+                                                </TooltipProvider>
                                             </TableCell>
                                             <TableCell>
                                                 {hasEvidence ? (

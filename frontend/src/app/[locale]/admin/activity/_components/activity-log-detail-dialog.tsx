@@ -15,8 +15,8 @@ interface ActivityLogDetailDialogProps {
 export function ActivityLogDetailDialog({ open, log, onOpenChange }: ActivityLogDetailDialogProps) {
     const t = useTranslations('AdminPage')
 
-    const actor = 'admin' in log ? log.admin?.username : log.user?.username
-    const actionLabel = getActivityLabel('action' in log ? log.action : log.action_type)
+    const actor = 'action_type' in log ? log.user?.username : log.admin?.username
+    const actionLabel = getActivityLabel('action_type' in log ? log.action_type : log.action)
     const metadata = 'metadata' in log ? log.metadata : null
 
     const metadataEntries = metadata
@@ -74,7 +74,7 @@ export function ActivityLogDetailDialog({ open, log, onOpenChange }: ActivityLog
                     </div>
                 </div>
 
-                <DialogFooter>
+                <DialogFooter className='gap-2'>
                     <Button variant='outline' onClick={() => onOpenChange(false)}>
                         {t('common.cancel')}
                     </Button>

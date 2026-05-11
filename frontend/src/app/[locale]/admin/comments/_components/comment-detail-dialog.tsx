@@ -55,7 +55,7 @@ export function CommentDetailDialog({ open, comment, onOpenChange }: CommentDeta
                     </div>
                 </div>
 
-                <DialogFooter>
+                <DialogFooter className='gap-2'>
                     <Button variant='outline' onClick={() => onOpenChange(false)}>
                         {t('common.cancel')}
                     </Button>

@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
-import { AdminLayout, AdminContainer, AdminHeader, DashboardStats } from '@/components/admin'
+import { AdminLayout, AdminContainer, AdminHeader, DashboardStats, DashboardQuickActions } from '@/components/admin'
 import { Suspense } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ActivityLog } from './activity/_components/activity-log'
@@ -32,7 +32,7 @@ export default async function AdminDashboardPage() {
                 <div className='space-y-8'>
                     {/* Dashboard Statistics */}
                     <section>
-                        <h2 className='text-xl font-semibold mb-4'>{t('dashboard.statistics')}</h2>
+                        <h2 className='text-base font-semibold mb-4 text-muted-foreground uppercase tracking-wide'>{t('dashboard.statistics')}</h2>
                         <Suspense
                             fallback={
                                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
@@ -46,9 +46,14 @@ export default async function AdminDashboardPage() {
                         </Suspense>
                     </section>
 
+                    {/* Quick Actions */}
+                    <section>
+                        <DashboardQuickActions />
+                    </section>
+
                     {/* Recent Activity */}
                     <section>
-                        <h2 className='text-xl font-semibold mb-4'>{t('dashboard.recentActivity')}</h2>
+                        <h2 className='text-base font-semibold mb-4 text-muted-foreground uppercase tracking-wide'>{t('dashboard.recentActivity')}</h2>
                         <Suspense
                             fallback={
                                 <div className='space-y-3'>
