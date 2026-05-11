@@ -14,7 +14,6 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { PasswordInput } from '@/components/ui/password-input'
 import { toast } from 'sonner'
-import { KeyRound, Loader2 } from 'lucide-react'
 
 interface ResetUserPasswordDialogProps {
     open: boolean
@@ -84,14 +83,11 @@ export function ResetUserPasswordDialog({
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className='sm:max-w-[500px]'>
                 <DialogHeader>
-                    <div className='flex items-start gap-3'>
-                        <KeyRound className='w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0' />
-                        <div>
-                            <DialogTitle className='text-lg'>Reset User Password</DialogTitle>
-                            <DialogDescription className='mt-1'>
-                                Set a new password for <strong>{username}</strong>
-                            </DialogDescription>
-                        </div>
+                    <div>
+                        <DialogTitle className='text-lg'>Reset User Password</DialogTitle>
+                        <DialogDescription className='mt-1'>
+                            Set a new password for <strong>{username}</strong>
+                        </DialogDescription>
                     </div>
                 </DialogHeader>
 
@@ -130,7 +126,6 @@ export function ResetUserPasswordDialog({
                         Cancel
                     </Button>
                     <Button type='button' onClick={handleSubmit} disabled={isLoading}>
-                        {isLoading && <Loader2 className='w-4 h-4 mr-2 animate-spin' />}
                         {isLoading ? 'Saving...' : 'Reset Password'}
                     </Button>
                 </DialogFooter>

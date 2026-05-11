@@ -162,8 +162,6 @@ class AppealRepository extends BaseRepository
         $query = $this->query()
             ->when($filterCollection->get('appeal_status'), function ($query, $appeal_status) {
                 $query->where('status', $appeal_status);
-            }, function ($query) {
-                $query->pending();
             })
             ->when($filterCollection->get('appeal_type'), function ($query, $appeal_type) {
                 $query->where('appeal_type', $appeal_type);

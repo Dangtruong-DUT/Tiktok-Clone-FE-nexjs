@@ -103,7 +103,6 @@ class AppealService
                 'resource_type' => 'Resource type must be user for account appeals',
             ]);
         }
-
         $user = $this->guard()->user();
         if (! $user->isBanned()) {
             throw new BusinessException('Your account is not currently banned.', [

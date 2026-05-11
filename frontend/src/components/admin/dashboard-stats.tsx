@@ -5,8 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { formatNumber } from '@/utils/formatting/formatNumber.util'
 import type { DashboardStats } from '@/types/dtos/admin/admin-response.dto'
 import { useGetDashboardStatsQuery } from '@/store/services/admin/index'
-import { cn } from '@/lib/utils'
-import { Users, FileVideo, MessageSquare, Shield } from 'lucide-react'
 
 interface DashboardStatsProps {
     stats?: DashboardStats
@@ -43,52 +41,34 @@ export function DashboardStats({ stats, period = 'today', isLoading }: Dashboard
     const cards = [
         {
             title: t('dashboard.totalUsers'),
-            value: formatNumber(resolvedStats.total_users),
-            icon: Users,
-            color: 'text-blue-600',
-            bgColor: 'bg-blue-100'
+            value: formatNumber(resolvedStats.total_users)
         },
         {
             title: t('dashboard.totalPosts'),
-            value: formatNumber(resolvedStats.total_posts),
-            icon: FileVideo,
-            color: 'text-green-600',
-            bgColor: 'bg-green-100'
+            value: formatNumber(resolvedStats.total_posts)
         },
         {
             title: t('dashboard.bannedUsers'),
-            value: formatNumber(resolvedStats.banned_users),
-            icon: Shield,
-            color: 'text-red-600',
-            bgColor: 'bg-red-100'
+            value: formatNumber(resolvedStats.banned_users)
         },
         {
             title: t('dashboard.adminActions'),
-            value: formatNumber(resolvedStats.total_admin_actions),
-            icon: MessageSquare,
-            color: 'text-purple-600',
-            bgColor: 'bg-purple-100'
+            value: formatNumber(resolvedStats.total_admin_actions)
         }
     ]
 
     return (
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
-            {cards.map((card) => {
-                const Icon = card.icon
-                return (
-                    <Card key={card.title} className='hover:shadow-lg transition-shadow'>
-                        <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                            <CardTitle className='text-sm font-medium'>{card.title}</CardTitle>
-                            <div className={cn('p-2 rounded-lg', card.bgColor)}>
-                                <Icon className={cn('w-4 h-4', card.color)} />
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            <div className='text-2xl font-bold'>{card.value}</div>
-                        </CardContent>
-                    </Card>
-                )
-            })}
+            {cards.map((card) => (
+                <Card key={card.title} className='hover:shadow-lg transition-shadow'>
+                    <CardHeader className='space-y-0 pb-2'>
+                        <CardTitle className='text-sm font-medium'>{card.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className='text-2xl font-bold'>{card.value}</div>
+                    </CardContent>
+                </Card>
+            ))}
         </div>
     )
 }

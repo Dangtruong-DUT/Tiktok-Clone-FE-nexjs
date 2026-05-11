@@ -16,7 +16,6 @@ import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
-import { AlertCircle, Loader2 } from 'lucide-react'
 
 interface BanUserDialogProps {
     open: boolean
@@ -90,14 +89,11 @@ export function BanUserDialog({ open, userUuid, username, onOpenChange, onSucces
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className='sm:max-w-[500px]'>
                 <DialogHeader>
-                    <div className='flex items-start gap-3'>
-                        <AlertCircle className='w-5 h-5 text-red-600 mt-0.5 flex-shrink-0' />
-                        <div>
-                            <DialogTitle className='text-lg'>{t('users.actions.ban')}</DialogTitle>
-                            <DialogDescription className='mt-1'>
-                                {t('users.banDialog.subtitle', { username })}
-                            </DialogDescription>
-                        </div>
+                    <div>
+                        <DialogTitle className='text-lg'>{t('users.actions.ban')}</DialogTitle>
+                        <DialogDescription className='mt-1'>
+                            {t('users.banDialog.subtitle', { username })}
+                        </DialogDescription>
                     </div>
                 </DialogHeader>
 
@@ -150,7 +146,6 @@ export function BanUserDialog({ open, userUuid, username, onOpenChange, onSucces
                         {t('common.cancel')}
                     </Button>
                     <Button type='button' variant='destructive' onClick={handleBan} disabled={isLoading}>
-                        {isLoading && <Loader2 className='w-4 h-4 mr-2 animate-spin' />}
                         {isLoading ? t('common.loading') : t('users.actions.confirmBan')}
                     </Button>
                 </DialogFooter>

@@ -15,7 +15,6 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
-import { AlertTriangle, Loader2 } from 'lucide-react'
 
 interface DeleteUserDialogProps {
     open: boolean
@@ -80,14 +79,11 @@ export function DeleteUserDialog({ open, userUuid, username, onOpenChange, onSuc
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className='sm:max-w-[500px]'>
                 <DialogHeader>
-                    <div className='flex items-start gap-3'>
-                        <AlertTriangle className='w-5 h-5 text-yellow-600 mt-0.5 flex-shrink-0' />
-                        <div>
-                            <DialogTitle className='text-lg'>{t('users.dialogs.deleteTitle')}</DialogTitle>
-                            <DialogDescription className='mt-1'>
-                                {t('users.dialogs.deleteSubtitle', { username })}
-                            </DialogDescription>
-                        </div>
+                    <div>
+                        <DialogTitle className='text-lg'>{t('users.dialogs.deleteTitle')}</DialogTitle>
+                        <DialogDescription className='mt-1'>
+                            {t('users.dialogs.deleteSubtitle', { username })}
+                        </DialogDescription>
                     </div>
                 </DialogHeader>
 
@@ -95,7 +91,7 @@ export function DeleteUserDialog({ open, userUuid, username, onOpenChange, onSuc
                     {/* Warning Box */}
                     <div className='bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3'>
                         <p className='text-sm text-yellow-800 dark:text-yellow-200'>
-                            ⚠️ {t('users.dialogs.deleteWarning')}
+                            {t('users.dialogs.deleteWarning')}
                         </p>
                     </div>
 
@@ -125,7 +121,6 @@ export function DeleteUserDialog({ open, userUuid, username, onOpenChange, onSuc
                         {t('common.cancel')}
                     </Button>
                     <Button type='button' variant='destructive' onClick={handleDelete} disabled={isLoading}>
-                        {isLoading && <Loader2 className='w-4 h-4 mr-2 animate-spin' />}
                         {isLoading ? t('common.loading') : t('users.actions.confirmDelete')}
                     </Button>
                 </DialogFooter>

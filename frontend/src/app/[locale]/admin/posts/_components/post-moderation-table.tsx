@@ -13,7 +13,6 @@ import AutoPagination from '@/components/auto-pagination'
 import { Skeleton } from '@/components/ui/skeleton'
 import { DeletePostDialog } from './delete-post-dialog'
 import { formatAdminDate, getPostStatusColor, getPostStatus, truncateText } from '@/helpers/admin-helpers'
-import { MoreHorizontal, Search, AlertCircle } from 'lucide-react'
 import { AdminPost } from '@/types/dtos/admin/admin-response.dto'
 
 interface PostModerationTableProps {
@@ -112,12 +111,10 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
             {/* Header - Search and Filters */}
             <div className='flex flex-col gap-3 md:flex-row md:items-end md:justify-between'>
                 <div className='flex-1 relative'>
-                    <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground' />
                     <Input
                         placeholder={t('posts.placeholders.searchPosts')}
                         value={searchTerm}
                         onChange={(e) => handleSearch(e.target.value)}
-                        className='pl-10'
                     />
                 </div>
 
@@ -155,7 +152,6 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
             {/* Table */}
             {posts.length === 0 ? (
                 <div className='border rounded-lg p-8 text-center'>
-                    <AlertCircle className='w-12 h-12 text-muted-foreground mx-auto mb-3' />
                     <p className='text-muted-foreground'>{t('posts.emptyState')}</p>
                 </div>
             ) : (
@@ -194,7 +190,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
                                                 <Button variant='ghost' size='sm' disabled={isFetching}>
-                                                    <MoreHorizontal className='w-4 h-4' />
+                                                    ...
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align='end' className='w-48'>

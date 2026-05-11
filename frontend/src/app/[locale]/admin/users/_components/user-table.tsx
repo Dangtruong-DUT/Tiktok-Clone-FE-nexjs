@@ -23,8 +23,13 @@ import { DeleteUserDialog } from './delete-user-dialog'
 import { RestoreUserDialog } from './restore-user-dialog'
 import { ResetUserPasswordDialog } from './reset-user-password-dialog'
 import { SendUserMailDialog } from './send-user-mail-dialog'
-import { formatAdminDate, getUserStatus, getUserStatusColor, formatUserStatus, truncateText } from '@/helpers/admin-helpers'
-import { MoreHorizontal, Search, AlertCircle } from 'lucide-react'
+import {
+    formatAdminDate,
+    getUserStatus,
+    getUserStatusColor,
+    formatUserStatus,
+    truncateText
+} from '@/helpers/admin-helpers'
 import { AdminUser } from '@/types/dtos/admin/admin-response.dto'
 
 interface UserTableProps {
@@ -127,12 +132,10 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
             {/* Header - Search and Filters */}
             <div className='flex flex-col gap-3 md:flex-row md:items-end md:justify-between'>
                 <div className='flex-1 relative'>
-                    <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground' />
                     <Input
                         placeholder={t('users.placeholders.searchUsers')}
                         value={searchTerm}
                         onChange={(e) => handleSearch(e.target.value)}
-                        className='pl-10'
                     />
                 </div>
 
@@ -146,7 +149,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                             <SelectItem value='all'>{t('users.filters.allStatuses')}</SelectItem>
                             <SelectItem value='active'>{t('users.filters.active')}</SelectItem>
                             <SelectItem value='banned'>{t('users.filters.banned')}</SelectItem>
-                                <SelectItem value='deleted'>{t('users.filters.deleted')}</SelectItem>
+                            <SelectItem value='deleted'>{t('users.filters.deleted')}</SelectItem>
                         </SelectContent>
                     </Select>
 
@@ -172,7 +175,6 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
             {/* Table */}
             {users.length === 0 ? (
                 <div className='border rounded-lg p-8 text-center'>
-                    <AlertCircle className='w-12 h-12 text-muted-foreground mx-auto mb-3' />
                     <p className='text-muted-foreground'>{t('users.emptyState')}</p>
                 </div>
             ) : (
@@ -194,97 +196,97 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
 
                                 return (
                                     <TableRow key={user.id} className='hover:bg-muted/50'>
-                                    <TableCell className='font-mono text-sm'>#{user.id}</TableCell>
-                                    <TableCell className='font-medium'>{user.username}</TableCell>
-                                    <TableCell className='text-sm max-w-xs truncate'>
-                                        {truncateText(user.email, 25)}
-                                    </TableCell>
-                                    <TableCell>
-                                        <Badge className={getUserStatusColor(status)}>
-                                            {formatUserStatus(status)}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell className='text-sm'>{formatAdminDate(user.created_at)}</TableCell>
-                                    <TableCell className='text-right'>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant='ghost' size='sm' disabled={isFetching}>
-                                                    <MoreHorizontal className='w-4 h-4' />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align='end' className='w-48'>
-                                                {status === 'deleted' ? (
-                                                    <DropdownMenuItem
-                                                        onClick={() => openDialog(user, 'restore')}
-                                                        className='cursor-pointer'
-                                                    >
-                                                        {t('users.actions.restore')}
-                                                    </DropdownMenuItem>
-                                                ) : status === 'banned' ? (
-                                                    <>
+                                        <TableCell className='font-mono text-sm'>#{user.id}</TableCell>
+                                        <TableCell className='font-medium'>{user.username}</TableCell>
+                                        <TableCell className='text-sm max-w-xs truncate'>
+                                            {truncateText(user.email, 25)}
+                                        </TableCell>
+                                        <TableCell>
+                                            <Badge className={getUserStatusColor(status)}>
+                                                {formatUserStatus(status)}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className='text-sm'>{formatAdminDate(user.created_at)}</TableCell>
+                                        <TableCell className='text-right'>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant='ghost' size='sm' disabled={isFetching}>
+                                                        ...
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align='end' className='w-48'>
+                                                    {status === 'deleted' ? (
                                                         <DropdownMenuItem
-                                                            onClick={() => openDialog(user, 'reset-password')}
+                                                            onClick={() => openDialog(user, 'restore')}
                                                             className='cursor-pointer'
                                                         >
-                                                            {t('users.actions.resetPassword')}
+                                                            {t('users.actions.restore')}
                                                         </DropdownMenuItem>
-                                                        <DropdownMenuItem
-                                                            onClick={() => openDialog(user, 'send-mail')}
-                                                            className='cursor-pointer'
-                                                        >
-                                                            {t('users.actions.sendEmail')}
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuSeparator />
-                                                        <DropdownMenuItem
-                                                            onClick={() => openDialog(user, 'unban')}
-                                                            className='cursor-pointer'
-                                                        >
-                                                            {t('users.actions.unban')}
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuSeparator />
-                                                        <DropdownMenuItem
-                                                            onClick={() => openDialog(user, 'delete')}
-                                                            className='text-red-600 cursor-pointer'
-                                                        >
-                                                            {t('users.actions.delete')}
-                                                        </DropdownMenuItem>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <DropdownMenuItem
-                                                            onClick={() => openDialog(user, 'reset-password')}
-                                                            className='cursor-pointer'
-                                                        >
-                                                            {t('users.actions.resetPassword')}
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuItem
-                                                            onClick={() => openDialog(user, 'send-mail')}
-                                                            className='cursor-pointer'
-                                                        >
-                                                            {t('users.actions.sendEmail')}
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuSeparator />
-                                                        <DropdownMenuItem
-                                                            onClick={() => openDialog(user, 'ban')}
-                                                            className='text-orange-600 cursor-pointer'
-                                                        >
-                                                            {t('users.actions.ban')}
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuSeparator />
-                                                        <DropdownMenuItem
-                                                            onClick={() => openDialog(user, 'delete')}
-                                                            className='text-red-600 cursor-pointer'
-                                                        >
-                                                            {t('users.actions.delete')}
-                                                        </DropdownMenuItem>
-                                                    </>
-                                                )}
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </TableCell>
-                                </TableRow>
-                            )
-                        })}
+                                                    ) : status === 'banned' ? (
+                                                        <>
+                                                            <DropdownMenuItem
+                                                                onClick={() => openDialog(user, 'reset-password')}
+                                                                className='cursor-pointer'
+                                                            >
+                                                                {t('users.actions.resetPassword')}
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuItem
+                                                                onClick={() => openDialog(user, 'send-mail')}
+                                                                className='cursor-pointer'
+                                                            >
+                                                                {t('users.actions.sendEmail')}
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuSeparator />
+                                                            <DropdownMenuItem
+                                                                onClick={() => openDialog(user, 'unban')}
+                                                                className='cursor-pointer'
+                                                            >
+                                                                {t('users.actions.unban')}
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuSeparator />
+                                                            <DropdownMenuItem
+                                                                onClick={() => openDialog(user, 'delete')}
+                                                                className='text-red-600 cursor-pointer'
+                                                            >
+                                                                {t('users.actions.delete')}
+                                                            </DropdownMenuItem>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <DropdownMenuItem
+                                                                onClick={() => openDialog(user, 'reset-password')}
+                                                                className='cursor-pointer'
+                                                            >
+                                                                {t('users.actions.resetPassword')}
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuItem
+                                                                onClick={() => openDialog(user, 'send-mail')}
+                                                                className='cursor-pointer'
+                                                            >
+                                                                {t('users.actions.sendEmail')}
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuSeparator />
+                                                            <DropdownMenuItem
+                                                                onClick={() => openDialog(user, 'ban')}
+                                                                className='text-orange-600 cursor-pointer'
+                                                            >
+                                                                {t('users.actions.ban')}
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuSeparator />
+                                                            <DropdownMenuItem
+                                                                onClick={() => openDialog(user, 'delete')}
+                                                                className='text-red-600 cursor-pointer'
+                                                            >
+                                                                {t('users.actions.delete')}
+                                                            </DropdownMenuItem>
+                                                        </>
+                                                    )}
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </TableCell>
+                                    </TableRow>
+                                )
+                            })}
                         </TableBody>
                     </Table>
                 </div>

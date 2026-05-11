@@ -16,7 +16,6 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
-import { AlertTriangle, Loader2 } from 'lucide-react'
 import { VIOLATION_REASONS } from '@/constants/admin.const'
 
 interface DeletePostDialogProps {
@@ -92,21 +91,18 @@ export function DeletePostDialog({ open, postUuid, authorUsername, onOpenChange,
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className='sm:max-w-[500px]'>
                 <DialogHeader>
-                    <div className='flex items-start gap-3'>
-                        <AlertTriangle className='w-5 h-5 text-red-600 mt-0.5 flex-shrink-0' />
-                        <div>
-                            <DialogTitle className='text-lg'>{t('posts.actions.delete')}</DialogTitle>
-                            <DialogDescription className='mt-1'>
-                                {t('posts.dialogs.deleteSubtitle', { username: authorUsername })}
-                            </DialogDescription>
-                        </div>
+                    <div>
+                        <DialogTitle className='text-lg'>{t('posts.actions.delete')}</DialogTitle>
+                        <DialogDescription className='mt-1'>
+                            {t('posts.dialogs.deleteSubtitle', { username: authorUsername })}
+                        </DialogDescription>
                     </div>
                 </DialogHeader>
 
                 <div className='space-y-4 py-4'>
                     {/* Warning Box */}
                     <div className='bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3'>
-                        <p className='text-sm text-red-800 dark:text-red-200'>⚠️ {t('posts.dialogs.deleteWarning')}</p>
+                        <p className='text-sm text-red-800 dark:text-red-200'>{t('posts.dialogs.deleteWarning')}</p>
                     </div>
 
                     {/* Reason Select */}
@@ -160,7 +156,6 @@ export function DeletePostDialog({ open, postUuid, authorUsername, onOpenChange,
                         {t('common.cancel')}
                     </Button>
                     <Button type='button' variant='destructive' onClick={handleDelete} disabled={isLoading}>
-                        {isLoading && <Loader2 className='w-4 h-4 mr-2 animate-spin' />}
                         {isLoading ? t('common.loading') : t('posts.actions.confirmDelete')}
                     </Button>
                 </DialogFooter>

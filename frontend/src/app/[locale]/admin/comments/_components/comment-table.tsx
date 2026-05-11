@@ -12,7 +12,6 @@ import AutoPagination from '@/components/auto-pagination'
 import { Skeleton } from '@/components/ui/skeleton'
 import { DeleteCommentDialog } from './delete-comment-dialog'
 import { formatAdminDate, truncateText } from '@/helpers/admin-helpers'
-import { MoreHorizontal, Search, AlertCircle } from 'lucide-react'
 import { AdminComment } from '@/types/dtos/admin/admin-response.dto'
 import type { PaginationMeta } from '@/types/common/pagination-meta.type'
 
@@ -117,12 +116,10 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
             {/* Header - Search and Filters */}
             <div className='flex flex-col gap-3 md:flex-row md:items-end md:justify-between'>
                 <div className='flex-1 relative'>
-                    <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground' />
                     <Input
                         placeholder={t('comments.placeholders.searchComments')}
                         value={searchTerm}
                         onChange={(e) => handleSearch(e.target.value)}
-                        className='pl-10'
                     />
                 </div>
 
@@ -147,7 +144,6 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
             {/* Table */}
             {comments.length === 0 ? (
                 <div className='border rounded-lg p-8 text-center'>
-                    <AlertCircle className='w-12 h-12 text-muted-foreground mx-auto mb-3' />
                     <p className='text-muted-foreground'>{t('comments.emptyState')}</p>
                 </div>
             ) : (
@@ -187,7 +183,7 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
                                                 <Button variant='ghost' size='sm' disabled={isFetching}>
-                                                    <MoreHorizontal className='w-4 h-4' />
+                                                    ...
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align='end' className='w-40'>

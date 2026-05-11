@@ -58,7 +58,7 @@ class AdminAppealService
             throw new NotFoundException('Appeal not found');
         }
 
-        if ($appeal->status !== AppealStatusEnum::PENDING->value) {
+        if ($appeal->status !== AppealStatusEnum::PENDING) {
             throw new BusinessException('This appeal has already been reviewed', [
                 'status' => 'Appeal is not pending',
             ]);
@@ -103,7 +103,7 @@ class AdminAppealService
             throw new NotFoundException('Appeal not found');
         }
 
-        if ($appeal->status !== AppealStatusEnum::PENDING->value) {
+        if ($appeal->status !== AppealStatusEnum::PENDING) {
             throw new BusinessException('This appeal has already been reviewed', [
                 'status' => 'Appeal is not pending',
             ]);

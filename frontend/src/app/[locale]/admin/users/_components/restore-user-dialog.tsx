@@ -12,7 +12,6 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
-import { RotateCcw, Loader2 } from 'lucide-react'
 
 interface RestoreUserDialogProps {
     open: boolean
@@ -50,12 +49,9 @@ export function RestoreUserDialog({ open, userUuid, username, onOpenChange, onSu
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className='sm:max-w-[400px]'>
                 <DialogHeader>
-                    <div className='flex items-start gap-3'>
-                        <RotateCcw className='w-5 h-5 text-emerald-600 mt-0.5 flex-shrink-0' />
-                        <div>
-                            <DialogTitle className='text-lg'>{t('users.actions.restore')}</DialogTitle>
-                            <DialogDescription>{t('users.dialogs.restoreSubtitle', { username })}</DialogDescription>
-                        </div>
+                    <div>
+                        <DialogTitle className='text-lg'>{t('users.actions.restore')}</DialogTitle>
+                        <DialogDescription>{t('users.dialogs.restoreSubtitle', { username })}</DialogDescription>
                     </div>
                 </DialogHeader>
 
@@ -64,7 +60,6 @@ export function RestoreUserDialog({ open, userUuid, username, onOpenChange, onSu
                         {t('common.cancel')}
                     </Button>
                     <Button type='button' onClick={handleRestore} disabled={isLoading}>
-                        {isLoading && <Loader2 className='w-4 h-4 mr-2 animate-spin' />}
                         {isLoading ? t('common.loading') : t('users.actions.confirmRestore')}
                     </Button>
                 </DialogFooter>

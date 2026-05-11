@@ -2,15 +2,8 @@
 
 import { useState, useCallback } from 'react'
 import { useTranslations } from 'next-intl'
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, ChevronRight, Download, ZoomIn, ZoomOut, ImageIcon } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 
@@ -66,16 +59,11 @@ export function EvidenceGalleryDialog({ open, onOpenChange, evidenceFiles, appea
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className='sm:max-w-[720px] p-0 overflow-hidden'>
                 <DialogHeader className='p-4 pb-2'>
-                    <DialogTitle className='flex items-center gap-2'>
-                        <ImageIcon className='h-5 w-5' />
-                        {t('title')}
-                    </DialogTitle>
+                    <DialogTitle>{t('title')}</DialogTitle>
                     <DialogDescription>
                         {t('imageCount', { current: currentIndex + 1, total: evidenceFiles.length })}
                         {currentFile && (
-                            <span className='ml-2 text-xs text-muted-foreground'>
-                                — {currentFile.file_name}
-                            </span>
+                            <span className='ml-2 text-xs text-muted-foreground'>— {currentFile.file_name}</span>
                         )}
                     </DialogDescription>
                 </DialogHeader>
@@ -111,17 +99,17 @@ export function EvidenceGalleryDialog({ open, onOpenChange, evidenceFiles, appea
                         <>
                             <button
                                 onClick={handlePrev}
-                                className='absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 transition-colors'
+                                className='absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 px-3 py-2 text-xs font-semibold text-white hover:bg-black/70 transition-colors'
                                 aria-label={t('prev')}
                             >
-                                <ChevronLeft className='h-5 w-5' />
+                                {t('prev')}
                             </button>
                             <button
                                 onClick={handleNext}
-                                className='absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 transition-colors'
+                                className='absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 px-3 py-2 text-xs font-semibold text-white hover:bg-black/70 transition-colors'
                                 aria-label={t('next')}
                             >
-                                <ChevronRight className='h-5 w-5' />
+                                {t('next')}
                             </button>
                         </>
                     )}
@@ -156,12 +144,12 @@ export function EvidenceGalleryDialog({ open, onOpenChange, evidenceFiles, appea
                             size='sm'
                             variant='ghost'
                             onClick={() => setIsZoomed(!isZoomed)}
-                            className='h-8 w-8 p-0'
+                            className='h-8 px-3 text-xs'
                         >
-                            {isZoomed ? <ZoomOut className='h-4 w-4' /> : <ZoomIn className='h-4 w-4' />}
+                            {isZoomed ? t('zoomOut') : t('zoomIn')}
                         </Button>
-                        <Button size='sm' variant='ghost' onClick={handleDownload} className='h-8 w-8 p-0'>
-                            <Download className='h-4 w-4' />
+                        <Button size='sm' variant='ghost' onClick={handleDownload} className='h-8 px-3 text-xs'>
+                            {t('download')}
                         </Button>
                     </div>
                 </div>

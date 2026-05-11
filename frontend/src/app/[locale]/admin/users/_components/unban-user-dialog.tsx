@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
-import { CheckCircle, Loader2 } from 'lucide-react'
 
 interface UnbanUserDialogProps {
     open: boolean
@@ -51,12 +50,9 @@ export function UnbanUserDialog({ open, userUuid, username, onOpenChange, onSucc
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className='sm:max-w-[400px]'>
                 <DialogHeader>
-                    <div className='flex items-start gap-3'>
-                        <CheckCircle className='w-5 h-5 text-green-600 mt-0.5 flex-shrink-0' />
-                        <div>
-                            <DialogTitle className='text-lg'>{t('users.actions.unban')}</DialogTitle>
-                            <DialogDescription>{t('users.dialogs.unbanSubtitle', { username })}</DialogDescription>
-                        </div>
+                    <div>
+                        <DialogTitle className='text-lg'>{t('users.actions.unban')}</DialogTitle>
+                        <DialogDescription>{t('users.dialogs.unbanSubtitle', { username })}</DialogDescription>
                     </div>
                 </DialogHeader>
 
@@ -65,7 +61,6 @@ export function UnbanUserDialog({ open, userUuid, username, onOpenChange, onSucc
                         {t('common.cancel')}
                     </Button>
                     <Button type='button' onClick={handleUnban} disabled={isLoading}>
-                        {isLoading && <Loader2 className='w-4 h-4 mr-2 animate-spin' />}
                         {isLoading ? t('common.loading') : t('users.actions.confirmUnban')}
                     </Button>
                 </DialogFooter>

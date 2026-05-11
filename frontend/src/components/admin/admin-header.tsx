@@ -24,11 +24,11 @@ interface AdminHeaderProps {
 
 export function AdminHeader({ title, description, breadcrumbs, actions }: AdminHeaderProps) {
     return (
-        <div className='border-b bg-card'>
-            <div className='px-4 py-4 md:px-8 md:py-6'>
+        <div className='border-b bg-background'>
+            <div className='mx-auto w-full max-w-[1600px] px-4 py-5 md:px-8 md:py-7'>
                 {/* Breadcrumbs */}
                 {breadcrumbs && breadcrumbs.length > 0 && (
-                    <Breadcrumb className='mb-3'>
+                    <Breadcrumb className='mb-4'>
                         <BreadcrumbList>
                             {breadcrumbs.map((crumb, idx) => (
                                 <BreadcrumbItem key={`${crumb.label}-${idx}`}>
@@ -49,8 +49,10 @@ export function AdminHeader({ title, description, breadcrumbs, actions }: AdminH
                 {/* Title and Actions */}
                 <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
                     <div>
-                        <h1 className='text-2xl font-bold tracking-tight md:text-3xl'>{title}</h1>
-                        {description && <p className='mt-1 text-muted-foreground'>{description}</p>}
+                        <h1 className='text-2xl font-semibold tracking-tight md:text-3xl'>{title}</h1>
+                        {description && (
+                            <p className='mt-1 text-sm text-muted-foreground md:text-base'>{description}</p>
+                        )}
                     </div>
 
                     {/* Actions */}

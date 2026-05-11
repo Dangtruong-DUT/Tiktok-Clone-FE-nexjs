@@ -25,18 +25,6 @@ import { Label } from '@/components/ui/label'
 import AutoPagination from '@/components/auto-pagination'
 import { Skeleton } from '@/components/ui/skeleton'
 import { toast } from 'sonner'
-import {
-    AlertCircle,
-    Check,
-    Search,
-    X,
-    ImageIcon,
-    ChevronDown,
-    ChevronUp,
-    Clock,
-    CheckCircle2,
-    XCircle
-} from 'lucide-react'
 import type { AdminAppeal } from '@/types/dtos/admin/admin-response.dto'
 import { formatAdminDate, truncateText } from '@/helpers/admin-helpers'
 import {
@@ -57,17 +45,14 @@ const FILTER_ALL = 'all' as const
 const STATUS_CONFIG = {
     [APPEAL_STATUSES.PENDING]: {
         className: 'bg-amber-50 text-amber-700 border-amber-200',
-        icon: Clock,
         label: 'pending'
     },
     [APPEAL_STATUSES.APPROVED]: {
         className: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-        icon: CheckCircle2,
         label: 'approved'
     },
     [APPEAL_STATUSES.REJECTED]: {
         className: 'bg-red-50 text-red-700 border-red-200',
-        icon: XCircle,
         label: 'rejected'
     }
 } as const
@@ -199,7 +184,6 @@ export function AppealTable() {
             {/* Filters */}
             <div className='flex flex-col gap-3 md:flex-row md:items-end md:justify-between'>
                 <div className='flex-1 relative'>
-                    <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground' />
                     <Input
                         placeholder={t('appeals.placeholders.searchAppeals')}
                         value={searchTerm}
@@ -207,7 +191,6 @@ export function AppealTable() {
                             setSearchTerm(e.target.value)
                             setPage(1)
                         }}
-                        className='pl-10'
                     />
                 </div>
 
@@ -257,7 +240,6 @@ export function AppealTable() {
             {/* Table */}
             {appeals.length === 0 ? (
                 <div className='border rounded-lg p-8 text-center'>
-                    <AlertCircle className='w-12 h-12 text-muted-foreground mx-auto mb-3' />
                     <p className='text-muted-foreground'>{t('appeals.emptyState')}</p>
                 </div>
             ) : (
@@ -279,9 +261,7 @@ export function AppealTable() {
                         <TableBody>
                             {appeals.map((appeal) => {
                                 const statusConf = getStatusConfig(appeal.status)
-                                const StatusIcon = statusConf.icon
-                                const hasEvidence =
-                                    appeal.evidence_files && appeal.evidence_files.length > 0
+                                const hasEvidence = appeal.evidence_files && appeal.evidence_files.length > 0
                                 const isExpanded = expandedRowId === appeal.id
 
                                 return (
@@ -292,12 +272,8 @@ export function AppealTable() {
                                             onClick={() => toggleExpandRow(appeal.id)}
                                         >
                                             <TableCell>
-                                                <button className='p-1 hover:bg-muted rounded'>
-                                                    {isExpanded ? (
-                                                        <ChevronUp className='h-4 w-4 text-muted-foreground' />
-                                                    ) : (
-                                                        <ChevronDown className='h-4 w-4 text-muted-foreground' />
-                                                    )}
+                                                <button className='text-xs text-muted-foreground hover:text-foreground'>
+                                                    {isExpanded ? '-' : '+'}
                                                 </button>
                                             </TableCell>
                                             <TableCell className='font-mono text-sm'>#{appeal.id}</TableCell>
@@ -335,21 +311,16 @@ export function AppealTable() {
                                                             e.stopPropagation()
                                                             setGalleryAppeal(appeal)
                                                         }}
-                                                        className='flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-800 transition-colors'
+                                                        className='text-sm text-blue-600 hover:text-blue-800 transition-colors'
                                                     >
-                                                        <ImageIcon className='h-4 w-4' />
-                                                        <span>{appeal.evidence_files!.length}</span>
+                                                        {appeal.evidence_files!.length}
                                                     </button>
                                                 ) : (
                                                     <span className='text-muted-foreground text-sm'>—</span>
                                                 )}
                                             </TableCell>
                                             <TableCell>
-                                                <Badge
-                                                    variant='outline'
-                                                    className={`${statusConf.className} gap-1 border`}
-                                                >
-                                                    <StatusIcon className='h-3 w-3' />
+                                                <Badge variant='outline' className={`${statusConf.className} border`}>
                                                     {t(`appeals.statuses.${statusConf.label}`)}
                                                 </Badge>
                                             </TableCell>
@@ -372,7 +343,6 @@ export function AppealTable() {
                                                                 setActionType(APPEAL_REVIEW_ACTIONS.APPROVE)
                                                             }}
                                                         >
-                                                            <Check className='w-3.5 h-3.5 mr-1' />
                                                             {t('appeals.actions.approve')}
                                                         </Button>
                                                         <Button
@@ -385,7 +355,6 @@ export function AppealTable() {
                                                                 setActionType(APPEAL_REVIEW_ACTIONS.REJECT)
                                                             }}
                                                         >
-                                                            <X className='w-3.5 h-3.5 mr-1' />
                                                             {t('appeals.actions.reject')}
                                                         </Button>
                                                     </div>
@@ -440,16 +409,17 @@ export function AppealTable() {
                                                                                     <button
                                                                                         key={file.id}
                                                                                         onClick={() =>
-                                                                                            setGalleryAppeal(
-                                                                                                appeal
-                                                                                            )
+                                                                                            setGalleryAppeal(appeal)
                                                                                         }
                                                                                         className='relative h-16 w-16 rounded-lg overflow-hidden border border-border hover:ring-2 hover:ring-primary transition-all'
                                                                                         title={file.file_name}
                                                                                     >
                                                                                         <Image
                                                                                             src={file.url}
-                                                                                            alt={file.file_name || `Evidence ${index + 1}`}
+                                                                                            alt={
+                                                                                                file.file_name ||
+                                                                                                `Evidence ${index + 1}`
+                                                                                            }
                                                                                             fill
                                                                                             className='object-cover'
                                                                                             unoptimized
@@ -474,9 +444,7 @@ export function AppealTable() {
                                                                         </span>
                                                                     )}
                                                                     {appeal.reviewer && (
-                                                                        <span>
-                                                                            By: {appeal.reviewer.username}
-                                                                        </span>
+                                                                        <span>By: {appeal.reviewer.username}</span>
                                                                     )}
                                                                 </div>
                                                             </div>

@@ -11,7 +11,6 @@ import { Badge } from '@/components/ui/badge'
 import { formatAdminDate, getActivityLabel, truncateText } from '@/helpers/admin-helpers'
 import { timeAgo } from '@/utils/formatting/formatTime.util'
 import type { LocalesType } from '@/i18n/config'
-import { Search, AlertCircle } from 'lucide-react'
 import { ACTIVITY_TYPES } from '@/constants/admin.const'
 import { AdminActivityListItem } from '@/types/dtos/admin/admin-response.dto'
 import type { PaginationMeta } from '@/types/common/pagination-meta.type'
@@ -41,6 +40,11 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
     const t = useTranslations('AdminPage')
     const locale = useLocale()
     const normalizedLocale: LocalesType = locale === 'vi' ? 'vi' : 'en'
+    const displayDateFormatter = useMemo(() => {
+        return new Intl.DateTimeFormat(locale === 'vi' ? 'vi-VN' : 'en-US', {
+            dateStyle: 'full'
+        })
+    }, [locale])
 
     // State
     const [page, setPage] = useState(1)
@@ -94,6 +98,18 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
         })
     }, [logs, searchTerm])
     const totalItems = pagination?.total ?? filteredLogs.length
+    const groupedLogs = useMemo(() => {
+        const groups = new Map<string, AdminActivityListItem[]>()
+        filteredLogs.forEach((log) => {
+            const dateKey = DATE_FORMATTER.format(new Date(log.created_at))
+            if (!groups.has(dateKey)) {
+                groups.set(dateKey, [])
+            }
+            groups.get(dateKey)?.push(log)
+        })
+
+        return Array.from(groups.entries()).map(([date, items]) => ({ date, items }))
+    }, [filteredLogs])
 
     // Handlers
     const handleSearch = (value: string) => {
@@ -130,30 +146,6 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
         return colorMap[activityKey] || 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
     }
 
-    const getActivityIcon = (activityKey: string): string => {
-        const iconMap: Record<string, string> = {
-            // User
-            user_registered: '👤',
-            user_login: '🔓',
-            user_logout: '🔒',
-
-            // Post
-            post_created: '📝',
-            post_deleted: '🗑️',
-            post_liked: '❤️',
-            post_unliked: '💔',
-
-            // Comment
-            comment_created: '💬',
-            comment_deleted: '❌',
-
-            // Admin
-            admin_ban_user: '⛔',
-            admin_unban_user: '✅'
-        }
-        return iconMap[activityKey] || '📋'
-    }
-
     const getActivityKey = (log: { action?: string; action_type?: string }): string => {
         return log.action ?? log.action_type ?? 'unknown'
     }
@@ -167,6 +159,21 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
 
     const getActivityMetadata = (log: AdminActivityListItem) => {
         return 'metadata' in log ? log.metadata : null
+    }
+
+    const getMetadataEntries = (log: AdminActivityListItem) => {
+        const metadata = getActivityMetadata(log)
+        if (!metadata) return []
+
+        return Object.entries(metadata)
+            .filter(([key, value]) => key && value !== undefined && value !== null)
+            .slice(0, 4)
+    }
+
+    const formatMetadataValue = (value: unknown): string => {
+        if (typeof value === 'string') return truncateText(value, 80)
+        if (typeof value === 'number' || typeof value === 'boolean') return String(value)
+        return truncateText(JSON.stringify(value), 80)
     }
 
     // Render loading skeleton
@@ -187,136 +194,193 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
     }
 
     return (
-        <div className='space-y-4'>
+        <div className='space-y-6'>
             {/* Header - Search and Filters */}
-            <div className='flex flex-col gap-3 md:flex-row md:items-end md:justify-between'>
-                <div className='flex-1 relative'>
-                    <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground' />
-                    <Input
-                        placeholder={t('activity.placeholders.searchActivity')}
-                        value={searchTerm}
-                        onChange={(e) => handleSearch(e.target.value)}
-                        className='pl-10'
-                    />
-                </div>
+            <div className='rounded-xl border bg-background p-4 md:p-5'>
+                <div className='flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between'>
+                    <div className='flex-1 space-y-3'>
+                        <div className='relative'>
+                            <Input
+                                placeholder={t('activity.placeholders.searchActivity')}
+                                value={searchTerm}
+                                onChange={(e) => handleSearch(e.target.value)}
+                            />
+                        </div>
 
-                <div className='flex gap-2'>
-                    {/* Time Period Filter */}
-                    <Select
-                        value={timePeriod}
-                        onValueChange={(v: '24h' | '7d' | '30d' | 'all') => {
-                            setTimePeriod(v)
-                            setPage(1)
-                        }}
-                    >
-                        <SelectTrigger className='w-40'>
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value='24h'>{t('activity.periods.last24h')}</SelectItem>
-                            <SelectItem value='7d'>{t('activity.periods.last7d')}</SelectItem>
-                            <SelectItem value='30d'>{t('activity.periods.last30d')}</SelectItem>
-                            <SelectItem value='all'>{t('activity.periods.allTime')}</SelectItem>
-                        </SelectContent>
-                    </Select>
+                        <div className='flex flex-wrap items-center gap-2 text-xs text-muted-foreground'>
+                            <span>
+                                {t('common.showingResults', {
+                                    from:
+                                        totalItems === 0
+                                            ? 0
+                                            : pagination?.current_page
+                                              ? (pagination.current_page - 1) * perPage + 1
+                                              : 1,
+                                    to: pagination?.current_page
+                                        ? Math.min(pagination.current_page * perPage, totalItems)
+                                        : totalItems,
+                                    total: totalItems
+                                })}
+                            </span>
+                            {searchTerm.trim() && (
+                                <Badge variant='secondary' className='text-xs'>
+                                    {truncateText(searchTerm.trim(), 24)}
+                                </Badge>
+                            )}
+                            {activityType !== 'all' && (
+                                <Badge variant='secondary' className='text-xs'>
+                                    {ACTIVITY_TYPES.find((item) => item.value === activityType)?.label}
+                                </Badge>
+                            )}
+                            {timePeriod !== 'all' && (
+                                <Badge variant='secondary' className='text-xs'>
+                                    {timePeriod === '24h'
+                                        ? t('activity.periods.last24h')
+                                        : timePeriod === '7d'
+                                          ? t('activity.periods.last7d')
+                                          : t('activity.periods.last30d')}
+                                </Badge>
+                            )}
+                        </div>
+                    </div>
 
-                    {/* Activity Type Filter */}
-                    <Select
-                        value={activityType}
-                        onValueChange={(v) => {
-                            setActivityType(v)
-                            setPage(1)
-                        }}
-                    >
-                        <SelectTrigger className='w-40'>
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value='all'>{t('activity.filters.allTypes')}</SelectItem>
-                            {ACTIVITY_TYPES.map((activity) => (
-                                <SelectItem key={activity.value} value={activity.value}>
-                                    {activity.label}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                    <div className='flex flex-wrap gap-2'>
+                        {/* Time Period Filter */}
+                        <Select
+                            value={timePeriod}
+                            onValueChange={(v: '24h' | '7d' | '30d' | 'all') => {
+                                setTimePeriod(v)
+                                setPage(1)
+                            }}
+                        >
+                            <SelectTrigger className='w-40'>
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value='24h'>{t('activity.periods.last24h')}</SelectItem>
+                                <SelectItem value='7d'>{t('activity.periods.last7d')}</SelectItem>
+                                <SelectItem value='30d'>{t('activity.periods.last30d')}</SelectItem>
+                                <SelectItem value='all'>{t('activity.periods.allTime')}</SelectItem>
+                            </SelectContent>
+                        </Select>
+
+                        {/* Activity Type Filter */}
+                        <Select
+                            value={activityType}
+                            onValueChange={(v) => {
+                                setActivityType(v)
+                                setPage(1)
+                            }}
+                        >
+                            <SelectTrigger className='w-44'>
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value='all'>{t('activity.filters.allTypes')}</SelectItem>
+                                {ACTIVITY_TYPES.map((activity) => (
+                                    <SelectItem key={activity.value} value={activity.value}>
+                                        {activity.label}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
                 </div>
             </div>
 
             {/* Timeline/List */}
             {filteredLogs.length === 0 ? (
                 <div className='border rounded-lg p-8 text-center'>
-                    <AlertCircle className='w-12 h-12 text-muted-foreground mx-auto mb-3' />
                     <p className='text-muted-foreground'>{t('activity.emptyState')}</p>
                 </div>
             ) : (
-                <div className='space-y-3'>
-                    {filteredLogs.map((log: AdminActivityListItem) => (
-                        <div key={log.id} className='border rounded-lg p-4 hover:bg-muted/50 transition'>
-                            <div className='flex gap-4'>
-                                {/* Avatar/Icon */}
-                                <div className='flex-shrink-0 text-2xl'>{getActivityIcon(getActivityKey(log))}</div>
-
-                                {/* Content */}
-                                <div className='flex-1 min-w-0'>
-                                    <div className='flex flex-wrap items-center gap-2 mb-1'>
-                                        <Badge variant='outline' className={getActivityColor(getActivityKey(log))}>
-                                            {getActivityLabel(getActivityKey(log))}
-                                        </Badge>
-                                        <span className='text-sm text-muted-foreground'>
-                                            {timeAgo({ locale: normalizedLocale, date: log.created_at })}
-                                        </span>
-                                    </div>
-
-                                    {/* Activity Details */}
-                                    <div className='text-sm'>
-                                        {getActorName(log) && (
-                                            <p className='text-foreground'>
-                                                <span className='font-semibold'>{getActorName(log)}</span>
-                                                {log.resource_type && (
-                                                    <>
-                                                        {' '}
-                                                        {t('activity.prepositions.on')}{' '}
-                                                        <span className='font-medium'>{log.resource_type}</span>
-                                                    </>
-                                                )}
-                                            </p>
-                                        )}
-
-                                        {/* Metadata Display */}
-                                        {getActivityMetadata(log) &&
-                                            Object.keys(getActivityMetadata(log) || {}).length > 0 && (
-                                                <div className='mt-2 space-y-1 text-muted-foreground'>
-                                                    {Object.entries(getActivityMetadata(log) || {}).map(
-                                                        ([key, value]) => (
-                                                            <div key={key} className='text-xs'>
-                                                                <span className='font-medium'>{key}:</span>{' '}
-                                                                {typeof value === 'string'
-                                                                    ? truncateText(value, 50)
-                                                                    : JSON.stringify(value)}
-                                                            </div>
-                                                        )
-                                                    )}
-                                                </div>
-                                            )}
-                                    </div>
-
-                                    {/* Timestamp */}
-                                    <div className='text-xs text-muted-foreground mt-2'>
-                                        {formatAdminDate(log.created_at)}
-                                    </div>
-                                </div>
-
-                                {/* Resource ID */}
-                                {log.resource_id && (
-                                    <div className='flex-shrink-0 text-right'>
-                                        <div className='text-xs font-mono text-muted-foreground'>
-                                            #{log.resource_id}
-                                        </div>
-                                    </div>
-                                )}
+                <div className='space-y-6'>
+                    {groupedLogs.map((group) => (
+                        <section key={group.date} className='space-y-3'>
+                            <div className='flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground'>
+                                <span>{displayDateFormatter.format(new Date(group.date))}</span>
+                                <span className='h-px flex-1 bg-border' />
+                                <span>{group.items.length}</span>
                             </div>
-                        </div>
+
+                            <div className='space-y-3'>
+                                {group.items.map((log) => {
+                                    const metadataEntries = getMetadataEntries(log)
+
+                                    return (
+                                        <div
+                                            key={log.id}
+                                            className='group rounded-lg border bg-background p-4 shadow-sm transition hover:border-muted-foreground/30'
+                                        >
+                                            <div className='flex flex-col gap-4 md:flex-row md:items-start md:justify-between'>
+                                                <div className='flex min-w-0 flex-1 gap-3'>
+                                                    <div className='min-w-0 space-y-2'>
+                                                        <div className='flex flex-wrap items-center gap-2'>
+                                                            <Badge
+                                                                variant='outline'
+                                                                className={getActivityColor(getActivityKey(log))}
+                                                            >
+                                                                {getActivityLabel(getActivityKey(log))}
+                                                            </Badge>
+                                                            <span className='text-xs text-muted-foreground'>
+                                                                {timeAgo({
+                                                                    locale: normalizedLocale,
+                                                                    date: log.created_at
+                                                                })}
+                                                            </span>
+                                                            {log.resource_type && (
+                                                                <Badge variant='secondary' className='text-xs'>
+                                                                    {log.resource_type}
+                                                                </Badge>
+                                                            )}
+                                                        </div>
+
+                                                        <div className='text-sm text-foreground'>
+                                                            {getActorName(log) && (
+                                                                <p>
+                                                                    <span className='font-semibold'>
+                                                                        {getActorName(log)}
+                                                                    </span>
+                                                                    {log.resource_type && (
+                                                                        <>
+                                                                            {' '}
+                                                                            {t('activity.prepositions.on')}{' '}
+                                                                            <span className='font-medium'>
+                                                                                {log.resource_type}
+                                                                            </span>
+                                                                        </>
+                                                                    )}
+                                                                </p>
+                                                            )}
+                                                        </div>
+
+                                                        {metadataEntries.length > 0 && (
+                                                            <div className='grid grid-cols-1 gap-x-6 gap-y-1 text-xs text-muted-foreground sm:grid-cols-2'>
+                                                                {metadataEntries.map(([key, value]) => (
+                                                                    <div key={key} className='flex gap-2'>
+                                                                        <span className='font-medium'>{key}:</span>
+                                                                        <span className='truncate'>
+                                                                            {formatMetadataValue(value)}
+                                                                        </span>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                                <div className='flex shrink-0 flex-row items-center gap-3 text-xs text-muted-foreground md:flex-col md:items-end'>
+                                                    {log.resource_id && (
+                                                        <span className='font-mono'>#{log.resource_id}</span>
+                                                    )}
+                                                    <span>{formatAdminDate(log.created_at)}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </section>
                     ))}
                 </div>
             )}

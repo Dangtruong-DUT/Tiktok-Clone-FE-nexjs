@@ -15,7 +15,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
-import { Mail, Loader2 } from 'lucide-react'
 
 interface SendUserMailDialogProps {
     open: boolean
@@ -79,14 +78,11 @@ export function SendUserMailDialog({ open, userUuid, username, onOpenChange, onS
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className='sm:max-w-[560px]'>
                 <DialogHeader>
-                    <div className='flex items-start gap-3'>
-                        <Mail className='w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0' />
-                        <div>
-                            <DialogTitle className='text-lg'>Send Email</DialogTitle>
-                            <DialogDescription className='mt-1'>
-                                Send a direct email to <strong>{username}</strong>
-                            </DialogDescription>
-                        </div>
+                    <div>
+                        <DialogTitle className='text-lg'>Send Email</DialogTitle>
+                        <DialogDescription className='mt-1'>
+                            Send a direct email to <strong>{username}</strong>
+                        </DialogDescription>
                     </div>
                 </DialogHeader>
 
@@ -126,7 +122,6 @@ export function SendUserMailDialog({ open, userUuid, username, onOpenChange, onS
                         Cancel
                     </Button>
                     <Button type='button' onClick={handleSubmit} disabled={isLoading}>
-                        {isLoading && <Loader2 className='w-4 h-4 mr-2 animate-spin' />}
                         {isLoading ? 'Sending...' : 'Send Email'}
                     </Button>
                 </DialogFooter>
