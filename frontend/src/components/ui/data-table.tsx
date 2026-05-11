@@ -1,30 +1,31 @@
 'use client'
 
 import { ColumnDef, flexRender, Table as TanstackTable } from '@tanstack/react-table'
-
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 interface DataTableProps<TData, TValue> {
     table: TanstackTable<TData>
     columns: ColumnDef<TData, TValue>[]
+    emptyText?: string
 }
 
-export function DataTable<TData, TValue>({ table, columns }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ table, columns, emptyText = 'No results.' }: DataTableProps<TData, TValue>) {
     return (
-        <div className='rounded-md border'>
+        <div className='rounded-xl border bg-background shadow-sm overflow-hidden'>
             <Table>
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => {
-                                return (
-                                    <TableHead key={header.id} className='text-base font-semibold'>
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(header.column.columnDef.header, header.getContext())}
-                                    </TableHead>
-                                )
-                            })}
+                        <TableRow key={headerGroup.id} className='bg-muted/40 hover:bg-muted/40'>
+                            {headerGroup.headers.map((header) => (
+                                <TableHead
+                                    key={header.id}
+                                    className='text-xs font-semibold uppercase tracking-wide text-muted-foreground'
+                                >
+                                    {header.isPlaceholder
+                                        ? null
+                                        : flexRender(header.column.columnDef.header, header.getContext())}
+                                </TableHead>
+                            ))}
                         </TableRow>
                     ))}
                 </TableHeader>
@@ -34,9 +35,7 @@ export function DataTable<TData, TValue>({ table, columns }: DataTableProps<TDat
                             <TableRow
                                 key={row.id}
                                 data-state={row.getIsSelected() && 'selected'}
-                                onClick={() => {
-                                    table.setRowSelection({ [row.id]: true })
-                                }}
+                                className='hover:bg-muted/50 transition-colors'
                             >
                                 {row.getVisibleCells().map((cell) => (
                                     <TableCell key={cell.id}>
@@ -47,8 +46,8 @@ export function DataTable<TData, TValue>({ table, columns }: DataTableProps<TDat
                         ))
                     ) : (
                         <TableRow>
-                            <TableCell colSpan={columns.length} className='h-24 text-center'>
-                                No results.
+                            <TableCell colSpan={columns.length} className='h-24 text-center text-sm text-muted-foreground'>
+                                {emptyText}
                             </TableCell>
                         </TableRow>
                     )}

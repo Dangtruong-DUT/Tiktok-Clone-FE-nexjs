@@ -222,7 +222,9 @@
           "private": "Private",
           "unknown": "Unknown"
         }
-      }
+      },
+      "emptyState": "No posts found.",
+      "showingResults": "Showing {from}-{to} of {total} posts"
     },
     "dashboard": {
       "knowledgeForYou": {
@@ -449,8 +451,13 @@
           "type": "Type",
           "reason": "Reason",
           "status": "Status",
-          "createdAt": "Created at"
-        }
+          "createdAt": "Created at",
+          "response": "Admin Response",
+          "resource": "Resource",
+          "evidence": "Evidence"
+        },
+        "viewDetail": "View Detail",
+        "resourcePreview": "Resource Preview"
       },
       "types": {
         "user_ban": "User Ban",
@@ -476,6 +483,23 @@
       "errors": {
         "reasonMinLength": "Reason must be at least 20 characters",
         "resourceIdInvalid": "Resource ID must be a valid number"
+      },
+      "detail": {
+        "title": "Appeal Detail",
+        "fields": {
+          "type": "Type",
+          "status": "Status",
+          "reason": "Your Reason",
+          "response": "Admin Response",
+          "createdAt": "Submitted",
+          "reviewedAt": "Reviewed",
+          "resource": "Resource",
+          "evidence": "Evidence Files"
+        },
+        "noResponse": "Awaiting review...",
+        "noEvidence": "No evidence attached",
+        "resourceUnavailable": "Resource no longer available",
+        "resourceTitle": "Related Resource"
       }
     }
   },

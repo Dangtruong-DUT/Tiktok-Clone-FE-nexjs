@@ -20,7 +20,7 @@ import { NotificationType } from '@/types/models/notification.model'
 import { useFollowUserMutation, useUnfollowUserMutation } from '@/store/services/user.service'
 import FollowToggleButton from '@/components/follow-toggle-button'
 import { useAppSelector } from '@/store/hooks'
-import { useRouter } from '@/i18n/navigation'
+
 import LoadingIcon from '@/components/lottie-icons/loading'
 
 type NotificationSection = 'new' | 'this_week' | 'this_month' | 'previous'
@@ -241,6 +241,57 @@ function getPreviewBadgeIcon(type: number) {
     return Video
 }
 
+function AdminEntityPreview({ notification }: { notification: NotificationType }) {
+    const action = typeof notification.data?.action === 'string' ? notification.data.action : ''
+    const entity = notification.entity
+
+    if (!entity) return null
+
+    // delete_post → show thumbnail
+    if (action === 'delete_post' && entity.thumbnail_url) {
+        return (
+            <div className='relative h-16 aspect-[9/16] overflow-hidden rounded-md bg-muted shrink-0'>
+                <img src={entity.thumbnail_url} alt='post' className='size-full object-cover' />
+                <span className='absolute bottom-1 right-1 flex size-5 items-center justify-center rounded-full bg-black/65 text-white'>
+                    <Video size={12} />
+                </span>
+            </div>
+        )
+    }
+
+    // delete_comment → show comment excerpt badge
+    if (action === 'delete_comment' && (entity.content || notification.data?.comment_excerpt)) {
+        const text = entity.content || (typeof notification.data?.comment_excerpt === 'string' ? notification.data.comment_excerpt : '')
+        return (
+            <div className='shrink-0 max-w-[100px] rounded-md border bg-muted/60 px-2 py-1.5'>
+                <div className='flex items-center gap-1 mb-0.5'>
+                    <MessageCircle size={10} className='text-muted-foreground' />
+                </div>
+                <p className='text-xs text-muted-foreground line-clamp-2 leading-tight'>{text}</p>
+            </div>
+        )
+    }
+
+    // ban_user / user actions → show avatar + username
+    if ((action === 'ban_user' || action === 'unban_user') && (entity.avatar || entity.username)) {
+        return (
+            <div className='flex shrink-0 flex-col items-center gap-1'>
+                <Avatar className='size-10'>
+                    <AvatarImage src={entity.avatar ?? undefined} />
+                    <AvatarFallback className='text-xs'>
+                        {(entity.username?.[0] || 'U').toUpperCase()}
+                    </AvatarFallback>
+                </Avatar>
+                {entity.username && (
+                    <span className='text-xs text-muted-foreground max-w-[60px] truncate'>@{entity.username}</span>
+                )}
+            </div>
+        )
+    }
+
+    return null
+}
+
 type NotificationItemProps = {
     notification: NotificationType
     locale: 'en' | 'vi'
@@ -269,6 +320,7 @@ function NotificationItem({
         date: notification.created_at
     })}`
     const isFollowNotification = notification.type === NotificationTypeCode.FOLLOW
+    const isAdminNotification = notification.type === NotificationTypeCode.ADMIN
     const isSystemNotification = [
         NotificationTypeCode.SYSTEM,
         NotificationTypeCode.ADMIN,
@@ -276,7 +328,7 @@ function NotificationItem({
     ].includes(notification.type)
     const SystemIcon = getSystemIcon(notification.type)
     const PreviewBadgeIcon = getPreviewBadgeIcon(notification.type)
-    const showThumbnail = !isFollowNotification && !!notification.entity?.thumbnail_url
+    const showThumbnail = !isFollowNotification && !isAdminNotification && !!notification.entity?.thumbnail_url
 
     const content = (
         <>
@@ -300,11 +352,7 @@ function NotificationItem({
 
             <div className='ml-2 flex items-center'>
                 {isFollowNotification ? (
-                    <div
-                        onClick={(event) => {
-                            event.stopPropagation()
-                        }}
-                    >
+                    <div onClick={(e) => e.stopPropagation()}>
                         <FollowToggleButton
                             isFollowed={isFollowed}
                             onToggleFollow={() => onToggleFollow(notification)}
@@ -315,6 +363,8 @@ function NotificationItem({
                             followClassName='bg-[#FF2D55] text-white hover:bg-[#ff2d55]/90'
                         />
                     </div>
+                ) : isAdminNotification ? (
+                    <AdminEntityPreview notification={notification} />
                 ) : showThumbnail ? (
                     <div className='relative h-16 aspect-[9/16] overflow-hidden rounded-md bg-muted'>
                         <img
@@ -441,7 +491,6 @@ export default function ActivityDrawerContent() {
         [followUser, localFollowState, unfollowUser]
     )
 
-    const router = useRouter()
     const handleNavigate = useCallback((path: string) => {
         window.open(`/${locale}${path}`, '_blank')
         toggleDrawer()

@@ -222,7 +222,9 @@
           "private": "Riêng tư",
           "unknown": "Không xác định"
         }
-      }
+      },
+      "emptyState": "Không tìm thấy bài viết nào.",
+      "showingResults": "Hiển thị {from}-{to} trong {total} bài viết"
     },
     "dashboard": {
       "knowledgeForYou": {
@@ -449,8 +451,13 @@
           "type": "Loại",
           "reason": "Lý do",
           "status": "Trạng thái",
-          "createdAt": "Ngày tạo"
-        }
+          "createdAt": "Ngày tạo",
+          "response": "Phản hồi Admin",
+          "resource": "Tài nguyên",
+          "evidence": "Bằng chứng"
+        },
+        "viewDetail": "Xem chi tiết",
+        "resourcePreview": "Xem tài nguyên"
       },
       "types": {
         "user_ban": "Khóa tài khoản",
@@ -476,6 +483,23 @@
       "errors": {
         "reasonMinLength": "Lý do phải có ít nhất 20 ký tự",
         "resourceIdInvalid": "Mã tài nguyên phải là số hợp lệ"
+      },
+      "detail": {
+        "title": "Chi tiết kháng cáo",
+        "fields": {
+          "type": "Loại",
+          "status": "Trạng thái",
+          "reason": "Lý do của bạn",
+          "response": "Phản hồi Admin",
+          "createdAt": "Đã gửi",
+          "reviewedAt": "Đã xét duyệt",
+          "resource": "Tài nguyên",
+          "evidence": "Tệp bằng chứng"
+        },
+        "noResponse": "Đang chờ xét duyệt...",
+        "noEvidence": "Không có bằng chứng đính kèm",
+        "resourceUnavailable": "Tài nguyên không còn khả dụng",
+        "resourceTitle": "Tài nguyên liên quan"
       }
     }
   },
