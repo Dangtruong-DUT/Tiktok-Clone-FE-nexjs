@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
-import { AdminLayout, AdminContainer, AdminHeader } from '@/components/admin'
+import { AdminLayout, AdminContainer } from '@/components/admin'
 import { Suspense } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { PostModerationTable } from './_components/post-moderation-table'
@@ -14,17 +14,14 @@ export default async function AdminPostsPage() {
     const t = await getTranslations('AdminPage')
 
     return (
-        <AdminLayout>
-            <AdminHeader
-                title={t('posts.title')}
-                description={t('posts.description')}
-                breadcrumbs={[
-                    { label: t('breadcrumbs.home'), href: '/' },
-                    { label: t('breadcrumbs.admin'), href: '/admin' },
-                    { label: t('posts.title') }
-                ]}
-            />
-
+        <AdminLayout
+            title={t('posts.title')}
+            description={t('posts.description')}
+            breadcrumbs={[
+                { label: t('breadcrumbs.admin'), href: '/admin' },
+                { label: t('posts.title') }
+            ]}
+        >
             <AdminContainer>
                 <Suspense
                     fallback={

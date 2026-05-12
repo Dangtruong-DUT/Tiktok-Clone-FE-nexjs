@@ -1,7 +1,6 @@
-import type { ApiSuccessResponse } from '@/types/common/http-response.type'
-import type { PaginationMeta } from '@/types/common/pagination-meta.type'
+import type { ApiSuccessResponse, ApiSuccessResponseWithData, ApiSuccessResponseWithMeta } from '@/types/common/http-response.type'
 
-export type AdminUser = {
+export interface AdminUser {
     readonly id: number
     readonly uuid: string
     readonly username: string
@@ -15,9 +14,9 @@ export type AdminUser = {
     readonly deleted_at: string | null
 }
 
-export type GetAdminUsersRes = ApiSuccessResponse & { data: AdminUser[]; meta: PaginationMeta }
-export type BanUserRes = ApiSuccessResponse & { data: AdminUser }
-export type UnbanUserRes = ApiSuccessResponse & { data: AdminUser }
-export type RestoreUserRes = ApiSuccessResponse & { data: AdminUser }
+export type GetAdminUsersRes = ApiSuccessResponseWithMeta<AdminUser[]>
+export type BanUserRes = ApiSuccessResponseWithData<AdminUser>
+export type UnbanUserRes = ApiSuccessResponseWithData<AdminUser>
+export type RestoreUserRes = ApiSuccessResponseWithData<AdminUser>
 export type DeleteUserRes = ApiSuccessResponse
 export type CommonMessageRes = ApiSuccessResponse

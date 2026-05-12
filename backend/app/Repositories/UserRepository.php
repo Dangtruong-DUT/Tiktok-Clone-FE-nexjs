@@ -184,7 +184,7 @@ class UserRepository extends BaseRepository
         $perPage = (int) $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
 
         return $query
-            ->with('avatarFile:id,url')
+            ->with('avatarFile:id')
             ->select([
                 'id',
                 'uuid',
@@ -194,6 +194,7 @@ class UserRepository extends BaseRepository
                 'created_at',
                 'banned_at',
                 'ban_reason',
+                'ban_duration_days',
                 'deleted_at',
             ])
             ->paginate($perPage);

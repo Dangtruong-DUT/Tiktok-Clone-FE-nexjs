@@ -6,12 +6,6 @@ use App\Http\Resources\BaseJsonResource;
 use App\Models\Post;
 use App\Models\User;
 
-/**
- * AppealResource - Format appeal data for API responses.
- * Admin identity (reviewed_by) is intentionally excluded for user-facing endpoints.
- * Evidence files are resolved from stored file IDs to include url + original filename.
- * resource_preview is included when the resource is still accessible.
- */
 class AppealResource extends BaseJsonResource
 {
     public function toArray($request): array
@@ -52,11 +46,6 @@ class AppealResource extends BaseJsonResource
         ];
     }
 
-    /**
-     * Resolve a lightweight preview of the appeal resource (post, comment, or user).
-     * Uses withTrashed for post/comment since the resource may have been deleted.
-     * Returns null when the resource cannot be found or type is unsupported.
- */
     private function resolveResourcePreview(): ?array
     {
         if (! $this->resource_id) {
@@ -74,8 +63,8 @@ class AppealResource extends BaseJsonResource
     private function resolvePostPreview(): ?array
     {
         $post = Post::withTrashed()
-            ->with('user:id,username,avatar')
-            ->select(['id', 'uuid', 'user_id', 'content', 'thumbnail_url', 'likes_count', 'comments_count', 'deleted_at', 'created_at'])
+            ->with(['user' => fn ($q) => $q->select(['id', 'username', 'avatar_file_id'])->with('avatarFile:id,file_path,disk')])
+            ->select(['id', 'uuid', 'user_id', 'content', 'thumbnail_file_id', 'likes_count', 'comments_count', 'deleted_at', 'created_at'])
             ->find($this->resource_id);
 
         if (! $post) {
@@ -101,7 +90,7 @@ class AppealResource extends BaseJsonResource
     private function resolveCommentPreview(): ?array
     {
         $comment = Post::withTrashed()
-            ->with('user:id,username,avatar')
+            ->with(['user' => fn ($q) => $q->select(['id', 'username', 'avatar_file_id'])->with('avatarFile:id,file_path,disk')])
             ->select(['id', 'uuid', 'user_id', 'content', 'deleted_at', 'created_at'])
             ->find($this->resource_id);
 
@@ -124,7 +113,8 @@ class AppealResource extends BaseJsonResource
 
     private function resolveUserPreview(): ?array
     {
-        $user = User::select(['id', 'uuid', 'username', 'avatar', 'banned_at', 'deleted_at'])
+        $user = User::select(['id', 'uuid', 'username', 'avatar_file_id', 'banned_at', 'deleted_at'])
+            ->with('avatarFile:id,file_path,disk')
             ->find($this->resource_id);
 
         if (! $user) {

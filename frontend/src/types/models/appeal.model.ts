@@ -1,55 +1,64 @@
 import { z } from 'zod'
 import { APPEAL_RESOURCE_TYPE_VALUES, APPEAL_STATUS_VALUES, APPEAL_TYPE_VALUES } from '@/constants/appeal.const'
 
+// ─── Zod schemas (runtime validation) ────────────────────────────────────────
+
 export const AppealTypeSchema = z.enum(APPEAL_TYPE_VALUES)
 export const AppealStatusSchema = z.enum(APPEAL_STATUS_VALUES)
 export const AppealResourceTypeSchema = z.enum(APPEAL_RESOURCE_TYPE_VALUES)
+
+// ─── Literal union types ──────────────────────────────────────────────────────
 
 export type AppealType = (typeof APPEAL_TYPE_VALUES)[number]
 export type AppealStatus = (typeof APPEAL_STATUS_VALUES)[number]
 export type AppealResourceType = (typeof APPEAL_RESOURCE_TYPE_VALUES)[number]
 
-type ResourcePreviewAuthor = {
+// ─── Supporting types ─────────────────────────────────────────────────────────
+
+interface ResourcePreviewAuthor {
     readonly username: string
     readonly avatar: string | null
 }
 
-export type ResourcePreview =
-    | {
-          readonly type: 'post'
-          readonly uuid?: string | null
-          readonly content: string | null
-          readonly thumbnail_url?: string | null
-          readonly likes_count?: number
-          readonly comments_count?: number
-          readonly is_deleted?: boolean
-          readonly author?: ResourcePreviewAuthor | null
-          readonly created_at?: string | null
-      }
-    | {
-          readonly type: 'comment'
-          readonly uuid?: string | null
-          readonly content: string | null
-          readonly is_deleted?: boolean
-          readonly author?: ResourcePreviewAuthor | null
-          readonly created_at?: string | null
-      }
-    | {
-          readonly type: 'user'
-          readonly uuid?: string | null
-          readonly username: string
-          readonly avatar?: string | null
-          readonly is_banned?: boolean
-          readonly is_deleted?: boolean
-      }
+interface ResourcePreviewBase {
+    readonly uuid?: string | null
+    readonly content: string | null
+    readonly is_deleted?: boolean
+    readonly author?: ResourcePreviewAuthor | null
+    readonly created_at?: string | null
+}
 
-type EvidenceFile = {
+interface PostResourcePreview extends ResourcePreviewBase {
+    readonly type: 'post'
+    readonly thumbnail_url?: string | null
+    readonly likes_count?: number
+    readonly comments_count?: number
+}
+
+interface CommentResourcePreview extends ResourcePreviewBase {
+    readonly type: 'comment'
+}
+
+interface UserResourcePreview {
+    readonly type: 'user'
+    readonly uuid?: string | null
+    readonly username: string
+    readonly avatar?: string | null
+    readonly is_banned?: boolean
+    readonly is_deleted?: boolean
+}
+
+export type ResourcePreview = PostResourcePreview | CommentResourcePreview | UserResourcePreview
+
+export interface EvidenceFile {
     readonly id: number
     readonly url: string
     readonly file_name: string
 }
 
-export type Appeal = {
+// ─── Domain model ─────────────────────────────────────────────────────────────
+
+export interface Appeal {
     readonly id: number
     readonly uuid?: string | null
     readonly user_id: number
@@ -64,5 +73,4 @@ export type Appeal = {
     readonly reviewed_at: string | null
     readonly created_at: string
     readonly updated_at: string
-    readonly [key: string]: unknown
 }

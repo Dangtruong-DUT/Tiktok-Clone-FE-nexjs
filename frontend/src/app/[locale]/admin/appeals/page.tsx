@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
-import { AdminLayout, AdminContainer, AdminHeader } from '@/components/admin'
+import { AdminLayout, AdminContainer } from '@/components/admin'
 import { Suspense } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AppealTable } from './_components/appeal-table'
@@ -14,17 +14,14 @@ export default async function AdminAppealsPage() {
     const t = await getTranslations('AdminPage')
 
     return (
-        <AdminLayout>
-            <AdminHeader
-                title={t('appeals.title')}
-                description={t('appeals.description')}
-                breadcrumbs={[
-                    { label: t('breadcrumbs.home'), href: '/' },
-                    { label: t('breadcrumbs.admin'), href: '/admin' },
-                    { label: t('appeals.title') }
-                ]}
-            />
-
+        <AdminLayout
+            title={t('appeals.title')}
+            description={t('appeals.description')}
+            breadcrumbs={[
+                { label: t('breadcrumbs.admin'), href: '/admin' },
+                { label: t('appeals.title') }
+            ]}
+        >
             <AdminContainer>
                 <Suspense
                     fallback={

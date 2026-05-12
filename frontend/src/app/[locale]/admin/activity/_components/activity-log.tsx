@@ -9,22 +9,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import AutoPagination from '@/components/auto-pagination'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
-import { formatAdminDate, getActivityLabel, truncateText } from '@/helpers/admin-helpers'
+import { formatAdminDate, getActivityKey, truncateText } from '@/helpers/admin-helpers'
 import { timeAgo } from '@/utils/formatting/formatTime.util'
 import type { LocalesType } from '@/i18n/config'
 import { ACTIVITY_TYPES } from '@/constants/admin.const'
 import { AdminActivityListItem } from '@/types/dtos/admin/admin-response.dto'
-import type { PaginationMeta } from '@/types/common/pagination-meta.type'
 import { ActivityLogDetailDialog } from './activity-log-detail-dialog'
 import { Button } from '@/components/ui/button'
 
 interface ActivityLogProps {
     type?: 'all' | 'admin' | 'system'
-}
-
-interface ActivityLogsApiResponse {
-    data: AdminActivityListItem[]
-    meta?: PaginationMeta
 }
 
 const DATE_FORMATTER = new Intl.DateTimeFormat('en-CA')
@@ -58,22 +52,17 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
     }, [timePeriod])
 
     // Fetch data
-    const activityQuery = useGetActivityLogsQuery({
+    const { data, isLoading } = useGetActivityLogsQuery({
         page,
         per_page: perPage,
         log_type: type === 'system' ? 'activity' : 'admin',
         action_type: activityType !== 'all' ? activityType : undefined,
         date_from: dateFrom,
         order_by: ['-created_at']
-    }) as unknown as {
-        data?: ActivityLogsApiResponse
-        isLoading: boolean
-    }
-    const { isLoading } = activityQuery
-    const responseData = activityQuery.data as ActivityLogsApiResponse | undefined
+    })
 
-    const logs: AdminActivityListItem[] = responseData?.data ?? []
-    const pagination = responseData?.meta
+    const logs: AdminActivityListItem[] = data?.data ?? []
+    const pagination = data?.meta
     const filteredLogs = useMemo(() => {
         const normalizedSearch = searchTerm.trim().toLowerCase()
         if (!normalizedSearch) return logs
@@ -146,10 +135,6 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
             update: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
         }
         return colorMap[activityKey] ?? 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
-    }
-
-    const getActivityKey = (log: { action?: string; action_type?: string }): string => {
-        return log.action ?? log.action_type ?? 'unknown'
     }
 
     const getActorName = (log: {
@@ -332,7 +317,7 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
                                                                 variant='outline'
                                                                 className={getActivityColor(getActivityKey(log))}
                                                             >
-                                                                {getActivityLabel(getActivityKey(log))}
+                                                                {t(`actionLabels.${getActivityKey(log)}` as Parameters<typeof t>[0]) ?? getActivityKey(log)}
                                                             </Badge>
                                                             <span className='text-xs text-muted-foreground'>
                                                                 {timeAgo({

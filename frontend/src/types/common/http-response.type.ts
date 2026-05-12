@@ -1,6 +1,8 @@
 import { z } from 'zod'
 import { PaginationMetaSchema } from '@/types/common/pagination-meta.type'
 
+// ─── Zod schemas (used for runtime validation only) ─────────────────────────
+
 export const HttpResponseSchema = z
     .object({
         status: z.boolean(),
@@ -9,9 +11,7 @@ export const HttpResponseSchema = z
     .strict()
 
 export const HttpResponseWithDataSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
-    HttpResponseSchema.extend({
-        data: dataSchema
-    }).strict()
+    HttpResponseSchema.extend({ data: dataSchema }).strict()
 
 export const HttpResponseWithMetaSchema = <T extends z.ZodTypeAny, M extends z.ZodTypeAny>({
     dataSchema,
@@ -20,10 +20,7 @@ export const HttpResponseWithMetaSchema = <T extends z.ZodTypeAny, M extends z.Z
     dataSchema: T
     metaSchema: M
 }) =>
-    HttpResponseSchema.extend({
-        data: dataSchema,
-        meta: metaSchema
-    }).strict()
+    HttpResponseSchema.extend({ data: dataSchema, meta: metaSchema }).strict()
 
 export const BusinessExceptionSchema = z.record(z.string(), z.union([z.string(), z.array(z.string())]))
 
@@ -39,20 +36,45 @@ export const ApiSuccessResponseSchema = z
     .strict()
 
 export const ApiSuccessResponseWithDataSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
-    ApiSuccessResponseSchema.extend({
-        data: dataSchema
-    }).strict()
+    ApiSuccessResponseSchema.extend({ data: dataSchema }).strict()
 
 export const ApiSuccessResponseWithMetaSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
-    ApiSuccessResponseSchema.extend({
-        data: dataSchema,
-        meta: PaginationMetaSchema
-    }).strict()
+    ApiSuccessResponseSchema.extend({ data: dataSchema, meta: PaginationMetaSchema }).strict()
 
-export type HttpResponse = z.infer<typeof HttpResponseSchema>
-export type HttpResponseWithData<T> = HttpResponse & { data: T }
-export type HttpResponseWithMeta<T, M> = HttpResponseWithData<T> & { meta: M }
-export type HttpResponseWithError = HttpResponseWithBusinessExceptions
+// ─── TypeScript types (source of truth for static typing) ────────────────────
+
 export type BusinessException = z.infer<typeof BusinessExceptionSchema>
-export type HttpResponseWithBusinessExceptions = z.infer<typeof HttpResponseWithBusinessExceptionsSchema>
-export type ApiSuccessResponse = z.infer<typeof ApiSuccessResponseSchema>
+
+/** Base HTTP response from the legacy API shape */
+export interface HttpResponse {
+    readonly status: boolean
+    readonly message: string
+}
+
+export interface HttpResponseWithData<T> extends HttpResponse {
+    readonly data: T
+}
+
+export interface HttpResponseWithMeta<T, M = unknown> extends HttpResponseWithData<T> {
+    readonly meta: M
+}
+
+export type HttpResponseWithError = HttpResponseWithBusinessExceptions
+
+export interface HttpResponseWithBusinessExceptions extends HttpResponse {
+    readonly errors: BusinessException[]
+}
+
+/** Base success response (RTK Query / backend v2 shape) */
+export interface ApiSuccessResponse {
+    readonly success: boolean
+    readonly message: string
+}
+
+export interface ApiSuccessResponseWithData<T> extends ApiSuccessResponse {
+    readonly data: T
+}
+
+export interface ApiSuccessResponseWithMeta<T> extends ApiSuccessResponseWithData<T> {
+    readonly meta: import('@/types/common/pagination-meta.type').PaginationMeta
+}

@@ -14,6 +14,7 @@
         "jsx": "preserve",
         "incremental": true,
         "allowArbitraryExtensions": true,
+        "noUncheckedIndexedAccess": true,
         "plugins": [
             {
                 "name": "next"

@@ -8,10 +8,19 @@
             "perPage": "Per page",
             "showingResults": "Showing {from}-{to} of {total}",
             "cancel": "Cancel",
-            "loading": "Loading..."
+            "reset": "Reset",
+            "search": "Search",
+            "loading": "Loading...",
+            "noResults": "No results found",
+            "confirmAction": "Are you sure?",
+            "actions": "Actions",
+            "clearSearch": "Clear"
         },
         "shell": {
             "panelLabel": "Admin Panel",
+            "consoleSubtitle": "Management Console",
+            "navigation": "Navigation",
+            "backToSite": "Back to site",
             "accountMenu": "Account menu",
             "settings": "Settings",
             "profile": "Profile",
@@ -364,6 +373,56 @@
             "errors": {
                 "rejectReasonMin": "Reject reason must be at least 10 characters"
             }
+        },
+        "actionLabels": {
+            "ban": "Ban User",
+            "unban": "Unban User",
+            "delete_user": "Delete User",
+            "restore_user": "Restore User",
+            "delete_post": "Delete Post",
+            "restore_post": "Restore Post",
+            "delete_comment": "Delete Comment",
+            "restore_comment": "Restore Comment",
+            "reset_user_password": "Reset Password",
+            "send_email_to_user": "Send Email",
+            "approve_appeal": "Approve Appeal",
+            "reject_appeal": "Reject Appeal",
+            "update": "Update",
+            "user_registered": "User Registered",
+            "user_verified": "User Verified",
+            "user_banned": "User Banned",
+            "user_unbanned": "User Unbanned",
+            "post_uploaded": "Post Uploaded",
+            "post_deleted": "Post Deleted",
+            "post_liked": "Post Liked",
+            "post_unliked": "Post Unliked",
+            "post_bookmarked": "Post Bookmarked",
+            "comment_created": "Comment Created",
+            "comment_deleted": "Comment Deleted",
+            "user_followed": "User Followed",
+            "user_unfollowed": "User Unfollowed",
+            "password_changed": "Password Changed",
+            "login": "Login",
+            "logout": "Logout"
+        },
+        "violationReasons": {
+            "spam": "Spam",
+            "harassment": "Harassment",
+            "inappropriate_content": "Inappropriate Content",
+            "copyright_infringement": "Copyright Infringement",
+            "misinformation": "Misinformation",
+            "hate_speech": "Hate Speech",
+            "violence": "Violence",
+            "other": "Other"
+        },
+        "userStatus": {
+            "active": "Active",
+            "banned": "Banned",
+            "deleted": "Deleted"
+        },
+        "postStatus": {
+            "visible": "Visible",
+            "deleted": "Deleted"
         }
     }
 }

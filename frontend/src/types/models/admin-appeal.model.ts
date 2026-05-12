@@ -1,6 +1,6 @@
 import type { Appeal } from '@/types/models/appeal.model'
 
-type AppealUserSummary = {
+interface AppealUserSummary {
     readonly id: number
     readonly uuid: string
     readonly username: string
@@ -8,7 +8,7 @@ type AppealUserSummary = {
     readonly avatar?: string | null
 }
 
-export type AdminAppeal = Appeal & {
+export interface AdminAppeal extends Appeal {
     readonly user?: AppealUserSummary | null
     readonly reviewer?: AppealUserSummary | null
 }

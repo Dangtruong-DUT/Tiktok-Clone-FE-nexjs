@@ -12,7 +12,6 @@ import { useGetPostOfUserPagingQuery } from '@/store/services/posts.service'
 import {
     formatAdminDate,
     formatNumber,
-    formatUserStatus,
     getUserStatus,
     getUserStatusColor
 } from '@/helpers/admin-helpers'
@@ -63,7 +62,9 @@ export function UserDetailDialog({ open, user, onOpenChange }: UserDetailDialogP
                                 <p className='text-xs text-muted-foreground'>{user.email}</p>
                             </div>
                         </div>
-                        <Badge className={getUserStatusColor(status)}>{formatUserStatus(status)}</Badge>
+                        <Badge className={getUserStatusColor(status)}>
+                            {t(`userStatus.${status}` as Parameters<typeof t>[0])}
+                        </Badge>
                     </div>
 
                     <div className='grid grid-cols-2 gap-3 sm:grid-cols-4'>

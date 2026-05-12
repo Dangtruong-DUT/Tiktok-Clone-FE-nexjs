@@ -89,9 +89,9 @@ class UserAdminController extends Controller
     /**
      * Restore a deleted user account.
      * Only soft-deleted users can be restored, permanently deleted users cannot be restored.
-      * @param RestoreUserRequest $request
-      * @return JsonResponse
- */
+     * @param RestoreUserRequest $request
+     * @return JsonResponse
+    */
     public function restoreUser(RestoreUserRequest $request): JsonResponse
     {
         $user = $this->userAdminService->restoreUser($request->validated());

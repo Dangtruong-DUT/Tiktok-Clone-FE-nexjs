@@ -1,14 +1,13 @@
-import type { ApiSuccessResponse } from '@/types/common/http-response.type'
-import type { PaginationMeta } from '@/types/common/pagination-meta.type'
+import type { ApiSuccessResponse, ApiSuccessResponseWithMeta } from '@/types/common/http-response.type'
 
-type AdminCommentAuthor = {
+interface AdminCommentAuthor {
     readonly id: number
     readonly uuid?: string | null
     readonly username: string
     readonly avatar: string | null
 }
 
-export type AdminComment = {
+export interface AdminComment {
     readonly id: number
     readonly uuid: string
     readonly user_id: number
@@ -21,5 +20,5 @@ export type AdminComment = {
     readonly likes_count: number
 }
 
-export type GetAdminCommentsRes = ApiSuccessResponse & { data: AdminComment[]; meta: PaginationMeta }
+export type GetAdminCommentsRes = ApiSuccessResponseWithMeta<AdminComment[]>
 export type DeleteCommentRes = ApiSuccessResponse

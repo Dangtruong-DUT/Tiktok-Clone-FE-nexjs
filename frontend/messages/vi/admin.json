@@ -8,10 +8,19 @@
             "perPage": "Mỗi trang",
             "showingResults": "Hiển thị {from}-{to} trên {total}",
             "cancel": "Hủy",
-            "loading": "Đang xử lý..."
+            "reset": "Đặt lại",
+            "search": "Tìm kiếm",
+            "loading": "Đang xử lý...",
+            "noResults": "Không tìm thấy kết quả",
+            "confirmAction": "Bạn có chắc không?",
+            "actions": "Thao tác",
+            "clearSearch": "Xóa"
         },
         "shell": {
             "panelLabel": "Bảng quản trị",
+            "consoleSubtitle": "Hệ thống quản lý",
+            "navigation": "Điều hướng",
+            "backToSite": "Về trang chính",
             "accountMenu": "Menu tài khoản",
             "settings": "Cài đặt",
             "profile": "Hồ sơ",
@@ -364,6 +373,56 @@
             "errors": {
                 "rejectReasonMin": "Lý do từ chối phải có ít nhất 10 ký tự"
             }
+        },
+        "actionLabels": {
+            "ban": "Khóa tài khoản",
+            "unban": "Mở khóa tài khoản",
+            "delete_user": "Xóa người dùng",
+            "restore_user": "Khôi phục người dùng",
+            "delete_post": "Xóa bài viết",
+            "restore_post": "Khôi phục bài viết",
+            "delete_comment": "Xóa bình luận",
+            "restore_comment": "Khôi phục bình luận",
+            "reset_user_password": "Đặt lại mật khẩu",
+            "send_email_to_user": "Gửi email",
+            "approve_appeal": "Phê duyệt kháng cáo",
+            "reject_appeal": "Từ chối kháng cáo",
+            "update": "Cập nhật",
+            "user_registered": "Người dùng đăng ký",
+            "user_verified": "Xác thực người dùng",
+            "user_banned": "Khóa người dùng",
+            "user_unbanned": "Mở khóa người dùng",
+            "post_uploaded": "Đăng bài viết",
+            "post_deleted": "Xóa bài viết",
+            "post_liked": "Thích bài viết",
+            "post_unliked": "Bỏ thích bài viết",
+            "post_bookmarked": "Lưu bài viết",
+            "comment_created": "Tạo bình luận",
+            "comment_deleted": "Xóa bình luận",
+            "user_followed": "Theo dõi người dùng",
+            "user_unfollowed": "Bỏ theo dõi người dùng",
+            "password_changed": "Thay đổi mật khẩu",
+            "login": "Đăng nhập",
+            "logout": "Đăng xuất"
+        },
+        "violationReasons": {
+            "spam": "Spam",
+            "harassment": "Quấy rối",
+            "inappropriate_content": "Nội dung không phù hợp",
+            "copyright_infringement": "Vi phạm bản quyền",
+            "misinformation": "Thông tin sai lệch",
+            "hate_speech": "Ngôn từ thù địch",
+            "violence": "Bạo lực",
+            "other": "Khác"
+        },
+        "userStatus": {
+            "active": "Hoạt động",
+            "banned": "Bị khóa",
+            "deleted": "Đã xóa"
+        },
+        "postStatus": {
+            "visible": "Hiển thị",
+            "deleted": "Đã xóa"
         }
     }
 }

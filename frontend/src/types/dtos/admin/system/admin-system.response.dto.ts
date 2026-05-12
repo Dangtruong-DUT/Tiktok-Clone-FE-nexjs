@@ -1,15 +1,14 @@
-import type { ApiSuccessResponse } from '@/types/common/http-response.type'
+import type { ApiSuccessResponse, ApiSuccessResponseWithData, ApiSuccessResponseWithMeta } from '@/types/common/http-response.type'
 import type { AdminResourceType } from '@/constants/admin.const'
-import type { PaginationMeta } from '@/types/common/pagination-meta.type'
 
-type LogActor = {
+interface LogActor {
     readonly id: number
     readonly uuid?: string | null
     readonly username: string
     readonly avatar: string | null
 }
 
-export type AdminLog = {
+export interface AdminLog {
     readonly id: number
     readonly admin_id: number
     readonly admin_uuid?: string | null
@@ -24,7 +23,7 @@ export type AdminLog = {
     readonly created_at: string
 }
 
-export type ActivityLog = {
+export interface ActivityLog {
     readonly id: number
     readonly user_id: number | null
     readonly user_uuid?: string | null
@@ -39,7 +38,7 @@ export type ActivityLog = {
 
 export type AdminActivityListItem = AdminLog | ActivityLog
 
-export type DashboardStats = {
+export interface DashboardStats {
     readonly total_users: number
     readonly active_users: number
     readonly banned_users: number
@@ -51,5 +50,7 @@ export type DashboardStats = {
     readonly new_posts_this_period: number
 }
 
-export type GetActivityLogsRes = ApiSuccessResponse & { data: AdminActivityListItem[]; meta: PaginationMeta }
-export type GetDashboardStatsRes = ApiSuccessResponse & { data: DashboardStats }
+export type GetActivityLogsRes = ApiSuccessResponseWithMeta<AdminActivityListItem[]>
+export type GetDashboardStatsRes = ApiSuccessResponseWithData<DashboardStats>
+// Re-export for convenience
+export type { ApiSuccessResponse }

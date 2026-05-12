@@ -1,27 +1,41 @@
 'use client'
 
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import { AdminSidebar } from './admin-sidebar'
 import { AdminTopbar } from './admin-topbar'
 
-interface AdminLayoutProps {
-    children: ReactNode
+export interface BreadcrumbEntry {
+    label: string
+    href?: string
 }
 
-export function AdminLayout({ children }: AdminLayoutProps) {
+interface AdminLayoutProps {
+    children: ReactNode
+    title?: string
+    description?: string
+    breadcrumbs?: BreadcrumbEntry[]
+    actions?: ReactNode
+}
+
+export function AdminLayout({ children, title, description, breadcrumbs, actions }: AdminLayoutProps) {
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+
     return (
-        <div className='flex h-screen bg-muted/30 text-foreground overflow-hidden'>
-            {/* Sidebar */}
-            <div className='hidden md:flex md:flex-col md:w-64 border-r bg-background shrink-0'>
-                <AdminSidebar />
-            </div>
+        <div className='flex h-screen bg-muted/20 text-foreground overflow-hidden'>
+            <AdminSidebar
+                collapsed={sidebarCollapsed}
+                onToggle={() => setSidebarCollapsed((v) => !v)}
+            />
 
-            {/* Main Content */}
             <div className='flex min-w-0 flex-1 flex-col min-h-0'>
-                <AdminTopbar />
-
-                {/* Content Area */}
-                <main className='flex-1 overflow-y-auto min-h-0'>{children}</main>
+                <AdminTopbar
+                    title={title}
+                    description={description}
+                    breadcrumbs={breadcrumbs}
+                    actions={actions}
+                    onToggleSidebar={() => setSidebarCollapsed((v) => !v)}
+                />
+                <main className='flex-1 overflow-y-auto'>{children}</main>
             </div>
         </div>
     )

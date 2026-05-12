@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { formatAdminDate, getActivityLabel, truncateText } from '@/helpers/admin-helpers'
+import { formatAdminDate, getActivityKey, truncateText } from '@/helpers/admin-helpers'
 import type { AdminActivityListItem } from '@/types/dtos/admin/admin-response.dto'
 
 interface ActivityLogDetailDialogProps {
@@ -16,7 +16,8 @@ export function ActivityLogDetailDialog({ open, log, onOpenChange }: ActivityLog
     const t = useTranslations('AdminPage')
 
     const actor = 'action_type' in log ? log.user?.username : log.admin?.username
-    const actionLabel = getActivityLabel('action_type' in log ? log.action_type : log.action)
+    const actionKey = getActivityKey({ action: 'action' in log ? log.action : undefined, action_type: 'action_type' in log ? log.action_type : undefined })
+    const actionLabel = t(`actionLabels.${actionKey}` as Parameters<typeof t>[0]) ?? actionKey
     const metadata = 'metadata' in log ? log.metadata : null
 
     const metadataEntries = metadata
