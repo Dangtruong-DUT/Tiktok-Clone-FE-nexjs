@@ -27,7 +27,6 @@ const STATUS_STYLES: Record<string, string> = {
     [APPEAL_STATUSES.PENDING]: 'bg-amber-50 text-amber-700 border-amber-200'
 }
 
-
 function ResourcePreviewBlock({ preview }: { preview: ResourcePreview }) {
     if (preview.type === 'post') {
         return (
@@ -50,9 +49,7 @@ function ResourcePreviewBlock({ preview }: { preview: ResourcePreview }) {
                     </div>
                 )}
                 <div className='space-y-1'>
-                    {preview.content && (
-                        <p className='text-sm text-foreground line-clamp-3'>{preview.content}</p>
-                    )}
+                    {preview.content && <p className='text-sm text-foreground line-clamp-3'>{preview.content}</p>}
                     {preview.author && (
                         <div className='flex items-center gap-2 mt-2'>
                             <Avatar className='size-6'>
@@ -114,10 +111,14 @@ function ResourcePreviewBlock({ preview }: { preview: ResourcePreview }) {
                 <p className='font-semibold'>@{preview.username}</p>
                 <div className='flex gap-2'>
                     {preview.is_banned && (
-                        <Badge variant='outline' className='bg-red-50 text-red-700 border-red-200 text-xs'>Banned</Badge>
+                        <Badge variant='outline' className='bg-red-50 text-red-700 border-red-200 text-xs'>
+                            Banned
+                        </Badge>
                     )}
                     {preview.is_deleted && (
-                        <Badge variant='outline' className='bg-gray-100 text-gray-600 border-gray-200 text-xs'>Deleted</Badge>
+                        <Badge variant='outline' className='bg-gray-100 text-gray-600 border-gray-200 text-xs'>
+                            Deleted
+                        </Badge>
                     )}
                 </div>
             </div>
@@ -126,7 +127,6 @@ function ResourcePreviewBlock({ preview }: { preview: ResourcePreview }) {
 
     return null
 }
-
 
 function AppealDetailDialog({ open, appeal, onClose }: { open: boolean; appeal: Appeal; onClose: () => void }) {
     const t = useTranslations('SnapiStudio.appeals')
@@ -156,13 +156,13 @@ function AppealDetailDialog({ open, appeal, onClose }: { open: boolean; appeal: 
                             <InfoRow label={t('detail.fields.type')} value={t(`types.${appeal.appeal_type}`)} />
                             <InfoRow label={t('detail.fields.createdAt')} value={formatAdminDate(appeal.created_at)} />
                             {appeal.reviewed_at && (
-                                <InfoRow label={t('detail.fields.reviewedAt')} value={formatAdminDate(appeal.reviewed_at)} />
+                                <InfoRow
+                                    label={t('detail.fields.reviewedAt')}
+                                    value={formatAdminDate(appeal.reviewed_at)}
+                                />
                             )}
                             {appeal.resource_type && (
-                                <InfoRow
-                                    label={t('detail.fields.resource')}
-                                    value={appeal.resource_type}
-                                />
+                                <InfoRow label={t('detail.fields.resource')} value={appeal.resource_type} />
                             )}
                         </div>
 
@@ -183,7 +183,9 @@ function AppealDetailDialog({ open, appeal, onClose }: { open: boolean; appeal: 
                                         {t('statuses.approved')} — Action Reversed
                                     </p>
                                     {appeal.admin_response && (
-                                        <p className='text-xs text-emerald-700 dark:text-emerald-400 mt-0.5'>{appeal.admin_response}</p>
+                                        <p className='text-xs text-emerald-700 dark:text-emerald-400 mt-0.5'>
+                                            {appeal.admin_response}
+                                        </p>
                                     )}
                                 </div>
                             </div>
@@ -196,7 +198,9 @@ function AppealDetailDialog({ open, appeal, onClose }: { open: boolean; appeal: 
                                         {t('statuses.rejected')}
                                     </p>
                                     {appeal.admin_response && (
-                                        <p className='text-xs text-red-700 dark:text-red-400 mt-0.5'>{appeal.admin_response}</p>
+                                        <p className='text-xs text-red-700 dark:text-red-400 mt-0.5'>
+                                            {appeal.admin_response}
+                                        </p>
                                     )}
                                 </div>
                             </div>
@@ -210,22 +214,33 @@ function AppealDetailDialog({ open, appeal, onClose }: { open: boolean; appeal: 
 
                         {/* Timeline */}
                         <div className='space-y-2'>
-                            <p className='text-xs uppercase tracking-wide text-muted-foreground font-medium'>Timeline</p>
+                            <p className='text-xs uppercase tracking-wide text-muted-foreground font-medium'>
+                                Timeline
+                            </p>
                             <ol className='relative border-l border-border ml-3 space-y-4'>
                                 <li className='pl-5'>
                                     <span className='absolute -left-1.5 mt-1 h-3 w-3 rounded-full border border-background bg-emerald-500' />
                                     <p className='text-xs font-medium text-foreground'>Appeal submitted</p>
-                                    <p className='text-xs text-muted-foreground'>{formatAdminDate(appeal.created_at)}</p>
+                                    <p className='text-xs text-muted-foreground'>
+                                        {formatAdminDate(appeal.created_at)}
+                                    </p>
                                 </li>
                                 {appeal.reviewed_at && (
                                     <li className='pl-5'>
-                                        <span className={`absolute -left-1.5 mt-1 h-3 w-3 rounded-full border border-background ${
-                                            appeal.status === APPEAL_STATUSES.APPROVED ? 'bg-emerald-500' : 'bg-red-500'
-                                        }`} />
+                                        <span
+                                            className={`absolute -left-1.5 mt-1 h-3 w-3 rounded-full border border-background ${
+                                                appeal.status === APPEAL_STATUSES.APPROVED
+                                                    ? 'bg-emerald-500'
+                                                    : 'bg-red-500'
+                                            }`}
+                                        />
                                         <p className='text-xs font-medium text-foreground'>
-                                            Appeal {appeal.status === APPEAL_STATUSES.APPROVED ? 'approved' : 'rejected'}
+                                            Appeal{' '}
+                                            {appeal.status === APPEAL_STATUSES.APPROVED ? 'approved' : 'rejected'}
                                         </p>
-                                        <p className='text-xs text-muted-foreground'>{formatAdminDate(appeal.reviewed_at)}</p>
+                                        <p className='text-xs text-muted-foreground'>
+                                            {formatAdminDate(appeal.reviewed_at)}
+                                        </p>
                                     </li>
                                 )}
                                 {!appeal.reviewed_at && (
@@ -283,7 +298,9 @@ function AppealDetailDialog({ open, appeal, onClose }: { open: boolean; appeal: 
                 </div>
 
                 <div className='flex justify-end pt-2'>
-                    <Button variant='outline' size='sm' onClick={onClose}>Close</Button>
+                    <Button variant='outline' size='sm' onClick={onClose}>
+                        Close
+                    </Button>
                 </div>
             </DialogContent>
         </Dialog>
@@ -298,7 +315,6 @@ function InfoRow({ label, value }: { label: string; value: string }) {
         </div>
     )
 }
-
 
 export default function StudioAppealsPage() {
     const t = useTranslations('SnapiStudio.appeals')
@@ -368,7 +384,11 @@ export default function StudioAppealsPage() {
                     />
                     <button
                         type='button'
-                        onClick={() => { setDraftSearch(''); setSearchTerm(''); setPage(1) }}
+                        onClick={() => {
+                            setDraftSearch('')
+                            setSearchTerm('')
+                            setPage(1)
+                        }}
                         disabled={!draftSearch}
                         className='absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground/50 transition-colors hover:text-muted-foreground disabled:pointer-events-none disabled:opacity-30'
                     >
@@ -376,17 +396,16 @@ export default function StudioAppealsPage() {
                     </button>
                 </div>
 
-                <Select
-                    value={draftStatus}
-                    onValueChange={(v: typeof FILTER_ALL | AppealStatus) => setDraftStatus(v)}
-                >
+                <Select value={draftStatus} onValueChange={(v: typeof FILTER_ALL | AppealStatus) => setDraftStatus(v)}>
                     <SelectTrigger className='h-8 w-40 rounded-md text-sm'>
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value={FILTER_ALL}>{t('list.filters.allStatuses')}</SelectItem>
                         {APPEAL_STATUS_VALUES.map((s) => (
-                            <SelectItem key={s} value={s}>{t(`statuses.${s}`)}</SelectItem>
+                            <SelectItem key={s} value={s}>
+                                {t(`statuses.${s}`)}
+                            </SelectItem>
                         ))}
                     </SelectContent>
                 </Select>
@@ -415,7 +434,9 @@ export default function StudioAppealsPage() {
             {/* Table */}
             {isLoading ? (
                 <div className='rounded-xl border bg-background shadow-sm overflow-hidden divide-y'>
-                    <div className='bg-muted/30 px-4 py-2.5'><Skeleton className='h-3.5 w-1/2' /></div>
+                    <div className='bg-muted/30 px-4 py-2.5'>
+                        <Skeleton className='h-3.5 w-1/2' />
+                    </div>
                     {Array.from({ length: 6 }).map((_, i) => (
                         <div key={i} className='flex items-center gap-4 px-4 py-3.5'>
                             <Skeleton className='h-3.5 w-24 shrink-0' />
@@ -444,7 +465,10 @@ export default function StudioAppealsPage() {
                                     t('list.columns.status'),
                                     t('list.columns.createdAt')
                                 ].map((label) => (
-                                    <TableHead key={label} className='text-xs uppercase tracking-wide text-muted-foreground font-semibold'>
+                                    <TableHead
+                                        key={label}
+                                        className='text-xs uppercase tracking-wide text-muted-foreground font-semibold'
+                                    >
                                         {label}
                                     </TableHead>
                                 ))}
@@ -509,13 +533,21 @@ export default function StudioAppealsPage() {
                 <div className='flex items-center gap-3 px-1'>
                     <div className='flex items-center gap-1.5 shrink-0'>
                         <span className='text-xs text-muted-foreground'>{t('list.perPage')}</span>
-                        <Select value={String(perPage)} onValueChange={(v) => { setPerPage(Number(v)); setPage(1) }}>
+                        <Select
+                            value={String(perPage)}
+                            onValueChange={(v) => {
+                                setPerPage(Number(v))
+                                setPage(1)
+                            }}
+                        >
                             <SelectTrigger className='h-7 w-14 rounded border-border/60 text-xs'>
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
                                 {[10, 20, 50].map((n) => (
-                                    <SelectItem key={n} value={String(n)} className='text-xs'>{n}</SelectItem>
+                                    <SelectItem key={n} value={String(n)} className='text-xs'>
+                                        {n}
+                                    </SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
@@ -538,11 +570,7 @@ export default function StudioAppealsPage() {
             )}
 
             {selectedAppeal && (
-                <AppealDetailDialog
-                    open
-                    appeal={selectedAppeal}
-                    onClose={() => setSelectedAppeal(null)}
-                />
+                <AppealDetailDialog open appeal={selectedAppeal} onClose={() => setSelectedAppeal(null)} />
             )}
         </div>
     )
