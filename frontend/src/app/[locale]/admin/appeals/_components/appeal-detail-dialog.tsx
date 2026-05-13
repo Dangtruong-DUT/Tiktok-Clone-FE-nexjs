@@ -176,7 +176,7 @@ export function AppealDetailDialog({ open, appeal, onOpenChange }: AppealDetailD
                                 />
                                 <DetailRow
                                     label={t('appeals.detail.fields.resourceId')}
-                                    value={appeal.resource_id ? `#${appeal.resource_id}` : '—'}
+                                    value={appeal.resource_preview?.uuid ? appeal.resource_preview.uuid : '—'}
                                 />
                             </div>
                         </div>
@@ -246,7 +246,7 @@ export function AppealDetailDialog({ open, appeal, onOpenChange }: AppealDetailD
                     open={showGallery}
                     onOpenChange={setShowGallery}
                     evidenceFiles={appeal.evidence_files}
-                    appealId={appeal.id}
+                    appealId={appeal.uuid ?? undefined}
                 />
             )}
         </Dialog>

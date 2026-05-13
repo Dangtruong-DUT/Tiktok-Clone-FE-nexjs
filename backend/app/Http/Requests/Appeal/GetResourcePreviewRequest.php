@@ -11,7 +11,7 @@ class GetResourcePreviewRequest extends BaseRequest
     {
         return $this->applyBaseRules([
             'resource_type' => [self::REQUIRED, self::STRING, 'in:' . implode(',', ResourceTypeEnum::values())],
-            'resource_id' => [self::NULLABLE, self::INTEGER, self::MIN . ':1'],
+            'resource_uuid' => [self::NULLABLE, self::STRING, 'uuid'],
         ]);
     }
 }

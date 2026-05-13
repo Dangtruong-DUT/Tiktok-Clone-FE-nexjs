@@ -21,7 +21,7 @@ interface AppealFormClientProps {
     appealUuid?: string
     appealType?: string
     resourceType?: string
-    resourceId?: string
+    resourceUuid?: string
 }
 
 function ResourcePreviewInline({
@@ -85,7 +85,7 @@ function ResourcePreviewInline({
     return null
 }
 
-export function AppealFormClient({ appealUuid, appealType, resourceType, resourceId }: AppealFormClientProps) {
+export function AppealFormClient({ appealUuid, appealType, resourceType, resourceUuid }: AppealFormClientProps) {
     const t = useTranslations('AppealPage')
     const tTypes = useTranslations('AppealPage.types')
     const tStatuses = useTranslations('AppealPage.statuses')
@@ -110,7 +110,7 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
     const existingAppealInfo = appealData?.data
 
     const { data: resourcePreviewData, isLoading: isLoadingPreview } = useGetResourcePreviewQuery(
-        { resourceType: resourceType ?? '', resourceId },
+        { resourceType: resourceType ?? '', resourceUuid },
         { skip: !isNewFlow || !resourceType }
     )
 
@@ -153,8 +153,8 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
         if (isNewFlow) {
             formData.append('appeal_type', appealType || '')
             formData.append('resource_type', resourceType || '')
-            if (resourceId) {
-                formData.append('resource_id', resourceId)
+            if (resourceUuid) {
+                formData.append('resource_uuid', resourceUuid)
             }
         } else if (isEditFlow && appealUuid) {
             formData.append('_method', 'PUT')
@@ -190,7 +190,7 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
         isNewFlow,
         appealType,
         resourceType,
-        resourceId,
+        resourceUuid,
         isEditFlow,
         updateAppeal
     ])
@@ -229,7 +229,7 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
 
     if (!isAuthenticated) {
         const redirectUrl = isNewFlow
-            ? `/appeal?appeal_type=${appealType}&resource_type=${resourceType}${resourceId ? `&resource_id=${resourceId}` : ''}`
+            ? `/appeal?appeal_type=${appealType}&resource_type=${resourceType}${resourceUuid ? `&resource_uuid=${resourceUuid}` : ''}`
             : isEditFlow
               ? `/appeal?appeal_uuid=${appealUuid}`
               : '/appeal'

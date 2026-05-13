@@ -161,7 +161,7 @@ function AppealDetailDialog({ open, appeal, onClose }: { open: boolean; appeal: 
                             {appeal.resource_type && (
                                 <InfoRow
                                     label={t('detail.fields.resource')}
-                                    value={`${appeal.resource_type}${appeal.resource_id ? ` #${appeal.resource_id}` : ''}`}
+                                    value={appeal.resource_type}
                                 />
                             )}
                         </div>
@@ -321,7 +321,7 @@ export default function StudioAppealsPage() {
         const keyword = searchTerm.trim().toLowerCase()
         if (!keyword) return list
         return list.filter((appeal) =>
-            [appeal.appeal_type, appeal.resource_type, appeal.reason, appeal.status, String(appeal.resource_id ?? '')]
+            [appeal.appeal_type, appeal.resource_type, appeal.reason, appeal.status]
                 .join(' ')
                 .toLowerCase()
                 .includes(keyword)
@@ -402,9 +402,9 @@ export default function StudioAppealsPage() {
                         </TableHeader>
                         <TableBody>
                             {appeals.map((appeal) => (
-                                <TableRow key={appeal.id} className='hover:bg-muted/50 transition-colors'>
+                                <TableRow key={appeal.uuid} className='hover:bg-muted/50 transition-colors'>
                                     <TableCell className='font-mono text-sm text-muted-foreground'>
-                                        #{appeal.id}
+                                        {appeal.appeal_type}
                                     </TableCell>
                                     <TableCell>
                                         <span className='text-sm'>{t(`types.${appeal.appeal_type}`)}</span>

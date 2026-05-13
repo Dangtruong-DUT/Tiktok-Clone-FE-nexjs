@@ -69,7 +69,7 @@ export function AppealTable() {
     const [selectedAppeal, setSelectedAppeal] = useState<AdminAppeal | null>(null)
     const [actionType, setActionType] = useState<AppealReviewAction | null>(null)
     const [adminResponse, setAdminResponse] = useState('')
-    const [expandedRowId, setExpandedRowId] = useState<number | null>(null)
+    const [expandedRowId, setExpandedRowId] = useState<string | null>(null)
     const [galleryAppeal, setGalleryAppeal] = useState<AdminAppeal | null>(null)
     const [detailAppeal, setDetailAppeal] = useState<AdminAppeal | null>(null)
 
@@ -94,7 +94,6 @@ export function AppealTable() {
                 appeal.reason ?? '',
                 appeal.appeal_type,
                 appeal.resource_type ?? '',
-                String(appeal.resource_id ?? ''),
                 appeal.status
             ]
                 .join(' ')
@@ -117,7 +116,7 @@ export function AppealTable() {
         setAdminResponse('')
     }, [])
 
-    const toggleExpandRow = useCallback((id: number) => {
+    const toggleExpandRow = useCallback((id: string) => {
         setExpandedRowId((prev) => (prev === id ? null : id))
     }, [])
 
@@ -279,13 +278,13 @@ export function AppealTable() {
                             {appeals.map((appeal) => {
                                 const statusConf = getStatusConfig(appeal.status)
                                 const hasEvidence = (appeal.evidence_files?.length ?? 0) > 0
-                                const isExpanded = expandedRowId === appeal.id
+                                const isExpanded = expandedRowId !== null && expandedRowId === (appeal.uuid ?? String(appeal.id))
 
                                 return (
-                                    <TooltipProvider key={appeal.id}>
+                                    <TooltipProvider key={appeal.uuid ?? appeal.id}>
                                         <TableRow
                                             className='hover:bg-muted/40 cursor-pointer transition-colors'
-                                            onClick={() => toggleExpandRow(appeal.id)}
+                                            onClick={() => toggleExpandRow(appeal.uuid ?? String(appeal.id))}
                                         >
                                             <TableCell>
                                                 <span className='text-xs text-muted-foreground select-none'>
@@ -400,7 +399,7 @@ export function AppealTable() {
                                         {/* Expandable row */}
                                         <AnimatePresence>
                                             {isExpanded && (
-                                                <TableRow key={`${appeal.id}-expanded`}>
+                                                <TableRow key={`${appeal.uuid ?? appeal.id}-expanded`}>
                                                     <TableCell colSpan={9} className='p-0 border-0'>
                                                         <motion.div
                                                             initial={{ height: 0, opacity: 0 }}
@@ -457,7 +456,7 @@ export function AppealTable() {
 
                                                                 <div className='flex flex-wrap gap-4 text-xs text-muted-foreground'>
                                                                     <span>
-                                                                        {t('appeals.detail.fields.resourceType')}: {appeal.resource_type} #{appeal.resource_id ?? '—'}
+                                                                        {t('appeals.detail.fields.resourceType')}: {appeal.resource_type}
                                                                     </span>
                                                                     {appeal.reviewed_at && (
                                                                         <span>
@@ -549,7 +548,7 @@ export function AppealTable() {
                 open={!!galleryAppeal}
                 onOpenChange={(open) => !open && setGalleryAppeal(null)}
                 evidenceFiles={galleryAppeal?.evidence_files ?? []}
-                appealId={galleryAppeal?.id}
+                appealId={galleryAppeal?.uuid ?? undefined}
             />
 
             {detailAppeal && (

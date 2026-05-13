@@ -24,11 +24,11 @@ export const AppealApi = createApi({
     endpoints: (builder) => ({
         getResourcePreview: builder.query<
             GetResourcePreviewResponse,
-            { resourceType: string; resourceId?: string | null }
+            { resourceType: string; resourceUuid?: string | null }
         >({
-            query: ({ resourceType, resourceId }) => ({
+            query: ({ resourceType, resourceUuid }) => ({
                 url: '/appeals/resource-preview',
-                params: { resource_type: resourceType, resource_id: resourceId ?? undefined }
+                params: { resource_type: resourceType, resource_uuid: resourceUuid ?? undefined }
             })
         }),
 

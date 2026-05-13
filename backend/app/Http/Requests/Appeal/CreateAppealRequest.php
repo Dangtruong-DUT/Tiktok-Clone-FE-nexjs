@@ -16,7 +16,7 @@ class CreateAppealRequest extends BaseRequest
         return $this->applyBaseRules([
             'appeal_type' => [self::REQUIRED],
             'resource_type' => [self::REQUIRED],
-            'resource_id' => [self::NULLABLE, self::INTEGER],
+            'resource_uuid' => [self::NULLABLE, self::STRING, 'uuid'],
             'reason' => [self::REQUIRED, self::STRING, self::MIN.':20', self::MAX.':1000'],
             'evidence_files' => [self::NULLABLE, self::ARRAY, self::MAX.':5'],
             'evidence_files.*' => [self::REQUIRED, self::IMAGE, self::MAX.':5120'],

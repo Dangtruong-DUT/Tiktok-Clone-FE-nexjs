@@ -33,14 +33,18 @@ class AdminModerationNoticeService
     ): void {
         $resourceType = (string) ($context['resource_type'] ?? $entityType->value);
         $resourceId = (int) ($context['resource_id'] ?? $entityId);
+        $resourceUuid = (string) ($context['resource_uuid'] ?? '');
         $appealLink = null;
 
         $notificationData = [
             'action' => $action->value,
             'reason' => $reason,
             'resource_type' => $resourceType,
-            'resource_id' => $resourceId,
         ];
+
+        if ($resourceUuid !== '') {
+            $notificationData['resource_uuid'] = $resourceUuid;
+        }
 
         if ($this->isAppealableAction($action)) {
             $appealType = AppealTypeEnum::fromAdminAction($action);
@@ -51,8 +55,10 @@ class AdminModerationNoticeService
             $notificationData['appeal_type'] = $appealType->value;
             $notificationData['appeal_available'] = true;
 
-            $appealLink = $this->buildAppealFrontendLink($appealType, $resourceType, $resourceId);
-            $notificationData['appeal_link'] = $appealLink;
+            if ($resourceUuid !== '') {
+                $appealLink = $this->buildAppealFrontendLink($appealType, $resourceType, $resourceUuid);
+                $notificationData['appeal_link'] = $appealLink;
+            }
         }
 
         $this->notificationService->notifyAdminModerationAction(
@@ -97,12 +103,18 @@ class AdminModerationNoticeService
         int $entityId,
         array $context = []
     ): void {
-        $notificationData = array_merge([
+        $baseData = [
             'action' => $action->value,
             'reason' => $message,
             'resource_type' => $context['resource_type'] ?? $entityType->value,
-            'resource_id' => $context['resource_id'] ?? $entityId,
-        ], $context);
+        ];
+
+        if (isset($context['resource_uuid']) && $context['resource_uuid'] !== '') {
+            $baseData['resource_uuid'] = $context['resource_uuid'];
+        }
+
+        $notificationData = array_merge($baseData, $context);
+        unset($notificationData['resource_id']);
 
         $this->notificationService->notifyAdminModerationAction(
             adminId: $admin->id,
@@ -134,14 +146,14 @@ class AdminModerationNoticeService
     /**
      * Build the frontend appeal link with query parameters.
  */
-    private function buildAppealFrontendLink(AppealTypeEnum $appealType, string $resourceType, int $resourceId): string
+    private function buildAppealFrontendLink(AppealTypeEnum $appealType, string $resourceType, string $resourceUuid): string
     {
         $baseUrl = rtrim((string) config('app.frontend_url'), '/');
 
         return $baseUrl.'/en/appeal?'.http_build_query([
             'appeal_type' => $appealType->value,
             'resource_type' => $resourceType,
-            'resource_id' => $resourceId,
+            'resource_uuid' => $resourceUuid,
         ]);
     }
 

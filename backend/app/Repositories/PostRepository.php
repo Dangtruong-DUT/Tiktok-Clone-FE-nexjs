@@ -128,6 +128,16 @@ class PostRepository extends BaseRepository
     }
 
     /**
+     * Find a post by UUID, including soft-deleted posts.
+     * @param  string  $uuid
+     * @return Post|null
+ */
+    public function findWithTrashedByUuid(string $uuid): ?Post
+    {
+        return $this->query()->withTrashed()->where('uuid', $uuid)->first();
+    }
+
+    /**
      * Restore a soft-deleted post by ID.
      * @return bool True if the post was restored, false otherwise.
  */

@@ -14,7 +14,6 @@ class AppealResource extends BaseJsonResource
             'uuid' => $this->uuid,
             'user_id' => $this->user_id,
             'appeal_type' => $this->appeal_type->value,
-            'resource_id' => $this->resource_id,
             'resource_type' => $this->resource_type,
             'reason' => $this->reason,
             'status' => $this->status->value,

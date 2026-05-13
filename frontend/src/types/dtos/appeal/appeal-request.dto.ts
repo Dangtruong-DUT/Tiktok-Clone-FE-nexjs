@@ -5,7 +5,7 @@ import { AppealResourceTypeSchema, AppealStatusSchema, AppealTypeSchema } from '
 export const CreateAppealSchema = z
     .object({
         appeal_type: AppealTypeSchema,
-        resource_id: z.number().int().positive().nullable().optional(),
+        resource_uuid: z.string().optional(),
         resource_type: AppealResourceTypeSchema,
         reason: z.string().min(20).max(1000),
         evidence_files: z.array(z.instanceof(File)).max(5).optional()

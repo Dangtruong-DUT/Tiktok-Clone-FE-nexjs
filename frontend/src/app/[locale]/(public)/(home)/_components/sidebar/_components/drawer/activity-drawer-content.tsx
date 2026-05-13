@@ -179,11 +179,11 @@ function getNotificationLink(notification: NotificationType): string | null {
     const appealAvailable = notification.data?.appeal_available === true
     const appealType = typeof notification.data?.appeal_type === 'string' ? notification.data.appeal_type : null
     const resourceType = typeof notification.data?.resource_type === 'string' ? notification.data.resource_type : null
-    const resourceId = typeof notification.data?.resource_id === 'number' ? notification.data.resource_id : null
+    const resourceUuid = typeof notification.data?.resource_uuid === 'string' ? notification.data.resource_uuid : null
     const appealLink = typeof notification.data?.appeal_link === 'string' ? notification.data.appeal_link : null
 
-    if (appealAvailable && appealType && resourceType && resourceId !== null) {
-        return `/appeal?appeal_type=${appealType}&resource_type=${resourceType}&resource_id=${resourceId}`
+    if (appealAvailable && appealType && resourceType && resourceUuid !== null) {
+        return `/appeal?appeal_type=${appealType}&resource_type=${resourceType}&resource_uuid=${resourceUuid}`
     }
 
     if (appealLink) {

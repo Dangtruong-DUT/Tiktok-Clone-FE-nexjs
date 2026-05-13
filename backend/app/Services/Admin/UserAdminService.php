@@ -88,6 +88,7 @@ class UserAdminService
                 context: [
                     'resource_type' => ResourceTypeEnum::USER->value,
                     'resource_id' => $user->id,
+                    'resource_uuid' => $user->uuid,
                 ]
             );
 
@@ -140,6 +141,7 @@ class UserAdminService
                 context: [
                     'resource_type' => ResourceTypeEnum::USER->value,
                     'resource_id' => $user->id,
+                    'resource_uuid' => $user->uuid,
                 ]
             );
 
@@ -190,6 +192,7 @@ class UserAdminService
                 context: [
                     'resource_type' => ResourceTypeEnum::USER->value,
                     'resource_id' => $user->id,
+                    'resource_uuid' => $user->uuid,
                 ]
             );
         });
@@ -240,6 +243,7 @@ class UserAdminService
                 context: [
                     'resource_type' => ResourceTypeEnum::USER->value,
                     'resource_id' => $user->id,
+                    'resource_uuid' => $user->uuid,
                 ]
             );
 

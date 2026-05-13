@@ -84,6 +84,7 @@ class PostAdminService
                 context: [
                     'resource_type' => ResourceTypeEnum::POST->value,
                     'resource_id' => $post->id,
+                    'resource_uuid' => $post->uuid,
                 ]
             );
         });

@@ -20,11 +20,16 @@ export default async function PublicAppealPage({
     searchParams
 }: {
     params: Promise<{ locale: LocalesType }>
-    searchParams: Promise<{ appeal_uuid?: string; appeal_type?: string; resource_type?: string; resource_id?: string }>
+    searchParams: Promise<{
+        appeal_uuid?: string
+        appeal_type?: string
+        resource_type?: string
+        resource_uuid?: string
+    }>
 }) {
     const { locale } = await params
     setRequestLocale(locale)
-    const { appeal_uuid, appeal_type, resource_type, resource_id } = await searchParams
+    const { appeal_uuid, appeal_type, resource_type, resource_uuid } = await searchParams
 
     return (
         <section className='mx-auto flex min-h-[70vh] w-full max-w-3xl items-center justify-center '>
@@ -45,7 +50,7 @@ export default async function PublicAppealPage({
                     appealUuid={appeal_uuid}
                     appealType={appeal_type}
                     resourceType={resource_type}
-                    resourceId={resource_id}
+                    resourceUuid={resource_uuid}
                 />
             </Suspense>
         </section>

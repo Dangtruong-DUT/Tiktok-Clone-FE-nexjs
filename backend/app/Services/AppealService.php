@@ -12,6 +12,7 @@ use App\Exceptions\http\NotFoundException;
 use App\Models\Appeal;
 use App\Repositories\AppealRepository;
 use App\Repositories\PostRepository;
+use App\Models\User;
 use App\Traits\HasAuthUser;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
@@ -30,7 +31,7 @@ class AppealService
 
     /**
      * File a new appeal (authenticated user only).
-     * @param  array{appeal_type: string, resource_type: string, resource_id?: int|null, reason: string}  $payload
+     * @param  array{appeal_type: string, resource_type: string, resource_uuid?: string|null, reason: string}  $payload
      * @param  array<\Illuminate\Http\UploadedFile>  $evidenceFiles
  */
     public function create(array $payload, array $evidenceFiles = []): Appeal
@@ -40,12 +41,12 @@ class AppealService
 
         $appealType = AppealTypeEnum::from((string) $payload['appeal_type']);
         $resourceType = ResourceTypeEnum::from((string) $payload['resource_type']);
-        $resourceId = $payload['resource_id'] ?? null;
+        $resourceUuid = $payload['resource_uuid'] ?? null;
 
         $resourceId = $this->validateAppealResource(
             appealType: $appealType,
             resourceType: $resourceType,
-            resourceId: $resourceId,
+            resourceUuid: $resourceUuid,
             userId: $userId,
         );
 
@@ -82,20 +83,20 @@ class AppealService
     private function validateAppealResource(
         AppealTypeEnum $appealType,
         ResourceTypeEnum $resourceType,
-        ?int $resourceId,
+        ?string $resourceUuid,
         int $userId
     ): ?int {
         return match ($appealType) {
-            AppealTypeEnum::USER_BAN => $this->validateUserBanAppeal($resourceType, $resourceId, $userId),
-            AppealTypeEnum::USER_DELETED => $this->validateUserDeletionAppeal($resourceType, $resourceId, $userId),
-            AppealTypeEnum::POST_DELETED => $this->validatePostAppeal($resourceType, $resourceId, $userId),
-            AppealTypeEnum::COMMENT_DELETED => $this->validateCommentAppeal($resourceType, $resourceId, $userId),
+            AppealTypeEnum::USER_BAN => $this->validateUserBanAppeal($resourceType, $resourceUuid, $userId),
+            AppealTypeEnum::USER_DELETED => $this->validateUserDeletionAppeal($resourceType, $resourceUuid, $userId),
+            AppealTypeEnum::POST_DELETED => $this->validatePostAppeal($resourceType, $resourceUuid, $userId),
+            AppealTypeEnum::COMMENT_DELETED => $this->validateCommentAppeal($resourceType, $resourceUuid, $userId),
         };
     }
 
     private function validateUserBanAppeal(
         ResourceTypeEnum $resourceType,
-        ?int $resourceId,
+        ?string $resourceUuid,
         int $userId
     ): int {
         if ($resourceType !== ResourceTypeEnum::USER) {
@@ -111,8 +112,11 @@ class AppealService
             ]);
         }
 
-        if ($resourceId !== null && $resourceId !== $userId) {
-            throw new ForbiddenException('You can only appeal your own account.');
+        if ($resourceUuid !== null) {
+            $resolvedUser = User::where('uuid', $resourceUuid)->first();
+            if ($resolvedUser && $resolvedUser->id !== $userId) {
+                throw new ForbiddenException('You can only appeal your own account.');
+            }
         }
 
         return $userId;
@@ -120,7 +124,7 @@ class AppealService
 
     private function validateUserDeletionAppeal(
         ResourceTypeEnum $resourceType,
-        ?int $resourceId,
+        ?string $resourceUuid,
         int $userId
     ): int {
         if ($resourceType !== ResourceTypeEnum::USER) {
@@ -129,8 +133,11 @@ class AppealService
             ]);
         }
 
-        if ($resourceId !== null && $resourceId !== $userId) {
-            throw new ForbiddenException('You can only appeal your own account.');
+        if ($resourceUuid !== null) {
+            $resolvedUser = User::where('uuid', $resourceUuid)->first();
+            if ($resolvedUser && $resolvedUser->id !== $userId) {
+                throw new ForbiddenException('You can only appeal your own account.');
+            }
         }
 
         return $userId;
@@ -138,12 +145,12 @@ class AppealService
 
     private function validatePostAppeal(
         ResourceTypeEnum $resourceType,
-        ?int $resourceId,
+        ?string $resourceUuid,
         int $userId
     ): int {
-        if (! $resourceId) {
-            throw new BusinessException('Resource ID is required for this appeal type.', [
-                'resource_id' => 'Resource ID is required',
+        if (! $resourceUuid) {
+            throw new BusinessException('Resource UUID is required for this appeal type.', [
+                'resource_uuid' => 'Resource UUID is required',
             ]);
         }
 
@@ -160,7 +167,7 @@ class AppealService
             ]);
         }
 
-        $post = $this->postRepository->findWithTrashedById($resourceId);
+        $post = $this->postRepository->findWithTrashedByUuid($resourceUuid);
         if (! $post) {
             throw new NotFoundException('Post not found for appeal');
         }
@@ -175,12 +182,12 @@ class AppealService
             ]);
         }
 
-        return $resourceId;
+        return $post->id;
     }
 
     private function validateCommentAppeal(
         ResourceTypeEnum $resourceType,
-        ?int $resourceId,
+        ?string $resourceUuid,
         int $userId
     ): int {
         if ($resourceType !== ResourceTypeEnum::COMMENT) {
@@ -189,13 +196,13 @@ class AppealService
             ]);
         }
 
-        if (! $resourceId) {
-            throw new BusinessException('Resource ID is required for this appeal type.', [
-                'resource_id' => 'Resource ID is required',
+        if (! $resourceUuid) {
+            throw new BusinessException('Resource UUID is required for this appeal type.', [
+                'resource_uuid' => 'Resource UUID is required',
             ]);
         }
 
-        $comment = $this->postRepository->findWithTrashedById($resourceId);
+        $comment = $this->postRepository->findWithTrashedByUuid($resourceUuid);
         if (! $comment) {
             throw new NotFoundException('Comment not found for appeal');
         }
@@ -210,7 +217,7 @@ class AppealService
             ]);
         }
 
-        return $resourceId;
+        return $comment->id;
     }
 
     /**

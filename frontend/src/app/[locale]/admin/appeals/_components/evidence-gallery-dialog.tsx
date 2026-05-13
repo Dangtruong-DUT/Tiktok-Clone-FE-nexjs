@@ -17,7 +17,7 @@ interface EvidenceGalleryDialogProps {
     open: boolean
     onOpenChange: (open: boolean) => void
     evidenceFiles: EvidenceFile[]
-    appealId?: number
+    appealId?: string
 }
 
 /**

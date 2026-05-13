@@ -81,9 +81,9 @@ class AppealController extends Controller
     public function resourcePreview(GetResourcePreviewRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        $preview = ResourcePreviewResolver::resolve(
+        $preview = ResourcePreviewResolver::resolveByUuid(
             resourceType: (string) $validated['resource_type'],
-            resourceId: isset($validated['resource_id']) ? (int) $validated['resource_id'] : null,
+            resourceUuid: $validated['resource_uuid'] ?? null,
         );
 
         return ApiResponse::success(
