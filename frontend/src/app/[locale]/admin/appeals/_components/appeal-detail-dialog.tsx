@@ -4,15 +4,15 @@ import { useTranslations } from 'next-intl'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { CheckCircle2, XCircle } from 'lucide-react'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { CheckCircle2, XCircle, FileText, MessageCircle, User as UserIcon, ImageOff } from 'lucide-react'
+import Image from 'next/image'
 import { formatAdminDate, formatNumber } from '@/helpers/admin-helpers'
 import { APPEAL_STATUSES } from '@/constants/status/appeal'
 import type { AdminAppeal } from '@/types/dtos/admin/admin-response.dto'
+import type { ResourcePreview } from '@/types/models/appeal.model'
 import { EvidenceGalleryDialog } from './evidence-gallery-dialog'
 import { useState } from 'react'
-import { useGetPostDetailQuery } from '@/store/services/posts.service'
-import VideoPlayer from '@/components/video-player-v3'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 interface AppealDetailDialogProps {
     open: boolean
@@ -26,18 +26,87 @@ const STATUS_STYLE: Record<string, string> = {
     [APPEAL_STATUSES.REJECTED]: 'bg-red-50 text-red-700 border-red-200'
 }
 
+function ResourcePreviewBlock({ preview }: { preview: ResourcePreview }) {
+    if (preview.type === 'post') {
+        return (
+            <div className='space-y-3'>
+                {preview.thumbnail_url ? (
+                    <div className='relative h-48 w-full overflow-hidden rounded-lg bg-black'>
+                        <Image src={preview.thumbnail_url} alt='Post thumbnail' fill className='object-cover' unoptimized />
+                        {preview.is_deleted && (
+                            <div className='absolute inset-0 flex items-center justify-center bg-black/60'>
+                                <span className='rounded-full bg-red-500/90 px-2.5 py-1 text-xs font-medium text-white'>Deleted</span>
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <div className='flex h-32 w-full items-center justify-center rounded-lg border bg-muted/30'>
+                        <ImageOff className='h-8 w-8 text-muted-foreground' />
+                    </div>
+                )}
+                {preview.content && (
+                    <p className='text-sm text-foreground line-clamp-3'>{preview.content}</p>
+                )}
+                {preview.author && (
+                    <p className='text-xs text-muted-foreground'>@{preview.author.username}</p>
+                )}
+                <div className='flex gap-3 text-xs text-muted-foreground'>
+                    {preview.likes_count != null && <span>❤ {preview.likes_count}</span>}
+                    {preview.comments_count != null && <span>💬 {preview.comments_count}</span>}
+                </div>
+            </div>
+        )
+    }
+
+    if (preview.type === 'comment') {
+        return (
+            <div className='space-y-2'>
+                <div className='flex items-start gap-2'>
+                    <MessageCircle className='mt-0.5 h-4 w-4 shrink-0 text-muted-foreground' />
+                    <div className='min-w-0 flex-1'>
+                        <p className='text-sm text-foreground line-clamp-4'>{preview.content || '—'}</p>
+                        {preview.author && (
+                            <p className='mt-1 text-xs text-muted-foreground'>@{preview.author.username}</p>
+                        )}
+                    </div>
+                </div>
+                {preview.is_deleted && (
+                    <Badge variant='outline' className='text-xs border-red-200 text-red-600 bg-red-50'>Deleted</Badge>
+                )}
+            </div>
+        )
+    }
+
+    if (preview.type === 'user') {
+        return (
+            <div className='flex items-center gap-3'>
+                <Avatar className='size-12'>
+                    <AvatarImage src={preview.avatar ?? undefined} />
+                    <AvatarFallback>
+                        <UserIcon className='h-5 w-5' />
+                    </AvatarFallback>
+                </Avatar>
+                <div>
+                    <p className='font-medium text-sm'>@{preview.username}</p>
+                    <div className='mt-1 flex gap-1.5'>
+                        {preview.is_banned && (
+                            <Badge variant='outline' className='text-xs border-orange-200 text-orange-600 bg-orange-50'>Banned</Badge>
+                        )}
+                        {preview.is_deleted && (
+                            <Badge variant='outline' className='text-xs border-red-200 text-red-600 bg-red-50'>Deleted</Badge>
+                        )}
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    return null
+}
+
 export function AppealDetailDialog({ open, appeal, onOpenChange }: AppealDetailDialogProps) {
     const t = useTranslations('AdminPage')
     const [showGallery, setShowGallery] = useState(false)
-
-    const resourceId = appeal.resource_id ? String(appeal.resource_id) : undefined
-    const shouldFetchPost = open && appeal.resource_type === 'post' && resourceId
-
-    const { data: postDetailRes, isLoading: isPostLoading } = useGetPostDetailQuery(resourceId || '', {
-        skip: !shouldFetchPost
-    })
-
-    const postDetail = postDetailRes?.data
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -46,7 +115,6 @@ export function AppealDetailDialog({ open, appeal, onOpenChange }: AppealDetailD
                     <DialogTitle>{t('appeals.detail.title')}</DialogTitle>
                 </DialogHeader>
 
-                {/* Review result banner */}
                 {appeal.status === APPEAL_STATUSES.APPROVED && (
                     <div className='flex items-start gap-3 rounded-lg border border-emerald-200 bg-emerald-50 dark:bg-emerald-950/40 px-4 py-3'>
                         <CheckCircle2 className='h-5 w-5 text-emerald-600 shrink-0 mt-0.5' />
@@ -151,36 +219,16 @@ export function AppealDetailDialog({ open, appeal, onOpenChange }: AppealDetailD
 
                     <div className='space-y-3'>
                         <p className='text-sm font-semibold'>{t('appeals.detail.resourceTitle')}</p>
-                        <div className='rounded-lg border bg-muted/20 p-3'>
-                            {appeal.resource_type === 'post' ? (
-                                postDetail && !isPostLoading ? (
-                                    <div className='space-y-3'>
-                                        <div className='h-[240px] overflow-hidden rounded-lg bg-black'>
-                                            {postDetail.medias?.length ? (
-                                                <VideoPlayer post={postDetail} />
-                                            ) : (
-                                                <div className='flex h-full items-center justify-center text-xs text-muted-foreground'>
-                                                    {t('posts.preview.noMedia')}
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div>
-                                            <p className='text-sm font-semibold'>{postDetail.author?.username}</p>
-                                            <p className='text-xs text-muted-foreground'>
-                                                {formatAdminDate(postDetail.created_at)}
-                                            </p>
-                                            <p className='mt-2 text-sm'>{postDetail.content}</p>
-                                        </div>
-                                    </div>
-                                ) : (
+                        <div className='rounded-lg border bg-muted/20 p-4'>
+                            {appeal.resource_preview ? (
+                                <ResourcePreviewBlock preview={appeal.resource_preview} />
+                            ) : (
+                                <div className='flex flex-col items-center gap-2 py-4 text-center'>
+                                    <FileText className='h-8 w-8 text-muted-foreground' />
                                     <p className='text-sm text-muted-foreground'>
                                         {t('appeals.detail.resourceUnavailable')}
                                     </p>
-                                )
-                            ) : (
-                                <p className='text-sm text-muted-foreground'>
-                                    {t('appeals.detail.resourceUnavailable')}
-                                </p>
+                                </div>
                             )}
                         </div>
                     </div>

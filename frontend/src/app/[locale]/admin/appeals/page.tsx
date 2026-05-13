@@ -17,10 +17,7 @@ export default async function AdminAppealsPage() {
         <AdminLayout
             title={t('appeals.title')}
             description={t('appeals.description')}
-            breadcrumbs={[
-                { label: t('breadcrumbs.admin'), href: '/admin' },
-                { label: t('appeals.title') }
-            ]}
+            breadcrumbs={[{ label: t('breadcrumbs.admin'), href: '/admin' }, { label: t('appeals.title') }]}
         >
             <AdminContainer>
                 <Suspense

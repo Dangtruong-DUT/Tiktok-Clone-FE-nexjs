@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { ImagePlus, X, Upload, AlertCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -20,11 +20,25 @@ const ACCEPTED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'i
  * Drag & drop evidence image upload zone with thumbnail previews.
  * Validates file type (images only) and size (default 5MB max per file).
  */
-export function EvidenceDropzone({ files, onFilesChange, maxFiles = 5, maxSizeMB = 5 }: EvidenceDropzoneProps) {
+export const EvidenceDropzone = memo(function EvidenceDropzone({
+    files,
+    onFilesChange,
+    maxFiles = 5,
+    maxSizeMB = 5
+}: EvidenceDropzoneProps) {
     const t = useTranslations('AppealPage.evidence')
     const inputRef = useRef<HTMLInputElement>(null)
     const [isDragging, setIsDragging] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [previewUrls, setPreviewUrls] = useState<string[]>([])
+
+    useEffect(() => {
+        const urls = files.map((file) => URL.createObjectURL(file))
+        setPreviewUrls(urls)
+        return () => {
+            urls.forEach((url) => URL.revokeObjectURL(url))
+        }
+    }, [files])
 
     const maxSizeBytes = maxSizeMB * 1024 * 1024
 
@@ -172,7 +186,7 @@ export function EvidenceDropzone({ files, onFilesChange, maxFiles = 5, maxSizeMB
                                 className='group relative aspect-square overflow-hidden rounded-xl border border-slate-200 bg-slate-50'
                             >
                                 <Image
-                                    src={URL.createObjectURL(file)}
+                                    src={previewUrls[index] ?? ''}
                                     alt={file.name}
                                     fill
                                     className='object-cover'
@@ -205,4 +219,4 @@ export function EvidenceDropzone({ files, onFilesChange, maxFiles = 5, maxSizeMB
             )}
         </div>
     )
-}
+})

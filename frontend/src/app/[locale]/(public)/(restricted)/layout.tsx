@@ -17,9 +17,7 @@ export default function RestrictedLayout({
     return (
         <div className='bg-white text-black flex flex-col h-screen  overflow-auto'>
             <RestrictedHeader />
-            <main className='flex-1 h-[calc(100vh-3.75rem-5.25rem)] overflow-auto flex items-center justify-center py-10 px-4'>
-                {children}
-            </main>
+            <main className='flex-1 overflow-auto py-10 px-4'>{children}</main>
             <Footer classname='bg-black text-white' />
         </div>
     )

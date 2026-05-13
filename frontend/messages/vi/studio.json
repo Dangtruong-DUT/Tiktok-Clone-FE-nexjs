@@ -1,336 +1,342 @@
 {
-  "SnapiStudio": {
-    "footer": {
-      "copyright": "Bản quyền © 2025 Snapi",
-      "privacyPolicy": "Chính sách quyền riêng tư",
-      "termsOfService": "Điều khoản dịch vụ"
-    },
-    "navigation": {
-      "home": "Trang chủ",
-      "posts": "Nội dung",
-      "appeals": "Kháng cáo",
-      "settings": "Cài đặt",
-      "back": "Quay lại Snapi"
-    },
-    "common": {
-      "audience": {
-        "selectPlaceholder": "Chọn đối tượng xem",
-        "all": "Tất cả đối tượng",
-        "public": "Công khai",
-        "friends": "Bạn bè",
-        "private": "Riêng tư",
-        "unknown": "Không xác định"
-      }
-    },
-    "content": {
-      "table": {
-        "columns": {
-          "content": "Nội dung",
-          "privacy": "Quyền riêng tư",
-          "views": "Lượt xem",
-          "comments": "Bình luận",
-          "actions": "Thao tác"
+    "SnapiStudio": {
+        "footer": {
+            "copyright": "Bản quyền © 2025 Snapi",
+            "privacyPolicy": "Chính sách quyền riêng tư",
+            "termsOfService": "Điều khoản dịch vụ"
         },
-        "actions": {
-          "edit": "Chỉnh sửa",
-          "delete": "Xóa"
-        }
-      },
-      "search": {
-        "placeholder": "Tìm kiếm...",
-        "clearButton": "Xóa",
-        "clearingButton": "Đang xóa...",
-        "searchButton": "Tìm kiếm",
-        "searchingButton": "Đang tìm..."
-      },
-      "filter": {
-        "audiencePlaceholder": "Lọc theo đối tượng xem",
-        "allAudience": "Tất cả đối tượng",
-        "audience": {
-          "public": "Công khai",
-          "friends": "Bạn bè",
-          "private": "Riêng tư",
-          "unknown": "Không xác định"
-        }
-      },
-      "emptyState": "Không tìm thấy bài viết nào.",
-      "showingResults": "Hiển thị {from}-{to} trong {total} bài viết"
-    },
-    "dashboard": {
-      "knowledgeForYou": {
-        "title": "Kiến thức dành cho bạn"
-      },
-      "userInfo": {
-        "likes": "{count} Lượt thích",
-        "followers": "{count} Người theo dõi",
-        "following": "{count} Đang theo dõi"
-      },
-      "recentPosts": {
-        "title": "Bài đăng gần đây",
-        "createdAt": "Đăng vào {date}",
-        "metrics": {
-          "views": "Lượt xem",
-          "likes": "Lượt thích",
-          "comments": "Bình luận"
-        }
-      },
-      "directorChart": {
-        "keyMetrics": "Chỉ số quan trọng",
-        "selectTimeRange": "Chọn khoảng thời gian",
-        "interactStats": "Thống kê tương tác",
-        "metrics": {
-          "userViews": "Lượt xem từ người dùng",
-          "guestViews": "Lượt xem từ khách",
-          "likes": "Lượt thích",
-          "comments": "Bình luận",
-          "views": "Lượt xem"
+        "navigation": {
+            "home": "Trang chủ",
+            "posts": "Nội dung",
+            "appeals": "Kháng cáo",
+            "settings": "Cài đặt",
+            "back": "Quay lại Snapi"
         },
-        "timeRanges": {
-          "last7Days": "7 ngày qua",
-          "last28Days": "28 ngày qua",
-          "last60Days": "60 ngày qua",
-          "last365Days": "365 ngày qua"
-        }
-      }
-    },
-    "header": {
-      "profile": "Hồ sơ",
-      "logout": "Đăng xuất"
-    },
-    "settings": {
-      "page": {
-        "title": "Cài đặt",
-        "description": "Quản lý cài đặt tài khoản và tùy chọn bảo mật",
-        "userBadge": "Người dùng"
-      },
-      "updateProfile": {
-        "title": "Cập nhật hồ sơ",
-        "description": "Cập nhật thông tin cá nhân và ảnh đại diện của bạn",
-        "upload": "Tải lên",
-        "defaultUser": "USER",
-        "fullNameLabel": "Họ và tên",
-        "cancel": "Hủy",
-        "save": "Lưu",
-        "validation": {
-          "invalidType": "Định dạng ảnh không hợp lệ. Chỉ hỗ trợ {accepted}.",
-          "tooLarge": "Ảnh quá lớn. Kích thước tối đa cho phép là {maxSizeMb} MB."
-        }
-      },
-      "changePassword": {
-        "title": "Đổi mật khẩu",
-        "description": "Giữ tài khoản của bạn an toàn bằng cách cập nhật mật khẩu thường xuyên",
-        "oldPassword": "Mật khẩu cũ",
-        "newPassword": "Mật khẩu mới",
-        "confirmPassword": "Xác nhận mật khẩu",
-        "forgotPassword": "Quên mật khẩu?",
-        "cancel": "Hủy",
-        "save": "Lưu"
-      },
-      "verifyEmail": {
-        "title": "Xác minh email",
-        "description": "Xác minh email để bảo mật tài khoản và mở khóa đầy đủ tính năng",
-        "notice": "Tài khoản của bạn chưa được xác minh. Chúng tôi sẽ gửi email xác minh tới {email}.",
-        "verifiedTitle": "Email đã xác minh",
-        "verifiedDescription": "Email của bạn đã được xác minh",
-        "verifiedNotice": "Tài khoản này đã xác minh với email: {email}.",
-        "emailLabel": "Email",
-        "resendButton": "Gửi lại email",
-        "resendError": "Không thể gửi lại email xác minh. Vui lòng thử lại."
-      },
-      "privacy": {
-        "title": "Quyền riêng tư",
-        "description": "Kiểm soát ai có thể xem hoạt động xã hội của bạn.",
-        "public": "Công khai",
-        "private": "Riêng tư",
-        "cancel": "Hủy",
-        "save": "Lưu",
-        "updateError": "Không thể cập nhật cài đặt quyền riêng tư. Vui lòng thử lại.",
-        "fields": {
-          "likedVideos": {
-            "label": "Video đã thích",
-            "description": "Cho phép người khác xem video bạn đã thích."
-          },
-          "bookmarkedVideos": {
-            "label": "Video đã lưu",
-            "description": "Cho phép người khác xem video bạn đã lưu."
-          },
-          "followers": {
-            "label": "Danh sách người theo dõi",
-            "description": "Cho phép người khác xem danh sách người theo dõi bạn."
-          },
-          "following": {
-            "label": "Danh sách đang theo dõi",
-            "description": "Cho phép người khác xem bạn đang theo dõi ai."
-          }
-        }
-      }
-    },
-    "upload": {
-      "selectVideo": "Chọn video để tải lên",
-      "dragAndDrop": "Hoặc kéo và thả tệp",
-      "mp4OrWebmOnly": "Chỉ hỗ trợ MP4 hoặc WebM",
-      "fileInfo": {
-        "size": "{size} MB",
-        "replace": "Thay thế"
-      },
-      "validation": {
-        "invalidType": "Định dạng tệp không hợp lệ. Chỉ hỗ trợ {accepted}.",
-        "tooLarge": "Tệp quá lớn. Kích thước tối đa cho phép là {maxSizeMb} MB."
-      },
-      "exitDialog": {
-        "title": "Bạn có chắc chắn muốn thoát?",
-        "description": "Các chỉnh sửa của bạn sẽ không được lưu.",
-        "exit": "Thoát",
-        "backToEdits": "Quay lại chỉnh sửa"
-      },
-      "selectThumbnail": {
-        "title": "Chọn ảnh thumbnail",
-        "edit": "Chỉnh sửa",
-        "selectCover": "Chọn ảnh bìa",
-        "uploadCover": "Tải lên ảnh bìa"
-      },
-      "guidelines": {
-        "sizeAndDuration": {
-          "title": "Kích thước và thời lượng",
-          "description": "Kích thước tối đa: 30 GB, thời lượng video: 60 phút."
+        "common": {
+            "audience": {
+                "selectPlaceholder": "Chọn đối tượng xem",
+                "all": "Tất cả đối tượng",
+                "public": "Công khai",
+                "friends": "Bạn bè",
+                "private": "Riêng tư",
+                "unknown": "Không xác định"
+            }
         },
-        "fileFormats": {
-          "title": "Định dạng tệp",
-          "description": "Khuyến nghị: '.mp4'. Các định dạng chính khác được hỗ trợ."
+        "content": {
+            "table": {
+                "columns": {
+                    "content": "Nội dung",
+                    "privacy": "Quyền riêng tư",
+                    "views": "Lượt xem",
+                    "comments": "Bình luận",
+                    "actions": "Thao tác"
+                },
+                "actions": {
+                    "edit": "Chỉnh sửa",
+                    "delete": "Xóa"
+                }
+            },
+            "search": {
+                "placeholder": "Tìm kiếm...",
+                "clearButton": "Xóa",
+                "clearingButton": "Đang xóa...",
+                "searchButton": "Tìm kiếm",
+                "searchingButton": "Đang tìm..."
+            },
+            "filter": {
+                "audiencePlaceholder": "Lọc theo đối tượng xem",
+                "allAudience": "Tất cả đối tượng",
+                "audience": {
+                    "public": "Công khai",
+                    "friends": "Bạn bè",
+                    "private": "Riêng tư",
+                    "unknown": "Không xác định"
+                }
+            },
+            "emptyState": "Không tìm thấy bài viết nào.",
+            "showingResults": "Hiển thị {from}-{to} trong {total} bài viết"
         },
-        "videoResolutions": {
-          "title": "Độ phân giải video",
-          "description": "Khuyến nghị độ phân giải cao: 1080p, 1440p, 4K."
+        "dashboard": {
+            "knowledgeForYou": {
+                "title": "Kiến thức dành cho bạn"
+            },
+            "userInfo": {
+                "likes": "{count} Lượt thích",
+                "followers": "{count} Người theo dõi",
+                "following": "{count} Đang theo dõi"
+            },
+            "recentPosts": {
+                "title": "Bài đăng gần đây",
+                "createdAt": "Đăng vào {date}",
+                "metrics": {
+                    "views": "Lượt xem",
+                    "likes": "Lượt thích",
+                    "comments": "Bình luận"
+                }
+            },
+            "directorChart": {
+                "keyMetrics": "Chỉ số quan trọng",
+                "selectTimeRange": "Chọn khoảng thời gian",
+                "interactStats": "Thống kê tương tác",
+                "metrics": {
+                    "userViews": "Lượt xem từ người dùng",
+                    "guestViews": "Lượt xem từ khách",
+                    "likes": "Lượt thích",
+                    "comments": "Bình luận",
+                    "views": "Lượt xem"
+                },
+                "timeRanges": {
+                    "last7Days": "7 ngày qua",
+                    "last28Days": "28 ngày qua",
+                    "last60Days": "60 ngày qua",
+                    "last365Days": "365 ngày qua"
+                }
+            }
         },
-        "aspectRatios": {
-          "title": "Tỷ lệ khung hình",
-          "description": "Khuyến nghị: 16:9 cho ngang, 9:16 cho dọc."
+        "header": {
+            "profile": "Hồ sơ",
+            "logout": "Đăng xuất"
+        },
+        "settings": {
+            "page": {
+                "title": "Cài đặt",
+                "description": "Quản lý cài đặt tài khoản và tùy chọn bảo mật",
+                "userBadge": "Người dùng"
+            },
+            "updateProfile": {
+                "title": "Cập nhật hồ sơ",
+                "description": "Cập nhật thông tin cá nhân và ảnh đại diện của bạn",
+                "upload": "Tải lên",
+                "defaultUser": "USER",
+                "fullNameLabel": "Họ và tên",
+                "cancel": "Hủy",
+                "save": "Lưu",
+                "validation": {
+                    "invalidType": "Định dạng ảnh không hợp lệ. Chỉ hỗ trợ {accepted}.",
+                    "tooLarge": "Ảnh quá lớn. Kích thước tối đa cho phép là {maxSizeMb} MB."
+                }
+            },
+            "changePassword": {
+                "title": "Đổi mật khẩu",
+                "description": "Giữ tài khoản của bạn an toàn bằng cách cập nhật mật khẩu thường xuyên",
+                "oldPassword": "Mật khẩu cũ",
+                "newPassword": "Mật khẩu mới",
+                "confirmPassword": "Xác nhận mật khẩu",
+                "forgotPassword": "Quên mật khẩu?",
+                "cancel": "Hủy",
+                "save": "Lưu"
+            },
+            "verifyEmail": {
+                "title": "Xác minh email",
+                "description": "Xác minh email để bảo mật tài khoản và mở khóa đầy đủ tính năng",
+                "notice": "Tài khoản của bạn chưa được xác minh. Chúng tôi sẽ gửi email xác minh tới {email}.",
+                "verifiedTitle": "Email đã xác minh",
+                "verifiedDescription": "Email của bạn đã được xác minh",
+                "verifiedNotice": "Tài khoản này đã xác minh với email: {email}.",
+                "emailLabel": "Email",
+                "resendButton": "Gửi lại email",
+                "resendError": "Không thể gửi lại email xác minh. Vui lòng thử lại."
+            },
+            "privacy": {
+                "title": "Quyền riêng tư",
+                "description": "Kiểm soát ai có thể xem hoạt động xã hội của bạn.",
+                "public": "Công khai",
+                "private": "Riêng tư",
+                "cancel": "Hủy",
+                "save": "Lưu",
+                "updateError": "Không thể cập nhật cài đặt quyền riêng tư. Vui lòng thử lại.",
+                "fields": {
+                    "likedVideos": {
+                        "label": "Video đã thích",
+                        "description": "Cho phép người khác xem video bạn đã thích."
+                    },
+                    "bookmarkedVideos": {
+                        "label": "Video đã lưu",
+                        "description": "Cho phép người khác xem video bạn đã lưu."
+                    },
+                    "followers": {
+                        "label": "Danh sách người theo dõi",
+                        "description": "Cho phép người khác xem danh sách người theo dõi bạn."
+                    },
+                    "following": {
+                        "label": "Danh sách đang theo dõi",
+                        "description": "Cho phép người khác xem bạn đang theo dõi ai."
+                    }
+                }
+            },
+            "nav": {
+                "profile": "Hồ sơ",
+                "security": "Bảo mật",
+                "privacy": "Quyền riêng tư",
+                "email": "Email"
+            }
+        },
+        "upload": {
+            "selectVideo": "Chọn video để tải lên",
+            "dragAndDrop": "Hoặc kéo và thả tệp",
+            "mp4OrWebmOnly": "Chỉ hỗ trợ MP4 hoặc WebM",
+            "fileInfo": {
+                "size": "{size} MB",
+                "replace": "Thay thế"
+            },
+            "validation": {
+                "invalidType": "Định dạng tệp không hợp lệ. Chỉ hỗ trợ {accepted}.",
+                "tooLarge": "Tệp quá lớn. Kích thước tối đa cho phép là {maxSizeMb} MB."
+            },
+            "exitDialog": {
+                "title": "Bạn có chắc chắn muốn thoát?",
+                "description": "Các chỉnh sửa của bạn sẽ không được lưu.",
+                "exit": "Thoát",
+                "backToEdits": "Quay lại chỉnh sửa"
+            },
+            "selectThumbnail": {
+                "title": "Chọn ảnh thumbnail",
+                "edit": "Chỉnh sửa",
+                "selectCover": "Chọn ảnh bìa",
+                "uploadCover": "Tải lên ảnh bìa"
+            },
+            "guidelines": {
+                "sizeAndDuration": {
+                    "title": "Kích thước và thời lượng",
+                    "description": "Kích thước tối đa: 30 GB, thời lượng video: 60 phút."
+                },
+                "fileFormats": {
+                    "title": "Định dạng tệp",
+                    "description": "Khuyến nghị: '.mp4'. Các định dạng chính khác được hỗ trợ."
+                },
+                "videoResolutions": {
+                    "title": "Độ phân giải video",
+                    "description": "Khuyến nghị độ phân giải cao: 1080p, 1440p, 4K."
+                },
+                "aspectRatios": {
+                    "title": "Tỷ lệ khung hình",
+                    "description": "Khuyến nghị: 16:9 cho ngang, 9:16 cho dọc."
+                }
+            },
+            "tooltips": {
+                "play": "Phát",
+                "pause": "Tạm dừng",
+                "mute": "Tắt tiếng",
+                "unmute": "Bật tiếng"
+            },
+            "resolutionReq": "Độ phân giải 720x1280 hoặc cao hơn",
+            "maxFileSize": "Dung lượng tối đa 30 GB",
+            "maxDuration": "Thời lượng tối đa 60 phút",
+            "selectFile": "Chọn tệp",
+            "selectedFile": "Tệp đã chọn",
+            "thumbnailUpload": {
+                "dragAndDrop": "Kéo và thả tệp vào đây",
+                "or": "hoặc",
+                "selectFile": "chọn tệp",
+                "supportedFormats": "Định dạng hỗ trợ: JPG, JPEG và PNG.",
+                "uploadNew": "Tải ảnh mới",
+                "confirm": "Xác nhận",
+                "validation": {
+                    "invalidType": "Định dạng ảnh không hợp lệ. Chỉ hỗ trợ {accepted}.",
+                    "tooLarge": "Ảnh quá lớn. Kích thước tối đa cho phép là {maxSizeMb} MB."
+                }
+            },
+            "detail": {
+                "title": "Chi tiết",
+                "description": {
+                    "label": "Mô tả",
+                    "placeholder": "Chia sẻ thêm về video của bạn tại đây..."
+                },
+                "cover": {
+                    "label": "Ảnh bìa",
+                    "tooltip": "Chọn một ảnh bìa hoặc tải lên từ thiết bị của bạn. Một ảnh bìa thu hút có thể gây ấn tượng với người xem hiệu quả."
+                }
+            },
+            "settings": {
+                "title": "Cài đặt",
+                "audience": {
+                    "label": "Ai có thể xem video này",
+                    "placeholder": "Chọn đối tượng xem"
+                }
+            },
+            "buttons": {
+                "post": "Đăng",
+                "discard": "Hủy"
+            }
+        },
+        "appeals": {
+            "create": {
+                "title": "Tạo kháng cáo mới",
+                "description": "Gửi kháng cáo cho các quyết định kiểm duyệt áp dụng với tài khoản hoặc nội dung của bạn.",
+                "appealType": "Loại kháng cáo",
+                "resourceType": "Loại tài nguyên",
+                "resourceId": "Mã tài nguyên",
+                "resourceIdPlaceholder": "ID số (không bắt buộc)",
+                "reason": "Lý do",
+                "reasonPlaceholder": "Mô tả vì sao quyết định kiểm duyệt này cần được xem xét lại.",
+                "submit": "Gửi kháng cáo",
+                "submitting": "Đang gửi..."
+            },
+            "list": {
+                "title": "Kháng cáo của tôi",
+                "description": "Theo dõi trạng thái các kháng cáo đã gửi.",
+                "searchPlaceholder": "Tìm kháng cáo",
+                "emptyState": "Không có kháng cáo",
+                "perPage": "Mỗi trang",
+                "showingResults": "Hiển thị {from}-{to} trên {total}",
+                "filters": {
+                    "allStatuses": "Tất cả trạng thái"
+                },
+                "columns": {
+                    "id": "ID",
+                    "type": "Loại",
+                    "reason": "Lý do",
+                    "status": "Trạng thái",
+                    "createdAt": "Ngày tạo",
+                    "response": "Phản hồi Admin",
+                    "resource": "Tài nguyên",
+                    "evidence": "Bằng chứng"
+                },
+                "viewDetail": "Xem chi tiết",
+                "resourcePreview": "Xem tài nguyên"
+            },
+            "types": {
+                "user_ban": "Khóa tài khoản",
+                "user_unban": "Mở khóa tài khoản",
+                "user_deleted": "Xóa tài khoản",
+                "post_deleted": "Xóa bài viết",
+                "comment_deleted": "Xóa bình luận"
+            },
+            "resourceTypes": {
+                "user": "Người dùng",
+                "post": "Bài viết",
+                "comment": "Bình luận"
+            },
+            "statuses": {
+                "pending": "Đang chờ",
+                "approved": "Đã duyệt",
+                "rejected": "Đã từ chối"
+            },
+            "messages": {
+                "createSuccess": "Gửi kháng cáo thành công",
+                "createError": "Gửi kháng cáo thất bại"
+            },
+            "errors": {
+                "reasonMinLength": "Lý do phải có ít nhất 20 ký tự",
+                "resourceIdInvalid": "Mã tài nguyên phải là số hợp lệ"
+            },
+            "detail": {
+                "title": "Chi tiết kháng cáo",
+                "fields": {
+                    "type": "Loại",
+                    "status": "Trạng thái",
+                    "reason": "Lý do của bạn",
+                    "response": "Phản hồi Admin",
+                    "createdAt": "Đã gửi",
+                    "reviewedAt": "Đã xét duyệt",
+                    "resource": "Tài nguyên",
+                    "evidence": "Tệp bằng chứng"
+                },
+                "noResponse": "Đang chờ xét duyệt...",
+                "noEvidence": "Không có bằng chứng đính kèm",
+                "resourceUnavailable": "Tài nguyên không còn khả dụng",
+                "resourceTitle": "Tài nguyên liên quan"
+            }
         }
-      },
-      "tooltips": {
-        "play": "Phát",
-        "pause": "Tạm dừng",
-        "mute": "Tắt tiếng",
-        "unmute": "Bật tiếng"
-      },
-      "resolutionReq": "Độ phân giải 720x1280 hoặc cao hơn",
-      "maxFileSize": "Dung lượng tối đa 30 GB",
-      "maxDuration": "Thời lượng tối đa 60 phút",
-      "selectFile": "Chọn tệp",
-      "selectedFile": "Tệp đã chọn",
-      "thumbnailUpload": {
-        "dragAndDrop": "Kéo và thả tệp vào đây",
-        "or": "hoặc",
-        "selectFile": "chọn tệp",
-        "supportedFormats": "Định dạng hỗ trợ: JPG, JPEG và PNG.",
-        "uploadNew": "Tải ảnh mới",
-        "confirm": "Xác nhận",
-        "validation": {
-          "invalidType": "Định dạng ảnh không hợp lệ. Chỉ hỗ trợ {accepted}.",
-          "tooLarge": "Ảnh quá lớn. Kích thước tối đa cho phép là {maxSizeMb} MB."
-        }
-      },
-      "detail": {
-        "title": "Chi tiết",
-        "description": {
-          "label": "Mô tả",
-          "placeholder": "Chia sẻ thêm về video của bạn tại đây..."
-        },
-        "cover": {
-          "label": "Ảnh bìa",
-          "tooltip": "Chọn một ảnh bìa hoặc tải lên từ thiết bị của bạn. Một ảnh bìa thu hút có thể gây ấn tượng với người xem hiệu quả."
-        }
-      },
-      "settings": {
-        "title": "Cài đặt",
-        "audience": {
-          "label": "Ai có thể xem video này",
-          "placeholder": "Chọn đối tượng xem"
-        }
-      },
-      "buttons": {
-        "post": "Đăng",
-        "discard": "Hủy"
-      }
-    },
-    "appeals": {
-      "create": {
-        "title": "Tạo kháng cáo mới",
-        "description": "Gửi kháng cáo cho các quyết định kiểm duyệt áp dụng với tài khoản hoặc nội dung của bạn.",
-        "appealType": "Loại kháng cáo",
-        "resourceType": "Loại tài nguyên",
-        "resourceId": "Mã tài nguyên",
-        "resourceIdPlaceholder": "ID số (không bắt buộc)",
-        "reason": "Lý do",
-        "reasonPlaceholder": "Mô tả vì sao quyết định kiểm duyệt này cần được xem xét lại.",
-        "submit": "Gửi kháng cáo",
-        "submitting": "Đang gửi..."
-      },
-      "list": {
-        "title": "Kháng cáo của tôi",
-        "description": "Theo dõi trạng thái các kháng cáo đã gửi.",
-        "searchPlaceholder": "Tìm kháng cáo",
-        "emptyState": "Không có kháng cáo",
-        "perPage": "Mỗi trang",
-        "showingResults": "Hiển thị {from}-{to} trên {total}",
-        "filters": {
-          "allStatuses": "Tất cả trạng thái"
-        },
-        "columns": {
-          "id": "ID",
-          "type": "Loại",
-          "reason": "Lý do",
-          "status": "Trạng thái",
-          "createdAt": "Ngày tạo",
-          "response": "Phản hồi Admin",
-          "resource": "Tài nguyên",
-          "evidence": "Bằng chứng"
-        },
-        "viewDetail": "Xem chi tiết",
-        "resourcePreview": "Xem tài nguyên"
-      },
-      "types": {
-        "user_ban": "Khóa tài khoản",
-        "user_unban": "Mở khóa tài khoản",
-        "user_deleted": "Xóa tài khoản",
-        "post_deleted": "Xóa bài viết",
-        "comment_deleted": "Xóa bình luận"
-      },
-      "resourceTypes": {
-        "user": "Người dùng",
-        "post": "Bài viết",
-        "comment": "Bình luận"
-      },
-      "statuses": {
-        "pending": "Đang chờ",
-        "approved": "Đã duyệt",
-        "rejected": "Đã từ chối"
-      },
-      "messages": {
-        "createSuccess": "Gửi kháng cáo thành công",
-        "createError": "Gửi kháng cáo thất bại"
-      },
-      "errors": {
-        "reasonMinLength": "Lý do phải có ít nhất 20 ký tự",
-        "resourceIdInvalid": "Mã tài nguyên phải là số hợp lệ"
-      },
-      "detail": {
-        "title": "Chi tiết kháng cáo",
-        "fields": {
-          "type": "Loại",
-          "status": "Trạng thái",
-          "reason": "Lý do của bạn",
-          "response": "Phản hồi Admin",
-          "createdAt": "Đã gửi",
-          "reviewedAt": "Đã xét duyệt",
-          "resource": "Tài nguyên",
-          "evidence": "Tệp bằng chứng"
-        },
-        "noResponse": "Đang chờ xét duyệt...",
-        "noEvidence": "Không có bằng chứng đính kèm",
-        "resourceUnavailable": "Tài nguyên không còn khả dụng",
-        "resourceTitle": "Tài nguyên liên quan"
-      }
     }
-  }
 }

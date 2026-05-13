@@ -78,7 +78,7 @@ class AdminAppealService
                 newData: $appeal->only(['status', 'admin_response', 'reviewed_by', 'reviewed_at']),
             );
 
-            $appealUser = $appeal->user;
+            $appealUser = $appeal->user()->withTrashed()->first();
             if ($appealUser) {
                 $approvedMessage = $payload['admin_response']
                     ?? 'Your appeal has been reviewed and approved. The action has been reversed.';
@@ -141,7 +141,7 @@ class AdminAppealService
                 newData: $appeal->only(['status', 'admin_response', 'reviewed_by', 'reviewed_at']),
             );
 
-            $appealUser = $appeal->user;
+            $appealUser = $appeal->user()->withTrashed()->first();
             if ($appealUser) {
                 $this->adminModerationNoticeService->send(
                     admin: $admin,

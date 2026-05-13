@@ -27,7 +27,7 @@ export default async function PublicAppealPage({
     const { appeal_uuid, appeal_type, resource_type, resource_id } = await searchParams
 
     return (
-        <section className='mx-auto flex min-h-[70vh] w-full max-w-3xl items-center justify-center'>
+        <section className='mx-auto flex min-h-[70vh] w-full max-w-3xl items-center justify-center '>
             <Suspense
                 fallback={
                     <div className='w-full animate-pulse space-y-4 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm'>

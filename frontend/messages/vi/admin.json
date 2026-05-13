@@ -287,7 +287,8 @@
         },
         "settings": {
             "title": "Cài đặt quản trị",
-            "description": "Cập nhật hồ sơ và bảo mật tài khoản quản trị"
+            "description": "Cập nhật hồ sơ và bảo mật tài khoản quản trị",
+            "adminNote": "Thay đổi chỉ áp dụng cho tài khoản admin của bạn."
         },
         "appeals": {
             "title": "Kiểm duyệt kháng cáo",

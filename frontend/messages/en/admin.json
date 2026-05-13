@@ -287,7 +287,8 @@
         },
         "settings": {
             "title": "Admin Settings",
-            "description": "Update your profile and account security settings"
+            "description": "Update your profile and account security settings",
+            "adminNote": "Changes apply to your admin account only."
         },
         "appeals": {
             "title": "Appeal Moderation",
