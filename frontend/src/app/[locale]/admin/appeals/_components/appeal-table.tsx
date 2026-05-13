@@ -26,7 +26,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { toast } from 'sonner'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
-import { AdminTableToolbar, AdminTablePagination, AdminTableWrapper } from '@/components/admin'
+import { AdminTableToolbar, AdminTablePagination, AdminTablePanel } from '@/components/admin'
 import { EvidenceGalleryDialog } from './evidence-gallery-dialog'
 import { AppealDetailDialog } from './appeal-detail-dialog'
 import { formatAdminDate } from '@/helpers/admin-helpers'
@@ -66,6 +66,8 @@ export function AppealTable() {
     const [searchTerm, setSearchTerm] = useState('')
     const [statusFilter, setStatusFilter] = useState<typeof FILTER_ALL | AppealStatus>(FILTER_ALL)
     const [typeFilter, setTypeFilter] = useState<typeof FILTER_ALL | AppealType>(FILTER_ALL)
+    const [draftStatus, setDraftStatus] = useState<typeof FILTER_ALL | AppealStatus>(FILTER_ALL)
+    const [draftType, setDraftType] = useState<typeof FILTER_ALL | AppealType>(FILTER_ALL)
     const [selectedAppeal, setSelectedAppeal] = useState<AdminAppeal | null>(null)
     const [actionType, setActionType] = useState<AppealReviewAction | null>(null)
     const [adminResponse, setAdminResponse] = useState('')
@@ -121,6 +123,8 @@ export function AppealTable() {
     }, [])
 
     const handleResetFilters = () => {
+        setDraftStatus(FILTER_ALL)
+        setDraftType(FILTER_ALL)
         setStatusFilter(FILTER_ALL)
         setTypeFilter(FILTER_ALL)
         setPage(1)
@@ -164,86 +168,100 @@ export function AppealTable() {
 
     if (isLoading) {
         return (
-            <div className='space-y-4'>
-                <div className='rounded-xl border bg-card shadow-xs p-3'>
-                    <Skeleton className='h-9 w-full rounded-lg' />
+            <div className='rounded-xl border bg-card shadow-xs overflow-hidden'>
+                <div className='border-b border-border/50 px-4 py-2.5'>
+                    <Skeleton className='h-8 w-full rounded-md' />
                 </div>
-                <div className='rounded-xl border bg-card shadow-xs overflow-hidden divide-y'>
-                    <div className='bg-muted/40 px-3 py-3'><Skeleton className='h-4 w-3/4' /></div>
-                    {Array.from({ length: 6 }).map((_, i) => (
-                        <div key={i} className='flex items-center gap-4 px-3 py-4'>
+                <div className='divide-y divide-border/40'>
+                    <div className='bg-muted/30 px-4 py-2.5'><Skeleton className='h-3.5 w-1/2' /></div>
+                    {Array.from({ length: 7 }).map((_, i) => (
+                        <div key={i} className='flex items-center gap-4 px-4 py-3.5'>
                             <Skeleton className='h-4 w-4 shrink-0' />
-                            <Skeleton className='h-4 w-8 shrink-0' />
-                            <Skeleton className='h-4 w-24' />
-                            <Skeleton className='h-4 w-28' />
-                            <Skeleton className='h-4 flex-1' />
-                            <Skeleton className='h-4 w-12' />
+                            <Skeleton className='h-3.5 w-8 shrink-0' />
+                            <Skeleton className='h-3.5 w-24' />
+                            <Skeleton className='h-3.5 w-28' />
+                            <Skeleton className='h-3.5 flex-1' />
+                            <Skeleton className='h-3.5 w-12' />
                             <Skeleton className='h-5 w-20 rounded-full' />
-                            <Skeleton className='h-4 w-24' />
-                            <Skeleton className='h-7 w-20 rounded-lg' />
+                            <Skeleton className='h-3.5 w-24' />
+                            <Skeleton className='h-7 w-20 rounded-md ml-auto' />
                         </div>
                     ))}
                 </div>
+                <div className='border-t border-border/50 px-4 py-2.5'><Skeleton className='h-7 w-48' /></div>
             </div>
         )
     }
 
     return (
-        <div className='space-y-4'>
-            <AdminTableToolbar
-                searchValue={searchTerm}
-                onSearchChange={(v) => { setSearchTerm(v); setPage(1) }}
-                searchPlaceholder={t('appeals.placeholders.searchAppeals')}
-                hasActiveFilters={hasActiveFilters}
-                onResetFilters={handleResetFilters}
-                resetLabel={t('common.reset')}
+        <div className='space-y-2'>
+            <AdminTablePanel
                 isFetching={isFetching}
-                filters={
-                    <>
-                        <Select
-                            value={statusFilter}
-                            onValueChange={(v) => { setStatusFilter(v as typeof FILTER_ALL | AppealStatus); setPage(1) }}
-                        >
-                            <SelectTrigger className='h-8 w-44 rounded-lg text-xs'>
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value={FILTER_ALL}>{t('appeals.filters.allStatuses')}</SelectItem>
-                                {APPEAL_STATUS_VALUES.map((status) => (
-                                    <SelectItem key={status} value={status}>
-                                        {t(`appeals.statuses.${status}` as Parameters<typeof t>[0])}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-
-                        <Select
-                            value={typeFilter}
-                            onValueChange={(v) => { setTypeFilter(v as typeof FILTER_ALL | AppealType); setPage(1) }}
-                        >
-                            <SelectTrigger className='h-8 w-44 rounded-lg text-xs'>
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value={FILTER_ALL}>{t('appeals.filters.allTypes')}</SelectItem>
-                                {APPEAL_TYPE_VALUES.map((appealType) => (
-                                    <SelectItem key={appealType} value={appealType}>
-                                        {t(`appeals.types.${appealType}` as Parameters<typeof t>[0])}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </>
+                toolbar={
+                    <AdminTableToolbar
+                        searchValue={searchTerm}
+                        onSearchChange={(v) => { setSearchTerm(v); setStatusFilter(draftStatus); setTypeFilter(draftType); setPage(1) }}
+                        searchPlaceholder={t('appeals.placeholders.searchAppeals')}
+                        hasActiveFilters={hasActiveFilters}
+                        onResetFilters={handleResetFilters}
+                        resetLabel={t('common.reset')}
+                        isFetching={isFetching}
+                        filters={
+                            <>
+                                <Select
+                                    value={draftStatus}
+                                    onValueChange={(v) => setDraftStatus(v as typeof FILTER_ALL | AppealStatus)}
+                                >
+                                    <SelectTrigger className='h-7 w-40 rounded text-xs'>
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value={FILTER_ALL}>{t('appeals.filters.allStatuses')}</SelectItem>
+                                        {APPEAL_STATUS_VALUES.map((status) => (
+                                            <SelectItem key={status} value={status}>
+                                                {t(`appeals.statuses.${status}` as Parameters<typeof t>[0])}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <Select
+                                    value={draftType}
+                                    onValueChange={(v) => setDraftType(v as typeof FILTER_ALL | AppealType)}
+                                >
+                                    <SelectTrigger className='h-7 w-40 rounded text-xs'>
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value={FILTER_ALL}>{t('appeals.filters.allTypes')}</SelectItem>
+                                        {APPEAL_TYPE_VALUES.map((appealType) => (
+                                            <SelectItem key={appealType} value={appealType}>
+                                                {t(`appeals.types.${appealType}` as Parameters<typeof t>[0])}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </>
+                        }
+                    />
                 }
-            />
-
-            <AdminTableWrapper isFetching={isFetching}>
+                pagination={
+                    pagination ? (
+                        <AdminTablePagination
+                            pagination={pagination}
+                            page={page}
+                            perPage={perPage}
+                            onPageChange={setPage}
+                            onPerPageChange={(n) => { setPerPage(n); setPage(1) }}
+                        />
+                    ) : undefined
+                }
+            >
             {appeals.length === 0 ? (
-                <div className='rounded-xl border bg-card p-12 text-center shadow-xs'>
+                <div className='py-16 text-center'>
                     <p className='text-sm text-muted-foreground'>{t('appeals.emptyState')}</p>
                 </div>
             ) : (
-                <div className='rounded-xl border bg-card shadow-xs overflow-hidden'>
+                <div>
                     <Table>
                         <TableHeader>
                             <TableRow className='hover:bg-muted/40'>
@@ -482,17 +500,7 @@ export function AppealTable() {
                     </Table>
                 </div>
             )}
-            </AdminTableWrapper>
-
-            {pagination && (
-                <AdminTablePagination
-                    pagination={pagination}
-                    page={page}
-                    perPage={perPage}
-                    onPageChange={setPage}
-                    onPerPageChange={(n) => { setPerPage(n); setPage(1) }}
-                />
-            )}
+            </AdminTablePanel>
 
             {/* Review dialog */}
             <Dialog open={!!selectedAppeal && !!actionType} onOpenChange={(open) => !open && closeDialog()}>

@@ -184,7 +184,7 @@ class UserRepository extends BaseRepository
         $perPage = (int) $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
 
         return $query
-            ->with('avatarFile:id')
+            ->with('avatarFile:id,file_path,disk')
             ->select([
                 'id',
                 'uuid',

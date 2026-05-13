@@ -20,7 +20,7 @@ export function AdminTablePagination({
     perPage,
     onPageChange,
     onPerPageChange,
-    perPageOptions = [5, 10, 25, 50]
+    perPageOptions = [10, 20, 50, 100]
 }: AdminTablePaginationProps) {
     const t = useTranslations('AdminPage')
 
@@ -29,11 +29,11 @@ export function AdminTablePagination({
     const to = Math.min(pagination.current_page * perPage, totalItems)
 
     return (
-        <div className='flex flex-col gap-3 rounded-xl border bg-card px-4 py-3 shadow-xs sm:flex-row sm:items-center sm:justify-between'>
-            <div className='flex items-center gap-2.5'>
+        <div className='flex items-center gap-3 px-1'>
+            <div className='flex items-center gap-1.5 shrink-0'>
                 <span className='text-xs text-muted-foreground'>{t('common.perPage')}</span>
                 <Select value={String(perPage)} onValueChange={(v) => onPerPageChange(Number(v))}>
-                    <SelectTrigger className='h-7 w-14 rounded-lg border-border/60 text-xs'>
+                    <SelectTrigger className='h-7 w-14 rounded border-border/60 text-xs'>
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -46,12 +46,14 @@ export function AdminTablePagination({
                 </Select>
             </div>
 
-            <p className='text-xs text-muted-foreground'>
+            <span className='text-xs text-muted-foreground shrink-0'>
                 {t('common.showingResults', { from, to, total: totalItems })}
-            </p>
+            </span>
 
             {pagination.last_page > 1 && (
-                <AutoPagination page={page} pageSize={pagination.last_page} onPageChange={onPageChange} />
+                <div className='ml-auto'>
+                    <AutoPagination page={page} pageSize={pagination.last_page} onPageChange={onPageChange} />
+                </div>
             )}
         </div>
     )

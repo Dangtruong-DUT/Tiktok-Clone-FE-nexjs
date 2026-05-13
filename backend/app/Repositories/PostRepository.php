@@ -182,7 +182,7 @@ class PostRepository extends BaseRepository
         return $query
             ->with([
                 'user:id,uuid,username,avatar_file_id',
-                'user.avatarFile:id',
+                'user.avatarFile:id,file_path,disk',
                 'media:id,post_id,type,upload_file_id',
                 'media.file:id',
             ])
@@ -218,7 +218,7 @@ class PostRepository extends BaseRepository
         return $query
             ->with([
                 'user:id,uuid,username,avatar_file_id',
-                'user.avatarFile:id',
+                'user.avatarFile:id,file_path,disk',
                 'parent:id,uuid,user_id,content',
                 'parent.user:id,uuid,username',
             ])

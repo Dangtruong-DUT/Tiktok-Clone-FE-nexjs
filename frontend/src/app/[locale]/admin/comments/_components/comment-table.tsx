@@ -9,7 +9,7 @@ import { Trash2, Eye } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Skeleton } from '@/components/ui/skeleton'
-import { AdminTableToolbar, AdminTablePagination, AdminTableWrapper } from '@/components/admin'
+import { AdminTableToolbar, AdminTablePagination, AdminTablePanel } from '@/components/admin'
 import { DeleteCommentDialog } from './delete-comment-dialog'
 import { CommentDetailDialog } from './comment-detail-dialog'
 import { formatAdminDate, truncateText } from '@/helpers/admin-helpers'
@@ -28,6 +28,7 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
     const [perPage, setPerPage] = useState(10)
     const [searchTerm, setSearchTerm] = useState('')
     const [sortBy, setSortBy] = useState<SortOrder>('recent')
+    const [draftSort, setDraftSort] = useState<SortOrder>('recent')
     const [selectedComment, setSelectedComment] = useState<AdminComment | null>(null)
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
     const [showDetailDialog, setShowDetailDialog] = useState(false)
@@ -46,10 +47,12 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
 
     const handleSearch = (value: string) => {
         setSearchTerm(value)
+        setSortBy(draftSort)
         setPage(1)
     }
 
     const handleResetFilters = () => {
+        setDraftSort('recent')
         setSortBy('recent')
         setPage(1)
     }
@@ -82,58 +85,71 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
 
     if (isLoading) {
         return (
-            <div className='space-y-4'>
-                <div className='rounded-xl border bg-card shadow-xs p-3'>
-                    <Skeleton className='h-9 w-full rounded-lg' />
+            <div className='rounded-xl border bg-card shadow-xs overflow-hidden'>
+                <div className='border-b border-border/50 px-4 py-2.5'>
+                    <Skeleton className='h-8 w-full rounded-md' />
                 </div>
-                <div className='rounded-xl border bg-card shadow-xs overflow-hidden divide-y'>
-                    <div className='bg-muted/40 px-3 py-3'><Skeleton className='h-4 w-3/4' /></div>
-                    {Array.from({ length: 6 }).map((_, i) => (
-                        <div key={i} className='flex items-center gap-4 px-3 py-4'>
-                            <Skeleton className='h-4 w-8 shrink-0' />
-                            <Skeleton className='h-4 w-24' />
-                            <Skeleton className='h-4 flex-1' />
-                            <Skeleton className='h-4 w-20' />
-                            <Skeleton className='h-4 w-24' />
-                            <Skeleton className='h-8 w-16 rounded-lg' />
+                <div className='divide-y divide-border/40'>
+                    <div className='bg-muted/30 px-4 py-2.5'><Skeleton className='h-3.5 w-1/2' /></div>
+                    {Array.from({ length: 7 }).map((_, i) => (
+                        <div key={i} className='flex items-center gap-4 px-4 py-3.5'>
+                            <Skeleton className='h-3.5 w-8 shrink-0' />
+                            <Skeleton className='h-3.5 w-24' />
+                            <Skeleton className='h-3.5 flex-1' />
+                            <Skeleton className='h-3.5 w-20' />
+                            <Skeleton className='h-3.5 w-24' />
+                            <Skeleton className='h-7 w-16 rounded-md ml-auto' />
                         </div>
                     ))}
                 </div>
+                <div className='border-t border-border/50 px-4 py-2.5'><Skeleton className='h-7 w-48' /></div>
             </div>
         )
     }
 
     return (
         <TooltipProvider>
-            <div className='space-y-4'>
-                <AdminTableToolbar
-                    searchValue={searchTerm}
-                    onSearchChange={handleSearch}
-                    searchPlaceholder={t('comments.placeholders.searchComments')}
-                    hasActiveFilters={hasActiveFilters}
-                    onResetFilters={handleResetFilters}
-                    resetLabel={t('common.reset')}
-                    isFetching={isFetching}
-                    filters={
-                        <Select value={sortBy} onValueChange={(v) => { setSortBy(v as SortOrder); setPage(1) }}>
-                            <SelectTrigger className='h-8 w-32 rounded-lg text-xs'>
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value='recent'>{t('comments.filters.recent')}</SelectItem>
-                                <SelectItem value='oldest'>{t('comments.filters.oldest')}</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    }
-                />
-
-                <AdminTableWrapper isFetching={isFetching}>
+            <AdminTablePanel
+                isFetching={isFetching}
+                toolbar={
+                    <AdminTableToolbar
+                        searchValue={searchTerm}
+                        onSearchChange={handleSearch}
+                        searchPlaceholder={t('comments.placeholders.searchComments')}
+                        hasActiveFilters={sortBy !== 'recent'}
+                        onResetFilters={handleResetFilters}
+                        resetLabel={t('common.reset')}
+                        isFetching={isFetching}
+                        filters={
+                            <Select value={draftSort} onValueChange={(v) => setDraftSort(v as SortOrder)}>
+                                <SelectTrigger className='h-7 w-32 rounded text-xs'>
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value='recent'>{t('comments.filters.recent')}</SelectItem>
+                                    <SelectItem value='oldest'>{t('comments.filters.oldest')}</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        }
+                    />
+                }
+                pagination={
+                    pagination ? (
+                        <AdminTablePagination
+                            pagination={pagination}
+                            page={page}
+                            perPage={perPage}
+                            onPageChange={setPage}
+                            onPerPageChange={(n) => { setPerPage(n); setPage(1) }}
+                        />
+                    ) : undefined
+                }
+            >
                 {comments.length === 0 ? (
-                    <div className='rounded-xl border bg-card p-12 text-center shadow-xs'>
+                    <div className='py-16 text-center'>
                         <p className='text-sm text-muted-foreground'>{t('comments.emptyState')}</p>
                     </div>
                 ) : (
-                    <div className='rounded-xl border bg-card shadow-xs overflow-hidden'>
                         <Table>
                             <TableHeader>
                                 <TableRow className='hover:bg-muted/40'>
@@ -213,38 +229,26 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
                                 ))}
                             </TableBody>
                         </Table>
-                    </div>
                 )}
-                </AdminTableWrapper>
+            </AdminTablePanel>
 
-                {pagination && (
-                    <AdminTablePagination
-                        pagination={pagination}
-                        page={page}
-                        perPage={perPage}
-                        onPageChange={setPage}
-                        onPerPageChange={(n) => { setPerPage(n); setPage(1) }}
+            {selectedComment && (
+                <>
+                    <CommentDetailDialog
+                        open={showDetailDialog}
+                        comment={selectedComment}
+                        onOpenChange={(open) => !open && closeDetailDialog()}
                     />
-                )}
-
-                {selectedComment && (
-                    <>
-                        <CommentDetailDialog
-                            open={showDetailDialog}
-                            comment={selectedComment}
-                            onOpenChange={(open) => !open && closeDetailDialog()}
-                        />
-                        <DeleteCommentDialog
-                            open={showDeleteDialog}
-                            commentUuid={selectedComment.uuid}
-                            authorUsername={selectedComment.author?.username ?? '—'}
-                            parentPostId={selectedComment.parent_id ?? undefined}
-                            onOpenChange={(open) => !open && closeDeleteDialog()}
-                            onSuccess={handleActionSuccess}
-                        />
-                    </>
-                )}
-            </div>
+                    <DeleteCommentDialog
+                        open={showDeleteDialog}
+                        commentUuid={selectedComment.uuid}
+                        authorUsername={selectedComment.author?.username ?? '—'}
+                        parentPostId={selectedComment.parent_id ?? undefined}
+                        onOpenChange={(open) => !open && closeDeleteDialog()}
+                        onSuccess={handleActionSuccess}
+                    />
+                </>
+            )}
         </TooltipProvider>
     )
 }

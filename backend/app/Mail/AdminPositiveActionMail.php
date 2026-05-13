@@ -16,7 +16,7 @@ class AdminPositiveActionMail extends BaseMailAble
     public function __construct(
         private readonly User $targetUser,
         private readonly AdminActionEnum $action,
-        private readonly string $message,
+        private readonly string $adminMessage,
     ) {
         parent::__construct();
     }
@@ -35,7 +35,7 @@ class AdminPositiveActionMail extends BaseMailAble
             with: [
                 'targetUserName' => $this->targetUser->name ?? $this->targetUser->username,
                 'actionLabel' => $this->action->label(),
-                'message' => $this->message,
+                'adminMessage' => $this->adminMessage,
             ],
         );
     }

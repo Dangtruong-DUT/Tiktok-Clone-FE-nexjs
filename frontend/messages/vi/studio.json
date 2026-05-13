@@ -54,7 +54,8 @@
                 }
             },
             "emptyState": "Không tìm thấy bài viết nào.",
-            "showingResults": "Hiển thị {from}-{to} trong {total} bài viết"
+            "showingResults": "Hiển thị {from}-{to} trong {total} bài viết",
+            "perPage": "Mỗi trang"
         },
         "dashboard": {
             "knowledgeForYou": {
@@ -293,7 +294,9 @@
                     "evidence": "Bằng chứng"
                 },
                 "viewDetail": "Xem chi tiết",
-                "resourcePreview": "Xem tài nguyên"
+                "resourcePreview": "Xem tài nguyên",
+                "search": "Tìm kiếm",
+                "reset": "Đặt lại"
             },
             "types": {
                 "user_ban": "Khóa tài khoản",

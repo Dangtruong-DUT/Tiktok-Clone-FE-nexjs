@@ -61,7 +61,7 @@
                 </p>
 
                 <div class="mail__notice">
-                    {{ $message }}
+                    {{ $adminMessage }}
                 </div>
 
                 <p class="mail__text">

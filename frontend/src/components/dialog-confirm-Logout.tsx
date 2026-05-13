@@ -1,5 +1,4 @@
 'use client'
-import AppLoader from '@/components/app-loader'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useLogout } from '@/hooks/data/useAuth'
@@ -43,7 +42,6 @@ export default function DialogConfirmLogout({ isOpen, onOpenChange }: DialogConf
                     </DialogHeader>
                 </DialogContent>
             </Dialog>
-            {logoutResult.isLoading && <AppLoader />}
         </>
     )
 }

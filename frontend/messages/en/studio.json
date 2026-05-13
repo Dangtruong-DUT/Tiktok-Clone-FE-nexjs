@@ -54,7 +54,8 @@
                 }
             },
             "emptyState": "No posts found.",
-            "showingResults": "Showing {from}-{to} of {total} posts"
+            "showingResults": "Showing {from}-{to} of {total} posts",
+            "perPage": "Per page"
         },
         "dashboard": {
             "knowledgeForYou": {
@@ -293,7 +294,9 @@
                     "evidence": "Evidence"
                 },
                 "viewDetail": "View Detail",
-                "resourcePreview": "Resource Preview"
+                "resourcePreview": "Resource Preview",
+                "search": "Search",
+                "reset": "Reset"
             },
             "types": {
                 "user_ban": "User Ban",

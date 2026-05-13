@@ -114,61 +114,57 @@ export default function TableContent() {
             <SearchParamsLoader onParamsReceived={setSearchParams} />
             <AlertDialogDeleteDish postIdDelete={postIdDelete} setPostIdDelete={setPostIdDelete} />
 
-            {/* Search & Filters */}
-            <div className='flex flex-col gap-3 md:flex-row md:items-center'>
-                <div className='relative flex-1 md:max-w-sm'>
-                    <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
+            {/* Search & Filters — ngoài card */}
+            <div className='flex flex-wrap items-center gap-2'>
+                <div className='relative min-w-0 flex-1' style={{ maxWidth: 320 }}>
+                    <Search className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground/50' />
                     <Input
                         placeholder={t('search.placeholder')}
                         value={searchKeyword}
                         onChange={(e) => setSearchKeyword(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                        className='pl-9'
+                        className='h-8 rounded-md border-transparent bg-muted/50 pl-8 pr-8 text-sm focus-visible:border-border focus-visible:bg-background focus-visible:ring-0'
                     />
-                    {searchKeyword && (
-                        <button
-                            onClick={() => setSearchKeyword('')}
-                            className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground'
-                        >
-                            <X className='h-3.5 w-3.5' />
-                        </button>
-                    )}
+                    <button
+                        type='button'
+                        onClick={() => setSearchKeyword('')}
+                        disabled={!searchKeyword}
+                        className='absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground/50 transition-colors hover:text-muted-foreground disabled:pointer-events-none disabled:opacity-30'
+                    >
+                        <X className='h-3.5 w-3.5' />
+                    </button>
                 </div>
 
                 <AudienceSelect
                     value={audienceFilter}
                     onValueChange={setAudienceFilter}
-                    className='md:w-[180px]'
+                    className='h-8 w-40 rounded-md text-sm'
                     placeholder={t('filter.audiencePlaceholder')}
                     includeAllOption
                     allOptionLabel={t('filter.allAudience')}
                     disabled={isFetchingPosts}
                 />
 
-                <div className='flex gap-2 md:ml-auto'>
-                    {hasActiveFilters && (
-                        <Button
-                            variant='ghost'
-                            size='sm'
-                            onClick={handleClearFilters}
-                            disabled={isFetchingPosts && pendingAction === 'clear'}
-                        >
-                            <X className='mr-1.5 h-3.5 w-3.5' />
-                            {t('search.clearButton')}
-                        </Button>
-                    )}
-                    <Button
-                        size='sm'
-                        onClick={handleSearch}
-                        disabled={isFetchingPosts}
-                        className='bg-brand hover:bg-brand/90 text-white'
-                    >
-                        <Search className='mr-1.5 h-3.5 w-3.5' />
-                        {isFetchingPosts && pendingAction === 'search'
-                            ? t('search.searchingButton')
-                            : t('search.searchButton')}
-                    </Button>
-                </div>
+                <Button
+                    size='sm'
+                    onClick={handleSearch}
+                    disabled={isFetchingPosts}
+                    className='h-8 shrink-0 rounded-md bg-primary px-3 text-xs text-primary-foreground shadow-none hover:bg-primary/85 disabled:opacity-50'
+                >
+                    <Search className='h-3.5 w-3.5' />
+                    <span className='ml-1.5 hidden sm:inline'>
+                        {isFetchingPosts && pendingAction === 'search' ? t('search.searchingButton') : t('search.searchButton')}
+                    </span>
+                </Button>
+
+                <button
+                    type='button'
+                    onClick={handleClearFilters}
+                    disabled={!hasActiveFilters}
+                    className='flex h-8 shrink-0 items-center gap-1 rounded-md border border-border/60 px-2.5 text-xs text-muted-foreground transition-colors hover:border-border hover:text-foreground disabled:pointer-events-none disabled:opacity-30'
+                >
+                    <X className='h-3 w-3' />
+                    {t('search.clearButton')}
+                </button>
             </div>
 
             {/* Table */}
@@ -178,21 +174,40 @@ export default function TableContent() {
                 <DataTable columns={columns} table={table} emptyText={t('emptyState')} />
             )}
 
-            {/* Pagination */}
-            {queryData?.meta && queryData.meta.last_page > 1 && (
-                <div className='flex items-center justify-between py-2'>
-                    <p className='text-sm text-muted-foreground'>
+            {/* Pagination — 1 hàng */}
+            {queryData?.meta && (
+                <div className='flex items-center gap-3 px-1'>
+                    <div className='flex items-center gap-1.5 shrink-0'>
+                        <span className='text-xs text-muted-foreground'>{t('perPage')}</span>
+                        <select
+                            value={pagination.pageSize}
+                            onChange={(e) => {
+                                table.setPageSize(Number(e.target.value))
+                                table.setPageIndex(0)
+                            }}
+                            className='h-7 rounded border border-border/60 bg-background px-1.5 text-xs text-foreground focus:outline-none'
+                        >
+                            {[10, 20, 50].map((n) => <option key={n} value={n}>{n}</option>)}
+                        </select>
+                    </div>
+
+                    <span className='text-xs text-muted-foreground shrink-0'>
                         {t('showingResults', {
                             from: (queryData.meta.current_page - 1) * pagination.pageSize + 1,
                             to: Math.min(queryData.meta.current_page * pagination.pageSize, queryData.meta.total ?? 0),
                             total: queryData.meta.total ?? 0
                         })}
-                    </p>
-                    <AutoPagination
-                        page={table.getState().pagination.pageIndex + 1}
-                        pageSize={queryData.meta.last_page}
-                        pathname='/snapistudio/content'
-                    />
+                    </span>
+
+                    {queryData.meta.last_page > 1 && (
+                        <div className='ml-auto'>
+                            <AutoPagination
+                                page={table.getState().pagination.pageIndex + 1}
+                                pageSize={queryData.meta.last_page}
+                                pathname='/snapistudio/content'
+                            />
+                        </div>
+                    )}
                 </div>
             )}
         </div>

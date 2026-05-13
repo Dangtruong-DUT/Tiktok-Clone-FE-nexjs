@@ -305,11 +305,18 @@ export default function StudioAppealsPage() {
 
     const [page, setPage] = useState(1)
     const [perPage, setPerPage] = useState(10)
+
+    // Applied state — used in API query
     const [searchTerm, setSearchTerm] = useState('')
     const [statusFilter, setStatusFilter] = useState<typeof FILTER_ALL | AppealStatus>(FILTER_ALL)
+
+    // Draft state — only applied on Search click
+    const [draftSearch, setDraftSearch] = useState('')
+    const [draftStatus, setDraftStatus] = useState<typeof FILTER_ALL | AppealStatus>(FILTER_ALL)
+
     const [selectedAppeal, setSelectedAppeal] = useState<Appeal | null>(null)
 
-    const { data, isLoading } = useGetMyAppealsQuery({
+    const { data, isLoading, isFetching } = useGetMyAppealsQuery({
         page,
         per_page: perPage,
         appeal_status: statusFilter === FILTER_ALL ? undefined : statusFilter,
@@ -331,33 +338,49 @@ export default function StudioAppealsPage() {
     const pagination = data?.meta
     const totalItems = pagination?.total ?? appeals.length
 
+    const handleSearch = () => {
+        setSearchTerm(draftSearch)
+        setStatusFilter(draftStatus)
+        setPage(1)
+    }
+
+    const handleReset = () => {
+        setDraftSearch('')
+        setDraftStatus(FILTER_ALL)
+        setSearchTerm('')
+        setStatusFilter(FILTER_ALL)
+        setPage(1)
+    }
+
+    const hasActiveFilters = statusFilter !== FILTER_ALL || !!searchTerm
+
     return (
-        <div className='max-w-6xl mx-auto p-4 md:p-6 space-y-4'>
-            {/* Search & Filters */}
-            <div className='flex flex-col gap-3 md:flex-row md:items-center'>
-                <div className='relative flex-1 md:max-w-sm'>
-                    <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
+        <div className='max-w-6xl mx-auto p-4 md:p-6 space-y-3'>
+            {/* Toolbar — ngoài card */}
+            <div className='flex flex-wrap items-center gap-2'>
+                <div className='relative min-w-0 flex-1' style={{ maxWidth: 320 }}>
+                    <Search className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground/50' />
                     <Input
-                        value={searchTerm}
-                        onChange={(e) => { setSearchTerm(e.target.value); setPage(1) }}
+                        value={draftSearch}
+                        onChange={(e) => setDraftSearch(e.target.value)}
                         placeholder={t('list.searchPlaceholder')}
-                        className='pl-9'
+                        className='h-8 rounded-md border-transparent bg-muted/50 pl-8 pr-8 text-sm focus-visible:border-border focus-visible:bg-background focus-visible:ring-0'
                     />
-                    {searchTerm && (
-                        <button
-                            onClick={() => { setSearchTerm(''); setPage(1) }}
-                            className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground'
-                        >
-                            <X className='h-3.5 w-3.5' />
-                        </button>
-                    )}
+                    <button
+                        type='button'
+                        onClick={() => { setDraftSearch(''); setSearchTerm(''); setPage(1) }}
+                        disabled={!draftSearch}
+                        className='absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground/50 transition-colors hover:text-muted-foreground disabled:pointer-events-none disabled:opacity-30'
+                    >
+                        <X className='h-3.5 w-3.5' />
+                    </button>
                 </div>
 
                 <Select
-                    value={statusFilter}
-                    onValueChange={(v: typeof FILTER_ALL | AppealStatus) => { setStatusFilter(v); setPage(1) }}
+                    value={draftStatus}
+                    onValueChange={(v: typeof FILTER_ALL | AppealStatus) => setDraftStatus(v)}
                 >
-                    <SelectTrigger className='w-44'>
+                    <SelectTrigger className='h-8 w-40 rounded-md text-sm'>
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -367,13 +390,41 @@ export default function StudioAppealsPage() {
                         ))}
                     </SelectContent>
                 </Select>
+
+                <Button
+                    size='sm'
+                    onClick={handleSearch}
+                    disabled={isFetching}
+                    className='h-8 shrink-0 rounded-md bg-primary px-3 text-xs text-primary-foreground shadow-none hover:bg-primary/85 disabled:opacity-50'
+                >
+                    <Search className='h-3.5 w-3.5' />
+                    <span className='ml-1.5 hidden sm:inline'>{t('list.search')}</span>
+                </Button>
+
+                <button
+                    type='button'
+                    onClick={handleReset}
+                    disabled={!hasActiveFilters}
+                    className='flex h-8 shrink-0 items-center gap-1 rounded-md border border-border/60 px-2.5 text-xs text-muted-foreground transition-colors hover:border-border hover:text-foreground disabled:pointer-events-none disabled:opacity-30'
+                >
+                    <X className='h-3 w-3' />
+                    {t('list.reset')}
+                </button>
             </div>
 
             {/* Table */}
             {isLoading ? (
-                <div className='rounded-xl border bg-background shadow-sm overflow-hidden p-4 space-y-3'>
-                    {Array.from({ length: 5 }).map((_, i) => (
-                        <Skeleton key={i} className='h-14 w-full' />
+                <div className='rounded-xl border bg-background shadow-sm overflow-hidden divide-y'>
+                    <div className='bg-muted/30 px-4 py-2.5'><Skeleton className='h-3.5 w-1/2' /></div>
+                    {Array.from({ length: 6 }).map((_, i) => (
+                        <div key={i} className='flex items-center gap-4 px-4 py-3.5'>
+                            <Skeleton className='h-3.5 w-24 shrink-0' />
+                            <Skeleton className='h-3.5 w-24' />
+                            <Skeleton className='h-3.5 flex-1' />
+                            <Skeleton className='h-5 w-20 rounded-full' />
+                            <Skeleton className='h-3.5 w-24' />
+                            <Skeleton className='h-7 w-8 rounded-md ml-auto' />
+                        </div>
                     ))}
                 </div>
             ) : appeals.length === 0 ? (
@@ -404,7 +455,7 @@ export default function StudioAppealsPage() {
                             {appeals.map((appeal) => (
                                 <TableRow key={appeal.uuid} className='hover:bg-muted/50 transition-colors'>
                                     <TableCell className='font-mono text-sm text-muted-foreground'>
-                                        {appeal.appeal_type}
+                                        {appeal.uuid ?? appeal.id}
                                     </TableCell>
                                     <TableCell>
                                         <span className='text-sm'>{t(`types.${appeal.appeal_type}`)}</span>
@@ -453,34 +504,35 @@ export default function StudioAppealsPage() {
                 </div>
             )}
 
-            {/* Pagination */}
+            {/* Pagination — 1 hàng */}
             {pagination && (
-                <div className='flex flex-col gap-3 md:flex-row md:items-center md:justify-between'>
-                    <div className='flex items-center gap-2'>
-                        <span className='text-sm text-muted-foreground'>{t('list.perPage')}</span>
-                        <Select
-                            value={String(perPage)}
-                            onValueChange={(v) => { setPerPage(Number(v)); setPage(1) }}
-                        >
-                            <SelectTrigger className='w-20'><SelectValue /></SelectTrigger>
+                <div className='flex items-center gap-3 px-1'>
+                    <div className='flex items-center gap-1.5 shrink-0'>
+                        <span className='text-xs text-muted-foreground'>{t('list.perPage')}</span>
+                        <Select value={String(perPage)} onValueChange={(v) => { setPerPage(Number(v)); setPage(1) }}>
+                            <SelectTrigger className='h-7 w-14 rounded border-border/60 text-xs'>
+                                <SelectValue />
+                            </SelectTrigger>
                             <SelectContent>
-                                {[5, 10, 25, 50].map((n) => (
-                                    <SelectItem key={n} value={String(n)}>{n}</SelectItem>
+                                {[10, 20, 50].map((n) => (
+                                    <SelectItem key={n} value={String(n)} className='text-xs'>{n}</SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
                     </div>
 
-                    <p className='text-sm text-muted-foreground'>
+                    <span className='text-xs text-muted-foreground shrink-0'>
                         {t('list.showingResults', {
                             from: (pagination.current_page - 1) * perPage + 1,
                             to: Math.min(pagination.current_page * perPage, totalItems),
                             total: totalItems
                         })}
-                    </p>
+                    </span>
 
                     {pagination.last_page > 1 && (
-                        <AutoPagination page={page} pageSize={pagination.last_page} onPageChange={setPage} />
+                        <div className='ml-auto'>
+                            <AutoPagination page={page} pageSize={pagination.last_page} onPageChange={setPage} />
+                        </div>
                     )}
                 </div>
             )}
