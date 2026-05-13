@@ -26,7 +26,8 @@ export enum EncodingStatus {
 export enum Audience {
     PUBLIC,
     PRIVATE,
-    FRIENDS
+    FRIENDS,
+    FOLLOWING
 }
 
 export enum PrivacyVisibility {
@@ -61,3 +62,7 @@ export enum NotificationTypeCode {
     ADMIN = 7,
     SECURITY = 8
 }
+
+// Post creation supports PUBLIC, PRIVATE, FRIENDS — FOLLOWING is read-only (feed filter only)
+export type AudienceValue = Exclude<Audience, Audience.FOLLOWING>
+export const AUDIENCE_VALUES = [Audience.PUBLIC, Audience.PRIVATE, Audience.FRIENDS] as const satisfies AudienceValue[]

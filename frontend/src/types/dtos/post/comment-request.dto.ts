@@ -11,4 +11,4 @@ export const CommentBody = z
     })
     .strict()
 
-export type CommentBodyType = z.TypeOf<typeof CommentBody>
+export type CommentBodyType = z.infer<typeof CommentBody>

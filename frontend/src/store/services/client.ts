@@ -5,7 +5,7 @@ import envConfig from '@/config/app.config'
 import { NEXT_API_ENDPOINT } from '@/config/endpoint.config'
 import { setLoggedOutAction, tokenReceived } from '@/store/features/authSlice'
 import { RefreshTokenRes } from '@/types/dtos/auth/auth-response.dto'
-import { HTTP_STATUS } from '@/constants/http'
+import { HTTP_STATUS } from '@/constants/api/http-status'
 import { RootState } from '@/store'
 
 /**

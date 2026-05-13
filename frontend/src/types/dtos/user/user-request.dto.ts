@@ -31,7 +31,7 @@ export const ChangePasswordBody = z
         }
     })
 
-export type ChangePasswordBodyType = z.TypeOf<typeof ChangePasswordBody>
+export type ChangePasswordBodyType = z.infer<typeof ChangePasswordBody>
 
 export const UpdateUserBody = z.object({
     name: z.string().min(2).max(100).optional(),
@@ -43,14 +43,14 @@ export const UpdateUserBody = z.object({
     avatar_file_id: z.number().int().positive().optional()
 })
 
-export type UpdateUserBodyType = z.TypeOf<typeof UpdateUserBody>
+export type UpdateUserBodyType = z.infer<typeof UpdateUserBody>
 
 export const GetUserIndicatorQueryParams = z.object({
     fromDate: z.string().min(10).max(30),
     toDate: z.string().min(10).max(30)
 })
 
-export type GetUserIndicatorQueryParamsType = z.TypeOf<typeof GetUserIndicatorQueryParams>
+export type GetUserIndicatorQueryParamsType = z.infer<typeof GetUserIndicatorQueryParams>
 
 export type GetUserListPagingQueryType = {
     user_uuid: string
@@ -65,13 +65,15 @@ export type GetSuggestedUsersQueryType = {
     q?: string
 }
 
+const privacyVisibilitySchema = z.union([z.literal(PrivacyVisibility.PUBLIC), z.literal(PrivacyVisibility.PRIVATE)])
+
 export const UpdateUserSettingsBody = z
     .object({
-        liked_videos_visibility: z.nativeEnum(PrivacyVisibility).optional(),
-        bookmarked_videos_visibility: z.nativeEnum(PrivacyVisibility).optional(),
-        followers_visibility: z.nativeEnum(PrivacyVisibility).optional(),
-        following_visibility: z.nativeEnum(PrivacyVisibility).optional()
+        liked_videos_visibility: privacyVisibilitySchema.optional(),
+        bookmarked_videos_visibility: privacyVisibilitySchema.optional(),
+        followers_visibility: privacyVisibilitySchema.optional(),
+        following_visibility: privacyVisibilitySchema.optional()
     })
     .strict()
 
-export type UpdateUserSettingsBodyType = z.TypeOf<typeof UpdateUserSettingsBody>
+export type UpdateUserSettingsBodyType = z.infer<typeof UpdateUserSettingsBody>

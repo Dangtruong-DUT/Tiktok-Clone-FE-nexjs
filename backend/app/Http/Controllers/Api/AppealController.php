@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Helpers\ResourcePreviewResolver;
 use App\Http\Requests\Appeal\CreateAppealRequest;
 use App\Http\Requests\Appeal\GetMyAppealsRequest;
+use App\Http\Requests\Appeal\GetResourcePreviewRequest;
 use App\Http\Requests\Appeal\ShowAppealRequest;
 use App\Http\Requests\Appeal\UpdateAppealRequest;
 use App\Http\Resources\Api\Appeal\AppealResource;
@@ -69,6 +71,24 @@ class AppealController extends Controller
         return ApiResponse::success(
             data: new AppealResource($appeal),
             message: 'Appeal retrieved successfully',
+        );
+    }
+
+    /**
+     * Return a lightweight preview for a given resource (supports soft-deleted records).
+     * Used by the appeal creation form before the appeal is saved.
+     */
+    public function resourcePreview(GetResourcePreviewRequest $request): JsonResponse
+    {
+        $validated = $request->validated();
+        $preview = ResourcePreviewResolver::resolve(
+            resourceType: (string) $validated['resource_type'],
+            resourceId: isset($validated['resource_id']) ? (int) $validated['resource_id'] : null,
+        );
+
+        return ApiResponse::success(
+            data: $preview,
+            message: 'Resource preview retrieved successfully',
         );
     }
 

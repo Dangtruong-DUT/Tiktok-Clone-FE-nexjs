@@ -1,5 +1,5 @@
 import AuthRequestApi from '@/apis/auth.request'
-import { HTTP_STATUS } from '@/constants/http'
+import { HTTP_STATUS } from '@/constants/api/http-status'
 import { JwtPayloadType } from '@/types/common/jwt-payload.type'
 import { decodeJwt } from '@/utils/auth/jwt.util'
 import { cookies } from 'next/headers'

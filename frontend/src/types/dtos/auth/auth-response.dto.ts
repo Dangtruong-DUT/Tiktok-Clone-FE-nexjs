@@ -1,4 +1,5 @@
 import { HttpResponseWithData } from '@/types/common/http-response.type'
+import { ApiSuccessResponse } from '@/types/common/http-response.type'
 import { UserType } from '@/types/models/user.model'
 
 export type UserAuthType = Pick<
@@ -6,22 +7,15 @@ export type UserAuthType = Pick<
     'id' | 'uuid' | 'name' | 'email' | 'verify' | 'username' | 'avatar' | 'role' | 'updated_at' | 'bio'
 >
 
-export type LoginResponseType = HttpResponseWithData<{
-    access_token: string
-    refresh_token: string
-    user: UserAuthType
+// Single canonical type for any endpoint that returns auth tokens
+export type AuthTokensResponse = HttpResponseWithData<{
+    readonly access_token: string
+    readonly refresh_token: string
+    readonly user: UserAuthType
 }>
 
-export type RegisterResponseType = HttpResponseWithData<{
-    access_token: string
-    refresh_token: string
-    user: UserAuthType
-}>
+export type LoginResponseType = AuthTokensResponse
+export type RegisterResponseType = AuthTokensResponse
+export type RefreshTokenRes = AuthTokensResponse
 
-export type LogoutResType = { message: string }
-
-export type RefreshTokenRes = HttpResponseWithData<{
-    access_token: string
-    refresh_token: string
-    user: UserAuthType
-}>
+export type LogoutResType = ApiSuccessResponse

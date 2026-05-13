@@ -1,12 +1,4 @@
-/**
- * Admin Helper Functions
- * Formatting, styling, and data utilities for admin UI.
- * Text labels should be resolved via i18n (useTranslations) in components.
- */
-
 import { formatNumber } from '@/utils/formatting/formatNumber.util'
-
-// ─── Date Formatting ─────────────────────────────────────────────────────────
 
 export function formatAdminDate(dateString: string, locale = 'en-US'): string {
     if (!dateString) return '-'
@@ -37,8 +29,6 @@ export function formatAdminDateShort(dateString: string, locale = 'en-US'): stri
     }
 }
 
-// ─── User Status ─────────────────────────────────────────────────────────────
-
 export function getUserStatus(user: {
     deleted_at?: string | null
     banned_at?: string | null
@@ -57,8 +47,6 @@ export function getUserStatusColor(status: 'active' | 'banned' | 'deleted'): str
     return colors[status]
 }
 
-// ─── Post Status ─────────────────────────────────────────────────────────────
-
 export function getPostStatus(post: { deleted_at?: string | null }): 'visible' | 'deleted' {
     return post.deleted_at ? 'deleted' : 'visible'
 }
@@ -69,21 +57,15 @@ export function getPostStatusColor(status: 'visible' | 'deleted'): string {
         : 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300'
 }
 
-// ─── Text ─────────────────────────────────────────────────────────────────────
-
 export function truncateText(text: string, maxLength = 100): string {
     if (!text) return ''
     return text.length > maxLength ? text.slice(0, maxLength) + '...' : text
 }
 
-// ─── Activity Key Resolution ──────────────────────────────────────────────────
-// Returns the action key — use with t(`actionLabels.${key}`) in components.
-
+// Returns the action key — use with t(`actionLabels.${key}`) in components
 export function getActivityKey(log: { action?: string; action_type?: string }): string {
     return log.action ?? log.action_type ?? 'unknown'
 }
-
-// ─── Misc ─────────────────────────────────────────────────────────────────────
 
 export function isRecentAction(dateString: string | null, hoursThreshold = 24): boolean {
     if (!dateString) return false

@@ -1,6 +1,6 @@
 'use client'
 
-import { Audience } from '@/constants/enum'
+import { Audience, AudienceValue } from '@/constants/enum'
 import { useUpdatePostMutation } from '@/store/services/posts.service'
 import { createContext, use, useState } from 'react'
 
@@ -9,7 +9,7 @@ type PostTableContextType = {
     postIdEdit: number | undefined
     postIdDelete: string | null
     setPostIdDelete: (value: string | null) => void
-    changeAudienceStatus: ({ status, postId }: { status: Audience; postId: string }) => void
+    changeAudienceStatus: ({ status, postId }: { status: AudienceValue; postId: string }) => void
     getAudienceStatus: ({ postId, fallback }: { postId: string; fallback: Audience }) => Audience
     clearAudienceStatus: (postId: string) => void
 }
@@ -31,10 +31,10 @@ export function usePostTableContext() {
 function PostTableProvider({ children }: { children: React.ReactNode }) {
     const [postIdEdit, setPostIdEdit] = useState<number | undefined>()
     const [postIdDelete, setPostIdDelete] = useState<string | null>(null)
-    const [audienceStatusMap, setAudienceStatusMap] = useState<Record<string, Audience>>({})
+    const [audienceStatusMap, setAudienceStatusMap] = useState<Record<string, AudienceValue>>({})
     const [updatePost] = useUpdatePostMutation()
 
-    const changeAudienceStatus = async ({ status, postId }: { status: Audience; postId: string }) => {
+    const changeAudienceStatus = async ({ status, postId }: { status: AudienceValue; postId: string }) => {
         setAudienceStatusMap((prev) => ({ ...prev, [postId]: status }))
 
         try {

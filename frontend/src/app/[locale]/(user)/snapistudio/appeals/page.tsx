@@ -15,7 +15,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import AutoPagination from '@/components/auto-pagination'
 import { formatAdminDate } from '@/helpers/admin-helpers'
 import { AlertCircle, CheckCircle2, Clock, Eye, FileText, Search, User, X, XCircle } from 'lucide-react'
-import { APPEAL_STATUSES, APPEAL_STATUS_VALUES, type AppealStatus } from '@/constants/appeal.const'
+import { APPEAL_STATUSES, APPEAL_STATUS_VALUES, type AppealStatus } from '@/constants/status/appeal'
 import type { Appeal, ResourcePreview } from '@/types/models/appeal.model'
 import Image from 'next/image'
 
@@ -27,7 +27,6 @@ const STATUS_STYLES: Record<string, string> = {
     [APPEAL_STATUSES.PENDING]: 'bg-amber-50 text-amber-700 border-amber-200'
 }
 
-// ─── Resource Preview Block ───────────────────────────────────────────────────
 
 function ResourcePreviewBlock({ preview }: { preview: ResourcePreview }) {
     if (preview.type === 'post') {
@@ -128,7 +127,6 @@ function ResourcePreviewBlock({ preview }: { preview: ResourcePreview }) {
     return null
 }
 
-// ─── Appeal Detail Dialog ─────────────────────────────────────────────────────
 
 function AppealDetailDialog({ open, appeal, onClose }: { open: boolean; appeal: Appeal; onClose: () => void }) {
     const t = useTranslations('SnapiStudio.appeals')
@@ -301,7 +299,6 @@ function InfoRow({ label, value }: { label: string; value: string }) {
     )
 }
 
-// ─── Main Page ─────────────────────────────────────────────────────────────────
 
 export default function StudioAppealsPage() {
     const t = useTranslations('SnapiStudio.appeals')

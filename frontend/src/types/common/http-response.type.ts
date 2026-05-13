@@ -1,8 +1,7 @@
 import { z } from 'zod'
 import { PaginationMetaSchema } from '@/types/common/pagination-meta.type'
 
-// ─── Zod schemas (used for runtime validation only) ─────────────────────────
-
+// Zod schemas for runtime validation at API boundaries
 export const HttpResponseSchema = z
     .object({
         status: z.boolean(),
@@ -19,8 +18,7 @@ export const HttpResponseWithMetaSchema = <T extends z.ZodTypeAny, M extends z.Z
 }: {
     dataSchema: T
     metaSchema: M
-}) =>
-    HttpResponseSchema.extend({ data: dataSchema, meta: metaSchema }).strict()
+}) => HttpResponseSchema.extend({ data: dataSchema, meta: metaSchema }).strict()
 
 export const BusinessExceptionSchema = z.record(z.string(), z.union([z.string(), z.array(z.string())]))
 
@@ -41,11 +39,10 @@ export const ApiSuccessResponseWithDataSchema = <T extends z.ZodTypeAny>(dataSch
 export const ApiSuccessResponseWithMetaSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
     ApiSuccessResponseSchema.extend({ data: dataSchema, meta: PaginationMetaSchema }).strict()
 
-// ─── TypeScript types (source of truth for static typing) ────────────────────
-
+// TypeScript types
 export type BusinessException = z.infer<typeof BusinessExceptionSchema>
 
-/** Base HTTP response from the legacy API shape */
+/** Legacy API shape — status: boolean */
 export interface HttpResponse {
     readonly status: boolean
     readonly message: string
@@ -59,13 +56,11 @@ export interface HttpResponseWithMeta<T, M = unknown> extends HttpResponseWithDa
     readonly meta: M
 }
 
-export type HttpResponseWithError = HttpResponseWithBusinessExceptions
-
 export interface HttpResponseWithBusinessExceptions extends HttpResponse {
     readonly errors: BusinessException[]
 }
 
-/** Base success response (RTK Query / backend v2 shape) */
+/** Current API shape — success: boolean */
 export interface ApiSuccessResponse {
     readonly success: boolean
     readonly message: string
@@ -75,6 +70,7 @@ export interface ApiSuccessResponseWithData<T> extends ApiSuccessResponse {
     readonly data: T
 }
 
-export interface ApiSuccessResponseWithMeta<T> extends ApiSuccessResponseWithData<T> {
-    readonly meta: import('@/types/common/pagination-meta.type').PaginationMeta
+export interface ApiSuccessResponseWithMeta<T, M = import('@/types/common/pagination-meta.type').PaginationMeta>
+    extends ApiSuccessResponseWithData<T> {
+    readonly meta: M
 }

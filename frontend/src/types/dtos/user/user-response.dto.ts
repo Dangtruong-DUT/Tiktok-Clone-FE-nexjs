@@ -16,6 +16,4 @@ export type UpdateUserResType = HttpResponseWithData<UserType>
 export type GetUserSettingsResType = HttpResponseWithData<UserSettingsType>
 export type UpdateUserSettingsResType = HttpResponseWithData<UserSettingsType>
 
-export type MetaPagination = PaginationMeta
-
-export type GetListUserResType = HttpResponseWithMeta<UserType[], MetaPagination>
+export type GetListUserResType = HttpResponseWithMeta<UserType[], PaginationMeta>

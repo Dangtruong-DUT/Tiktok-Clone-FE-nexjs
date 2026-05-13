@@ -4,7 +4,8 @@ import type { GetMyAppealsParams } from '@/types/dtos/appeal/appeal-request.dto'
 import type {
     CreateAppealResponse,
     GetAppealResponse,
-    GetMyAppealsResponse
+    GetMyAppealsResponse,
+    GetResourcePreviewResponse
 } from '@/types/dtos/appeal/appeal-response.dto'
 import { toQueryParams } from '@/utils/common/query-params.util'
 
@@ -21,6 +22,16 @@ export const AppealApi = createApi({
     baseQuery: baseQueryWithReauth,
     tagTypes: ['Appeals'],
     endpoints: (builder) => ({
+        getResourcePreview: builder.query<
+            GetResourcePreviewResponse,
+            { resourceType: string; resourceId?: string | null }
+        >({
+            query: ({ resourceType, resourceId }) => ({
+                url: '/appeals/resource-preview',
+                params: { resource_type: resourceType, resource_id: resourceId ?? undefined }
+            })
+        }),
+
         getMyAppeals: builder.query<GetMyAppealsResponse, GetMyAppealsParams>({
             query: (params) => ({
                 url: '/appeals',
@@ -59,4 +70,10 @@ export const AppealApi = createApi({
     })
 })
 
-export const { useGetMyAppealsQuery, useGetAppealQuery, useCreateAppealMutation, useUpdateAppealMutation } = AppealApi
+export const {
+    useGetResourcePreviewQuery,
+    useGetMyAppealsQuery,
+    useGetAppealQuery,
+    useCreateAppealMutation,
+    useUpdateAppealMutation
+} = AppealApi

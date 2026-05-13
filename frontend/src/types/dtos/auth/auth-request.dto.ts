@@ -7,7 +7,7 @@ export const LoginReqBody = z
     })
     .strict()
 
-export type LoginReqBodyType = z.TypeOf<typeof LoginReqBody>
+export type LoginReqBodyType = z.infer<typeof LoginReqBody>
 
 export const RegisterReqBody = z
     .object({
@@ -28,7 +28,7 @@ export const RegisterReqBody = z
         }
     })
 
-export type RegisterReqBodyType = z.TypeOf<typeof RegisterReqBody>
+export type RegisterReqBodyType = z.infer<typeof RegisterReqBody>
 
 export const RefreshTokenReqBody = z
     .object({
@@ -36,7 +36,7 @@ export const RefreshTokenReqBody = z
     })
     .strict()
 
-export type RefreshTokenReqBodyType = z.TypeOf<typeof RefreshTokenReqBody>
+export type RefreshTokenReqBodyType = z.infer<typeof RefreshTokenReqBody>
 
 export const LogoutReqBody = z
     .object({
@@ -44,7 +44,7 @@ export const LogoutReqBody = z
     })
     .strict()
 
-export type LogoutReqBodyType = z.TypeOf<typeof LogoutReqBody>
+export type LogoutReqBodyType = z.infer<typeof LogoutReqBody>
 
 export const forgotPasswordReqBody = z
     .object({
@@ -52,7 +52,7 @@ export const forgotPasswordReqBody = z
     })
     .strict()
 
-export type ForgotPasswordReqBodyType = z.TypeOf<typeof forgotPasswordReqBody>
+export type ForgotPasswordReqBodyType = z.infer<typeof forgotPasswordReqBody>
 
 export const verifyForgotPasswordReqBody = z
     .object({
@@ -60,7 +60,7 @@ export const verifyForgotPasswordReqBody = z
     })
     .strict()
 
-export type verifyForgotPasswordReqBodyType = z.TypeOf<typeof verifyForgotPasswordReqBody>
+export type verifyForgotPasswordReqBodyType = z.infer<typeof verifyForgotPasswordReqBody>
 
 export const resetPasswordReqBody = z
     .object({
@@ -79,4 +79,4 @@ export const resetPasswordReqBody = z
         }
     })
 
-export type ResetPasswordReqBodyType = z.TypeOf<typeof resetPasswordReqBody>
+export type ResetPasswordReqBodyType = z.infer<typeof resetPasswordReqBody>

@@ -1,4 +1,4 @@
-import { HTTP_STATUS } from '@/constants/http'
+import { HTTP_STATUS } from '@/constants/api/http-status'
 import { HttpException } from './HttpException.exception'
 
 export type BusinessExceptionPayload = {

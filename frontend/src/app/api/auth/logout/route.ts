@@ -1,5 +1,5 @@
 import AuthRequestApi from '@/apis/auth.request'
-import { HTTP_STATUS } from '@/constants/http'
+import { HTTP_STATUS } from '@/constants/api/http-status'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 

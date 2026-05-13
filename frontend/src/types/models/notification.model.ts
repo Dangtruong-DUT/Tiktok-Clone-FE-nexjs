@@ -3,7 +3,7 @@
  * Plain TypeScript — no Zod needed for API response shapes.
  */
 
-export type NotificationActor = {
+export interface NotificationActor {
     readonly id: number
     readonly uuid: string
     readonly name: string
@@ -12,7 +12,7 @@ export type NotificationActor = {
     readonly is_followed: boolean
 }
 
-export type NotificationEntity = {
+export interface NotificationEntity {
     readonly id?: number
     readonly type?: 'post' | 'user' | 'hashtag'
     readonly uuid?: string
@@ -23,7 +23,7 @@ export type NotificationEntity = {
     readonly name?: string
 }
 
-export type NotificationType = {
+export interface NotificationType {
     readonly id: number
     readonly uuid: string
     readonly type: number
@@ -34,9 +34,3 @@ export type NotificationType = {
     readonly actor?: NotificationActor | null
     readonly entity?: NotificationEntity | null
 }
-
-/** @deprecated use NotificationActor */
-export type NotificationActorType = NotificationActor
-
-/** @deprecated use NotificationEntity */
-export type NotificationEntityType = NotificationEntity

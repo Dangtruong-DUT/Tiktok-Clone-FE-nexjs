@@ -1,6 +1,6 @@
 import { PrivacyVisibility } from '@/constants/enum'
 
-export type UserSettingsType = {
+export interface UserSettingsType {
     readonly id: number
     readonly liked_videos_visibility: PrivacyVisibility
     readonly bookmarked_videos_visibility: PrivacyVisibility

@@ -15,5 +15,5 @@ export function getOauthGoogleUrl(): string {
     }
     const qs = new URLSearchParams(options)
     return '#!'
-    return `${rootUrl}?${qs.toString()}`
+    // return `${rootUrl}?${qs.toString()}`
 }

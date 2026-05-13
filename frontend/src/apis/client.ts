@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import envConfig from '@/config/app.config'
-import { HTTP_STATUS } from '@/constants/http'
+import { HTTP_STATUS } from '@/constants/api/http-status'
 import { BusinessException } from '@/exceptions/BussinessException.exception'
 import { HttpException } from '@/exceptions/HttpException.exception'
 import { redirect } from '@/i18n/navigation'

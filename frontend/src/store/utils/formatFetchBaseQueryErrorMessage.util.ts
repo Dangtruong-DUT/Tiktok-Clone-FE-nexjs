@@ -1,4 +1,4 @@
-import { HTTP_STATUS } from '@/constants/http'
+import { HTTP_STATUS } from '@/constants/api/http-status'
 import { isPayloadErrorWithMessage } from '@/store/utils/apiErrorGuards.util'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 
@@ -8,7 +8,7 @@ export interface ReadableErrorMessageReturn {
 }
 export function formatFetchBaseQueryErrorMessage(error: FetchBaseQueryError): ReadableErrorMessageReturn {
     const silentStatuses = [HTTP_STATUS.UNPROCESSABLE_ENTITY, HTTP_STATUS.TOO_MANY_REQUESTS]
-    if (typeof error.status === 'string' || silentStatuses.includes(error.status)) {
+    if (typeof error.status === 'string' || (silentStatuses as readonly number[]).includes(error.status)) {
         return {
             title: 'Unknown Error',
             description: 'An unknown error occurred'

@@ -1,19 +1,18 @@
 import { z } from 'zod'
-import { APPEAL_RESOURCE_TYPE_VALUES, APPEAL_STATUS_VALUES, APPEAL_TYPE_VALUES } from '@/constants/appeal.const'
-
-// ─── Zod schemas (runtime validation) ────────────────────────────────────────
+import {
+    APPEAL_RESOURCE_TYPE_VALUES,
+    APPEAL_STATUS_VALUES,
+    APPEAL_TYPE_VALUES,
+    type AppealResourceType,
+    type AppealStatus,
+    type AppealType
+} from '@/constants/status/appeal'
 
 export const AppealTypeSchema = z.enum(APPEAL_TYPE_VALUES)
 export const AppealStatusSchema = z.enum(APPEAL_STATUS_VALUES)
 export const AppealResourceTypeSchema = z.enum(APPEAL_RESOURCE_TYPE_VALUES)
 
-// ─── Literal union types ──────────────────────────────────────────────────────
-
-export type AppealType = (typeof APPEAL_TYPE_VALUES)[number]
-export type AppealStatus = (typeof APPEAL_STATUS_VALUES)[number]
-export type AppealResourceType = (typeof APPEAL_RESOURCE_TYPE_VALUES)[number]
-
-// ─── Supporting types ─────────────────────────────────────────────────────────
+export type { AppealType, AppealStatus, AppealResourceType, AppealReviewAction } from '@/constants/status/appeal'
 
 interface ResourcePreviewAuthor {
     readonly username: string
@@ -55,8 +54,6 @@ export interface EvidenceFile {
     readonly url: string
     readonly file_name: string
 }
-
-// ─── Domain model ─────────────────────────────────────────────────────────────
 
 export interface Appeal {
     readonly id: number

@@ -1,5 +1,5 @@
 import AuthRequestApi from '@/apis/auth.request'
-import { HTTP_STATUS } from '@/constants/http'
+import { HTTP_STATUS } from '@/constants/api/http-status'
 import { verifyForgotPasswordReqBodyType } from '@/types/dtos/auth/auth-request.dto'
 import { NextRequest, NextResponse } from 'next/server'
 

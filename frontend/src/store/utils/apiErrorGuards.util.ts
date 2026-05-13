@@ -1,4 +1,4 @@
-import { HTTP_STATUS } from '@/constants/http'
+import { HTTP_STATUS } from '@/constants/api/http-status'
 import { BusinessException } from '@/types/common/http-response.type'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 

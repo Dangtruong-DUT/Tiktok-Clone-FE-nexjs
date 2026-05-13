@@ -1,20 +1,20 @@
 export interface UserIndicatorItem {
-    date: string
-    likes_count: number
-    guests_view: number
-    users_view: number
-    comments_count: number
+    readonly date: string
+    readonly likes_count: number
+    readonly guests_view: number
+    readonly users_view: number
+    readonly comments_count: number
 }
 
 export interface UserIndicatorsData {
-    likes_count: number
-    guests_view: number
-    users_view: number
-    comments_count: number
-    Indicator: UserIndicatorItem[]
+    readonly likes_count: number
+    readonly guests_view: number
+    readonly users_view: number
+    readonly comments_count: number
+    readonly Indicator: UserIndicatorItem[]
 }
 
-export type UserIndicatorsResponse = {
-    message: string
-    data: UserIndicatorsData
+export interface UserIndicatorsResponse {
+    readonly message: string
+    readonly data: UserIndicatorsData
 }

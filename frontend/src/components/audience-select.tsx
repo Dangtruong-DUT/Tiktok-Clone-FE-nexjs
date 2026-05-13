@@ -2,7 +2,7 @@
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Audience } from '@/constants/enum'
-import { audienceStatusValues } from '@/constants/types'
+import { AUDIENCE_VALUES } from '@/constants/enum'
 import { cn } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
 
@@ -49,7 +49,7 @@ export default function AudienceSelect({
             </SelectTrigger>
             <SelectContent>
                 {includeAllOption && <SelectItem value={allOptionValue}>{allOptionLabel ?? t('all')}</SelectItem>}
-                {audienceStatusValues.map((audience) => (
+                {AUDIENCE_VALUES.map((audience) => (
                     <SelectItem key={audience} value={audience.toString()}>
                         {getAudienceLabel(audience)}
                     </SelectItem>

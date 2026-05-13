@@ -1,4 +1,4 @@
-import { UPLOAD_CONSTRAINTS, UploadConstraintType } from '@/constants/upload-constraints'
+import { UPLOAD_CONSTRAINTS, UploadConstraintType } from '@/constants/ui/upload'
 
 type UploadValidationErrorCode = 'invalid_type' | 'too_large'
 

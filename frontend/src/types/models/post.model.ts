@@ -4,7 +4,7 @@ import type { Media } from '@/types/models/media.model'
 import type { MentionType } from '@/types/models/mention.model'
 import type { UserType } from '@/types/models/user.model'
 
-export type TikTokPostType = {
+export interface TikTokPostType {
     readonly id: number
     readonly uuid: string
     readonly user_id: number
@@ -31,6 +31,3 @@ export type TikTokPostType = {
     readonly thumbnail_url: string
     readonly thumbnail_file_id?: number | null
 }
-
-/** @deprecated use TikTokPostType */
-export type TikTokPostSchema = TikTokPostType

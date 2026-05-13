@@ -1,6 +1,6 @@
 import { EncodingStatus } from '@/constants/enum'
 
-export type VideoStatusType = {
+export interface VideoStatusType {
     readonly id: string
     readonly name: string
     readonly status: EncodingStatus

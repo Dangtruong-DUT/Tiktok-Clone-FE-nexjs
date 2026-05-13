@@ -11,9 +11,10 @@ import LoadingIcon from '@/components/lottie-icons/loading'
 import Image from 'next/image'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import { APPEAL_STATUSES } from '@/constants/appeal.const'
-import { useGetAppealQuery, useCreateAppealMutation, useUpdateAppealMutation } from '@/store/services/appeal.service'
+import { APPEAL_STATUSES } from '@/constants/status/appeal'
+import { useGetAppealQuery, useCreateAppealMutation, useUpdateAppealMutation, useGetResourcePreviewQuery } from '@/store/services/appeal.service'
 import { useAppSelector } from '@/store/hooks'
+import { useAppContext } from '@/provider/app-provider'
 import { EvidenceDropzone } from './evidence-dropzone'
 import { Link } from '@/i18n/navigation'
 interface AppealFormClientProps {
@@ -88,6 +89,7 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
     const t = useTranslations('AppealPage')
     const tTypes = useTranslations('AppealPage.types')
     const tStatuses = useTranslations('AppealPage.statuses')
+    const { authStatus } = useAppContext()
     const isAuthenticated = useAppSelector((state) => state.auth.role != null)
 
     const isEditFlow = !!appealUuid
@@ -106,6 +108,13 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
     } = useGetAppealQuery({ uuid: appealUuid ?? '' }, { skip: !appealUuid })
 
     const existingAppealInfo = appealData?.data
+
+    const { data: resourcePreviewData, isLoading: isLoadingPreview } = useGetResourcePreviewQuery(
+        { resourceType: resourceType ?? '', resourceId },
+        { skip: !isNewFlow || !resourceType }
+    )
+
+    const newFlowPreview = resourcePreviewData?.data ?? null
 
     const [createAppeal, { isLoading: isCreating }] = useCreateAppealMutation()
     const [updateAppeal, { isLoading: isUpdating }] = useUpdateAppealMutation()
@@ -203,6 +212,16 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
                     >
                         {t('pending.viewAppeal')}
                     </Link>
+                </div>
+            </div>
+        )
+    }
+
+    if (authStatus === 'loading') {
+        return (
+            <div className='w-full rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-10'>
+                <div className='flex flex-col items-center justify-center gap-2 py-8'>
+                    <LoadingIcon loop className='size-20' />
                 </div>
             </div>
         )
@@ -359,10 +378,18 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
                             )}
                         </div>
 
-                        {/* Resource Preview (edit flow only) */}
+                        {/* Resource Preview — edit flow */}
                         {isEditFlow && existingAppealInfo?.resource_preview && (
                             <ResourcePreviewInline preview={existingAppealInfo.resource_preview} />
                         )}
+
+                        {/* Resource Preview — new flow */}
+                        {isNewFlow &&
+                            (isLoadingPreview ? (
+                                <div className='h-16 animate-pulse rounded-xl bg-slate-100' />
+                            ) : newFlowPreview ? (
+                                <ResourcePreviewInline preview={newFlowPreview} />
+                            ) : null)}
                     </div>
                 )}
 

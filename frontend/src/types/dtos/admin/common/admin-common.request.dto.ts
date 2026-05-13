@@ -1,8 +1,7 @@
 import { z } from 'zod'
-import { ADMIN_RESOURCE_TYPES, AdminResourceType as AdminResourceTypeValue } from '@/constants/admin.const'
+import { ADMIN_RESOURCE_TYPES } from '@/constants/admin'
+import type { AdminResourceType } from '@/constants/admin'
 
 export const AdminResourceTypeSchema = z.enum(
-    Object.values(ADMIN_RESOURCE_TYPES) as [AdminResourceTypeValue, ...AdminResourceTypeValue[]]
+    Object.values(ADMIN_RESOURCE_TYPES) as [AdminResourceType, ...AdminResourceType[]]
 )
-
-export type AdminResourceType = z.infer<typeof AdminResourceTypeSchema>

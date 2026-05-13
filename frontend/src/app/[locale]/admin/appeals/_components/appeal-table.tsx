@@ -39,7 +39,7 @@ import {
     type AppealReviewAction,
     type AppealStatus,
     type AppealType
-} from '@/constants/appeal.const'
+} from '@/constants/status/appeal'
 
 const FILTER_ALL = 'all' as const
 

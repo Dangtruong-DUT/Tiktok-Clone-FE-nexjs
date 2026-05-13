@@ -1,6 +1,6 @@
 import { Role, UserVerifyStatus } from '@/constants/enum'
 
-export type UserType = {
+export interface UserType {
     readonly id: number
     readonly uuid: string
     readonly name: string
@@ -21,6 +21,3 @@ export type UserType = {
     readonly is_owner?: boolean
     readonly role: Role
 }
-
-/** @deprecated use UserType */
-export type UserSchema = UserType

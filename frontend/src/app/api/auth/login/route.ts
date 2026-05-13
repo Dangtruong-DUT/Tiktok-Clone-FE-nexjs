@@ -1,5 +1,5 @@
 import AuthRequestApi from '@/apis/auth.request'
-import { HTTP_STATUS } from '@/constants/http'
+import { HTTP_STATUS } from '@/constants/api/http-status'
 import { HttpException } from '@/exceptions/HttpException.exception'
 import { JwtPayloadType } from '@/types/common/jwt-payload.type'
 import { decodeJwt } from '@/utils/auth/jwt.util'

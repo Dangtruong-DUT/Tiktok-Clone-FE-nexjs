@@ -1,5 +1,5 @@
 import AuthRequestApi from '@/apis/auth.request'
-import { HTTP_STATUS } from '@/constants/http'
+import { HTTP_STATUS } from '@/constants/api/http-status'
 import { decodeJwt } from '@/utils/auth/jwt.util'
 import { VerifyEmailReqBodyType } from '@/types/dtos/user/user-request.dto'
 import { cookies } from 'next/headers'

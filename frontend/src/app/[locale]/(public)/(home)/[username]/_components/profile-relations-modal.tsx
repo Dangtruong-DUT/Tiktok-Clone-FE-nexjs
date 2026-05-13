@@ -19,7 +19,7 @@ import {
 import { UserType } from '@/types/models/user.model'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
-import { HTTP_STATUS } from '@/constants/http'
+import { HTTP_STATUS } from '@/constants/api/http-status'
 
 type RelationTab = 'following' | 'followers' | 'friends' | 'suggested'
 

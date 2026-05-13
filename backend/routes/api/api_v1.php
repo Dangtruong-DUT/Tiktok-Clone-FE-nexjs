@@ -127,6 +127,7 @@ Route::middleware(['auth:api'])
     ->prefix('appeals')
     ->name('appeals.')
     ->group(function () {
+        Route::get('/resource-preview', [AppealController::class, 'resourcePreview'])->name('resource-preview');
         Route::get('/', [AppealController::class, 'index'])->name('list');
         Route::post('/', [AppealController::class, 'create'])->name('create');
         Route::put('/{appeal_uuid}', [AppealController::class, 'update'])->name('update');

@@ -1,5 +1,5 @@
-import type { ApiSuccessResponse, ApiSuccessResponseWithData, ApiSuccessResponseWithMeta } from '@/types/common/http-response.type'
-import type { AdminResourceType } from '@/constants/admin.const'
+import type { ApiSuccessResponseWithData, ApiSuccessResponseWithMeta } from '@/types/common/http-response.type'
+import type { AdminResourceType } from '@/constants/admin'
 
 interface LogActor {
     readonly id: number
@@ -52,5 +52,3 @@ export interface DashboardStats {
 
 export type GetActivityLogsRes = ApiSuccessResponseWithMeta<AdminActivityListItem[]>
 export type GetDashboardStatsRes = ApiSuccessResponseWithData<DashboardStats>
-// Re-export for convenience
-export type { ApiSuccessResponse }
