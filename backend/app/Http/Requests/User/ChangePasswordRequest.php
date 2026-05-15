@@ -8,7 +8,7 @@ class ChangePasswordRequest extends BaseRequest
 {
     /**
      * set rules
- */
+     */
     public function rules(): array
     {
 

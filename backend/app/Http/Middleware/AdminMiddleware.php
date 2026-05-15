@@ -13,7 +13,7 @@ class AdminMiddleware
     /**
      * Handle an incoming request.
      * Checks if the authenticated user has the SUPER_ADMIN role before allowing access to admin routes.
- */
+     */
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();

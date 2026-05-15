@@ -10,7 +10,7 @@ class VerifyUserEmail extends BaseMailAble
 {
     /**
      * Create a new message instance.
- */
+     */
     public function __construct(
         private User $user,
         private string $token,
@@ -20,7 +20,7 @@ class VerifyUserEmail extends BaseMailAble
 
     /**
      * Get the message envelope.
- */
+     */
     public function envelope(): Envelope
     {
         return new Envelope(
@@ -30,7 +30,7 @@ class VerifyUserEmail extends BaseMailAble
 
     /**
      * Get the message content definition.
- */
+     */
     public function content(): Content
     {
         return new Content(
@@ -49,7 +49,7 @@ class VerifyUserEmail extends BaseMailAble
      * Get the attachments for the message.
      *
      * @return array<int, \Illuminate\Mail\Mailables\Attachment>
- */
+     */
     public function attachments(): array
     {
         return [];

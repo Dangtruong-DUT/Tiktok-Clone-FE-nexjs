@@ -8,7 +8,7 @@ class RegisterRequest extends BaseRequest
 {
     /**
      * set rules
- */
+     */
     public function rules(): array
     {
 
@@ -16,7 +16,7 @@ class RegisterRequest extends BaseRequest
             'name' => [self::REQUIRED],
             'email' => [self::REQUIRED],
             'password' => [self::REQUIRED],
-            'confirm_password' => [self::REQUIRED, 'same:password'],
+            'confirm_password' => [self::REQUIRED],
             'date_of_birth' => [self::REQUIRED],
         ]);
     }

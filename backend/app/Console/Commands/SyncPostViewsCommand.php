@@ -11,19 +11,19 @@ class SyncPostViewsCommand extends Command
      * The name and signature of the console command.
      *
      * @var string
- */
+     */
     protected $signature = 'posts:sync-views';
 
     /**
      * The console command description.
      *
      * @var string
- */
+     */
     protected $description = 'Sync post views from Redis to PostgreSQL in batch and clear Redis counters';
 
     /**
      * Execute the console command.
- */
+     */
     public function handle(PostViewService $postViewService): int
     {
         $syncedPosts = $postViewService->syncViewsToDatabase();

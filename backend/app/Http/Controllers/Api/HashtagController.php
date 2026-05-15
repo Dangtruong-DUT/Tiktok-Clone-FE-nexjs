@@ -7,7 +7,7 @@ use App\Http\Requests\Hashtag\GetListHashtagRequest;
 use App\Http\Resources\Api\Hashtag\HashtagResource;
 use App\Http\Response\ApiResponse;
 use App\Services\HashtagService;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Illuminate\Http\JsonResponse;
 
 class HashtagController extends Controller
 {

@@ -37,7 +37,7 @@ enum ActivityTypeEnum: string implements BaseEnumInterface
 
     /**
      * Get the label of the enum value
- */
+     */
     public function label(): string
     {
         return match ($this) {
@@ -63,7 +63,7 @@ enum ActivityTypeEnum: string implements BaseEnumInterface
 
     /**
      * Get the translated label of the enum value
- */
+     */
     public function translate(): string
     {
         return match ($this) {

@@ -8,7 +8,7 @@ class BusinessException extends BaseException
 {
     /**
      * Create a new business exception instance.
- */
+     */
     public function __construct(string $message = 'Business error occurred', array $errors = [])
     {
         parent::__construct(

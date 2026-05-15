@@ -9,7 +9,7 @@ class EloquentServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
- */
+     */
     public function register(): void
     {
         //
@@ -17,7 +17,7 @@ class EloquentServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap services.
- */
+     */
     public function boot(): void
     {
         Builder::macro('orderByMultiple', function (array $orderBy) {

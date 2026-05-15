@@ -16,7 +16,7 @@ class GetUserIndicatorsRequest extends BaseRequest
 
     /**
      * Set rules
- */
+     */
     public function rules(): array
     {
         return $this->applyBaseRules([

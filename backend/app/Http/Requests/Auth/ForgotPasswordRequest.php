@@ -8,7 +8,7 @@ class ForgotPasswordRequest extends BaseRequest
 {
     /**
      * set rules
- */
+     */
     public function rules(): array
     {
 

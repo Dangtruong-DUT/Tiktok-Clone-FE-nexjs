@@ -11,7 +11,7 @@ class AdminModerationActionMail extends BaseMailAble
 {
     /**
      * Admin identity is intentionally hidden from the email.
- */
+     */
     public function __construct(
         private readonly User $targetUser,
         private readonly AdminActionEnum $action,
@@ -43,7 +43,7 @@ class AdminModerationActionMail extends BaseMailAble
 
     /**
      * @return array<int, \Illuminate\Mail\Mailables\Attachment>
- */
+     */
     public function attachments(): array
     {
         return [];

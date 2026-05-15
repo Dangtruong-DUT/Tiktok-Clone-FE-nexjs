@@ -10,7 +10,7 @@ class UserSettingsResource extends BaseJsonResource
      * Transform the resource into an array.
      *
      * @param  \Illuminate\Http\Request  $request
- */
+     */
     public function toArray($request): array
     {
         return [

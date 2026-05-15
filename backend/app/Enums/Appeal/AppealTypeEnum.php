@@ -20,7 +20,7 @@ enum AppealTypeEnum: string implements BaseEnumInterface
 
     /**
      * Get a human-readable label for the appeal type
- */
+     */
     public function label(): string
     {
         return match ($this) {
@@ -33,7 +33,7 @@ enum AppealTypeEnum: string implements BaseEnumInterface
 
     /**
      * Get a translated string for the appeal type (e.g. for notifications)
- */
+     */
     public function translate(): string
     {
         return match ($this) {

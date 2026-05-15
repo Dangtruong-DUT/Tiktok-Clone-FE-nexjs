@@ -8,7 +8,7 @@ class LogoutRequest extends BaseRequest
 {
     /**
      * set rules
- */
+     */
     public function rules(): array
     {
 

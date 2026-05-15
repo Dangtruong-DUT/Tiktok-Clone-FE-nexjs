@@ -14,7 +14,7 @@ abstract class BaseMailAble extends Mailable implements ShouldQueue
 
     /**
      * Create a new instance.
- */
+     */
     public function __construct()
     {
         $this->onQueue('emails');

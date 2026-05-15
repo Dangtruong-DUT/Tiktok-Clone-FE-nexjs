@@ -21,7 +21,7 @@ class RefreshToken extends Model
      * The attributes that are mass assignable.
      *
      * @var list<string>
- */
+     */
     protected $fillable = [
         'user_id',
         'jti',
@@ -44,7 +44,7 @@ class RefreshToken extends Model
      * Get the user that owns the refresh token.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo The relationship instance.
- */
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

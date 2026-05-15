@@ -9,7 +9,7 @@ class ApproveAppealRequest extends BaseRequest
     /**
      * Prepare the data for validation.
      * Extract appeal_uuid from route and merge into request data
- */
+     */
     protected function prepareForValidation(): void
     {
         parent::prepareForValidation();
@@ -23,7 +23,7 @@ class ApproveAppealRequest extends BaseRequest
      * Get the validation rules.
      *
      * @return array<string, string|array>
- */
+     */
     public function rules(): array
     {
         return $this->applyBaseRules([

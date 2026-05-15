@@ -169,7 +169,7 @@ Route::prefix('auth')
 Route::prefix('posts')
     ->name('posts.')
     ->group(function () {
-        Route::get('{post_uuid}/children', [PostController::class, 'showChildren'])->name('show');
+        Route::get('{post_uuid}/children', [PostController::class, 'showChildren'])->name('show-children');
         Route::get('{post_uuid}/related', [PostController::class, 'showRelatedPosts'])->name('related');
         Route::get('{post_uuid}', [PostController::class, 'show'])->name('show');
         Route::get('/', [PostController::class, 'index'])->name('index');

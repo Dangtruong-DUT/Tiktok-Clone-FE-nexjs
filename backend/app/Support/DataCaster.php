@@ -14,7 +14,7 @@ class DataCaster
      * @return mixed The casted value.
      *
      * @throws Exception If the type is unsupported or if boolean casting fails.
- */
+     */
     public static function cast(string $type, mixed $value): mixed
     {
         return match ($type) {
@@ -32,7 +32,7 @@ class DataCaster
      * @return int The casted boolean value (1 or 0).
      *
      * @throws Exception If the value cannot be cast to boolean.
- */
+     */
     private static function castBool($value): int
     {
         if (in_array($value, ['true', '1', 1, true], true)) {
@@ -53,7 +53,7 @@ class DataCaster
      * @param  array  $casts  An associative array where keys are the paths to the values and values are the types to cast to.
      * @param  string  $parentKey  The parent key used for building the cast key (used in recursion).
      * @return array The data with values cast according to the provided casts.
- */
+     */
     public static function nestedCast(array $data, array $casts, string $parentKey = ''): array
     {
         $result = [];
@@ -86,7 +86,7 @@ class DataCaster
      * @param  string|int  $key  The current key being processed.
      * @param  string  $parent  The parent key path built so far.
      * @return string The constructed cast key for the current value.
- */
+     */
     private static function buildCastKey(string|int $key, string $parent): string
     {
         if (is_numeric($key)) {

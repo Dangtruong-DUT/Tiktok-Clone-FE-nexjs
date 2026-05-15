@@ -20,7 +20,7 @@ class AuthTokenService
     public function __construct(
         private readonly RefreshTokenRepository $refreshTokenRepository,
         private readonly ForgotPasswordTokenRepository $forgotPasswordTokenRepository,
-        private readonly VerifyEmailTokenRepository $verifyEmailTokenRepo
+        private readonly VerifyEmailTokenRepository $verifyEmailTokenRepository
     ) {}
 
     /**
@@ -32,7 +32,7 @@ class AuthTokenService
     {
         $fingerprint = EmailVerifyToken::hashToken($verifyEmailToken);
 
-        $validToken = $this->verifyEmailTokenRepo
+        $validToken = $this->verifyEmailTokenRepository
             ->findByTokenHash($fingerprint);
 
         if (! $validToken) {
@@ -40,7 +40,7 @@ class AuthTokenService
         }
 
         if ($validToken->isExpired()) {
-            $this->verifyEmailTokenRepo->delete($validToken->id);
+            $this->verifyEmailTokenRepository->delete($validToken->id);
 
             throw new BadRequestException('Token has expired');
         }
@@ -200,7 +200,7 @@ class AuthTokenService
             (int) config('auth.verification.token_length', 64)
         );
 
-        $this->verifyEmailTokenRepo->create([
+        $this->verifyEmailTokenRepository->create([
             'token_hash' => EmailVerifyToken::hashToken($token),
             'user_id' => $user->id,
             'expires_at' => now()->addMinutes(

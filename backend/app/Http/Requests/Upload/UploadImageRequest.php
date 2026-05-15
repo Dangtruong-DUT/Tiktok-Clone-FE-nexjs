@@ -10,7 +10,7 @@ class UploadImageRequest extends BaseRequest
      * Prepare the data for validation.
      *
      * @return void
- */
+     */
     protected function prepareForValidation()
     {
         parent::prepareForValidation();
@@ -22,7 +22,7 @@ class UploadImageRequest extends BaseRequest
 
     /**
      * set rules
- */
+     */
     public function rules(): array
     {
 

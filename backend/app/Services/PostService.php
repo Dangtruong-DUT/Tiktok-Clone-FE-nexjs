@@ -61,7 +61,7 @@ class PostService
 
             if (! empty($payload['parent_id'])) {
                 $parentPost = $this->postRepository->findById($payload['parent_id']);
-                if (empty($parentPost)) {
+                if (! $parentPost) {
                     throw new NotFoundException('Parent post not found');
                 }
 
@@ -150,11 +150,11 @@ class PostService
                 ]);
             }
 
-            if (array_key_exists('mentions', $payload) || array_key_exists('content', $payload)) {
+            if (array_key_exists('mentions', $payload)) {
                 $post->mentions()->sync($mentionSyncData);
             }
 
-            if (array_key_exists('hashtags', $payload) || array_key_exists('content', $payload)) {
+            if (array_key_exists('hashtags', $payload)) {
                 $this->syncHashtags($post, $hashtagSyncData);
             }
         });
@@ -185,10 +185,10 @@ class PostService
                 throw new ForbiddenException('You can only delete your own post');
             }
 
-            if (! empty($post->parent_id)) {
+            if ($post->parent_id) {
                 $parentPost = $this->postRepository->findById($post->parent_id);
 
-                if (! empty($parentPost)) {
+                if ($parentPost) {
                     $this->updateParentCounter($parentPost, $post->type->value, 'decrement');
                 }
             }
@@ -201,11 +201,11 @@ class PostService
      * Get post by uuid.
      * @throws NotFoundException
      */
-    public function getByUuidOrFail(string $uuid): ?Post
+    public function getByUuidOrFail(string $uuid): Post
     {
         $userId = auth_user_id();
         $postDetail = $this->postRepository->getByUuidWithDetail($uuid, $userId);
-        if (empty($postDetail)) {
+        if (! $postDetail) {
             throw new NotFoundException('Post not found');
         }
 

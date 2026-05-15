@@ -8,21 +8,21 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class UploadFileId implements ValidationRule
 {
-    private readonly UploadFileRepository $uploadFileRepo;
+    private readonly UploadFileRepository $uploadFileRepository;
 
     public function __construct()
     {
-        $this->uploadFileRepo = app()->make(UploadFileRepository::class);
+        $this->uploadFileRepository = app()->make(UploadFileRepository::class);
     }
 
     /**
      * Run the validation rule.
      *
      * @param  \Closure(string, ?string=): \Illuminate\Translation\PotentiallyTranslatedString  $fail
- */
+     */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (! $this->uploadFileRepo->isExist($value)) {
+        if (! $this->uploadFileRepository->isExist($value)) {
             $fail(':attribute must be a valid upload file id.');
         }
     }

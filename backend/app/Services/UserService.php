@@ -104,6 +104,9 @@ class UserService
     {
         $targetUserUuid = $payload['user_uuid'];
         $targetUser = $this->userRepository->findByUuid($targetUserUuid);
+        if (! $targetUser) {
+            return true;
+        }
         /** @var User $authUser */
         $authUser = $this->guard()->user();
         if (! $this->relationshipRepository->isFollowing($authUser->id, $targetUser->id)) {

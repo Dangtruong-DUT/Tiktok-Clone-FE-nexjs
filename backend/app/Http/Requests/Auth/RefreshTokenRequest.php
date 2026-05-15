@@ -8,7 +8,7 @@ class RefreshTokenRequest extends BaseRequest
 {
     /**
      * set rules
- */
+     */
     public function rules(): array
     {
 

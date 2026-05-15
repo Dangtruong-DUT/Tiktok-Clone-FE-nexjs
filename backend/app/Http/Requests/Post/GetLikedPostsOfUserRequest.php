@@ -22,7 +22,7 @@ class GetLikedPostsOfUserRequest extends BaseListRequest
 
     /**
      * Determine if the user is authorized to make this request.
- */
+     */
     public function authorize(): bool
     {
         return Gate::allows('viewLikedVideos', $this->getTargetUser());
@@ -30,7 +30,7 @@ class GetLikedPostsOfUserRequest extends BaseListRequest
 
     /**
      * set rules
- */
+     */
     public function rules(): array
     {
 
@@ -55,7 +55,7 @@ class GetLikedPostsOfUserRequest extends BaseListRequest
 
     /**
      * Get the target user based on the route parameter.
- */
+     */
     private function getTargetUser(): User
     {
         return User::where('uuid', $this->route('user_uuid'))->firstOrFail();

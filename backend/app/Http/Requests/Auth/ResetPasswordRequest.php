@@ -8,7 +8,7 @@ class ResetPasswordRequest extends BaseRequest
 {
     /**
      * set rules
- */
+     */
     public function rules(): array
     {
         return $this->applyBaseRules([

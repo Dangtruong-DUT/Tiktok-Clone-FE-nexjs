@@ -13,7 +13,7 @@ class UserSettings extends Model
      * The attributes that are mass assignable.
      *
      * @var list<string>
- */
+     */
     protected $fillable = [
         'user_id',
         'liked_videos_visibility',
@@ -43,7 +43,7 @@ class UserSettings extends Model
      * The default attributes for the model.
      *
      * @var array<string, mixed>
- */
+     */
     protected $attributes = [
         'liked_videos_visibility' => PrivacyVisibilityEnum::PUBLIC->value,
         'bookmarked_videos_visibility' => PrivacyVisibilityEnum::PUBLIC->value,
@@ -55,7 +55,7 @@ class UserSettings extends Model
      * Get the user whose avatar is this file.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo The relationship instance.
- */
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');

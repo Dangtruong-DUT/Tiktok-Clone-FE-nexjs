@@ -177,17 +177,17 @@ abstract class BaseRequest extends BaseFormRequest
 
     /**
      * shared rules
- */
+     */
     protected array $sharedRules = [];
 
     /**
      * @var array cast rules
- */
+     */
     protected array $casts = [];
 
     /**
      * merge base rules
- */
+     */
     protected function applyBaseRules(array $rules): array
     {
         $this->defineBaseRules();
@@ -215,7 +215,7 @@ abstract class BaseRequest extends BaseFormRequest
 
     /**
      * check if common rules exist
- */
+     */
     private function hasBaseRule(string $name): bool
     {
         return array_key_exists($name, $this->sharedRules);
@@ -223,7 +223,7 @@ abstract class BaseRequest extends BaseFormRequest
 
     /**
      * find rule from common rules
- */
+     */
     private function getBaseRule(string $name): array
     {
         if (array_key_exists($name, $this->sharedRules)) {
@@ -236,7 +236,7 @@ abstract class BaseRequest extends BaseFormRequest
     /**
      * define base rules
      * If you store common rules in the constructor, the contents of the Request will not be available.
- */
+     */
     protected function defineBaseRules(): void
     {
         $this->sharedRules = [

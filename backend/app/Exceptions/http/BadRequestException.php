@@ -8,7 +8,7 @@ class BadRequestException extends BaseException
 {
     /**
      * Create a new business exception instance.
- */
+     */
     public function __construct(string $message = 'Bad request', array $errors = [])
     {
         parent::__construct(

@@ -21,7 +21,7 @@ class AiModerationService
     public function __construct(
         private readonly AdminModerationNoticeService $adminModerationNoticeService,
         private readonly PostRepository $postRepository,
-        private readonly UserRepository $userRepo
+        private readonly UserRepository $userRepository
     ) {}
 
     /**
@@ -124,7 +124,7 @@ class AiModerationService
 
             if ($isViolation) {
                 $post->delete();
-                $systemAdmin = $this->userRepo->getSuperAdmin();
+                $systemAdmin = $this->userRepository->getSuperAdmin();
                 if (! $systemAdmin) {
                     return;
                 }

@@ -19,7 +19,7 @@ class PostViewService
     private const ANTISPAM_TTL_SECONDS = 60;
 
     public function __construct(
-        private readonly PostRepository $postRepo
+        private readonly PostRepository $postRepository
     ) {}
 
     /**
@@ -80,11 +80,11 @@ class PostViewService
                 $userKey = self::USER_VIEW_KEY_PREFIX.$postId;
                 $guestKey = self::GUEST_VIEW_KEY_PREFIX.$postId;
 
-                $userViews = (int) Redis::get($userKey) ?? 0;
-                $guestViews = (int) Redis::get($guestKey) ?? 0;
+                $userViews = (int) (Redis::get($userKey) ?? 0);
+                $guestViews = (int) (Redis::get($guestKey) ?? 0);
 
                 if ($userViews > 0 || $guestViews > 0) {
-                    $this->postRepo->incrementViews(
+                    $this->postRepository->incrementViews(
                         $postId,
                         $userViews,
                         $guestViews

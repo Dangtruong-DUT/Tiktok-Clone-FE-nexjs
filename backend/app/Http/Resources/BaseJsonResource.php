@@ -11,7 +11,7 @@ class BaseJsonResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
- */
+     */
     public function toArray(Request $request): array
     {
         return parent::toArray($request);
@@ -21,7 +21,7 @@ class BaseJsonResource extends JsonResource
      * Create a new anonymous resource collection.
      *
      * @param  mixed  $resource
- */
+     */
     public static function collection($resource): AnonymousResourceCollection
     {
         return tap(new AnonymousResourceCollection($resource, static::class), function ($collection): void {

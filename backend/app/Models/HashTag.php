@@ -13,7 +13,7 @@ class Hashtag extends Model
      * The attributes that are mass assignable.
      *
      * @var list<string>
- */
+     */
     protected $fillable = [
         'name',
     ];
@@ -35,7 +35,7 @@ class Hashtag extends Model
      * Get the posts associated with the hashtag.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany The relationship instance.
- */
+     */
     public function posts()
     {
         return $this->belongsToMany(Post::class, 'posts_hashtags')

@@ -16,7 +16,7 @@ class CreatePostRequest extends BaseRequest
 {
     /**
      * set rules
- */
+     */
     public function rules(): array
     {
         return $this->applyBaseRules([
@@ -59,6 +59,8 @@ class CreatePostRequest extends BaseRequest
                 self::MAX.':255',
             ],
             'thumbnail' => [
+                self::SOMETIMES,
+                self::NULLABLE,
                 self::INTEGER,
                 new UploadFileId,
             ],

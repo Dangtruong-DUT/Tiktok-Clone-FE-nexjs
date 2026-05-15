@@ -12,7 +12,7 @@ class Relationship extends Model
      * The attributes that are mass assignable.
      *
      * @var list<string>
- */
+     */
     protected $fillable = [
         'user_id',
         'target_user_id',
@@ -37,7 +37,7 @@ class Relationship extends Model
      * Get the user that has relationship with the target user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo The relationship instance.
- */
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -47,7 +47,7 @@ class Relationship extends Model
      * Get the target user that has relationship with the user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo The relationship instance.
- */
+     */
     public function targetUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'target_user_id');

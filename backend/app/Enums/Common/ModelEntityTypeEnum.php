@@ -18,7 +18,7 @@ enum ModelEntityTypeEnum: string implements BaseEnumInterface
 
     /**
      * Get the label for the entity type.
- */
+     */
     public function label(): string
     {
         return match ($this) {
@@ -30,7 +30,7 @@ enum ModelEntityTypeEnum: string implements BaseEnumInterface
 
     /**
      * Get the translated label for the entity type.
- */
+     */
     public function translate(): string
     {
         return match ($this) {

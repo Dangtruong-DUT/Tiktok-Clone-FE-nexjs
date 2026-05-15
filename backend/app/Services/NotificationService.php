@@ -157,7 +157,6 @@ class NotificationService
         $mentionedUserIds = array_values(array_unique(array_filter($mentionedUserIds, fn ($id) => (int) $id > 0)));
 
         foreach ($mentionedUserIds as $mentionedUserId) {
-            $mentionedUserId = $mentionedUserId;
             if ($actorId === $mentionedUserId) {
                 continue;
             }

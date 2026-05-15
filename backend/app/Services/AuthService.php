@@ -149,9 +149,7 @@ class AuthService
     {
         $token = $credentials['email_verify_token'];
         $validToken = $this->tokenService->verifyVerifyEmailToken($token);
-        $user = null;
-
-    return DB::transaction(function () use ($validToken, &$user) {
+        return DB::transaction(function () use ($validToken) {
             $user = $this->userRepository->findOrFail($validToken->user_id);
             $user->verify = UserVerifyStatusEnum::VERIFIED->value;
             $user->save();
@@ -162,9 +160,8 @@ class AuthService
                 'access_token' => $this->tokenService->createAccessToken($user),
                 'refresh_token' => $this->tokenService->createRefreshToken($user),
                 'user' => $user,
-        ];
+            ];
         });
-
     }
 
     /**

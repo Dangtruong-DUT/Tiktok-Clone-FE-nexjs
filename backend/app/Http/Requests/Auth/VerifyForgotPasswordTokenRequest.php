@@ -8,7 +8,7 @@ class VerifyForgotPasswordTokenRequest extends BaseRequest
 {
     /**
      * set rules
- */
+     */
     public function rules(): array
     {
 
