@@ -27,9 +27,9 @@ class UserAdminService
     ) {}
 
     /**
-     * Get user details
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
- */
+     * Get user details.
+     * @throws \App\Exceptions\http\NotFoundException
+     */
     public function getUserDetail(int $userId): User
     {
         /** @var User $user */
@@ -43,7 +43,7 @@ class UserAdminService
      * @param  array{user_uuid:string,reason:string,duration_days?:int}  $payload
      * @return User Updated user
      * @throws \Exception
- */
+     */
     public function banUser(array $payload): User
     {
         $admin = $this->guard()->user();
@@ -101,7 +101,7 @@ class UserAdminService
      * @param  array{user_uuid:string}  $payload
      * @return User Updated user
      * @throws \Exception
- */
+     */
     public function unbanUser(array $payload): User
     {
         $admin = $this->guard()->user();
@@ -153,7 +153,7 @@ class UserAdminService
      * Delete a user account (soft delete).
      * @param  array{user_uuid:string,reason:string}  $payload
      * @throws \Exception
- */
+     */
     public function deleteUser(array $payload): void
     {
         $admin = $this->guard()->user();
@@ -203,7 +203,7 @@ class UserAdminService
      * @param  array{user_uuid:string}  $payload
      * @return User Updated user
      * @throws \Exception
- */
+     */
     public function restoreUser(array $payload): User
     {
         $admin = $this->guard()->user();
@@ -254,7 +254,7 @@ class UserAdminService
     /**
      * Reset a user password by admin.
      * @param  array{user_uuid:string,password:string}  $payload
- */
+     */
     public function resetUserPassword(array $payload): User
     {
         $admin = $this->guard()->user();
@@ -281,7 +281,8 @@ class UserAdminService
     /**
      * Send direct mail from admin to target user.
      * @param  array{user_uuid:string,subject:string,message:string}  $payload
- */
+     * @throws BadRequestException
+     */
     public function sendMailToUser(array $payload): void
     {
         $admin = $this->guard()->user();
@@ -314,15 +315,9 @@ class UserAdminService
     }
 
     /**
-     * Get paginated list of users with filtering
-     * @param  array  $filters  {
-     *                          q?: string,
-     *                          status?: 'active'|'banned'|'all',
-     *                          page?: int,
-     *                          per_page?: int,
-     *                          order_by?: string
-     *                          }
- */
+     * Get paginated list of users with filtering.
+     * @param  array{q?: string, status?: 'active'|'banned'|'deleted'|'all', page?: int, per_page?: int, order_by?: string}  $filters
+     */
     public function getUsers(array $filters = []): LengthAwarePaginator
     {
         return $this->userRepository->searchForAdmin($filters);

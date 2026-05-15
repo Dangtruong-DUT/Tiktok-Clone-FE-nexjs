@@ -23,18 +23,9 @@ class CommentAdminService
     ) {}
 
     /**
-     * Get paginated list of comments with filtering
-     * @param  array  $filters  {
-     *                          q?: string,
-     *                          post_uuid?: string,
-     *                          user_uuid?: string,
-     *                          date_from?: string (Y-m-d),
-     *                          date_to?: string (Y-m-d),
-     *                          page?: int,
-     *                          per_page?: int,
-     *                          order_by?: string
-     *                          }
- */
+     * Get paginated list of comments with filtering.
+     * @param  array{q?: string, post_uuid?: string, user_uuid?: string, date_from?: string, date_to?: string, page?: int, per_page?: int, order_by?: string}  $filters
+     */
     public function getComments(array $filters = []): LengthAwarePaginator
     {
         return $this->postRepository->searchCommentsForAdmin($filters);
@@ -44,7 +35,7 @@ class CommentAdminService
      * Delete a comment.
      * @param  array{comment_uuid:string,reason:string}  $payload
      * @throws \Exception
- */
+     */
     public function deleteComment(array $payload): void
     {
         $admin = $this->guard()->user();

@@ -31,7 +31,8 @@ class AdminAppealService
 
     /**
      * Get paginated appeals for admin review.
- */
+     * @param  array{status?: string, appeal_type?: string, per_page?: int, page?: int, order_by?: string}  $filters
+     */
     public function getAppeals(array $filters): PaginationLengthAwarePaginator
     {
         return $this->appealRepository->getForAdmin($filters);
@@ -40,7 +41,9 @@ class AdminAppealService
     /**
      * Approve an appeal, reverse the original admin action, and notify the user.
      * @param  array{appeal_uuid:string,admin_response?:string}  $payload
- */
+     * @throws NotFoundException
+     * @throws BusinessException
+     */
     public function approve(array $payload): Appeal
     {
         $admin = $this->guard()->user();
@@ -106,7 +109,9 @@ class AdminAppealService
     /**
      * Reject an appeal and notify the user.
      * @param  array{appeal_uuid:string,admin_response:string}  $payload
- */
+     * @throws NotFoundException
+     * @throws BusinessException
+     */
     public function reject(array $payload): Appeal
     {
         $admin = $this->guard()->user();
@@ -167,7 +172,7 @@ class AdminAppealService
     /**
      * Reverse the original moderation action when appeal is approved.
      * Each case logs its own restoration action for full audit trail.
- */
+     */
     private function reverseAdminAction(Appeal $appeal): void
     {
         $admin = $this->guard()->user();

@@ -21,16 +21,15 @@ use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
-    /**
-     * UserController constructor.
- */
     public function __construct(
         private readonly UserService $userService
     ) {}
 
     /**
      * Search users by keyword.
- */
+     * @param  GetListUserRequest  $request
+     * @return JsonResponse
+     */
     public function index(GetListUserRequest $request): JsonResponse
     {
         $users = $this->userService->search($request->validated());
@@ -43,7 +42,9 @@ class UserController extends Controller
 
     /**
      * Change the password of the authenticated user.
- */
+     * @param  ChangePasswordRequest  $request
+     * @return JsonResponse
+     */
     public function changePassword(ChangePasswordRequest $request): JsonResponse
     {
         $this->userService->changePassword($request->validated());
@@ -53,7 +54,9 @@ class UserController extends Controller
 
     /**
      * Follow someone
- */
+     * @param  FollowSomeOneRequest  $request
+     * @return JsonResponse
+     */
     public function follow(FollowSomeOneRequest $request): JsonResponse
     {
         $this->userService->follow($request->validated());
@@ -63,17 +66,21 @@ class UserController extends Controller
 
     /**
      * Unfollow someone
- */
-    public function unfollow(UnFollowSomeOneRequest $request): JsonResponse
+     * @param  UnFollowSomeOneRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function unfollow(UnFollowSomeOneRequest $request): \Illuminate\Http\Response
     {
         $this->userService->unfollow($request->validated());
 
-        return ApiResponse::success(message: 'Unfollowed successfully');
+        return ApiResponse::noContent();
     }
 
     /**
      * Update the profile of the authenticated user.
- */
+     * @param  UpdateMeRequest  $request
+     * @return JsonResponse
+     */
     public function update(UpdateMeRequest $request): JsonResponse
     {
         $user = $this->userService->update($request->validated());
@@ -86,7 +93,8 @@ class UserController extends Controller
 
     /**
      * Get the profile of the authenticated user.
- */
+     * @return JsonResponse
+     */
     public function showMe(): JsonResponse
     {
         $user = $this->userService->me();
@@ -99,7 +107,9 @@ class UserController extends Controller
 
     /**
      * Get indicators of the authenticated user.
- */
+     * @param  GetUserIndicatorsRequest  $request
+     * @return JsonResponse
+     */
     public function indicators(GetUserIndicatorsRequest $request): JsonResponse
     {
         $indicators = $this->userService->getIndicators($request->validated());
@@ -112,7 +122,9 @@ class UserController extends Controller
 
     /**
      * Get user profile by username.
- */
+     * @param  GetUserProfileRequest  $request
+     * @return JsonResponse
+     */
     public function showProfile(GetUserProfileRequest $request): JsonResponse
     {
         $user = $this->userService->getByUsername($request->username);
@@ -125,7 +137,9 @@ class UserController extends Controller
 
     /**
      * Get paginated followers by user uuid.
- */
+     * @param  GetUserFollowersRequest  $request
+     * @return JsonResponse
+     */
     public function followers(GetUserFollowersRequest $request): JsonResponse
     {
         $users = $this->userService->getFollowers(
@@ -141,7 +155,9 @@ class UserController extends Controller
 
     /**
      * Get paginated following users by user uuid.
- */
+     * @param  GetUserFollowingRequest  $request
+     * @return JsonResponse
+     */
     public function following(GetUserFollowingRequest $request): JsonResponse
     {
         $users = $this->userService->getFollowing(
@@ -157,7 +173,9 @@ class UserController extends Controller
 
     /**
      * Get paginated friends by user uuid.
- */
+     * @param  GetFriendsListRequest  $request
+     * @return JsonResponse
+     */
     public function friends(GetFriendsListRequest $request): JsonResponse
     {
         $users = $this->userService->getFriends(
@@ -173,7 +191,9 @@ class UserController extends Controller
 
     /**
      * Get suggested users for authenticated user.
- */
+     * @param  GetSuggestedUsersRequest  $request
+     * @return JsonResponse
+     */
     public function suggested(GetSuggestedUsersRequest $request): JsonResponse
     {
         $users = $this->userService->getSuggestedUsers($request->validated());

@@ -11,13 +11,14 @@ use Illuminate\Http\JsonResponse;
 
 class UserSettingsController extends Controller
 {
-    /**
-     * UserSettingsController constructor.
- */
     public function __construct(
         private readonly UserSettingsService $userSettingsService
     ) {}
 
+    /**
+     * Get the authenticated user's settings.
+     * @return JsonResponse
+     */
     public function show(): JsonResponse
     {
         $userSettings = $this->userSettingsService->show();
@@ -25,6 +26,11 @@ class UserSettingsController extends Controller
         return ApiResponse::success(new UserSettingsResource($userSettings));
     }
 
+    /**
+     * Update the authenticated user's settings.
+     * @param  UpdateUserSettingsRequest  $request
+     * @return JsonResponse
+     */
     public function update(UpdateUserSettingsRequest $request): JsonResponse
     {
         $userSettings = $this->userSettingsService->update($request->validated());

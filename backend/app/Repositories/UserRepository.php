@@ -13,9 +13,6 @@ use Illuminate\Support\Facades\DB;
 
 class UserRepository extends BaseRepository
 {
-    /**
-     * UserRepository constructor.
- */
     public function __construct()
     {
         parent::__construct(app()->make(User::class));
@@ -24,7 +21,7 @@ class UserRepository extends BaseRepository
     /**
      * Get super admin user.
      * @param  int  $id
- */
+     */
     public function getSuperAdmin(): ?User
     {
         return $this->query()->admin()->first();
@@ -32,7 +29,7 @@ class UserRepository extends BaseRepository
 
     /**
      * Check if user exists.
- */
+     */
     public function isExist(int $id): bool
     {
         return $this->query()->whereKey($id)->exists();
@@ -40,7 +37,7 @@ class UserRepository extends BaseRepository
 
     /**
      * Check if user exists by username.
- */
+     */
     public function isExistByUsername(string $username): bool
     {
         return $this->query()->where('username', $username)->exists();
@@ -48,7 +45,7 @@ class UserRepository extends BaseRepository
 
     /**
      * Check if user exists by uuid.
- */
+     */
     public function isExistByUuid(string $uuid): bool
     {
         return $this->query()->where('uuid', $uuid)->exists();
@@ -56,7 +53,7 @@ class UserRepository extends BaseRepository
 
     /**
      * Find a user by uuid.
- */
+     */
     public function findByUuid(string $uuid): ?User
     {
         // @phpstan-ignore return.type
@@ -65,7 +62,7 @@ class UserRepository extends BaseRepository
 
     /**
      * Find a user by uuid or fail.
- */
+     */
     public function findByUuidOrFail(string $uuid): User
     {
         return $this->query()->where('uuid', $uuid)->firstOrFail();
@@ -73,7 +70,7 @@ class UserRepository extends BaseRepository
 
     /**
      * Find a user by uuid including soft-deleted records.
- */
+     */
     public function findWithTrashedByUuidOrFail(string $uuid): User
     {
         return $this->query()->withTrashed()->where('uuid', $uuid)->firstOrFail();
@@ -81,7 +78,7 @@ class UserRepository extends BaseRepository
 
     /**
      * Check if user exists by email.
- */
+     */
     public function checkExistByEmail(string $email): bool
     {
         return $this->query()->where('email', $email)->exists();
@@ -89,7 +86,7 @@ class UserRepository extends BaseRepository
 
     /**
      * Find a user by email.
- */
+     */
     public function findByEmail(string $email): ?User
     {
         return $this->query()->where('email', $email)->first();
@@ -97,7 +94,7 @@ class UserRepository extends BaseRepository
 
     /**
      * Check if user exists by username.
- */
+     */
     public function checkUsernameExist(string $username): bool
     {
         return $this->query()->where('username', $username)->exists();
@@ -107,7 +104,7 @@ class UserRepository extends BaseRepository
      * Get user ids by usernames.
      * @param  array<int, string>  $usernames
      * @return array<int, int>
- */
+     */
     public function getIdsByUsernames(array $usernames): array
     {
         if ($usernames === []) {
@@ -125,7 +122,7 @@ class UserRepository extends BaseRepository
      * Get map [username => id] for given usernames.
      * @param  array<int, string>  $usernames
      * @return array<string, int>
- */
+     */
     public function getIdMapByUsernames(array $usernames): array
     {
         if ($usernames === []) {
@@ -141,7 +138,7 @@ class UserRepository extends BaseRepository
 
     /**
      * Find a user by username.
- */
+     */
     public function getByUsernameWithDetail(string $username, ?int $authUserId): ?User
     {
         $query = $this->query()->where('username', $username);
@@ -152,7 +149,7 @@ class UserRepository extends BaseRepository
     /**
      * Search users with filters, omit super admin.
      * @param  array<string, mixed>  $filters
- */
+     */
     public function search(array $filters, ?int $authUserId): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
@@ -169,7 +166,7 @@ class UserRepository extends BaseRepository
     /**
      * Get paginated users for admin panel.
      * @param  array<string,mixed>  $filters
- */
+     */
     public function searchForAdmin(array $filters): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
@@ -202,7 +199,7 @@ class UserRepository extends BaseRepository
 
     /**
      * Get user indicators grouped by date in given range.
- */
+     */
     public function getIndicatorsByUserIdAndDateRange(int $userId, string $fromDate, string $toDate): Collection
     {
         return DB::table('posts')
@@ -222,7 +219,7 @@ class UserRepository extends BaseRepository
     /**
      * Get followers of target user.
      * @param  array<string, mixed>  $filters
- */
+     */
     public function getFollowersByUserId(int $targetUserId, array $filters, ?int $authUserId): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
@@ -236,7 +233,7 @@ class UserRepository extends BaseRepository
     /**
      * Get followings of target user.
      * @param  array<string, mixed>  $filters
- */
+     */
     public function getFollowingByUserId(int $targetUserId, array $filters, ?int $authUserId): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
@@ -250,7 +247,7 @@ class UserRepository extends BaseRepository
     /**
      * Get mutual friends of target user.
      * @param  array<string, mixed>  $filters
- */
+     */
     public function getFriendsByUserId(int $targetUserId, array $filters, ?int $authUserId): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
@@ -265,7 +262,7 @@ class UserRepository extends BaseRepository
     /**
      * Get suggested users for authenticated user.
      * @param  array<string, mixed>  $filters
- */
+     */
     public function getSuggestedUsers(array $filters, ?int $authUserId): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
@@ -284,7 +281,7 @@ class UserRepository extends BaseRepository
      * Get user with details by id.
      * @param  Builder<User>  $query
      * @return Builder<User>
- */
+     */
     private function withDetail(Builder $query, ?int $userId): Builder
     {
         return $query
@@ -305,7 +302,7 @@ class UserRepository extends BaseRepository
     /**
      * Apply list filters and return paginated users with detail.
      * @param  Builder<User>  $query
- */
+     */
     private function paginateListWithDetail(Builder $query, Collection $filterCollection, ?int $authUserId): LengthAwarePaginator
     {
         $keyword = trim((string) $filterCollection->get('q', ''));
@@ -323,7 +320,7 @@ class UserRepository extends BaseRepository
     /**
      * Build search query with filters.
      * @param  Collection  $filterCollection
- */
+     */
     private function buildSearchQuery(Collection $filterCollection): Builder
     {
         $keyword = trim((string) $filterCollection->get('q', ''));
@@ -365,7 +362,7 @@ class UserRepository extends BaseRepository
 
     /**
      * Apply full-text search condition on search_vector.
- */
+     */
     private function applySearchVector(Builder $query, string $keyword): Builder
     {
         return $query->whereRaw(

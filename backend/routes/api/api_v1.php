@@ -31,15 +31,21 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
             Route::post('/logout/all', [AuthController::class, 'logoutAll'])->name('logout-all');
             Route::get('/me', [AuthController::class, 'me'])->name('me');
-            Route::post('/resend-verify-email', [AuthController::class, 'resendVerifyEmail'])->name('resend-verify-email');
+            Route::post('/resend-verify-email', [AuthController::class, 'resendVerifyEmail'])
+                ->middleware('throttle:3,1')
+                ->name('resend-verify-email');
         });
 
     // media routes
     Route::prefix('medias')
         ->name('media.')
         ->group(function () {
-            Route::post('upload-image', [UploadController::class, 'uploadImage'])->name('upload-image');
-            Route::post('upload-video', [UploadController::class, 'uploadVideo'])->name('upload-video');
+            Route::post('upload-image', [UploadController::class, 'uploadImage'])
+                ->middleware('throttle:20,1')
+                ->name('upload-image');
+            Route::post('upload-video', [UploadController::class, 'uploadVideo'])
+                ->middleware('throttle:10,1')
+                ->name('upload-video');
         });
 
     // user routes
@@ -144,10 +150,16 @@ Route::middleware(['auth:api'])
 Route::prefix('auth')
     ->name('auth.')
     ->group(function () {
-        Route::post('/login', [AuthController::class, 'login'])->name('login');
+        Route::post('/login', [AuthController::class, 'login'])
+            ->middleware('throttle:5,1')
+            ->name('login');
         Route::post('/refresh-token', [AuthController::class, 'refresh'])->name('refresh');
-        Route::post('/register', [AuthController::class, 'register'])->name('register');
-        Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
+        Route::post('/register', [AuthController::class, 'register'])
+            ->middleware('throttle:3,1')
+            ->name('register');
+        Route::post('forgot-password', [AuthController::class, 'forgotPassword'])
+            ->middleware('throttle:3,1')
+            ->name('forgot-password');
         Route::post('verify-forgot-password', [AuthController::class, 'verifyForgotPasswordToken'])->name('verify-forgot-password');
         Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
         Route::post('/verify-email', [AuthController::class, 'verifyEmail'])->name('verify-email');

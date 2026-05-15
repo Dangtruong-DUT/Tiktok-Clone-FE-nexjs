@@ -18,8 +18,8 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class AuthTokenService
 {
     public function __construct(
-        private readonly RefreshTokenRepository $refreshRepo,
-        private readonly ForgotPasswordTokenRepository $forgotPasswordTokenRepo,
+        private readonly RefreshTokenRepository $refreshTokenRepository,
+        private readonly ForgotPasswordTokenRepository $forgotPasswordTokenRepository,
         private readonly VerifyEmailTokenRepository $verifyEmailTokenRepo
     ) {}
 
@@ -60,7 +60,7 @@ class AuthTokenService
             $forgotPasswordToken
         );
 
-        $validToken = $this->forgotPasswordTokenRepo
+        $validToken = $this->forgotPasswordTokenRepository
             ->findByTokenHash($fingerprint);
 
         if (! $validToken) {
@@ -68,7 +68,7 @@ class AuthTokenService
         }
 
         if ($validToken->isExpired()) {
-            $this->forgotPasswordTokenRepo->delete($validToken->id);
+            $this->forgotPasswordTokenRepository->delete($validToken->id);
 
             throw new BadRequestException('Token has expired');
         }
@@ -96,7 +96,7 @@ class AuthTokenService
             throw new UnauthorizedException('Invalid refresh token');
         }
 
-        $token = $this->refreshRepo->findByJti(
+        $token = $this->refreshTokenRepository->findByJti(
             $payload->get('jti')
         );
 
@@ -111,7 +111,7 @@ class AuthTokenService
         }
 
         if ($token->isExpired()) {
-            $this->refreshRepo->delete($token->id);
+            $this->refreshTokenRepository->delete($token->id);
 
             throw new UnauthorizedException(
                 'Refresh token has expired'
@@ -138,7 +138,7 @@ class AuthTokenService
 
         $refreshToken = JWTAuth::claims($claims)->fromUser($user);
 
-        $this->refreshRepo->create([
+        $this->refreshTokenRepository->create([
             'jti' => $claims['jti'],
             'user_id' => $user->id,
             'expires_at' => now()->addMinutes(
@@ -178,7 +178,7 @@ class AuthTokenService
             (int) config('auth.reset_password.token_length', 64)
         );
 
-        $this->forgotPasswordTokenRepo->create([
+        $this->forgotPasswordTokenRepository->create([
             'token_hash' => ForgotPasswordToken::hashToken($token),
             'user_id' => $user->id,
             'expires_at' => now()->addMinutes(

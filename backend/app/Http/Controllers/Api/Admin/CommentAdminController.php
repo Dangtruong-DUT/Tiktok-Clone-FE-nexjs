@@ -15,18 +15,15 @@ use Illuminate\Http\JsonResponse;
  */
 class CommentAdminController extends Controller
 {
-    /**
-     * CommentAdminController constructor.
- */
     public function __construct(
         private readonly CommentAdminService $commentAdminService,
     ) {}
 
     /**
      * Get paginated list of comments with filtering.
-     * @param GetAdminCommentsRequest $request
+     * @param  GetAdminCommentsRequest  $request
      * @return JsonResponse
- */
+     */
     public function getComments(GetAdminCommentsRequest $request): JsonResponse
     {
         $comments = $this->commentAdminService->getComments($request->validated());
@@ -38,14 +35,14 @@ class CommentAdminController extends Controller
     }
 
     /**
-     * Delete a comment permanently.
-     * @param DeleteCommentRequest $request
-     * @return JsonResponse
- */
-    public function deleteComment(DeleteCommentRequest $request): JsonResponse
+     * Delete a comment (soft delete).
+     * @param  DeleteCommentRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteComment(DeleteCommentRequest $request): \Illuminate\Http\Response
     {
         $this->commentAdminService->deleteComment($request->validated());
 
-        return ApiResponse::success(message: 'Comment deleted successfully');
+        return ApiResponse::noContent();
     }
 }

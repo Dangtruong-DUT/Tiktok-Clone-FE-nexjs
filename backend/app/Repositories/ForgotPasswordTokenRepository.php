@@ -6,9 +6,6 @@ use App\Models\ForgotPasswordToken;
 
 class ForgotPasswordTokenRepository extends BaseRepository
 {
-    /**
-     * ForgotPasswordTokenRepository constructor.
- */
     public function __construct()
     {
         $modelInstance = app()->make(ForgotPasswordToken::class);
@@ -17,7 +14,7 @@ class ForgotPasswordTokenRepository extends BaseRepository
 
     /**
      * Delete forgot password tokens by user ID
- */
+     */
     public function deleteByUserId(int $userId): int
     {
         return $this->query()->where('user_id', $userId)->delete();
@@ -25,7 +22,7 @@ class ForgotPasswordTokenRepository extends BaseRepository
 
     /**
      * Find a forgot password token by token hash
- */
+     */
     public function findByTokenHash(string $tokenHash): ?ForgotPasswordToken
     {
         return $this->query()->where('token_hash', $tokenHash)->first();

@@ -12,9 +12,6 @@ use Illuminate\Support\Collection;
 
 class PostRepository extends BaseRepository
 {
-    /**
-     * PostRepository constructor.
- */
     public function __construct()
     {
         parent::__construct(app()->make(Post::class));
@@ -22,11 +19,7 @@ class PostRepository extends BaseRepository
 
     /**
      * Increment user_views and guest_views for a post by given amounts.
-     * @param int $postId
-     * @param int $userViews
-     * @param int $guestViews
-     * @return bool True if the update was successful, false otherwise.
- */
+     */
     public function incrementViews(int $postId, int $userViews, int $guestViews): bool
     {
         $post = $this->query()->whereKey($postId)->first();
@@ -43,9 +36,7 @@ class PostRepository extends BaseRepository
 
     /**
      * Check if a post exists by id.
-     * @param int $id
-     * @return bool
- */
+     */
     public function isExist(int $id): bool
     {
         return $this->query()->whereKey($id)->exists();
@@ -53,9 +44,7 @@ class PostRepository extends BaseRepository
 
     /**
      * Check if a post exists by uuid.
-     * @param string $uuid
-     * @return bool
- */
+     */
     public function isExistByUuid(string $uuid): bool
     {
         return $this->query()->where('uuid', $uuid)->exists();
@@ -63,9 +52,7 @@ class PostRepository extends BaseRepository
 
     /**
      * Find a post by id.
-     * @param int $id
-     * @return Post|null
- */
+     */
     public function findById(int $id): ?Post
     {
         return $this->query()->whereKey($id)->first();
@@ -73,9 +60,7 @@ class PostRepository extends BaseRepository
 
     /**
      * Get post with details by id.
-     * @param int $id
-     * @return Post|null
- */
+     */
     public function getByIdWithDetail(int $id, ?int $userId): ?Post
     {
         $query = $this->query()->whereKey($id);
@@ -85,10 +70,7 @@ class PostRepository extends BaseRepository
 
     /**
      * Get post with details by uuid.
-     * @param string  $uuid
-     * @param int|null $userId
-     * @return Post|null
- */
+     */
     public function getByUuidWithDetail(string $uuid, ?int $userId): ?Post
     {
         $query = $this->query()->where('uuid', $uuid);
@@ -98,9 +80,7 @@ class PostRepository extends BaseRepository
 
     /**
      * Find a post by its UUID.
-     * @param string  $uuid
-     * @return Post|null
- */
+     */
     public function findByUuid(string $uuid): ?Post
     {
         return $this->query()->where('uuid', $uuid)->first();
@@ -108,10 +88,8 @@ class PostRepository extends BaseRepository
 
     /**
      * Find a post by its UUID or throw an exception if not found.
-     * @param string  $uuid
-     * @return Post
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
- */
+     */
     public function findByUuidOrFail(string $uuid): Post
     {
         return $this->query()->where('uuid', $uuid)->firstOrFail();
@@ -119,9 +97,7 @@ class PostRepository extends BaseRepository
 
     /**
      * Find a post by ID, including soft-deleted posts.
-     * @param  int  $id
-     * @return Post|null
- */
+     */
     public function findWithTrashedById(int $id): ?Post
     {
         return $this->query()->withTrashed()->whereKey($id)->first();
@@ -129,9 +105,7 @@ class PostRepository extends BaseRepository
 
     /**
      * Find a post by UUID, including soft-deleted posts.
-     * @param  string  $uuid
-     * @return Post|null
- */
+     */
     public function findWithTrashedByUuid(string $uuid): ?Post
     {
         return $this->query()->withTrashed()->where('uuid', $uuid)->first();
@@ -139,8 +113,7 @@ class PostRepository extends BaseRepository
 
     /**
      * Restore a soft-deleted post by ID.
-     * @return bool True if the post was restored, false otherwise.
- */
+     */
     public function restoreById(int $id): bool
     {
         return (bool) $this->query()->withTrashed()->whereKey($id)->restore();
@@ -150,7 +123,7 @@ class PostRepository extends BaseRepository
      * Get paginated list of posts for admin view with filters.
      * @param  array<string,mixed>  $filters
      * @return LengthAwarePaginator
- */
+     */
     public function searchPostsForAdmin(array $filters): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
@@ -194,7 +167,7 @@ class PostRepository extends BaseRepository
      * Search comments for admin view with filters.
      * @param  array<string,mixed>  $filters
      * @return LengthAwarePaginator
- */
+     */
     public function searchCommentsForAdmin(array $filters): LengthAwarePaginator
     {
         $filters['type']= PostTypeEnum::COMMENT->value;
@@ -230,7 +203,7 @@ class PostRepository extends BaseRepository
      * Get posts of target user by id.
      * @param  array<string,mixed>  $filters
      * @return LengthAwarePaginator
- */
+     */
     public function getPostsByUserId(array $filters, int $targetUserId, ?int $authUserId): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
@@ -256,7 +229,7 @@ class PostRepository extends BaseRepository
      * Get liked posts of target user by id.
      * @param  array<string,mixed>  $filters
      * @return LengthAwarePaginator
- */
+     */
     public function getLikedPostsByUserId(array $filters, int $targetUserId, ?int $authUserId): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
@@ -278,7 +251,7 @@ class PostRepository extends BaseRepository
      * Get bookmarked posts of target user by id.
      * @param  array<string,mixed>  $filters
      * @return LengthAwarePaginator
- */
+     */
     public function getBookmarkedPostsByUserId(array $filters, int $targetUserId, ?int $authUserId): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
@@ -300,7 +273,7 @@ class PostRepository extends BaseRepository
      * Get posts of mutual friends.
      * @param  array<string,mixed>  $filters
      * @return LengthAwarePaginator
- */
+     */
     public function getMutualFriendsPosts(array $filters, ?int $authUserId): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
@@ -323,7 +296,7 @@ class PostRepository extends BaseRepository
      * Get posts of following users.
      * @param  array<string,mixed>  $filters
      * @return LengthAwarePaginator
- */
+     */
     public function getFollowingPosts(array $filters, ?int $authUserId): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
@@ -345,7 +318,7 @@ class PostRepository extends BaseRepository
      * @param  array<int, int>  $hashtagIds
      * @param  array<string,mixed>  $filters
      * @return LengthAwarePaginator
- */
+     */
     public function getRelatedPosts(
         int $targetPostId,
         int $targetUserId,
@@ -386,7 +359,7 @@ class PostRepository extends BaseRepository
      * Search posts with filters and keyword.
      * @param  array<string,mixed>  $filters
      * @return LengthAwarePaginator
- */
+     */
     public function search(array $filters, ?int $authUserId): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
@@ -404,7 +377,7 @@ class PostRepository extends BaseRepository
      * Get post with details by id.
      * @param  Builder<Post>  $query
      * @return Builder<Post>
- */
+     */
     private function withDetail(Builder $query, ?int $authUserId): Builder
     {
         $queryUserId = $authUserId ?? -1000;
@@ -438,7 +411,7 @@ class PostRepository extends BaseRepository
      * Build search query with filters.
      * @param  Collection<string,mixed>  $filterCollection
      * @return Builder<Post>
- */
+     */
     private function buildSearchQuery(Collection $filterCollection): Builder
     {
         $keyword = trim((string) $filterCollection->get('q', ''));
@@ -492,7 +465,7 @@ class PostRepository extends BaseRepository
      * @param  Builder<Post>  $query
      * @param  string  $keyword
      * @return Builder<Post>
- */
+     */
     private function applyPostAndUserSearchVector(Builder $query, string $keyword): Builder
     {
         return $query->where(function (Builder $searchQuery) use ($keyword) {
@@ -508,7 +481,7 @@ class PostRepository extends BaseRepository
      * @param  Builder  $query
      * @param  string  $keyword
      * @return Builder
- */
+     */
     private function applySearchVector(Builder $query, string $keyword): Builder
     {
         return $query->whereRaw(

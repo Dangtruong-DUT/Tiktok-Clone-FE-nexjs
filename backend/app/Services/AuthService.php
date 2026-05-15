@@ -22,10 +22,10 @@ class AuthService
     use HasAuthUser;
 
     public function __construct(
-        private readonly UserRepository $userRepo,
-        private readonly RefreshTokenRepository $refreshRepo,
-        private readonly ForgotPasswordTokenRepository $forgotPasswordTokenRepo,
-        private readonly VerifyEmailTokenRepository $verifyEmailTokenRepo,
+        private readonly UserRepository $userRepository,
+        private readonly RefreshTokenRepository $refreshTokenRepository,
+        private readonly ForgotPasswordTokenRepository $forgotPasswordTokenRepository,
+        private readonly VerifyEmailTokenRepository $verifyEmailTokenRepository,
         private readonly AuthTokenService $tokenService,
         private readonly NotificationService $notificationService
     ) {}
@@ -62,7 +62,7 @@ class AuthService
     {
         $token = $this->tokenService->verifyRefreshToken($refreshToken);
         $this->guard()->logout();
-        $this->refreshRepo->delete($token->id); // @phpstan-ignore-line
+        $this->refreshTokenRepository->delete($token->id); // @phpstan-ignore-line
 
         return true;
     }
@@ -76,7 +76,7 @@ class AuthService
         $this->tokenService->verifyRefreshToken($refreshToken);
         $user = $this->guard()->user();
         $this->guard()->logout();
-        $this->refreshRepo->deleteByUserId($user->id);
+        $this->refreshTokenRepository->deleteByUserId($user->id);
 
         return true;
     }
@@ -89,9 +89,9 @@ class AuthService
     public function refresh(string $refreshToken): array
     {
         $token = $this->tokenService->verifyRefreshToken($refreshToken);
-        $user = $this->userRepo->findOrFail($token->user_id);
+        $user = $this->userRepository->findOrFail($token->user_id);
 
-        $this->refreshRepo->delete($token->id); // @phpstan-ignore-line
+        $this->refreshTokenRepository->delete($token->id); // @phpstan-ignore-line
         $newAccessToken = $this->tokenService->createAccessToken($user);
         $newRefreshToken = $this->tokenService->createRefreshToken($user);
 
@@ -110,7 +110,7 @@ class AuthService
      */
     public function register(array $data): array
     {
-        $isExist = $this->userRepo->checkExistByEmail($data['email']);
+        $isExist = $this->userRepository->checkExistByEmail($data['email']);
         if ($isExist) {
             throw new BusinessException(
                 'Email already exists',
@@ -118,7 +118,7 @@ class AuthService
             );
         }
         DB::transaction(function () use ($data, &$accessToken, &$refreshToken, &$user) {
-            $user = $this->userRepo->create([
+            $user = $this->userRepository->create([
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => $data['password'],
@@ -152,10 +152,10 @@ class AuthService
         $user = null;
 
     return DB::transaction(function () use ($validToken, &$user) {
-            $user = $this->userRepo->findOrFail($validToken->user_id);
+            $user = $this->userRepository->findOrFail($validToken->user_id);
             $user->verify = UserVerifyStatusEnum::VERIFIED->value;
             $user->save();
-            $this->verifyEmailTokenRepo->deleteByUserId($validToken->user_id);
+            $this->verifyEmailTokenRepository->deleteByUserId($validToken->user_id);
             Mail::to($user->email)->send(new VerifyUserSuccess($user));
 
             return [
@@ -178,7 +178,7 @@ class AuthService
             throw new BusinessException('Email is already verified');
         }
         DB::transaction(function () use ($user) {
-            $this->verifyEmailTokenRepo->deleteByUserId($user->id);
+            $this->verifyEmailTokenRepository->deleteByUserId($user->id);
             $verifyToken = $this->tokenService->createVerifyEmailToken($user);
             Mail::to($user->email)->send(new VerifyUserEmail($user, $verifyToken));
         });
@@ -200,7 +200,7 @@ class AuthService
      */
     public function forgot(string $email): bool
     {
-        $user = $this->userRepo->findByEmail($email);
+        $user = $this->userRepository->findByEmail($email);
         if (! $user) {
             throw new BusinessException(
                 'Email not found',
@@ -237,8 +237,8 @@ class AuthService
     public function resetPassword(array $credentials): bool
     {
         $validToken = $this->tokenService->verifyForgotPasswordToken($credentials['forgot_password_token']);
-        $this->forgotPasswordTokenRepo->deleteByUserId($validToken->user_id);
-        $user = $this->userRepo->findOrFail($validToken->user_id);
+        $this->forgotPasswordTokenRepository->deleteByUserId($validToken->user_id);
+        $user = $this->userRepository->findOrFail($validToken->user_id);
         $user->password = $credentials['password'];
         $user->save();
 

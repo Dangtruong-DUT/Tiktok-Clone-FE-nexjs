@@ -9,9 +9,6 @@ use Illuminate\Support\Collection;
 
 class ActivityLogRepository extends BaseRepository
 {
-    /**
-     * ActivityLogRepository constructor.
- */
     public function __construct()
     {
         parent::__construct(app()->make(ActivityLog::class));
@@ -20,7 +17,7 @@ class ActivityLogRepository extends BaseRepository
     /**
      * Get paginated activity logs for admin panel.
      * @param  array<string,mixed>  $filters
- */
+     */
     public function searchForAdmin(array $filters = []): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
@@ -41,7 +38,7 @@ class ActivityLogRepository extends BaseRepository
 
     /**
      * Build search query with filters.
- */
+     */
     private function buildSearchQuery(Collection $filterCollection): Builder
     {
         return $this->query()

@@ -15,18 +15,15 @@ use Illuminate\Http\JsonResponse;
  */
 class PostAdminController extends Controller
 {
-    /**
-     * PostAdminController constructor.
- */
     public function __construct(
         private readonly PostAdminService $postAdminService,
     ) {}
 
     /**
      * Get paginated list of posts with filtering.
-     * @param GetAdminPostsRequest $request
+     * @param  GetAdminPostsRequest  $request
      * @return JsonResponse
- */
+     */
     public function getPosts(GetAdminPostsRequest $request): JsonResponse
     {
         $posts = $this->postAdminService->getPosts($request->validated());
@@ -38,14 +35,14 @@ class PostAdminController extends Controller
     }
 
     /**
-     * Delete a post permanently.
-     * @param DeletePostRequest $request
-     * @return JsonResponse
- */
-    public function deletePost(DeletePostRequest $request): JsonResponse
+     * Delete a post (soft delete).
+     * @param  DeletePostRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function deletePost(DeletePostRequest $request): \Illuminate\Http\Response
     {
         $this->postAdminService->deletePost($request->validated());
 
-        return ApiResponse::success(message: 'Post deleted successfully');
+        return ApiResponse::noContent();
     }
 }

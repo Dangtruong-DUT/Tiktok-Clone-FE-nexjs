@@ -20,7 +20,7 @@ class AiModerationService
 {
     public function __construct(
         private readonly AdminModerationNoticeService $adminModerationNoticeService,
-        private readonly PostRepository $postRepo,
+        private readonly PostRepository $postRepository,
         private readonly UserRepository $userRepo
     ) {}
 
@@ -74,7 +74,7 @@ class AiModerationService
      */
     public function applyVerdict(array $payload): void
     {
-        $post = $this->postRepo->find((int) $payload['resource_id']);
+        $post = $this->postRepository->find((int) $payload['resource_id']);
 
         if (! $post || $post->deleted_at !== null) {
             return;

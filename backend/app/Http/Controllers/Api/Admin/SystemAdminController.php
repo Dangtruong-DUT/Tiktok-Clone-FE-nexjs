@@ -16,18 +16,15 @@ use Illuminate\Http\JsonResponse;
  */
 class SystemAdminController extends Controller
 {
-    /**
-     * SystemAdminController constructor.
- */
     public function __construct(
         private readonly SystemAdminService $systemAdminService,
     ) {}
 
     /**
      * Get dashboard statistics for given period.
-     * @param GetDashboardStatsRequest $request
+     * @param  GetDashboardStatsRequest  $request
      * @return JsonResponse
- */
+     */
     public function getDashboardStats(GetDashboardStatsRequest $request): JsonResponse
     {
         $stats = $this->systemAdminService->getDashboardStats(
@@ -42,9 +39,9 @@ class SystemAdminController extends Controller
 
     /**
      * Get activity logs (admin actions and system events).
-     * @param GetActivityLogsRequest $request
+     * @param  GetActivityLogsRequest  $request
      * @return JsonResponse
- */
+     */
     public function getActivityLogs(GetActivityLogsRequest $request): JsonResponse
     {
         $validated = $request->validated();

@@ -26,9 +26,6 @@ use Illuminate\Http\JsonResponse;
 
 class PostController extends Controller
 {
-    /**
-     * PostController constructor.
- */
     public function __construct(
         private readonly PostService $postService,
         private readonly PostViewService $postViewService
@@ -36,7 +33,9 @@ class PostController extends Controller
 
     /**
      * Create a new post.
- */
+     * @param  CreatePostRequest  $request
+     * @return JsonResponse
+     */
     public function create(CreatePostRequest $request): JsonResponse
     {
         $post = $this->postService->create($request->validated());
@@ -49,7 +48,9 @@ class PostController extends Controller
 
     /**
      * Update a post by uuid.
- */
+     * @param  UpdatePostRequest  $request
+     * @return JsonResponse
+     */
     public function update(UpdatePostRequest $request): JsonResponse
     {
         $post = $this->postService->update($request->validated());
@@ -62,17 +63,21 @@ class PostController extends Controller
 
     /**
      * Delete a post by uuid.
- */
-    public function delete(GetPostRequest $request): JsonResponse
+     * @param  GetPostRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function delete(GetPostRequest $request): \Illuminate\Http\Response
     {
         $this->postService->delete($request->input('post_uuid'));
 
-        return ApiResponse::success(message: 'Post deleted successfully');
+        return ApiResponse::noContent();
     }
 
     /**
      * Get post details by uuid.
- */
+     * @param  GetPostRequest  $request
+     * @return JsonResponse
+     */
     public function show(GetPostRequest $request): JsonResponse
     {
         $uuid = $request->input('post_uuid');
@@ -97,13 +102,12 @@ class PostController extends Controller
 
     /**
      * Get list of posts.
- */
+     * @param  GetListPostRequest  $request
+     * @return JsonResponse
+     */
     public function index(GetListPostRequest $request): JsonResponse
     {
-        $params = array_merge(
-            $request->validated()
-        );
-        $posts = $this->postService->search($params);
+        $posts = $this->postService->search($request->validated());
 
         return ApiResponse::success(
             data: PostResource::collection($posts),
@@ -113,7 +117,9 @@ class PostController extends Controller
 
     /**
      * Get friends posts.
- */
+     * @param  GetFriendPostsRequest  $request
+     * @return JsonResponse
+     */
     public function showFriendsPosts(GetFriendPostsRequest $request): JsonResponse
     {
         $posts = $this->postService->getMutualFriendsPosts($request->validated());
@@ -126,7 +132,9 @@ class PostController extends Controller
 
     /**
      * Get following posts.
- */
+     * @param  GetFollowingPostsRequest  $request
+     * @return JsonResponse
+     */
     public function showFollowingPosts(GetFollowingPostsRequest $request): JsonResponse
     {
         $posts = $this->postService->getFollowingPosts($request->validated());
@@ -139,7 +147,9 @@ class PostController extends Controller
 
     /**
      * Get list of child posts by parent post uuid.
- */
+     * @param  GetListChildrenPostRequest  $request
+     * @return JsonResponse
+     */
     public function showChildren(GetListChildrenPostRequest $request): JsonResponse
     {
         $children = $this->postService->getChildren($request->validated());
@@ -152,7 +162,9 @@ class PostController extends Controller
 
     /**
      * Get related posts by post uuid.
- */
+     * @param  GetRelatedPostsRequest  $request
+     * @return JsonResponse
+     */
     public function showRelatedPosts(GetRelatedPostsRequest $request): JsonResponse
     {
         $posts = $this->postService->getRelatedPosts($request->validated());
@@ -165,7 +177,9 @@ class PostController extends Controller
 
     /**
      * Like a post.
- */
+     * @param  LikePostRequest  $request
+     * @return JsonResponse
+     */
     public function like(LikePostRequest $request): JsonResponse
     {
         $this->postService->like($request->input('post_uuid'));
@@ -175,27 +189,33 @@ class PostController extends Controller
 
     /**
      * Unlike a post.
- */
-    public function unlike(UnlikePostRequest $request): JsonResponse
+     * @param  UnlikePostRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function unlike(UnlikePostRequest $request): \Illuminate\Http\Response
     {
         $this->postService->unlike($request->input('post_uuid'));
 
-        return ApiResponse::success(message: 'Post unliked successfully');
+        return ApiResponse::noContent();
     }
 
     /**
      * Unbookmark a post.
- */
-    public function unbookmark(UnBookmarkPostRequest $request): JsonResponse
+     * @param  UnBookmarkPostRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function unbookmark(UnBookmarkPostRequest $request): \Illuminate\Http\Response
     {
         $this->postService->unbookmark($request->input('post_uuid'));
 
-        return ApiResponse::success(message: 'Post unbookmarked successfully');
+        return ApiResponse::noContent();
     }
 
     /**
      * Bookmark a post.
- */
+     * @param  BookmarkPostRequest  $request
+     * @return JsonResponse
+     */
     public function bookmark(BookmarkPostRequest $request): JsonResponse
     {
         $this->postService->bookmark($request->input('post_uuid'));
@@ -205,7 +225,9 @@ class PostController extends Controller
 
     /**
      * Get posts of a user by user uuid.
- */
+     * @param  GetPostsOfUserRequest  $request
+     * @return JsonResponse
+     */
     public function showUserPosts(GetPostsOfUserRequest $request): JsonResponse
     {
         $posts = $this->postService->getUserPosts($request->validated());
@@ -218,7 +240,9 @@ class PostController extends Controller
 
     /**
      * Get liked posts of a user by user uuid.
- */
+     * @param  GetLikedPostsOfUserRequest  $request
+     * @return JsonResponse
+     */
     public function showLikedPosts(GetLikedPostsOfUserRequest $request): JsonResponse
     {
         $posts = $this->postService->getUserLikedPosts($request->validated());
@@ -231,7 +255,9 @@ class PostController extends Controller
 
     /**
      * Get bookmarked posts of a user by user uuid.
- */
+     * @param  GetBookmarkedPostsOfUserRequest  $request
+     * @return JsonResponse
+     */
     public function showBookmarkedPosts(GetBookmarkedPostsOfUserRequest $request): JsonResponse
     {
         $posts = $this->postService->getUserBookmarkedPosts($request->validated());

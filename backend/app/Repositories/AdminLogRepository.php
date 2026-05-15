@@ -11,9 +11,6 @@ use Illuminate\Support\Collection as SupportCollection;
 
 class AdminLogRepository extends BaseRepository
 {
-    /**
-     * AdminLogRepository constructor.
- */
     public function __construct()
     {
         parent::__construct(app()->make(AdminLog::class));
@@ -22,7 +19,7 @@ class AdminLogRepository extends BaseRepository
     /**
      * Get paginated admin logs for admin panel.
      * @param  array<string,mixed>  $filters
- */
+     */
     public function searchForAdmin(array $filters = []): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
@@ -46,7 +43,7 @@ class AdminLogRepository extends BaseRepository
 
     /**
      * Count admin logs from a given date.
- */
+     */
     public function countSince(Carbon $dateFrom): int
     {
         return $this->query()
@@ -56,7 +53,7 @@ class AdminLogRepository extends BaseRepository
 
     /**
      * Get actions by admin id.
- */
+     */
     public function getActionsByAdminId(int $adminId, int $limit = 50): EloquentCollection
     {
         return $this->query()
@@ -68,7 +65,7 @@ class AdminLogRepository extends BaseRepository
 
     /**
      * Build search query with filters.
- */
+     */
     private function buildSearchQuery(SupportCollection $filterCollection): Builder
     {
         return $this->query()

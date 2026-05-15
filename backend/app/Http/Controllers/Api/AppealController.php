@@ -22,7 +22,9 @@ class AppealController extends Controller
 
     /**
      * Create a new appeal (authenticated user only).
- */
+     * @param  CreateAppealRequest  $request
+     * @return JsonResponse
+     */
     public function create(CreateAppealRequest $request): JsonResponse
     {
         $validated = $request->validated();
@@ -39,7 +41,9 @@ class AppealController extends Controller
     /**
      * Update an existing appeal (edit reason + evidence).
      * Only pending appeals can be updated.
- */
+     * @param  UpdateAppealRequest  $request
+     * @return JsonResponse
+     */
     public function update(UpdateAppealRequest $request, string $appealUuid): JsonResponse
     {
         $validated = $request->validated();
@@ -59,9 +63,9 @@ class AppealController extends Controller
 
     /**
      * Show appeal details by UUID.
-     * @param ShowAppealRequest $request
+     * @param  ShowAppealRequest  $request
      * @return JsonResponse
- */
+     */
     public function show(ShowAppealRequest $request): JsonResponse
     {
         $validated = $request->validated();
@@ -77,6 +81,8 @@ class AppealController extends Controller
     /**
      * Return a lightweight preview for a given resource (supports soft-deleted records).
      * Used by the appeal creation form before the appeal is saved.
+     * @param  GetResourcePreviewRequest  $request
+     * @return JsonResponse
      */
     public function resourcePreview(GetResourcePreviewRequest $request): JsonResponse
     {
@@ -94,7 +100,9 @@ class AppealController extends Controller
 
     /**
      * Get authenticated user's appeals list.
- */
+     * @param  GetMyAppealsRequest  $request
+     * @return JsonResponse
+     */
     public function index(GetMyAppealsRequest $request): JsonResponse
     {
         $appeals = $this->appealService->getAppeals(

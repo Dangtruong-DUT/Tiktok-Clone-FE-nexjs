@@ -19,8 +19,8 @@ class UserService
     use HasAuthUser;
 
     public function __construct(
-        private readonly RelationshipRepository $relationshipRepo,
-        private readonly UserRepository $userRepo,
+        private readonly RelationshipRepository $relationshipRepository,
+        private readonly UserRepository $userRepository,
         private readonly NotificationService $notificationService
     ) {}
 
@@ -32,7 +32,7 @@ class UserService
     {
         $authUserId = auth_user_id();
 
-        return $this->userRepo->search($payload, $authUserId);
+        return $this->userRepository->search($payload, $authUserId);
     }
 
     /**
@@ -65,7 +65,7 @@ class UserService
     public function follow(array $payload): bool
     {
         $targetUserUuid = $payload['user_uuid'];
-        $targetUser = $this->userRepo->findByUuid($targetUserUuid);
+        $targetUser = $this->userRepository->findByUuid($targetUserUuid);
         if (! $targetUser) {
             throw new BusinessException('The user you are trying to follow does not exist');
         }
@@ -75,11 +75,11 @@ class UserService
             throw new BadRequestException('You cannot follow yourself');
         }
 
-        if ($this->relationshipRepo->isFollowing($authUser->id, $targetUser->id)) {
+        if ($this->relationshipRepository->isFollowing($authUser->id, $targetUser->id)) {
             return true;
         }
         DB::transaction(function () use ($authUser, $targetUser) {
-            $this->relationshipRepo->create([
+            $this->relationshipRepository->create([
                 'user_id' => $authUser->id,
                 'target_user_id' => $targetUser->id,
                 'type' => RelationshipTypeEnum::FOLLOW->value,
@@ -103,14 +103,14 @@ class UserService
     public function unfollow(array $payload): bool
     {
         $targetUserUuid = $payload['user_uuid'];
-        $targetUser = $this->userRepo->findByUuid($targetUserUuid);
+        $targetUser = $this->userRepository->findByUuid($targetUserUuid);
         /** @var User $authUser */
         $authUser = $this->guard()->user();
-        if (! $this->relationshipRepo->isFollowing($authUser->id, $targetUser->id)) {
+        if (! $this->relationshipRepository->isFollowing($authUser->id, $targetUser->id)) {
             return true;
         }
         DB::transaction(function () use ($authUser, $targetUser) {
-            $this->relationshipRepo->deleteRelationship($authUser->id, $targetUser->id, RelationshipTypeEnum::FOLLOW);
+            $this->relationshipRepository->deleteRelationship($authUser->id, $targetUser->id, RelationshipTypeEnum::FOLLOW);
             $authUser->decrement('following_count');
             $targetUser->decrement('followers_count');
         });
@@ -140,7 +140,7 @@ class UserService
         if (empty($updateData)) {
             throw new BusinessException('No valid fields to update');
         }
-        $updatedUser = $this->userRepo->update($authUser->id, [
+        $updatedUser = $this->userRepository->update($authUser->id, [
             'name' => $updateData['name'] ?? $authUser->name,
             'date_of_birth' => $updateData['date_of_birth'] ?? $authUser->date_of_birth,
             'bio' => $updateData['bio'] ?? $authUser->bio,
@@ -170,7 +170,7 @@ class UserService
     {
         $authUserId = auth_user_id();
 
-        return $this->userRepo->getByUsernameWithDetail($username, $authUserId);
+        return $this->userRepository->getByUsernameWithDetail($username, $authUserId);
     }
 
     /**
@@ -180,9 +180,9 @@ class UserService
     public function getFollowers(string $userUuid, array $filters): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
-        $targetUser = $this->userRepo->findByUuidOrFail($userUuid);
+        $targetUser = $this->userRepository->findByUuidOrFail($userUuid);
 
-        return $this->userRepo->getFollowersByUserId($targetUser->id, $filters, $authUserId);
+        return $this->userRepository->getFollowersByUserId($targetUser->id, $filters, $authUserId);
     }
 
     /**
@@ -192,9 +192,9 @@ class UserService
     public function getFollowing(string $userUuid, array $filters): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
-        $targetUser = $this->userRepo->findByUuidOrFail($userUuid);
+        $targetUser = $this->userRepository->findByUuidOrFail($userUuid);
 
-        return $this->userRepo->getFollowingByUserId($targetUser->id, $filters, $authUserId);
+        return $this->userRepository->getFollowingByUserId($targetUser->id, $filters, $authUserId);
     }
 
     /**
@@ -204,9 +204,9 @@ class UserService
     public function getFriends(string $userUuid, array $filters): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
-        $targetUser = $this->userRepo->findByUuidOrFail($userUuid);
+        $targetUser = $this->userRepository->findByUuidOrFail($userUuid);
 
-        return $this->userRepo->getFriendsByUserId($targetUser->id, $filters, $authUserId);
+        return $this->userRepository->getFriendsByUserId($targetUser->id, $filters, $authUserId);
     }
 
     /**
@@ -217,7 +217,7 @@ class UserService
     {
         $authUserId = auth_user_id();
 
-        return $this->userRepo->getSuggestedUsers($filters, $authUserId);
+        return $this->userRepository->getSuggestedUsers($filters, $authUserId);
     }
 
     /**
@@ -231,7 +231,7 @@ class UserService
         $fromDate = Carbon::parse($payload['fromDate'])->toDateString();
         $toDate = Carbon::parse($payload['toDate'])->toDateString();
 
-        $rowsByDate = $this->userRepo
+        $rowsByDate = $this->userRepository
             ->getIndicatorsByUserIdAndDateRange($authUserId, $fromDate, $toDate)
             ->keyBy('date');
 

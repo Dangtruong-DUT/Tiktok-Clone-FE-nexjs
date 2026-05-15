@@ -20,17 +20,10 @@ class SystemAdminService
     ) {}
 
     /**
-     * Get dashboard statistics
-     * @param  string  $period  'today'|'week'|'month'|'year'
-     * @return array {
-     *               total_users: int,
-     *               active_users: int,
-     *               banned_users: int,
-     *               total_posts: int,
-     *               deleted_posts: int,
-     *               total_comments: int,
-     *               total_admin_actions: int
-     *               }
+     * Get dashboard statistics.
+     * @param  'today'|'week'|'month'|'year'  $period
+     * @return array{total_users: int, active_users: int, banned_users: int, total_posts: int, deleted_posts: int, total_comments: int, total_admin_actions: int, new_users_this_period: int, new_posts_this_period: int}
+     * @throws \InvalidArgumentException
      */
     public function getDashboardStats(string $period = 'today'): array
     {
@@ -52,17 +45,8 @@ class SystemAdminService
     }
 
     /**
-     * Get paginated admin logs with filtering
-     * @param  array  $filters  {
-     *                          action_type?: string,
-     *                          admin_uuid?: string,
-     *                          resource_type?: string,
-     *                          date_from?: string (Y-m-d),
-     *                          date_to?: string (Y-m-d),
-     *                          page?: int,
-     *                          per_page?: int,
-     *                          order_by?: string
-     *                          }
+     * Get paginated admin logs with filtering.
+     * @param  array{action_type?: string, admin_uuid?: string, resource_type?: string, date_from?: string, date_to?: string, page?: int, per_page?: int, order_by?: string}  $filters
      */
     public function getAdminLogs(array $filters = []): LengthAwarePaginator
     {
@@ -70,17 +54,8 @@ class SystemAdminService
     }
 
     /**
-     * Get paginated activity logs with filtering
-     * @param  array  $filters  {
-     *                          action_type?: string,
-     *                          user_uuid?: string,
-     *                          resource_type?: string,
-     *                          date_from?: string (Y-m-d),
-     *                          date_to?: string (Y-m-d),
-     *                          page?: int,
-     *                          per_page?: int,
-     *                          order_by?: string
-     *                          }
+     * Get paginated activity logs with filtering.
+     * @param  array{action_type?: string, user_uuid?: string, resource_type?: string, date_from?: string, date_to?: string, page?: int, per_page?: int, order_by?: string}  $filters
      */
     public function getActivityLogs(array $filters = []): LengthAwarePaginator
     {

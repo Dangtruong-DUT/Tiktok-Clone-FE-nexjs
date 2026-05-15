@@ -26,7 +26,9 @@ class AuthController extends Controller
 
     /**
      * Handle a registration request for the application.
- */
+     * @param  RegisterRequest  $request
+     * @return JsonResponse
+     */
     public function register(RegisterRequest $request): JsonResponse
     {
         $credentials = $request->validated();
@@ -42,7 +44,9 @@ class AuthController extends Controller
 
     /**
      * Handle a login request to the application.
- */
+     * @param  LoginRequest  $request
+     * @return JsonResponse
+     */
     public function login(LoginRequest $request): JsonResponse
     {
         $credentials = $request->validated();
@@ -58,7 +62,8 @@ class AuthController extends Controller
 
     /**
      * Get the authenticated User
- */
+     * @return JsonResponse
+     */
     public function me(): JsonResponse
     {
         $user = $this->authService->me();
@@ -71,7 +76,9 @@ class AuthController extends Controller
 
     /**
      * Log the user out (Invalidate the token)
- */
+     * @param  LogoutRequest  $request
+     * @return JsonResponse
+     */
     public function logout(LogoutRequest $request): JsonResponse
     {
         $refreshToken = $request->input('refresh_token');
@@ -82,7 +89,9 @@ class AuthController extends Controller
 
     /**
      * Log the user out from all devices (Invalidate all tokens)
- */
+     * @param  LogoutRequest  $request
+     * @return JsonResponse
+     */
     public function logoutAll(LogoutRequest $request): JsonResponse
     {
         $refreshToken = $request->input('refresh_token');
@@ -93,7 +102,9 @@ class AuthController extends Controller
 
     /**
      * Refresh a token.
- */
+     * @param  RefreshTokenRequest  $request
+     * @return JsonResponse
+     */
     public function refresh(RefreshTokenRequest $request): JsonResponse
     {
         $refreshToken = $request->input('refresh_token');
@@ -109,7 +120,9 @@ class AuthController extends Controller
 
     /**
      * Handle forgot password request by sending a reset link to the user's email.
- */
+     * @param  ForgotPasswordRequest  $request
+     * @return JsonResponse
+     */
     public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
     {
         $this->authService->forgot($request->input('email'));
@@ -119,7 +132,9 @@ class AuthController extends Controller
 
     /**
      * Handle verify forgot password request by verifying the token and resetting the password.
- */
+     * @param  VerifyForgotPasswordTokenRequest  $request
+     * @return JsonResponse
+     */
     public function verifyForgotPasswordToken(VerifyForgotPasswordTokenRequest $request): JsonResponse
     {
         $credentials = $request->validated();
@@ -130,7 +145,9 @@ class AuthController extends Controller
 
     /**
      * Handle reset password request by resetting the user's password.
- */
+     * @param  ResetPasswordRequest  $request
+     * @return JsonResponse
+     */
     public function resetPassword(ResetPasswordRequest $request): JsonResponse
     {
         $credentials = $request->validated();
@@ -141,7 +158,9 @@ class AuthController extends Controller
 
     /**
      * Handle verify email request by verifying the token and activating the user's account.
- */
+     * @param  VerifyEmailRequest  $request
+     * @return JsonResponse
+     */
     public function verifyEmail(VerifyEmailRequest $request): JsonResponse
     {
         $credentials = $request->validated();
@@ -157,7 +176,9 @@ class AuthController extends Controller
 
     /**
      * Resend the verification email to the user if their email is not verified.
- */
+     * @param  Request  $request
+     * @return JsonResponse
+     */
     public function resendVerifyEmail(Request $request): JsonResponse
     {
         $this->authService->resendVerifyEmail();
@@ -167,7 +188,12 @@ class AuthController extends Controller
 
     /**
      * Get the token array structure.
- */
+     * @param  string  $accessToken
+     * @param  string|null  $refreshToken
+     * @param  string  $message
+     * @param  Authenticatable|null  $user
+     * @return JsonResponse
+     */
     protected function respondWithToken(
         string $accessToken,
         ?string $refreshToken = null,

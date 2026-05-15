@@ -96,7 +96,7 @@ class AdminModerationNoticeService
      * Send a positive/constructive admin action notice (unban, restore, approve appeal, etc.).
      * No appeal link is included — these are restorative actions.
      * @param  array<string,mixed>  $context  Extra data for the notification (e.g. resource info)
- */
+     */
     public function sendPositiveAction(
         User $admin,
         User $targetUser,
@@ -148,7 +148,7 @@ class AdminModerationNoticeService
 
     /**
      * Build the frontend appeal link with query parameters.
- */
+     */
     private function buildAppealFrontendLink(AppealTypeEnum $appealType, string $resourceType, string $resourceUuid): string
     {
         $baseUrl = rtrim((string) config('app.frontend_url'), '/');
@@ -162,7 +162,7 @@ class AdminModerationNoticeService
 
     /**
      * Determine if the admin action should allow the user to submit an appeal.
- */
+     */
     private function isAppealableAction(AdminActionEnum $action): bool
     {
         return in_array($action, [

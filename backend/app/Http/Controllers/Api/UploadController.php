@@ -11,16 +11,15 @@ use Illuminate\Http\JsonResponse;
 
 class UploadController extends Controller
 {
-    /**
-     * UploadController constructor.
- */
     public function __construct(
         private readonly UploadService $uploadService
     ) {}
 
     /**
      * handle image upload
- */
+     * @param  UploadImageRequest  $request
+     * @return JsonResponse
+     */
     public function uploadImage(UploadImageRequest $request): JsonResponse
     {
         $data = $this->uploadService->image($request->file('file'));
@@ -30,7 +29,9 @@ class UploadController extends Controller
 
     /**
      * handle video upload
- */
+     * @param  UploadVideoRequest  $request
+     * @return JsonResponse
+     */
     public function uploadVideo(UploadVideoRequest $request): JsonResponse
     {
         $data = $this->uploadService->video($request->file('file'));

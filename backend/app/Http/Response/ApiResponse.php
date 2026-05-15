@@ -60,13 +60,23 @@ class ApiResponse
     }
 
     /**
+     * Return a 204 No Content response for successful DELETE operations.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public static function noContent()
+    {
+        return response()->noContent();
+    }
+
+    /**
      * Return a created response with the given data and message.
      *
      * @param  mixed  $data  The data to include in the response (default: null).
      * @param  string  $message  The message to include in the response (default: 'Created successfully').
      * @param  array  $meta  Additional meta information to include in the response (default: []).
      * @return \Illuminate\Http\JsonResponse The JSON response containing the data, message, and meta information.
- */
+     */
     public static function created($data = null, string $message = 'Created successfully', array $meta = [])
     {
         return self::success($data, $message, Response::HTTP_CREATED, $meta);

@@ -21,10 +21,10 @@ class PostService
     use HasAuthUser;
 
     public function __construct(
-        private readonly UserRepository $userRepo,
-        private readonly PostRepository $postRepo,
-        private readonly MediaRepository $mediaRepo,
-        private readonly HashtagRepository $hashtagRepo,
+        private readonly UserRepository $userRepository,
+        private readonly PostRepository $postRepository,
+        private readonly MediaRepository $mediaRepository,
+        private readonly HashtagRepository $hashtagRepository,
         private readonly NotificationService $notificationService,
         private readonly AiModerationService $aiModerationService,
     ) {}
@@ -60,7 +60,7 @@ class PostService
             $parentPost = null;
 
             if (! empty($payload['parent_id'])) {
-                $parentPost = $this->postRepo->findById($payload['parent_id']);
+                $parentPost = $this->postRepository->findById($payload['parent_id']);
                 if (empty($parentPost)) {
                     throw new NotFoundException('Parent post not found');
                 }
@@ -68,7 +68,7 @@ class PostService
                 $this->updateParentCounter($parentPost, $postType, 'increment');
             }
 
-            $post = $this->postRepo->create([
+            $post = $this->postRepository->create([
                 'type' => $postType,
                 'audience' => $payload['audience'],
                 'content' => $payload['content'],
@@ -85,7 +85,7 @@ class PostService
             }
 
             if (! empty($payload['medias'])) {
-                $this->mediaRepo->createMany($payload['medias'], $post->id);
+                $this->mediaRepository->createMany($payload['medias'], $post->id);
             }
 
             if (! empty($parentPost) && $postType === PostTypeEnum::COMMENT->value) {
@@ -109,7 +109,7 @@ class PostService
 
         $this->aiModerationService->enqueue($post);
 
-        return $this->postRepo->getByIdWithDetail($post->id, $user->id);
+        return $this->postRepository->getByIdWithDetail($post->id, $user->id);
     }
 
     /**
@@ -141,7 +141,7 @@ class PostService
 
         DB::transaction(function () use ($post, $payload, $dataToUpdate, $mentionSyncData, $hashtagSyncData): void {
             if (! empty($dataToUpdate)) {
-                $this->postRepo->update($post->id, [
+                $this->postRepository->update($post->id, [
                     'content' => $dataToUpdate['content'] ?? $post->content,
                     'audience' => $dataToUpdate['audience'] ?? $post->audience,
                     'thumbnail_file_id' => array_key_exists('thumbnail', $dataToUpdate)
@@ -168,7 +168,7 @@ class PostService
             );
         }
 
-        return $this->postRepo->getByIdWithDetail($post->id, $authUserId);
+        return $this->postRepository->getByIdWithDetail($post->id, $authUserId);
     }
 
     /**
@@ -186,14 +186,14 @@ class PostService
             }
 
             if (! empty($post->parent_id)) {
-                $parentPost = $this->postRepo->findById($post->parent_id);
+                $parentPost = $this->postRepository->findById($post->parent_id);
 
                 if (! empty($parentPost)) {
                     $this->updateParentCounter($parentPost, $post->type->value, 'decrement');
                 }
             }
 
-            $this->postRepo->delete($post->id);
+            $this->postRepository->delete($post->id);
         });
     }
 
@@ -204,7 +204,7 @@ class PostService
     public function getByUuidOrFail(string $uuid): ?Post
     {
         $userId = auth_user_id();
-        $postDetail = $this->postRepo->getByUuidWithDetail($uuid, $userId);
+        $postDetail = $this->postRepository->getByUuidWithDetail($uuid, $userId);
         if (empty($postDetail)) {
             throw new NotFoundException('Post not found');
         }
@@ -223,7 +223,7 @@ class PostService
         $post = $this->findPostOrFail($postUuid);
         $authUserId = auth_user_id();
 
-        return $this->postRepo->search([
+        return $this->postRepository->search([
             'q' => $payload['q'] ?? null,
             'audience' => $payload['audience'] ?? null,
             'type' => $payload['post_type'] ?? null,
@@ -241,7 +241,7 @@ class PostService
     {
         $authUserId = auth_user_id();
 
-        return $this->postRepo->search([
+        return $this->postRepository->search([
             'q' => $payload['q'] ?? null,
             'audience' => $payload['audience'] ?? null,
             'type' => $payload['post_type'] ?? null,
@@ -261,7 +261,7 @@ class PostService
         $targetPost = $this->findPostOrFail($payload['post_uuid']);
         $hashtagIds = $targetPost->hashtags()->pluck('hashtags.id')->toArray();
 
-        return $this->postRepo->getRelatedPosts(
+        return $this->postRepository->getRelatedPosts(
             targetPostId: $targetPost->id,
             targetUserId: $targetPost->user_id,
             hashtagIds: $hashtagIds,
@@ -281,7 +281,7 @@ class PostService
     {
         $authUserId = auth_user_id();
 
-        return $this->postRepo->getMutualFriendsPosts(
+        return $this->postRepository->getMutualFriendsPosts(
             filters: [
                 'q' => $payload['q'] ?? null,
                 'per_page' => $payload['per_page'] ?? config('const.pagination.default_per_page'),
@@ -299,7 +299,7 @@ class PostService
     {
         $authUserId = auth_user_id();
 
-        return $this->postRepo->getFollowingPosts(
+        return $this->postRepository->getFollowingPosts(
             filters: [
                 'q' => $payload['q'] ?? null,
                 'per_page' => $payload['per_page'] ?? config('const.pagination.default_per_page'),
@@ -317,9 +317,9 @@ class PostService
     public function getUserPosts(array $payload): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
-        $targetUser = $this->userRepo->findByUuidOrFail($payload['user_uuid']);
+        $targetUser = $this->userRepository->findByUuidOrFail($payload['user_uuid']);
 
-        return $this->postRepo->getPostsByUserId(
+        return $this->postRepository->getPostsByUserId(
             filters: [
                 'type' => $payload['post_type'] ?? null,
                 'q' => $payload['q'] ?? null,
@@ -340,7 +340,7 @@ class PostService
     public function getUserLikedPosts(array $payload): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
-        $targetUser = $this->userRepo->findByUuidOrFail($payload['user_uuid']);
+        $targetUser = $this->userRepository->findByUuidOrFail($payload['user_uuid']);
 
         $this->ensureUserSettingsVisibility(
             targetUser: $targetUser,
@@ -349,7 +349,7 @@ class PostService
             forbiddenMessage: 'This user keeps liked videos private'
         );
 
-        return $this->postRepo->getLikedPostsByUserId(
+        return $this->postRepository->getLikedPostsByUserId(
             filters: [
                 'type' => $payload['post_type'] ?? null,
                 'per_page' => $payload['per_page'] ?? config('const.pagination.default_per_page'),
@@ -368,7 +368,7 @@ class PostService
     public function getUserBookmarkedPosts(array $payload): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
-        $targetUser = $this->userRepo->findByUuidOrFail($payload['user_uuid']);
+        $targetUser = $this->userRepository->findByUuidOrFail($payload['user_uuid']);
 
         $this->ensureUserSettingsVisibility(
             targetUser: $targetUser,
@@ -377,7 +377,7 @@ class PostService
             forbiddenMessage: 'This user keeps bookmarked videos private'
         );
 
-        return $this->postRepo->getBookmarkedPostsByUserId(
+        return $this->postRepository->getBookmarkedPostsByUserId(
             filters: [
                 'type' => $payload['post_type'] ?? null,
                 'per_page' => $payload['per_page'] ?? config('const.pagination.default_per_page'),
@@ -465,7 +465,7 @@ class PostService
      */
     private function findPostOrFail(string $uuid): Post
     {
-        $post = $this->postRepo->findByUuid($uuid);
+        $post = $this->postRepository->findByUuid($uuid);
 
         if (empty($post)) {
             throw new NotFoundException('Post not found');
@@ -494,7 +494,7 @@ class PostService
             return;
         }
 
-        $existingHashtags = $this->hashtagRepo->getByNames($hashtagNames)
+        $existingHashtags = $this->hashtagRepository->getByNames($hashtagNames)
             ->keyBy('name');
         $newHashtags = [];
 
@@ -505,10 +505,10 @@ class PostService
         }
 
         if (! empty($newHashtags)) {
-            $this->hashtagRepo->createMany($newHashtags);
+            $this->hashtagRepository->createMany($newHashtags);
         }
 
-        $hashtagMapByName = $this->hashtagRepo->getByNames($hashtagNames)
+        $hashtagMapByName = $this->hashtagRepository->getByNames($hashtagNames)
             ->keyBy('name');
 
         $syncData = [];
@@ -541,7 +541,7 @@ class PostService
 
         $mentionTokens = $this->extractMentionTokens($payload['content'] ?? '');
         $mentionUsernames = array_values(array_unique(array_map(fn ($item) => $item['username'], $mentionTokens)));
-        $userIdMap = $this->userRepo->getIdMapByUsernames($mentionUsernames);
+        $userIdMap = $this->userRepository->getIdMapByUsernames($mentionUsernames);
 
         $syncData = [];
 

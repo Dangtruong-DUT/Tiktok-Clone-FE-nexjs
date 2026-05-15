@@ -23,18 +23,9 @@ class PostAdminService
     ) {}
 
     /**
-     * Get paginated list of posts with filtering
-     * @param  array  $filters  {
-     *                          q?: string,
-     *                          user_uuid?: string,
-     *                          status?: 'all'|'visible'|'deleted',
-     *                          date_from?: string (Y-m-d),
-     *                          date_to?: string (Y-m-d),
-     *                          page?: int,
-     *                          per_page?: int,
-     *                          order_by?: string
-     *                          }
- */
+     * Get paginated list of posts with filtering.
+     * @param  array{q?: string, user_uuid?: string, status?: 'all'|'visible'|'deleted', date_from?: string, date_to?: string, page?: int, per_page?: int, order_by?: string}  $filters
+     */
     public function getPosts(array $filters = []): LengthAwarePaginator
     {
         $filters['type'] = PostTypeEnum::POST->value;
@@ -45,7 +36,7 @@ class PostAdminService
      * Delete a post permanently (soft delete)
      * @param  array{post_uuid:string,reason:string}  $payload
      * @throws \Exception
- */
+     */
     public function deletePost(array $payload): void
     {
         $admin = $this->guard()->user();
