@@ -8,6 +8,12 @@ class AdminCommentResource extends BaseJsonResource
 {
     public function toArray($request): array
     {
+        $user = $this->relationLoaded('user') ? $this->user : null;
+        $avatar = null;
+        if ($user && $user->relationLoaded('avatarFile')) {
+            $avatar = $user->avatar_url;
+        }
+
         return [
             'id' => $this->id,
             'uuid' => $this->uuid,
@@ -18,12 +24,12 @@ class AdminCommentResource extends BaseJsonResource
             'content' => $this->content,
             'likes_count' => $this->likes_count,
             'created_at' => optional($this->created_at)?->toDateTimeString(),
-            'author' => $this->whenLoaded('user', function () {
+            'author' => $this->whenLoaded('user', function () use ($avatar) {
                 return [
                     'id' => $this->user?->id,
                     'uuid' => $this->user?->uuid,
                     'username' => $this->user?->username,
-                    'avatar' => $this->user?->avatar_url,
+                    'avatar' => $avatar,
                 ];
             }),
         ];

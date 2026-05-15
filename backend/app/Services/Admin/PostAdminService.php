@@ -24,7 +24,7 @@ class PostAdminService
 
     /**
      * Get paginated list of posts with filtering.
-     * @param  array{q?: string, user_uuid?: string, status?: 'all'|'visible'|'deleted', date_from?: string, date_to?: string, page?: int, per_page?: int, order_by?: string}  $filters
+    * @param  array{q?: string, user_uuid?: string, status?: 'all'|'visible'|'deleted', date_from?: string, date_to?: string, page?: int, per_page?: int, order_by?: array<int, string>}  $filters
      */
     public function getPosts(array $filters = []): LengthAwarePaginator
     {

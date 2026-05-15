@@ -37,8 +37,7 @@ abstract class BaseListRequest extends BaseRequest
                 self::MAX.':'.config('const.pagination.max_per_page', 100),
             ],
             'order_by' => [self::ARRAY],
-            'order_by.*.column' => [self::STRING],
-            'order_by.*.direction' => [self::STRING],
+            'order_by.*' => [self::STRING],
         ]);
     }
 

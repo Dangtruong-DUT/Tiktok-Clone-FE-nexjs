@@ -49,7 +49,7 @@ class SystemAdminService
 
     /**
      * Get paginated admin logs with filtering.
-     * @param  array{action_type?: string, admin_uuid?: string, resource_type?: string, date_from?: string, date_to?: string, page?: int, per_page?: int, order_by?: string}  $filters
+    * @param  array{action_type?: string, admin_uuid?: string, resource_type?: string, date_from?: string, date_to?: string, page?: int, per_page?: int, order_by?: array<int, string>}  $filters
      */
     public function getAdminLogs(array $filters = []): LengthAwarePaginator
     {
@@ -58,7 +58,7 @@ class SystemAdminService
 
     /**
      * Get paginated activity logs with filtering.
-     * @param  array{action_type?: string, user_uuid?: string, resource_type?: string, date_from?: string, date_to?: string, page?: int, per_page?: int, order_by?: string}  $filters
+    * @param  array{action_type?: string, user_uuid?: string, resource_type?: string, date_from?: string, date_to?: string, page?: int, per_page?: int, order_by?: array<int, string>}  $filters
      */
     public function getActivityLogs(array $filters = []): LengthAwarePaginator
     {
@@ -67,7 +67,7 @@ class SystemAdminService
 
     /**
      * Get admin/activity logs resource collection based on log type.
-     * @param  array{log_type?: string, action_type?: string, admin_uuid?: string, user_uuid?: string, resource_type?: string, date_from?: string, date_to?: string, page?: int, per_page?: int, order_by?: string}  $filters
+    * @param  array{log_type?: string, action_type?: string, admin_uuid?: string, user_uuid?: string, resource_type?: string, date_from?: string, date_to?: string, page?: int, per_page?: int, order_by?: array<int, string>}  $filters
      */
     public function getLogsResource(array $filters = []): AnonymousResourceCollection
     {

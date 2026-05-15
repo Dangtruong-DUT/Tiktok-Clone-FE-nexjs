@@ -316,7 +316,7 @@ class UserAdminService
 
     /**
      * Get paginated list of users with filtering.
-     * @param  array{q?: string, status?: 'active'|'banned'|'deleted'|'all', page?: int, per_page?: int, order_by?: string}  $filters
+    * @param  array{q?: string, status?: 'active'|'banned'|'deleted'|'all', page?: int, per_page?: int, order_by?: array<int, string>}  $filters
      */
     public function getUsers(array $filters = []): LengthAwarePaginator
     {

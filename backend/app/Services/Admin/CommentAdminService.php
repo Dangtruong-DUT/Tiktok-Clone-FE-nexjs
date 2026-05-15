@@ -24,7 +24,7 @@ class CommentAdminService
 
     /**
      * Get paginated list of comments with filtering.
-     * @param  array{q?: string, post_uuid?: string, user_uuid?: string, date_from?: string, date_to?: string, page?: int, per_page?: int, order_by?: string}  $filters
+    * @param  array{q?: string, post_uuid?: string, user_uuid?: string, date_from?: string, date_to?: string, page?: int, per_page?: int, order_by?: array<int, string>}  $filters
      */
     public function getComments(array $filters = []): LengthAwarePaginator
     {

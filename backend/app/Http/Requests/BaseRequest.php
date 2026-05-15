@@ -195,8 +195,8 @@ abstract class BaseRequest extends BaseFormRequest
         $mergedRules = [];
         foreach ($rules as $name => $value) {
             $leafName = '';
-            if (str_contains($name, '*')) {
-                $leafName = substr(strstr($name, '.*.'), 3);
+            if (str_contains($name, '.*.')) {
+                $leafName = substr($name, strpos($name, '.*.') + 3);
             }
             if (is_array($value)) {
                 $defaultRule = [self::BAIL];

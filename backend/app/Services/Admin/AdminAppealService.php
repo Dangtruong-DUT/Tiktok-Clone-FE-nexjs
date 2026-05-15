@@ -32,7 +32,7 @@ class AdminAppealService
 
     /**
      * Get paginated appeals for admin review.
-     * @param  array{status?: string, appeal_type?: string, per_page?: int, page?: int, order_by?: string}  $filters
+    * @param  array{status?: string, appeal_type?: string, per_page?: int, page?: int, order_by?: array<int, string>}  $filters
      */
     public function getAppeals(array $filters): PaginationLengthAwarePaginator
     {

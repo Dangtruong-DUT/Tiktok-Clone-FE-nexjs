@@ -8,6 +8,7 @@ class GetUserProfileRequest extends BaseRequest
 {
     protected function prepareForValidation(): void
     {
+        parent::prepareForValidation();
         $this->merge([
             'username' => $this->route('username'),
         ]);
