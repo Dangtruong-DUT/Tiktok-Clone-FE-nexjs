@@ -20,7 +20,6 @@ class UserRepository extends BaseRepository
 
     /**
      * Get super admin user.
-     * @param  int  $id
      */
     public function getSuperAdmin(): ?User
     {
@@ -79,7 +78,7 @@ class UserRepository extends BaseRepository
     /**
      * Check if user exists by email.
      */
-    public function checkExistByEmail(string $email): bool
+    public function isExistByEmail(string $email): bool
     {
         return $this->query()->where('email', $email)->exists();
     }
@@ -90,14 +89,6 @@ class UserRepository extends BaseRepository
     public function findByEmail(string $email): ?User
     {
         return $this->query()->where('email', $email)->first();
-    }
-
-    /**
-     * Check if user exists by username.
-     */
-    public function checkUsernameExist(string $username): bool
-    {
-        return $this->query()->where('username', $username)->exists();
     }
 
     /**
@@ -284,6 +275,8 @@ class UserRepository extends BaseRepository
      */
     private function withDetail(Builder $query, ?int $userId): Builder
     {
+        $resolvedUserId = $userId ?? -1;
+
         return $query
             ->select('users.*')
             ->with(['avatarFile'])
@@ -294,9 +287,9 @@ class UserRepository extends BaseRepository
                     ->whereColumn('posts.user_id', 'users.id');
             }, 'likes_count')
             ->withExists([
-                'followers as is_followed' => fn (Builder $followersQuery) => $followersQuery->whereKey($userId),
+                'followers as is_followed' => fn (Builder $followersQuery) => $followersQuery->whereKey($resolvedUserId),
             ])
-            ->selectRaw('users.id = ? as is_owner', [$userId]);
+            ->selectRaw('users.id = ? as is_owner', [$resolvedUserId]);
     }
 
     /**

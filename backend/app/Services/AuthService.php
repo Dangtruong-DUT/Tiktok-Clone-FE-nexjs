@@ -110,7 +110,7 @@ class AuthService
      */
     public function register(array $data): array
     {
-        $isExist = $this->userRepository->checkExistByEmail($data['email']);
+        $isExist = $this->userRepository->isExistByEmail($data['email']);
         if ($isExist) {
             throw new BusinessException(
                 'Email already exists',

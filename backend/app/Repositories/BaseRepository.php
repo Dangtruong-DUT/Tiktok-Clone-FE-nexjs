@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Exceptions\http\NotFoundException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -20,7 +21,7 @@ abstract class BaseRepository
     /**
      * @return \Illuminate\Database\Eloquent\Builder<TModel>
      */
-    public function query()
+    public function query(): Builder
     {
         return $this->model->query();
     }
@@ -117,6 +118,9 @@ abstract class BaseRepository
         return $this->query()->whereIn('id', $ids)->get();
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function delete(int $id): bool
     {
         $record = $this->findOrFail($id);
