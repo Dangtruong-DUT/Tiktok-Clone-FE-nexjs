@@ -95,6 +95,7 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
         ->group(function () {
             // User management
             Route::get('/users', [UserAdminController::class, 'getUsers'])->name('list-users');
+            Route::get('/users/{user_uuid}', [UserAdminController::class, 'getUserDetail'])->name('get-user-detail');
             Route::post('/users/{user_uuid}/ban', [UserAdminController::class, 'banUser'])->name('ban-user');
             Route::delete('/users/{user_uuid}/ban', [UserAdminController::class, 'unbanUser'])->name('unban-user');
             Route::delete('/users/{user_uuid}', [UserAdminController::class, 'deleteUser'])->name('delete-user');
@@ -105,7 +106,6 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             // Post moderation
             Route::get('/posts', [PostAdminController::class, 'getPosts'])->name('list-posts');
             Route::delete('/posts/{post_uuid}', [PostAdminController::class, 'deletePost'])->name('delete-post');
-            Route::post('/posts/{post_uuid}/delete', [PostAdminController::class, 'deletePost'])->name('delete-post-compat');
 
             // Comment moderation
             Route::get('/comments', [CommentAdminController::class, 'getComments'])->name('list-comments');

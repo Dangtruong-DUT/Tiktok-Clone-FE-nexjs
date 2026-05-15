@@ -16,7 +16,7 @@ class UploadController extends Controller
     ) {}
 
     /**
-     * handle image upload
+        * Handle image upload
      * @param  UploadImageRequest  $request
      * @return JsonResponse
      */
@@ -28,7 +28,7 @@ class UploadController extends Controller
     }
 
     /**
-     * handle video upload
+        * Handle video upload
      * @param  UploadVideoRequest  $request
      * @return JsonResponse
      */

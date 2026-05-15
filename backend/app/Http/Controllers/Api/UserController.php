@@ -55,13 +55,13 @@ class UserController extends Controller
     /**
      * Follow someone
      * @param  FollowSomeOneRequest  $request
-     * @return JsonResponse
+        * @return \Illuminate\Http\Response
      */
-    public function follow(FollowSomeOneRequest $request): JsonResponse
+        public function follow(FollowSomeOneRequest $request): \Illuminate\Http\Response
     {
         $this->userService->follow($request->validated());
 
-        return ApiResponse::success(message: 'Followed successfully');
+        return ApiResponse::noContent();
     }
 
     /**
@@ -127,7 +127,8 @@ class UserController extends Controller
      */
     public function showProfile(GetUserProfileRequest $request): JsonResponse
     {
-        $user = $this->userService->getByUsername($request->username);
+        $validated = $request->validated();
+        $user = $this->userService->getByUsername($validated['username']);
 
         return ApiResponse::success(
             data: UserResource::make($user),
@@ -142,9 +143,10 @@ class UserController extends Controller
      */
     public function followers(GetUserFollowersRequest $request): JsonResponse
     {
+        $validated = $request->validated();
         $users = $this->userService->getFollowers(
-            userUuid: $request->user_uuid,
-            filters: $request->validated()
+            userUuid: $validated['user_uuid'],
+            filters: $validated
         );
 
         return ApiResponse::success(
@@ -160,9 +162,10 @@ class UserController extends Controller
      */
     public function following(GetUserFollowingRequest $request): JsonResponse
     {
+        $validated = $request->validated();
         $users = $this->userService->getFollowing(
-            userUuid: $request->user_uuid,
-            filters: $request->validated()
+            userUuid: $validated['user_uuid'],
+            filters: $validated
         );
 
         return ApiResponse::success(
@@ -178,9 +181,10 @@ class UserController extends Controller
      */
     public function friends(GetFriendsListRequest $request): JsonResponse
     {
+        $validated = $request->validated();
         $users = $this->userService->getFriends(
-            userUuid: $request->user_uuid,
-            filters: $request->validated()
+            userUuid: $validated['user_uuid'],
+            filters: $validated
         );
 
         return ApiResponse::success(

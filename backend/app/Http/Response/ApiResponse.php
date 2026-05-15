@@ -18,7 +18,7 @@ class ApiResponse
      * @param  int  $code  The HTTP status code for the response (default: 200 OK).
      * @param  array  $meta  Additional meta information to include in the response (default: []).
      * @return \Illuminate\Http\JsonResponse The JSON response containing the data, message, and meta information.
- */
+      */
     public static function success(
         $data = null,
         string $message = 'Success',
@@ -47,7 +47,7 @@ class ApiResponse
      * @param  mixed  $errors  Additional error details to include in the response (default: null
      *                         can be an array or string).
      * @return \Illuminate\Http\JsonResponse The JSON response containing the error message and details.
- */
+      */
     public static function error(string $message = 'Error', int $code = Response::HTTP_BAD_REQUEST, $errors = null)
     {
         $data = filter_null_values([

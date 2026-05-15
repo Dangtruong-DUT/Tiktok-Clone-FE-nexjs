@@ -16,7 +16,6 @@ use App\Http\Response\ApiResponse;
 use App\Services\AuthService;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 class AuthController extends Controller
 {
@@ -77,27 +76,27 @@ class AuthController extends Controller
     /**
      * Log the user out (Invalidate the token)
      * @param  LogoutRequest  $request
-     * @return JsonResponse
+     * @return \Illuminate\Http\Response
      */
-    public function logout(LogoutRequest $request): JsonResponse
+    public function logout(LogoutRequest $request): \Illuminate\Http\Response
     {
         $refreshToken = $request->input('refresh_token');
         $this->authService->logout($refreshToken);
 
-        return ApiResponse::success(message: 'Successfully logged out');
+        return ApiResponse::noContent();
     }
 
     /**
      * Log the user out from all devices (Invalidate all tokens)
      * @param  LogoutRequest  $request
-     * @return JsonResponse
+     * @return \Illuminate\Http\Response
      */
-    public function logoutAll(LogoutRequest $request): JsonResponse
+    public function logoutAll(LogoutRequest $request): \Illuminate\Http\Response
     {
         $refreshToken = $request->input('refresh_token');
         $this->authService->logoutAll($refreshToken);
 
-        return ApiResponse::success(message: 'Successfully logged out from all devices');
+        return ApiResponse::noContent();
     }
 
     /**
@@ -140,7 +139,7 @@ class AuthController extends Controller
         $credentials = $request->validated();
         $this->authService->verifyForgotPasswordToken($credentials);
 
-        return ApiResponse::success(message: 'forgot password validation email sent successfully');
+        return ApiResponse::success(message: 'Forgot password token verified successfully');
     }
 
     /**
@@ -176,10 +175,9 @@ class AuthController extends Controller
 
     /**
      * Resend the verification email to the user if their email is not verified.
-     * @param  Request  $request
      * @return JsonResponse
      */
-    public function resendVerifyEmail(Request $request): JsonResponse
+    public function resendVerifyEmail(): JsonResponse
     {
         $this->authService->resendVerifyEmail();
 

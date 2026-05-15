@@ -2,12 +2,15 @@
 
 namespace App\Services\Admin;
 
+use App\Http\Resources\Api\Admin\System\ActivityLogResource;
+use App\Http\Resources\Api\Admin\System\AdminLogResource;
 use App\Models\Post;
 use App\Models\User;
 use App\Repositories\ActivityLogRepository;
 use App\Repositories\AdminLogRepository;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 /**
  * Handles: activity logs, statistics, audit trail
@@ -60,6 +63,21 @@ class SystemAdminService
     public function getActivityLogs(array $filters = []): LengthAwarePaginator
     {
         return $this->activityLogRepository->searchForAdmin($filters);
+    }
+
+    /**
+     * Get admin/activity logs resource collection based on log type.
+     * @param  array{log_type?: string, action_type?: string, admin_uuid?: string, user_uuid?: string, resource_type?: string, date_from?: string, date_to?: string, page?: int, per_page?: int, order_by?: string}  $filters
+     */
+    public function getLogsResource(array $filters = []): AnonymousResourceCollection
+    {
+        $logType = (string) ($filters['log_type'] ?? 'admin');
+
+        if ($logType === 'activity') {
+            return ActivityLogResource::collection($this->getActivityLogs($filters));
+        }
+
+        return AdminLogResource::collection($this->getAdminLogs($filters));
     }
 
     /**

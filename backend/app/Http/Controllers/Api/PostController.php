@@ -178,13 +178,13 @@ class PostController extends Controller
     /**
      * Like a post.
      * @param  LikePostRequest  $request
-     * @return JsonResponse
+     * @return \Illuminate\Http\Response
      */
-    public function like(LikePostRequest $request): JsonResponse
+    public function like(LikePostRequest $request): \Illuminate\Http\Response
     {
         $this->postService->like($request->input('post_uuid'));
 
-        return ApiResponse::success(message: 'Post liked successfully');
+        return ApiResponse::noContent();
     }
 
     /**
@@ -214,13 +214,13 @@ class PostController extends Controller
     /**
      * Bookmark a post.
      * @param  BookmarkPostRequest  $request
-     * @return JsonResponse
+     * @return \Illuminate\Http\Response
      */
-    public function bookmark(BookmarkPostRequest $request): JsonResponse
+    public function bookmark(BookmarkPostRequest $request): \Illuminate\Http\Response
     {
         $this->postService->bookmark($request->input('post_uuid'));
 
-        return ApiResponse::success(message: 'Post bookmarked successfully');
+        return ApiResponse::noContent();
     }
 
     /**

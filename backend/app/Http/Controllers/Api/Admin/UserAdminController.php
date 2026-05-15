@@ -40,6 +40,21 @@ class UserAdminController extends Controller
     }
 
     /**
+     * Get user detail by uuid.
+     * @param  string  $user_uuid
+     * @return JsonResponse
+     */
+    public function getUserDetail(string $user_uuid): JsonResponse
+    {
+        $user = $this->userAdminService->getUserDetail($user_uuid);
+
+        return ApiResponse::success(
+            data: AdminUserResource::make($user),
+            message: 'User retrieved successfully'
+        );
+    }
+
+    /**
      * Ban a user account.
      * @param  BanUserRequest  $request
      * @return JsonResponse

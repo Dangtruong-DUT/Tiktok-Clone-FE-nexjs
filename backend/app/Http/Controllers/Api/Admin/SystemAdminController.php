@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\System\GetActivityLogsRequest;
 use App\Http\Requests\Admin\System\GetDashboardStatsRequest;
-use App\Http\Resources\Api\Admin\System\ActivityLogResource;
-use App\Http\Resources\Api\Admin\System\AdminLogResource;
 use App\Http\Response\ApiResponse;
 use App\Services\Admin\SystemAdminService;
 use Illuminate\Http\JsonResponse;
@@ -44,16 +42,7 @@ class SystemAdminController extends Controller
      */
     public function getActivityLogs(GetActivityLogsRequest $request): JsonResponse
     {
-        $validated = $request->validated();
-        $logType = (string) ($validated['log_type'] ?? 'admin');
-
-        $logs = $logType === 'activity'
-            ? $this->systemAdminService->getActivityLogs($validated)
-            : $this->systemAdminService->getAdminLogs($validated);
-
-        $logsResource = $logType === 'activity'
-            ? ActivityLogResource::collection($logs)
-            : AdminLogResource::collection($logs);
+        $logsResource = $this->systemAdminService->getLogsResource($request->validated());
 
         return ApiResponse::success(
             data: $logsResource,

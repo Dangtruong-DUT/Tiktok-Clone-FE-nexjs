@@ -30,10 +30,10 @@ class UserAdminService
      * Get user details.
      * @throws \App\Exceptions\http\NotFoundException
      */
-    public function getUserDetail(int $userId): User
+    public function getUserDetail(string $userUuid): User
     {
         /** @var User $user */
-        $user = $this->userRepository->findOrFail($userId);
+        $user = $this->userRepository->findByUuidOrFail($userUuid);
 
         return $user;
     }
