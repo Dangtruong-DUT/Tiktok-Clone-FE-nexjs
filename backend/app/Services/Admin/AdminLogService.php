@@ -24,7 +24,7 @@ class AdminLogService
      * @param  array|null  $oldData  Previous state (JSON-serializable array)
      * @param  array|null  $newData  Current state (JSON-serializable array)
      * @return AdminLog The created log entry
- */
+     */
     public function log(
         User $admin,
         ResourceTypeEnum $resourceType,

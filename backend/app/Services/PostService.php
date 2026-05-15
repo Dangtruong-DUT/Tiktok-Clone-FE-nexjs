@@ -20,9 +20,6 @@ class PostService
 {
     use HasAuthUser;
 
-    /**
-     * PostService constructor.
- */
     public function __construct(
         private readonly UserRepository $userRepo,
         private readonly PostRepository $postRepo,
@@ -34,7 +31,10 @@ class PostService
 
     /**
      * Create a new post.
- */
+     * @param  array{type?: string, parent_id?: int|null, audience: string, content: string, thumbnail?: int|null, medias?: array<int, array{file_id: int, type: string}>, mentions?: array<int, int>, hashtags?: array<int, string>}  $payload
+     * @throws BusinessException
+     * @throws NotFoundException
+     */
     public function create(array $payload): Post
     {
 
@@ -114,8 +114,11 @@ class PostService
 
     /**
      * Update a post by uuid.
-     * @param  array  $payload
- */
+     * @param  array{post_uuid: string, content?: string, audience?: string, thumbnail?: int|null, mentions?: array<int, int>, hashtags?: array<int, string>}  $payload
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws BusinessException
+     */
     public function update(array $payload): Post
     {
         $post = $this->findPostOrFail($payload['post_uuid']);
@@ -170,7 +173,9 @@ class PostService
 
     /**
      * Delete a post by uuid.
- */
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     */
     public function delete(string $uuid): void
     {
         DB::transaction(function () use ($uuid): void {
@@ -194,7 +199,8 @@ class PostService
 
     /**
      * Get post by uuid.
- */
+     * @throws NotFoundException
+     */
     public function getByUuidOrFail(string $uuid): ?Post
     {
         $userId = auth_user_id();
@@ -208,8 +214,9 @@ class PostService
 
     /**
      * Get list of child posts by parent post uuid.
-     * @param  array  $payload
- */
+     * @param  array{post_uuid: string, q?: string, audience?: string, post_type?: string, per_page?: int, page?: int}  $payload
+     * @throws NotFoundException
+     */
     public function getChildren(array $payload): LengthAwarePaginator
     {
         $postUuid = $payload['post_uuid'];
@@ -228,8 +235,8 @@ class PostService
 
     /**
      * Search for posts.
-     * @param  array  $payload
- */
+     * @param  array{q?: string, audience?: string, post_type?: string, per_page?: int, page?: int}  $payload
+     */
     public function search(array $payload): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
@@ -245,8 +252,9 @@ class PostService
 
     /**
      * Get related posts by post uuid.
-     * @param  array  $payload
- */
+     * @param  array{post_uuid: string, post_type?: string, per_page?: int}  $payload
+     * @throws NotFoundException
+     */
     public function getRelatedPosts(array $payload): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
@@ -266,9 +274,9 @@ class PostService
     }
 
     /**
-     * Get ports of friends.
-     * @param  array  $payload
- */
+     * Get posts of friends.
+     * @param  array{q?: string, per_page?: int, page?: int}  $payload
+     */
     public function getMutualFriendsPosts(array $payload): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
@@ -284,9 +292,9 @@ class PostService
     }
 
     /**
-     * Get ports of following users.
-     * @param  array  $payload
- */
+     * Get posts of following users.
+     * @param  array{q?: string, per_page?: int, page?: int}  $payload
+     */
     public function getFollowingPosts(array $payload): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
@@ -303,8 +311,9 @@ class PostService
 
     /**
      * Get posts of a user by user uuid.
-     * @param  array  $payload
- */
+     * @param  array{user_uuid: string, post_type?: string, q?: string, audience?: string, per_page?: int}  $payload
+     * @throws NotFoundException
+     */
     public function getUserPosts(array $payload): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
@@ -324,8 +333,10 @@ class PostService
 
     /**
      * Get liked posts of a user by user uuid.
-     * @param  array  $payload
- */
+     * @param  array{user_uuid: string, post_type?: string, per_page?: int}  $payload
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     */
     public function getUserLikedPosts(array $payload): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
@@ -350,8 +361,10 @@ class PostService
 
     /**
      * Get bookmarked posts of a user by user uuid.
-     * @param  array  $payload
- */
+     * @param  array{user_uuid: string, post_type?: string, per_page?: int}  $payload
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     */
     public function getUserBookmarkedPosts(array $payload): LengthAwarePaginator
     {
         $authUserId = auth_user_id();
@@ -376,7 +389,8 @@ class PostService
 
     /**
      * Like a post.
- */
+     * @throws NotFoundException
+     */
     public function like(string $uuid): void
     {
         DB::transaction(function () use ($uuid) {
@@ -396,7 +410,8 @@ class PostService
 
     /**
      * Unlike a post.
- */
+     * @throws NotFoundException
+     */
     public function unlike(string $uuid): void
     {
         DB::transaction(function () use ($uuid) {
@@ -412,7 +427,8 @@ class PostService
 
     /**
      * Bookmark a post.
- */
+     * @throws NotFoundException
+     */
     public function bookmark(string $uuid): void
     {
         DB::transaction(function () use ($uuid) {
@@ -428,7 +444,8 @@ class PostService
 
     /**
      * Unbookmark a post.
- */
+     * @throws NotFoundException
+     */
     public function unbookmark(string $uuid): void
     {
         DB::transaction(function () use ($uuid) {
@@ -444,7 +461,8 @@ class PostService
 
     /**
      * Find post by uuid or throw not found exception.
- */
+     * @throws NotFoundException
+     */
     private function findPostOrFail(string $uuid): Post
     {
         $post = $this->postRepo->findByUuid($uuid);
@@ -459,7 +477,7 @@ class PostService
     /**
      * Sync hashtags to post.
      * @param  array<int, array{name: string, start: int|null, end: int|null}>  $hashtags
- */
+     */
     private function syncHashtags(Post $post, array $hashtags): void
     {
         if (empty($hashtags)) {
@@ -512,7 +530,7 @@ class PostService
     /**
      * Resolve mention sync data [userId => pivotData].
      * @return array<int, array{start: int|null, end: int|null}>
- */
+     */
     private function resolveMentionSyncData(array $payload): array
     {
         $explicitMentionIds = collect($payload['mentions'] ?? [])
@@ -557,7 +575,7 @@ class PostService
     /**
      * Resolve hashtag sync payload with positions.
      * @return array<int, array{name: string, start: int|null, end: int|null}>
- */
+     */
     private function resolveHashtagSyncData(array $payload): array
     {
         $explicitHashtags = collect($payload['hashtags'] ?? [])
@@ -597,7 +615,7 @@ class PostService
     /**
      * Extract mention tokens with positions from content.
      * @return array<int, array{username: string, start: int, end: int}>
- */
+     */
     private function extractMentionTokens(string $content): array
     {
         $tokens = $this->extractTokenMatches($content, (string) config('regex.social.mention_token'));
@@ -615,7 +633,7 @@ class PostService
     /**
      * Extract hashtag tokens with positions from content.
      * @return array<int, array{name: string, start: int, end: int}>
- */
+     */
     private function extractHashtagTokens(string $content): array
     {
         $tokens = $this->extractTokenMatches($content, (string) config('regex.social.hashtag_token'));
@@ -633,7 +651,7 @@ class PostService
     /**
      * Extract first capture group matches and positions for a regex.
      * @return array<int, array{value: string, start: int, end: int}>
- */
+     */
     private function extractTokenMatches(string $content, string $pattern): array
     {
         if ($content === '') {
@@ -671,7 +689,7 @@ class PostService
 
     /**
      * Convert byte offset to UTF-8 character offset.
- */
+     */
     private function byteOffsetToCharOffset(string $content, int $byteOffset): int
     {
         if ($byteOffset <= 0) {
@@ -683,7 +701,8 @@ class PostService
 
     /**
      * Ensure target user's privacy setting allows current viewer.
- */
+     * @throws ForbiddenException
+     */
     private function ensureUserSettingsVisibility(
         \App\Models\User $targetUser,
         ?int $authUserId,
@@ -704,7 +723,7 @@ class PostService
 
     /**
      * Update parent post counter by post type.
- */
+     */
     private function updateParentCounter(Post $parentPost, int $type, string $action = 'increment'): void
     {
         $map = [

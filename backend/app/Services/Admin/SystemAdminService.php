@@ -31,7 +31,7 @@ class SystemAdminService
      *               total_comments: int,
      *               total_admin_actions: int
      *               }
- */
+     */
     public function getDashboardStats(string $period = 'today'): array
     {
         $this->validatePeriod($period);
@@ -63,7 +63,7 @@ class SystemAdminService
      *                          per_page?: int,
      *                          order_by?: string
      *                          }
- */
+     */
     public function getAdminLogs(array $filters = []): LengthAwarePaginator
     {
         return $this->adminLogRepository->searchForAdmin($filters);
@@ -81,7 +81,7 @@ class SystemAdminService
      *                          per_page?: int,
      *                          order_by?: string
      *                          }
- */
+     */
     public function getActivityLogs(array $filters = []): LengthAwarePaginator
     {
         return $this->activityLogRepository->searchForAdmin($filters);
@@ -90,7 +90,7 @@ class SystemAdminService
     /**
      * Validate period parameter
      * @throws \InvalidArgumentException
- */
+     */
     private function validatePeriod(string $period): void
     {
         if (! in_array($period, ['today', 'week', 'month', 'year'])) {
@@ -100,7 +100,7 @@ class SystemAdminService
 
     /**
      * Get date from based on period
- */
+     */
     private function getDateFrom(string $period): Carbon
     {
         return match ($period) {

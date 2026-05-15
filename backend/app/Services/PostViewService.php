@@ -27,7 +27,7 @@ class PostViewService
      * @param  int  $postId  ID of the post being viewed
      * @param  int|null  $authUserId  ID of the authenticated user (null for guests)
      * @param  string|null  $viewerFingerprint  Unique fingerprint for guest viewers
- */
+     */
     public function increaseView(int $postId, ?int $authUserId, ?string $viewerFingerprint = null): void
     {
         $viewerKey = $authUserId
@@ -55,7 +55,7 @@ class PostViewService
     /**
      * Sync view counts from Redis to database
      * @return int Number of posts synced
- */
+     */
     public function syncViewsToDatabase(): int
     {
         $postIds = Redis::smembers(self::REDIS_POST_IDS_SET_KEY);

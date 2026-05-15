@@ -9,8 +9,8 @@ class HashtagService
 {
     /**
      * Search for hashtags.
-     * @param  array  $data
- */
+     * @param  array{q?: string, per_page?: int}  $data
+     */
     public function search(array $data): LengthAwarePaginator
     {
         $query = $data['q'] ?? '';

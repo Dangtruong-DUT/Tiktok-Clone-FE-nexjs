@@ -10,14 +10,11 @@ class UserSettingsService
 {
     use HasAuthUser;
 
-    /**
-     * UserSettingsService constructor.
- */
     public function __construct() {}
 
     /**
      * Show the user settings.
- */
+     */
     public function show(): UserSettings
     {
         $userSettings = $this->guard()->user()->settings;
@@ -27,8 +24,8 @@ class UserSettingsService
 
     /**
      * Update the user settings.
-     * @param  array  $data
- */
+     * @param  array{liked_videos_visibility?: string, bookmarked_videos_visibility?: string, followers_visibility?: string, following_visibility?: string}  $data
+     */
     public function update(array $data): UserSettings
     {
 

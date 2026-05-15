@@ -21,9 +21,6 @@ class AuthService
 {
     use HasAuthUser;
 
-    /**
-     * AuthService constructor.
- */
     public function __construct(
         private readonly UserRepository $userRepo,
         private readonly RefreshTokenRepository $refreshRepo,
@@ -35,7 +32,10 @@ class AuthService
 
     /**
      * Attempt to log the user in and return the access token and refresh token.
- */
+     * @param  array{email: string, password: string}  $credentials
+     * @return array{access_token: string, refresh_token: string, user: User}
+     * @throws UnauthorizedException
+     */
     public function login(array $credentials): array
     {
         if (! $this->guard()->attempt($credentials)) {
@@ -56,7 +56,8 @@ class AuthService
 
     /**
      * Log the user out by invalidating the refresh token.
- */
+     * @throws UnauthorizedException
+     */
     public function logout(string $refreshToken): bool
     {
         $token = $this->tokenService->verifyRefreshToken($refreshToken);
@@ -68,7 +69,8 @@ class AuthService
 
     /**
      * Log the user out from all devices by invalidating all refresh tokens.
- */
+     * @throws UnauthorizedException
+     */
     public function logoutAll(string $refreshToken): bool
     {
         $this->tokenService->verifyRefreshToken($refreshToken);
@@ -81,7 +83,9 @@ class AuthService
 
     /**
      * Refresh the access token using the refresh token.
- */
+     * @return array{access_token: string, refresh_token: string, user: User}
+     * @throws UnauthorizedException
+     */
     public function refresh(string $refreshToken): array
     {
         $token = $this->tokenService->verifyRefreshToken($refreshToken);
@@ -100,7 +104,10 @@ class AuthService
 
     /**
      * Register for new User
- */
+     * @param  array{name: string, email: string, password: string, date_of_birth: string}  $data
+     * @return array{access_token: string, refresh_token: string, user: User}
+     * @throws BusinessException
+     */
     public function register(array $data): array
     {
         $isExist = $this->userRepo->checkExistByEmail($data['email']);
@@ -134,9 +141,10 @@ class AuthService
 
     /**
      * Handle verify email request by verifying the token and activating the user's account.
-     * @param  array  $credentials
-     * @return array
- */
+     * @param  array{email_verify_token: string}  $credentials
+     * @return array{access_token: string, refresh_token: string, user: User}
+     * @throws \App\Exceptions\http\BadRequestException
+     */
     public function verifyEmail(array $credentials): array
     {
         $token = $credentials['email_verify_token'];
@@ -161,7 +169,8 @@ class AuthService
 
     /**
      * Resend the verification email to the user if their email is not verified.
- */
+     * @throws BusinessException
+     */
     public function resendVerifyEmail(): bool
     {
         $user = $this->guard()->user();
@@ -179,7 +188,7 @@ class AuthService
 
     /**
      * Get the authenticated user's profile.
- */
+     */
     public function me(): ?User
     {
         return $this->guard()->user();
@@ -187,7 +196,8 @@ class AuthService
 
     /**
      * Handle forgot password request by sending a reset link to the user's email.
- */
+     * @throws BusinessException
+     */
     public function forgot(string $email): bool
     {
         $user = $this->userRepo->findByEmail($email);
@@ -207,8 +217,10 @@ class AuthService
     }
 
     /**
-     * @param  array  $credentials
- */
+     * Verify that a forgot-password token is valid.
+     * @param  array{forgot_password_token: string}  $credentials
+     * @throws \App\Exceptions\http\BadRequestException
+     */
     public function verifyForgotPasswordToken(array $credentials): bool
     {
         $token = $credentials['forgot_password_token'];
@@ -219,7 +231,9 @@ class AuthService
 
     /**
      * Handle reset password request by resetting the user's password.
- */
+     * @param  array{forgot_password_token: string, password: string}  $credentials
+     * @throws \App\Exceptions\http\BadRequestException
+     */
     public function resetPassword(array $credentials): bool
     {
         $validToken = $this->tokenService->verifyForgotPasswordToken($credentials['forgot_password_token']);
