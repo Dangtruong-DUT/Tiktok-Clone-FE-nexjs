@@ -94,6 +94,7 @@ class AdminAppealService
                         'appeal_type' => $appeal->appeal_type->value,
                         'resource_type' => $appeal->resource_type,
                         'resource_id' => $appeal->resource_id,
+                        'appeal_uuid' => $appeal->uuid,
                     ],
                 );
             }
@@ -154,6 +155,7 @@ class AdminAppealService
                         'appeal_type' => $appeal->appeal_type->value,
                         'resource_type' => $appeal->resource_type,
                         'resource_id' => $appeal->resource_id,
+                        'appeal_uuid' => $appeal->uuid,
                     ],
                 );
             }

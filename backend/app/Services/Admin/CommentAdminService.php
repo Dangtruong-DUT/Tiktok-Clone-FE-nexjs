@@ -93,6 +93,7 @@ class CommentAdminService
                 context: [
                     'resource_type' => ResourceTypeEnum::COMMENT->value,
                     'resource_id' => $comment->id,
+                    'resource_uuid' => $comment->uuid,
                 ]
             );
         });

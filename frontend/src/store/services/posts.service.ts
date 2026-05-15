@@ -222,12 +222,12 @@ export const PostApi = createApi({
         }),
         getPostOfUserPaging: builder.query<
             GetListPostRes,
-            { userId: string; page: number; q?: string; audience?: number }
+            { userId: string; page: number; per_page?: number; q?: string; audience?: number }
         >({
-            query: ({ userId, page, q, audience }) => {
+            query: ({ userId, page, per_page = 10, q, audience }) => {
                 const params = new URLSearchParams({
                     page: String(page),
-                    per_page: '10',
+                    per_page: String(per_page),
                     type: String(PosterType.POST)
                 })
 

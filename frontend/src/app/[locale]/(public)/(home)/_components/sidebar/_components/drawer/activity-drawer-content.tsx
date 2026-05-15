@@ -161,18 +161,16 @@ function getNotificationSubText(notification: NotificationType): string | null {
 
 function getNotificationLink(notification: NotificationType): string | null {
     const action = typeof notification.data?.action === 'string' ? notification.data.action : ''
-    const blockedAppealActions = new Set([
-        'unban',
-        'unban_user',
-        'restore_user',
-        'restore_post',
-        'restore_comment',
-        'approve_appeal',
-        'reject_appeal'
-    ])
+    const blockedActions = new Set(['unban', 'unban_user', 'restore_user', 'restore_post', 'restore_comment'])
 
-    if (notification.type === NotificationTypeCode.ADMIN && blockedAppealActions.has(action)) {
+    if (notification.type === NotificationTypeCode.ADMIN && blockedActions.has(action)) {
         return null
+    }
+
+    // approve_appeal / reject_appeal → view the resolved appeal
+    if (notification.type === NotificationTypeCode.ADMIN && (action === 'approve_appeal' || action === 'reject_appeal')) {
+        const appealUuid = typeof notification.data?.appeal_uuid === 'string' ? notification.data.appeal_uuid : null
+        return appealUuid ? `/appeal?appeal_uuid=${appealUuid}` : null
     }
 
     // Appeal notifications: prefer resource-based link (auth flow) over token link
@@ -494,7 +492,7 @@ export default function ActivityDrawerContent() {
     const handleNavigate = useCallback((path: string) => {
         window.open(`/${locale}${path}`, '_blank')
         toggleDrawer()
-    }, [])
+    }, [locale, toggleDrawer])
 
     return (
         <div className='w-full h-full flex flex-col'>

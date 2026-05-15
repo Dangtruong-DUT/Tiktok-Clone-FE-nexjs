@@ -141,6 +141,7 @@ class AiModerationService
                     context: [
                         'resource_type' => $resourceType->value,
                         'resource_id' => $post->id,
+                        'resource_uuid' => $post->uuid,
                     ]
                 );
             }

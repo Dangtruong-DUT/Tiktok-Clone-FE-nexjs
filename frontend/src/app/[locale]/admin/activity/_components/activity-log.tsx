@@ -51,7 +51,6 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
         return DATE_FORMATTER.format(now)
     }, [timePeriod])
 
-    // Fetch data
     const { data, isLoading } = useGetActivityLogsQuery({
         page,
         per_page: perPage,
@@ -317,7 +316,11 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
                                                                 variant='outline'
                                                                 className={getActivityColor(getActivityKey(log))}
                                                             >
-                                                                {t(`actionLabels.${getActivityKey(log)}` as Parameters<typeof t>[0]) ?? getActivityKey(log)}
+                                                                {t(
+                                                                    `actionLabels.${getActivityKey(log)}` as Parameters<
+                                                                        typeof t
+                                                                    >[0]
+                                                                ) ?? getActivityKey(log)}
                                                             </Badge>
                                                             <span className='text-xs text-muted-foreground'>
                                                                 {timeAgo({

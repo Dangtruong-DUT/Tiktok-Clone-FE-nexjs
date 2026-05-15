@@ -56,6 +56,7 @@ export default function TableContent() {
     } = useGetPostOfUserPagingQuery(
         {
             page: pagination.pageIndex + 1,
+            per_page: pagination.pageSize,
             userId: currentUser?.uuid || '',
             q: appliedSearchQuery || undefined,
             audience: appliedAudience
@@ -193,8 +194,8 @@ export default function TableContent() {
 
                     <span className='text-xs text-muted-foreground shrink-0'>
                         {t('showingResults', {
-                            from: (queryData.meta.current_page - 1) * pagination.pageSize + 1,
-                            to: Math.min(queryData.meta.current_page * pagination.pageSize, queryData.meta.total ?? 0),
+                            from: (queryData.meta.total ?? 0) === 0 ? 0 : (queryData.meta.current_page - 1) * queryData.meta.per_page + 1,
+                            to: Math.min(queryData.meta.current_page * queryData.meta.per_page, queryData.meta.total ?? 0),
                             total: queryData.meta.total ?? 0
                         })}
                     </span>

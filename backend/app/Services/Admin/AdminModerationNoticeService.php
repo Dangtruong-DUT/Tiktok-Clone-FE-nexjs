@@ -21,7 +21,7 @@ class AdminModerationNoticeService
     /**
      * Send a punitive moderation notice (ban, delete).
      * Includes appeal link if the action is appealable.
- */
+    */
     public function send(
         User $admin,
         User $targetUser,
@@ -32,7 +32,6 @@ class AdminModerationNoticeService
         array $context = []
     ): void {
         $resourceType = (string) ($context['resource_type'] ?? $entityType->value);
-        $resourceId = (int) ($context['resource_id'] ?? $entityId);
         $resourceUuid = (string) ($context['resource_uuid'] ?? '');
         $appealLink = null;
 
@@ -44,6 +43,10 @@ class AdminModerationNoticeService
 
         if ($resourceUuid !== '') {
             $notificationData['resource_uuid'] = $resourceUuid;
+        }
+
+        if (isset($context['appeal_uuid']) && (string) $context['appeal_uuid'] !== '') {
+            $notificationData['appeal_uuid'] = (string) $context['appeal_uuid'];
         }
 
         if ($this->isAppealableAction($action)) {
@@ -132,7 +135,7 @@ class AdminModerationNoticeService
             Mail::to($targetUser->email)->send(new AdminPositiveActionMail(
                 targetUser: $targetUser,
                 action: $action,
-                message: $message,
+                adminMessage: $message,
             ));
         } catch (\Throwable $exception) {
             Log::warning('Failed to queue positive action email', [
