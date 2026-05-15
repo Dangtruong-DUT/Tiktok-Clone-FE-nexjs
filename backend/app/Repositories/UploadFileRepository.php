@@ -17,7 +17,7 @@ class UploadFileRepository extends BaseRepository
      */
     public function isExist(int $id): bool
     {
-        return $this->query()->where('id', $id)->exists();
+        return $this->query()->whereKey($id)->exists();
     }
 
     /**

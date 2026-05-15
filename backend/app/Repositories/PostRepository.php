@@ -170,8 +170,7 @@ class PostRepository extends BaseRepository
      */
     public function searchCommentsForAdmin(array $filters): LengthAwarePaginator
     {
-        $filters['type']= PostTypeEnum::COMMENT->value;
-        $filterCollection = collect($filters);
+        $filterCollection = collect(array_merge($filters, ['type' => PostTypeEnum::COMMENT->value]));
 
         $query = $this->buildSearchQuery($filterCollection)
             ->when($filterCollection->get('post_uuid'), function (Builder $query, $postUuid) {
@@ -417,7 +416,6 @@ class PostRepository extends BaseRepository
         $keyword = trim((string) $filterCollection->get('q', ''));
 
         return $this->query()
-            ->with(['user', 'media', 'hashtags', 'mentions', 'thumbnailFile'])
             ->when(
                 $filterCollection->has('audience') && $filterCollection->get('audience') !== null,
                 fn (Builder $query) => $query->where('audience', $filterCollection->get('audience'))
@@ -478,9 +476,8 @@ class PostRepository extends BaseRepository
 
     /**
      * Apply full-text search condition on search_vector.
-     * @param  Builder  $query
-     * @param  string  $keyword
-     * @return Builder
+     * @param  Builder<Post>  $query
+     * @return Builder<Post>
      */
     private function applySearchVector(Builder $query, string $keyword): Builder
     {

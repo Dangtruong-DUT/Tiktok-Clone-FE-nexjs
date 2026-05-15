@@ -13,7 +13,8 @@ class VerifyEmailTokenRepository extends BaseRepository
     }
 
     /**
-     * Delete verify email tokens by user ID
+     * Delete verify email tokens by user ID.
+     * @return int Number of deleted rows
      */
     public function deleteByUserId(int $userId): int
     {

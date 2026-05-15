@@ -21,7 +21,8 @@ class RefreshTokenRepository extends BaseRepository
     }
 
     /**
-     * Delete refresh tokens by user ID
+     * Delete refresh tokens by user ID.
+     * @return int Number of deleted rows
      */
     public function deleteByUserId(int $userId): int
     {

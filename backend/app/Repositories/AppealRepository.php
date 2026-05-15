@@ -6,6 +6,7 @@ use App\Enums\Appeal\AppealStatusEnum;
 use App\Models\Appeal;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 class AppealRepository extends BaseRepository
 {
@@ -27,7 +28,7 @@ class AppealRepository extends BaseRepository
      */
     public function isExistById(int $id): bool
     {
-        return $this->query()->where('id', $id)->exists();
+        return $this->query()->whereKey($id)->exists();
     }
 
     /**
@@ -96,68 +97,67 @@ class AppealRepository extends BaseRepository
     }
 
     /**
-     * Get appeals for a user with optional filters
+     * Get appeals for a user with optional filters.
      * @param  array<string,mixed>  $filters
      */
     public function getByUser(int $userId, array $filters): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
         $query = $this
-            ->buildSearchQuery($filters)
+            ->buildSearchQuery($filterCollection)
             ->byUser($userId)
             ->when($filterCollection->get('order_by'), function (Builder $query, $orderBy) {
                 $query->orderByMultiple($orderBy);
-            },
-                function (Builder $query) {
-                    $query->orderBy('created_at', 'desc');
-                });
+            }, function (Builder $query) {
+                $query->orderBy('created_at', 'desc');
+            });
+
+        $perPage = min((int) $filterCollection->get('per_page', 15), 100);
 
         return $query
             ->with([
                 'user:id,uuid,username,name,avatar_file_id',
                 'reviewer:id,uuid,username,name,avatar_file_id',
             ])
-            ->paginate((int) $filterCollection->get('per_page', 15));
+            ->paginate($perPage);
     }
 
     /**
-     * Get all appeals for admin view with optional filters
+     * Get all appeals for admin view with optional filters.
      * @param  array<string,mixed>  $filters
      */
     public function getForAdmin(array $filters): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
-        $query = $this->buildSearchQuery($filters)
+        $query = $this->buildSearchQuery($filterCollection)
             ->when($filterCollection->get('order_by'), function (Builder $query, $orderBy) {
                 $query->orderByMultiple($orderBy);
-            },
-                function (Builder $query) {
-                    $query->orderBy('created_at', 'desc');
-                });
+            }, function (Builder $query) {
+                $query->orderBy('created_at', 'desc');
+            });
+
+        $perPage = min((int) $filterCollection->get('per_page', 20), 100);
 
         return $query
             ->with([
                 'user:id,uuid,username,name,avatar_file_id',
                 'reviewer:id,uuid,username,name,avatar_file_id',
             ])
-            ->paginate((int) $filterCollection->get('per_page', 20));
+            ->paginate($perPage);
     }
 
     /**
-     * Build search query for appeals with filters
-     * @param  array<string,mixed>  $filters
+     * Build search query for appeals with filters.
+     * @param  Collection<string,mixed>  $filterCollection
      */
-    private function buildSearchQuery(array $filters): Builder
+    private function buildSearchQuery(Collection $filterCollection): Builder
     {
-        $filterCollection = collect($filters);
-        $query = $this->query()
-            ->when($filterCollection->get('appeal_status'), function ($query, $appeal_status) {
-                $query->where('status', $appeal_status);
+        return $this->query()
+            ->when($filterCollection->get('appeal_status'), function (Builder $query, $appealStatus) {
+                $query->where('status', $appealStatus);
             })
-            ->when($filterCollection->get('appeal_type'), function ($query, $appeal_type) {
-                $query->where('appeal_type', $appeal_type);
+            ->when($filterCollection->get('appeal_type'), function (Builder $query, $appealType) {
+                $query->where('appeal_type', $appealType);
             });
-
-        return $query;
     }
 }

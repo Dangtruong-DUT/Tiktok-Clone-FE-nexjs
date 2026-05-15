@@ -23,6 +23,8 @@ class HashtagRepository extends BaseRepository
 
     /**
      * Get hashtags by an array of names.
+     * @param  array<int, string>  $names
+     * @return Collection<int, Hashtag>
      */
     public function getByNames(array $names): Collection
     {

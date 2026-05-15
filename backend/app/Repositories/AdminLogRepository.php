@@ -24,15 +24,12 @@ class AdminLogRepository extends BaseRepository
     {
         $filterCollection = collect($filters);
 
-        $query = $this->buildSearchQuery($filterCollection);
-
-        $orderBy = $filterCollection->get('order_by');
-
-        if (is_array($orderBy) && count($orderBy) > 0) {
-            $query->orderByMultiple($orderBy);
-        } else {
-            $query->orderByDesc('created_at');
-        }
+        $query = $this->buildSearchQuery($filterCollection)
+            ->when(
+                is_array($filterCollection->get('order_by')) && count($filterCollection->get('order_by')) > 0,
+                fn (Builder $q) => $q->orderByMultiple($filterCollection->get('order_by')),
+                fn (Builder $q) => $q->orderByDesc('created_at')
+            );
 
         $perPage = min((int) $filterCollection->get('per_page', 20), 100);
 
