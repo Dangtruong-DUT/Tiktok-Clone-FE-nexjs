@@ -35,7 +35,8 @@ class PostAdminService
     /**
      * Delete a post permanently (soft delete)
      * @param  array{post_uuid:string,reason:string}  $payload
-     * @throws \Exception
+     * @throws BadRequestException
+     * @throws \App\Exceptions\http\NotFoundException
      */
     public function deletePost(array $payload): void
     {

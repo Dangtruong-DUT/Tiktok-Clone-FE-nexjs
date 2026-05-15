@@ -10,6 +10,7 @@ use App\Enums\Common\ResourceTypeEnum;
 use App\Exceptions\http\BusinessException;
 use App\Exceptions\http\NotFoundException;
 use App\Models\Appeal;
+use App\Models\User;
 use App\Repositories\AppealRepository;
 use App\Repositories\PostRepository;
 use App\Repositories\UserRepository;
@@ -186,7 +187,7 @@ class AdminAppealService
         };
     }
 
-    private function unbanUser(Appeal $appeal, \App\Models\User $admin): void
+    private function unbanUser(Appeal $appeal, User $admin): void
     {
         $user = $appeal->user;
         if (! $user) {
@@ -207,7 +208,7 @@ class AdminAppealService
         );
     }
 
-    private function restorePost(Appeal $appeal, AdminActionEnum $action, \App\Models\User $admin): void
+    private function restorePost(Appeal $appeal, AdminActionEnum $action, User $admin): void
     {
         $isPostType = in_array($appeal->resource_type, [
             ResourceTypeEnum::POST->value,

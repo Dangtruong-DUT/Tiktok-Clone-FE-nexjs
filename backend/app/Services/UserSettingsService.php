@@ -17,9 +17,7 @@ class UserSettingsService
      */
     public function show(): UserSettings
     {
-        $userSettings = $this->guard()->user()->settings;
-
-        return $userSettings;
+        return $this->guard()->user()->settings;
     }
 
     /**

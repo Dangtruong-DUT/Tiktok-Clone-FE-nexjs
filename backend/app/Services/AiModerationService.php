@@ -76,7 +76,7 @@ class AiModerationService
     {
         $post = $this->postRepository->find((int) $payload['resource_id']);
 
-        if (! $post || $post->deleted_at !== null) {
+        if (! $post) {
             return;
         }
 

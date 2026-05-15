@@ -21,7 +21,7 @@ class AdminModerationNoticeService
     /**
      * Send a punitive moderation notice (ban, delete).
      * Includes appeal link if the action is appealable.
-    */
+     */
     public function send(
         User $admin,
         User $targetUser,

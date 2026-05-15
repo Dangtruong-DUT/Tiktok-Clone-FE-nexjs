@@ -46,7 +46,7 @@ class NotificationService
     public function markAsRead(string $notificationUuid): void
     {
         $notification = $this->notificationRepository->findByUuidAndNotifiableId($notificationUuid, auth_user_id());
-        if (empty($notification)) {
+        if (! $notification) {
             throw new NotFoundException('Notification not found');
         }
 

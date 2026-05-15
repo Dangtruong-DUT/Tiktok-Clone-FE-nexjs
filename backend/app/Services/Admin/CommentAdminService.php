@@ -34,7 +34,8 @@ class CommentAdminService
     /**
      * Delete a comment.
      * @param  array{comment_uuid:string,reason:string}  $payload
-     * @throws \Exception
+     * @throws BadRequestException
+     * @throws \App\Exceptions\http\NotFoundException
      */
     public function deleteComment(array $payload): void
     {

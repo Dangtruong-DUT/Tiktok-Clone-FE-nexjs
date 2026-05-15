@@ -9,7 +9,7 @@ use App\Models\User;
 use App\Repositories\RelationshipRepository;
 use App\Repositories\UserRepository;
 use App\Traits\HasAuthUser;
-use Carbon\CarbonPeriod as CarbonCarbonPeriod;
+use Carbon\CarbonPeriod;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -244,7 +244,7 @@ class UserService
         $totalComments = 0;
         $indicator = [];
 
-        foreach (CarbonCarbonPeriod::create($fromDate, $toDate) as $date) {
+        foreach (CarbonPeriod::create($fromDate, $toDate) as $date) {
             $dateKey = $date->format('Y-m-d');
             $row = $rowsByDate->get($dateKey);
 
@@ -272,7 +272,7 @@ class UserService
             'guests_view' => $totalGuestsView,
             'users_view' => $totalUsersView,
             'comments_count' => $totalComments,
-            'Indicator' => $indicator,
+            'indicator' => $indicator,
         ];
     }
 }

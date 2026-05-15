@@ -12,6 +12,7 @@ use App\Repositories\HashtagRepository;
 use App\Repositories\MediaRepository;
 use App\Repositories\PostRepository;
 use App\Repositories\UserRepository;
+use App\Models\User;
 use App\Traits\HasAuthUser;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -88,7 +89,7 @@ class PostService
                 $this->mediaRepository->createMany($payload['medias'], $post->id);
             }
 
-            if (! empty($parentPost) && $postType === PostTypeEnum::COMMENT->value) {
+            if ($parentPost && $postType === PostTypeEnum::COMMENT->value) {
                 $this->notificationService->notifyComment(
                     actorId: $user->id,
                     targetPost: $parentPost,
@@ -467,7 +468,7 @@ class PostService
     {
         $post = $this->postRepository->findByUuid($uuid);
 
-        if (empty($post)) {
+        if (! $post) {
             throw new NotFoundException('Post not found');
         }
 
@@ -704,7 +705,7 @@ class PostService
      * @throws ForbiddenException
      */
     private function ensureUserSettingsVisibility(
-        \App\Models\User $targetUser,
+        User $targetUser,
         ?int $authUserId,
         string $settingField,
         string $forbiddenMessage
@@ -724,7 +725,7 @@ class PostService
     /**
      * Update parent post counter by post type.
      */
-    private function updateParentCounter(Post $parentPost, int $type, string $action = 'increment'): void
+    private function updateParentCounter(Post $parentPost, string $type, string $action = 'increment'): void
     {
         $map = [
             PostTypeEnum::RE_POST->value => 'repost_count',
