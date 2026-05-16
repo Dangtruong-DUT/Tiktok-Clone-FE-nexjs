@@ -8,7 +8,8 @@ import { Skeleton } from '@/components/ui/skeleton'
 import VideoPlayer from '@/components/video-player-v3'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useGetPostDetailQuery } from '@/store/services/posts.service'
-import { formatAdminDate, formatNumber, getPostStatus, getPostStatusColor } from '@/helpers/admin-helpers'
+import { formatAdminDate, getPostStatus, getPostStatusColor } from '@/helpers/admin-helpers'
+import { formatNumber } from '@/utils/formatting/formatNumber.util'
 import type { AdminPost } from '@/types/dtos/admin/admin-response.dto'
 
 interface PostPreviewDialogProps {

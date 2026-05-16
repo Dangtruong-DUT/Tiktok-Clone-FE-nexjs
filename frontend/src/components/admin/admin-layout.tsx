@@ -22,10 +22,7 @@ export function AdminLayout({ children, title, description, breadcrumbs, actions
 
     return (
         <div className='flex h-screen bg-muted/20 text-foreground overflow-hidden'>
-            <AdminSidebar
-                collapsed={sidebarCollapsed}
-                onToggle={() => setSidebarCollapsed((v) => !v)}
-            />
+            <AdminSidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed((v) => !v)} />
 
             <div className='flex min-w-0 flex-1 flex-col min-h-0'>
                 <AdminTopbar

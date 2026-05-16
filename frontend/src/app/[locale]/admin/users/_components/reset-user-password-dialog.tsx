@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useResetUserPasswordMutation } from '@/store/services/admin/index'
+import { useResetUserPasswordMutation } from '@/store/services/admin'
 import {
     Dialog,
     DialogContent,
@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { PasswordInput } from '@/components/ui/password-input'
 import { toast } from 'sonner'
+import { extractApiError } from '@/utils/extract-api-error'
 
 interface ResetUserPasswordDialogProps {
     open: boolean
@@ -74,8 +75,7 @@ export function ResetUserPasswordDialog({
             handleClose()
             onSuccess?.()
         } catch (error) {
-            const errorMessage = (error as { data?: { message?: string } })?.data?.message
-            toast.error(errorMessage || 'Failed to reset user password')
+            toast.error(extractApiError(error) ?? 'Failed to reset user password')
         }
     }
 

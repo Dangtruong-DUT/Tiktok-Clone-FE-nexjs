@@ -1,12 +1,8 @@
 'use client'
 
-import { useState, useCallback, useMemo } from 'react'
+import { Fragment, useState, useCallback, useMemo } from 'react'
 import { useTranslations } from 'next-intl'
-import {
-    useApproveAppealMutation,
-    useGetAdminAppealsQuery,
-    useRejectAppealMutation
-} from '@/store/services/admin/index'
+import { useApproveAppealMutation, useGetAdminAppealsQuery, useRejectAppealMutation } from '@/store/services/admin'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
@@ -21,15 +17,17 @@ import {
 } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
-import { Skeleton } from '@/components/ui/skeleton'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { toast } from 'sonner'
+import { extractApiError } from '@/utils/extract-api-error'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
-import { AdminTableToolbar, AdminTablePagination, AdminTablePanel } from '@/components/admin'
+import { AdminTableToolbar, AdminTablePagination, AdminTablePanel, AdminTableSkeleton } from '@/components/admin'
+import { EmptyState } from '@/components/empty-state'
 import { EvidenceGalleryDialog } from './evidence-gallery-dialog'
 import { AppealDetailDialog } from './appeal-detail-dialog'
 import { formatAdminDate } from '@/helpers/admin-helpers'
+import { TABLE_HEAD_CLASS } from '@/constants/ui/admin'
 import type { AdminAppeal } from '@/types/dtos/admin/admin-response.dto'
 import {
     APPEAL_REVIEW_ACTIONS,
@@ -130,6 +128,18 @@ export function AppealTable() {
         setPage(1)
     }
 
+    const handleSearch = (value: string) => {
+        setSearchTerm(value)
+        setStatusFilter(draftStatus)
+        setTypeFilter(draftType)
+        setPage(1)
+    }
+
+    const handlePerPageChange = (n: number) => {
+        setPerPage(n)
+        setPage(1)
+    }
+
     const handleReviewAppeal = useCallback(async () => {
         if (!selectedAppeal || !actionType) return
 
@@ -161,411 +171,443 @@ export function AppealTable() {
             closeDialog()
             refetch()
         } catch (error) {
-            const errorMessage = (error as { data?: { message?: string } })?.data?.message
-            toast.error(errorMessage ?? t('appeals.messages.reviewError'))
+            toast.error(extractApiError(error) ?? t('appeals.messages.reviewError'))
         }
     }, [selectedAppeal, actionType, adminResponse, approveAppeal, rejectAppeal, closeDialog, refetch, t])
 
     if (isLoading) {
         return (
-            <div className='rounded-xl border bg-card shadow-xs overflow-hidden'>
-                <div className='border-b border-border/50 px-4 py-2.5'>
-                    <Skeleton className='h-8 w-full rounded-md' />
-                </div>
-                <div className='divide-y divide-border/40'>
-                    <div className='bg-muted/30 px-4 py-2.5'><Skeleton className='h-3.5 w-1/2' /></div>
-                    {Array.from({ length: 7 }).map((_, i) => (
-                        <div key={i} className='flex items-center gap-4 px-4 py-3.5'>
-                            <Skeleton className='h-4 w-4 shrink-0' />
-                            <Skeleton className='h-3.5 w-8 shrink-0' />
-                            <Skeleton className='h-3.5 w-24' />
-                            <Skeleton className='h-3.5 w-28' />
-                            <Skeleton className='h-3.5 flex-1' />
-                            <Skeleton className='h-3.5 w-12' />
-                            <Skeleton className='h-5 w-20 rounded-full' />
-                            <Skeleton className='h-3.5 w-24' />
-                            <Skeleton className='h-7 w-20 rounded-md ml-auto' />
-                        </div>
-                    ))}
-                </div>
-                <div className='border-t border-border/50 px-4 py-2.5'><Skeleton className='h-7 w-48' /></div>
-            </div>
+            <AdminTableSkeleton
+                columnWidths={[
+                    'w-4 shrink-0',
+                    'w-8 shrink-0',
+                    'w-24',
+                    'w-28',
+                    'flex-1',
+                    'w-12',
+                    'w-20 rounded-full',
+                    'w-24',
+                    'w-20 ml-auto'
+                ]}
+            />
         )
     }
 
     return (
-        <div className='space-y-2'>
-            <AdminTablePanel
-                isFetching={isFetching}
-                toolbar={
-                    <AdminTableToolbar
-                        searchValue={searchTerm}
-                        onSearchChange={(v) => { setSearchTerm(v); setStatusFilter(draftStatus); setTypeFilter(draftType); setPage(1) }}
-                        searchPlaceholder={t('appeals.placeholders.searchAppeals')}
-                        hasActiveFilters={hasActiveFilters}
-                        onResetFilters={handleResetFilters}
-                        resetLabel={t('common.reset')}
-                        isFetching={isFetching}
-                        filters={
-                            <>
-                                <Select
-                                    value={draftStatus}
-                                    onValueChange={(v) => setDraftStatus(v as typeof FILTER_ALL | AppealStatus)}
-                                >
-                                    <SelectTrigger className='h-7 w-40 rounded text-xs'>
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value={FILTER_ALL}>{t('appeals.filters.allStatuses')}</SelectItem>
-                                        {APPEAL_STATUS_VALUES.map((status) => (
-                                            <SelectItem key={status} value={status}>
-                                                {t(`appeals.statuses.${status}` as Parameters<typeof t>[0])}
+        <TooltipProvider>
+            <div className='space-y-2'>
+                <AdminTablePanel
+                    isFetching={isFetching}
+                    toolbar={
+                        <AdminTableToolbar
+                            searchValue={searchTerm}
+                            onSearchChange={handleSearch}
+                            searchPlaceholder={t('appeals.placeholders.searchAppeals')}
+                            hasActiveFilters={hasActiveFilters}
+                            onResetFilters={handleResetFilters}
+                            resetLabel={t('common.reset')}
+                            isFetching={isFetching}
+                            filters={
+                                <>
+                                    <Select
+                                        value={draftStatus}
+                                        onValueChange={(v) => setDraftStatus(v as typeof FILTER_ALL | AppealStatus)}
+                                    >
+                                        <SelectTrigger className='h-7 w-40 rounded text-xs'>
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value={FILTER_ALL}>
+                                                {t('appeals.filters.allStatuses')}
                                             </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                <Select
-                                    value={draftType}
-                                    onValueChange={(v) => setDraftType(v as typeof FILTER_ALL | AppealType)}
-                                >
-                                    <SelectTrigger className='h-7 w-40 rounded text-xs'>
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value={FILTER_ALL}>{t('appeals.filters.allTypes')}</SelectItem>
-                                        {APPEAL_TYPE_VALUES.map((appealType) => (
-                                            <SelectItem key={appealType} value={appealType}>
-                                                {t(`appeals.types.${appealType}` as Parameters<typeof t>[0])}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </>
-                        }
-                    />
-                }
-                pagination={
-                    pagination ? (
-                        <AdminTablePagination
-                            pagination={pagination}
-                            page={page}
-                            perPage={perPage}
-                            onPageChange={setPage}
-                            onPerPageChange={(n) => { setPerPage(n); setPage(1) }}
+                                            {APPEAL_STATUS_VALUES.map((status) => (
+                                                <SelectItem key={status} value={status}>
+                                                    {t(`appeals.statuses.${status}` as Parameters<typeof t>[0])}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <Select
+                                        value={draftType}
+                                        onValueChange={(v) => setDraftType(v as typeof FILTER_ALL | AppealType)}
+                                    >
+                                        <SelectTrigger className='h-7 w-40 rounded text-xs'>
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value={FILTER_ALL}>{t('appeals.filters.allTypes')}</SelectItem>
+                                            {APPEAL_TYPE_VALUES.map((appealType) => (
+                                                <SelectItem key={appealType} value={appealType}>
+                                                    {t(`appeals.types.${appealType}` as Parameters<typeof t>[0])}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </>
+                            }
                         />
-                    ) : undefined
-                }
-            >
-            {appeals.length === 0 ? (
-                <div className='py-16 text-center'>
-                    <p className='text-sm text-muted-foreground'>{t('appeals.emptyState')}</p>
-                </div>
-            ) : (
-                <div>
-                    <Table>
-                        <TableHeader>
-                            <TableRow className='hover:bg-muted/40'>
-                                <TableHead className='w-10' />
-                                <TableHead className='text-xs font-semibold uppercase tracking-wide text-muted-foreground w-16'>
-                                    {t('appeals.columns.id')}
-                                </TableHead>
-                                <TableHead className='text-xs font-semibold uppercase tracking-wide text-muted-foreground'>
-                                    {t('appeals.columns.user')}
-                                </TableHead>
-                                <TableHead className='text-xs font-semibold uppercase tracking-wide text-muted-foreground'>
-                                    {t('appeals.columns.type')}
-                                </TableHead>
-                                <TableHead className='text-xs font-semibold uppercase tracking-wide text-muted-foreground'>
-                                    {t('appeals.columns.reason')}
-                                </TableHead>
-                                <TableHead className='text-xs font-semibold uppercase tracking-wide text-muted-foreground w-20'>
-                                    {t('appeals.columns.evidence')}
-                                </TableHead>
-                                <TableHead className='text-xs font-semibold uppercase tracking-wide text-muted-foreground w-28'>
-                                    {t('appeals.columns.status')}
-                                </TableHead>
-                                <TableHead className='text-xs font-semibold uppercase tracking-wide text-muted-foreground'>
-                                    {t('appeals.columns.createdAt')}
-                                </TableHead>
-                                <TableHead className='text-right text-xs font-semibold uppercase tracking-wide text-muted-foreground'>
-                                    {t('appeals.columns.actions')}
-                                </TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {appeals.map((appeal) => {
-                                const statusConf = getStatusConfig(appeal.status)
-                                const hasEvidence = (appeal.evidence_files?.length ?? 0) > 0
-                                const isExpanded = expandedRowId !== null && expandedRowId === (appeal.uuid ?? String(appeal.id))
+                    }
+                    pagination={
+                        pagination ? (
+                            <AdminTablePagination
+                                pagination={pagination}
+                                page={page}
+                                perPage={perPage}
+                                onPageChange={setPage}
+                                onPerPageChange={handlePerPageChange}
+                            />
+                        ) : undefined
+                    }
+                >
+                    {appeals.length === 0 ? (
+                        <EmptyState message={t('appeals.emptyState')} />
+                    ) : (
+                        <div>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow className='hover:bg-muted/40'>
+                                        <TableHead className='w-10' />
+                                        <TableHead className={`${TABLE_HEAD_CLASS} w-16`}>
+                                            {t('appeals.columns.id')}
+                                        </TableHead>
+                                        <TableHead className={TABLE_HEAD_CLASS}>{t('appeals.columns.user')}</TableHead>
+                                        <TableHead className={TABLE_HEAD_CLASS}>{t('appeals.columns.type')}</TableHead>
+                                        <TableHead className={TABLE_HEAD_CLASS}>
+                                            {t('appeals.columns.reason')}
+                                        </TableHead>
+                                        <TableHead className={`${TABLE_HEAD_CLASS} w-20`}>
+                                            {t('appeals.columns.evidence')}
+                                        </TableHead>
+                                        <TableHead className={`${TABLE_HEAD_CLASS} w-28`}>
+                                            {t('appeals.columns.status')}
+                                        </TableHead>
+                                        <TableHead className={TABLE_HEAD_CLASS}>
+                                            {t('appeals.columns.createdAt')}
+                                        </TableHead>
+                                        <TableHead className={`text-right ${TABLE_HEAD_CLASS}`}>
+                                            {t('appeals.columns.actions')}
+                                        </TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {appeals.map((appeal) => {
+                                        const statusConf = getStatusConfig(appeal.status)
+                                        const hasEvidence = (appeal.evidence_files?.length ?? 0) > 0
+                                        const isExpanded =
+                                            expandedRowId !== null &&
+                                            expandedRowId === (appeal.uuid ?? String(appeal.id))
 
-                                return (
-                                    <TooltipProvider key={appeal.uuid ?? appeal.id}>
-                                        <TableRow
-                                            className='hover:bg-muted/40 cursor-pointer transition-colors'
-                                            onClick={() => toggleExpandRow(appeal.uuid ?? String(appeal.id))}
-                                        >
-                                            <TableCell>
-                                                <span className='text-xs text-muted-foreground select-none'>
-                                                    {isExpanded ? '▲' : '▼'}
-                                                </span>
-                                            </TableCell>
-                                            <TableCell className='font-mono text-xs text-muted-foreground'>
-                                                #{appeal.id}
-                                            </TableCell>
-                                            <TableCell>
-                                                <div className='flex items-center gap-2'>
-                                                    {appeal.user?.avatar && (
-                                                        <Image
-                                                            src={appeal.user.avatar}
-                                                            alt={appeal.user.username}
-                                                            width={24}
-                                                            height={24}
-                                                            className='rounded-full object-cover'
-                                                            unoptimized
-                                                        />
-                                                    )}
-                                                    <span className='text-sm font-medium'>
-                                                        {appeal.user?.username ?? '—'}
-                                                    </span>
-                                                </div>
-                                            </TableCell>
-                                            <TableCell className='text-sm'>
-                                                {t(`appeals.types.${appeal.appeal_type}` as Parameters<typeof t>[0])}
-                                            </TableCell>
-                                            <TableCell className='max-w-[200px]'>
-                                                <Tooltip>
-                                                    <TooltipTrigger asChild>
-                                                        <span className='line-clamp-1 cursor-help text-sm text-muted-foreground'>
-                                                            {appeal.reason ?? '—'}
+                                        return (
+                                            <Fragment key={appeal.uuid ?? appeal.id}>
+                                                <TableRow
+                                                    className='hover:bg-muted/40 cursor-pointer transition-colors'
+                                                    onClick={() => toggleExpandRow(appeal.uuid ?? String(appeal.id))}
+                                                >
+                                                    <TableCell>
+                                                        <span className='text-xs text-muted-foreground select-none'>
+                                                            {isExpanded ? '▲' : '▼'}
                                                         </span>
-                                                    </TooltipTrigger>
-                                                    {appeal.reason && (
-                                                        <TooltipContent side='top' className='max-w-xs'>
-                                                            <p className='text-xs'>{appeal.reason}</p>
-                                                        </TooltipContent>
-                                                    )}
-                                                </Tooltip>
-                                            </TableCell>
-                                            <TableCell>
-                                                {hasEvidence ? (
-                                                    <button
-                                                        onClick={(e) => { e.stopPropagation(); setGalleryAppeal(appeal) }}
-                                                        className='text-sm font-medium text-primary hover:underline'
-                                                    >
-                                                        {appeal.evidence_files!.length}
-                                                    </button>
-                                                ) : (
-                                                    <span className='text-muted-foreground text-sm'>—</span>
-                                                )}
-                                            </TableCell>
-                                            <TableCell>
-                                                <Badge variant='outline' className={statusConf.className}>
-                                                    {t(`appeals.statuses.${statusConf.labelKey}` as Parameters<typeof t>[0])}
-                                                </Badge>
-                                            </TableCell>
-                                            <TableCell className='text-sm text-muted-foreground'>
-                                                {formatAdminDate(appeal.created_at)}
-                                            </TableCell>
-                                            <TableCell className='text-right'>
-                                                {appeal.status === APPEAL_STATUSES.PENDING ? (
-                                                    <div
-                                                        className='flex flex-wrap justify-end gap-1.5'
-                                                        onClick={(e) => e.stopPropagation()}
-                                                    >
-                                                        <Button
-                                                            size='sm'
-                                                            variant='ghost'
-                                                            className='h-7 text-xs'
-                                                            onClick={() => setDetailAppeal(appeal)}
-                                                        >
-                                                            {t('appeals.actions.viewDetails')}
-                                                        </Button>
-                                                        <Button
-                                                            size='sm'
-                                                            variant='outline'
-                                                            disabled={isFetching}
-                                                            className='h-7 text-xs'
-                                                            onClick={() => { setSelectedAppeal(appeal); setActionType(APPEAL_REVIEW_ACTIONS.APPROVE) }}
-                                                        >
-                                                            {t('appeals.actions.approve')}
-                                                        </Button>
-                                                        <Button
-                                                            size='sm'
-                                                            variant='destructive'
-                                                            disabled={isFetching}
-                                                            className='h-7 text-xs'
-                                                            onClick={() => { setSelectedAppeal(appeal); setActionType(APPEAL_REVIEW_ACTIONS.REJECT) }}
-                                                        >
-                                                            {t('appeals.actions.reject')}
-                                                        </Button>
-                                                    </div>
-                                                ) : (
-                                                    <div className='flex justify-end' onClick={(e) => e.stopPropagation()}>
-                                                        <Button
-                                                            size='sm'
-                                                            variant='ghost'
-                                                            className='h-7 text-xs'
-                                                            onClick={() => setDetailAppeal(appeal)}
-                                                        >
-                                                            {t('appeals.actions.viewDetails')}
-                                                        </Button>
-                                                    </div>
-                                                )}
-                                            </TableCell>
-                                        </TableRow>
-
-                                        {/* Expandable row */}
-                                        <AnimatePresence>
-                                            {isExpanded && (
-                                                <TableRow key={`${appeal.uuid ?? appeal.id}-expanded`}>
-                                                    <TableCell colSpan={9} className='p-0 border-0'>
-                                                        <motion.div
-                                                            initial={{ height: 0, opacity: 0 }}
-                                                            animate={{ height: 'auto', opacity: 1 }}
-                                                            exit={{ height: 0, opacity: 0 }}
-                                                            transition={{ duration: 0.18 }}
-                                                            className='overflow-hidden'
-                                                        >
-                                                            <div className='bg-muted/30 px-6 py-4 space-y-3'>
-                                                                <div className='grid grid-cols-1 md:grid-cols-2 gap-4 text-sm'>
-                                                                    <div>
-                                                                        <p className='text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1'>
-                                                                            {t('appeals.columns.reason')}
-                                                                        </p>
-                                                                        <p className='whitespace-pre-wrap'>
-                                                                            {appeal.reason ?? '—'}
-                                                                        </p>
-                                                                    </div>
-                                                                    <div>
-                                                                        <p className='text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1'>
-                                                                            {t('appeals.labels.adminResponse')}
-                                                                        </p>
-                                                                        <p className='whitespace-pre-wrap'>
-                                                                            {appeal.admin_response ?? '—'}
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-
-                                                                {hasEvidence && (
-                                                                    <div>
-                                                                        <p className='text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2'>
-                                                                            {t('appeals.columns.evidence')} ({appeal.evidence_files!.length})
-                                                                        </p>
-                                                                        <div className='flex gap-2 flex-wrap'>
-                                                                            {appeal.evidence_files!.map((file, index) => (
-                                                                                <button
-                                                                                    key={file.id}
-                                                                                    onClick={() => setGalleryAppeal(appeal)}
-                                                                                    className='relative h-16 w-16 rounded-lg overflow-hidden border hover:ring-2 hover:ring-primary transition-all'
-                                                                                    title={file.file_name}
-                                                                                >
-                                                                                    <Image
-                                                                                        src={file.url}
-                                                                                        alt={file.file_name || `${t('appeals.evidenceDialog.imageAlt').replace('{index}', String(index + 1))}`}
-                                                                                        fill
-                                                                                        className='object-cover'
-                                                                                        unoptimized
-                                                                                    />
-                                                                                </button>
-                                                                            ))}
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-
-                                                                <div className='flex flex-wrap gap-4 text-xs text-muted-foreground'>
-                                                                    <span>
-                                                                        {t('appeals.detail.fields.resourceType')}: {appeal.resource_type}
-                                                                    </span>
-                                                                    {appeal.reviewed_at && (
-                                                                        <span>
-                                                                            {t('appeals.detail.fields.reviewedAt')}: {formatAdminDate(appeal.reviewed_at)}
-                                                                        </span>
-                                                                    )}
-                                                                    {appeal.reviewer && (
-                                                                        <span>
-                                                                            {t('appeals.detail.fields.reviewer')}: {appeal.reviewer.username}
-                                                                        </span>
-                                                                    )}
-                                                                </div>
+                                                    </TableCell>
+                                                    <TableCell className='font-mono text-xs text-muted-foreground'>
+                                                        #{appeal.id}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <div className='flex items-center gap-2'>
+                                                            {appeal.user?.avatar && (
+                                                                <Image
+                                                                    src={appeal.user.avatar}
+                                                                    alt={appeal.user.username}
+                                                                    width={24}
+                                                                    height={24}
+                                                                    className='rounded-full object-cover'
+                                                                    unoptimized
+                                                                />
+                                                            )}
+                                                            <span className='text-sm font-medium'>
+                                                                {appeal.user?.username ?? '—'}
+                                                            </span>
+                                                        </div>
+                                                    </TableCell>
+                                                    <TableCell className='text-sm'>
+                                                        {t(
+                                                            `appeals.types.${appeal.appeal_type}` as Parameters<
+                                                                typeof t
+                                                            >[0]
+                                                        )}
+                                                    </TableCell>
+                                                    <TableCell className='max-w-[200px]'>
+                                                        <Tooltip>
+                                                            <TooltipTrigger asChild>
+                                                                <span className='line-clamp-1 cursor-help text-sm text-muted-foreground'>
+                                                                    {appeal.reason ?? '—'}
+                                                                </span>
+                                                            </TooltipTrigger>
+                                                            {appeal.reason && (
+                                                                <TooltipContent side='top' className='max-w-xs'>
+                                                                    <p className='text-xs'>{appeal.reason}</p>
+                                                                </TooltipContent>
+                                                            )}
+                                                        </Tooltip>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {hasEvidence ? (
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation()
+                                                                    setGalleryAppeal(appeal)
+                                                                }}
+                                                                className='text-sm font-medium text-primary hover:underline'
+                                                            >
+                                                                {appeal.evidence_files!.length}
+                                                            </button>
+                                                        ) : (
+                                                            <span className='text-muted-foreground text-sm'>—</span>
+                                                        )}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <Badge variant='outline' className={statusConf.className}>
+                                                            {t(
+                                                                `appeals.statuses.${statusConf.labelKey}` as Parameters<
+                                                                    typeof t
+                                                                >[0]
+                                                            )}
+                                                        </Badge>
+                                                    </TableCell>
+                                                    <TableCell className='text-sm text-muted-foreground'>
+                                                        {formatAdminDate(appeal.created_at)}
+                                                    </TableCell>
+                                                    <TableCell className='text-right'>
+                                                        {appeal.status === APPEAL_STATUSES.PENDING ? (
+                                                            <div
+                                                                className='flex flex-wrap justify-end gap-1.5'
+                                                                onClick={(e) => e.stopPropagation()}
+                                                            >
+                                                                <Button
+                                                                    size='sm'
+                                                                    variant='ghost'
+                                                                    className='h-7 text-xs'
+                                                                    onClick={() => setDetailAppeal(appeal)}
+                                                                >
+                                                                    {t('appeals.actions.viewDetails')}
+                                                                </Button>
+                                                                <Button
+                                                                    size='sm'
+                                                                    variant='outline'
+                                                                    disabled={isFetching}
+                                                                    className='h-7 text-xs'
+                                                                    onClick={() => {
+                                                                        setSelectedAppeal(appeal)
+                                                                        setActionType(APPEAL_REVIEW_ACTIONS.APPROVE)
+                                                                    }}
+                                                                >
+                                                                    {t('appeals.actions.approve')}
+                                                                </Button>
+                                                                <Button
+                                                                    size='sm'
+                                                                    variant='destructive'
+                                                                    disabled={isFetching}
+                                                                    className='h-7 text-xs'
+                                                                    onClick={() => {
+                                                                        setSelectedAppeal(appeal)
+                                                                        setActionType(APPEAL_REVIEW_ACTIONS.REJECT)
+                                                                    }}
+                                                                >
+                                                                    {t('appeals.actions.reject')}
+                                                                </Button>
                                                             </div>
-                                                        </motion.div>
+                                                        ) : (
+                                                            <div
+                                                                className='flex justify-end'
+                                                                onClick={(e) => e.stopPropagation()}
+                                                            >
+                                                                <Button
+                                                                    size='sm'
+                                                                    variant='ghost'
+                                                                    className='h-7 text-xs'
+                                                                    onClick={() => setDetailAppeal(appeal)}
+                                                                >
+                                                                    {t('appeals.actions.viewDetails')}
+                                                                </Button>
+                                                            </div>
+                                                        )}
                                                     </TableCell>
                                                 </TableRow>
-                                            )}
-                                        </AnimatePresence>
-                                    </TooltipProvider>
-                                )
-                            })}
-                        </TableBody>
-                    </Table>
-                </div>
-            )}
-            </AdminTablePanel>
 
-            {/* Review dialog */}
-            <Dialog open={!!selectedAppeal && !!actionType} onOpenChange={(open) => !open && closeDialog()}>
-                <DialogContent className='sm:max-w-[520px]'>
-                    <DialogHeader>
-                        <DialogTitle>
-                            {actionType === APPEAL_REVIEW_ACTIONS.APPROVE
-                                ? t('appeals.actions.approve')
-                                : t('appeals.actions.reject')}
-                        </DialogTitle>
-                        <DialogDescription>
-                            {actionType === APPEAL_REVIEW_ACTIONS.APPROVE
-                                ? t('appeals.dialogs.approve')
-                                : t('appeals.dialogs.reject')}
-                        </DialogDescription>
-                    </DialogHeader>
+                                                {/* Expandable row */}
+                                                <AnimatePresence>
+                                                    {isExpanded && (
+                                                        <TableRow key={`${appeal.uuid ?? appeal.id}-expanded`}>
+                                                            <TableCell colSpan={9} className='p-0 border-0'>
+                                                                <motion.div
+                                                                    initial={{ height: 0, opacity: 0 }}
+                                                                    animate={{ height: 'auto', opacity: 1 }}
+                                                                    exit={{ height: 0, opacity: 0 }}
+                                                                    transition={{ duration: 0.18 }}
+                                                                    className='overflow-hidden'
+                                                                >
+                                                                    <div className='bg-muted/30 px-6 py-4 space-y-3'>
+                                                                        <div className='grid grid-cols-1 md:grid-cols-2 gap-4 text-sm'>
+                                                                            <div>
+                                                                                <p className='text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1'>
+                                                                                    {t('appeals.columns.reason')}
+                                                                                </p>
+                                                                                <p className='whitespace-pre-wrap'>
+                                                                                    {appeal.reason ?? '—'}
+                                                                                </p>
+                                                                            </div>
+                                                                            <div>
+                                                                                <p className='text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1'>
+                                                                                    {t('appeals.labels.adminResponse')}
+                                                                                </p>
+                                                                                <p className='whitespace-pre-wrap'>
+                                                                                    {appeal.admin_response ?? '—'}
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
 
-                    <div className='space-y-2 py-2'>
-                        <Label htmlFor='admin-response'>{t('appeals.labels.adminResponse')}</Label>
-                        <Textarea
-                            id='admin-response'
-                            value={adminResponse}
-                            onChange={(e) => setAdminResponse(e.target.value)}
-                            placeholder={
-                                actionType === APPEAL_REVIEW_ACTIONS.APPROVE
-                                    ? t('appeals.placeholders.approveResponse')
-                                    : t('appeals.placeholders.rejectResponse')
-                            }
-                            className='min-h-[100px]'
-                        />
-                    </div>
+                                                                        {hasEvidence && (
+                                                                            <div>
+                                                                                <p className='text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2'>
+                                                                                    {t('appeals.columns.evidence')} (
+                                                                                    {appeal.evidence_files!.length})
+                                                                                </p>
+                                                                                <div className='flex gap-2 flex-wrap'>
+                                                                                    {appeal.evidence_files!.map(
+                                                                                        (file, index) => (
+                                                                                            <button
+                                                                                                key={file.id}
+                                                                                                onClick={() =>
+                                                                                                    setGalleryAppeal(
+                                                                                                        appeal
+                                                                                                    )
+                                                                                                }
+                                                                                                className='relative h-16 w-16 rounded-lg overflow-hidden border hover:ring-2 hover:ring-primary transition-all'
+                                                                                                title={file.file_name}
+                                                                                            >
+                                                                                                <Image
+                                                                                                    src={file.url}
+                                                                                                    alt={
+                                                                                                        file.file_name ||
+                                                                                                        `${t('appeals.evidenceDialog.imageAlt').replace('{index}', String(index + 1))}`
+                                                                                                    }
+                                                                                                    fill
+                                                                                                    className='object-cover'
+                                                                                                    unoptimized
+                                                                                                />
+                                                                                            </button>
+                                                                                        )
+                                                                                    )}
+                                                                                </div>
+                                                                            </div>
+                                                                        )}
 
-                    <DialogFooter>
-                        <Button variant='outline' onClick={closeDialog} disabled={isSubmitting}>
-                            {t('common.cancel')}
-                        </Button>
-                        <Button
-                            variant={actionType === APPEAL_REVIEW_ACTIONS.APPROVE ? 'default' : 'destructive'}
-                            onClick={handleReviewAppeal}
-                            disabled={isSubmitting}
-                        >
-                            {isSubmitting
-                                ? t('common.loading')
-                                : actionType === APPEAL_REVIEW_ACTIONS.APPROVE
-                                  ? t('appeals.actions.approve')
-                                  : t('appeals.actions.reject')}
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+                                                                        <div className='flex flex-wrap gap-4 text-xs text-muted-foreground'>
+                                                                            <span>
+                                                                                {t(
+                                                                                    'appeals.detail.fields.resourceType'
+                                                                                )}
+                                                                                : {appeal.resource_type}
+                                                                            </span>
+                                                                            {appeal.reviewed_at && (
+                                                                                <span>
+                                                                                    {t(
+                                                                                        'appeals.detail.fields.reviewedAt'
+                                                                                    )}
+                                                                                    :{' '}
+                                                                                    {formatAdminDate(
+                                                                                        appeal.reviewed_at
+                                                                                    )}
+                                                                                </span>
+                                                                            )}
+                                                                            {appeal.reviewer && (
+                                                                                <span>
+                                                                                    {t(
+                                                                                        'appeals.detail.fields.reviewer'
+                                                                                    )}
+                                                                                    : {appeal.reviewer.username}
+                                                                                </span>
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                </motion.div>
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    )}
+                                                </AnimatePresence>
+                                            </Fragment>
+                                        )
+                                    })}
+                                </TableBody>
+                            </Table>
+                        </div>
+                    )}
+                </AdminTablePanel>
 
-            <EvidenceGalleryDialog
-                open={!!galleryAppeal}
-                onOpenChange={(open) => !open && setGalleryAppeal(null)}
-                evidenceFiles={galleryAppeal?.evidence_files ?? []}
-                appealId={galleryAppeal?.uuid ?? undefined}
-            />
+                {/* Review dialog */}
+                <Dialog open={!!selectedAppeal && !!actionType} onOpenChange={(open) => !open && closeDialog()}>
+                    <DialogContent className='sm:max-w-[520px]'>
+                        <DialogHeader>
+                            <DialogTitle>
+                                {actionType === APPEAL_REVIEW_ACTIONS.APPROVE
+                                    ? t('appeals.actions.approve')
+                                    : t('appeals.actions.reject')}
+                            </DialogTitle>
+                            <DialogDescription>
+                                {actionType === APPEAL_REVIEW_ACTIONS.APPROVE
+                                    ? t('appeals.dialogs.approve')
+                                    : t('appeals.dialogs.reject')}
+                            </DialogDescription>
+                        </DialogHeader>
 
-            {detailAppeal && (
-                <AppealDetailDialog
-                    open={!!detailAppeal}
-                    appeal={detailAppeal}
-                    onOpenChange={(open) => !open && setDetailAppeal(null)}
+                        <div className='space-y-2 py-2'>
+                            <Label htmlFor='admin-response'>{t('appeals.labels.adminResponse')}</Label>
+                            <Textarea
+                                id='admin-response'
+                                value={adminResponse}
+                                onChange={(e) => setAdminResponse(e.target.value)}
+                                placeholder={
+                                    actionType === APPEAL_REVIEW_ACTIONS.APPROVE
+                                        ? t('appeals.placeholders.approveResponse')
+                                        : t('appeals.placeholders.rejectResponse')
+                                }
+                                className='min-h-[100px]'
+                            />
+                        </div>
+
+                        <DialogFooter>
+                            <Button variant='outline' onClick={closeDialog} disabled={isSubmitting}>
+                                {t('common.cancel')}
+                            </Button>
+                            <Button
+                                variant={actionType === APPEAL_REVIEW_ACTIONS.APPROVE ? 'default' : 'destructive'}
+                                onClick={handleReviewAppeal}
+                                disabled={isSubmitting}
+                            >
+                                {isSubmitting
+                                    ? t('common.loading')
+                                    : actionType === APPEAL_REVIEW_ACTIONS.APPROVE
+                                      ? t('appeals.actions.approve')
+                                      : t('appeals.actions.reject')}
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+
+                <EvidenceGalleryDialog
+                    open={!!galleryAppeal}
+                    onOpenChange={(open) => !open && setGalleryAppeal(null)}
+                    evidenceFiles={galleryAppeal?.evidence_files ?? []}
+                    appealId={galleryAppeal?.uuid ?? undefined}
                 />
-            )}
-        </div>
+
+                {detailAppeal && (
+                    <AppealDetailDialog
+                        open={!!detailAppeal}
+                        appeal={detailAppeal}
+                        onOpenChange={(open) => !open && setDetailAppeal(null)}
+                    />
+                )}
+            </div>
+        </TooltipProvider>
     )
 }

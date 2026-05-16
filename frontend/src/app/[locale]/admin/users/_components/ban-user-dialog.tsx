@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useBanUserMutation } from '@/store/services/admin/index'
+import { useBanUserMutation } from '@/store/services/admin'
 import {
     Dialog,
     DialogContent,
@@ -16,6 +16,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
+import { extractApiError } from '@/utils/extract-api-error'
 
 interface BanUserDialogProps {
     open: boolean
@@ -76,8 +77,7 @@ export function BanUserDialog({ open, userUuid, username, onOpenChange, onSucces
             handleCloseDialog()
             onSuccess?.()
         } catch (error) {
-            const errorMessage = (error as { data?: { message?: string } })?.data?.message
-            toast.error(errorMessage || t('users.messages.banError'))
+            toast.error(extractApiError(error) ?? t('users.messages.banError'))
         }
     }
 

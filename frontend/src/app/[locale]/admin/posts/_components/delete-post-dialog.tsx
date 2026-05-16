@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useDeletePostMutation } from '@/store/services/admin/index'
+import { useDeletePostMutation } from '@/store/services/admin'
 import {
     Dialog,
     DialogContent,
@@ -16,6 +16,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
+import { extractApiError } from '@/utils/extract-api-error'
 import { VIOLATION_REASONS } from '@/constants/ui/admin'
 
 interface DeletePostDialogProps {
@@ -78,8 +79,7 @@ export function DeletePostDialog({ open, postUuid, authorUsername, onOpenChange,
             handleCloseDialog()
             onSuccess?.()
         } catch (error) {
-            const errorMessage = (error as { data?: { message?: string } })?.data?.message
-            toast.error(errorMessage || t('posts.messages.deleteError'))
+            toast.error(extractApiError(error) ?? t('posts.messages.deleteError'))
         }
     }
 

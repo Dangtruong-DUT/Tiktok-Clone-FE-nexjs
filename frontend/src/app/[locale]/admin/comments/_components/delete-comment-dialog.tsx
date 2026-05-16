@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
+import { extractApiError } from '@/utils/extract-api-error'
 
 interface DeleteCommentDialogProps {
     open: boolean
@@ -72,8 +73,7 @@ export function DeleteCommentDialog({
             handleCloseDialog()
             onSuccess?.()
         } catch (error) {
-            const errorMessage = (error as { data?: { message?: string } })?.data?.message
-            toast.error(errorMessage || t('comments.messages.deleteError'))
+            toast.error(extractApiError(error) ?? t('comments.messages.deleteError'))
         }
     }
 

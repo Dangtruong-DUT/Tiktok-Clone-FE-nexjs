@@ -1,5 +1,3 @@
-import { formatNumber } from '@/utils/formatting/formatNumber.util'
-
 export function formatAdminDate(dateString: string, locale = 'en-US'): string {
     if (!dateString) return '-'
     try {
@@ -72,5 +70,3 @@ export function isRecentAction(dateString: string | null, hoursThreshold = 24): 
     const diffInHours = (Date.now() - new Date(dateString).getTime()) / (1000 * 60 * 60)
     return diffInHours < hoursThreshold
 }
-
-export { formatNumber }

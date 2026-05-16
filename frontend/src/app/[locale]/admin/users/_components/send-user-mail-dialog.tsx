@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useSendUserMailMutation } from '@/store/services/admin/index'
+import { useSendUserMailMutation } from '@/store/services/admin'
 import {
     Dialog,
     DialogContent,

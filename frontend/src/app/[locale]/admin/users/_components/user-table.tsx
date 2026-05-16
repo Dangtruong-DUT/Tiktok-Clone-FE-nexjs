@@ -1,8 +1,7 @@
 'use client'
 
-import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useGetAdminUsersQuery } from '@/store/services/admin/index'
+import { useGetAdminUsersQuery } from '@/store/services/admin'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import {
     DropdownMenu,
@@ -11,13 +10,13 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Button } from '@/components/ui/button'
 import { Trash2, ShieldOff, ShieldCheck, MoreHorizontal } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Skeleton } from '@/components/ui/skeleton'
-import { AdminTableToolbar, AdminTablePagination, AdminTablePanel } from '@/components/admin'
+import { AdminTableToolbar, AdminTablePagination, AdminTablePanel, AdminTableSkeleton } from '@/components/admin'
+import { TooltipIconButton } from '@/components/ui/tooltip-icon-button'
+import { EmptyState } from '@/components/empty-state'
 import { BanUserDialog } from './ban-user-dialog'
 import { UnbanUserDialog } from './unban-user-dialog'
 import { DeleteUserDialog } from './delete-user-dialog'
@@ -26,6 +25,9 @@ import { ResetUserPasswordDialog } from './reset-user-password-dialog'
 import { SendUserMailDialog } from './send-user-mail-dialog'
 import { UserDetailDialog } from './user-detail-dialog'
 import { formatAdminDate, getUserStatus, getUserStatusColor, truncateText } from '@/helpers/admin-helpers'
+import { useAdminTableState } from '@/hooks/use-admin-table-state'
+import { useDialog } from '@/hooks/use-dialog'
+import { TABLE_HEAD_CLASS, type SortOrder } from '@/constants/ui/admin'
 import type { AdminUser } from '@/types/dtos/admin/admin-response.dto'
 
 interface UserTableProps {
@@ -33,64 +35,40 @@ interface UserTableProps {
 }
 
 type UserStatusFilter = 'all' | 'banned' | 'active' | 'deleted'
-type SortOrder = 'recent' | 'oldest'
 type DialogType = 'detail' | 'ban' | 'unban' | 'delete' | 'restore' | 'reset-password' | 'send-mail'
 
 export function UserTable({ onUserDeleted }: UserTableProps) {
     const t = useTranslations('AdminPage')
 
-    const [page, setPage] = useState(1)
-    const [perPage, setPerPage] = useState(10)
+    const {
+        page,
+        perPage,
+        searchTerm,
+        statusFilter,
+        sortBy,
+        draftStatus,
+        draftSort,
+        hasActiveFilters,
+        setPage,
+        setDraftStatus,
+        setDraftSort,
+        handleSearch,
+        handleReset,
+        handlePerPageChange
+    } = useAdminTableState('all')
 
-    // Applied state — used in API query
-    const [searchTerm, setSearchTerm] = useState('')
-    const [statusFilter, setStatusFilter] = useState<UserStatusFilter>('all')
-    const [sortBy, setSortBy] = useState<SortOrder>('recent')
-
-    // Draft state — controlled by UI, applied only on Search click
-    const [draftStatus, setDraftStatus] = useState<UserStatusFilter>('all')
-    const [draftSort, setDraftSort] = useState<SortOrder>('recent')
-
-    const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null)
-    const [dialogType, setDialogType] = useState<DialogType | null>(null)
+    const { selectedItem: selectedUser, dialogType, openDialog, closeDialog } = useDialog<AdminUser, DialogType>()
 
     const { data, isLoading, isFetching, refetch } = useGetAdminUsersQuery({
         page,
         per_page: perPage,
         q: searchTerm || undefined,
-        status: statusFilter,
+        status: statusFilter as UserStatusFilter,
         order_by: [sortBy === 'recent' ? '-created_at' : 'created_at']
     })
 
     const users = data?.data ?? []
     const pagination = data?.meta
-
-    const hasActiveFilters = statusFilter !== 'all' || sortBy !== 'recent'
-
-    const handleSearch = (value: string) => {
-        setSearchTerm(value)
-        setStatusFilter(draftStatus)
-        setSortBy(draftSort)
-        setPage(1)
-    }
-
-    const handleResetFilters = () => {
-        setDraftStatus('all')
-        setDraftSort('recent')
-        setStatusFilter('all')
-        setSortBy('recent')
-        setPage(1)
-    }
-
-    const openDialog = (user: AdminUser, type: DialogType) => {
-        setSelectedUser(user)
-        setDialogType(type)
-    }
-
-    const closeDialog = () => {
-        setSelectedUser(null)
-        setDialogType(null)
-    }
 
     const handleActionSuccess = () => {
         closeDialog()
@@ -100,34 +78,14 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
 
     if (isLoading) {
         return (
-            <div className='rounded-xl border bg-card shadow-xs overflow-hidden'>
-                <div className='border-b border-border/50 px-4 py-2.5'>
-                    <Skeleton className='h-8 w-full rounded-md' />
-                </div>
-                <div className='divide-y divide-border/40'>
-                    <div className='bg-muted/30 px-4 py-2.5'>
-                        <Skeleton className='h-3.5 w-1/2' />
-                    </div>
-                    {Array.from({ length: 7 }).map((_, i) => (
-                        <div key={i} className='flex items-center gap-4 px-4 py-3.5'>
-                            <Skeleton className='h-3.5 w-8 shrink-0' />
-                            <Skeleton className='h-3.5 w-28' />
-                            <Skeleton className='h-3.5 flex-1' />
-                            <Skeleton className='h-5 w-16 rounded-full' />
-                            <Skeleton className='h-3.5 w-24' />
-                            <Skeleton className='h-7 w-20 rounded-md ml-auto' />
-                        </div>
-                    ))}
-                </div>
-                <div className='border-t border-border/50 px-4 py-2.5'>
-                    <Skeleton className='h-7 w-48' />
-                </div>
-            </div>
+            <AdminTableSkeleton
+                columnWidths={['w-8 shrink-0', 'w-28', 'flex-1', 'w-16 rounded-full', 'w-24', 'w-20 ml-auto']}
+            />
         )
     }
 
     return (
-        <TooltipProvider>
+        <>
             <AdminTablePanel
                 isFetching={isFetching}
                 toolbar={
@@ -136,12 +94,15 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                         onSearchChange={handleSearch}
                         searchPlaceholder={t('users.placeholders.searchUsers')}
                         hasActiveFilters={hasActiveFilters}
-                        onResetFilters={handleResetFilters}
+                        onResetFilters={handleReset}
                         resetLabel={t('common.reset')}
                         isFetching={isFetching}
                         filters={
                             <>
-                                <Select value={draftStatus} onValueChange={(v) => setDraftStatus(v as UserStatusFilter)}>
+                                <Select
+                                    value={draftStatus}
+                                    onValueChange={(v) => setDraftStatus(v as UserStatusFilter)}
+                                >
                                     <SelectTrigger className='h-7 w-36 rounded text-xs'>
                                         <SelectValue />
                                     </SelectTrigger>
@@ -172,38 +133,25 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                             page={page}
                             perPage={perPage}
                             onPageChange={setPage}
-                            onPerPageChange={(n) => {
-                                setPerPage(n)
-                                setPage(1)
-                            }}
+                            onPerPageChange={handlePerPageChange}
                         />
                     ) : undefined
                 }
             >
                 {users.length === 0 ? (
-                    <div className='py-16 text-center'>
-                        <p className='text-sm text-muted-foreground'>{t('users.emptyState')}</p>
-                    </div>
+                    <EmptyState message={t('users.emptyState')} />
                 ) : (
                     <Table>
                         <TableHeader>
                             <TableRow className='hover:bg-muted/40'>
-                                <TableHead className='text-xs font-semibold uppercase tracking-wide text-muted-foreground w-16'>
-                                    {t('users.columns.id')}
-                                </TableHead>
-                                <TableHead className='text-xs font-semibold uppercase tracking-wide text-muted-foreground'>
-                                    {t('users.columns.username')}
-                                </TableHead>
-                                <TableHead className='text-xs font-semibold uppercase tracking-wide text-muted-foreground'>
-                                    {t('users.columns.email')}
-                                </TableHead>
-                                <TableHead className='text-xs font-semibold uppercase tracking-wide text-muted-foreground w-28'>
+                                <TableHead className={`${TABLE_HEAD_CLASS} w-16`}>{t('users.columns.id')}</TableHead>
+                                <TableHead className={TABLE_HEAD_CLASS}>{t('users.columns.username')}</TableHead>
+                                <TableHead className={TABLE_HEAD_CLASS}>{t('users.columns.email')}</TableHead>
+                                <TableHead className={`${TABLE_HEAD_CLASS} w-28`}>
                                     {t('users.columns.status')}
                                 </TableHead>
-                                <TableHead className='text-xs font-semibold uppercase tracking-wide text-muted-foreground'>
-                                    {t('users.columns.joinDate')}
-                                </TableHead>
-                                <TableHead className='text-right text-xs font-semibold uppercase tracking-wide text-muted-foreground w-28'>
+                                <TableHead className={TABLE_HEAD_CLASS}>{t('users.columns.joinDate')}</TableHead>
+                                <TableHead className={`text-right ${TABLE_HEAD_CLASS} w-28`}>
                                     {t('users.columns.actions')}
                                 </TableHead>
                             </TableRow>
@@ -231,67 +179,39 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                                         <TableCell className='text-right'>
                                             <div className='flex items-center justify-end gap-1'>
                                                 {status === 'deleted' ? (
-                                                    <Tooltip>
-                                                        <TooltipTrigger asChild>
-                                                            <Button
-                                                                variant='ghost'
-                                                                size='icon'
-                                                                className='h-8 w-8 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950'
-                                                                onClick={() => openDialog(user, 'restore')}
-                                                                disabled={isFetching}
-                                                            >
-                                                                <ShieldCheck className='h-4 w-4' />
-                                                            </Button>
-                                                        </TooltipTrigger>
-                                                        <TooltipContent>{t('users.actions.restore')}</TooltipContent>
-                                                    </Tooltip>
+                                                    <TooltipIconButton
+                                                        icon={ShieldCheck}
+                                                        tooltip={t('users.actions.restore')}
+                                                        onClick={() => openDialog(user, 'restore')}
+                                                        disabled={isFetching}
+                                                        className='text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950'
+                                                    />
                                                 ) : status === 'banned' ? (
-                                                    <Tooltip>
-                                                        <TooltipTrigger asChild>
-                                                            <Button
-                                                                variant='ghost'
-                                                                size='icon'
-                                                                className='h-8 w-8 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950'
-                                                                onClick={() => openDialog(user, 'unban')}
-                                                                disabled={isFetching}
-                                                            >
-                                                                <ShieldCheck className='h-4 w-4' />
-                                                            </Button>
-                                                        </TooltipTrigger>
-                                                        <TooltipContent>{t('users.actions.unban')}</TooltipContent>
-                                                    </Tooltip>
+                                                    <TooltipIconButton
+                                                        icon={ShieldCheck}
+                                                        tooltip={t('users.actions.unban')}
+                                                        onClick={() => openDialog(user, 'unban')}
+                                                        disabled={isFetching}
+                                                        className='text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950'
+                                                    />
                                                 ) : (
-                                                    <Tooltip>
-                                                        <TooltipTrigger asChild>
-                                                            <Button
-                                                                variant='ghost'
-                                                                size='icon'
-                                                                className='h-8 w-8 text-orange-500 hover:text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-950'
-                                                                onClick={() => openDialog(user, 'ban')}
-                                                                disabled={isFetching}
-                                                            >
-                                                                <ShieldOff className='h-4 w-4' />
-                                                            </Button>
-                                                        </TooltipTrigger>
-                                                        <TooltipContent>{t('users.actions.ban')}</TooltipContent>
-                                                    </Tooltip>
+                                                    <TooltipIconButton
+                                                        icon={ShieldOff}
+                                                        tooltip={t('users.actions.ban')}
+                                                        onClick={() => openDialog(user, 'ban')}
+                                                        disabled={isFetching}
+                                                        className='text-orange-500 hover:text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-950'
+                                                    />
                                                 )}
 
                                                 {status !== 'deleted' && (
-                                                    <Tooltip>
-                                                        <TooltipTrigger asChild>
-                                                            <Button
-                                                                variant='ghost'
-                                                                size='icon'
-                                                                className='h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10'
-                                                                onClick={() => openDialog(user, 'delete')}
-                                                                disabled={isFetching}
-                                                            >
-                                                                <Trash2 className='h-4 w-4' />
-                                                            </Button>
-                                                        </TooltipTrigger>
-                                                        <TooltipContent>{t('users.actions.delete')}</TooltipContent>
-                                                    </Tooltip>
+                                                    <TooltipIconButton
+                                                        icon={Trash2}
+                                                        tooltip={t('users.actions.delete')}
+                                                        onClick={() => openDialog(user, 'delete')}
+                                                        disabled={isFetching}
+                                                        className='text-destructive hover:text-destructive hover:bg-destructive/10'
+                                                    />
                                                 )}
 
                                                 <DropdownMenu>
@@ -388,6 +308,6 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                     />
                 </>
             )}
-        </TooltipProvider>
+        </>
     )
 }

@@ -9,12 +9,8 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetUserByUsernameQuery } from '@/store/services/user.service'
 import { useGetPostOfUserPagingQuery } from '@/store/services/posts.service'
-import {
-    formatAdminDate,
-    formatNumber,
-    getUserStatus,
-    getUserStatusColor
-} from '@/helpers/admin-helpers'
+import { formatAdminDate, getUserStatus, getUserStatusColor } from '@/helpers/admin-helpers'
+import { formatNumber } from '@/utils/formatting/formatNumber.util'
 import type { AdminUser } from '@/types/dtos/admin/admin-response.dto'
 
 interface UserDetailDialogProps {
@@ -113,10 +109,7 @@ export function UserDetailDialog({ open, user, onOpenChange }: UserDetailDialogP
                             />
                         )}
                         {user.ban_expires_at && (
-                            <DetailRow
-                                label='Ban Expires'
-                                value={formatAdminDate(user.ban_expires_at)}
-                            />
+                            <DetailRow label='Ban Expires' value={formatAdminDate(user.ban_expires_at)} />
                         )}
                         <DetailRow
                             label={t('users.detail.fields.banReason')}

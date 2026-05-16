@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
-import { useGetActivityLogsQuery } from '@/store/services/admin/index'
+import { useGetActivityLogsQuery } from '@/store/services/admin'
 import { Input } from '@/components/ui/input'
 import { Search, X as XIcon } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'

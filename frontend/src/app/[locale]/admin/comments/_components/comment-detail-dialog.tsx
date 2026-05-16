@@ -4,7 +4,8 @@ import { useTranslations } from 'next-intl'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { formatAdminDate, formatNumber } from '@/helpers/admin-helpers'
+import { formatAdminDate } from '@/helpers/admin-helpers'
+import { formatNumber } from '@/utils/formatting/formatNumber.util'
 import type { AdminComment } from '@/types/dtos/admin/admin-response.dto'
 
 interface CommentDetailDialogProps {

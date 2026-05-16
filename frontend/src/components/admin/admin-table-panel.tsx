@@ -15,14 +15,14 @@ interface AdminTablePanelProps {
 export function AdminTablePanel({ toolbar, pagination, children, isFetching, className }: AdminTablePanelProps) {
     return (
         <div className={cn('flex flex-col gap-3', className)}>
-            {/* Toolbar — ngoài card, flat */}
             {toolbar}
 
-            {/* Table card */}
-            <div className={cn(
-                'relative rounded-xl border bg-card shadow-xs overflow-hidden transition-opacity duration-150',
-                isFetching && 'opacity-40 pointer-events-none select-none'
-            )}>
+            <div
+                className={cn(
+                    'relative rounded-xl border bg-card shadow-xs overflow-hidden transition-opacity duration-150',
+                    isFetching && 'opacity-40 pointer-events-none select-none'
+                )}
+            >
                 {children}
                 {isFetching && (
                     <div className='absolute inset-0 z-10 flex items-center justify-center'>
@@ -34,7 +34,6 @@ export function AdminTablePanel({ toolbar, pagination, children, isFetching, cla
                 )}
             </div>
 
-            {/* Pagination — ngoài card, flat */}
             {pagination}
         </div>
     )

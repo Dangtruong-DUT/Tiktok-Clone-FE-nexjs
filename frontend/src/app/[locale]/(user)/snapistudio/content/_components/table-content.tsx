@@ -25,7 +25,7 @@ import AudienceSelect from '@/components/audience-select'
 import AlertDialogDeleteDish from '@/app/[locale]/(user)/snapistudio/content/_components/alert-confirm-delete-post'
 import { usePostTableContext } from '@/app/[locale]/(user)/snapistudio/content/_context/content-table.context'
 import { useColumns } from '@/app/[locale]/(user)/snapistudio/content/_components/columns'
-import TableSkeleton from '@/app/[locale]/(user)/snapistudio/content/_components/table-skeleton'
+import { TableSkeleton } from '@/components/table-skeleton'
 import { Audience } from '@/constants/enum'
 
 export default function TableContent() {

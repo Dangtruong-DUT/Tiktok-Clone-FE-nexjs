@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useDeleteUserMutation } from '@/store/services/admin/index'
+import { useDeleteUserMutation } from '@/store/services/admin'
 import {
     Dialog,
     DialogContent,
@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
+import { extractApiError } from '@/utils/extract-api-error'
 
 interface DeleteUserDialogProps {
     open: boolean
@@ -65,8 +66,7 @@ export function DeleteUserDialog({ open, userUuid, username, onOpenChange, onSuc
             handleCloseDialog()
             onSuccess?.()
         } catch (error) {
-            const errorMessage = (error as { data?: { message?: string } })?.data?.message
-            toast.error(errorMessage || t('users.messages.deleteError'))
+            toast.error(extractApiError(error) ?? t('users.messages.deleteError'))
         }
     }
 

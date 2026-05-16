@@ -1,16 +1,10 @@
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle
-} from '@/components/ui/alert-dialog'
+'use client'
+
 import { useCallback } from 'react'
 import { toast } from 'sonner'
 import { useDeletePostMutation } from '@/store/services/posts.service'
+import { ConfirmDialog } from '@/components/confirm-dialog'
+import { extractApiError } from '@/utils/extract-api-error'
 
 export default function AlertDialogDeleteDish({
     postIdDelete,
@@ -19,41 +13,29 @@ export default function AlertDialogDeleteDish({
     postIdDelete: string | null
     setPostIdDelete: (value: string | null) => void
 }) {
-    const [deletePostMutate, deletePostResult] = useDeletePostMutation()
-    const handleDeletePost = useCallback(async () => {
-        if (postIdDelete && deletePostResult.isLoading === false) {
-            try {
-                const res = await deletePostMutate(postIdDelete).unwrap()
-                toast.success(res.message)
-                setPostIdDelete(null)
-            } catch (error) {
-                console.log('error', error)
-            }
+    const [deletePostMutate, { isLoading }] = useDeletePostMutation()
+
+    const handleDelete = useCallback(async () => {
+        if (!postIdDelete) return
+        try {
+            const res = await deletePostMutate(postIdDelete).unwrap()
+            toast.success(res.message)
+            setPostIdDelete(null)
+        } catch (error) {
+            toast.error(extractApiError(error) ?? 'Failed to delete post')
         }
-    }, [deletePostMutate, postIdDelete, setPostIdDelete, deletePostResult.isLoading])
+    }, [deletePostMutate, postIdDelete, setPostIdDelete])
+
     return (
-        <AlertDialog
+        <ConfirmDialog
             open={Boolean(postIdDelete)}
-            onOpenChange={(value) => {
-                if (!value) {
-                    setPostIdDelete(null)
-                }
-            }}
-        >
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                    <AlertDialogTitle>Delete Post?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                        Are you certain you want to delete this post? Once deleted, you won’t be able to recover it.
-                    </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleDeletePost} className='bg-red-500 text-white'>
-                        Continue
-                    </AlertDialogAction>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialog>
+            onOpenChange={(open) => { if (!open) setPostIdDelete(null) }}
+            title='Delete Post?'
+            description="Are you certain you want to delete this post? Once deleted, you won't be able to recover it."
+            confirmLabel='Delete'
+            isLoading={isLoading}
+            onConfirm={handleDelete}
+            confirmClassName='bg-destructive text-white hover:bg-destructive/90'
+        />
     )
 }

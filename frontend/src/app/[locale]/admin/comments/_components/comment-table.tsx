@@ -1,37 +1,46 @@
 'use client'
 
-import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useGetAdminCommentsQuery } from '@/store/services/admin/index'
+import { useGetAdminCommentsQuery } from '@/store/services/admin'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
 import { Trash2, Eye } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { Skeleton } from '@/components/ui/skeleton'
-import { AdminTableToolbar, AdminTablePagination, AdminTablePanel } from '@/components/admin'
+import { TooltipProvider } from '@/components/ui/tooltip'
+import { AdminTableToolbar, AdminTablePagination, AdminTablePanel, AdminTableSkeleton } from '@/components/admin'
+import { TooltipIconButton } from '@/components/ui/tooltip-icon-button'
+import { EmptyState } from '@/components/empty-state'
 import { DeleteCommentDialog } from './delete-comment-dialog'
 import { CommentDetailDialog } from './comment-detail-dialog'
 import { formatAdminDate, truncateText } from '@/helpers/admin-helpers'
+import { useAdminTableState } from '@/hooks/use-admin-table-state'
+import { useDialog } from '@/hooks/use-dialog'
+import { TABLE_HEAD_CLASS, type SortOrder } from '@/constants/ui/admin'
 import type { AdminComment } from '@/types/dtos/admin/admin-response.dto'
 
 interface CommentTableProps {
     onCommentDeleted?: () => void
 }
 
-type SortOrder = 'recent' | 'oldest'
+type DialogType = 'detail' | 'delete'
 
 export function CommentTable({ onCommentDeleted }: CommentTableProps) {
     const t = useTranslations('AdminPage')
 
-    const [page, setPage] = useState(1)
-    const [perPage, setPerPage] = useState(10)
-    const [searchTerm, setSearchTerm] = useState('')
-    const [sortBy, setSortBy] = useState<SortOrder>('recent')
-    const [draftSort, setDraftSort] = useState<SortOrder>('recent')
-    const [selectedComment, setSelectedComment] = useState<AdminComment | null>(null)
-    const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-    const [showDetailDialog, setShowDetailDialog] = useState(false)
+    const {
+        page,
+        perPage,
+        searchTerm,
+        sortBy,
+        draftSort,
+        hasActiveFilters,
+        setPage,
+        setDraftSort,
+        handleSearch,
+        handleReset,
+        handlePerPageChange
+    } = useAdminTableState()
+
+    const { selectedItem: selectedComment, dialogType, openDialog, closeDialog } = useDialog<AdminComment, DialogType>()
 
     const { data, isLoading, isFetching, refetch } = useGetAdminCommentsQuery({
         page,
@@ -43,67 +52,17 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
     const comments: AdminComment[] = data?.data ?? []
     const pagination = data?.meta
 
-    const hasActiveFilters = sortBy !== 'recent'
-
-    const handleSearch = (value: string) => {
-        setSearchTerm(value)
-        setSortBy(draftSort)
-        setPage(1)
-    }
-
-    const handleResetFilters = () => {
-        setDraftSort('recent')
-        setSortBy('recent')
-        setPage(1)
-    }
-
-    const openDeleteDialog = (comment: AdminComment) => {
-        setSelectedComment(comment)
-        setShowDeleteDialog(true)
-    }
-
-    const openDetailDialog = (comment: AdminComment) => {
-        setSelectedComment(comment)
-        setShowDetailDialog(true)
-    }
-
-    const closeDeleteDialog = () => {
-        setSelectedComment(null)
-        setShowDeleteDialog(false)
-    }
-
-    const closeDetailDialog = () => {
-        setSelectedComment(null)
-        setShowDetailDialog(false)
-    }
-
     const handleActionSuccess = () => {
-        closeDeleteDialog()
+        closeDialog()
         refetch()
         onCommentDeleted?.()
     }
 
     if (isLoading) {
         return (
-            <div className='rounded-xl border bg-card shadow-xs overflow-hidden'>
-                <div className='border-b border-border/50 px-4 py-2.5'>
-                    <Skeleton className='h-8 w-full rounded-md' />
-                </div>
-                <div className='divide-y divide-border/40'>
-                    <div className='bg-muted/30 px-4 py-2.5'><Skeleton className='h-3.5 w-1/2' /></div>
-                    {Array.from({ length: 7 }).map((_, i) => (
-                        <div key={i} className='flex items-center gap-4 px-4 py-3.5'>
-                            <Skeleton className='h-3.5 w-8 shrink-0' />
-                            <Skeleton className='h-3.5 w-24' />
-                            <Skeleton className='h-3.5 flex-1' />
-                            <Skeleton className='h-3.5 w-20' />
-                            <Skeleton className='h-3.5 w-24' />
-                            <Skeleton className='h-7 w-16 rounded-md ml-auto' />
-                        </div>
-                    ))}
-                </div>
-                <div className='border-t border-border/50 px-4 py-2.5'><Skeleton className='h-7 w-48' /></div>
-            </div>
+            <AdminTableSkeleton
+                columnWidths={['w-8 shrink-0', 'w-24', 'flex-1', 'w-20', 'w-24', 'w-16 ml-auto']}
+            />
         )
     }
 
@@ -116,8 +75,8 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
                         searchValue={searchTerm}
                         onSearchChange={handleSearch}
                         searchPlaceholder={t('comments.placeholders.searchComments')}
-                        hasActiveFilters={sortBy !== 'recent'}
-                        onResetFilters={handleResetFilters}
+                        hasActiveFilters={hasActiveFilters}
+                        onResetFilters={handleReset}
                         resetLabel={t('common.reset')}
                         isFetching={isFetching}
                         filters={
@@ -140,111 +99,95 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
                             page={page}
                             perPage={perPage}
                             onPageChange={setPage}
-                            onPerPageChange={(n) => { setPerPage(n); setPage(1) }}
+                            onPerPageChange={handlePerPageChange}
                         />
                     ) : undefined
                 }
             >
                 {comments.length === 0 ? (
-                    <div className='py-16 text-center'>
-                        <p className='text-sm text-muted-foreground'>{t('comments.emptyState')}</p>
-                    </div>
+                    <EmptyState message={t('comments.emptyState')} />
                 ) : (
-                        <Table>
-                            <TableHeader>
-                                <TableRow className='hover:bg-muted/40'>
-                                    <TableHead className='text-xs font-semibold uppercase tracking-wide text-muted-foreground w-16'>
-                                        {t('comments.columns.id')}
-                                    </TableHead>
-                                    <TableHead className='text-xs font-semibold uppercase tracking-wide text-muted-foreground'>
-                                        {t('comments.columns.author')}
-                                    </TableHead>
-                                    <TableHead className='text-xs font-semibold uppercase tracking-wide text-muted-foreground'>
-                                        {t('comments.columns.content')}
-                                    </TableHead>
-                                    <TableHead className='text-xs font-semibold uppercase tracking-wide text-muted-foreground w-28'>
-                                        {t('comments.columns.parentPost')}
-                                    </TableHead>
-                                    <TableHead className='text-xs font-semibold uppercase tracking-wide text-muted-foreground'>
-                                        {t('comments.columns.date')}
-                                    </TableHead>
-                                    <TableHead className='text-right text-xs font-semibold uppercase tracking-wide text-muted-foreground w-24'>
-                                        {t('comments.columns.actions')}
-                                    </TableHead>
+                    <Table>
+                        <TableHeader>
+                            <TableRow className='hover:bg-muted/40'>
+                                <TableHead className={`${TABLE_HEAD_CLASS} w-16`}>
+                                    {t('comments.columns.id')}
+                                </TableHead>
+                                <TableHead className={TABLE_HEAD_CLASS}>
+                                    {t('comments.columns.author')}
+                                </TableHead>
+                                <TableHead className={TABLE_HEAD_CLASS}>
+                                    {t('comments.columns.content')}
+                                </TableHead>
+                                <TableHead className={`${TABLE_HEAD_CLASS} w-28`}>
+                                    {t('comments.columns.parentPost')}
+                                </TableHead>
+                                <TableHead className={TABLE_HEAD_CLASS}>
+                                    {t('comments.columns.date')}
+                                </TableHead>
+                                <TableHead className={`text-right ${TABLE_HEAD_CLASS} w-24`}>
+                                    {t('comments.columns.actions')}
+                                </TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {comments.map((comment) => (
+                                <TableRow key={comment.id} className='hover:bg-muted/40'>
+                                    <TableCell className='font-mono text-xs text-muted-foreground'>
+                                        #{comment.id}
+                                    </TableCell>
+                                    <TableCell className='text-sm font-medium'>
+                                        {comment.author?.username ?? '—'}
+                                    </TableCell>
+                                    <TableCell>
+                                        <p className='max-w-xs text-sm text-muted-foreground line-clamp-2'>
+                                            {truncateText(comment.content, 60)}
+                                        </p>
+                                    </TableCell>
+                                    <TableCell className='text-sm text-muted-foreground'>
+                                        {comment.parent_id ? `#${comment.parent_id}` : '—'}
+                                    </TableCell>
+                                    <TableCell className='text-sm text-muted-foreground'>
+                                        {formatAdminDate(comment.created_at)}
+                                    </TableCell>
+                                    <TableCell className='text-right'>
+                                        <div className='flex items-center justify-end gap-1'>
+                                            <TooltipIconButton
+                                                icon={Eye}
+                                                tooltip={t('comments.actions.view')}
+                                                onClick={() => openDialog(comment, 'detail')}
+                                                disabled={isFetching}
+                                                className='text-muted-foreground hover:text-foreground'
+                                            />
+                                            <TooltipIconButton
+                                                icon={Trash2}
+                                                tooltip={t('comments.actions.delete')}
+                                                onClick={() => openDialog(comment, 'delete')}
+                                                disabled={isFetching}
+                                                className='text-destructive hover:text-destructive hover:bg-destructive/10'
+                                            />
+                                        </div>
+                                    </TableCell>
                                 </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {comments.map((comment) => (
-                                    <TableRow key={comment.id} className='hover:bg-muted/40'>
-                                        <TableCell className='font-mono text-xs text-muted-foreground'>
-                                            #{comment.id}
-                                        </TableCell>
-                                        <TableCell className='text-sm font-medium'>
-                                            {comment.author?.username ?? '—'}
-                                        </TableCell>
-                                        <TableCell>
-                                            <p className='max-w-xs text-sm text-muted-foreground line-clamp-2'>
-                                                {truncateText(comment.content, 60)}
-                                            </p>
-                                        </TableCell>
-                                        <TableCell className='text-sm text-muted-foreground'>
-                                            {comment.parent_id ? `#${comment.parent_id}` : '—'}
-                                        </TableCell>
-                                        <TableCell className='text-sm text-muted-foreground'>
-                                            {formatAdminDate(comment.created_at)}
-                                        </TableCell>
-                                        <TableCell className='text-right'>
-                                            <div className='flex items-center justify-end gap-1'>
-                                                <Tooltip>
-                                                    <TooltipTrigger asChild>
-                                                        <Button
-                                                            variant='ghost'
-                                                            size='icon'
-                                                            className='h-8 w-8 text-muted-foreground hover:text-foreground'
-                                                            onClick={() => openDetailDialog(comment)}
-                                                            disabled={isFetching}
-                                                        >
-                                                            <Eye className='h-4 w-4' />
-                                                        </Button>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent>{t('comments.actions.view')}</TooltipContent>
-                                                </Tooltip>
-                                                <Tooltip>
-                                                    <TooltipTrigger asChild>
-                                                        <Button
-                                                            variant='ghost'
-                                                            size='icon'
-                                                            className='h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10'
-                                                            onClick={() => openDeleteDialog(comment)}
-                                                            disabled={isFetching}
-                                                        >
-                                                            <Trash2 className='h-4 w-4' />
-                                                        </Button>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent>{t('comments.actions.delete')}</TooltipContent>
-                                                </Tooltip>
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                            ))}
+                        </TableBody>
+                    </Table>
                 )}
             </AdminTablePanel>
 
             {selectedComment && (
                 <>
                     <CommentDetailDialog
-                        open={showDetailDialog}
+                        open={dialogType === 'detail'}
                         comment={selectedComment}
-                        onOpenChange={(open) => !open && closeDetailDialog()}
+                        onOpenChange={(open) => !open && closeDialog()}
                     />
                     <DeleteCommentDialog
-                        open={showDeleteDialog}
+                        open={dialogType === 'delete'}
                         commentUuid={selectedComment.uuid}
                         authorUsername={selectedComment.author?.username ?? '—'}
                         parentPostId={selectedComment.parent_id ?? undefined}
-                        onOpenChange={(open) => !open && closeDeleteDialog()}
+                        onOpenChange={(open) => !open && closeDialog()}
                         onSuccess={handleActionSuccess}
                     />
                 </>
