@@ -1,5 +1,6 @@
 'use client'
 
+import { Loader2 } from 'lucide-react'
 import {
     AlertDialog,
     AlertDialogAction,
@@ -45,7 +46,7 @@ export function ConfirmDialog({
                 <AlertDialogFooter>
                     <AlertDialogCancel disabled={isLoading}>{cancelLabel}</AlertDialogCancel>
                     <AlertDialogAction onClick={onConfirm} disabled={isLoading} className={cn(confirmClassName)}>
-                        {isLoading ? '...' : confirmLabel}
+                        {isLoading ? <Loader2 className='h-4 w-4 animate-spin' /> : confirmLabel}
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

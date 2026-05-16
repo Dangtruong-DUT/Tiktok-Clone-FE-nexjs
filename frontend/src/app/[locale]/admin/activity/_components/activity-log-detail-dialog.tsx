@@ -16,7 +16,10 @@ export function ActivityLogDetailDialog({ open, log, onOpenChange }: ActivityLog
     const t = useTranslations('AdminPage')
 
     const actor = 'action_type' in log ? log.user?.username : log.admin?.username
-    const actionKey = getActivityKey({ action: 'action' in log ? log.action : undefined, action_type: 'action_type' in log ? log.action_type : undefined })
+    const actionKey = getActivityKey({
+        action: 'action' in log ? log.action : undefined,
+        action_type: 'action_type' in log ? log.action_type : undefined
+    })
     const actionLabel = t(`actionLabels.${actionKey}` as Parameters<typeof t>[0]) ?? actionKey
     const metadata = 'metadata' in log ? log.metadata : null
 

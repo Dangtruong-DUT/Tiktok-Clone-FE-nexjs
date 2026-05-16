@@ -33,10 +33,18 @@ function ResourcePreviewBlock({ preview }: { preview: ResourcePreview }) {
             <div className='space-y-3'>
                 {preview.thumbnail_url ? (
                     <div className='relative h-48 w-full overflow-hidden rounded-lg bg-black'>
-                        <Image src={preview.thumbnail_url} alt='Post thumbnail' fill className='object-cover' unoptimized />
+                        <Image
+                            src={preview.thumbnail_url}
+                            alt='Post thumbnail'
+                            fill
+                            className='object-cover'
+                            unoptimized
+                        />
                         {preview.is_deleted && (
                             <div className='absolute inset-0 flex items-center justify-center bg-black/60'>
-                                <span className='rounded-full bg-red-500/90 px-2.5 py-1 text-xs font-medium text-white'>Deleted</span>
+                                <span className='rounded-full bg-red-500/90 px-2.5 py-1 text-xs font-medium text-white'>
+                                    Deleted
+                                </span>
                             </div>
                         )}
                     </div>
@@ -45,12 +53,8 @@ function ResourcePreviewBlock({ preview }: { preview: ResourcePreview }) {
                         <ImageOff className='h-8 w-8 text-muted-foreground' />
                     </div>
                 )}
-                {preview.content && (
-                    <p className='text-sm text-foreground line-clamp-3'>{preview.content}</p>
-                )}
-                {preview.author && (
-                    <p className='text-xs text-muted-foreground'>@{preview.author.username}</p>
-                )}
+                {preview.content && <p className='text-sm text-foreground line-clamp-3'>{preview.content}</p>}
+                {preview.author && <p className='text-xs text-muted-foreground'>@{preview.author.username}</p>}
                 <div className='flex gap-3 text-xs text-muted-foreground'>
                     {preview.likes_count != null && <span>❤ {preview.likes_count}</span>}
                     {preview.comments_count != null && <span>💬 {preview.comments_count}</span>}
@@ -72,7 +76,9 @@ function ResourcePreviewBlock({ preview }: { preview: ResourcePreview }) {
                     </div>
                 </div>
                 {preview.is_deleted && (
-                    <Badge variant='outline' className='text-xs border-red-200 text-red-600 bg-red-50'>Deleted</Badge>
+                    <Badge variant='outline' className='text-xs border-red-200 text-red-600 bg-red-50'>
+                        Deleted
+                    </Badge>
                 )}
             </div>
         )
@@ -91,10 +97,14 @@ function ResourcePreviewBlock({ preview }: { preview: ResourcePreview }) {
                     <p className='font-medium text-sm'>@{preview.username}</p>
                     <div className='mt-1 flex gap-1.5'>
                         {preview.is_banned && (
-                            <Badge variant='outline' className='text-xs border-orange-200 text-orange-600 bg-orange-50'>Banned</Badge>
+                            <Badge variant='outline' className='text-xs border-orange-200 text-orange-600 bg-orange-50'>
+                                Banned
+                            </Badge>
                         )}
                         {preview.is_deleted && (
-                            <Badge variant='outline' className='text-xs border-red-200 text-red-600 bg-red-50'>Deleted</Badge>
+                            <Badge variant='outline' className='text-xs border-red-200 text-red-600 bg-red-50'>
+                                Deleted
+                            </Badge>
                         )}
                     </div>
                 </div>
@@ -120,9 +130,13 @@ export function AppealDetailDialog({ open, appeal, onOpenChange }: AppealDetailD
                     <div className='flex items-start gap-3 rounded-lg border border-emerald-200 bg-emerald-50 dark:bg-emerald-950/40 px-4 py-3'>
                         <CheckCircle2 className='h-5 w-5 text-emerald-600 shrink-0 mt-0.5' />
                         <div>
-                            <p className='text-sm font-semibold text-emerald-800 dark:text-emerald-300'>Appeal Approved — Action Reversed</p>
+                            <p className='text-sm font-semibold text-emerald-800 dark:text-emerald-300'>
+                                Appeal Approved — Action Reversed
+                            </p>
                             {appeal.admin_response && (
-                                <p className='text-xs text-emerald-700 dark:text-emerald-400 mt-0.5'>{appeal.admin_response}</p>
+                                <p className='text-xs text-emerald-700 dark:text-emerald-400 mt-0.5'>
+                                    {appeal.admin_response}
+                                </p>
                             )}
                         </div>
                     </div>

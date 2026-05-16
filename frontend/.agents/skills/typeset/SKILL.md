@@ -3,7 +3,7 @@ name: typeset
 description: Improves typography by fixing font choices, hierarchy, sizing, weight, and readability so text feels intentional. Use when the user mentions fonts, type, readability, text hierarchy, sizing looks off, or wants more polished, intentional typography.
 version: 2.1.1
 user-invocable: true
-argument-hint: "[target]"
+argument-hint: '[target]'
 ---
 
 Assess and improve typography that feels generic, inconsistent, or poorly structured — turning default-looking text into intentional, well-crafted type.
@@ -19,29 +19,29 @@ Invoke /impeccable — it contains design principles, anti-patterns, and the **C
 Analyze what's weak or generic about the current type:
 
 1. **Font choices**:
-   - Are we using invisible defaults? (Inter, Roboto, Arial, Open Sans, system defaults)
-   - Does the font match the brand personality? (A playful brand shouldn't use a corporate typeface)
-   - Are there too many font families? (More than 2-3 is almost always a mess)
+    - Are we using invisible defaults? (Inter, Roboto, Arial, Open Sans, system defaults)
+    - Does the font match the brand personality? (A playful brand shouldn't use a corporate typeface)
+    - Are there too many font families? (More than 2-3 is almost always a mess)
 
 2. **Hierarchy**:
-   - Can you tell headings from body from captions at a glance?
-   - Are font sizes too close together? (14px, 15px, 16px = muddy hierarchy)
-   - Are weight contrasts strong enough? (Medium vs Regular is barely visible)
+    - Can you tell headings from body from captions at a glance?
+    - Are font sizes too close together? (14px, 15px, 16px = muddy hierarchy)
+    - Are weight contrasts strong enough? (Medium vs Regular is barely visible)
 
 3. **Sizing & scale**:
-   - Is there a consistent type scale, or are sizes arbitrary?
-   - Does body text meet minimum readability? (16px+)
-   - Is the sizing strategy appropriate for the context? (Fixed `rem` scales for app UIs; fluid `clamp()` for marketing/content page headings)
+    - Is there a consistent type scale, or are sizes arbitrary?
+    - Does body text meet minimum readability? (16px+)
+    - Is the sizing strategy appropriate for the context? (Fixed `rem` scales for app UIs; fluid `clamp()` for marketing/content page headings)
 
 4. **Readability**:
-   - Are line lengths comfortable? (45-75 characters ideal)
-   - Is line-height appropriate for the font and context?
-   - Is there enough contrast between text and background?
+    - Are line lengths comfortable? (45-75 characters ideal)
+    - Is line-height appropriate for the font and context?
+    - Is there enough contrast between text and background?
 
 5. **Consistency**:
-   - Are the same elements styled the same way throughout?
-   - Are font weights used consistently? (Not bold in one section, semibold in another for the same role)
-   - Is letter-spacing intentional or default everywhere?
+    - Are the same elements styled the same way throughout?
+    - Are font weights used consistently? (Not bold in one section, semibold in another for the same role)
+    - Is letter-spacing intentional or default everywhere?
 
 **CRITICAL**: The goal isn't to make text "fancier" — it's to make it clearer, more readable, and more intentional. Good typography is invisible; bad typography is distracting.
 
@@ -61,6 +61,7 @@ Create a systematic plan:
 ### Font Selection
 
 If fonts need replacing:
+
 - Choose fonts that reflect the brand personality
 - Pair with genuine contrast (serif + sans, geometric + humanist) — or use a single family in multiple weights
 - Ensure web font loading doesn't cause layout shift (`font-display: swap`, metric-matched fallbacks)
@@ -68,6 +69,7 @@ If fonts need replacing:
 ### Establish Hierarchy
 
 Build a clear type scale:
+
 - **5 sizes cover most needs**: caption, secondary, body, subheading, heading
 - **Use a consistent ratio** between levels (1.25, 1.333, or 1.5)
 - **Combine dimensions**: Size + weight + color + space for strong hierarchy — don't rely on size alone
@@ -95,6 +97,7 @@ Build a clear type scale:
 - Load only the weights you actually use (each weight adds to page load)
 
 **NEVER**:
+
 - Use more than 2-3 font families
 - Pick sizes arbitrarily — commit to a scale
 - Set body text below 16px

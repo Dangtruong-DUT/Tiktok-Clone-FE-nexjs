@@ -1,4 +1,8 @@
-import type { ApiSuccessResponse, ApiSuccessResponseWithData, ApiSuccessResponseWithMeta } from '@/types/common/http-response.type'
+import type {
+    ApiSuccessResponse,
+    ApiSuccessResponseWithData,
+    ApiSuccessResponseWithMeta
+} from '@/types/common/http-response.type'
 
 export interface AdminUser {
     readonly id: number

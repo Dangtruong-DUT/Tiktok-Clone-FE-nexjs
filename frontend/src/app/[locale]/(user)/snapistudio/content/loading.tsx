@@ -1,9 +1,5 @@
-import LoadingIcon from '@/components/lottie-icons/loading'
+import { PageLoading } from '@/components/page-loading'
 
 export default function Loading() {
-    return (
-        <div className='flex min-h-[60vh] items-center justify-center'>
-            <LoadingIcon loop className='size-20' />
-        </div>
-    )
+    return <PageLoading />
 }

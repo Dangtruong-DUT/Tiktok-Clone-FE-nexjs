@@ -22,7 +22,10 @@ import { toast } from 'sonner'
 import { extractApiError } from '@/utils/extract-api-error'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
-import { AdminTableToolbar, AdminTablePagination, AdminTablePanel, AdminTableSkeleton } from '@/components/admin'
+import { AdminTableToolbar } from '@/components/admin'
+import { TablePanel } from '@/components/table-panel'
+import { TablePagination } from '@/components/table-pagination'
+import { TableSkeleton } from '@/components/table-skeleton'
 import { EmptyState } from '@/components/empty-state'
 import { EvidenceGalleryDialog } from './evidence-gallery-dialog'
 import { AppealDetailDialog } from './appeal-detail-dialog'
@@ -177,7 +180,7 @@ export function AppealTable() {
 
     if (isLoading) {
         return (
-            <AdminTableSkeleton
+            <TableSkeleton
                 columnWidths={[
                     'w-4 shrink-0',
                     'w-8 shrink-0',
@@ -196,7 +199,7 @@ export function AppealTable() {
     return (
         <TooltipProvider>
             <div className='space-y-2'>
-                <AdminTablePanel
+                <TablePanel
                     isFetching={isFetching}
                     toolbar={
                         <AdminTableToolbar
@@ -249,12 +252,16 @@ export function AppealTable() {
                     }
                     pagination={
                         pagination ? (
-                            <AdminTablePagination
+                            <TablePagination
                                 pagination={pagination}
                                 page={page}
                                 perPage={perPage}
                                 onPageChange={setPage}
                                 onPerPageChange={handlePerPageChange}
+                                perPageLabel={t('common.perPage')}
+                                showingResultsFormatter={(from, to, total) =>
+                                    t('common.showingResults', { from, to, total })
+                                }
                             />
                         ) : undefined
                     }
@@ -541,7 +548,7 @@ export function AppealTable() {
                             </Table>
                         </div>
                     )}
-                </AdminTablePanel>
+                </TablePanel>
 
                 {/* Review dialog */}
                 <Dialog open={!!selectedAppeal && !!actionType} onOpenChange={(open) => !open && closeDialog()}>

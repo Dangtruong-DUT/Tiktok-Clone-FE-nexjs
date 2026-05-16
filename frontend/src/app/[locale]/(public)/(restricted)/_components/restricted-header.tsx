@@ -53,10 +53,7 @@ export function RestrictedHeader() {
                 </button>
             </div>
 
-            <DialogConfirmLogout 
-                isOpen={isLogoutModalOpen} 
-                onOpenChange={setIsLogoutModalOpen} 
-            />
+            <DialogConfirmLogout isOpen={isLogoutModalOpen} onOpenChange={setIsLogoutModalOpen} />
         </header>
     )
 }

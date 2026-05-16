@@ -1,96 +1,96 @@
 {
-  "HomePage": {
-    "menu": {
-      "forYou": "For You",
-      "explore": "Explore",
-      "following": "Following",
-      "friends": "Friends",
-      "upload": "Upload",
-      "activity": "Activity",
-      "messages": "Messages",
-      "more": "More",
-      "profile": "Profile"
-    },
-    "unfollowedFeed": {
-      "noContent": "No posts found"
-    },
-    "sidebar": {
-      "footer": {
-        "company": "Company",
-        "program": "Program",
-        "termsAndPolicies": "Terms & Policies",
-        "copyright": "© 2025 Snapi.",
-        "privacyPolicy": "Privacy Policy",
-        "termsOfService": "Terms of Service"
-      },
-      "search": {
-        "title": "Search",
-        "placeholder": "Search accounts and videos",
-        "accounts": "Account",
-        "viewAllResults": "View all results for \"{query}\"",
-        "searchPlaceholder": "Search"
-      },
-      "activity": {
-        "title": "Notifications",
-        "empty": "No notifications yet.",
-        "labels": {
-          "someone": "Someone",
-          "system": "System",
-          "total": "{count} items"
+    "HomePage": {
+        "menu": {
+            "forYou": "For You",
+            "explore": "Explore",
+            "following": "Following",
+            "friends": "Friends",
+            "upload": "Upload",
+            "activity": "Activity",
+            "messages": "Messages",
+            "more": "More",
+            "profile": "Profile"
         },
-        "tabs": {
-          "all": "All activity",
-          "likes": "Likes",
-          "comments": "Comments",
-          "mentions": "Mentions and tags",
-          "followers": "Followers"
+        "unfollowedFeed": {
+            "noContent": "No posts found"
         },
-        "sections": {
-          "new": "New",
-          "this_week": "This week",
-          "this_month": "This month",
-          "previous": "Previous"
+        "sidebar": {
+            "footer": {
+                "company": "Company",
+                "program": "Program",
+                "termsAndPolicies": "Terms & Policies",
+                "copyright": "© 2025 Snapi.",
+                "privacyPolicy": "Privacy Policy",
+                "termsOfService": "Terms of Service"
+            },
+            "search": {
+                "title": "Search",
+                "placeholder": "Search accounts and videos",
+                "accounts": "Account",
+                "viewAllResults": "View all results for \"{query}\"",
+                "searchPlaceholder": "Search"
+            },
+            "activity": {
+                "title": "Notifications",
+                "empty": "No notifications yet.",
+                "labels": {
+                    "someone": "Someone",
+                    "system": "System",
+                    "total": "{count} items"
+                },
+                "tabs": {
+                    "all": "All activity",
+                    "likes": "Likes",
+                    "comments": "Comments",
+                    "mentions": "Mentions and tags",
+                    "followers": "Followers"
+                },
+                "sections": {
+                    "new": "New",
+                    "this_week": "This week",
+                    "this_month": "This month",
+                    "previous": "Previous"
+                },
+                "messages": {
+                    "like": "{actor} liked your video.",
+                    "likeComment": "{actor} liked your comment.",
+                    "comment": "{actor} commented on your video.",
+                    "mention": "{actor} mentioned you in a post.",
+                    "follow": "{actor} started following you.",
+                    "authLogin": "You logged in successfully.",
+                    "authRegister": "Your account was created successfully.",
+                    "adminBan": "{actor} has restricted your account.",
+                    "adminDeletePost": "{actor} removed one of your posts.",
+                    "adminDeleteComment": "{actor} removed one of your comments.",
+                    "appealApproved": "{actor} approved your appeal.",
+                    "appealRejected": "{actor} rejected your appeal.",
+                    "adminNotice": "{actor} sent you an admin notice.",
+                    "aiNotice": "AI moderation updated one of your contents.",
+                    "default": "{actor} sent you a notification."
+                },
+                "actions": {
+                    "markAllRead": "Mark all read",
+                    "loadMore": "Load more",
+                    "followBack": "Follow back",
+                    "friends": "Friends"
+                }
+            },
+            "auth": {
+                "login": "Log in"
+            }
         },
-        "messages": {
-          "like": "{actor} liked your video.",
-          "likeComment": "{actor} liked your comment.",
-          "comment": "{actor} commented on your video.",
-          "mention": "{actor} mentioned you in a post.",
-          "follow": "{actor} started following you.",
-          "authLogin": "You logged in successfully.",
-          "authRegister": "Your account was created successfully.",
-          "adminBan": "{actor} has restricted your account.",
-          "adminDeletePost": "{actor} removed one of your posts.",
-          "adminDeleteComment": "{actor} removed one of your comments.",
-          "appealApproved": "{actor} approved your appeal.",
-          "appealRejected": "{actor} rejected your appeal.",
-          "adminNotice": "{actor} sent you an admin notice.",
-          "aiNotice": "AI moderation updated one of your contents.",
-          "default": "{actor} sent you a notification."
-        },
-        "actions": {
-          "markAllRead": "Mark all read",
-          "loadMore": "Load more",
-          "followBack": "Follow back",
-          "friends": "Friends"
+        "search": {
+            "noResults": {
+                "title": "No results found",
+                "description": "Try searching with a different keyword."
+            },
+            "tabs": {
+                "users": "Users",
+                "videos": "Videos"
+            },
+            "userList": {
+                "followers": "{count} Followers"
+            }
         }
-      },
-      "auth": {
-        "login": "Log in"
-      }
-    },
-    "search": {
-      "noResults": {
-        "title": "No results found",
-        "description": "Try searching with a different keyword."
-      },
-      "tabs": {
-        "users": "Users",
-        "videos": "Videos"
-      },
-      "userList": {
-        "followers": "{count} Followers"
-      }
     }
-  }
 }

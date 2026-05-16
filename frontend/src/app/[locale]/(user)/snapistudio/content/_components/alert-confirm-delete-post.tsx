@@ -29,7 +29,9 @@ export default function AlertDialogDeleteDish({
     return (
         <ConfirmDialog
             open={Boolean(postIdDelete)}
-            onOpenChange={(open) => { if (!open) setPostIdDelete(null) }}
+            onOpenChange={(open) => {
+                if (!open) setPostIdDelete(null)
+            }}
             title='Delete Post?'
             description="Are you certain you want to delete this post? Once deleted, you won't be able to recover it."
             confirmLabel='Delete'

@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 import { Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-interface AdminTablePanelProps {
+interface TablePanelProps {
     toolbar?: ReactNode
     pagination?: ReactNode
     children: ReactNode
@@ -12,7 +12,7 @@ interface AdminTablePanelProps {
     className?: string
 }
 
-export function AdminTablePanel({ toolbar, pagination, children, isFetching, className }: AdminTablePanelProps) {
+export function TablePanel({ toolbar, pagination, children, isFetching, className }: TablePanelProps) {
     return (
         <div className={cn('flex flex-col gap-3', className)}>
             {toolbar}

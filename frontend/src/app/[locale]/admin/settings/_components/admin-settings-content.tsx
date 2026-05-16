@@ -4,8 +4,8 @@ import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
 import { UserCircle, Lock } from 'lucide-react'
-import UpdateProfileForm from '@/app/[locale]/(user)/snapistudio/settings/update-profile-form'
-import ChangePasswordForm from '@/app/[locale]/(user)/snapistudio/settings/change-password-form'
+import UpdateProfileForm from '@/app/[locale]/(user)/snapistudio/settings/_components/update-profile-form'
+import ChangePasswordForm from '@/app/[locale]/(user)/snapistudio/settings/_components/change-password-form'
 
 type Tab = 'profile' | 'security'
 
@@ -41,9 +41,7 @@ export function AdminSettingsContent() {
                     ))}
                 </nav>
 
-                <p className='mt-4 px-1 text-xs text-muted-foreground'>
-                    {t('settings.adminNote')}
-                </p>
+                <p className='mt-4 px-1 text-xs text-muted-foreground'>{t('settings.adminNote')}</p>
             </aside>
 
             {/* Content */}

@@ -46,7 +46,10 @@ export function DataTable<TData, TValue>({ table, columns, emptyText = 'No resul
                         ))
                     ) : (
                         <TableRow>
-                            <TableCell colSpan={columns.length} className='h-24 text-center text-sm text-muted-foreground'>
+                            <TableCell
+                                colSpan={columns.length}
+                                className='h-24 text-center text-sm text-muted-foreground'
+                            >
                                 {emptyText}
                             </TableCell>
                         </TableRow>

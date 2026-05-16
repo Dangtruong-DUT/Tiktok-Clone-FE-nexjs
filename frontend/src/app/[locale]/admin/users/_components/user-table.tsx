@@ -14,7 +14,10 @@ import { Button } from '@/components/ui/button'
 import { Trash2, ShieldOff, ShieldCheck, MoreHorizontal } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { AdminTableToolbar, AdminTablePagination, AdminTablePanel, AdminTableSkeleton } from '@/components/admin'
+import { AdminTableToolbar } from '@/components/admin'
+import { TablePanel } from '@/components/table-panel'
+import { TablePagination } from '@/components/table-pagination'
+import { TableSkeleton } from '@/components/table-skeleton'
 import { TooltipIconButton } from '@/components/ui/tooltip-icon-button'
 import { EmptyState } from '@/components/empty-state'
 import { BanUserDialog } from './ban-user-dialog'
@@ -78,7 +81,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
 
     if (isLoading) {
         return (
-            <AdminTableSkeleton
+            <TableSkeleton
                 columnWidths={['w-8 shrink-0', 'w-28', 'flex-1', 'w-16 rounded-full', 'w-24', 'w-20 ml-auto']}
             />
         )
@@ -86,7 +89,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
 
     return (
         <>
-            <AdminTablePanel
+            <TablePanel
                 isFetching={isFetching}
                 toolbar={
                     <AdminTableToolbar
@@ -128,12 +131,16 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                 }
                 pagination={
                     pagination ? (
-                        <AdminTablePagination
+                        <TablePagination
                             pagination={pagination}
                             page={page}
                             perPage={perPage}
                             onPageChange={setPage}
                             onPerPageChange={handlePerPageChange}
+                            perPageLabel={t('common.perPage')}
+                            showingResultsFormatter={(from, to, total) =>
+                                t('common.showingResults', { from, to, total })
+                            }
                         />
                     ) : undefined
                 }
@@ -255,7 +262,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                         </TableBody>
                     </Table>
                 )}
-            </AdminTablePanel>
+            </TablePanel>
 
             {selectedUser && (
                 <>

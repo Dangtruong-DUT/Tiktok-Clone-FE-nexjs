@@ -70,7 +70,9 @@ export interface ApiSuccessResponseWithData<T> extends ApiSuccessResponse {
     readonly data: T
 }
 
-export interface ApiSuccessResponseWithMeta<T, M = import('@/types/common/pagination-meta.type').PaginationMeta>
-    extends ApiSuccessResponseWithData<T> {
+export interface ApiSuccessResponseWithMeta<
+    T,
+    M = import('@/types/common/pagination-meta.type').PaginationMeta
+> extends ApiSuccessResponseWithData<T> {
     readonly meta: M
 }

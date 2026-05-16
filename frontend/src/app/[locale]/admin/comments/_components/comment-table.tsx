@@ -6,7 +6,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Trash2, Eye } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { TooltipProvider } from '@/components/ui/tooltip'
-import { AdminTableToolbar, AdminTablePagination, AdminTablePanel, AdminTableSkeleton } from '@/components/admin'
+import { AdminTableToolbar } from '@/components/admin'
+import { TablePanel } from '@/components/table-panel'
+import { TablePagination } from '@/components/table-pagination'
+import { TableSkeleton } from '@/components/table-skeleton'
 import { TooltipIconButton } from '@/components/ui/tooltip-icon-button'
 import { EmptyState } from '@/components/empty-state'
 import { DeleteCommentDialog } from './delete-comment-dialog'
@@ -59,16 +62,12 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
     }
 
     if (isLoading) {
-        return (
-            <AdminTableSkeleton
-                columnWidths={['w-8 shrink-0', 'w-24', 'flex-1', 'w-20', 'w-24', 'w-16 ml-auto']}
-            />
-        )
+        return <TableSkeleton columnWidths={['w-8 shrink-0', 'w-24', 'flex-1', 'w-20', 'w-24', 'w-16 ml-auto']} />
     }
 
     return (
         <TooltipProvider>
-            <AdminTablePanel
+            <TablePanel
                 isFetching={isFetching}
                 toolbar={
                     <AdminTableToolbar
@@ -94,12 +93,16 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
                 }
                 pagination={
                     pagination ? (
-                        <AdminTablePagination
+                        <TablePagination
                             pagination={pagination}
                             page={page}
                             perPage={perPage}
                             onPageChange={setPage}
                             onPerPageChange={handlePerPageChange}
+                            perPageLabel={t('common.perPage')}
+                            showingResultsFormatter={(from, to, total) =>
+                                t('common.showingResults', { from, to, total })
+                            }
                         />
                     ) : undefined
                 }
@@ -110,21 +113,13 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
                     <Table>
                         <TableHeader>
                             <TableRow className='hover:bg-muted/40'>
-                                <TableHead className={`${TABLE_HEAD_CLASS} w-16`}>
-                                    {t('comments.columns.id')}
-                                </TableHead>
-                                <TableHead className={TABLE_HEAD_CLASS}>
-                                    {t('comments.columns.author')}
-                                </TableHead>
-                                <TableHead className={TABLE_HEAD_CLASS}>
-                                    {t('comments.columns.content')}
-                                </TableHead>
+                                <TableHead className={`${TABLE_HEAD_CLASS} w-16`}>{t('comments.columns.id')}</TableHead>
+                                <TableHead className={TABLE_HEAD_CLASS}>{t('comments.columns.author')}</TableHead>
+                                <TableHead className={TABLE_HEAD_CLASS}>{t('comments.columns.content')}</TableHead>
                                 <TableHead className={`${TABLE_HEAD_CLASS} w-28`}>
                                     {t('comments.columns.parentPost')}
                                 </TableHead>
-                                <TableHead className={TABLE_HEAD_CLASS}>
-                                    {t('comments.columns.date')}
-                                </TableHead>
+                                <TableHead className={TABLE_HEAD_CLASS}>{t('comments.columns.date')}</TableHead>
                                 <TableHead className={`text-right ${TABLE_HEAD_CLASS} w-24`}>
                                     {t('comments.columns.actions')}
                                 </TableHead>
@@ -173,7 +168,7 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
                         </TableBody>
                     </Table>
                 )}
-            </AdminTablePanel>
+            </TablePanel>
 
             {selectedComment && (
                 <>

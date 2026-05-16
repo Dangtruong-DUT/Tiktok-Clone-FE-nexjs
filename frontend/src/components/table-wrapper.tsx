@@ -4,16 +4,21 @@ import { ReactNode } from 'react'
 import { Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-interface AdminTableWrapperProps {
+interface TableWrapperProps {
     isFetching?: boolean
     children: ReactNode
     className?: string
 }
 
-export function AdminTableWrapper({ isFetching, children, className }: AdminTableWrapperProps) {
+export function TableWrapper({ isFetching, children, className }: TableWrapperProps) {
     return (
         <div className={cn('relative', className)}>
-            <div className={cn('transition-opacity duration-200', isFetching && 'opacity-50 pointer-events-none select-none')}>
+            <div
+                className={cn(
+                    'transition-opacity duration-200',
+                    isFetching && 'opacity-50 pointer-events-none select-none'
+                )}
+            >
                 {children}
             </div>
             {isFetching && (

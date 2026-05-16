@@ -6,7 +6,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Trash2, Eye } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { AdminTableToolbar, AdminTablePagination, AdminTablePanel, AdminTableSkeleton } from '@/components/admin'
+import { AdminTableToolbar } from '@/components/admin'
+import { TablePanel } from '@/components/table-panel'
+import { TablePagination } from '@/components/table-pagination'
+import { TableSkeleton } from '@/components/table-skeleton'
 import { TooltipIconButton } from '@/components/ui/tooltip-icon-button'
 import { EmptyState } from '@/components/empty-state'
 import { DeletePostDialog } from './delete-post-dialog'
@@ -65,7 +68,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
 
     if (isLoading) {
         return (
-            <AdminTableSkeleton
+            <TableSkeleton
                 columnWidths={['w-8 shrink-0', 'flex-1', 'w-24', 'w-16 rounded-full', 'w-24', 'w-16 ml-auto']}
             />
         )
@@ -73,7 +76,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
 
     return (
         <>
-            <AdminTablePanel
+            <TablePanel
                 isFetching={isFetching}
                 toolbar={
                     <AdminTableToolbar
@@ -113,12 +116,16 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
                 }
                 pagination={
                     pagination ? (
-                        <AdminTablePagination
+                        <TablePagination
                             pagination={pagination}
                             page={page}
                             perPage={perPage}
                             onPageChange={setPage}
                             onPerPageChange={handlePerPageChange}
+                            perPageLabel={t('common.perPage')}
+                            showingResultsFormatter={(from, to, total) =>
+                                t('common.showingResults', { from, to, total })
+                            }
                         />
                     ) : undefined
                 }
@@ -190,7 +197,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
                         </TableBody>
                     </Table>
                 )}
-            </AdminTablePanel>
+            </TablePanel>
 
             {selectedPost && (
                 <>

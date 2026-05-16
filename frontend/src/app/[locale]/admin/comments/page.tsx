@@ -17,10 +17,7 @@ export default async function AdminCommentsPage() {
         <AdminLayout
             title={t('comments.title')}
             description={t('comments.description')}
-            breadcrumbs={[
-                { label: t('breadcrumbs.admin'), href: '/admin' },
-                { label: t('comments.title') }
-            ]}
+            breadcrumbs={[{ label: t('breadcrumbs.admin'), href: '/admin' }, { label: t('comments.title') }]}
         >
             <AdminContainer>
                 <Suspense

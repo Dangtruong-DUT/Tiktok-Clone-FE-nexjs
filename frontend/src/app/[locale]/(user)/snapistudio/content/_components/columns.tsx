@@ -126,9 +126,7 @@ export function useColumns(): ColumnDef<TikTokPostType>[] {
                 accessorKey: 'comments_count',
                 header: t('columns.comments'),
                 cell: ({ row }) => (
-                    <span className='text-sm font-medium'>
-                        {formatCompactNumber(row.getValue('comments_count'))}
-                    </span>
+                    <span className='text-sm font-medium'>{formatCompactNumber(row.getValue('comments_count'))}</span>
                 )
             },
             {
@@ -145,7 +143,11 @@ export function useColumns(): ColumnDef<TikTokPostType>[] {
                                     <Link
                                         href={`/snapistudio/upload/post/${post.uuid}?from=${encodeURIComponent('/snapistudio/content')}`}
                                     >
-                                        <Button variant='ghost' size='icon' className='h-8 w-8 text-muted-foreground hover:text-foreground'>
+                                        <Button
+                                            variant='ghost'
+                                            size='icon'
+                                            className='h-8 w-8 text-muted-foreground hover:text-foreground'
+                                        >
                                             <PencilLine className='h-4 w-4' />
                                         </Button>
                                     </Link>
@@ -157,13 +159,20 @@ export function useColumns(): ColumnDef<TikTokPostType>[] {
 
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button variant='ghost' size='icon' className='h-8 w-8 text-muted-foreground hover:text-foreground'>
+                                    <Button
+                                        variant='ghost'
+                                        size='icon'
+                                        className='h-8 w-8 text-muted-foreground hover:text-foreground'
+                                    >
                                         <MoreHorizontal className='h-4 w-4' />
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align='end' className='w-40'>
                                     <DropdownMenuItem asChild>
-                                        <Link href={`/snapistudio/upload/post/${post.uuid}?from=${encodeURIComponent('/snapistudio/content')}`} className='cursor-pointer'>
+                                        <Link
+                                            href={`/snapistudio/upload/post/${post.uuid}?from=${encodeURIComponent('/snapistudio/content')}`}
+                                            className='cursor-pointer'
+                                        >
                                             <PencilLine className='mr-2 h-4 w-4' />
                                             {t('actions.edit')}
                                         </Link>

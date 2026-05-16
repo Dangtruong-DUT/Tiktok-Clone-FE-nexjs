@@ -12,7 +12,12 @@ import Image from 'next/image'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { APPEAL_STATUSES } from '@/constants/status/appeal'
-import { useGetAppealQuery, useCreateAppealMutation, useUpdateAppealMutation, useGetResourcePreviewQuery } from '@/store/services/appeal.service'
+import {
+    useGetAppealQuery,
+    useCreateAppealMutation,
+    useUpdateAppealMutation,
+    useGetResourcePreviewQuery
+} from '@/store/services/appeal.service'
 import { useAppSelector } from '@/store/hooks'
 import { useAppContext } from '@/provider/app-provider'
 import { EvidenceDropzone } from './evidence-dropzone'

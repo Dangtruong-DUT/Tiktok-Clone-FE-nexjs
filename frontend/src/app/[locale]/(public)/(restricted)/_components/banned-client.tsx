@@ -90,7 +90,7 @@ export function BannedClient({
                     <h4 className='font-semibold text-neutral-900'>{tAppealCardTitle}</h4>
                     <p className='mt-1 text-sm text-neutral-500'>{tAppealCardBody}</p>
                 </div>
-                
+
                 {/* Actions */}
                 <div className='space-y-3'>
                     <Link
@@ -103,7 +103,7 @@ export function BannedClient({
                     </Link>
                 </div>
             </div>
-            
+
             <div className='h-6' />
         </motion.div>
     )

@@ -54,7 +54,10 @@ export function AdminTableToolbar({
                 />
                 <button
                     type='button'
-                    onClick={() => { setInputValue(''); onSearchChange('') }}
+                    onClick={() => {
+                        setInputValue('')
+                        onSearchChange('')
+                    }}
                     disabled={!inputValue}
                     aria-label='Clear'
                     className='absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground/50 transition-colors hover:text-muted-foreground disabled:pointer-events-none disabled:opacity-30'
@@ -73,11 +76,7 @@ export function AdminTableToolbar({
                 disabled={isFetching}
                 className='h-8 shrink-0 rounded-md bg-primary px-3 text-xs text-primary-foreground shadow-none hover:bg-primary/85 disabled:opacity-50'
             >
-                {isFetching ? (
-                    <Loader2 className='h-3.5 w-3.5 animate-spin' />
-                ) : (
-                    <Search className='h-3.5 w-3.5' />
-                )}
+                {isFetching ? <Loader2 className='h-3.5 w-3.5 animate-spin' /> : <Search className='h-3.5 w-3.5' />}
                 <span className='hidden sm:inline ml-1.5'>{t('common.search')}</span>
             </Button>
 
@@ -95,9 +94,7 @@ export function AdminTableToolbar({
             )}
 
             {actions && (
-                <div className='flex shrink-0 items-center gap-2 border-l border-border/50 pl-2'>
-                    {actions}
-                </div>
+                <div className='flex shrink-0 items-center gap-2 border-l border-border/50 pl-2'>{actions}</div>
             )}
         </div>
     )

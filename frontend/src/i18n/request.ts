@@ -9,9 +9,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
     const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale
 
     const parts = await Promise.all(
-        NAMESPACES.map((ns) =>
-            import(`../../messages/${locale}/${ns}.json`).then((m) => m.default)
-        )
+        NAMESPACES.map((ns) => import(`../../messages/${locale}/${ns}.json`).then((m) => m.default))
     )
 
     return { locale, messages: Object.assign({}, ...parts) }

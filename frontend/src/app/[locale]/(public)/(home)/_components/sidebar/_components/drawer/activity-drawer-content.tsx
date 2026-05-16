@@ -168,7 +168,10 @@ function getNotificationLink(notification: NotificationType): string | null {
     }
 
     // approve_appeal / reject_appeal → view the resolved appeal
-    if (notification.type === NotificationTypeCode.ADMIN && (action === 'approve_appeal' || action === 'reject_appeal')) {
+    if (
+        notification.type === NotificationTypeCode.ADMIN &&
+        (action === 'approve_appeal' || action === 'reject_appeal')
+    ) {
         const appealUuid = typeof notification.data?.appeal_uuid === 'string' ? notification.data.appeal_uuid : null
         return appealUuid ? `/appeal?appeal_uuid=${appealUuid}` : null
     }
@@ -259,7 +262,9 @@ function AdminEntityPreview({ notification }: { notification: NotificationType }
 
     // delete_comment → show comment excerpt badge
     if (action === 'delete_comment' && (entity.content || notification.data?.comment_excerpt)) {
-        const text = entity.content || (typeof notification.data?.comment_excerpt === 'string' ? notification.data.comment_excerpt : '')
+        const text =
+            entity.content ||
+            (typeof notification.data?.comment_excerpt === 'string' ? notification.data.comment_excerpt : '')
         return (
             <div className='shrink-0 max-w-[100px] rounded-md border bg-muted/60 px-2 py-1.5'>
                 <div className='flex items-center gap-1 mb-0.5'>
@@ -276,9 +281,7 @@ function AdminEntityPreview({ notification }: { notification: NotificationType }
             <div className='flex shrink-0 flex-col items-center gap-1'>
                 <Avatar className='size-10'>
                     <AvatarImage src={entity.avatar ?? undefined} />
-                    <AvatarFallback className='text-xs'>
-                        {(entity.username?.[0] || 'U').toUpperCase()}
-                    </AvatarFallback>
+                    <AvatarFallback className='text-xs'>{(entity.username?.[0] || 'U').toUpperCase()}</AvatarFallback>
                 </Avatar>
                 {entity.username && (
                     <span className='text-xs text-muted-foreground max-w-[60px] truncate'>@{entity.username}</span>
@@ -489,10 +492,13 @@ export default function ActivityDrawerContent() {
         [followUser, localFollowState, unfollowUser]
     )
 
-    const handleNavigate = useCallback((path: string) => {
-        window.open(`/${locale}${path}`, '_blank')
-        toggleDrawer()
-    }, [locale, toggleDrawer])
+    const handleNavigate = useCallback(
+        (path: string) => {
+            window.open(`/${locale}${path}`, '_blank')
+            toggleDrawer()
+        },
+        [locale, toggleDrawer]
+    )
 
     return (
         <div className='w-full h-full flex flex-col'>

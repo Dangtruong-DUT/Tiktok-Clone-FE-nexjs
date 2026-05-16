@@ -17,10 +17,7 @@ export default async function AdminPostsPage() {
         <AdminLayout
             title={t('posts.title')}
             description={t('posts.description')}
-            breadcrumbs={[
-                { label: t('breadcrumbs.admin'), href: '/admin' },
-                { label: t('posts.title') }
-            ]}
+            breadcrumbs={[{ label: t('breadcrumbs.admin'), href: '/admin' }, { label: t('posts.title') }]}
         >
             <AdminContainer>
                 <Suspense

@@ -18,7 +18,7 @@ import { SearchParamsLoader, useSearchParamsLoader } from '@/components/searchpa
 import { useGetPostOfUserPagingQuery } from '@/store/services/posts.service'
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'
 import { DataTable } from '@/components/ui/data-table'
-import AutoPagination from '@/components/auto-pagination'
+import { TablePagination } from '@/components/table-pagination'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import AudienceSelect from '@/components/audience-select'
@@ -153,7 +153,9 @@ export default function TableContent() {
                 >
                     <Search className='h-3.5 w-3.5' />
                     <span className='ml-1.5 hidden sm:inline'>
-                        {isFetchingPosts && pendingAction === 'search' ? t('search.searchingButton') : t('search.searchButton')}
+                        {isFetchingPosts && pendingAction === 'search'
+                            ? t('search.searchingButton')
+                            : t('search.searchButton')}
                     </span>
                 </Button>
 
@@ -170,46 +172,31 @@ export default function TableContent() {
 
             {/* Table */}
             {isLoadingPosts ? (
-                <TableSkeleton rows={pagination.pageSize} />
+                <TableSkeleton
+                    rows={pagination.pageSize}
+                    showToolbar={false}
+                    showPagination={false}
+                    columnWidths={['w-48 shrink-0', 'w-36', 'w-8', 'w-8', 'w-16 ml-auto']}
+                />
             ) : (
                 <DataTable columns={columns} table={table} emptyText={t('emptyState')} />
             )}
 
-            {/* Pagination — 1 hàng */}
             {queryData?.meta && (
-                <div className='flex items-center gap-3 px-1'>
-                    <div className='flex items-center gap-1.5 shrink-0'>
-                        <span className='text-xs text-muted-foreground'>{t('perPage')}</span>
-                        <select
-                            value={pagination.pageSize}
-                            onChange={(e) => {
-                                table.setPageSize(Number(e.target.value))
-                                table.setPageIndex(0)
-                            }}
-                            className='h-7 rounded border border-border/60 bg-background px-1.5 text-xs text-foreground focus:outline-none'
-                        >
-                            {[10, 20, 50].map((n) => <option key={n} value={n}>{n}</option>)}
-                        </select>
-                    </div>
-
-                    <span className='text-xs text-muted-foreground shrink-0'>
-                        {t('showingResults', {
-                            from: (queryData.meta.total ?? 0) === 0 ? 0 : (queryData.meta.current_page - 1) * queryData.meta.per_page + 1,
-                            to: Math.min(queryData.meta.current_page * queryData.meta.per_page, queryData.meta.total ?? 0),
-                            total: queryData.meta.total ?? 0
-                        })}
-                    </span>
-
-                    {queryData.meta.last_page > 1 && (
-                        <div className='ml-auto'>
-                            <AutoPagination
-                                page={table.getState().pagination.pageIndex + 1}
-                                pageSize={queryData.meta.last_page}
-                                pathname='/snapistudio/content'
-                            />
-                        </div>
-                    )}
-                </div>
+                <TablePagination
+                    pagination={queryData.meta}
+                    page={table.getState().pagination.pageIndex + 1}
+                    perPage={table.getState().pagination.pageSize}
+                    onPerPageChange={(n) => {
+                        table.setPageSize(n)
+                        table.setPageIndex(0)
+                    }}
+                    onPageChange={(p) => table.setPageIndex(p - 1)}
+                    perPageOptions={[10, 20, 50]}
+                    perPageLabel={t('perPage')}
+                    showingResultsFormatter={(from, to, total) => t('showingResults', { from, to, total })}
+                    pathname='/snapistudio/content'
+                />
             )}
         </div>
     )

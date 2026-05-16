@@ -1,5 +1,7 @@
-import { AdminLoading } from '@/components/admin/admin-loading'
+import { getTranslations } from 'next-intl/server'
+import { PageLoading } from '@/components/page-loading'
 
-export default function Loading() {
-    return <AdminLoading />
+export default async function Loading() {
+    const t = await getTranslations('AdminPage')
+    return <PageLoading message={t('common.loading')} />
 }

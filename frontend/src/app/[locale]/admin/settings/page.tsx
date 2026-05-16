@@ -15,10 +15,7 @@ export default async function AdminSettingsPage() {
         <AdminLayout
             title={t('settings.title')}
             description={t('settings.description')}
-            breadcrumbs={[
-                { label: t('breadcrumbs.admin'), href: '/admin' },
-                { label: t('settings.title') }
-            ]}
+            breadcrumbs={[{ label: t('breadcrumbs.admin'), href: '/admin' }, { label: t('settings.title') }]}
         >
             <AdminContainer>
                 <AdminSettingsContent />

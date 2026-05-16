@@ -1,49 +1,49 @@
 {
-  "menuItems": {
-    "useEmail": "Sử dụng email",
-    "continueWithGoogle": "Tiếp tục với Google"
-  },
-  "SwitchLanguage": {
-    "label": "Chuyển ngôn ngữ",
-    "en": "Tiếng Anh",
-    "vi": "Tiếng Việt"
-  },
-  "header": {
-    "help": "Phản hồi và Trợ giúp"
-  },
-  "datePicker": {
-    "month": "Tháng",
-    "day": "Ngày",
-    "year": "Năm",
-    "months": {
-      "1": "Tháng 1",
-      "2": "Tháng 2",
-      "3": "Tháng 3",
-      "4": "Tháng 4",
-      "5": "Tháng 5",
-      "6": "Tháng 6",
-      "7": "Tháng 7",
-      "8": "Tháng 8",
-      "9": "Tháng 9",
-      "10": "Tháng 10",
-      "11": "Tháng 11",
-      "12": "Tháng 12"
+    "menuItems": {
+        "useEmail": "Sử dụng email",
+        "continueWithGoogle": "Tiếp tục với Google"
+    },
+    "SwitchLanguage": {
+        "label": "Chuyển ngôn ngữ",
+        "en": "Tiếng Anh",
+        "vi": "Tiếng Việt"
+    },
+    "header": {
+        "help": "Phản hồi và Trợ giúp"
+    },
+    "datePicker": {
+        "month": "Tháng",
+        "day": "Ngày",
+        "year": "Năm",
+        "months": {
+            "1": "Tháng 1",
+            "2": "Tháng 2",
+            "3": "Tháng 3",
+            "4": "Tháng 4",
+            "5": "Tháng 5",
+            "6": "Tháng 6",
+            "7": "Tháng 7",
+            "8": "Tháng 8",
+            "9": "Tháng 9",
+            "10": "Tháng 10",
+            "11": "Tháng 11",
+            "12": "Tháng 12"
+        }
+    },
+    "menuMore": {
+        "title": "Thêm",
+        "language": "Ngôn ngữ",
+        "language_english": "Tiếng Anh",
+        "language_vietnamese": "Tiếng Việt",
+        "feedback": "Góp ý và trợ giúp",
+        "darkmode": "Chế độ tối",
+        "darkmode_system": "Theo hệ thống",
+        "darkmode_dark": "Chế độ tối",
+        "darkmode_light": "Chế độ sáng",
+        "settings": "Cài đặt",
+        "logout": "Đăng xuất"
+    },
+    "StudioLayout": {
+        "upload": "Tải lên"
     }
-  },
-  "menuMore": {
-    "title": "Thêm",
-    "language": "Ngôn ngữ",
-    "language_english": "Tiếng Anh",
-    "language_vietnamese": "Tiếng Việt",
-    "feedback": "Góp ý và trợ giúp",
-    "darkmode": "Chế độ tối",
-    "darkmode_system": "Theo hệ thống",
-    "darkmode_dark": "Chế độ tối",
-    "darkmode_light": "Chế độ sáng",
-    "settings": "Cài đặt",
-    "logout": "Đăng xuất"
-  },
-  "StudioLayout": {
-    "upload": "Tải lên"
-  }
 }

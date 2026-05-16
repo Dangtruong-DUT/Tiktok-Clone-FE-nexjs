@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import { useUnbanUserMutation } from '@/store/services/admin'
-import { AdminConfirmDialog } from '@/components/admin'
+import { ConfirmDialog } from '@/components/confirm-dialog'
 import { extractApiError } from '@/utils/extract-api-error'
 import { toast } from 'sonner'
 
@@ -30,11 +30,12 @@ export function UnbanUserDialog({ open, userUuid, username, onOpenChange, onSucc
     }
 
     return (
-        <AdminConfirmDialog
+        <ConfirmDialog
             open={open}
             title={t('users.actions.unban')}
             description={t('users.dialogs.unbanSubtitle', { username })}
             confirmLabel={t('users.actions.confirmUnban')}
+            cancelLabel={t('common.cancel')}
             onConfirm={handleUnban}
             isLoading={isLoading}
             onOpenChange={onOpenChange}

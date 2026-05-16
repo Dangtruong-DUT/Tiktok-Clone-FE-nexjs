@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import { useRestoreUserMutation } from '@/store/services/admin'
-import { AdminConfirmDialog } from '@/components/admin'
+import { ConfirmDialog } from '@/components/confirm-dialog'
 import { extractApiError } from '@/utils/extract-api-error'
 import { toast } from 'sonner'
 
@@ -30,11 +30,12 @@ export function RestoreUserDialog({ open, userUuid, username, onOpenChange, onSu
     }
 
     return (
-        <AdminConfirmDialog
+        <ConfirmDialog
             open={open}
             title={t('users.actions.restore')}
             description={t('users.dialogs.restoreSubtitle', { username })}
             confirmLabel={t('users.actions.confirmRestore')}
+            cancelLabel={t('common.cancel')}
             onConfirm={handleRestore}
             isLoading={isLoading}
             onOpenChange={onOpenChange}
