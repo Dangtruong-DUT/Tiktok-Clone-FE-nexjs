@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
-class ForgotPasswordMail extends BaseMailAble
+class ForgotPasswordEmail extends BaseEmail
 {
     /**
      * Create a new message instance.

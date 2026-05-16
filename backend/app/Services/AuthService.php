@@ -5,9 +5,9 @@ namespace App\Services;
 use App\Enums\User\UserVerifyStatusEnum;
 use App\Exceptions\http\BusinessException;
 use App\Exceptions\http\UnauthorizedException;
-use App\Mail\ForgotPasswordMail;
+use App\Mail\ForgotPasswordEmail;
 use App\Mail\VerifyUserEmail;
-use App\Mail\VerifyUserSuccess;
+use App\Mail\VerifyUserSuccessEmail;
 use App\Models\User;
 use App\Repositories\ForgotPasswordTokenRepository;
 use App\Repositories\RefreshTokenRepository;
@@ -154,7 +154,7 @@ class AuthService
             $user->verify = UserVerifyStatusEnum::VERIFIED->value;
             $user->save();
             $this->verifyEmailTokenRepository->deleteByUserId($validToken->user_id);
-            Mail::to($user->email)->send(new VerifyUserSuccess($user));
+            Mail::to($user->email)->send(new VerifyUserSuccessEmail($user));
 
             return [
                 'access_token' => $this->tokenService->createAccessToken($user),
@@ -207,7 +207,7 @@ class AuthService
 
         DB::transaction(function () use ($user, $email) {
             $token = $this->tokenService->createForgotPasswordToken($user);
-            Mail::to($email)->send(new ForgotPasswordMail($user, $token));
+            Mail::to($email)->send(new ForgotPasswordEmail($user, $token));
         });
 
         return true;

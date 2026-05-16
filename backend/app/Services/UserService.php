@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\User\RelationshipTypeEnum;
+use App\Events\Social\UserFollowedEvent;
 use App\Exceptions\http\BadRequestException;
 use App\Exceptions\http\BusinessException;
 use App\Models\User;
@@ -20,8 +21,7 @@ class UserService
 
     public function __construct(
         private readonly RelationshipRepository $relationshipRepository,
-        private readonly UserRepository $userRepository,
-        private readonly NotificationService $notificationService
+        private readonly UserRepository $userRepository
     ) {}
 
     /**
@@ -87,10 +87,7 @@ class UserService
             $authUser->increment('following_count');
             $targetUser->increment('followers_count');
 
-            $this->notificationService->notifyFollow(
-                actorId: $authUser->id,
-                notifiableId: $targetUser->id
-            );
+            event(new UserFollowedEvent($authUser->id, $targetUser->id));
         });
 
         return true;

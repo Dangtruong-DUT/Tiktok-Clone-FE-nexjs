@@ -5,6 +5,7 @@ namespace App\Services\Admin;
 use App\Enums\Admin\AdminActionEnum;
 use App\Enums\Common\ModelEntityTypeEnum;
 use App\Enums\Common\ResourceTypeEnum;
+use App\Events\Admin\AdminActionLoggedEvent;
 use App\Enums\Post\PostTypeEnum;
 use App\Exceptions\http\BadRequestException;
 use App\Repositories\PostRepository;
@@ -18,7 +19,6 @@ class CommentAdminService
 
     public function __construct(
         private readonly PostRepository $postRepository,
-        private readonly AdminLogService $adminLogService,
         private readonly AdminModerationNoticeService $adminModerationNoticeService,
     ) {}
 
@@ -65,7 +65,7 @@ class CommentAdminService
                 }
             }
 
-            $this->adminLogService->log(
+            event(new AdminActionLoggedEvent(
                 admin: $admin,
                 resourceType: ResourceTypeEnum::COMMENT,
                 resourceId: $comment->id,
@@ -73,7 +73,7 @@ class CommentAdminService
                 reason: $payload['reason'],
                 oldData: $oldData,
                 newData: null,
-            );
+            ));
 
             $this->adminModerationNoticeService->send(
                 admin: $admin,

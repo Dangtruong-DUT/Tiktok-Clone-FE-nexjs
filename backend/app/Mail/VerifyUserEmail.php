@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
-class VerifyUserEmail extends BaseMailAble
+class VerifyUserEmail extends BaseEmail
 {
     /**
      * Create a new message instance.

@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
-class AdminModerationActionMail extends BaseMailAble
+class AdminModerationActionEmail extends BaseEmail
 {
     /**
      * Admin identity is intentionally hidden from the email.

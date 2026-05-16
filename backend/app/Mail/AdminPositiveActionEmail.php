@@ -2,17 +2,21 @@
 
 namespace App\Mail;
 
+use App\Enums\Admin\AdminActionEnum;
 use App\Models\User;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
-class AdminDirectMessageMail extends BaseMailAble
+/**
+ * Mail for positive/restorative admin actions:
+ * unban, restore account, restore post/comment, approve appeal.
+ */
+class AdminPositiveActionEmail extends BaseEmail
 {
     public function __construct(
-        private readonly User $admin,
         private readonly User $targetUser,
-        private readonly string $subjectLine,
-        private readonly string $messageBody,
+        private readonly AdminActionEnum $action,
+        private readonly string $adminMessage,
     ) {
         parent::__construct();
     }
@@ -20,27 +24,22 @@ class AdminDirectMessageMail extends BaseMailAble
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->subjectLine,
+            subject: 'Account Notice: '.$this->action->label(),
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'emails.admin_direct_message',
+            view: 'emails.admin_positive_action',
             with: [
                 'targetUserName' => $this->targetUser->name ?? $this->targetUser->username,
-                'adminName' => $this->admin->name ?? $this->admin->username,
-                'subjectLine' => $this->subjectLine,
-                'messageBody' => $this->messageBody,
-                'appName' => config('app.name'),
+                'actionLabel' => $this->action->label(),
+                'adminMessage' => $this->adminMessage,
             ],
         );
     }
 
-    /**
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
     public function attachments(): array
     {
         return [];

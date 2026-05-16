@@ -5,15 +5,15 @@ namespace App\Services\Admin;
 use App\Enums\Admin\AdminActionEnum;
 use App\Enums\Common\ModelEntityTypeEnum;
 use App\Enums\Common\ResourceTypeEnum;
+use App\Events\Admin\AdminActionLoggedEvent;
+use App\Events\Admin\AdminDirectMessageSentEvent;
 use App\Exceptions\http\BadRequestException;
-use App\Mail\AdminDirectMessageMail;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Repositories\RefreshTokenRepository;
 use App\Traits\HasAuthUser;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 
 class UserAdminService
 {
@@ -22,7 +22,6 @@ class UserAdminService
     public function __construct(
         private readonly UserRepository $userRepository,
         private readonly RefreshTokenRepository $refreshTokenRepository,
-        private readonly AdminLogService $adminLogService,
         private readonly AdminModerationNoticeService $adminModerationNoticeService,
     ) {}
 
@@ -68,7 +67,7 @@ class UserAdminService
 
                 $this->refreshTokenRepository->deleteByUserId($user->id);
 
-            $this->adminLogService->log(
+            event(new AdminActionLoggedEvent(
                 admin: $admin,
                 resourceType: ResourceTypeEnum::USER,
                 resourceId: $user->id,
@@ -76,7 +75,7 @@ class UserAdminService
                 reason: $payload['reason'],
                 oldData: $oldData,
                 newData: $user->only(['banned_at', 'ban_reason', 'ban_duration_days']),
-            );
+            ));
 
             $this->adminModerationNoticeService->send(
                 admin: $admin,
@@ -122,14 +121,15 @@ class UserAdminService
 
                 $this->refreshTokenRepository->deleteByUserId($user->id);
 
-            $this->adminLogService->log(
+            event(new AdminActionLoggedEvent(
                 admin: $admin,
                 resourceType: ResourceTypeEnum::USER,
                 resourceId: $user->id,
                 action: AdminActionEnum::UNBAN,
+                reason: null,
                 oldData: $oldData,
                 newData: $user->only(['banned_at', 'ban_reason', 'ban_duration_days']),
-            );
+            ));
 
             $this->adminModerationNoticeService->send(
                 admin: $admin,
@@ -172,7 +172,7 @@ class UserAdminService
 
             $user->delete();
 
-            $this->adminLogService->log(
+            event(new AdminActionLoggedEvent(
                 admin: $admin,
                 resourceType: ResourceTypeEnum::USER,
                 resourceId: $user->id,
@@ -180,7 +180,7 @@ class UserAdminService
                 reason: $payload['reason'],
                 oldData: $oldData,
                 newData: null,
-            );
+            ));
 
             $this->adminModerationNoticeService->send(
                 admin: $admin,
@@ -223,7 +223,7 @@ class UserAdminService
 
             $user->restore();
 
-            $this->adminLogService->log(
+            event(new AdminActionLoggedEvent(
                 admin: $admin,
                 resourceType: ResourceTypeEnum::USER,
                 resourceId: $user->id,
@@ -231,7 +231,7 @@ class UserAdminService
                 reason: 'Restore deleted user account',
                 oldData: $oldData,
                 newData: ['deleted_at' => null],
-            );
+            ));
 
             $this->adminModerationNoticeService->sendPositiveAction(
                 admin: $admin,
@@ -264,7 +264,7 @@ class UserAdminService
             $user->password = (string) $payload['password'];
             $user->save();
 
-            $this->adminLogService->log(
+            event(new AdminActionLoggedEvent(
                 admin: $admin,
                 resourceType: ResourceTypeEnum::USER,
                 resourceId: $user->id,
@@ -272,7 +272,7 @@ class UserAdminService
                 reason: 'Admin reset user password',
                 oldData: null,
                 newData: null,
-            );
+            ));
 
             return $user;
         });
@@ -293,14 +293,14 @@ class UserAdminService
         }
 
         DB::transaction(function () use ($admin, $user, $payload) {
-            Mail::to($user->email)->send(new AdminDirectMessageMail(
+            event(new AdminDirectMessageSentEvent(
                 admin: $admin,
                 targetUser: $user,
-                subjectLine: (string) $payload['subject'],
-                messageBody: (string) $payload['message'],
+                subject: (string) $payload['subject'],
+                message: (string) $payload['message'],
             ));
 
-            $this->adminLogService->log(
+            event(new AdminActionLoggedEvent(
                 admin: $admin,
                 resourceType: ResourceTypeEnum::USER,
                 resourceId: $user->id,
@@ -310,7 +310,7 @@ class UserAdminService
                 newData: [
                     'subject' => (string) $payload['subject'],
                 ],
-            );
+            ));
         });
     }
 

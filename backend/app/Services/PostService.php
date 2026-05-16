@@ -4,6 +4,9 @@ namespace App\Services;
 
 use App\Enums\Post\PostTypeEnum;
 use App\Enums\Settings\PrivacyVisibilityEnum;
+use App\Events\Social\PostCommentedEvent;
+use App\Events\Social\PostLikedEvent;
+use App\Events\Social\UserMentionedEvent;
 use App\Exceptions\http\BusinessException;
 use App\Exceptions\http\ForbiddenException;
 use App\Exceptions\http\NotFoundException;
@@ -26,7 +29,6 @@ class PostService
         private readonly PostRepository $postRepository,
         private readonly MediaRepository $mediaRepository,
         private readonly HashtagRepository $hashtagRepository,
-        private readonly NotificationService $notificationService,
         private readonly AiModerationService $aiModerationService,
     ) {}
 
@@ -90,19 +92,11 @@ class PostService
             }
 
             if ($parentPost && $postType === PostTypeEnum::COMMENT->value) {
-                $this->notificationService->notifyComment(
-                    actorId: $user->id,
-                    targetPost: $parentPost,
-                    commentPost: $post
-                );
+                event(new PostCommentedEvent($user->id, $parentPost, $post));
             }
 
             if (! empty($mentionSyncData)) {
-                $this->notificationService->notifyMention(
-                    actorId: $user->id,
-                    post: $post,
-                    mentionedUserIds: array_keys($mentionSyncData)
-                );
+                event(new UserMentionedEvent($user->id, $post, array_keys($mentionSyncData)));
             }
 
             return $post;
@@ -162,11 +156,7 @@ class PostService
 
         $newMentionedUserIds = array_values(array_diff(array_keys($mentionSyncData), $existingMentionUserIds));
         if (! empty($newMentionedUserIds)) {
-            $this->notificationService->notifyMention(
-                actorId: $authUserId,
-                post: $post,
-                mentionedUserIds: $newMentionedUserIds
-            );
+            event(new UserMentionedEvent($authUserId, $post, $newMentionedUserIds));
         }
 
         return $this->postRepository->getByIdWithDetail($post->id, $authUserId);
@@ -402,10 +392,7 @@ class PostService
             $post->userLikes()->syncWithoutDetaching([auth_user_id()]);
             $post->increment('likes_count');
 
-            $this->notificationService->notifyLike(
-                actorId: auth_user_id(),
-                post: $post
-            );
+            event(new PostLikedEvent(auth_user_id(), $post));
         });
     }
 

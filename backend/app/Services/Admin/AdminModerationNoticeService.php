@@ -5,19 +5,12 @@ namespace App\Services\Admin;
 use App\Enums\Admin\AdminActionEnum;
 use App\Enums\Appeal\AppealTypeEnum;
 use App\Enums\Common\ModelEntityTypeEnum;
-use App\Mail\AdminModerationActionMail;
-use App\Mail\AdminPositiveActionMail;
+use App\Events\Admin\AdminModerationActionNotifiedEvent;
+use App\Events\Admin\AdminPositiveActionNotifiedEvent;
 use App\Models\User;
-use App\Services\NotificationService;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
 class AdminModerationNoticeService
 {
-    public function __construct(
-        private readonly NotificationService $notificationService
-    ) {}
-
     /**
      * Send a punitive moderation notice (ban, delete).
      * Includes appeal link if the action is appealable.
@@ -64,32 +57,16 @@ class AdminModerationNoticeService
             }
         }
 
-        $this->notificationService->notifyAdminModerationAction(
-            adminId: $admin->id,
-            notifiableUserId: $targetUser->id,
+        event(new AdminModerationActionNotifiedEvent(
+            admin: $admin,
+            targetUser: $targetUser,
+            action: $action,
+            reason: $reason,
             entityType: $entityType,
             entityId: $entityId,
-            data: $notificationData,
-        );
-
-        if (empty($targetUser->email)) {
-            return;
-        }
-
-        try {
-            Mail::to($targetUser->email)->send(new AdminModerationActionMail(
-                targetUser: $targetUser,
-                action: $action,
-                reason: $reason,
-                appealLink: $appealLink,
-            ));
-        } catch (\Throwable $exception) {
-            Log::warning('Failed to queue moderation email', [
-                'target_user_id' => $targetUser->id,
-                'action' => $action->value,
-                'error' => $exception->getMessage(),
-            ]);
-        }
+            notificationData: $notificationData,
+            appealLink: $appealLink,
+        ));
     }
 
     /**
@@ -119,31 +96,15 @@ class AdminModerationNoticeService
         $notificationData = array_merge($baseData, $context);
         unset($notificationData['resource_id']);
 
-        $this->notificationService->notifyAdminModerationAction(
-            adminId: $admin->id,
-            notifiableUserId: $targetUser->id,
+        event(new AdminPositiveActionNotifiedEvent(
+            admin: $admin,
+            targetUser: $targetUser,
+            action: $action,
+            message: $message,
             entityType: $entityType,
             entityId: $entityId,
-            data: $notificationData,
-        );
-
-        if (empty($targetUser->email)) {
-            return;
-        }
-
-        try {
-            Mail::to($targetUser->email)->send(new AdminPositiveActionMail(
-                targetUser: $targetUser,
-                action: $action,
-                adminMessage: $message,
-            ));
-        } catch (\Throwable $exception) {
-            Log::warning('Failed to queue positive action email', [
-                'target_user_id' => $targetUser->id,
-                'action' => $action->value,
-                'error' => $exception->getMessage(),
-            ]);
-        }
+            notificationData: $notificationData,
+        ));
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Enums\Appeal\AppealStatusEnum;
 use App\Enums\Appeal\AppealTypeEnum;
 use App\Enums\Common\ModelEntityTypeEnum;
 use App\Enums\Common\ResourceTypeEnum;
+use App\Events\Admin\AdminActionLoggedEvent;
 use App\Exceptions\http\BusinessException;
 use App\Exceptions\http\NotFoundException;
 use App\Models\Appeal;
@@ -26,7 +27,6 @@ class AdminAppealService
         private readonly AppealRepository $appealRepository,
         private readonly PostRepository $postRepository,
         private readonly UserRepository $userRepository,
-        private readonly AdminLogService $adminLogService,
         private readonly AdminModerationNoticeService $adminModerationNoticeService,
     ) {}
 
@@ -72,7 +72,7 @@ class AdminAppealService
 
             $this->reverseAdminAction($appeal);
 
-            $this->adminLogService->log(
+            event(new AdminActionLoggedEvent(
                 admin: $admin,
                 resourceType: ResourceTypeEnum::APPEAL,
                 resourceId: $appeal->id,
@@ -80,7 +80,7 @@ class AdminAppealService
                 reason: 'Appeal approved for: '.$appeal->appeal_type->label(),
                 oldData: $oldData,
                 newData: $appeal->only(['status', 'admin_response', 'reviewed_by', 'reviewed_at']),
-            );
+            ));
 
             $appealUser = $appeal->user()->withTrashed()->first();
             if ($appealUser) {
@@ -138,7 +138,7 @@ class AdminAppealService
                 'reviewed_at' => now(),
             ]);
 
-            $this->adminLogService->log(
+            event(new AdminActionLoggedEvent(
                 admin: $admin,
                 resourceType: ResourceTypeEnum::APPEAL,
                 resourceId: $appeal->id,
@@ -146,7 +146,7 @@ class AdminAppealService
                 reason: 'Appeal rejected for: '.$appeal->appeal_type->label(),
                 oldData: $oldData,
                 newData: $appeal->only(['status', 'admin_response', 'reviewed_by', 'reviewed_at']),
-            );
+            ));
 
             $appealUser = $appeal->user()->withTrashed()->first();
             if ($appealUser) {
@@ -197,7 +197,7 @@ class AdminAppealService
         $oldData = $user->only(['banned_at', 'ban_reason', 'ban_duration_days']);
         $user->update(['banned_at' => null, 'ban_reason' => null, 'ban_duration_days' => null]);
 
-        $this->adminLogService->log(
+        event(new AdminActionLoggedEvent(
             admin: $admin,
             resourceType: ResourceTypeEnum::USER,
             resourceId: $user->id,
@@ -205,7 +205,7 @@ class AdminAppealService
             reason: 'Unban via approved appeal #'.$appeal->id,
             oldData: $oldData,
             newData: ['banned_at' => null],
-        );
+        ));
     }
 
     private function restorePost(Appeal $appeal, AdminActionEnum $action, User $admin): void
@@ -228,7 +228,7 @@ class AdminAppealService
             ? ResourceTypeEnum::COMMENT
             : ResourceTypeEnum::POST;
 
-        $this->adminLogService->log(
+        event(new AdminActionLoggedEvent(
             admin: $admin,
             resourceType: $resourceType,
             resourceId: $appeal->resource_id,
@@ -236,7 +236,7 @@ class AdminAppealService
             reason: 'Restored via approved appeal #'.$appeal->id,
             oldData: ['deleted_at' => 'not null'],
             newData: ['deleted_at' => null],
-        );
+        ));
     }
 
     private function restoreUser(Appeal $appeal): void
