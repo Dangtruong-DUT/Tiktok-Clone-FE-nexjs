@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { cn } from '@/lib/utils'
 import { FaBookmark, FaHeart, FaShare } from 'react-icons/fa6'
 import LikedIcon from '@/components/lottie-icons/liked-icon'
@@ -11,6 +11,7 @@ import { useBookmarkPost, useLikePost } from '@/hooks/data/useVideo'
 import { useGetPostDetailQuery } from '@/store/services/posts.service'
 import ActionButton from '@/components/action-video-bar-v2/action-button'
 import { useAppSelector } from '@/store/hooks'
+import { useAnimatedState } from '@/hooks/ui/useAnimatedState'
 import envConfig from '@/config/app.config'
 import { ShareMenuDialog } from '@/components/share-menu-dialog'
 import { useLocale } from 'use-intl'
@@ -26,24 +27,18 @@ export default function ActionBar({ post, className }: ActionBarProps) {
 
     const role = useAppSelector((state) => state.auth.role)
 
-    const [isOpenAnimatingLike, setIsOpenAnimatingLike] = useState<boolean>(false)
+    const { isAnimating: isOpenAnimatingLike, trigger: triggerLikeAnimation } = useAnimatedState()
     const { isLikedState, toggleLikeState } = useLikePost({
         postId: post.uuid,
         initialLikeState: postDetail?.is_liked || false,
-        onLiked: () => {
-            setIsOpenAnimatingLike(true)
-            setTimeout(() => setIsOpenAnimatingLike(false), 3000)
-        }
+        onLiked: triggerLikeAnimation
     })
 
-    const [isOpenAnimatingBookmark, setIsOpenAnimatingBookmark] = useState<boolean>(false)
+    const { isAnimating: isOpenAnimatingBookmark, trigger: triggerBookmarkAnimation } = useAnimatedState()
     const { isBookmarkedState, toggleBookmarkState } = useBookmarkPost({
         postId: post.uuid,
         initialBookmarkState: postDetail?.is_bookmarked || false,
-        onBookmarked: () => {
-            setIsOpenAnimatingBookmark(true)
-            setTimeout(() => setIsOpenAnimatingBookmark(false), 3000)
-        }
+        onBookmarked: triggerBookmarkAnimation
     })
 
     const handleOpenComment = useCallback(() => {

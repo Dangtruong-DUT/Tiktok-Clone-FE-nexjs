@@ -551,7 +551,7 @@ export function AppealTable() {
                 </TablePanel>
 
                 {/* Review dialog */}
-                <Dialog open={!!selectedAppeal && !!actionType} onOpenChange={(open) => !open && closeDialog()}>
+                <Dialog open={selectedAppeal !== null && actionType !== null} onOpenChange={(open) => !open && closeDialog()}>
                     <DialogContent className='sm:max-w-[520px]'>
                         <DialogHeader>
                             <DialogTitle>
@@ -601,7 +601,7 @@ export function AppealTable() {
                 </Dialog>
 
                 <EvidenceGalleryDialog
-                    open={!!galleryAppeal}
+                    open={galleryAppeal !== null}
                     onOpenChange={(open) => !open && setGalleryAppeal(null)}
                     evidenceFiles={galleryAppeal?.evidence_files ?? []}
                     appealId={galleryAppeal?.uuid ?? undefined}

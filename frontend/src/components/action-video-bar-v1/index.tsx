@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -20,6 +20,7 @@ import { useBookmarkPost, useLikePost } from '@/hooks/data/useVideo'
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'
 import ActionButton from '@/components/action-video-bar-v1/action-button'
 import { ShareMenuDialog } from '@/components/share-menu-dialog'
+import { useAnimatedState } from '@/hooks/ui/useAnimatedState'
 import envConfig from '@/config/app.config'
 import { useLocale } from 'use-intl'
 
@@ -45,24 +46,18 @@ export default function ActionBar({ post, className }: ActionBarProps) {
         initialFollowState: fetchedAuthor?.is_followed ?? author.is_followed
     })
 
-    const [isOpenAnimatingLike, setIsOpenAnimatingLike] = useState<boolean>(false)
+    const { isAnimating: isOpenAnimatingLike, trigger: triggerLikeAnimation } = useAnimatedState()
     const { isLikedState, toggleLikeState } = useLikePost({
         postId: post.uuid,
         initialLikeState: post.is_liked,
-        onLiked: () => {
-            setIsOpenAnimatingLike(true)
-            setTimeout(() => setIsOpenAnimatingLike(false), 3000)
-        }
+        onLiked: triggerLikeAnimation
     })
 
-    const [isOpenAnimatingBookmark, setIsOpenAnimatingBookmark] = useState<boolean>(false)
+    const { isAnimating: isOpenAnimatingBookmark, trigger: triggerBookmarkAnimation } = useAnimatedState()
     const { isBookmarkedState, toggleBookmarkState } = useBookmarkPost({
         postId: post.uuid,
         initialBookmarkState: post.is_bookmarked,
-        onBookmarked: () => {
-            setIsOpenAnimatingBookmark(true)
-            setTimeout(() => setIsOpenAnimatingBookmark(false), 3000)
-        }
+        onBookmarked: triggerBookmarkAnimation
     })
 
     const handleToggleOpenComment = useCallback(() => {

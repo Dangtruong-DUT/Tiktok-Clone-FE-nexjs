@@ -101,7 +101,9 @@
             },
             "labels": {
                 "reason": "Reason",
-                "duration": "Duration (days)"
+                "duration": "Duration (days)",
+                "subject": "Subject",
+                "mailMessage": "Message"
             },
             "placeholders": {
                 "searchUsers": "Search by username or email",
@@ -112,7 +114,9 @@
             "errors": {
                 "reasonRequired": "Reason is required",
                 "reasonMinLength": "Reason must be at least 10 characters",
-                "durationInvalid": "Duration must be a positive number"
+                "durationInvalid": "Duration must be a positive number",
+                "subjectMinLength": "Subject must be at least 3 characters",
+                "messageMinLength": "Message must be at least 10 characters"
             },
             "messages": {
                 "banSuccess": "User banned successfully",
@@ -122,14 +126,17 @@
                 "deleteSuccess": "User deleted successfully",
                 "deleteError": "Failed to delete user",
                 "restoreSuccess": "User restored successfully",
-                "restoreError": "Failed to restore user"
+                "restoreError": "Failed to restore user",
+                "sendMailSuccess": "Email sent successfully",
+                "sendMailError": "Failed to send email"
             },
             "dialogs": {
                 "deleteTitle": "Delete User",
                 "deleteSubtitle": "Delete account for @{username}",
                 "deleteWarning": "This action cannot be undone.",
                 "unbanSubtitle": "Unban account for @{username}",
-                "restoreSubtitle": "Restore account for @{username}"
+                "restoreSubtitle": "Restore account for @{username}",
+                "sendMailSubtitle": "Send a direct email to {username}"
             },
             "banDialog": {
                 "subtitle": "Ban account for @{username}"

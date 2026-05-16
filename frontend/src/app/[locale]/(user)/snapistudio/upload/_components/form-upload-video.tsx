@@ -99,7 +99,7 @@ export default function FormUploadVideo() {
     useEffect(() => {
         const fetchFrame = async () => {
             if (videoUrl && videoFrames.length > 0) {
-                const file = await convertBase64ToFileToFile(videoFrames[0].image, 'video_thumbnail.png')
+                const file = await convertBase64ToFileToFile(videoFrames[0]!.image, 'video_thumbnail.png')
                 if (file) setThumbnailFile(file)
             }
         }

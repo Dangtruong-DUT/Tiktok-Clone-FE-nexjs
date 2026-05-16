@@ -16,7 +16,7 @@ export function useVideoRouterNavigation({ onVideoEnd }: UseVideoRouterNavigatio
         (targetIndex: number) => {
             if (targetIndex >= 0 && targetIndex < playlist.length) {
                 const targetVideo = playlist[targetIndex]
-                const newUrl = `/@${targetVideo.author.username}/video/${targetVideo.uuid}`
+                const newUrl = `/@${targetVideo?.author.username}/video/${targetVideo?.uuid}`
                 router.replace(newUrl)
             }
         },
@@ -27,7 +27,7 @@ export function useVideoRouterNavigation({ onVideoEnd }: UseVideoRouterNavigatio
         (videoId: string) => {
             const targetVideo = playlist.find((item) => item.uuid === videoId)
             if (targetVideo) {
-                const newUrl = `/@${targetVideo.author.username}/video/${targetVideo.uuid}`
+                const newUrl = `/@${targetVideo?.author.username}/video/${targetVideo?.uuid}`
                 router.replace(newUrl)
             }
         },

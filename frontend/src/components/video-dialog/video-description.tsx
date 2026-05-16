@@ -15,7 +15,8 @@ import { TikTokPostType } from '@/types/models/post.model'
 import { formatCompactNumber } from '@/utils/formatting/formatNumber.util'
 import { timeAgo } from '@/utils/formatting/formatTime.util'
 import { useLocale } from 'next-intl'
-import { useCallback, useState } from 'react'
+import { useAnimatedState } from '@/hooks/ui/useAnimatedState'
+import { useCallback } from 'react'
 import { AiFillMessage } from 'react-icons/ai'
 import { FaBookmark, FaHeart } from 'react-icons/fa6'
 import { toast } from 'sonner'
@@ -78,24 +79,18 @@ export default function VideoDescription({ post, className }: VideoDescriptionPr
     const { data: postDetailRes } = useGetPostDetailQuery(post.uuid)
     const postDetail = postDetailRes?.data
 
-    const [isOpenAnimatingLike, setIsOpenAnimatingLike] = useState<boolean>(false)
+    const { isAnimating: isOpenAnimatingLike, trigger: triggerLikeAnimation } = useAnimatedState()
     const { isLikedState, toggleLikeState } = useLikePost({
         postId: post.uuid,
         initialLikeState: postDetail?.is_liked || false,
-        onLiked: () => {
-            setIsOpenAnimatingLike(true)
-            setTimeout(() => setIsOpenAnimatingLike(false), 3000)
-        }
+        onLiked: triggerLikeAnimation
     })
 
-    const [isOpenAnimatingBookmark, setIsOpenAnimatingBookmark] = useState<boolean>(false)
+    const { isAnimating: isOpenAnimatingBookmark, trigger: triggerBookmarkAnimation } = useAnimatedState()
     const { isBookmarkedState, toggleBookmarkState } = useBookmarkPost({
         postId: post.uuid,
         initialBookmarkState: postDetail?.is_bookmarked || false,
-        onBookmarked: () => {
-            setIsOpenAnimatingBookmark(true)
-            setTimeout(() => setIsOpenAnimatingBookmark(false), 3000)
-        }
+        onBookmarked: triggerBookmarkAnimation
     })
     const copyLink = useCallback(() => {
         navigator.clipboard.writeText(linkToVideo)

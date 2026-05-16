@@ -101,7 +101,9 @@
             },
             "labels": {
                 "reason": "Lý do",
-                "duration": "Thời hạn (ngày)"
+                "duration": "Thời hạn (ngày)",
+                "subject": "Tiêu đề",
+                "mailMessage": "Nội dung"
             },
             "placeholders": {
                 "searchUsers": "Tìm theo tên hoặc email",
@@ -112,7 +114,9 @@
             "errors": {
                 "reasonRequired": "Lý do là bắt buộc",
                 "reasonMinLength": "Lý do tối thiểu 10 ký tự",
-                "durationInvalid": "Thời hạn phải là số dương"
+                "durationInvalid": "Thời hạn phải là số dương",
+                "subjectMinLength": "Tiêu đề phải có ít nhất 3 ký tự",
+                "messageMinLength": "Nội dung phải có ít nhất 10 ký tự"
             },
             "messages": {
                 "banSuccess": "Khóa người dùng thành công",
@@ -122,14 +126,17 @@
                 "deleteSuccess": "Xóa người dùng thành công",
                 "deleteError": "Xóa người dùng thất bại",
                 "restoreSuccess": "Khôi phục người dùng thành công",
-                "restoreError": "Khôi phục người dùng thất bại"
+                "restoreError": "Khôi phục người dùng thất bại",
+                "sendMailSuccess": "Gửi email thành công",
+                "sendMailError": "Gửi email thất bại"
             },
             "dialogs": {
                 "deleteTitle": "Xóa người dùng",
                 "deleteSubtitle": "Xóa tài khoản @{username}",
                 "deleteWarning": "Hành động này không thể hoàn tác.",
                 "unbanSubtitle": "Mở khóa tài khoản @{username}",
-                "restoreSubtitle": "Khôi phục tài khoản @{username}"
+                "restoreSubtitle": "Khôi phục tài khoản @{username}",
+                "sendMailSubtitle": "Gửi email trực tiếp đến {username}"
             },
             "banDialog": {
                 "subtitle": "Khóa tài khoản @{username}"
