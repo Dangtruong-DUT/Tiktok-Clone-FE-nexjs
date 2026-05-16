@@ -22,3 +22,16 @@ export const DeletePostReqSchema = z
 
 export type GetAdminPostsParams = z.infer<typeof GetAdminPostsParamsSchema>
 export type DeletePostReq = z.infer<typeof DeletePostReqSchema>
+
+// Form schemas (client-side validation)
+export const DeletePostFormSchema = z
+    .object({
+        reason: z.string().min(1),
+        customReason: z.string().optional()
+    })
+    .refine((data) => data.reason !== 'other' || (data.customReason && data.customReason.trim().length > 0), {
+        message: 'Custom reason is required',
+        path: ['customReason']
+    })
+
+export type DeletePostFormValues = z.infer<typeof DeletePostFormSchema>

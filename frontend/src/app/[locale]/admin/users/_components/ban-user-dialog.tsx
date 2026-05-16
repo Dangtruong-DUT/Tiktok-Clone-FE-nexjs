@@ -1,7 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
+import { BanUserFormSchema, type BanUserFormValues } from '@/types/dtos/admin/user/admin-user.request.dto'
 import { useBanUserMutation } from '@/store/services/admin'
 import {
     Dialog,
@@ -15,6 +18,7 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { extractApiError } from '@/utils/extract-api-error'
 
@@ -30,51 +34,30 @@ export function BanUserDialog({ open, userUuid, username, onOpenChange, onSucces
     const t = useTranslations('AdminPage')
     const [banUser, { isLoading }] = useBanUserMutation()
 
-    const [formData, setFormData] = useState({
-        reason: '',
-        durationDays: ''
+    const form = useForm<BanUserFormValues>({
+        resolver: zodResolver(BanUserFormSchema),
+        defaultValues: { reason: '', durationDays: '' }
     })
 
-    const [errors, setErrors] = useState<Record<string, string>>({})
+    useEffect(() => {
+        if (!open) form.reset()
+    }, [open, form])
 
-    const handleCloseDialog = () => {
-        setFormData({ reason: '', durationDays: '' })
-        setErrors({})
-        onOpenChange(false)
-    }
+    const handleClose = () => onOpenChange(false)
 
-    const validateForm = (): boolean => {
-        const newErrors: Record<string, string> = {}
-
-        if (!formData.reason.trim()) {
-            newErrors.reason = t('users.errors.reasonRequired')
-        } else if (formData.reason.trim().length < 10) {
-            newErrors.reason = t('users.errors.reasonMinLength')
-        }
-
-        if (formData.durationDays && (isNaN(Number(formData.durationDays)) || Number(formData.durationDays) < 1)) {
-            newErrors.durationDays = t('users.errors.durationInvalid')
-        }
-
-        setErrors(newErrors)
-        return Object.keys(newErrors).length === 0
-    }
-
-    const handleBan = async () => {
-        if (!validateForm()) return
-
+    const handleBan = async (data: BanUserFormValues) => {
         try {
             const request = {
                 user_uuid: userUuid,
-                reason: formData.reason.trim(),
-                duration_days: formData.durationDays ? Number(formData.durationDays) : undefined
+                reason: data.reason,
+                duration_days: data.durationDays ? Number(data.durationDays) : undefined
             }
 
             await banUser(request).unwrap()
 
             toast.success(t('users.messages.banSuccess'))
 
-            handleCloseDialog()
+            handleClose()
             onSuccess?.()
         } catch (error) {
             toast.error(extractApiError(error) ?? t('users.messages.banError'))
@@ -103,15 +86,13 @@ export function BanUserDialog({ open, userUuid, username, onOpenChange, onSucces
                         <Textarea
                             id='reason'
                             placeholder={t('users.placeholders.banReason')}
-                            value={formData.reason}
-                            onChange={(e) => {
-                                setFormData((prev) => ({ ...prev, reason: e.target.value }))
-                                if (errors.reason) setErrors((prev) => ({ ...prev, reason: '' }))
-                            }}
+                            {...form.register('reason')}
                             className='min-h-[100px] resize-none'
                             disabled={isLoading}
                         />
-                        {errors.reason && <p className='text-sm text-red-600'>{errors.reason}</p>}
+                        {form.formState.errors.reason?.message && (
+                            <p className='text-sm text-red-600'>{form.formState.errors.reason.message}</p>
+                        )}
                     </div>
 
                     {/* Duration Field */}
@@ -123,26 +104,29 @@ export function BanUserDialog({ open, userUuid, username, onOpenChange, onSucces
                             id='duration'
                             type='number'
                             placeholder={t('users.placeholders.duration')}
-                            value={formData.durationDays}
-                            onChange={(e) => {
-                                setFormData((prev) => ({ ...prev, durationDays: e.target.value }))
-                                if (errors.durationDays) setErrors((prev) => ({ ...prev, durationDays: '' }))
-                            }}
+                            {...form.register('durationDays')}
                             min='1'
                             max='365'
                             disabled={isLoading}
                         />
                         <p className='text-xs text-muted-foreground'>{t('users.hints.durationHint')}</p>
-                        {errors.durationDays && <p className='text-sm text-red-600'>{errors.durationDays}</p>}
+                        {form.formState.errors.durationDays?.message && (
+                            <p className='text-sm text-red-600'>{form.formState.errors.durationDays.message}</p>
+                        )}
                     </div>
                 </div>
 
                 <DialogFooter className='gap-2'>
-                    <Button type='button' variant='outline' onClick={handleCloseDialog} disabled={isLoading}>
+                    <Button type='button' variant='outline' onClick={handleClose} disabled={isLoading}>
                         {t('common.cancel')}
                     </Button>
-                    <Button type='button' variant='destructive' onClick={handleBan} disabled={isLoading}>
-                        {isLoading ? t('common.loading') : t('users.actions.confirmBan')}
+                    <Button
+                        type='button'
+                        variant='destructive'
+                        onClick={form.handleSubmit(handleBan)}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? <Loader2 className='h-4 w-4 animate-spin' /> : t('users.actions.confirmBan')}
                     </Button>
                 </DialogFooter>
             </DialogContent>

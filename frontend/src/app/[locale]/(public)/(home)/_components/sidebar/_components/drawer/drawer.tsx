@@ -23,10 +23,10 @@ type DrawerSidebarProps = {
     isOpen: boolean
     setIsOpenDrawer: (open: boolean) => void
 
-    drawerWidth?: string // ví dụ: "300px"
-    leftOffset?: string // ví dụ: "72px"
-    zIndex?: string | number // ví dụ: 99
-    padding?: string // ví dụ: "pt-6 px-2 pb-0"
+    drawerWidth?: string
+    leftOffset?: string
+    zIndex?: string | number
+    padding?: string
 }
 
 export default function DrawerSidebar({
@@ -71,14 +71,12 @@ export default function DrawerSidebar({
                     } as React.CSSProperties
                 }
             >
-                {/* Overlay */}
                 <div
                     className='bg-transparent absolute top-0 bottom-0 left-0'
                     style={{ width: `calc(100vw - ${leftOffset})` }}
                     onClick={handleClose}
                 />
 
-                {/* Content */}
                 <section
                     className={cn('relative bg-background w-full h-full flex flex-col border-x border-border', padding)}
                 >

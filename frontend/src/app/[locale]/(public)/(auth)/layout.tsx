@@ -37,7 +37,6 @@ export default async function AuthLayout({
     params: Promise<{ locale: LocalesType }>
 }) {
     const { locale } = await params
-    // Enable static rendering
     setRequestLocale(locale)
     const t = await getTranslations('AuthLayout')
 

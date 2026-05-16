@@ -33,7 +33,6 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
         })
     }, [locale])
 
-    // State
     const [page, setPage] = useState(1)
     const [perPage, setPerPage] = useState(20)
     const [searchTerm, setSearchTerm] = useState('')
@@ -106,7 +105,6 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
 
     const getActivityColor = (activityKey: string): string => {
         const colorMap: Record<string, string> = {
-            // System/user activity
             user_registered: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
             user_login: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
             user_logout: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200',

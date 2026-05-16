@@ -15,7 +15,6 @@ export default function HomeLayout({
 }) {
     const { locale } = use(params)
 
-    // Enable static rendering
     setRequestLocale(locale)
     return (
         <div className='sm:flex sm:flex-row'>

@@ -9,10 +9,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Skeleton } from '@/components/ui/skeleton'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import AutoPagination from '@/components/auto-pagination'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { TableSkeleton } from '@/components/table-skeleton'
+import { TablePagination } from '@/components/table-pagination'
+import { useDialog } from '@/hooks/use-dialog'
 import { formatAdminDate } from '@/helpers/admin-helpers'
 import { AlertCircle, CheckCircle2, Clock, Eye, FileText, Search, User, X, XCircle } from 'lucide-react'
 import { APPEAL_STATUSES, APPEAL_STATUS_VALUES, type AppealStatus } from '@/constants/status/appeal'
@@ -131,7 +132,7 @@ function ResourcePreviewBlock({ preview }: { preview: ResourcePreview }) {
 function AppealDetailDialog({ open, appeal, onClose }: { open: boolean; appeal: Appeal; onClose: () => void }) {
     const t = useTranslations('SnapiStudio.appeals')
     const statusStyle = STATUS_STYLES[appeal.status] ?? STATUS_STYLES[APPEAL_STATUSES.PENDING]
-    const hasPreview = !!appeal.resource_preview
+    const hasPreview = appeal.resource_preview != null
 
     return (
         <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
@@ -141,9 +142,7 @@ function AppealDetailDialog({ open, appeal, onClose }: { open: boolean; appeal: 
                 </DialogHeader>
 
                 <div className='grid gap-5 md:grid-cols-[1fr_1fr]'>
-                    {/* Left: Appeal Info */}
                     <div className='space-y-4'>
-                        {/* Meta */}
                         <div className='rounded-lg border bg-muted/30 p-4 space-y-3 text-sm'>
                             <div className='flex items-center justify-between'>
                                 <span className='text-xs uppercase tracking-wide text-muted-foreground font-medium'>
@@ -166,7 +165,6 @@ function AppealDetailDialog({ open, appeal, onClose }: { open: boolean; appeal: 
                             )}
                         </div>
 
-                        {/* Reason */}
                         <div className='rounded-lg border bg-background p-4 space-y-2'>
                             <p className='text-xs uppercase tracking-wide text-muted-foreground font-medium'>
                                 {t('detail.fields.reason')}
@@ -174,7 +172,6 @@ function AppealDetailDialog({ open, appeal, onClose }: { open: boolean; appeal: 
                             <p className='text-sm text-foreground whitespace-pre-wrap'>{appeal.reason || '—'}</p>
                         </div>
 
-                        {/* Admin Response with status banner */}
                         {appeal.status === APPEAL_STATUSES.APPROVED && (
                             <div className='flex items-start gap-3 rounded-lg border border-emerald-200 bg-emerald-50 dark:bg-emerald-950/40 px-4 py-3'>
                                 <CheckCircle2 className='h-5 w-5 text-emerald-600 shrink-0 mt-0.5' />
@@ -212,7 +209,6 @@ function AppealDetailDialog({ open, appeal, onClose }: { open: boolean; appeal: 
                             </div>
                         )}
 
-                        {/* Timeline */}
                         <div className='space-y-2'>
                             <p className='text-xs uppercase tracking-wide text-muted-foreground font-medium'>
                                 Timeline
@@ -252,7 +248,6 @@ function AppealDetailDialog({ open, appeal, onClose }: { open: boolean; appeal: 
                             </ol>
                         </div>
 
-                        {/* Evidence */}
                         {appeal.evidence_files && appeal.evidence_files.length > 0 && (
                             <div className='rounded-lg border bg-background p-4 space-y-2'>
                                 <p className='text-xs uppercase tracking-wide text-muted-foreground font-medium'>
@@ -281,7 +276,6 @@ function AppealDetailDialog({ open, appeal, onClose }: { open: boolean; appeal: 
                         )}
                     </div>
 
-                    {/* Right: Resource Preview */}
                     <div className='space-y-2'>
                         <p className='text-sm font-semibold'>{t('detail.resourceTitle')}</p>
                         <div className='rounded-lg border bg-muted/20 p-4 min-h-[200px]'>
@@ -322,15 +316,12 @@ export default function StudioAppealsPage() {
     const [page, setPage] = useState(1)
     const [perPage, setPerPage] = useState(10)
 
-    // Applied state — used in API query
     const [searchTerm, setSearchTerm] = useState('')
     const [statusFilter, setStatusFilter] = useState<typeof FILTER_ALL | AppealStatus>(FILTER_ALL)
-
-    // Draft state — only applied on Search click
     const [draftSearch, setDraftSearch] = useState('')
     const [draftStatus, setDraftStatus] = useState<typeof FILTER_ALL | AppealStatus>(FILTER_ALL)
 
-    const [selectedAppeal, setSelectedAppeal] = useState<Appeal | null>(null)
+    const { selectedItem: selectedAppeal, openDialog, closeDialog } = useDialog<Appeal, 'detail'>()
 
     const { data, isLoading, isFetching } = useGetMyAppealsQuery({
         page,
@@ -352,7 +343,6 @@ export default function StudioAppealsPage() {
     }, [data?.data, searchTerm])
 
     const pagination = data?.meta
-    const totalItems = pagination?.total ?? appeals.length
 
     const handleSearch = () => {
         setSearchTerm(draftSearch)
@@ -372,7 +362,6 @@ export default function StudioAppealsPage() {
 
     return (
         <div className='max-w-6xl mx-auto p-4 md:p-6 space-y-3'>
-            {/* Toolbar — ngoài card */}
             <div className='flex flex-wrap items-center gap-2'>
                 <div className='relative min-w-0 flex-1 max-w-[320px]'>
                     <Search className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground/50' />
@@ -431,23 +420,13 @@ export default function StudioAppealsPage() {
                 </button>
             </div>
 
-            {/* Table */}
             {isLoading ? (
-                <div className='rounded-xl border bg-background shadow-sm overflow-hidden divide-y'>
-                    <div className='bg-muted/30 px-4 py-2.5'>
-                        <Skeleton className='h-3.5 w-1/2' />
-                    </div>
-                    {Array.from({ length: 6 }).map((_, i) => (
-                        <div key={i} className='flex items-center gap-4 px-4 py-3.5'>
-                            <Skeleton className='h-3.5 w-24 shrink-0' />
-                            <Skeleton className='h-3.5 w-24' />
-                            <Skeleton className='h-3.5 flex-1' />
-                            <Skeleton className='h-5 w-20 rounded-full' />
-                            <Skeleton className='h-3.5 w-24' />
-                            <Skeleton className='h-7 w-8 rounded-md ml-auto' />
-                        </div>
-                    ))}
-                </div>
+                <TableSkeleton
+                    columnWidths={['w-24 shrink-0', 'w-24', 'flex-1', 'w-20 rounded-full', 'w-24', 'w-8 ml-auto']}
+                    rows={6}
+                    showToolbar={false}
+                    showPagination={false}
+                />
             ) : appeals.length === 0 ? (
                 <div className='rounded-xl border bg-background p-10 text-center'>
                     <AlertCircle className='h-10 w-10 text-muted-foreground mx-auto mb-3' />
@@ -485,20 +464,18 @@ export default function StudioAppealsPage() {
                                         <span className='text-sm'>{t(`types.${appeal.appeal_type}`)}</span>
                                     </TableCell>
                                     <TableCell className='max-w-[200px]'>
-                                        <TooltipProvider>
-                                            <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                    <span className='line-clamp-1 cursor-help text-sm text-muted-foreground'>
-                                                        {appeal.reason ?? '—'}
-                                                    </span>
-                                                </TooltipTrigger>
-                                                {appeal.reason && (
-                                                    <TooltipContent side='top' className='max-w-xs'>
-                                                        <p className='text-xs'>{appeal.reason}</p>
-                                                    </TooltipContent>
-                                                )}
-                                            </Tooltip>
-                                        </TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <span className='line-clamp-1 cursor-help text-sm text-muted-foreground'>
+                                                    {appeal.reason ?? '—'}
+                                                </span>
+                                            </TooltipTrigger>
+                                            {appeal.reason && (
+                                                <TooltipContent side='top' className='max-w-xs'>
+                                                    <p className='text-xs'>{appeal.reason}</p>
+                                                </TooltipContent>
+                                            )}
+                                        </Tooltip>
                                     </TableCell>
                                     <TableCell>
                                         <Badge
@@ -516,7 +493,7 @@ export default function StudioAppealsPage() {
                                             variant='ghost'
                                             size='icon'
                                             className='h-8 w-8'
-                                            onClick={() => setSelectedAppeal(appeal)}
+                                            onClick={() => openDialog(appeal, 'detail')}
                                         >
                                             <Eye className='h-4 w-4' />
                                         </Button>
@@ -528,50 +505,23 @@ export default function StudioAppealsPage() {
                 </div>
             )}
 
-            {/* Pagination — 1 hàng */}
             {pagination && (
-                <div className='flex items-center gap-3 px-1'>
-                    <div className='flex items-center gap-1.5 shrink-0'>
-                        <span className='text-xs text-muted-foreground'>{t('list.perPage')}</span>
-                        <Select
-                            value={String(perPage)}
-                            onValueChange={(v) => {
-                                setPerPage(Number(v))
-                                setPage(1)
-                            }}
-                        >
-                            <SelectTrigger className='h-7 w-14 rounded border-border/60 text-xs'>
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {[10, 20, 50].map((n) => (
-                                    <SelectItem key={n} value={String(n)} className='text-xs'>
-                                        {n}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    <span className='text-xs text-muted-foreground shrink-0'>
-                        {t('list.showingResults', {
-                            from: (pagination.current_page - 1) * perPage + 1,
-                            to: Math.min(pagination.current_page * perPage, totalItems),
-                            total: totalItems
-                        })}
-                    </span>
-
-                    {pagination.last_page > 1 && (
-                        <div className='ml-auto'>
-                            <AutoPagination page={page} pageSize={pagination.last_page} onPageChange={setPage} />
-                        </div>
-                    )}
-                </div>
+                <TablePagination
+                    pagination={pagination}
+                    page={page}
+                    perPage={perPage}
+                    onPageChange={setPage}
+                    onPerPageChange={(n) => {
+                        setPerPage(n)
+                        setPage(1)
+                    }}
+                    perPageOptions={[10, 20, 50]}
+                    perPageLabel={t('list.perPage')}
+                    showingResultsFormatter={(from, to, total) => t('list.showingResults', { from, to, total })}
+                />
             )}
 
-            {selectedAppeal && (
-                <AppealDetailDialog open appeal={selectedAppeal} onClose={() => setSelectedAppeal(null)} />
-            )}
+            {selectedAppeal && <AppealDetailDialog open appeal={selectedAppeal} onClose={closeDialog} />}
         </div>
     )
 }

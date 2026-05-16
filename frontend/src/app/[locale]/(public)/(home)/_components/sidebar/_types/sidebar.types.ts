@@ -1,7 +1,6 @@
 import { routesValuesType } from '@/app/[locale]/(public)/(home)/_components/sidebar/_config/menu-items-sidebar.config'
 
 export enum SidebarActiveType {
-    // Navigation items
     HOME = 'home',
     EXPLORE = 'explore',
     FRIENDS = 'friends',
@@ -9,13 +8,9 @@ export enum SidebarActiveType {
     UPLOAD = 'upload',
     ACTIVITY = 'activity',
     MESSAGES = 'messages',
-
-    // Special actions
     PROFILE = 'profile',
     MORE = 'more',
     SEARCH = 'search',
-
-    // Default state
     NONE = 'none'
 }
 

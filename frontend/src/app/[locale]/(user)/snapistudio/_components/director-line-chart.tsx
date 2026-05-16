@@ -64,7 +64,6 @@ export default function DirectorLineChart() {
     const [selectedDays, setSelectedDays] = useState<DaysSelectionType>('7')
     const [activeChart, setActiveChart] = useState<ChartKeys>('users_view')
 
-    // Memoize rangeDay so query args stay stable unless selectedDays changes
     const rangeDay = useMemo(() => getFromAndLastDate(Number(selectedDays)), [selectedDays])
     const { data } = useGetUserIndicatorQuery({
         fromDate: rangeDay.from,

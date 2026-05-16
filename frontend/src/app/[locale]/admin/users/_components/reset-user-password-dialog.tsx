@@ -1,6 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslations } from 'next-intl'
+import { ResetPasswordFormSchema, type ResetPasswordFormValues } from '@/types/dtos/admin/user/admin-user.request.dto'
 import { useResetUserPasswordMutation } from '@/store/services/admin'
 import {
     Dialog,
@@ -13,6 +17,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { PasswordInput } from '@/components/ui/password-input'
+import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { extractApiError } from '@/utils/extract-api-error'
 
@@ -31,51 +36,33 @@ export function ResetUserPasswordDialog({
     onOpenChange,
     onSuccess
 }: ResetUserPasswordDialogProps) {
+    const t = useTranslations('AdminPage')
     const [resetPassword, { isLoading }] = useResetUserPasswordMutation()
-    const [password, setPassword] = useState('')
-    const [passwordConfirmation, setPasswordConfirmation] = useState('')
-    const [error, setError] = useState('')
 
-    const resetForm = () => {
-        setPassword('')
-        setPasswordConfirmation('')
-        setError('')
-    }
+    const form = useForm<ResetPasswordFormValues>({
+        resolver: zodResolver(ResetPasswordFormSchema),
+        defaultValues: { password: '', confirmPassword: '' }
+    })
 
-    const handleClose = () => {
-        resetForm()
-        onOpenChange(false)
-    }
+    useEffect(() => {
+        if (!open) form.reset()
+    }, [open, form])
 
-    const validate = (): boolean => {
-        if (password.length < 8) {
-            setError('Password must be at least 8 characters')
-            return false
-        }
+    const handleClose = () => onOpenChange(false)
 
-        if (password !== passwordConfirmation) {
-            setError('Password confirmation does not match')
-            return false
-        }
-
-        return true
-    }
-
-    const handleSubmit = async () => {
-        if (!validate()) return
-
+    const handleSubmit = async (data: ResetPasswordFormValues) => {
         try {
             await resetPassword({
                 user_uuid: userUuid,
-                password,
-                confirm_password: passwordConfirmation
+                password: data.password,
+                confirm_password: data.confirmPassword
             }).unwrap()
 
-            toast.success('User password reset successfully')
+            toast.success(t('users.messages.resetPasswordSuccess'))
             handleClose()
             onSuccess?.()
         } catch (error) {
-            toast.error(extractApiError(error) ?? 'Failed to reset user password')
+            toast.error(extractApiError(error) ?? t('users.messages.resetPasswordError'))
         }
     }
 
@@ -84,49 +71,45 @@ export function ResetUserPasswordDialog({
             <DialogContent className='sm:max-w-[500px]'>
                 <DialogHeader>
                     <div>
-                        <DialogTitle className='text-lg'>Reset User Password</DialogTitle>
+                        <DialogTitle className='text-lg'>{t('users.dialogs.resetPasswordTitle')}</DialogTitle>
                         <DialogDescription className='mt-1'>
-                            Set a new password for <strong>{username}</strong>
+                            {t('users.dialogs.resetPasswordSubtitle', { username })}
                         </DialogDescription>
                     </div>
                 </DialogHeader>
 
                 <div className='space-y-4 py-4'>
                     <div className='space-y-2'>
-                        <Label htmlFor='new-password'>New password</Label>
+                        <Label htmlFor='new-password'>{t('users.labels.newPassword')}</Label>
                         <PasswordInput
                             id='new-password'
-                            value={password}
-                            onChange={(e) => {
-                                setPassword(e.target.value)
-                                if (error) setError('')
-                            }}
+                            {...form.register('password')}
                             disabled={isLoading}
                         />
+                        {form.formState.errors.password?.message && (
+                            <p className='text-sm text-red-600'>{form.formState.errors.password.message}</p>
+                        )}
                     </div>
 
                     <div className='space-y-2'>
-                        <Label htmlFor='confirm-password'>Confirm password</Label>
+                        <Label htmlFor='confirm-password'>{t('users.labels.confirmPassword')}</Label>
                         <PasswordInput
                             id='confirm-password'
-                            value={passwordConfirmation}
-                            onChange={(e) => {
-                                setPasswordConfirmation(e.target.value)
-                                if (error) setError('')
-                            }}
+                            {...form.register('confirmPassword')}
                             disabled={isLoading}
                         />
+                        {form.formState.errors.confirmPassword?.message && (
+                            <p className='text-sm text-red-600'>{form.formState.errors.confirmPassword.message}</p>
+                        )}
                     </div>
-
-                    {error && <p className='text-sm text-red-600'>{error}</p>}
                 </div>
 
                 <DialogFooter className='gap-2'>
                     <Button type='button' variant='outline' onClick={handleClose} disabled={isLoading}>
-                        Cancel
+                        {t('common.cancel')}
                     </Button>
-                    <Button type='button' onClick={handleSubmit} disabled={isLoading}>
-                        {isLoading ? 'Saving...' : 'Reset Password'}
+                    <Button type='button' onClick={form.handleSubmit(handleSubmit)} disabled={isLoading}>
+                        {isLoading ? <Loader2 className='h-4 w-4 animate-spin' /> : t('users.actions.resetPassword')}
                     </Button>
                 </DialogFooter>
             </DialogContent>

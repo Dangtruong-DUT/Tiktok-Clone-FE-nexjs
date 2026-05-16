@@ -62,3 +62,38 @@ export type DeleteUserReq = z.infer<typeof DeleteUserReqSchema>
 export type RestoreUserReq = z.infer<typeof RestoreUserReqSchema>
 export type ResetUserPasswordReq = z.infer<typeof ResetUserPasswordReqSchema>
 export type SendUserMailReq = z.infer<typeof SendUserMailReqSchema>
+
+// Form schemas (client-side validation)
+export const DeleteUserFormSchema = z.object({
+    reason: z.string().min(10)
+})
+
+export const BanUserFormSchema = z.object({
+    reason: z.string().min(10),
+    durationDays: z
+        .string()
+        .optional()
+        .refine((v) => !v || (!isNaN(Number(v)) && Number(v) >= 1), {
+            message: 'Duration must be at least 1 day'
+        })
+})
+
+export const ResetPasswordFormSchema = z
+    .object({
+        password: z.string().min(8).max(100),
+        confirmPassword: z.string()
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: 'Passwords do not match',
+        path: ['confirmPassword']
+    })
+
+export const SendMailFormSchema = z.object({
+    subject: z.string().min(3).max(150),
+    message: z.string().min(10).max(5000)
+})
+
+export type DeleteUserFormValues = z.infer<typeof DeleteUserFormSchema>
+export type BanUserFormValues = z.infer<typeof BanUserFormSchema>
+export type ResetPasswordFormValues = z.infer<typeof ResetPasswordFormSchema>
+export type SendMailFormValues = z.infer<typeof SendMailFormSchema>

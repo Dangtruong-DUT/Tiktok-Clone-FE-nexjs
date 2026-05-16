@@ -167,7 +167,6 @@ function getNotificationLink(notification: NotificationType): string | null {
         return null
     }
 
-    // approve_appeal / reject_appeal → view the resolved appeal
     if (
         notification.type === NotificationTypeCode.ADMIN &&
         (action === 'approve_appeal' || action === 'reject_appeal')
@@ -176,7 +175,6 @@ function getNotificationLink(notification: NotificationType): string | null {
         return appealUuid ? `/appeal?appeal_uuid=${appealUuid}` : null
     }
 
-    // Appeal notifications: prefer resource-based link (auth flow) over token link
     const appealAvailable = notification.data?.appeal_available === true
     const appealType = typeof notification.data?.appeal_type === 'string' ? notification.data.appeal_type : null
     const resourceType = typeof notification.data?.resource_type === 'string' ? notification.data.resource_type : null
@@ -248,7 +246,6 @@ function AdminEntityPreview({ notification }: { notification: NotificationType }
 
     if (!entity) return null
 
-    // delete_post → show thumbnail
     if (action === 'delete_post' && entity.thumbnail_url) {
         return (
             <div className='relative h-16 aspect-[9/16] overflow-hidden rounded-md bg-muted shrink-0'>
@@ -260,7 +257,6 @@ function AdminEntityPreview({ notification }: { notification: NotificationType }
         )
     }
 
-    // delete_comment → show comment excerpt badge
     if (action === 'delete_comment' && (entity.content || notification.data?.comment_excerpt)) {
         const text =
             entity.content ||
@@ -275,7 +271,6 @@ function AdminEntityPreview({ notification }: { notification: NotificationType }
         )
     }
 
-    // ban_user / user actions → show avatar + username
     if ((action === 'ban_user' || action === 'unban_user') && (entity.avatar || entity.username)) {
         return (
             <div className='flex shrink-0 flex-col items-center gap-1'>

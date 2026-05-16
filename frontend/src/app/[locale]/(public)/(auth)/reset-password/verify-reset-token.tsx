@@ -39,7 +39,6 @@ export default function VerifyResetToken({ onTokenVerified }: VerifyResetTokenPr
         }
     }, [token, handleVerifyToken])
 
-    // Loading state
     if (verifyStatus === 'loading') {
         return (
             <div className='w-full max-w-sm mx-auto px-4 text-center'>
@@ -54,7 +53,6 @@ export default function VerifyResetToken({ onTokenVerified }: VerifyResetTokenPr
         )
     }
 
-    // Error state
     return (
         <div className='w-full max-w-sm mx-auto px-4 text-center'>
             <div className='mt-16 mb-8'>

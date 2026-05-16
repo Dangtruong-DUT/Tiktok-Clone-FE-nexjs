@@ -103,7 +103,9 @@
                 "reason": "Reason",
                 "duration": "Duration (days)",
                 "subject": "Subject",
-                "mailMessage": "Message"
+                "mailMessage": "Message",
+                "newPassword": "New password",
+                "confirmPassword": "Confirm password"
             },
             "placeholders": {
                 "searchUsers": "Search by username or email",
@@ -116,7 +118,9 @@
                 "reasonMinLength": "Reason must be at least 10 characters",
                 "durationInvalid": "Duration must be a positive number",
                 "subjectMinLength": "Subject must be at least 3 characters",
-                "messageMinLength": "Message must be at least 10 characters"
+                "messageMinLength": "Message must be at least 10 characters",
+                "passwordMinLength": "Password must be at least 8 characters",
+                "passwordMismatch": "Passwords do not match"
             },
             "messages": {
                 "banSuccess": "User banned successfully",
@@ -128,7 +132,9 @@
                 "restoreSuccess": "User restored successfully",
                 "restoreError": "Failed to restore user",
                 "sendMailSuccess": "Email sent successfully",
-                "sendMailError": "Failed to send email"
+                "sendMailError": "Failed to send email",
+                "resetPasswordSuccess": "Password reset successfully",
+                "resetPasswordError": "Failed to reset password"
             },
             "dialogs": {
                 "deleteTitle": "Delete User",
@@ -136,7 +142,9 @@
                 "deleteWarning": "This action cannot be undone.",
                 "unbanSubtitle": "Unban account for @{username}",
                 "restoreSubtitle": "Restore account for @{username}",
-                "sendMailSubtitle": "Send a direct email to {username}"
+                "sendMailSubtitle": "Send a direct email to {username}",
+                "resetPasswordTitle": "Reset User Password",
+                "resetPasswordSubtitle": "Set a new password for @{username}"
             },
             "banDialog": {
                 "subtitle": "Ban account for @{username}"

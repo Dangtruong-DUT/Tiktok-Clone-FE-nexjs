@@ -44,11 +44,9 @@ export default function ForgotPasswordForm() {
         }
     }
 
-    // Email confirmation screen
     if (emailSent) {
         return <EmailSentConfirmation sentEmail={sentEmail} onSendAnotherEmail={() => setEmailSent(false)} />
     }
-    // Original forgot password form
     return (
         <div className='space-y-4'>
             <Form {...form}>

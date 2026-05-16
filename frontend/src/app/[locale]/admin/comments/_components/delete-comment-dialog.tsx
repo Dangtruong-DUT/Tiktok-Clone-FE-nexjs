@@ -1,8 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
-import { useDeleteCommentMutation } from '@/store/services/admin/index'
+import {
+    DeleteCommentFormSchema,
+    type DeleteCommentFormValues
+} from '@/types/dtos/admin/comment/admin-comment.request.dto'
+import { useDeleteCommentMutation } from '@/store/services/admin'
 import {
     Dialog,
     DialogContent,
@@ -14,6 +20,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
+import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { extractApiError } from '@/utils/extract-api-error'
 
@@ -36,41 +43,27 @@ export function DeleteCommentDialog({
     const t = useTranslations('AdminPage')
     const [deleteComment, { isLoading }] = useDeleteCommentMutation()
 
-    const [reason, setReason] = useState('')
-    const [error, setError] = useState('')
+    const form = useForm<DeleteCommentFormValues>({
+        resolver: zodResolver(DeleteCommentFormSchema),
+        defaultValues: { reason: '' }
+    })
 
-    const handleCloseDialog = () => {
-        setReason('')
-        setError('')
-        onOpenChange(false)
-    }
+    useEffect(() => {
+        if (!open) form.reset()
+    }, [open, form])
 
-    const validateForm = (): boolean => {
-        if (!reason.trim()) {
-            setError(t('comments.errors.reasonRequired'))
-            return false
-        }
+    const handleClose = () => onOpenChange(false)
 
-        if (reason.trim().length < 10) {
-            setError(t('comments.errors.reasonMinLength'))
-            return false
-        }
-
-        return true
-    }
-
-    const handleDelete = async () => {
-        if (!validateForm()) return
-
+    const handleDelete = async (data: DeleteCommentFormValues) => {
         try {
             await deleteComment({
                 comment_uuid: commentUuid,
-                reason: reason.trim()
+                reason: data.reason
             }).unwrap()
 
             toast.success(t('comments.messages.deleteSuccess'))
 
-            handleCloseDialog()
+            handleClose()
             onSuccess?.()
         } catch (error) {
             toast.error(extractApiError(error) ?? t('comments.messages.deleteError'))
@@ -104,24 +97,27 @@ export function DeleteCommentDialog({
                         <Textarea
                             id='reason'
                             placeholder={t('comments.placeholders.deleteReason')}
-                            value={reason}
-                            onChange={(e) => {
-                                setReason(e.target.value)
-                                if (error) setError('')
-                            }}
+                            {...form.register('reason')}
                             className='min-h-[100px] resize-none'
                             disabled={isLoading}
                         />
-                        {error && <p className='text-sm text-red-600'>{error}</p>}
+                        {form.formState.errors.reason?.message && (
+                            <p className='text-sm text-red-600'>{form.formState.errors.reason.message}</p>
+                        )}
                     </div>
                 </div>
 
                 <DialogFooter className='gap-2'>
-                    <Button type='button' variant='outline' onClick={handleCloseDialog} disabled={isLoading}>
+                    <Button type='button' variant='outline' onClick={handleClose} disabled={isLoading}>
                         {t('common.cancel')}
                     </Button>
-                    <Button type='button' variant='destructive' onClick={handleDelete} disabled={isLoading}>
-                        {isLoading ? t('common.loading') : t('comments.actions.confirmDelete')}
+                    <Button
+                        type='button'
+                        variant='destructive'
+                        onClick={form.handleSubmit(handleDelete)}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? <Loader2 className='h-4 w-4 animate-spin' /> : t('comments.actions.confirmDelete')}
                     </Button>
                 </DialogFooter>
             </DialogContent>

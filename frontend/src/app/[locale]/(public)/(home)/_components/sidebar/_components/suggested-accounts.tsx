@@ -7,7 +7,6 @@ export interface SuggestedAccountsProps {
 }
 
 export default function SuggestedAccounts({ title }: SuggestedAccountsProps) {
-    // Mock data for accounts
     const mockAccounts = [
         {
             id: '1',
@@ -34,7 +33,6 @@ export default function SuggestedAccounts({ title }: SuggestedAccountsProps) {
             before:content-[''] before:block before:absolute before:top-0 before:left-2 before:right-2 before:border-t-[0.5px] before:border-border before:pointer-events-none
             "
         >
-            {/* Title */}
             <p
                 className='
         px-2 mb-2 font-semibold text-sm text-muted-foreground
@@ -44,7 +42,6 @@ export default function SuggestedAccounts({ title }: SuggestedAccountsProps) {
                 {title}
             </p>
 
-            {/* Accounts List */}
             <ul>
                 {mockAccounts.map((account) => (
                     <li key={account.id}>
@@ -63,7 +60,6 @@ export default function SuggestedAccounts({ title }: SuggestedAccountsProps) {
                 ))}
             </ul>
 
-            {/* See More Button */}
             <Button
                 variant='ghost'
                 size='sm'

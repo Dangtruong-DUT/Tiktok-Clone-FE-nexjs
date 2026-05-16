@@ -1,7 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
+import { SendMailFormSchema, type SendMailFormValues } from '@/types/dtos/admin/user/admin-user.request.dto'
 import { useSendUserMailMutation } from '@/store/services/admin'
 import {
     Dialog,
@@ -30,42 +33,26 @@ interface SendUserMailDialogProps {
 export function SendUserMailDialog({ open, userUuid, username, onOpenChange, onSuccess }: SendUserMailDialogProps) {
     const t = useTranslations('AdminPage')
     const [sendMail, { isLoading }] = useSendUserMailMutation()
-    const [subject, setSubject] = useState('')
-    const [message, setMessage] = useState('')
-    const [error, setError] = useState('')
 
-    const resetForm = () => {
-        setSubject('')
-        setMessage('')
-        setError('')
-    }
+    const form = useForm<SendMailFormValues>({
+        resolver: zodResolver(SendMailFormSchema),
+        defaultValues: { subject: '', message: '' }
+    })
 
-    const handleClose = () => {
-        resetForm()
-        onOpenChange(false)
-    }
+    useEffect(() => {
+        if (!open) form.reset()
+    }, [open, form])
 
-    const validate = (): boolean => {
-        if (subject.trim().length < 3) {
-            setError(t('users.errors.subjectMinLength'))
-            return false
-        }
-        if (message.trim().length < 10) {
-            setError(t('users.errors.messageMinLength'))
-            return false
-        }
-        return true
-    }
+    const handleClose = () => onOpenChange(false)
 
-    const handleSubmit = async () => {
-        if (!validate()) return
+    const handleSubmit = async (data: SendMailFormValues) => {
         try {
-            await sendMail({ user_uuid: userUuid, subject: subject.trim(), message: message.trim() }).unwrap()
+            await sendMail({ user_uuid: userUuid, subject: data.subject.trim(), message: data.message.trim() }).unwrap()
             toast.success(t('users.messages.sendMailSuccess'))
             handleClose()
             onSuccess?.()
-        } catch (err) {
-            toast.error(extractApiError(err) ?? t('users.messages.sendMailError'))
+        } catch (error) {
+            toast.error(extractApiError(error) ?? t('users.messages.sendMailError'))
         }
     }
 
@@ -82,31 +69,30 @@ export function SendUserMailDialog({ open, userUuid, username, onOpenChange, onS
                 <div className='space-y-4 py-4'>
                     <div className='space-y-2'>
                         <Label htmlFor='mail-subject'>{t('users.labels.subject')}</Label>
-                        <Input
-                            id='mail-subject'
-                            value={subject}
-                            onChange={(e) => { setSubject(e.target.value); if (error) setError('') }}
-                            disabled={isLoading}
-                        />
+                        <Input id='mail-subject' {...form.register('subject')} disabled={isLoading} />
+                        {form.formState.errors.subject?.message && (
+                            <p className='text-sm text-red-600'>{form.formState.errors.subject.message}</p>
+                        )}
                     </div>
                     <div className='space-y-2'>
                         <Label htmlFor='mail-message'>{t('users.labels.mailMessage')}</Label>
                         <Textarea
                             id='mail-message'
-                            value={message}
-                            onChange={(e) => { setMessage(e.target.value); if (error) setError('') }}
+                            {...form.register('message')}
                             className='min-h-[140px] resize-none'
                             disabled={isLoading}
                         />
+                        {form.formState.errors.message?.message && (
+                            <p className='text-sm text-red-600'>{form.formState.errors.message.message}</p>
+                        )}
                     </div>
-                    {error && <p className='text-sm text-red-600'>{error}</p>}
                 </div>
 
                 <DialogFooter className='gap-2'>
                     <Button type='button' variant='outline' onClick={handleClose} disabled={isLoading}>
                         {t('common.cancel')}
                     </Button>
-                    <Button type='button' onClick={handleSubmit} disabled={isLoading}>
+                    <Button type='button' onClick={form.handleSubmit(handleSubmit)} disabled={isLoading}>
                         {isLoading ? <Loader2 className='h-4 w-4 animate-spin' /> : t('users.actions.sendEmail')}
                     </Button>
                 </DialogFooter>

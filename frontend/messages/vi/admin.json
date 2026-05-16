@@ -103,7 +103,9 @@
                 "reason": "Lý do",
                 "duration": "Thời hạn (ngày)",
                 "subject": "Tiêu đề",
-                "mailMessage": "Nội dung"
+                "mailMessage": "Nội dung",
+                "newPassword": "Mật khẩu mới",
+                "confirmPassword": "Xác nhận mật khẩu"
             },
             "placeholders": {
                 "searchUsers": "Tìm theo tên hoặc email",
@@ -116,7 +118,9 @@
                 "reasonMinLength": "Lý do tối thiểu 10 ký tự",
                 "durationInvalid": "Thời hạn phải là số dương",
                 "subjectMinLength": "Tiêu đề phải có ít nhất 3 ký tự",
-                "messageMinLength": "Nội dung phải có ít nhất 10 ký tự"
+                "messageMinLength": "Nội dung phải có ít nhất 10 ký tự",
+                "passwordMinLength": "Mật khẩu phải có ít nhất 8 ký tự",
+                "passwordMismatch": "Mật khẩu không khớp"
             },
             "messages": {
                 "banSuccess": "Khóa người dùng thành công",
@@ -128,7 +132,9 @@
                 "restoreSuccess": "Khôi phục người dùng thành công",
                 "restoreError": "Khôi phục người dùng thất bại",
                 "sendMailSuccess": "Gửi email thành công",
-                "sendMailError": "Gửi email thất bại"
+                "sendMailError": "Gửi email thất bại",
+                "resetPasswordSuccess": "Đặt lại mật khẩu thành công",
+                "resetPasswordError": "Đặt lại mật khẩu thất bại"
             },
             "dialogs": {
                 "deleteTitle": "Xóa người dùng",
@@ -136,7 +142,9 @@
                 "deleteWarning": "Hành động này không thể hoàn tác.",
                 "unbanSubtitle": "Mở khóa tài khoản @{username}",
                 "restoreSubtitle": "Khôi phục tài khoản @{username}",
-                "sendMailSubtitle": "Gửi email trực tiếp đến {username}"
+                "sendMailSubtitle": "Gửi email trực tiếp đến {username}",
+                "resetPasswordTitle": "Đặt lại mật khẩu",
+                "resetPasswordSubtitle": "Đặt mật khẩu mới cho @{username}"
             },
             "banDialog": {
                 "subtitle": "Khóa tài khoản @{username}"

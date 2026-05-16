@@ -115,7 +115,6 @@ export default function TableContent() {
             <SearchParamsLoader onParamsReceived={setSearchParams} />
             <AlertDialogDeleteDish postIdDelete={postIdDelete} setPostIdDelete={setPostIdDelete} />
 
-            {/* Search & Filters — ngoài card */}
             <div className='flex flex-wrap items-center gap-2'>
                 <div className='relative min-w-0 flex-1 max-w-[320px]'>
                     <Search className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground/50' />
@@ -170,7 +169,6 @@ export default function TableContent() {
                 </button>
             </div>
 
-            {/* Table */}
             {isLoadingPosts ? (
                 <TableSkeleton
                     rows={pagination.pageSize}

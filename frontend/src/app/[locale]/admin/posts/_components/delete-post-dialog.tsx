@@ -1,7 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
+import { DeletePostFormSchema, type DeletePostFormValues } from '@/types/dtos/admin/post/admin-post.request.dto'
 import { useDeletePostMutation } from '@/store/services/admin'
 import {
     Dialog,
@@ -15,6 +18,7 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { extractApiError } from '@/utils/extract-api-error'
 import { VIOLATION_REASONS } from '@/constants/ui/admin'
@@ -31,43 +35,26 @@ export function DeletePostDialog({ open, postUuid, authorUsername, onOpenChange,
     const t = useTranslations('AdminPage')
     const [deletePost, { isLoading }] = useDeletePostMutation()
 
-    const [formData, setFormData] = useState({
-        reason: '',
-        customReason: ''
+    const form = useForm<DeletePostFormValues>({
+        resolver: zodResolver(DeletePostFormSchema),
+        defaultValues: { reason: '', customReason: '' }
     })
 
-    const [errors, setErrors] = useState<Record<string, string>>({})
+    useEffect(() => {
+        if (!open) form.reset()
+    }, [open, form])
 
-    const handleCloseDialog = () => {
-        setFormData({ reason: '', customReason: '' })
-        setErrors({})
-        onOpenChange(false)
-    }
+    const handleClose = () => onOpenChange(false)
 
-    const validateForm = (): boolean => {
-        const newErrors: Record<string, string> = {}
+    const selectedReason = form.watch('reason')
 
-        if (!formData.reason) {
-            newErrors.reason = t('posts.errors.reasonRequired')
-        }
-
-        if (formData.reason === 'other' && !formData.customReason.trim()) {
-            newErrors.reason = t('posts.errors.reasonRequired')
-        }
-
-        setErrors(newErrors)
-        return Object.keys(newErrors).length === 0
-    }
-
-    const handleDelete = async () => {
-        if (!validateForm()) return
-
+    const handleDelete = async (data: DeletePostFormValues) => {
         try {
-            const selectedReason = VIOLATION_REASONS.find((reason) => reason.value === formData.reason)
+            const violationReason = VIOLATION_REASONS.find((r) => r.value === data.reason)
             const finalReason =
-                formData.reason === 'other'
-                    ? formData.customReason.trim()
-                    : `Violation: ${selectedReason?.label ?? formData.reason}`
+                data.reason === 'other'
+                    ? data.customReason!.trim()
+                    : `Violation: ${violationReason?.label ?? data.reason}`
 
             await deletePost({
                 post_uuid: postUuid,
@@ -76,7 +63,7 @@ export function DeletePostDialog({ open, postUuid, authorUsername, onOpenChange,
 
             toast.success(t('posts.messages.deleteSuccess'))
 
-            handleCloseDialog()
+            handleClose()
             onSuccess?.()
         } catch (error) {
             toast.error(extractApiError(error) ?? t('posts.messages.deleteError'))
@@ -108,10 +95,10 @@ export function DeletePostDialog({ open, postUuid, authorUsername, onOpenChange,
                             <span className='text-red-600 ml-1'>*</span>
                         </Label>
                         <Select
-                            value={formData.reason}
+                            value={selectedReason}
                             onValueChange={(value) => {
-                                setFormData((prev) => ({ ...prev, reason: value, customReason: '' }))
-                                if (errors.reason) setErrors((prev) => ({ ...prev, reason: '' }))
+                                form.setValue('reason', value, { shouldValidate: true })
+                                form.setValue('customReason', '')
                             }}
                         >
                             <SelectTrigger>
@@ -126,11 +113,13 @@ export function DeletePostDialog({ open, postUuid, authorUsername, onOpenChange,
                                 <SelectItem value='other'>{t('posts.reasons.other')}</SelectItem>
                             </SelectContent>
                         </Select>
-                        {errors.reason && <p className='text-sm text-red-600'>{errors.reason}</p>}
+                        {form.formState.errors.reason?.message && (
+                            <p className='text-sm text-red-600'>{form.formState.errors.reason.message}</p>
+                        )}
                     </div>
 
                     {/* Custom Reason (if "other" selected) */}
-                    {formData.reason === 'other' && (
+                    {selectedReason === 'other' && (
                         <div className='space-y-2'>
                             <Label htmlFor='customReason' className='text-sm font-semibold'>
                                 {t('posts.labels.customReason')}
@@ -138,21 +127,28 @@ export function DeletePostDialog({ open, postUuid, authorUsername, onOpenChange,
                             <Textarea
                                 id='customReason'
                                 placeholder={t('posts.placeholders.customReason')}
-                                value={formData.customReason}
-                                onChange={(e) => setFormData((prev) => ({ ...prev, customReason: e.target.value }))}
+                                {...form.register('customReason')}
                                 className='min-h-[80px] resize-none'
                                 disabled={isLoading}
                             />
+                            {form.formState.errors.customReason?.message && (
+                                <p className='text-sm text-red-600'>{form.formState.errors.customReason.message}</p>
+                            )}
                         </div>
                     )}
                 </div>
 
                 <DialogFooter className='gap-2'>
-                    <Button type='button' variant='outline' onClick={handleCloseDialog} disabled={isLoading}>
+                    <Button type='button' variant='outline' onClick={handleClose} disabled={isLoading}>
                         {t('common.cancel')}
                     </Button>
-                    <Button type='button' variant='destructive' onClick={handleDelete} disabled={isLoading}>
-                        {isLoading ? t('common.loading') : t('posts.actions.confirmDelete')}
+                    <Button
+                        type='button'
+                        variant='destructive'
+                        onClick={form.handleSubmit(handleDelete)}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? <Loader2 className='h-4 w-4 animate-spin' /> : t('posts.actions.confirmDelete')}
                     </Button>
                 </DialogFooter>
             </DialogContent>
