@@ -28,16 +28,19 @@ class EloquentServiceProvider extends ServiceProvider
                     $columnName = $column['column'] ?? $column[0] ?? null;
                     $direction = $column['direction'] ?? $column[1] ?? 'asc';
 
-                    if ($columnName) {
+                    if ($columnName && preg_match('/^[a-zA-Z_][a-zA-Z0-9_.]*$/', (string) $columnName)) {
                         $this->orderBy($columnName, strtolower($direction) === 'desc' ? 'desc' : 'asc');
                     }
                 }
                 // Handle string format: 'name' or '-name'
                 elseif (is_string($column)) {
-                    if (str_starts_with($column, '-')) {
-                        $this->orderByDesc(substr($column, 1));
-                    } else {
-                        $this->orderBy(ltrim($column, '+'));
+                    $col = ltrim($column, '+-');
+                    if (preg_match('/^[a-zA-Z_][a-zA-Z0-9_.]*$/', $col)) {
+                        if (str_starts_with($column, '-')) {
+                            $this->orderByDesc($col);
+                        } else {
+                            $this->orderBy($col);
+                        }
                     }
                 }
             }

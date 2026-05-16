@@ -38,7 +38,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
 
-        $exceptions->render(function (Throwable $e, $request) {
+        $exceptions->render(function (Throwable $e, $_request) {
             Log::error('An error occurred', [
                 'message' => $e->getMessage(),
                 'exception' => get_class($e),
@@ -92,19 +92,20 @@ return Application::configure(basePath: dirname(__DIR__))
                     Response::HTTP_METHOD_NOT_ALLOWED
                 ),
 
-                default => config('app.debug')
+                default => app()->isProduction()
                     ? ApiResponse::error(
+                        'Internal Server Error',
+                        Response::HTTP_INTERNAL_SERVER_ERROR
+                    )
+                    : ApiResponse::error(
                         $e->getMessage(),
                         Response::HTTP_INTERNAL_SERVER_ERROR,
                         [
+                            'exception' => get_class($e),
                             'file' => $e->getFile(),
                             'line' => $e->getLine(),
                             'trace' => $e->getTrace(),
                         ]
-                    )
-                    : ApiResponse::error(
-                        'Internal Server Error',
-                        Response::HTTP_INTERNAL_SERVER_ERROR
                     ),
             };
         });

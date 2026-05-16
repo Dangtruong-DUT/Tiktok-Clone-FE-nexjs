@@ -153,16 +153,24 @@ Route::prefix('auth')
         Route::post('/login', [AuthController::class, 'login'])
             ->middleware('throttle:5,1')
             ->name('login');
-        Route::post('/refresh-token', [AuthController::class, 'refresh'])->name('refresh');
+        Route::post('/refresh-token', [AuthController::class, 'refresh'])
+            ->middleware('throttle:10,1')
+            ->name('refresh');
         Route::post('/register', [AuthController::class, 'register'])
             ->middleware('throttle:3,1')
             ->name('register');
         Route::post('forgot-password', [AuthController::class, 'forgotPassword'])
             ->middleware('throttle:3,1')
             ->name('forgot-password');
-        Route::post('verify-forgot-password', [AuthController::class, 'verifyForgotPasswordToken'])->name('verify-forgot-password');
-        Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
-        Route::post('/verify-email', [AuthController::class, 'verifyEmail'])->name('verify-email');
+        Route::post('verify-forgot-password', [AuthController::class, 'verifyForgotPasswordToken'])
+            ->middleware('throttle:5,1')
+            ->name('verify-forgot-password');
+        Route::post('/reset-password', [AuthController::class, 'resetPassword'])
+            ->middleware('throttle:5,1')
+            ->name('reset-password');
+        Route::post('/verify-email', [AuthController::class, 'verifyEmail'])
+            ->middleware('throttle:5,1')
+            ->name('verify-email');
     });
 
 // post routes

@@ -11,6 +11,8 @@ class UserResource extends BaseJsonResource
 
     public function toArray($request): array
     {
+        $isOwner = (bool) $this->is_owner;
+
         return [
             'id' => $this->id,
             'uuid' => $this->uuid,
@@ -28,7 +30,7 @@ class UserResource extends BaseJsonResource
             'likes_count' => $this->likes_count,
             'is_followed' => $this->is_followed,
             'is_owner' => $this->whenNotNull($this->is_owner),
-            'role' => $this->role->value,
+            'role' => $this->when($isOwner, $this->role->value),
             'created_at' => $this->created_at->toDateTimeString(),
         ];
     }

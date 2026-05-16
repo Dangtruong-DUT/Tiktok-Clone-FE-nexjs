@@ -100,7 +100,7 @@ class AuthTokenService
             $payload->get('jti')
         );
 
-        if (! $token || ! $token->isValidToken($refreshToken)) {
+        if (! $token) {
             throw new UnauthorizedException('Invalid refresh token');
         }
 

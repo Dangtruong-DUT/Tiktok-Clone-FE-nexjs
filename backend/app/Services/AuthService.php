@@ -198,11 +198,11 @@ class AuthService
     public function forgot(string $email): bool
     {
         $user = $this->userRepository->findByEmail($email);
+
+        // Always return success to prevent account enumeration.
+        // Email is sent only if the account actually exists.
         if (! $user) {
-            throw new BusinessException(
-                'Email not found',
-                ['email' => 'The email address is not registered. Please check and try again.']
-            );
+            return true;
         }
 
         DB::transaction(function () use ($user, $email) {

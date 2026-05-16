@@ -26,6 +26,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Fail-fast: never run with debug enabled in production.
+        if (App::isProduction() && config('app.debug')) {
+            throw new \RuntimeException('APP_DEBUG must be false in production.');
+        }
+
         Model::shouldBeStrict(! App::isProduction());
 
         Relation::enforceMorphMap([
