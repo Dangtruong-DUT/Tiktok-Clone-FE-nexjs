@@ -16,7 +16,6 @@ use App\Events\Social\UserMentionedEvent;
 use App\Listeners\Admin\NotifyModerationActionListener;
 use App\Listeners\Admin\NotifyPositiveActionListener;
 use App\Listeners\Admin\CreateAdminLogListener;
-use App\Listeners\Admin\CreateAdminLogFromNotificationListener;
 use App\Listeners\Admin\SendDirectMessageEmailListener;
 use App\Listeners\Admin\SendModerationEmailListener;
 use App\Listeners\Admin\SendPositiveActionEmailListener;
@@ -56,12 +55,10 @@ class EventServiceProvider extends ServiceProvider
         AdminModerationActionNotifiedEvent::class => [
             NotifyModerationActionListener::class,
             SendModerationEmailListener::class,
-            CreateAdminLogFromNotificationListener::class,
         ],
         AdminPositiveActionNotifiedEvent::class => [
             NotifyPositiveActionListener::class,
             SendPositiveActionEmailListener::class,
-            CreateAdminLogFromNotificationListener::class,
         ],
         AdminDirectMessageSentEvent::class => [
             SendDirectMessageEmailListener::class,

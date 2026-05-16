@@ -4,13 +4,17 @@ namespace App\Listeners\Admin;
 
 use App\Events\Admin\AdminModerationActionNotifiedEvent;
 use App\Mail\AdminModerationActionEmail;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class SendModerationEmailListener implements ShouldQueue
 {
     use Queueable;
+
+    public int $tries = 3;
+    public array $backoff = [30, 60, 120];
 
     public function __construct()
     {
@@ -20,16 +24,24 @@ class SendModerationEmailListener implements ShouldQueue
 
     public function handle(AdminModerationActionNotifiedEvent $event): void
     {
-        $email = $event->targetUser->email;
-        if (empty($email)) {
+        if (empty($event->targetUser->email)) {
             return;
         }
 
-        Mail::to($email)->send(new AdminModerationActionEmail(
+        Mail::to($event->targetUser->email)->send(new AdminModerationActionEmail(
             targetUser: $event->targetUser,
             action: $event->action,
             reason: $event->reason,
             appealLink: $event->appealLink,
         ));
+    }
+
+    public function failed(AdminModerationActionNotifiedEvent $event, \Throwable $exception): void
+    {
+        Log::error('Failed to send moderation action email', [
+            'target_user_id' => $event->targetUser->id,
+            'action' => $event->action->value,
+            'error' => $exception->getMessage(),
+        ]);
     }
 }

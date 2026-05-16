@@ -87,7 +87,7 @@ class UserService
             $authUser->increment('following_count');
             $targetUser->increment('followers_count');
 
-            event(new UserFollowedEvent($authUser->id, $targetUser->id));
+            event(new UserFollowedEvent($authUser->id, $targetUser));
         });
 
         return true;
