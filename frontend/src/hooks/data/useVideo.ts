@@ -8,6 +8,7 @@ import {
     useUnlikePostMutation
 } from '@/store/services/posts.service'
 import { useCallback, useEffect, useState } from 'react'
+import { logger } from '@/utils/logger'
 
 interface UseLikePostProps {
     postId: string
@@ -36,7 +37,7 @@ export function useLikePost({ postId, initialLikeState, onLiked, onDisliked }: U
             }
         } catch (error) {
             setIsLikedState((prev) => !prev)
-            console.error(error)
+            logger.error(error)
         }
     }, 300)
 
@@ -85,7 +86,7 @@ export function useBookmarkPost({ postId, initialBookmarkState, onBookmarked, on
             }
         } catch (error) {
             setIsBookmarkedState((prev) => !prev)
-            console.error(error)
+            logger.error(error)
         }
     }, 300)
 

@@ -2,6 +2,7 @@
 
 import { useCallback } from 'react'
 import { useTemporaryIcon } from '@/hooks/ui/useTemporaryIcon'
+import { logger } from '@/utils/logger'
 
 interface UseVideoControlsProps {
     videoRef: React.RefObject<HTMLVideoElement | null>
@@ -27,7 +28,7 @@ export function useVideoControls({
         if (videoRef.current) {
             if (videoRef.current.paused) {
                 videoRef.current.play().catch((error) => {
-                    console.error('Error attempting to play video:', error)
+                    logger.error('Error attempting to play video:', error)
                 })
             } else {
                 videoRef.current.pause()

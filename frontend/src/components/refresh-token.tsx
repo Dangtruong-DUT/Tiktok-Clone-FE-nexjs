@@ -9,6 +9,7 @@ import { tokenReceived } from '@/store/features/authSlice'
 import { JwtPayloadType } from '@/types/common/jwt-payload.type'
 import { decodeJwt } from '@/utils/auth/jwt.util'
 import { useCallback, useEffect, useRef } from 'react'
+import { logger } from '@/utils/logger'
 
 const EXCLUDE_PATHS = ['/login', '/register', '/logout', '/refresh-token', '/oauth']
 export default function RefreshToken() {
@@ -31,7 +32,7 @@ export default function RefreshToken() {
                 try {
                     await logoutMutate().unwrap()
                 } catch (error) {
-                    console.error('Error logging out:', error)
+                    logger.error('Error logging out:', error)
                 } finally {
                     router.push('/')
                 }

@@ -14,6 +14,7 @@ import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { extractHashtags } from '@/utils/social-token.util'
 import MentionHashtagTextField from '@/components/mention-hashtag-text-field'
+import { logger } from '@/utils/logger'
 
 interface CommentFormProps {
     className?: string
@@ -66,7 +67,7 @@ function CommentForm({
                     error,
                     setFormError: form.setError
                 })
-                console.log(error)
+                logger.error(error)
             }
         },
         [createCommentMutate, createCommentResult.isLoading, form, onClose, postUuid]

@@ -3,6 +3,7 @@
 import useDebounceCallback from '@/hooks/shared/useCallback'
 import { useFollowUserMutation, useUnfollowUserMutation } from '@/store/services/user.service'
 import { useCallback, useEffect, useState } from 'react'
+import { logger } from '@/utils/logger'
 
 export function useFollowUser({ userId, initialFollowState }: { userId: string; initialFollowState: boolean }) {
     const [followUser, { isLoading: isFollowLoading }] = useFollowUserMutation()
@@ -27,7 +28,7 @@ export function useFollowUser({ userId, initialFollowState }: { userId: string; 
             }
         } catch (error) {
             setIsFollowedState((prev) => !prev)
-            console.error(error)
+            logger.error(error)
         }
     }, 300)
 

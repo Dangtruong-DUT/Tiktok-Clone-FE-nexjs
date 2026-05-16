@@ -11,6 +11,7 @@ import { decodeJwt } from '@/utils/auth/jwt.util'
 import { setRole, setUserProfile, tokenReceived } from '@/store/features/authSlice'
 import RefreshToken from '@/components/refresh-token'
 import GlobalAppLoader from '@/components/global-app-loader'
+import { logger } from '@/utils/logger'
 
 interface AppContextType {
     authStatus: AuthStatus
@@ -49,7 +50,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             dispatch(setRole(role))
             dispatch(setUserProfile(userProfile))
         } catch (error) {
-            console.error('Failed to decode JWT:', error)
+            logger.error('Failed to decode JWT:', error)
         } finally {
             setAuthStatus('ready')
         }

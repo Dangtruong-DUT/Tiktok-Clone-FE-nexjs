@@ -9,6 +9,7 @@ import { MailCheck, Loader } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
+import { logger } from '@/utils/logger'
 
 const RESEND_COOLDOWN_SECONDS = 180
 const RESEND_COOLDOWN_STORAGE_KEY = 'settings:verify-email:resend-cooldown-until'
@@ -62,7 +63,7 @@ export default function VerifyEmailForm() {
             setRemainingCooldown(RESEND_COOLDOWN_SECONDS)
         } catch (error) {
             toast.error(t('verifyEmail.resendError'))
-            console.error('Error resending verify email:', error)
+            logger.error('Error resending verify email:', error)
         }
     }, [isLoading, isUnverified, remainingCooldown, resendVerifyEmailMutate, t])
 

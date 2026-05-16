@@ -3,6 +3,7 @@
 import { Audience, AudienceValue } from '@/constants/enum'
 import { useUpdatePostMutation } from '@/store/services/posts.service'
 import { createContext, use, useState } from 'react'
+import { logger } from '@/utils/logger'
 
 type PostTableContextType = {
     setPostIdEdit: (value: number | undefined) => void
@@ -48,7 +49,7 @@ function PostTableProvider({ children }: { children: React.ReactNode }) {
                 delete next[postId]
                 return next
             })
-            console.error('Failed to update post audience:', error)
+            logger.error('Failed to update post audience:', error)
         }
     }
 

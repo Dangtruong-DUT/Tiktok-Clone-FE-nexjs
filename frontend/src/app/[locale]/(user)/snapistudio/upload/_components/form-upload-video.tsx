@@ -27,6 +27,7 @@ import { useAppDispatch } from '@/store/hooks'
 import { setLoadingByKey } from '@/store/features/appSlice'
 import { extractHashtags } from '@/utils/social-token.util'
 import MentionHashtagTextField from '@/components/mention-hashtag-text-field'
+import { logger } from '@/utils/logger'
 
 const APP_LOADING_KEYS = {
     uploadVideoPost: 'upload.video-post'
@@ -165,7 +166,7 @@ export default function FormUploadVideo() {
             onReset()
             router.push('/snapistudio/content')
         } catch (error) {
-            console.error(error)
+            logger.error(error)
             handleFormError<CreatePostReqBodyType>({
                 error,
                 setFormError: form.setError

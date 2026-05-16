@@ -1,3 +1,5 @@
+import { logger } from '@/utils/logger'
+
 export async function convertBase64ToFileToFile(image: string, filename: string) {
     try {
         const res = await fetch(image)
@@ -5,6 +7,6 @@ export async function convertBase64ToFileToFile(image: string, filename: string)
         const file = new File([blob], filename, { type: 'image/png' })
         return file
     } catch (error) {
-        console.error('Error fetching thumbnail:', error)
+        logger.error('Error fetching thumbnail:', error)
     }
 }

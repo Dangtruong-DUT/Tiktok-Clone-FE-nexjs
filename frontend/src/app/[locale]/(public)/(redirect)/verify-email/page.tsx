@@ -9,6 +9,7 @@ import { useRouter } from '@/i18n/navigation'
 import { useVerifyEmailMutation } from '@/store/services/auth.service'
 import { setRole, tokenReceived } from '@/store/features/authSlice'
 import { useCallback, useEffect, useState } from 'react'
+import { logger } from '@/utils/logger'
 export default function VerifyPage() {
     const { searchParams, setSearchParams } = useSearchParamsLoader()
 
@@ -30,7 +31,7 @@ export default function VerifyPage() {
                 router.push('/')
                 setVerifyStatus('success')
             } catch (error) {
-                console.error('Error verifying email:', error)
+                logger.error('Error verifying email:', error)
                 setVerifyStatus('error')
             }
         },

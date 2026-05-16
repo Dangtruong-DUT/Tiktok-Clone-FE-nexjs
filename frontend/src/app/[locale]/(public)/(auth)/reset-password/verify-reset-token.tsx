@@ -5,6 +5,7 @@ import { SearchParamsLoader, useSearchParamsLoader } from '@/components/searchpa
 import { useVerifyForgotPasswordMutation } from '@/store/services/user.service'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
+import { logger } from '@/utils/logger'
 
 interface VerifyResetTokenProps {
     onTokenVerified: (token: string) => void
@@ -25,7 +26,7 @@ export default function VerifyResetToken({ onTokenVerified }: VerifyResetTokenPr
                 await verifyForgotPasswordMutate({ forgot_password_token: token }).unwrap()
                 onTokenVerified(token)
             } catch (error) {
-                console.error('Error verifying reset password token:', error)
+                logger.error('Error verifying reset password token:', error)
                 setVerifyStatus('error')
             }
         },

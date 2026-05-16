@@ -7,6 +7,7 @@ import { useLogoutMutation } from '@/store/services/auth.service'
 import { tokenReceived } from '@/store/features/authSlice'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
+import { logger } from '@/utils/logger'
 
 export default function RefreshToken() {
     const refreshTokenFormStore = useAppSelector((state) => state.auth.refresh_token)
@@ -21,7 +22,7 @@ export default function RefreshToken() {
             await logoutMutate()
             router.push('/')
         } catch (error) {
-            console.error('Error logging out:', error)
+            logger.error('Error logging out:', error)
         }
     }, [logoutMutate, router])
 
@@ -40,7 +41,7 @@ export default function RefreshToken() {
                 try {
                     await logoutMutate().unwrap()
                 } catch (error) {
-                    console.error('Error logging out:', error)
+                    logger.error('Error logging out:', error)
                 } finally {
                     router.push('/')
                 }

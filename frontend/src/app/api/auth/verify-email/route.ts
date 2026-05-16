@@ -5,6 +5,7 @@ import { VerifyEmailReqBodyType } from '@/types/dtos/user/user-request.dto'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 import { JwtPayloadType } from '@/types/common/jwt-payload.type'
+import { logger } from '@/utils/logger'
 
 export async function POST(request: NextRequest) {
     const body = (await request.json()) as VerifyEmailReqBodyType
@@ -37,7 +38,7 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json(response)
     } catch (error) {
-        console.error('Error verifying email:', error)
+        logger.error('Error verifying email:', error)
         return NextResponse.json(
             { message: 'Please provide a valid email verify token.' },
             { status: HTTP_STATUS.BAD_REQUEST }

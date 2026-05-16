@@ -5,6 +5,7 @@ import { useAppSelector } from '@/store/hooks'
 import { useRouter } from '@/i18n/navigation'
 import { useLogoutMutation } from '@/store/services/auth.service'
 import { useEffect } from 'react'
+import { logger } from '@/utils/logger'
 
 export default function Logout() {
     const router = useRouter()
@@ -19,7 +20,7 @@ export default function Logout() {
             try {
                 await logoutMutate().unwrap()
             } catch (error) {
-                console.error('Error logging out:', error)
+                logger.error('Error logging out:', error)
             } finally {
                 router.push('/')
             }

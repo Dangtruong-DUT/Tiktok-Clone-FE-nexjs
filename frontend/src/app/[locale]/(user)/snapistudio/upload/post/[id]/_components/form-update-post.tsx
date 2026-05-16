@@ -28,6 +28,7 @@ import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
 import { extractHashtags } from '@/utils/social-token.util'
 import MentionHashtagTextField from '@/components/mention-hashtag-text-field'
+import { logger } from '@/utils/logger'
 
 export default function FormUpdatePost() {
     const t = useTranslations('SnapiStudio.upload')
@@ -126,7 +127,7 @@ export default function FormUpdatePost() {
             await updatePostMutate({ post_uuid: post.uuid, body }).unwrap()
             toast('Post updated successfully')
         } catch (error) {
-            console.error(error)
+            logger.error(error)
             handleFormError<CreatePostReqBodyType>({
                 error,
                 setFormError: form.setError

@@ -2,6 +2,7 @@
 
 import { generateTimeLineFrames, TimelineFrameType } from '@/utils/video.util'
 import { useEffect, useState } from 'react'
+import { logger } from '@/utils/logger'
 
 export default function useVideoFrames(VideoSrc: string | null, frameCount: number) {
     const [frames, setFrames] = useState<TimelineFrameType[]>([])
@@ -18,7 +19,7 @@ export default function useVideoFrames(VideoSrc: string | null, frameCount: numb
             })
             .catch((error) => {
                 setFrames([])
-                console.error('Error generating frames:', error)
+                logger.error('Error generating frames:', error)
             })
     }, [VideoSrc, frameCount])
 

@@ -18,6 +18,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import { logger } from '@/utils/logger'
 
 const LOGOUT_LOADING_KEY = 'logout'
 
@@ -120,7 +121,7 @@ export function useLogout(props?: UseLogoutProps) {
             props?.onSuccess?.(res)
             clearStore(dispatch)
         } catch (error) {
-            console.error('Logout error:', error)
+            logger.error('Logout error:', error)
             props?.onError?.(error)
         } finally {
             dispatch(stopLoadingByKey(LOGOUT_LOADING_KEY))

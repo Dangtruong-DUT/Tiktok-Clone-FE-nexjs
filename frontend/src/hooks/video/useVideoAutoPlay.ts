@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import { useInViewport } from '@/hooks/ui/useInViewport'
+import { logger } from '@/utils/logger'
 
 interface UseVideoAutoPlayProps {
     videoRef: React.RefObject<HTMLVideoElement | null>
@@ -17,7 +18,7 @@ export function useVideoAutoPlay({ videoRef, threshold = 0.5 }: UseVideoAutoPlay
 
         if (isInViewport) {
             video.play().catch((error) => {
-                console.error('Error attempting to play video:', error)
+                logger.error('Error attempting to play video:', error)
             })
         } else {
             video.pause()
@@ -34,7 +35,7 @@ export function useVideoAutoPlay({ videoRef, threshold = 0.5 }: UseVideoAutoPlay
             } else {
                 if (isInViewport) {
                     video.play().catch((error) => {
-                        console.error('Error attempting to play video:', error)
+                        logger.error('Error attempting to play video:', error)
                     })
                 }
             }

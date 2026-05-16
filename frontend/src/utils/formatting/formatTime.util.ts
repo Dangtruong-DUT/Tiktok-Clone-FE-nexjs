@@ -1,5 +1,6 @@
 import { LocalesType } from '@/i18n/config'
 import TimeAgo from 'javascript-time-ago'
+import { logger } from '@/utils/logger'
 
 // English.
 import en from 'javascript-time-ago/locale/en'
@@ -15,7 +16,7 @@ export function timeAgo({ locale, date }: { locale: LocalesType; date: string })
         const timeAgo = new TimeAgo(locale)
         return timeAgo.format(parsedDate, 'twitter-minute-now')
     } catch (error) {
-        console.error('Error in timeAgo function:', error)
+        logger.error('Error in timeAgo function:', error)
         return ''
     }
 }
@@ -52,7 +53,7 @@ export function formatISOToDisplayDate(data: string): string {
             hour12: true
         }).format(date)
     } catch (error) {
-        console.log('Error in formatISOToDisplayDate function:', error)
+        logger.error('Error in formatISOToDisplayDate function:', error)
         return ''
     }
 }

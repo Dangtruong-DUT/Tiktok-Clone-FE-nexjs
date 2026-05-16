@@ -6,6 +6,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { toast } from 'sonner'
 import { createShareItems } from '@/components/share-items'
 import { useCallback, useMemo } from 'react'
+import { logger } from '@/utils/logger'
 import { DialogTitle } from '@radix-ui/react-dialog'
 
 interface ShareMenuDialogProps {
@@ -22,7 +23,7 @@ export function ShareMenuDialog({ url, children }: ShareMenuDialogProps) {
             })
         } catch (_) {
             // Fallback method for older browsers
-            console.warn('Clipboard API not supported, using fallback method.')
+            logger.warn('Clipboard API not supported, using fallback method.')
         }
     }, [url])
 
