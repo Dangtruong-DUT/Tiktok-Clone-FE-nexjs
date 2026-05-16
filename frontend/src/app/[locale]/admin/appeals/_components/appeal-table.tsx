@@ -609,7 +609,7 @@ export function AppealTable() {
 
                 {detailAppeal && (
                     <AppealDetailDialog
-                        open={!!detailAppeal}
+                        open={detailAppeal !== null}
                         appeal={detailAppeal}
                         onOpenChange={(open) => !open && setDetailAppeal(null)}
                     />

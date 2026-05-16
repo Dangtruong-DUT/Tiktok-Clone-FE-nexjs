@@ -46,7 +46,7 @@ export default function SelectThumbnailFromOriginalVideo({
     const calculateFrameSelected = (e: MouseEvent | TouchEvent) => {
         if (!canvasRef.current || videoFrames.length === 0) return
         const rect = canvasRef.current.getBoundingClientRect()
-        const x = 'touches' in e ? e.touches[0].clientX : e.clientX
+        const x = 'touches' in e ? e.touches[0]!.clientX : e.clientX
         const offsetX = Math.min(Math.max(x - rect.left, 0), rect.width)
 
         setCursorX(offsetX)

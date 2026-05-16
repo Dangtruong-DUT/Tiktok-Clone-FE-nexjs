@@ -77,7 +77,7 @@ export default function FormUpdatePost() {
     useEffect(() => {
         if (post) {
             form.setValue('content', post.content)
-            form.setValue('audience', post.audience)
+            form.setValue('audience', post.audience as any)
             form.setValue('thumbnail', post.thumbnail_file_id ?? undefined)
             form.setValue(
                 'hashtags',

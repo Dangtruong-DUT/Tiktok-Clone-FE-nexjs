@@ -430,7 +430,7 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
 
             {detailLog && (
                 <ActivityLogDetailDialog
-                    open={!!detailLog}
+                    open={detailLog !== null}
                     log={detailLog}
                     onOpenChange={(open) => !open && setDetailLog(null)}
                 />

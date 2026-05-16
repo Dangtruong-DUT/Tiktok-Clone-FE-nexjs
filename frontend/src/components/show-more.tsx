@@ -14,6 +14,8 @@ interface ShowMoreProps {
     className?: string
     textClassName?: string
     enableRichText?: boolean
+    showMoreLabel?: string
+    showLessLabel?: string
 }
 
 const ShowMore: React.FC<ShowMoreProps> = ({
@@ -23,7 +25,9 @@ const ShowMore: React.FC<ShowMoreProps> = ({
     maxHeight = 100,
     className,
     textClassName,
-    enableRichText = false
+    enableRichText = false,
+    showMoreLabel = 'more',
+    showLessLabel = 'less'
 }) => {
     const [expanded, setExpanded] = useState(false)
     const [showButton, setShowButton] = useState(false)
@@ -39,12 +43,8 @@ const ShowMore: React.FC<ShowMoreProps> = ({
         <div className={cn('relative', className)}>
             <div
                 ref={contentRef}
-                style={{
-                    maxHeight: expanded ? 'none' : `${maxHeight}px`,
-                    overflow: 'hidden',
-                    transition: 'max-height 0.3s ease'
-                }}
-                className={cn('text-sm', textClassName)}
+                style={{ maxHeight: expanded ? 'none' : `${maxHeight}px` }}
+                className={cn('text-sm overflow-hidden transition-[max-height] duration-300 ease-in-out', textClassName)}
             >
                 {enableRichText ? <RichTextContent text={text} mentions={mentions} hashtags={hashtags} /> : text}
             </div>
@@ -52,9 +52,9 @@ const ShowMore: React.FC<ShowMoreProps> = ({
             {showButton && (
                 <button
                     onClick={() => setExpanded(!expanded)}
-                    className='mt-2 text-sm hover:underline cursor-pointer text-muted-foreground '
+                    className='mt-2 text-sm hover:underline cursor-pointer text-muted-foreground'
                 >
-                    {expanded ? 'less' : 'more'}
+                    {expanded ? showLessLabel : showMoreLabel}
                 </button>
             )}
         </div>
