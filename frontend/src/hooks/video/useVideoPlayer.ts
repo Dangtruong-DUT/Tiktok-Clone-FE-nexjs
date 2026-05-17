@@ -45,7 +45,6 @@ export function useVideoPlayer(
             if (onVideoEnd) {
                 onVideoEnd()
             } else {
-                // Default behavior: restart the video
                 video.currentTime = 0
                 video
                     .play()
@@ -71,7 +70,6 @@ export function useVideoPlayer(
         }
     }, [videoRef, onVideoEnd])
 
-    // Add an effect to sync video state with isPlaying state
     useEffect(() => {
         const video = videoRef.current
         if (!video) return
@@ -88,7 +86,6 @@ export function useVideoPlayer(
         }
     }, [videoRef, setIsPlaying])
 
-    // Add an effect to sync video state with isMuted state
     useEffect(() => {
         const video = videoRef.current
         if (!video) return

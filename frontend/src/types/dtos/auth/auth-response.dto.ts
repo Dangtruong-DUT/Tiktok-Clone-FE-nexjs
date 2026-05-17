@@ -7,7 +7,6 @@ export type UserAuthType = Pick<
     'id' | 'uuid' | 'name' | 'email' | 'verify' | 'username' | 'avatar' | 'role' | 'updated_at' | 'bio'
 >
 
-// Single canonical type for any endpoint that returns auth tokens
 export type AuthTokensResponse = HttpResponseWithData<{
     readonly access_token: string
     readonly refresh_token: string

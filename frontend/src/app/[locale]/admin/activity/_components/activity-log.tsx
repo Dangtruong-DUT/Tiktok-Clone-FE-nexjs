@@ -92,7 +92,6 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
         return Array.from(groups.entries()).map(([date, items]) => ({ date, items }))
     }, [filteredLogs])
 
-    // Handlers
     const handleSearch = (value: string) => {
         setSearchTerm(value)
         setPage(1)
@@ -114,19 +113,16 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
             post_unliked: 'bg-pink-50 text-pink-700 dark:bg-pink-950 dark:text-pink-300',
             comment_created: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200',
             comment_deleted: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
-            // Admin punitive actions (red spectrum)
             ban: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
             delete_user: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
             delete_post: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
             delete_comment: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
             reject_appeal: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-            // Admin positive actions (green spectrum)
             unban: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200',
             restore_user: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200',
             restore_post: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200',
             restore_comment: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200',
             approve_appeal: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200',
-            // Neutral admin actions
             reset_user_password: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
             send_email_to_user: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
             update: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
@@ -160,7 +156,6 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
         return truncateText(JSON.stringify(value), 80)
     }
 
-    // Render loading skeleton
     if (isLoading) {
         return (
             <div className='space-y-4'>
@@ -179,7 +174,6 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
 
     return (
         <div className='space-y-6'>
-            {/* Header - Search and Filters */}
             <div className='rounded-xl border bg-background p-4 md:p-5'>
                 <div className='flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between'>
                     <div className='flex-1 space-y-3'>
@@ -239,7 +233,6 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
                     </div>
 
                     <div className='flex flex-wrap gap-2'>
-                        {/* Time Period Filter */}
                         <Select
                             value={timePeriod}
                             onValueChange={(v: '24h' | '7d' | '30d' | 'all') => {
@@ -258,7 +251,6 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
                             </SelectContent>
                         </Select>
 
-                        {/* Activity Type Filter */}
                         <Select
                             value={activityType}
                             onValueChange={(v) => {
@@ -282,7 +274,6 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
                 </div>
             </div>
 
-            {/* Timeline/List */}
             {filteredLogs.length === 0 ? (
                 <div className='rounded-xl border bg-background p-10 text-center'>
                     <p className='text-muted-foreground'>{t('activity.emptyState')}</p>
@@ -391,10 +382,8 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
                 </div>
             )}
 
-            {/* Pagination Controls */}
             {pagination && (
                 <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
-                    {/* Per Page Selector */}
                     <div className='flex items-center gap-2'>
                         <span className='text-sm text-muted-foreground'>{t('common.perPage')}</span>
                         <Select value={String(perPage)} onValueChange={handlePerPageChange}>
@@ -410,7 +399,6 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
                         </Select>
                     </div>
 
-                    {/* Info */}
                     <div className='text-sm text-muted-foreground'>
                         {t('common.showingResults', {
                             from: (pagination.current_page - 1) * perPage + 1,
@@ -419,7 +407,6 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
                         })}
                     </div>
 
-                    {/* Pagination */}
                     {pagination.last_page > 1 && (
                         <AutoPagination page={page} pageSize={pagination.last_page} onPageChange={setPage} />
                     )}

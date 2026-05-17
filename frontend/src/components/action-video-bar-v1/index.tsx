@@ -73,7 +73,6 @@ export default function ActionBar({ post, className }: ActionBarProps) {
 
     return (
         <section className={cn('flex flex-col items-center gap-3  relative', className)}>
-            {/* Avatar & Follow */}
             <div className='flex flex-col items-center text-5xl'>
                 <Link href={`/@${fetchedAuthor?.username ?? author.username}`}>
                     <Avatar className='w-[1em] h-[1em] shrink-0'>
@@ -115,7 +114,6 @@ export default function ActionBar({ post, className }: ActionBarProps) {
                     </AuthModal>
                 )}
             </div>
-            {/* Action Buttons */}
             <div className='flex flex-col items-center gap-6'>
                 <ActionButton
                     icon={

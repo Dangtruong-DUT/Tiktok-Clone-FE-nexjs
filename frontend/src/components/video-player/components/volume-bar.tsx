@@ -68,7 +68,6 @@ function VolumeBar({
                 className={cn('relative p-2 w-10 h-10 z-[6] transition-opacity duration-300 text-white cursor-pointer')}
                 onClick={onMuteToggle}
             >
-                {/* Placeholder for sound icon */}
                 <div
                     className={cn('opacity-0 w-full h-full flex items-center justify-center text-white', {
                         'opacity-100': isParentHovered || isMuted || volume === 0

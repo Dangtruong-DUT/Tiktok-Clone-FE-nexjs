@@ -52,12 +52,10 @@ export default function Slider({ value, onChange }: SliderProps) {
             className='relative w-[400px] h-[6px] rounded-full bg-gray-200 select-none'
             onPointerDown={handlePointerDown}
         >
-            {/* progress */}
             <div
                 className='absolute top-0 left-0 h-full rounded-full bg-brand'
                 style={{ width: `${internalValue}%` }}
             />
-            {/* thumb */}
             <div
                 className='absolute top-1/2 w-4 h-4 rounded-full bg-brand shadow cursor-pointer'
                 style={{

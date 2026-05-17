@@ -2,7 +2,6 @@ import { LocalesType } from '@/i18n/config'
 import TimeAgo from 'javascript-time-ago'
 import { logger } from '@/utils/logger'
 
-// English.
 import en from 'javascript-time-ago/locale/en'
 import vi from 'javascript-time-ago/locale/vi'
 

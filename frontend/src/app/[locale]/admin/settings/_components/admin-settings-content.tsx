@@ -20,7 +20,6 @@ export function AdminSettingsContent() {
 
     return (
         <div className='flex flex-col gap-6 lg:flex-row lg:gap-8'>
-            {/* Sidebar Nav */}
             <aside className='w-full lg:w-52 shrink-0'>
                 <nav className='flex flex-row gap-1 overflow-x-auto lg:flex-col lg:overflow-visible rounded-xl border bg-card p-2 shadow-xs'>
                     {TABS.map(({ id, icon: Icon, label }) => (
@@ -44,7 +43,6 @@ export function AdminSettingsContent() {
                 <p className='mt-4 px-1 text-xs text-muted-foreground'>{t('settings.adminNote')}</p>
             </aside>
 
-            {/* Content */}
             <div className='min-w-0 flex-1'>
                 <div className='rounded-xl border bg-card p-6 shadow-xs'>
                     {active === 'profile' && <UpdateProfileForm />}

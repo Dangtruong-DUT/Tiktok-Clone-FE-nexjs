@@ -44,7 +44,6 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
         setIsProgressBarActive(active)
     }, [])
 
-    // Use current video data if available, fallback to props
     const displayPost = post
     const displayAuthor = author
 

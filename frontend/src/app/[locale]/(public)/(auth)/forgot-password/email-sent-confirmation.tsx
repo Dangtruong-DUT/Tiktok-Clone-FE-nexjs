@@ -32,7 +32,6 @@ export default function EmailSentConfirmation({ sentEmail, onSendAnotherEmail }:
                 >
                     {t('emailSent.sendAnotherEmail')}
                 </Button>
-                {/* Back to Home Button */}
                 <Link href='/'>
                     <Button
                         variant='outline'

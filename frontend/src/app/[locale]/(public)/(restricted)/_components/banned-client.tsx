@@ -52,7 +52,6 @@ export function BannedClient({
             </div>
 
             <div className='px-6 py-4 sm:px-8'>
-                {/* Status Box */}
                 <div className='mb-6 rounded-xl border border-neutral-200 bg-neutral-50/50 p-4'>
                     <div className='flex items-start gap-3'>
                         <AlertOctagon className='mt-0.5 h-5 w-5 shrink-0 text-red-600' />
@@ -65,7 +64,6 @@ export function BannedClient({
                     </div>
                 </div>
 
-                {/* Next Steps */}
                 <div className='space-y-4 mb-6'>
                     <h3 className='text-sm font-semibold text-neutral-900'>{tNextStepsTitle}</h3>
 
@@ -85,13 +83,11 @@ export function BannedClient({
                     </ul>
                 </div>
 
-                {/* Appeal Info */}
                 <div className='mb-6'>
                     <h4 className='font-semibold text-neutral-900'>{tAppealCardTitle}</h4>
                     <p className='mt-1 text-sm text-neutral-500'>{tAppealCardBody}</p>
                 </div>
 
-                {/* Actions */}
                 <div className='space-y-3'>
                     <Link
                         href='/appeal?appeal_type=user_ban&resource_type=user'

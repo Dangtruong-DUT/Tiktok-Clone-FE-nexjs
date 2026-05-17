@@ -27,7 +27,6 @@ export function AuthModalContent() {
         setMode(mode === 'login-email' ? 'login' : 'signup')
     }
 
-    // Email form view
     if (isEmailMode) {
         return (
             <div className='flex flex-col h-[90vh]'>
@@ -40,7 +39,6 @@ export function AuthModalContent() {
         )
     }
 
-    // Main menu view
     return (
         <div className='flex flex-col h-[90vh]'>
             <main className='flex-1 overflow-auto p-6'>

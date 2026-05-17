@@ -68,7 +68,6 @@ export function EvidenceGalleryDialog({ open, onOpenChange, evidenceFiles, appea
                     </DialogDescription>
                 </DialogHeader>
 
-                {/* Image viewer */}
                 <div className='relative bg-neutral-950 flex items-center justify-center min-h-[400px]'>
                     <AnimatePresence mode='wait'>
                         {currentFile && (
@@ -94,7 +93,6 @@ export function EvidenceGalleryDialog({ open, onOpenChange, evidenceFiles, appea
                         )}
                     </AnimatePresence>
 
-                    {/* Navigation arrows */}
                     {evidenceFiles.length > 1 && (
                         <>
                             <button
@@ -115,9 +113,7 @@ export function EvidenceGalleryDialog({ open, onOpenChange, evidenceFiles, appea
                     )}
                 </div>
 
-                {/* Toolbar */}
                 <div className='flex items-center justify-between p-3 border-t'>
-                    {/* Thumbnails */}
                     <div className='flex gap-1.5 overflow-x-auto max-w-[60%]'>
                         {evidenceFiles.map((file, index) => (
                             <button
@@ -138,7 +134,6 @@ export function EvidenceGalleryDialog({ open, onOpenChange, evidenceFiles, appea
                         ))}
                     </div>
 
-                    {/* Actions */}
                     <div className='flex gap-1.5'>
                         <Button
                             size='sm'

@@ -5,7 +5,6 @@ import type { MetadataRoute } from 'next'
 const baseUrl = envConfig.NEXT_PUBLIC_URL || 'http://localhost:3000'
 
 const staticRoutes: MetadataRoute.Sitemap = [
-    // Main app routes
     {
         url: '',
         lastModified: new Date(),
@@ -36,8 +35,6 @@ const staticRoutes: MetadataRoute.Sitemap = [
         changeFrequency: 'daily' as const,
         priority: 0.7
     },
-
-    // TikTok Studio routes
     {
         url: '/snapistudio',
         lastModified: new Date(),
@@ -56,8 +53,6 @@ const staticRoutes: MetadataRoute.Sitemap = [
         changeFrequency: 'weekly' as const,
         priority: 0.6
     },
-
-    // Auth routes
     {
         url: '/auth/login',
         lastModified: new Date(),
@@ -82,8 +77,6 @@ const staticRoutes: MetadataRoute.Sitemap = [
         changeFrequency: 'monthly' as const,
         priority: 0.4
     },
-
-    // Legal routes
     {
         url: '/terms-of-service',
         lastModified: new Date(),
@@ -99,7 +92,6 @@ const staticRoutes: MetadataRoute.Sitemap = [
 ]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    // Add language variations for each static route
     const localeStaticRoutes = locales.flatMap((locale) =>
         staticRoutes.map((route) => ({
             ...route,

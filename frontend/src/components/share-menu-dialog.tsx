@@ -22,7 +22,6 @@ export function ShareMenuDialog({ url, children }: ShareMenuDialogProps) {
                 position: 'top-center'
             })
         } catch (_) {
-            // Fallback method for older browsers
             logger.warn('Clipboard API not supported, using fallback method.')
         }
     }, [url])

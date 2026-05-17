@@ -23,7 +23,6 @@ export const DeletePostReqSchema = z
 export type GetAdminPostsParams = z.infer<typeof GetAdminPostsParamsSchema>
 export type DeletePostReq = z.infer<typeof DeletePostReqSchema>
 
-// Form schemas (client-side validation)
 export const DeletePostFormSchema = z
     .object({
         reason: z.string().min(1),

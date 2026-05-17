@@ -63,7 +63,6 @@ export type RestoreUserReq = z.infer<typeof RestoreUserReqSchema>
 export type ResetUserPasswordReq = z.infer<typeof ResetUserPasswordReqSchema>
 export type SendUserMailReq = z.infer<typeof SendUserMailReqSchema>
 
-// Form schemas (client-side validation)
 export const DeleteUserFormSchema = z.object({
     reason: z.string().min(10)
 })

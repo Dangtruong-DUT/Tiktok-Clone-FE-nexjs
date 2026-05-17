@@ -60,7 +60,6 @@ export function truncateText(text: string, maxLength = 100): string {
     return text.length > maxLength ? text.slice(0, maxLength) + '...' : text
 }
 
-// Returns the action key — use with t(`actionLabels.${key}`) in components
 export function getActivityKey(log: { action?: string; action_type?: string }): string {
     return log.action ?? log.action_type ?? 'unknown'
 }

@@ -64,7 +64,6 @@ export default function CommentList({ postUuid, postId, username }: CommentListP
                 {comments.length === 0 && !isLoading && (
                     <p className='text-gray-500 text-center'>Be the first to comment!</p>
                 )}
-                {/* Sentinel để lắng nghe*/}
                 <div className='h-px bg-transparent' ref={sentinelScrollRef} />
                 {isLoading && (
                     <div className='space-y-4  '>

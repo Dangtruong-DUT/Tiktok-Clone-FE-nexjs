@@ -1,7 +1,6 @@
 import { z } from 'zod'
 import { PaginationMetaSchema } from '@/types/common/pagination-meta.type'
 
-// Zod schemas for runtime validation at API boundaries
 export const HttpResponseSchema = z
     .object({
         status: z.boolean(),
@@ -39,10 +38,8 @@ export const ApiSuccessResponseWithDataSchema = <T extends z.ZodTypeAny>(dataSch
 export const ApiSuccessResponseWithMetaSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
     ApiSuccessResponseSchema.extend({ data: dataSchema, meta: PaginationMetaSchema }).strict()
 
-// TypeScript types
 export type BusinessException = z.infer<typeof BusinessExceptionSchema>
 
-/** Legacy API shape — status: boolean */
 export interface HttpResponse {
     readonly status: boolean
     readonly message: string
@@ -60,7 +57,6 @@ export interface HttpResponseWithBusinessExceptions extends HttpResponse {
     readonly errors: BusinessException[]
 }
 
-/** Current API shape — success: boolean */
 export interface ApiSuccessResponse {
     readonly success: boolean
     readonly message: string

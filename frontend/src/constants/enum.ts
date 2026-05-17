@@ -63,6 +63,5 @@ export enum NotificationTypeCode {
     SECURITY = 8
 }
 
-// Post creation supports PUBLIC, PRIVATE, FRIENDS — FOLLOWING is read-only (feed filter only)
 export type AudienceValue = Exclude<Audience, Audience.FOLLOWING>
 export const AUDIENCE_VALUES = [Audience.PUBLIC, Audience.PRIVATE, Audience.FRIENDS] as const satisfies AudienceValue[]

@@ -440,7 +440,6 @@ export function AppealTable() {
                                                     </TableCell>
                                                 </TableRow>
 
-                                                {/* Expandable row */}
                                                 <AnimatePresence>
                                                     {isExpanded && (
                                                         <TableRow key={`${appeal.uuid ?? appeal.id}-expanded`}>
@@ -550,7 +549,6 @@ export function AppealTable() {
                     )}
                 </TablePanel>
 
-                {/* Review dialog */}
                 <Dialog open={selectedAppeal !== null && actionType !== null} onOpenChange={(open) => !open && closeDialog()}>
                     <DialogContent className='sm:max-w-[520px]'>
                         <DialogHeader>

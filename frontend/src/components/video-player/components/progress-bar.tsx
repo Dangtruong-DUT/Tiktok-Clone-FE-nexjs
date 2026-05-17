@@ -65,7 +65,6 @@ function ProgressBar({ currentTime, duration, className, onActive, onSeek }: Pro
             onTouchMove={handleMove}
             onTouchEnd={handleEnd}
         >
-            {/* Nút kéo */}
             <div
                 className={cn(
                     'block absolute opacity-0 top-1/2 -translate-x-1/2 w-3 aspect-square z-[6] bg-white shadow-[0_0_1px_1px_rgba(0,0,0,0.3)] rounded-full',
@@ -80,7 +79,6 @@ function ProgressBar({ currentTime, duration, className, onActive, onSeek }: Pro
                 onTouchStart={handleStart}
             />
 
-            {/* Hiển thị thời gian */}
             <div
                 className={cn(
                     'absolute z-[1] top-0 left-1/2 -translate-x-1/2 -translate-y-[200%] bg-transparent text-white',
@@ -92,7 +90,6 @@ function ProgressBar({ currentTime, duration, className, onActive, onSeek }: Pro
                 {formatSecondsToTime(isDragging ? dragTime : currentTime)} / {formatSecondsToTime(duration)}
             </div>
 
-            {/* Thanh tiến độ */}
             <div className='relative flex items-end h-full rounded-bl-2xl rounded-br-2xl overflow-hidden'>
                 <div
                     ref={progressBarRef}

@@ -90,7 +90,6 @@ export default function UsersContainer({
                 </li>
             ))}
 
-            {/* Sentinel để lắng nghe*/}
             <div className='h-px bg-transparent' ref={sentinelForUserResultScrollRef} />
             {isFetching && (
                 <div className='px-4 py-2'>

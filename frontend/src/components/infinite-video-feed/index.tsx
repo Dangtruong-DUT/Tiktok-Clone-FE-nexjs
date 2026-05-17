@@ -53,7 +53,6 @@ export default function InfiniteVideoFeed({
                             </div>
                         </article>
                     ))}
-                {/* Sentinel để lắng nghe*/}
                 <div className='h-px bg-transparent' ref={sentinelScrollRef} />
                 {!isLoading && isFetching && (
                     <div className='px-4 @5xl:ps-[3rem] @5xl:pe-[15rem]  py-4  snap-start snap-always '>

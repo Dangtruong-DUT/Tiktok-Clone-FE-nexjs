@@ -61,7 +61,6 @@ function VideoGrid() {
                             </Link>
                         )
                     })}
-                    {/* Sentinel để lắng nghe*/}
                     <div className='h-px bg-transparent col-span-full' ref={sentinelScrollRef} />
                     {isFetching && (
                         <div className='pt-4 col-span-full '>

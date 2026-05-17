@@ -47,7 +47,6 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            {/* Video Controls Top */}
             <VideoControlsTop
                 volume={volume}
                 onVolumeChange={handleVolumeChange}
@@ -56,7 +55,6 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
                 isParentHovered={isHovered}
             />
 
-            {/* Overlay Icons */}
             <VideoOverlayIcons
                 showPlayPauseIcon={showPlayPauseIcon}
                 showMutedIcon={showMutedIcon}
@@ -64,7 +62,6 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
                 isMuted={isMuted}
             />
 
-            {/* Video Element */}
             <video
                 onClick={handlePlayPause}
                 className='w-full h-full rounded-2xl object-contain  bg-accent transition-all duration-400'
@@ -77,7 +74,6 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
                 <source src={post.medias[0].url} type='video/mp4' />
             </video>
 
-            {/* Video Controls Bottom */}
             <VideoControlsBottom
                 post={post}
                 author={post.author}

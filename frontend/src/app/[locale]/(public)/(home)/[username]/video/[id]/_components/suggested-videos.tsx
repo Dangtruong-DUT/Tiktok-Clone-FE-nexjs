@@ -37,7 +37,6 @@ export default function SuggestedVideos() {
                         <CardVideoItem post={post} isCurrentlyPlaying={index === currentIndex} />
                     </div>
                 ))}
-                {/* Sentinel để lắng nghe*/}
                 <div className='h-px bg-transparent' ref={sentinelScrollRef} />
                 {isFetching && (
                     <div className='pt-4 col-span-full'>

@@ -1,4 +1,3 @@
-// Values must match backend PHP enums exactly
 export const ADMIN_ACTIONS = {
     BAN: 'ban',
     UNBAN: 'unban',

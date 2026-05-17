@@ -67,12 +67,8 @@ export default function PhotoEditorDialog({ photoUrl, isVisible, setVisible, onC
         (x: number, y: number, scaleValue: number = scale) => {
             const scaledWidth = size.width * scaleValue
             const scaledHeight = size.height * scaleValue
-
-            // Calculate the offset needed because scaling happens from center
             const scaleOffsetX = (scaledWidth - size.width) / 2
             const scaleOffsetY = (scaledHeight - size.height) / 2
-
-            // Calculate bounds considering the scale offset
             const maxX = scaleOffsetX
             const maxY = scaleOffsetY
             const minX = 360 - scaledWidth + scaleOffsetX
@@ -95,7 +91,7 @@ export default function PhotoEditorDialog({ photoUrl, isVisible, setVisible, onC
 
     const handleSliderChange = useCallback(
         (value: number) => {
-            const scaleValue = 1 + (value / 100) * 2 // Scale from 1 to 3
+            const scaleValue = 1 + (value / 100) * 2
             setScale(scaleValue)
             const { x, y } = clampPosition(posRef.current.x, posRef.current.y, scaleValue)
             posRef.current = { x, y }
@@ -179,11 +175,8 @@ export default function PhotoEditorDialog({ photoUrl, isVisible, setVisible, onC
                     displayRatio = naturalHeight / displayHeight
                 }
 
-                // Vị trí hiện tại của ảnh trong viewport (360x360)
                 const currentX = posRef.current.x
                 const currentY = posRef.current.y
-
-                // Khu vực crop trong hệ tọa độ hiển thị (viewport 360x360)
                 const cropStartX = -currentX
                 const cropStartY = -currentY
                 const cropWidth = 360 / scale
@@ -279,7 +272,7 @@ export default function PhotoEditorDialog({ photoUrl, isVisible, setVisible, onC
                     <span className='text-sm font-medium'>Zoom</span>
                     <Slider
                         onChange={handleSliderChange}
-                        value={((scale - 1) / 2) * 100} // Convert scale (1-3) to slider value (0-100)
+                        value={((scale - 1) / 2) * 100}
                     />
                 </div>
 

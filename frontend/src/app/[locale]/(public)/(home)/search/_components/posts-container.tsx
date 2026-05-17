@@ -80,7 +80,6 @@ export default function PostsContainer({
                 )}
             </div>
 
-            {/* Sentinel để lắng nghe*/}
             <div className='h-px bg-transparent' ref={sentinelForPostsResultScrollRef} />
         </div>
     )

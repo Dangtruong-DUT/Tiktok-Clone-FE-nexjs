@@ -1,4 +1,3 @@
-// Values match backend NotificationTabEnum
 export const NOTIFICATION_TABS = {
     ALL: 'all',
     LIKES: 'likes',

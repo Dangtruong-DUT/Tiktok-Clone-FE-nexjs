@@ -43,7 +43,6 @@ export function AdminTableToolbar({
 
     return (
         <div className={cn('flex flex-wrap items-center gap-2 px-4 py-2.5', className)}>
-            {/* Search input */}
             <div className='relative w-full min-w-0 max-w-xs flex-1'>
                 <Search className='pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground/50' />
                 <Input
@@ -66,10 +65,8 @@ export function AdminTableToolbar({
                 </button>
             </div>
 
-            {/* Filters */}
             {filters}
 
-            {/* Search button */}
             <Button
                 size='sm'
                 onClick={handleSubmit}
@@ -80,7 +77,6 @@ export function AdminTableToolbar({
                 <span className='hidden sm:inline ml-1.5'>{t('common.search')}</span>
             </Button>
 
-            {/* Reset filters */}
             {onResetFilters && (
                 <button
                     type='button'

@@ -23,7 +23,6 @@ export const DeleteCommentReqSchema = z
 export type GetAdminCommentsParams = z.infer<typeof GetAdminCommentsParamsSchema>
 export type DeleteCommentReq = z.infer<typeof DeleteCommentReqSchema>
 
-// Form schemas (client-side validation)
 export const DeleteCommentFormSchema = z.object({
     reason: z.string().min(10)
 })

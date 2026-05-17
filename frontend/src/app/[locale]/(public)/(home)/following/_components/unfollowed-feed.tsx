@@ -70,7 +70,6 @@ export default function UnfollowedFeed({
                     </div>
                 )}
             </div>
-            {/* Sentinel để lắng nghe*/}
             <div className='h-px bg-transparent' ref={sentinelScrollRef} />
         </>
     )

@@ -83,12 +83,10 @@ export function DeleteCommentDialog({
                 </DialogHeader>
 
                 <div className='space-y-4 py-4'>
-                    {/* Warning Box */}
                     <div className='bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3'>
                         <p className='text-sm text-red-800 dark:text-red-200'>{t('comments.dialogs.deleteWarning')}</p>
                     </div>
 
-                    {/* Reason Field */}
                     <div className='space-y-2'>
                         <Label htmlFor='reason' className='text-sm font-semibold'>
                             {t('comments.labels.reason')}

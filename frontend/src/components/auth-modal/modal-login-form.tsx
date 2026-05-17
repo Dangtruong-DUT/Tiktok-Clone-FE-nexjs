@@ -62,7 +62,6 @@ export function ModalLoginForm() {
                 >
                     {loginResult.isLoading ? <Loader className='animate-spin font-semibold text-brand' /> : t('submit')}
                 </Button>
-                {/* Hidden close button for programmatic closing */}
                 <DialogClose ref={closeButtonRef} className='hidden' />
             </form>
         </Form>

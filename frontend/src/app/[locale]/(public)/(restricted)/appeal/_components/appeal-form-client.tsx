@@ -383,12 +383,10 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
                             )}
                         </div>
 
-                        {/* Resource Preview — edit flow */}
                         {isEditFlow && existingAppealInfo?.resource_preview && (
                             <ResourcePreviewInline preview={existingAppealInfo.resource_preview} />
                         )}
 
-                        {/* Resource Preview — new flow */}
                         {isNewFlow &&
                             (isLoadingPreview ? (
                                 <div className='h-16 animate-pulse rounded-xl bg-slate-100' />

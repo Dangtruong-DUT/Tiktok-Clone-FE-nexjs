@@ -40,7 +40,6 @@ export function AdminTopbar({ title, breadcrumbs, actions, onToggleSidebar }: Ad
     return (
         <header className='sticky top-0 z-30 border-b bg-background/95 backdrop-blur-sm'>
             <div className='flex h-14 items-center gap-2 px-4 md:px-5'>
-                {/* Toggle sidebar */}
                 <Button
                     variant='ghost'
                     size='icon'
@@ -51,7 +50,6 @@ export function AdminTopbar({ title, breadcrumbs, actions, onToggleSidebar }: Ad
                     <PanelLeft className='h-4 w-4' />
                 </Button>
 
-                {/* Breadcrumbs + Title */}
                 <div className='flex-1 min-w-0'>
                     {breadcrumbs && breadcrumbs.length > 0 && (
                         <Breadcrumb>
@@ -76,10 +74,8 @@ export function AdminTopbar({ title, breadcrumbs, actions, onToggleSidebar }: Ad
                     {title && <h1 className={'sr-only'}>{title}</h1>}
                 </div>
 
-                {/* Page actions slot */}
                 {actions && <div className='flex shrink-0 items-center gap-2'>{actions}</div>}
 
-                {/* Controls */}
                 <div className='flex items-center gap-1 shrink-0'>
                     <Popover>
                         <PopoverTrigger asChild>

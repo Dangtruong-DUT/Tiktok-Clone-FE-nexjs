@@ -26,7 +26,6 @@ interface AdminHeaderProps {
 export function AdminHeader({ title, description, breadcrumbs, actions, className }: AdminHeaderProps) {
     return (
         <div className={cn('border-b bg-background px-4 md:px-6 py-4', className)}>
-            {/* Breadcrumbs */}
             {breadcrumbs && breadcrumbs.length > 0 && (
                 <Breadcrumb className='mb-2'>
                     <BreadcrumbList>
@@ -48,7 +47,6 @@ export function AdminHeader({ title, description, breadcrumbs, actions, classNam
                 </Breadcrumb>
             )}
 
-            {/* Title + Actions */}
             <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
                 <div className='min-w-0'>
                     <h1 className='text-lg font-semibold tracking-tight sm:text-xl'>{title}</h1>

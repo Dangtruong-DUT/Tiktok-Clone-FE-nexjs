@@ -136,7 +136,6 @@ export default function VideoDescription({ post, className }: VideoDescriptionPr
                 />
             </div>
 
-            {/* Video Stats and Actions */}
             <div className='flex items-center justify-between mb-4'>
                 <div className='flex items-center gap-4'>
                     <ActionButton

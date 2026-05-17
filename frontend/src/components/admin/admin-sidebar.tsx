@@ -70,7 +70,6 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
                 )}
             >
                 <div className='flex flex-col h-full'>
-                    {/* ── Logo header ── */}
                     <div
                         className={cn(
                             'shrink-0 flex items-center h-14 border-b border-white/8',
@@ -107,7 +106,6 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
                         )}
                     </div>
 
-                    {/* ── Navigation ── */}
                     <nav className='flex-1 overflow-y-auto py-3 px-2'>
                         {!collapsed && (
                             <p className='mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500'>
@@ -165,11 +163,9 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
                         </div>
                     </nav>
 
-                    {/* ── Footer ── */}
                     <div className='shrink-0 border-t border-white/8 px-2 py-3 space-y-0.5'>
                         {collapsed ? (
                             <>
-                                {/* Theme toggle — icon only */}
                                 <Tooltip>
                                     <TooltipTrigger asChild>
                                         <DropdownMenu>
@@ -196,7 +192,6 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
                                     </TooltipContent>
                                 </Tooltip>
 
-                                {/* Back to site */}
                                 <Tooltip>
                                     <TooltipTrigger asChild>
                                         <Link
@@ -213,7 +208,6 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
                             </>
                         ) : (
                             <>
-                                {/* Language + Theme row */}
                                 <div className='flex items-center gap-1.5 px-0.5'>
                                     <Select value={locale} onValueChange={onLocaleChange} disabled={isLocalePending}>
                                         <SelectTrigger className='h-8 flex-1 border-0 bg-white/5 text-xs text-zinc-400 hover:bg-white/8 hover:text-zinc-200 focus:ring-0 focus:ring-offset-0 transition-colors [&>svg]:text-zinc-500'>

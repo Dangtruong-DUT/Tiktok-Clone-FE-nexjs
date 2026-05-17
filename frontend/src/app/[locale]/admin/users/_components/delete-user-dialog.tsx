@@ -73,14 +73,12 @@ export function DeleteUserDialog({ open, userUuid, username, onOpenChange, onSuc
                 </DialogHeader>
 
                 <div className='space-y-4 py-4'>
-                    {/* Warning Box */}
                     <div className='bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3'>
                         <p className='text-sm text-yellow-800 dark:text-yellow-200'>
                             {t('users.dialogs.deleteWarning')}
                         </p>
                     </div>
 
-                    {/* Reason Field */}
                     <div className='space-y-2'>
                         <Label htmlFor='reason' className='text-sm font-semibold'>
                             {t('users.labels.reason')}

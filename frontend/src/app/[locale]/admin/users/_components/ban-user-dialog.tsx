@@ -77,7 +77,6 @@ export function BanUserDialog({ open, userUuid, username, onOpenChange, onSucces
                 </DialogHeader>
 
                 <div className='space-y-4 py-4'>
-                    {/* Reason Field */}
                     <div className='space-y-2'>
                         <Label htmlFor='reason' className='text-sm font-semibold'>
                             {t('users.labels.reason')}
@@ -95,7 +94,6 @@ export function BanUserDialog({ open, userUuid, username, onOpenChange, onSucces
                         )}
                     </div>
 
-                    {/* Duration Field */}
                     <div className='space-y-2'>
                         <Label htmlFor='duration' className='text-sm font-semibold'>
                             {t('users.labels.duration')}

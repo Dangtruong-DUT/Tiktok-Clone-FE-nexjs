@@ -1,4 +1,3 @@
-// Values must match backend PHP enums exactly
 export const USER_STATUS = {
     ACTIVE: 'active',
     BANNED: 'banned',
