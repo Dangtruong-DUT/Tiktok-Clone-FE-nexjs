@@ -24,7 +24,6 @@ const LOGOUT_LOADING_KEY = 'logout'
 
 export function useLoginWithEmail() {
     const router = useRouter()
-    const dispatch = useAppDispatch()
 
     const [loginMutate, loginResult] = useLoginMutation()
 
@@ -43,7 +42,6 @@ export function useLoginWithEmail() {
                 const destination = result.data.user.role === Role.SUPER_ADMIN ? '/admin' : '/'
                 router.push(destination)
                 toast.success(result.message)
-                clearStore(dispatch)
             } catch (error) {
                 handleFormError<LoginReqBodyType>({
                     error,
@@ -51,7 +49,7 @@ export function useLoginWithEmail() {
                 })
             }
         },
-        [loginMutate, router, form.setError, dispatch]
+        [loginMutate, router, form.setError]
     )
     return {
         form,
@@ -62,7 +60,6 @@ export function useLoginWithEmail() {
 
 export function useRegisterWithEmail() {
     const router = useRouter()
-    const dispatch = useAppDispatch()
 
     const [registerMutate, registerResult] = useRegisterMutation()
 
@@ -83,7 +80,6 @@ export function useRegisterWithEmail() {
                 const result = await registerMutate(data).unwrap()
                 router.push('/')
                 toast.success(result.message)
-                clearStore(dispatch)
             } catch (error) {
                 handleFormError<RegisterReqBodyType>({
                     error,
@@ -91,7 +87,7 @@ export function useRegisterWithEmail() {
                 })
             }
         },
-        [registerMutate, router, form.setError, dispatch]
+        [registerMutate, router, form.setError]
     )
 
     return {
@@ -106,6 +102,7 @@ interface UseLogoutProps {
     onSuccess?: (data: LogoutResType) => void
     onError?: (error: unknown) => void
 }
+
 export function useLogout(props?: UseLogoutProps) {
     const [logoutMutate, logoutResult] = useLogoutMutation()
     const router = useRouter()
@@ -115,11 +112,11 @@ export function useLogout(props?: UseLogoutProps) {
         props?.onLogout?.()
         dispatch(startLoadingByKey(LOGOUT_LOADING_KEY))
         try {
+            clearStore(dispatch)
             const res = await logoutMutate().unwrap()
             router.replace('/')
             router.refresh()
             props?.onSuccess?.(res)
-            clearStore(dispatch)
         } catch (error) {
             logger.error('Logout error:', error)
             props?.onError?.(error)

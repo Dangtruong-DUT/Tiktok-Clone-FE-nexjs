@@ -7,7 +7,7 @@ import { SearchParamsLoader, useSearchParamsLoader } from '@/components/searchpa
 import { useAppDispatch } from '@/store/hooks'
 import { useRouter } from '@/i18n/navigation'
 import { useVerifyEmailMutation } from '@/store/services/auth.service'
-import { setRole, tokenReceived } from '@/store/features/authSlice'
+import { setAuthenticated, setRole, setUserProfile } from '@/store/features/authSlice'
 import { useCallback, useEffect, useState } from 'react'
 import { logger } from '@/utils/logger'
 export default function VerifyPage() {
@@ -25,9 +25,10 @@ export default function VerifyPage() {
         async (token: string) => {
             try {
                 const response = await verifyEmailMutate({ email_verify_token: token }).unwrap()
-                const { access_token, refresh_token, user } = response.data
-                dispatch(tokenReceived({ access_token, refresh_token }))
+                const { user } = response.data
+                dispatch(setAuthenticated(true))
                 dispatch(setRole(user.role))
+                dispatch(setUserProfile(user))
                 router.push('/')
                 setVerifyStatus('success')
             } catch (error) {

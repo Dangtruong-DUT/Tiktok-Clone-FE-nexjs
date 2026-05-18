@@ -80,7 +80,7 @@ class AuthController extends Controller
      */
     public function logout(LogoutRequest $request): \Illuminate\Http\Response
     {
-        $refreshToken = $request->input('refresh_token');
+        $refreshToken = $request->input('refresh_token') ?? $request->cookie('refresh_token');
         $this->authService->logout($refreshToken);
 
         return ApiResponse::noContent();

@@ -13,7 +13,7 @@ class LogoutRequest extends BaseRequest
     {
 
         return $this->applyBaseRules([
-            'refresh_token' => [self::REQUIRED],
+            'refresh_token' => ['nullable', 'string'],
         ]);
     }
 }

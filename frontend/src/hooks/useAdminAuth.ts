@@ -2,24 +2,28 @@
 
 import { useEffect } from 'react'
 import { useAppSelector } from '@/store/hooks'
+import { useAppContext } from '@/provider/app-provider'
+import { useRouter } from 'next/navigation'
 import { useLocale } from 'next-intl'
-import { redirect } from 'next/navigation'
 import { Role } from '@/constants/enum'
 
 export function useAdminAuth() {
-    const { role } = useAppSelector((state) => state.auth)
+    const { role, isAuthenticated } = useAppSelector((state) => state.auth)
+    const { authStatus } = useAppContext()
+    const router = useRouter()
     const locale = useLocale()
 
     const isAdmin = role === Role.SUPER_ADMIN
 
     useEffect(() => {
-        if (role !== undefined && !isAdmin) {
-            redirect(`/${locale}`)
+        if (authStatus !== 'ready') return
+        if (!isAuthenticated || !isAdmin) {
+            router.replace(`/${locale}`)
         }
-    }, [isAdmin, role, locale])
+    }, [isAdmin, isAuthenticated, authStatus, locale, router])
 
     return {
         isAdmin,
-        isLoading: role === undefined
+        isLoading: authStatus !== 'ready'
     }
 }
