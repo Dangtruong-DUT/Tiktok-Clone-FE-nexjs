@@ -6,6 +6,19 @@ use App\Http\Requests\BaseRequest;
 
 class LogoutRequest extends BaseRequest
 {
+
+    /**
+     * prepare for validation: merge cookies into request data
+     *
+     * @return void
+     */
+    protected function prepareForValidation() {
+        parent::prepareForValidation();
+        $cookies = request()->cookies->all();
+        $this->merge($cookies);
+    }
+
+
     /**
      * set rules
      */
@@ -13,7 +26,7 @@ class LogoutRequest extends BaseRequest
     {
 
         return $this->applyBaseRules([
-            'refresh_token' => [self::REQUIRED],
+            'refresh_token' => [self::STRING],
         ]);
     }
 }

@@ -9,6 +9,7 @@ import { ThemeProvider } from '@/provider/theme-provider'
 import { AppProvider } from '@/provider/app-provider'
 import StoreProvider from '@/provider/store-provider'
 import envConfig from '@/config/app.config'
+import { cookies } from 'next/headers'
 
 export function generateStaticParams() {
     return routing.locales.map((locale) => ({ locale }))
@@ -72,12 +73,15 @@ export default async function LocaleLayout({
         notFound()
     }
 
+    const cookieStore = await cookies()
+    const hasAccessToken = !!cookieStore.get('access_token')?.value
+
     return (
         <html lang={locale} suppressHydrationWarning>
             <body className={`${tiktokDisplayFont.variable} ${tiktokFont.variable} antialiased`}>
                 <NextIntlClientProvider>
                     <StoreProvider>
-                        <AppProvider>
+                        <AppProvider initialAuthenticated={hasAccessToken}>
                             <ThemeProvider
                                 attribute='class'
                                 defaultTheme='system'

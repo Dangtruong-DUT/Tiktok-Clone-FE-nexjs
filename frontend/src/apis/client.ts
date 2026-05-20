@@ -5,8 +5,6 @@ import { BusinessException } from '@/exceptions/BussinessException.exception'
 import { HttpException } from '@/exceptions/HttpException.exception'
 import { redirect } from '@/i18n/navigation'
 
-import { getLocale } from 'next-intl/server'
-
 const isClient = typeof window !== 'undefined'
 
 export type CustomOptionsType = RequestInit & { baseUrl?: string }
@@ -48,12 +46,14 @@ export async function clientRequest<response>({ method, url, options = {} }: Req
         if (isClient) throw error
 
         if (error instanceof HttpException && error.status === HTTP_STATUS.UNAUTHORIZED) {
-            const token = (options.headers as any)?.Authorization?.replace('Bearer ', '') || ''
-            const locale = await getLocale()
-            redirect({
-                href: `/logout?accessToken=${token}`,
-                locale
-            })
+            const [{ cookies }, { getLocale }] = await Promise.all([
+                import('next/headers'),
+                import('next-intl/server')
+            ])
+            const [cookieStore, locale] = await Promise.all([cookies(), getLocale()])
+            cookieStore.delete('access_token')
+            cookieStore.delete('refresh_token')
+            redirect({ href: '/login', locale })
         }
         throw error
     }

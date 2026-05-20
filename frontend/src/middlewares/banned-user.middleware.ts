@@ -32,7 +32,7 @@ export function bannedUserMiddleware({
         const bannedUntil = payload.ban_until
         const remainingDays = payload.ban_remaining_days
 
-        const targetUrl = new URL(`${locale}/banned`, request.url)
+        const targetUrl = new URL(`/${locale}/banned`, request.url)
         if (bannedUntil) {
             targetUrl.searchParams.set('ban_until', bannedUntil)
         }

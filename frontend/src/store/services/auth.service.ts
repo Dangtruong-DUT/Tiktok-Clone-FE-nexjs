@@ -1,5 +1,5 @@
 import { NEXT_API_ENDPOINT } from '@/config/endpoint.config'
-import { NextWithAuthBaseQuery } from '@/store/services/client'
+import { BffBaseQuery } from '@/store/services/client'
 import {
     LoginResponseType,
     LogoutResType,
@@ -12,7 +12,7 @@ import { VerifyEmailReqBodyType } from '@/types/dtos/user/user-request.dto'
 import { createApi } from '@reduxjs/toolkit/query/react'
 
 export const AuthApi = createApi({
-    baseQuery: NextWithAuthBaseQuery,
+    baseQuery: BffBaseQuery,
     reducerPath: 'AuthApi',
     refetchOnReconnect: true,
     endpoints: (builder) => ({

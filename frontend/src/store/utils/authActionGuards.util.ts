@@ -60,47 +60,6 @@ export function isSignUpMutationAction(action: unknown): action is {
     )
 }
 
-export function isTokenReceivedAction(
-    action: unknown
-): action is { type: string; payload: { access_token: string; refresh_token: string } } {
-    return (
-        typeof action === 'object' &&
-        action !== null &&
-        'type' in action &&
-        action.type === 'auth/tokenReceived' &&
-        'payload' in action &&
-        typeof action.payload === 'object' &&
-        action.payload !== null &&
-        'access_token' in action.payload &&
-        'refresh_token' in action.payload
-    )
-}
-
-export function isSetAccessTokenAction(action: unknown): action is { type: string; payload: string } {
-    return (
-        typeof action === 'object' &&
-        action !== null &&
-        'type' in action &&
-        action.type === 'auth/setAccessToken' &&
-        'payload' in action &&
-        typeof action.payload === 'string'
-    )
-}
-
-export function isSetUserProfileAction(action: unknown): action is {
-    type: string
-    payload: UserAuthType | null
-} {
-    return (
-        typeof action === 'object' &&
-        action !== null &&
-        'type' in action &&
-        action.type === 'auth/setUserProfile' &&
-        'payload' in action &&
-        (typeof action.payload === 'object' || action.payload === null)
-    )
-}
-
 export function isGetMeQueryAction(action: unknown): action is {
     type: string
     meta: { arg: { endpointName: 'getMe' } }
@@ -113,11 +72,5 @@ export function isGetMeQueryAction(action: unknown): action is {
         'payload' in action &&
         typeof action.payload === 'object' &&
         action.payload !== null
-    )
-}
-
-export function isSetLoggedOutAction(action: unknown): action is { type: string } {
-    return (
-        typeof action === 'object' && action !== null && 'type' in action && action.type === 'auth/setLoggedOutAction'
     )
 }

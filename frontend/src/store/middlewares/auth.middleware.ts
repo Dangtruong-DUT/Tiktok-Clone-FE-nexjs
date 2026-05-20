@@ -1,51 +1,27 @@
-import clientSessionToken from '@/services/storage/clientSessionToken'
 import { storeApiType } from '@/store'
-import { setLoggedOutAction, setRole, setUserProfile, tokenReceived } from '@/store/features/authSlice'
+import { setAuthenticated, setLoggedOutAction, setRole, setUserProfile } from '@/store/features/authSlice'
 import {
     isGetMeQueryAction,
     isLoginMutationAction,
     isLogoutMutationAction,
-    isSetLoggedOutAction,
-    isSetUserProfileAction,
-    isSignUpMutationAction,
-    isTokenReceivedAction
+    isSignUpMutationAction
 } from '@/store/utils/authActionGuards.util'
 import { Middleware } from '@reduxjs/toolkit'
 
 export const authMiddleware: Middleware = (storeAPI: storeApiType) => (next) => (action) => {
-    if (isTokenReceivedAction(action)) {
-        const { access_token, refresh_token } = action.payload
-        clientSessionToken.setAccessToken(access_token)
-        clientSessionToken.setRefreshToken(refresh_token)
-        return next(action)
-    }
-
-    if (isSetUserProfileAction(action)) {
-        const userProfile = action.payload
-        clientSessionToken.setUserProfile(userProfile)
-        return next(action)
-    }
-
-    if (isSetLoggedOutAction(action)) {
-        clientSessionToken.clearToken()
-        return next(action)
-    }
-
     if (isLoginMutationAction(action)) {
-        const { user, access_token, refresh_token } = action.payload.data
-        storeAPI.dispatch(tokenReceived({ access_token, refresh_token }))
+        const { user } = action.payload.data
+        storeAPI.dispatch(setAuthenticated(true))
         storeAPI.dispatch(setRole(user.role))
         storeAPI.dispatch(setUserProfile(user))
         return next(action)
     }
 
     if (isSignUpMutationAction(action)) {
-        const { user, access_token, refresh_token } = action.payload.data
-        const role = user.role
-        storeAPI.dispatch(tokenReceived({ access_token, refresh_token }))
+        const { user } = action.payload.data
+        storeAPI.dispatch(setAuthenticated(true))
+        storeAPI.dispatch(setRole(user.role))
         storeAPI.dispatch(setUserProfile(user))
-        storeAPI.dispatch(setRole(role))
-
         return next(action)
     }
 
@@ -55,9 +31,11 @@ export const authMiddleware: Middleware = (storeAPI: storeApiType) => (next) => 
     }
 
     if (isGetMeQueryAction(action)) {
-        if (action.payload) {
-            storeAPI.dispatch(setUserProfile(action.payload.data))
-            clientSessionToken.setUserProfile(action.payload.data)
+        if (action.payload?.data) {
+            const user = action.payload.data
+            storeAPI.dispatch(setAuthenticated(true))
+            storeAPI.dispatch(setRole(user.role))
+            storeAPI.dispatch(setUserProfile(user))
         }
         return next(action)
     }

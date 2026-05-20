@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
             title: user?.name ? `${user.name} (@${user.username})` : 'Snapi Profile',
             description: user?.bio || `Check out ${user?.name || user?.username}'s profile on Snapi`,
             type: 'profile',
-            url: `${process.env.NEXT_PUBLIC_URL}${locale}/@${cleanUsername}`,
+            url: `${process.env.NEXT_PUBLIC_URL}/${locale}/@${cleanUsername}`,
             siteName: 'Snapi',
             locale
         },

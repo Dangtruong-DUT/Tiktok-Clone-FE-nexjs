@@ -1,60 +1,39 @@
 'use client'
 
-import { SearchParamsLoader, useSearchParamsLoader } from '@/components/searchparams-loader'
-import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { handleRefreshToken } from '@/lib/auth'
 import { useLogoutMutation } from '@/store/services/auth.service'
-import { tokenReceived } from '@/store/features/authSlice'
-import { useRouter } from 'next/navigation'
-import { useCallback, useEffect } from 'react'
 import { logger } from '@/utils/logger'
+import { useLocale } from 'next-intl'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
-export default function RefreshToken() {
-    const refreshTokenFormStore = useAppSelector((state) => state.auth.refresh_token)
-    const { searchParams, setSearchParams } = useSearchParamsLoader()
-    const redirectQuery = searchParams?.get('redirect')
-    const [logoutMutate] = useLogoutMutation()
+interface RefreshTokenProps {
+    redirectPath: string
+}
+
+export default function RefreshToken({ redirectPath }: RefreshTokenProps) {
     const router = useRouter()
-    const dispatch = useAppDispatch()
-
-    const handleLogout = useCallback(async () => {
-        try {
-            await logoutMutate()
-            router.push('/')
-        } catch (error) {
-            logger.error('Error logging out:', error)
-        }
-    }, [logoutMutate, router])
-
-    const refreshToken = useCallback(async () => {
-        await handleRefreshToken({
-            onSuccess: (data) => {
-                const { access_token, refresh_token } = data.data
-                dispatch(tokenReceived({ access_token, refresh_token }))
-                if (redirectQuery?.startsWith('/')) {
-                    router.replace(redirectQuery)
-                    return
-                }
-                router.replace('/')
-            },
-            onError: async () => {
-                try {
-                    await logoutMutate().unwrap()
-                } catch (error) {
-                    logger.error('Error logging out:', error)
-                } finally {
-                    router.push('/')
-                }
-            }
-        })
-    }, [dispatch, logoutMutate, router, redirectQuery])
+    const locale = useLocale()
+    const [logoutMutate] = useLogoutMutation()
 
     useEffect(() => {
-        if (refreshTokenFormStore && refreshToken) {
-            refreshToken()
-        } else {
-            handleLogout()
-        }
-    }, [refreshToken, refreshTokenFormStore, handleLogout])
-    return <SearchParamsLoader onParamsReceived={setSearchParams} />
+        handleRefreshToken({
+            onSuccess: () => {
+                // Force full page reload so the server layout re-reads the new
+                // access_token cookie and sets initialAuthenticated=true,
+                // which triggers getMe and restores isAuthenticated in Redux.
+                window.location.replace(redirectPath)
+            },
+            onError: async (error) => {
+                try {
+                    await logoutMutate().unwrap()
+                } catch {
+                    logger.error('Failed to logout after refresh token failure', error)
+                }
+                router.replace(`/${locale}/login`)
+            }
+        })
+    }, [router, redirectPath, logoutMutate, locale])
+
+    return null
 }

@@ -3,6 +3,7 @@
 use App\Exceptions\http\BaseException;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\CheckUserStatus;
+use App\Http\Middleware\CookieToBearer;
 use App\Http\Middleware\ForceJsonResponse;
 use App\Http\Response\ApiResponse;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -33,6 +34,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->append([
+            CookieToBearer::class,
             ForceJsonResponse::class,
         ]);
     })
