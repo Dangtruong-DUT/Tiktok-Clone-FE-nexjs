@@ -4,6 +4,8 @@ import { HTTP_STATUS } from '@/constants/api/http-status'
 import { BusinessException } from '@/exceptions/BussinessException.exception'
 import { HttpException } from '@/exceptions/HttpException.exception'
 import { redirect } from '@/i18n/navigation'
+import { cookies } from 'next/headers'
+import { getLocale } from 'next-intl/server'
 
 const isClient = typeof window !== 'undefined'
 
@@ -46,10 +48,6 @@ export async function clientRequest<response>({ method, url, options = {} }: Req
         if (isClient) throw error
 
         if (error instanceof HttpException && error.status === HTTP_STATUS.UNAUTHORIZED) {
-            const [{ cookies }, { getLocale }] = await Promise.all([
-                import('next/headers'),
-                import('next-intl/server')
-            ])
             const [cookieStore, locale] = await Promise.all([cookies(), getLocale()])
             cookieStore.delete('access_token')
             cookieStore.delete('refresh_token')

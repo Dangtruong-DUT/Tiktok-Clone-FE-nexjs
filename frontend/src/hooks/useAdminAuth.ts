@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { useAppSelector } from '@/store/hooks'
 import { useAppContext } from '@/provider/app-provider'
+import { useRouter } from 'next/navigation'
 import { useLocale } from 'next-intl'
 import { Role } from '@/constants/enum'
 import { useRouter } from '@/i18n/navigation'
@@ -18,7 +19,7 @@ export function useAdminAuth() {
     useEffect(() => {
         if (authStatus !== 'ready') return
         if (!isAuthenticated || !isAdmin) {
-            router.replace('/')
+            router.replace(`/${locale}`)
         }
     }, [isAdmin, isAuthenticated, authStatus, locale, router])
 

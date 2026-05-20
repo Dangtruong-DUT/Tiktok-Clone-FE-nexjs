@@ -37,6 +37,10 @@ return Application::configure(basePath: dirname(__DIR__))
             CookieToBearer::class,
             ForceJsonResponse::class,
         ]);
+
+        $middleware->appendToGroup('api', [
+            CookieToBearer::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
 

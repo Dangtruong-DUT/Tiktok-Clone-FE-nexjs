@@ -112,7 +112,6 @@ export function useLogout(props?: UseLogoutProps) {
         props?.onLogout?.()
         try {
             clearStore(dispatch)
-            dispatch(startLoadingByKey(LOGOUT_LOADING_KEY))
             const res = await logoutMutate().unwrap()
             router.replace('/')
             router.refresh()
