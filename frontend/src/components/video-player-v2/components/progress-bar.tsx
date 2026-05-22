@@ -19,10 +19,17 @@ function ProgressBar({ currentTime, duration, className, onActive, onSeek }: Pro
         if (!slider) return currentTime
 
         const rect = slider.getBoundingClientRect()
-        const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
+        const clientX = getClientXFromEvent(e)
         const offsetX = Math.min(Math.max(clientX - rect.left, 0), rect.width)
 
         return (offsetX / rect.width) * duration
+    }
+
+    const getClientXFromEvent = (e: MouseEvent | TouchEvent): number => {
+        if ('touches' in e) {
+            return e.touches[0]?.clientX ?? 0
+        }
+        return (e as MouseEvent).clientX
     }
 
     const handleStart = (e: MouseEvent | TouchEvent) => {

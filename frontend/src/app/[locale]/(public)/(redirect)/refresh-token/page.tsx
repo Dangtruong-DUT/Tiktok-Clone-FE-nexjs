@@ -2,7 +2,6 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import RefreshToken from './refresh-token'
 import Loading from '@/components/lottie-icons/loading'
-import { redirect } from '@/i18n/navigation'
 import { LocalesType } from '@/i18n/config'
 
 interface RefreshTokenPageProps {

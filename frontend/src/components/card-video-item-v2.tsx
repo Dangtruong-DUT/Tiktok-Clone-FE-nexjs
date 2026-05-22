@@ -95,7 +95,7 @@ export default function CardVideoItem({ post, className }: { post: TikTokPostTyp
                         preload='metadata'
                         className=' block w-full h-full object-cover'
                     >
-                        <source src={post.medias[0].url} />
+                        <source src={post?.medias?.at(0)?.url} />
                     </video>
                 </div>
             </Link>

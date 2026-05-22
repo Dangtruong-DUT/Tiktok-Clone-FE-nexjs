@@ -67,7 +67,7 @@ export default function CardVideoItem({
                         loop
                         preload='metadata'
                         className='w-full h-full object-contain'
-                        src={post.medias[0].url}
+                        src={post?.medias?.at(0)?.url}
                     />
                 </div>
 

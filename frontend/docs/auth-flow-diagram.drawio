@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-05-22T00:00:00.000Z" agent="Claude-Code" version="21.0.0" type="device">
+  <diagram name="Auth Flow - Current State" id="auth-flow-current">
+    <mxGraphModel dx="1800" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ============================================================ -->
+        <!-- TITLE -->
+        <!-- ============================================================ -->
+        <mxCell id="title-main" value="TikTok Clone — Sơ đồ Auth hiện tại + Vấn đề Bảo mật (Current Auth Flow + Security Issues)"
+          style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#1a1a1a;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="15" width="1560" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- LEGEND -->
+        <!-- ============================================================ -->
+        <mxCell id="leg-bg-title" value="LEGEND"
+          style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=12;fontStyle=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="1090" y="68" width="490" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="leg-browser" value="🌐 Browser (Client)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;fontStyle=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="1090" y="101" width="200" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="leg-nextjs" value="⚙️ Next.js Server (Middleware + BFF)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;fontStyle=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="1300" y="101" width="280" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="leg-laravel" value="🔧 Laravel Server"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;fontStyle=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="1090" y="135" width="200" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="leg-critical" value="🔴 CRITICAL: Lỗ hổng bảo mật nghiêm trọng"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0e0;strokeColor=#cc0000;fontColor=#cc0000;fontSize=10;fontStyle=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="1300" y="135" width="280" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="leg-medium" value="🟠 MEDIUM: Bug / Issue trung bình"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#ff6600;fontColor=#cc4400;fontSize=10;fontStyle=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="1090" y="169" width="200" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="leg-arch" value="🟣 Architecture / Design Issue"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9900ff;fontColor=#9900ff;fontSize=10;fontStyle=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="1300" y="169" width="280" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="leg-good" value="✅ Đúng / Tốt"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#005500;fontSize=10;fontStyle=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="1090" y="203" width="200" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="leg-note" value="⚙️ Nginx proxy: port 9696 (dev), taplamit.tech (prod)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#999999;fontColor=#333333;fontSize=10;"
+          vertex="1" parent="1">
+          <mxGeometry x="1300" y="203" width="280" height="28" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- ACTOR HEADERS (y=68–128) -->
+        <!-- ============================================================ -->
+        <mxCell id="actor-browser" value="🌐 Browser&#xa;(Client Side)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;fontStyle=1;arcSize=5;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="68" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-middleware" value="⚙️ Next.js Middleware&#xa;(src/middleware.ts)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;arcSize=5;"
+          vertex="1" parent="1">
+          <mxGeometry x="260" y="68" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-bff" value="🖥️ Next.js BFF&#xa;(/api/auth/* route handlers)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#006EAF;fontSize=12;fontStyle=1;arcSize=5;"
+          vertex="1" parent="1">
+          <mxGeometry x="500" y="68" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-laravel" value="🔧 Laravel API Server&#xa;(backend)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;arcSize=5;"
+          vertex="1" parent="1">
+          <mxGeometry x="760" y="68" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- LIFELINES (dashed vertical lines) -->
+        <mxCell id="life-browser" value="" style="endArrow=none;dashed=1;dashPattern=6 6;strokeColor=#bbbbbb;strokeWidth=1;"
+          edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="120" y="128" as="sourcePoint" />
+            <mxPoint x="120" y="1840" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="life-middleware" value="" style="endArrow=none;dashed=1;dashPattern=6 6;strokeColor=#bbbbbb;strokeWidth=1;"
+          edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="360" y="128" as="sourcePoint" />
+            <mxPoint x="360" y="1840" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="life-bff" value="" style="endArrow=none;dashed=1;dashPattern=6 6;strokeColor=#bbbbbb;strokeWidth=1;"
+          edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="610" y="128" as="sourcePoint" />
+            <mxPoint x="610" y="1840" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="life-laravel" value="" style="endArrow=none;dashed=1;dashPattern=6 6;strokeColor=#bbbbbb;strokeWidth=1;"
+          edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="860" y="128" as="sourcePoint" />
+            <mxPoint x="860" y="1840" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- FLOW 1: LOGIN / REGISTER (y: 160–620) -->
+        <!-- ============================================================ -->
+        <mxCell id="s1-hdr" value="📌 FLOW 1: LOGIN / REGISTER"
+          style="text;html=1;strokeColor=#555555;fillColor=#f5f5f5;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=13;fontStyle=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="152" width="450" height="28" as="geometry" />
+        </mxCell>
+
+        <!-- Step 1: Browser submits form -->
+        <mxCell id="s1-b1" value="1. User nhập email/pwd&#xa;và submit login form"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="195" width="200" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: Browser → BFF -->
+        <mxCell id="s1-arr1" value="POST /api/auth/login&#xa;{ email, password }"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;fontStyle=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;"
+          edge="1" source="s1-b1" target="s1-bff1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="370" y="220" />
+              <mxPoint x="370" y="220" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 2: BFF receives -->
+        <mxCell id="s1-bff1" value="2. BFF nhận request&#xa;(POST /api/auth/login)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#006EAF;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="500" y="195" width="220" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: BFF → Laravel -->
+        <mxCell id="s1-arr2" value="POST /api/v1/auth/login&#xa;{ email, password }"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;fontStyle=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;"
+          edge="1" source="s1-bff1" target="s1-lv1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Step 3: Laravel validates -->
+        <mxCell id="s1-lv1" value="3. Validate credentials&#xa;Generate JWT access + refresh"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="760" y="195" width="200" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: Laravel → BFF (response) -->
+        <mxCell id="s1-arr3" value="{ access_token, refresh_token, user }"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;fontStyle=2;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;"
+          edge="1" source="s1-lv1" target="s1-bff2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Step 4: BFF decodes JWT (CRITICAL) -->
+        <mxCell id="s1-bff2" value="4. BFF: decodeJwt(access_token)&#xa;    decodeJwt(refresh_token)&#xa;→ lấy .exp để set cookie expires"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#006EAF;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="500" y="290" width="220" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- ISSUE: CRITICAL #1 -->
+        <mxCell id="s1-issue1" value="🔴 CRITICAL #1: jwt.decode() KHÔNG verify signature!&#xa;→ Nếu token bị forge, .exp sai → cookie sai TTL&#xa;→ Cần: jwt.verify(token, LARAVEL_JWT_SECRET)&#xa;📁 jwt.util.ts · login/route.ts · register/route.ts · refresh-token/route.ts"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0e0;strokeColor=#cc0000;fontColor=#cc0000;fontSize=10;fontStyle=1;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="1000" y="280" width="570" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="s1-arr-i1" value="" style="dashed=1;endArrow=open;endFill=0;strokeColor=#cc0000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" source="s1-bff2" target="s1-issue1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Step 5: BFF sets httpOnly cookies -->
+        <mxCell id="s1-bff3" value="5. Set httpOnly cookie:&#xa;   access_token (SameSite=Lax, Secure=true)&#xa;   refresh_token (SameSite=Lax, Secure=true)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#006EAF;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="500" y="390" width="220" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="s1-arr-bff23" value="" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="s1-bff2" target="s1-bff3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- GOOD note about httpOnly -->
+        <mxCell id="s1-good1" value="✅ Cookies là httpOnly → JS không đọc được tokens&#xa;✅ SameSite=Lax, Secure=true → CSRF protection"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#005500;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="1000" y="390" width="380" height="48" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: BFF → Browser (response JSON) -->
+        <mxCell id="s1-arr4" value="Response JSON (có tokens trong body!) + Set-Cookie"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;fontStyle=2;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;"
+          edge="1" source="s1-bff3" target="s1-b2" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="370" y="422" />
+              <mxPoint x="370" y="487" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 6: Browser Redux update -->
+        <mxCell id="s1-b2" value="6. RTK Middleware:&#xa;setAuthenticated(true)&#xa;setRole(user.role)&#xa;setUserProfile(user)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="462" width="200" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- ISSUE: MEDIUM #1 - tokens in JSON body -->
+        <mxCell id="s1-issue2" value="🟠 MEDIUM #1: Tokens vẫn trả trong JSON response body!&#xa;→ JS code có thể đọc access_token và refresh_token từ response&#xa;→ Fix: Chỉ trả { user } trong JSON, KHÔNG trả tokens&#xa;📁 api/auth/login/route.ts:34 · api/auth/register/route.ts:34"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#ff6600;fontColor=#cc4400;fontSize=10;fontStyle=1;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="1000" y="455" width="570" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- FLOW 2: MIDDLEWARE AUTH CHECK (y: 570–970) -->
+        <!-- ============================================================ -->
+        <mxCell id="s2-hdr" value="📌 FLOW 2: NEXT.JS MIDDLEWARE — Auth Check (chạy trước MỌI request)"
+          style="text;html=1;strokeColor=#555555;fillColor=#f5f5f5;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=13;fontStyle=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="558" width="700" height="28" as="geometry" />
+        </mxCell>
+
+        <!-- Step: Browser navigates -->
+        <mxCell id="s2-b1" value="User navigate đến route&#xa;(ví dụ: /profile — private)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="600" width="200" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: Browser → Middleware -->
+        <mxCell id="s2-arr1" value="HTTP Request (cookies auto-gửi kèm)"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;fontStyle=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;"
+          edge="1" source="s2-b1" target="s2-mw1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Step: Middleware reads tokens -->
+        <mxCell id="s2-mw1" value="Middleware:&#xa;reads cookies: access_token, refresh_token&#xa;isAuthenticated = !!refresh_token"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="260" y="600" width="200" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- ISSUE: MEDIUM #2 - no expiry check -->
+        <mxCell id="s2-issue1" value="🟠 MEDIUM #2: isAuthenticated = !!refresh_token — chỉ check sự tồn tại!&#xa;→ refresh_token đã EXPIRED vẫn bị coi là &quot;đã đăng nhập&quot;&#xa;→ User sẽ bị redirected về /refresh-token liên tục nếu access expired&#xa;📁 src/middleware.ts:15 · src/middlewares/auth.middleware.ts:18"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#ff6600;fontColor=#cc4400;fontSize=10;fontStyle=1;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="1000" y="595" width="570" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="s2-arr-i1" value="" style="dashed=1;endArrow=open;endFill=0;strokeColor=#ff6600;" edge="1" source="s2-mw1" target="s2-issue1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Step: Middleware role/banned check -->
+        <mxCell id="s2-mw2" value="Nếu isAuthenticated:&#xa;decodeJwt(refresh_token)&#xa;→ check .role (SUPER_ADMIN?)&#xa;→ check .banned?"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="260" y="700" width="200" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="s2-arr-mw12" value="" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="s2-mw1" target="s2-mw2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ISSUE: CRITICAL #2 - unverified JWT for auth decisions -->
+        <mxCell id="s2-issue2" value="🔴 CRITICAL #2: decodeJwt(refresh_token) KHÔNG verify signature!&#xa;→ Kẻ tấn công có thể tự tạo JWT với role=SUPER_ADMIN trong cookie&#xa;→ Middleware sẽ cho phép truy cập /admin mà không kiểm tra thực tế!&#xa;→ Role/banned phải được ENFORCE tại Laravel, không tại Next.js middleware&#xa;📁 role-check.middleware.ts · banned-user.middleware.ts · guest-route.middleware.ts"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0e0;strokeColor=#cc0000;fontColor=#cc0000;fontSize=10;fontStyle=1;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="1000" y="695" width="570" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="s2-arr-i2" value="" style="dashed=1;endArrow=open;endFill=0;strokeColor=#cc0000;" edge="1" source="s2-mw2" target="s2-issue2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Step: clearToken redirect -->
+        <mxCell id="s2-mw3" value="Nếu !isAuthenticated + private route:&#xa;redirect /login?clearToken=true&amp;redirect=..."
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="260" y="810" width="200" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="s2-arr-mw23" value="" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="s2-mw2" target="s2-mw3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ISSUE: ARCH #1 - clearToken in URL -->
+        <mxCell id="s2-issue3" value="🟣 ARCH #1: clearToken=true trong URL query param&#xa;→ Thông tin lộ qua browser history, server logs, referrer headers&#xa;→ ClearTokenByServer.tsx đọc ?clearToken để dispatch logout Redux&#xa;→ Fix: chỉ cần redirect /login, KHÔNG cần query param&#xa;📁 private-route.middleware.ts · clear-token-by-server.tsx"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9900ff;fontColor=#9900ff;fontSize=10;fontStyle=1;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="1000" y="803" width="570" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s2-arr-i3" value="" style="dashed=1;endArrow=open;endFill=0;strokeColor=#9900ff;" edge="1" source="s2-mw3" target="s2-issue3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- FLOW 3: AUTHENTICATED API CALL (y: 920–1360) -->
+        <!-- ============================================================ -->
+        <mxCell id="s3-hdr" value="📌 FLOW 3: API CALL CÓ XÁC THỰC — Browser gọi trực tiếp Laravel (baseQueryWithReauth)"
+          style="text;html=1;strokeColor=#555555;fillColor=#f5f5f5;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=13;fontStyle=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="910" width="780" height="28" as="geometry" />
+        </mxCell>
+
+        <!-- Step: Component makes call -->
+        <mxCell id="s3-b1" value="React component cần data&#xa;→ RTK Query hook&#xa;(baseQueryWithReauth)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="952" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: Browser → Laravel DIRECT (cross-origin issue) -->
+        <mxCell id="s3-arr-direct" value="GET {NEXT_PUBLIC_API_ENDPOINT}/posts (ví dụ)&#xa;credentials:&#39;include&#39; | KHÔNG có Authorization header!"
+          style="rounded=0;fontSize=10;fontStyle=2;strokeColor=#cc0000;fontColor=#cc0000;startArrow=none;endArrow=open;endFill=1;"
+          edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="220" y="980" as="sourcePoint" />
+            <mxPoint x="760" y="980" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step: Laravel receives (no valid auth) -->
+        <mxCell id="s3-lv1" value="Laravel nhận request:&#xa;- Có cookie? → chỉ gửi nếu cùng origin&#xa;- Không có Authorization header&#xa;- CHƯA CÓ cookie bridge!&#xa;→ Trả 401 Unauthorized"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0e0;strokeColor=#cc0000;fontSize=11;fontStyle=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="760" y="952" width="200" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- ISSUE: CRITICAL #3 - No cookie bridge -->
+        <mxCell id="s3-issue1" value="🔴 CRITICAL #3: Laravel CHƯA có cookie-to-bearer bridge!&#xa;→ API calls có auth SẼ FAIL với 401 Unauthorized&#xa;→ Trong dev (port khác): cookies KHÔNG được gửi (cross-origin)&#xa;→ Trong prod (Nginx same origin): cookies gửi được NHƯNG Laravel không dùng&#xa;→ Fix (Phase 0): Laravel đọc access_token từ cookie nếu không có Bearer header&#xa;📁 src/store/services/client.ts (BackendBaseQuery + baseQueryWithReauth)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0e0;strokeColor=#cc0000;fontColor=#cc0000;fontSize=10;fontStyle=1;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="1000" y="942" width="570" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="s3-arr-i1" value="" style="dashed=1;endArrow=open;endFill=0;strokeColor=#cc0000;" edge="1" source="s3-lv1" target="s3-issue1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: 401 back to browser -->
+        <mxCell id="s3-arr-401" value="401 Unauthorized"
+          style="rounded=0;fontSize=10;fontStyle=2;strokeColor=#cc0000;fontColor=#cc0000;startArrow=none;endArrow=open;endFill=1;"
+          edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="760" y="1060" as="sourcePoint" />
+            <mxPoint x="220" y="1060" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step: Refresh attempt -->
+        <mxCell id="s3-b2" value="baseQueryWithReauth:&#xa;Nhận 401 → try refresh"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="1080" width="200" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: Browser → BFF refresh-token -->
+        <mxCell id="s3-arr-refresh" value="POST /api/auth/refresh-token (BFF)"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;fontStyle=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;"
+          edge="1" source="s3-b2" target="s3-bff1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="610" y="1105" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step: BFF refresh -->
+        <mxCell id="s3-bff1" value="BFF đọc refresh_token cookie&#xa;→ POST Laravel /refresh-token&#xa;→ Nhận tokens mới&#xa;→ Set new httpOnly cookies"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#006EAF;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="500" y="1080" width="220" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: refresh success back to browser -->
+        <mxCell id="s3-arr-ref-ok" value="200 OK (new cookies set)"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;fontStyle=2;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;"
+          edge="1" source="s3-bff1" target="s3-b3" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="370" y="1115" />
+              <mxPoint x="370" y="1200" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step: Retry - still fails -->
+        <mxCell id="s3-b3" value="Retry original request...&#xa;→ VẪN BỊ 401! (cùng vấn đề)&#xa;Sau MAX_REFRESH_RETRIES=2:&#xa;→ POST /api/auth/logout&#xa;→ User bị ĐĂNG XUẤT!"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0e0;strokeColor=#cc0000;fontSize=11;fontStyle=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="1175" width="200" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- ISSUE: MEDIUM #3 - MAX_REFRESH_RETRIES too aggressive -->
+        <mxCell id="s3-issue2" value="🟠 MEDIUM #3: MAX_REFRESH_RETRIES=2 quá ngắn&#xa;→ Transient errors (network fluke) → auto logout!&#xa;→ Sau 2 lần fail BẰNG BẤT KỲ LÝ DO gì → logout người dùng&#xa;📁 src/store/services/client.ts:17"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#ff6600;fontColor=#cc4400;fontSize=10;fontStyle=1;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="1000" y="1165" width="570" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- FLOW 4: LOGOUT (y: 1320–1620) -->
+        <!-- ============================================================ -->
+        <mxCell id="s4-hdr" value="📌 FLOW 4: LOGOUT"
+          style="text;html=1;strokeColor=#555555;fillColor=#f5f5f5;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=13;fontStyle=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="1310" width="300" height="28" as="geometry" />
+        </mxCell>
+
+        <!-- Step: User clicks logout -->
+        <mxCell id="s4-b1" value="User click nút Logout"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="1352" width="200" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: Browser → BFF logout -->
+        <mxCell id="s4-arr1" value="POST /api/auth/logout (RTK Mutation)"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;fontStyle=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;"
+          edge="1" source="s4-b1" target="s4-bff1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="610" y="1375" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step: BFF reads cookie and calls Laravel -->
+        <mxCell id="s4-bff1" value="BFF: đọc access_token + refresh_token&#xa;từ cookie (server-side read)&#xa;→ Delete cookies&#xa;→ Gọi Laravel logout"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#006EAF;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="500" y="1352" width="220" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: BFF → Laravel logout -->
+        <mxCell id="s4-arr2" value="POST /api/v1/auth/logout&#xa;Authorization: Bearer {access_token}&#xa;Body: { refresh_token }"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;fontStyle=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;"
+          edge="1" source="s4-bff1" target="s4-lv1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Step: Laravel invalidates -->
+        <mxCell id="s4-lv1" value="Laravel revoke/blacklist tokens&#xa;→ 200 OK"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="760" y="1352" width="200" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: BFF → Browser (cleared) -->
+        <mxCell id="s4-arr3" value="200 OK + Set-Cookie (empty, max-age=0)"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=0;fontSize=10;fontStyle=2;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;"
+          edge="1" source="s4-bff1" target="s4-b2" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="370" y="1387" />
+              <mxPoint x="370" y="1475" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step: Browser clears Redux -->
+        <mxCell id="s4-b2" value="isLogoutMutationAction:&#xa;setLoggedOutAction()&#xa;→ isAuthenticated=false&#xa;→ role=null, user=null"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="1452" width="200" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- GOOD: logout flow -->
+        <mxCell id="s4-good1" value="✅ Logout flow hoạt động đúng:&#xa;   - Cookies bị delete ở BFF (server-side)&#xa;   - Redux bị clear ở client&#xa;   - Tokens bị revoke ở Laravel"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#005500;fontSize=10;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="1000" y="1347" width="380" height="75" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- FLOW 5: APP HYDRATION (AppProvider) -->
+        <!-- ============================================================ -->
+        <mxCell id="s5-hdr" value="📌 FLOW 5: APP HYDRATION — Khi load trang (AppProvider)"
+          style="text;html=1;strokeColor=#555555;fillColor=#f5f5f5;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=13;fontStyle=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="1555" width="650" height="28" as="geometry" />
+        </mxCell>
+
+        <!-- Step: App loads -->
+        <mxCell id="s5-b1" value="App load / reload page"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="1597" width="200" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: Browser → Laravel /users/me -->
+        <mxCell id="s5-arr1" value="GET /api/v1/users/me (nếu initialAuthenticated=true)"
+          style="rounded=0;fontSize=10;fontStyle=2;strokeColor=#333333;startArrow=none;endArrow=open;endFill=1;"
+          edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="220" y="1620" as="sourcePoint" />
+            <mxPoint x="760" y="1620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step: Laravel returns user -->
+        <mxCell id="s5-lv1" value="Laravel trả user data&#xa;→ 200 { user }"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;"
+          vertex="1" parent="1">
+          <mxGeometry x="760" y="1597" width="200" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: back to browser -->
+        <mxCell id="s5-arr2" value="{ user } → Redux hydrate"
+          style="rounded=0;fontSize=10;fontStyle=2;strokeColor=#333333;startArrow=none;endArrow=open;endFill=1;"
+          edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="760" y="1648" as="sourcePoint" />
+            <mxPoint x="220" y="1648" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ISSUE: ARCH #2 - hydration depends on /me working (which also fails) -->
+        <mxCell id="s5-issue1" value="🟠 MEDIUM #4: AppProvider gọi useGetMeQuery → /api/v1/users/me trực tiếp tới Laravel&#xa;→ Cùng vấn đề FLOW 3: cookies không gửi được → /me cũng trả 401&#xa;→ isAuthenticated=false dù user đã login → UI hiện sai trạng thái&#xa;→ Fix: cùng fix với CRITICAL #3 (cookie bridge hoặc BFF proxy)&#xa;📁 src/provider/app-provider.tsx · src/store/services/user.service.ts"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#ff6600;fontColor=#cc4400;fontSize=10;fontStyle=1;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="1000" y="1590" width="570" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- SUMMARY TABLE (y: 1730+) -->
+        <!-- ============================================================ -->
+        <mxCell id="sum-hdr" value="📋 TỔNG KẾT VẤN ĐỀ &amp; ĐỘ ƯU TIÊN FIX"
+          style="text;html=1;strokeColor=#333333;fillColor=#f5f5f5;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=14;fontStyle=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="1720" width="1570" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="sum-critical" value="🔴 CRITICAL — Fix ngay (security risk hoặc broken flow):&#xa;&#xa;#1  jwt.decode() KHÔNG verify → tokens giả mạo → expiry sai&#xa;     📁 jwt.util.ts | login/route.ts | register/route.ts | refresh-token/route.ts&#xa;&#xa;#2  Middleware dùng decoded JWT không verify để check role/banned → bypass admin auth!&#xa;     📁 role-check.middleware.ts | banned-user.middleware.ts | guest-route.middleware.ts&#xa;&#xa;#3  httpOnly cookies từ Next.js KHÔNG gửi tới Laravel + Laravel chưa có cookie bridge&#xa;     → Mọi API call có auth bị 401 → auto logout! (BROKEN FLOW)&#xa;     📁 store/services/client.ts | cần fix Laravel backend (Phase 0)"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0e0;strokeColor=#cc0000;fontColor=#cc0000;fontSize=11;fontStyle=0;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="1762" width="760" height="185" as="geometry" />
+        </mxCell>
+
+        <mxCell id="sum-medium" value="🟠 MEDIUM — Fix sớm (design issue / UX bug):&#xa;&#xa;#1  Tokens vẫn trả trong JSON response body → JS đọc được&#xa;     📁 api/auth/login/route.ts:34 | api/auth/register/route.ts:34&#xa;&#xa;#2  isAuthenticated = !!refresh_token — không check expiry&#xa;     📁 src/middleware.ts:15 | auth.middleware.ts:18&#xa;&#xa;#3  MAX_REFRESH_RETRIES=2 quá thấp → transient error → auto logout&#xa;     📁 store/services/client.ts:17&#xa;&#xa;#4  AppProvider /users/me bị ảnh hưởng bởi CRITICAL #3 → UI trạng thái sai&#xa;     📁 src/provider/app-provider.tsx"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#ff6600;fontColor=#cc4400;fontSize=11;fontStyle=0;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="800" y="1762" width="760" height="185" as="geometry" />
+        </mxCell>
+
+        <mxCell id="sum-arch" value="🟣 ARCHITECTURE — Cần refactor (từ fix plan):&#xa;&#xa;#1  clearToken=true trong URL query param&#xa;     📁 private-route.middleware.ts | clear-token-by-server.tsx&#xa;&#xa;#2  Hai sources of truth: cookie (server) vs Redux (client)&#xa;     → Phase 1: dùng /me để hydrate, không decode token ở client&#xa;&#xa;#3  Role/banned check ở Next.js middleware (không có authority)&#xa;     → Enforce ở Laravel, Next.js middleware chỉ check sự tồn tại cookie"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9900ff;fontColor=#9900ff;fontSize=11;fontStyle=0;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="20" y="1960" width="760" height="150" as="geometry" />
+        </mxCell>
+
+        <mxCell id="sum-good" value="✅ ĐÃ LÀM ĐÚNG (không cần thay đổi):&#xa;&#xa;✅  Tokens được set vào httpOnly cookies (không localStorage)&#xa;✅  SameSite=Lax, Secure=true, Path=/ — cấu hình đúng&#xa;✅  Auth/register/refresh/logout đều đi qua Next.js BFF (đúng pattern)&#xa;✅  Mutex trong baseQueryWithReauth — tránh race condition khi refresh&#xa;✅  Redux authMiddleware handle login/logout/register/me responses&#xa;✅  Logout đúng: delete cookie server-side + revoke ở Laravel"
+          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#005500;fontSize=11;fontStyle=0;align=left;"
+          vertex="1" parent="1">
+          <mxGeometry x="800" y="1960" width="760" height="150" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

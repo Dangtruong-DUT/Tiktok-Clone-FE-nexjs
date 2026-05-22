@@ -66,10 +66,10 @@ export default function NestedMenu({
             {history.length === 1 ? (
                 <DialogHeader title={t(titleKeyI18n)} onClose={onClose} />
             ) : (
-                <DialogHeader title={current.title || ''} onBack={handleBackPrevMenu} />
+                <DialogHeader title={current?.title || ''} onBack={handleBackPrevMenu} />
             )}
             <div className='mt-7 w-full h-full overflow-y-auto flex flex-col gap-1.5'>
-                {current.menuItems.map((item, index) => {
+                {current?.menuItems.map((item, index) => {
                     if (!item.for.includes(role)) {
                         return null
                     }
