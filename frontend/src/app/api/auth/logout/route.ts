@@ -9,6 +9,7 @@ export async function POST() {
     const refresh_token = cookieStore.get('refresh_token')?.value
     cookieStore.delete('access_token')
     cookieStore.delete('refresh_token')
+    cookieStore.delete('user_role')
     if (!access_token || !refresh_token) {
         return NextResponse.json({ message: 'Logout successful.' }, { status: HTTP_STATUS.OK })
     }
@@ -19,6 +20,9 @@ export async function POST() {
         })
         return NextResponse.json(response, { status: HTTP_STATUS.OK })
     } catch (error) {
+        cookieStore.delete('access_token')
+        cookieStore.delete('refresh_token')
+        cookieStore.delete('user_role')
         return NextResponse.json({ message: 'Logout successful.' }, { status: HTTP_STATUS.OK })
     }
 }

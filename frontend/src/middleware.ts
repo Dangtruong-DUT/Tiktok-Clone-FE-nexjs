@@ -2,7 +2,6 @@ import { guestRouteMiddleware } from '@/middlewares/guest-route.middleware'
 import { i18nMiddleware } from '@/middlewares/i18n.middleware'
 import { privateRouteMiddleware } from '@/middlewares/private-route.middleware'
 import { roleCheckMiddleware } from '@/middlewares/role-check.middleware'
-import { bannedUserMiddleware } from '@/middlewares/banned-user.middleware'
 import { getAuthTokens } from '@/utils/auth/token.util'
 import { NextRequest } from 'next/server'
 import { refreshTokenMiddleware } from './middlewares/auth.middleware'
@@ -11,7 +10,7 @@ export function middleware(request: NextRequest) {
     const { response, locale } = i18nMiddleware(request)
     const { pathname } = request.nextUrl
 
-    const { access_token, refresh_token } = getAuthTokens(request)
+    const { access_token, refresh_token, user_role } = getAuthTokens(request)
     const isAuthenticated = !!refresh_token
 
     if (pathname.endsWith('/refresh-token')) {
@@ -34,22 +33,14 @@ export function middleware(request: NextRequest) {
         pathname,
         isAuthenticated,
         request,
-        refreshToken: refresh_token,
+        userRole: user_role,
         locale
     })
     if (guestRouteRedirect) return guestRouteRedirect
 
     if (isAuthenticated) {
-        const bannedRedirect = bannedUserMiddleware({
-            refreshToken: refresh_token!,
-            pathname,
-            request,
-            locale
-        })
-        if (bannedRedirect) return bannedRedirect
-
         const roleRedirect = roleCheckMiddleware({
-            refreshToken: refresh_token!,
+            userRole: user_role,
             pathname,
             request,
             locale

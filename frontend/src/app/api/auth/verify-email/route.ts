@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
         }
 
         const response = await AuthRequestApi.verifyEmail(body)
-        const { access_token, refresh_token } = response.data
+        const { access_token, refresh_token, user } = response.data
         const decodedAccess = decodeJwt<JwtPayloadType>(access_token)
         const decodedRefresh = decodeJwt<JwtPayloadType>(refresh_token)
 
@@ -30,6 +30,13 @@ export async function POST(request: NextRequest) {
         })
         cookieStore.set('refresh_token', refresh_token, {
             httpOnly: true,
+            sameSite: 'lax',
+            secure: true,
+            path: '/',
+            expires: new Date(decodedRefresh.exp * 1000)
+        })
+        cookieStore.set('user_role', String(user.role), {
+            httpOnly: false,
             sameSite: 'lax',
             secure: true,
             path: '/',

@@ -18,7 +18,7 @@ export async function POST() {
 
     try {
         const response = await AuthRequestApi.refreshToken({ refresh_token })
-        const { access_token: newAccessToken, refresh_token: newRefreshToken } = response.data
+        const { access_token: newAccessToken, refresh_token: newRefreshToken, user } = response.data
         const decodedAccess = decodeJwt<JwtPayloadType>(newAccessToken)
         const decodedRefresh = decodeJwt<JwtPayloadType>(newRefreshToken)
 
@@ -31,6 +31,13 @@ export async function POST() {
         })
         cookieStore.set('refresh_token', newRefreshToken, {
             httpOnly: true,
+            sameSite: 'lax',
+            secure: true,
+            path: '/',
+            expires: new Date(decodedRefresh.exp * 1000)
+        })
+        cookieStore.set('user_role', String(user.role), {
+            httpOnly: false,
             sameSite: 'lax',
             secure: true,
             path: '/',
