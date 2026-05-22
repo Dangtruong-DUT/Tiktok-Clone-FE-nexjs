@@ -20,8 +20,8 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { extractApiError } from '@/utils/extract-api-error'
 import { VIOLATION_REASONS } from '@/constants/ui/admin'
+import { extractApiErrorMessage } from '@/utils/handleErrors/extractApiError.util'
 
 interface DeletePostDialogProps {
     open: boolean
@@ -66,7 +66,7 @@ export function DeletePostDialog({ open, postUuid, authorUsername, onOpenChange,
             handleClose()
             onSuccess?.()
         } catch (error) {
-            toast.error(extractApiError(error) ?? t('posts.messages.deleteError'))
+            toast.error(extractApiErrorMessage(error) ?? t('posts.messages.deleteError'))
         }
     }
 

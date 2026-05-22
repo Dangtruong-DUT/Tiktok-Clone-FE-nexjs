@@ -1,7 +1,7 @@
 import { Middleware, isRejectedWithValue } from '@reduxjs/toolkit'
 import { toast } from 'sonner'
 import { formatFetchBaseQueryErrorMessage } from '@/store/utils/formatFetchBaseQueryErrorMessage.util'
-import { isBusinessException, isFetchBaseQueryError } from '../utils/apiErrorGuards.util'
+import { isBusinessException, isFetchBaseQueryError } from '../../utils/handleErrors/apiErrorGuards.util'
 import { HTTP_STATUS } from '@/constants/api/http-status'
 
 const silentStatuses = [HTTP_STATUS.UNPROCESSABLE_ENTITY, HTTP_STATUS.TOO_MANY_REQUESTS, HTTP_STATUS.FORBIDDEN]

@@ -5,6 +5,7 @@ import envConfig from '@/config/app.config'
 import { NEXT_API_ENDPOINT } from '@/config/endpoint.config'
 import { setLoggedOutAction } from '@/store/features/authSlice'
 import { HTTP_STATUS } from '@/constants/api/http-status'
+import { getExponentialBackoffDelay, sleep } from '@/utils/backoff.util'
 
 export const BackendBaseQuery = fetchBaseQuery({
     baseUrl: envConfig.NEXT_PUBLIC_API_ENDPOINT,
@@ -14,7 +15,8 @@ export const BackendBaseQuery = fetchBaseQuery({
 export const BffBaseQuery = fetchBaseQuery({ baseUrl: '' })
 
 const mutex = new Mutex()
-const MAX_REFRESH_RETRIES = 2
+const MAX_REFRESH_RETRIES = 3
+const INITIAL_DELAY = 1000
 
 const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
     args,
@@ -27,6 +29,9 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
     let refreshAttempts = 0
 
     while (result.error?.status === HTTP_STATUS.UNAUTHORIZED && refreshAttempts < MAX_REFRESH_RETRIES) {
+        const delay = getExponentialBackoffDelay(refreshAttempts)
+        await sleep(delay)
+
         if (mutex.isLocked()) {
             await mutex.waitForUnlock()
             result = await BackendBaseQuery(args, api, extraOptions)

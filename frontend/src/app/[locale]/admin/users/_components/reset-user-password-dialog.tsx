@@ -19,7 +19,7 @@ import { Label } from '@/components/ui/label'
 import { PasswordInput } from '@/components/ui/password-input'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { extractApiError } from '@/utils/extract-api-error'
+import { extractApiErrorMessage } from '@/utils/handleErrors/extractApiError.util'
 
 interface ResetUserPasswordDialogProps {
     open: boolean
@@ -62,7 +62,7 @@ export function ResetUserPasswordDialog({
             handleClose()
             onSuccess?.()
         } catch (error) {
-            toast.error(extractApiError(error) ?? t('users.messages.resetPasswordError'))
+            toast.error(extractApiErrorMessage(error) ?? t('users.messages.resetPasswordError'))
         }
     }
 
@@ -81,11 +81,7 @@ export function ResetUserPasswordDialog({
                 <div className='space-y-4 py-4'>
                     <div className='space-y-2'>
                         <Label htmlFor='new-password'>{t('users.labels.newPassword')}</Label>
-                        <PasswordInput
-                            id='new-password'
-                            {...form.register('password')}
-                            disabled={isLoading}
-                        />
+                        <PasswordInput id='new-password' {...form.register('password')} disabled={isLoading} />
                         {form.formState.errors.password?.message && (
                             <p className='text-sm text-red-600'>{form.formState.errors.password.message}</p>
                         )}

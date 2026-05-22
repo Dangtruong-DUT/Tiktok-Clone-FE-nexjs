@@ -4,6 +4,7 @@ import { HttpException } from '@/exceptions/HttpException.exception'
 import { decodeJwt } from '@/utils/auth/jwt.util'
 import { JwtPayloadType } from '@/types/common/jwt-payload.type'
 import { RegisterReqBodyType } from '@/types/dtos/auth/auth-request.dto'
+import { BffAuthUserResponse } from '@/types/dtos/auth/auth-response.dto'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -38,11 +39,19 @@ export async function POST(request: NextRequest) {
             expires: new Date(decodedRefresh.exp * 1000)
         })
 
-        return NextResponse.json(response)
+        const bffResponse: BffAuthUserResponse = {
+            status: response.status,
+            message: response.message,
+            data: { user }
+        }
+        return NextResponse.json(bffResponse)
     } catch (error) {
         if (error instanceof HttpException) {
             return NextResponse.json(error.data, { status: error.status })
         }
-        return NextResponse.json({ message: 'Please check your email and password.' }, { status: HTTP_STATUS.BAD_REQUEST })
+        return NextResponse.json(
+            { message: 'Please check your email and password.' },
+            { status: HTTP_STATUS.BAD_REQUEST }
+        )
     }
 }

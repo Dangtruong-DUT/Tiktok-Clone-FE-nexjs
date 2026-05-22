@@ -12,7 +12,7 @@ import { CreateCommentsReqBody, CreateCommentsReqBodyType } from '@/types/dtos/p
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
-import { extractHashtags } from '@/utils/social-token.util'
+import { extractHashtags } from '@/utils/socialToken.util'
 import MentionHashtagTextField from '@/components/mention-hashtag-text-field'
 import { logger } from '@/utils/logger'
 

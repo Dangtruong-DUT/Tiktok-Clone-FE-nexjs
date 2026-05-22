@@ -20,7 +20,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { extractApiError } from '@/utils/extract-api-error'
+import { extractApiErrorMessage } from '@/utils/handleErrors/extractApiError.util'
 
 interface BanUserDialogProps {
     open: boolean
@@ -60,7 +60,7 @@ export function BanUserDialog({ open, userUuid, username, onOpenChange, onSucces
             handleClose()
             onSuccess?.()
         } catch (error) {
-            toast.error(extractApiError(error) ?? t('users.messages.banError'))
+            toast.error(extractApiErrorMessage(error) ?? t('users.messages.banError'))
         }
     }
 

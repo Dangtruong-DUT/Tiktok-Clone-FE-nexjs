@@ -1,4 +1,4 @@
-import { isBusinessException } from '@/store/utils/apiErrorGuards.util'
+import { isBusinessException } from '@/utils/handleErrors/apiErrorGuards.util'
 import { FieldValues, Path, UseFormSetError } from 'react-hook-form'
 
 /** This function is used to handle form errors from the API response and set the form errors using react-hook-form's setError function

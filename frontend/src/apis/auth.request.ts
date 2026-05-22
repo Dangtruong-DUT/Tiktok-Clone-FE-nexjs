@@ -1,12 +1,6 @@
 import httpClient from '@/apis/client'
 import { BACKEND_API_ENDPOINT } from '@/config/endpoint.config'
-import {
-    LoginResponseType,
-    LogoutResType,
-    RefreshTokenRes,
-    RegisterResponseType
-} from '@/types/dtos/auth/auth-response.dto'
-import { VerifyEmailResType } from '@/types/dtos/user/user-response.dto'
+import { BackendAuthTokensResponse, LogoutResType } from '@/types/dtos/auth/auth-response.dto'
 import {
     ForgotPasswordReqBodyType,
     LoginReqBodyType,
@@ -19,9 +13,10 @@ import {
 import { VerifyEmailReqBodyType } from '@/types/dtos/user/user-request.dto'
 
 const AuthRequestApi = {
-    login: (body: LoginReqBodyType) => httpClient.post<LoginResponseType>(BACKEND_API_ENDPOINT.API_LOGIN, body),
+    login: (body: LoginReqBodyType) =>
+        httpClient.post<BackendAuthTokensResponse>(BACKEND_API_ENDPOINT.API_LOGIN, body),
     register: (body: RegisterReqBodyType) =>
-        httpClient.post<RegisterResponseType>(BACKEND_API_ENDPOINT.API_REGISTER, body),
+        httpClient.post<BackendAuthTokensResponse>(BACKEND_API_ENDPOINT.API_REGISTER, body),
     logout: (data: LogoutReqBodyType & { access_token: string }) => {
         const { access_token, ...body } = data
         return httpClient.post<LogoutResType>(BACKEND_API_ENDPOINT.API_LOGOUT, body, {
@@ -36,11 +31,10 @@ const AuthRequestApi = {
         httpClient.post<{ message: string }>(BACKEND_API_ENDPOINT.API_VERIFY_FORGOT_PASSWORD, body),
     resetPassword: (body: ResetPasswordReqBodyType) =>
         httpClient.post<{ message: string }>(BACKEND_API_ENDPOINT.API_RESET_PASSWORD, body),
-    refreshToken: (body: RefreshTokenReqBodyType) => {
-        return httpClient.post<RefreshTokenRes>(BACKEND_API_ENDPOINT.API_REFRESH_TOKEN, body)
-    },
+    refreshToken: (body: RefreshTokenReqBodyType) =>
+        httpClient.post<BackendAuthTokensResponse>(BACKEND_API_ENDPOINT.API_REFRESH_TOKEN, body),
     verifyEmail: (body: VerifyEmailReqBodyType) =>
-        httpClient.post<VerifyEmailResType>(BACKEND_API_ENDPOINT.API_VERIFY_EMAIL, body)
+        httpClient.post<BackendAuthTokensResponse>(BACKEND_API_ENDPOINT.API_VERIFY_EMAIL, body)
 }
 
 export default AuthRequestApi

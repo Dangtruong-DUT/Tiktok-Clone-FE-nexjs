@@ -4,7 +4,7 @@ import { useCallback } from 'react'
 import { toast } from 'sonner'
 import { useDeletePostMutation } from '@/store/services/posts.service'
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { extractApiError } from '@/utils/extract-api-error'
+import { extractApiErrorMessage } from '@/utils/handleErrors/extractApiError.util'
 
 export default function AlertDialogDeleteDish({
     postIdDelete,
@@ -22,7 +22,7 @@ export default function AlertDialogDeleteDish({
             toast.success(res.message)
             setPostIdDelete(null)
         } catch (error) {
-            toast.error(extractApiError(error) ?? 'Failed to delete post')
+            toast.error(extractApiErrorMessage(error) ?? 'Failed to delete post')
         }
     }, [deletePostMutate, postIdDelete, setPostIdDelete])
 

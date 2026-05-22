@@ -3,8 +3,8 @@
 import { useTranslations } from 'next-intl'
 import { useRestoreUserMutation } from '@/store/services/admin'
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { extractApiError } from '@/utils/extract-api-error'
 import { toast } from 'sonner'
+import { extractApiErrorMessage } from '@/utils/handleErrors/extractApiError.util'
 
 interface RestoreUserDialogProps {
     open: boolean
@@ -25,7 +25,7 @@ export function RestoreUserDialog({ open, userUuid, username, onOpenChange, onSu
             onOpenChange(false)
             onSuccess?.()
         } catch (error) {
-            toast.error(extractApiError(error) ?? t('users.messages.restoreError'))
+            toast.error(extractApiErrorMessage(error) ?? t('users.messages.restoreError'))
         }
     }
 

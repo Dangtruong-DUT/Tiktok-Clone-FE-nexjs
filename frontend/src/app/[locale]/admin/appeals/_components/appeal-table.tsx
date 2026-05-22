@@ -19,7 +19,6 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { toast } from 'sonner'
-import { extractApiError } from '@/utils/extract-api-error'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { AdminTableToolbar } from '@/components/admin'
@@ -41,6 +40,7 @@ import {
     type AppealStatus,
     type AppealType
 } from '@/constants/status/appeal'
+import { extractApiErrorMessage } from '@/utils/handleErrors/extractApiError.util'
 
 const FILTER_ALL = 'all' as const
 
@@ -174,7 +174,7 @@ export function AppealTable() {
             closeDialog()
             refetch()
         } catch (error) {
-            toast.error(extractApiError(error) ?? t('appeals.messages.reviewError'))
+            toast.error(extractApiErrorMessage(error) ?? t('appeals.messages.reviewError'))
         }
     }, [selectedAppeal, actionType, adminResponse, approveAppeal, rejectAppeal, closeDialog, refetch, t])
 
@@ -549,7 +549,10 @@ export function AppealTable() {
                     )}
                 </TablePanel>
 
-                <Dialog open={selectedAppeal !== null && actionType !== null} onOpenChange={(open) => !open && closeDialog()}>
+                <Dialog
+                    open={selectedAppeal !== null && actionType !== null}
+                    onOpenChange={(open) => !open && closeDialog()}
+                >
                     <DialogContent className='sm:max-w-[520px]'>
                         <DialogHeader>
                             <DialogTitle>

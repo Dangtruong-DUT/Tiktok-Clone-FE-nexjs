@@ -2,6 +2,7 @@ import AuthRequestApi from '@/apis/auth.request'
 import { HTTP_STATUS } from '@/constants/api/http-status'
 import { decodeJwt } from '@/utils/auth/jwt.util'
 import { JwtPayloadType } from '@/types/common/jwt-payload.type'
+import { BffAuthUserResponse } from '@/types/dtos/auth/auth-response.dto'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
@@ -44,7 +45,12 @@ export async function POST() {
             expires: new Date(decodedRefresh.exp * 1000)
         })
 
-        return NextResponse.json(response, { status: HTTP_STATUS.OK })
+        const bffResponse: BffAuthUserResponse = {
+            status: response.status,
+            message: response.message,
+            data: { user }
+        }
+        return NextResponse.json(bffResponse, { status: HTTP_STATUS.OK })
     } catch {
         cookieStore.delete('access_token')
         cookieStore.delete('refresh_token')

@@ -22,7 +22,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { extractApiError } from '@/utils/extract-api-error'
+import { extractApiErrorMessage } from '@/utils/handleErrors/extractApiError.util'
 
 interface DeleteCommentDialogProps {
     open: boolean
@@ -66,7 +66,7 @@ export function DeleteCommentDialog({
             handleClose()
             onSuccess?.()
         } catch (error) {
-            toast.error(extractApiError(error) ?? t('comments.messages.deleteError'))
+            toast.error(extractApiErrorMessage(error) ?? t('comments.messages.deleteError'))
         }
     }
 

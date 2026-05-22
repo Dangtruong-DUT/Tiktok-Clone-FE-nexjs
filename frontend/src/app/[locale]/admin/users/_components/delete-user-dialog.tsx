@@ -19,7 +19,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { extractApiError } from '@/utils/extract-api-error'
+import { extractApiErrorMessage } from '@/utils/handleErrors/extractApiError.util'
 
 interface DeleteUserDialogProps {
     open: boolean
@@ -56,7 +56,7 @@ export function DeleteUserDialog({ open, userUuid, username, onOpenChange, onSuc
             handleClose()
             onSuccess?.()
         } catch (error) {
-            toast.error(extractApiError(error) ?? t('users.messages.deleteError'))
+            toast.error(extractApiErrorMessage(error) ?? t('users.messages.deleteError'))
         }
     }
 

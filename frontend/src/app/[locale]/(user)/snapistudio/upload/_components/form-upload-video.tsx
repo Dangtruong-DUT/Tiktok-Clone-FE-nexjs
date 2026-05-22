@@ -25,7 +25,7 @@ import { useConfirmNavigation } from '@/hooks/shared/useConfirmNavigation'
 import AlertDialogExitPage from '@/app/[locale]/(user)/snapistudio/upload/_components/alert-confirm-leave-page'
 import { useAppDispatch } from '@/store/hooks'
 import { setLoadingByKey } from '@/store/features/appSlice'
-import { extractHashtags } from '@/utils/social-token.util'
+import { extractHashtags } from '@/utils/socialToken.util'
 import MentionHashtagTextField from '@/components/mention-hashtag-text-field'
 import { logger } from '@/utils/logger'
 

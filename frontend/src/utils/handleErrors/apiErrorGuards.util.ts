@@ -7,6 +7,9 @@ export function isFetchBaseQueryError(error: unknown): error is FetchBaseQueryEr
 }
 
 /**
+ * This error guard is used to check
+ * if the error is a business exception error
+ * which has a specific structure in the API response
  *
  * @param error
  * @returns boolean

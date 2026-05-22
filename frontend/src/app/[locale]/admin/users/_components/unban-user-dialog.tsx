@@ -3,8 +3,8 @@
 import { useTranslations } from 'next-intl'
 import { useUnbanUserMutation } from '@/store/services/admin'
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { extractApiError } from '@/utils/extract-api-error'
 import { toast } from 'sonner'
+import { extractApiErrorMessage } from '@/utils/handleErrors/extractApiError.util'
 
 interface UnbanUserDialogProps {
     open: boolean
@@ -25,7 +25,7 @@ export function UnbanUserDialog({ open, userUuid, username, onOpenChange, onSucc
             onOpenChange(false)
             onSuccess?.()
         } catch (error) {
-            toast.error(extractApiError(error) ?? t('users.messages.unbanError'))
+            toast.error(extractApiErrorMessage(error) ?? t('users.messages.unbanError'))
         }
     }
 

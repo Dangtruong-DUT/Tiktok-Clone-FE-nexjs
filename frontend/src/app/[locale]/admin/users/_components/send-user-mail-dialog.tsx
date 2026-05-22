@@ -20,7 +20,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { extractApiError } from '@/utils/extract-api-error'
+import { extractApiErrorMessage } from '@/utils/handleErrors/extractApiError.util'
 
 interface SendUserMailDialogProps {
     open: boolean
@@ -52,7 +52,7 @@ export function SendUserMailDialog({ open, userUuid, username, onOpenChange, onS
             handleClose()
             onSuccess?.()
         } catch (error) {
-            toast.error(extractApiError(error) ?? t('users.messages.sendMailError'))
+            toast.error(extractApiErrorMessage(error) ?? t('users.messages.sendMailError'))
         }
     }
 

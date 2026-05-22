@@ -4,9 +4,8 @@ import { UserAuthType } from '@/types/dtos/auth/auth-response.dto'
 import { UserSettingsType } from '@/types/models/user-settings.model'
 import { UserType } from '@/types/models/user.model'
 
+/** BFF shape — tokens stripped, only user data returned to the browser. */
 export type VerifyEmailResType = HttpResponseWithData<{
-    access_token: string
-    refresh_token: string
     user: UserAuthType
 }>
 
