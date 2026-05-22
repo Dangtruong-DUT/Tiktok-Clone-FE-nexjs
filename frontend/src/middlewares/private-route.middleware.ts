@@ -19,7 +19,6 @@ export function privateRouteMiddleware({
 
     if (isProtectedPath && !isAuthenticated) {
         const url = new URL(`/${locale}/login`, request.url)
-        url.searchParams.set('clearToken', 'true')
         url.searchParams.set('redirect', pathname)
         return NextResponse.redirect(url)
     }
