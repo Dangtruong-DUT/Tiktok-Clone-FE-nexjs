@@ -3,7 +3,7 @@
 namespace App\Listeners\Admin;
 
 use App\Events\Admin\AdminPositiveActionNotifiedEvent;
-use App\Mail\AdminPositiveActionEmail;
+use App\Mail\AdminPositiveActionMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
@@ -28,7 +28,7 @@ class SendPositiveActionEmailListener implements ShouldQueue
             return;
         }
 
-        Mail::to($event->targetUser->email)->send(new AdminPositiveActionEmail(
+        Mail::to($event->targetUser->email)->send(new AdminPositiveActionMail(
             targetUser: $event->targetUser,
             action: $event->action,
             adminMessage: $event->message,

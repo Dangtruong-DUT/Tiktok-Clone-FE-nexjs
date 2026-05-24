@@ -3,7 +3,7 @@
 namespace App\Listeners\Auth;
 
 use App\Events\Auth\UserPasswordResetRequestedEvent;
-use App\Mail\ForgotPasswordEmail;
+use App\Mail\ForgotPasswordMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
@@ -24,7 +24,7 @@ class SendPasswordResetEmailListener implements ShouldQueue
 
     public function handle(UserPasswordResetRequestedEvent $event): void
     {
-        Mail::to($event->email)->send(new ForgotPasswordEmail($event->user, $event->resetToken));
+        Mail::to($event->email)->send(new ForgotPasswordMail($event->user, $event->resetToken));
     }
 
     public function failed(UserPasswordResetRequestedEvent $event, \Throwable $exception): void

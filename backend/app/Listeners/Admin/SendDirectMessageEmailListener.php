@@ -3,7 +3,7 @@
 namespace App\Listeners\Admin;
 
 use App\Events\Admin\AdminDirectMessageSentEvent;
-use App\Mail\AdminDirectMessageEmail;
+use App\Mail\AdminDirectMessageMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
@@ -28,7 +28,7 @@ class SendDirectMessageEmailListener implements ShouldQueue
             return;
         }
 
-        Mail::to($event->targetUser->email)->send(new AdminDirectMessageEmail(
+        Mail::to($event->targetUser->email)->send(new AdminDirectMessageMail(
             admin: $event->admin,
             targetUser: $event->targetUser,
             subjectLine: $event->subject,

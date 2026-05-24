@@ -3,7 +3,7 @@
 namespace App\Listeners\Auth;
 
 use App\Events\Auth\UserEmailVerificationRequestedEvent;
-use App\Mail\VerifyUserEmail;
+use App\Mail\VerifyUserMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
@@ -24,7 +24,7 @@ class SendVerifyEmailListener implements ShouldQueue
 
     public function handle(UserEmailVerificationRequestedEvent $event): void
     {
-        Mail::to($event->email)->send(new VerifyUserEmail($event->user, $event->verifyToken));
+        Mail::to($event->email)->send(new VerifyUserMail($event->user, $event->verifyToken));
     }
 
     public function failed(UserEmailVerificationRequestedEvent $event, \Throwable $exception): void

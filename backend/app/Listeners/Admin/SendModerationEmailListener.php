@@ -3,7 +3,7 @@
 namespace App\Listeners\Admin;
 
 use App\Events\Admin\AdminModerationActionNotifiedEvent;
-use App\Mail\AdminModerationActionEmail;
+use App\Mail\AdminModerationActionMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
@@ -28,7 +28,7 @@ class SendModerationEmailListener implements ShouldQueue
             return;
         }
 
-        Mail::to($event->targetUser->email)->send(new AdminModerationActionEmail(
+        Mail::to($event->targetUser->email)->send(new AdminModerationActionMail(
             targetUser: $event->targetUser,
             action: $event->action,
             reason: $event->reason,

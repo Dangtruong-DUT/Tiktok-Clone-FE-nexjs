@@ -5,9 +5,9 @@ namespace App\Services;
 use App\Enums\User\UserVerifyStatusEnum;
 use App\Exceptions\http\BusinessException;
 use App\Exceptions\http\UnauthorizedException;
-use App\Mail\ForgotPasswordEmail;
-use App\Mail\VerifyUserEmail;
-use App\Mail\VerifyUserSuccessEmail;
+use App\Mail\ForgotPasswordMail;
+use App\Mail\VerifyUserMail;
+use App\Mail\VerifyUserSuccess;
 use App\Models\User;
 use App\Repositories\ForgotPasswordTokenRepository;
 use App\Repositories\RefreshTokenRepository;
@@ -127,7 +127,7 @@ class AuthService
             $accessToken = $this->tokenService->createAccessToken($user);
             $refreshToken = $this->tokenService->createRefreshToken($user);
             $verifyToken = $this->tokenService->createVerifyEmailToken($user);
-            Mail::to($data['email'])->send(new VerifyUserEmail($user, $verifyToken));
+            Mail::to($data['email'])->send(new VerifyUserMail($user, $verifyToken));
 
             $this->notificationService->notifyAuthEvent($user->id, 'register');
         });
@@ -154,7 +154,7 @@ class AuthService
             $user->verify = UserVerifyStatusEnum::VERIFIED->value;
             $user->save();
             $this->verifyEmailTokenRepository->deleteByUserId($validToken->user_id);
-            Mail::to($user->email)->send(new VerifyUserSuccessEmail($user));
+            Mail::to($user->email)->send(new VerifyUserSuccess($user));
 
             return [
                 'access_token' => $this->tokenService->createAccessToken($user),
@@ -177,7 +177,7 @@ class AuthService
         DB::transaction(function () use ($user) {
             $this->verifyEmailTokenRepository->deleteByUserId($user->id);
             $verifyToken = $this->tokenService->createVerifyEmailToken($user);
-            Mail::to($user->email)->send(new VerifyUserEmail($user, $verifyToken));
+            Mail::to($user->email)->send(new VerifyUserMail($user, $verifyToken));
         });
 
         return true;
@@ -207,7 +207,7 @@ class AuthService
 
         DB::transaction(function () use ($user, $email) {
             $token = $this->tokenService->createForgotPasswordToken($user);
-            Mail::to($email)->send(new ForgotPasswordEmail($user, $token));
+            Mail::to($email)->send(new ForgotPasswordMail($user, $token));
         });
 
         return true;

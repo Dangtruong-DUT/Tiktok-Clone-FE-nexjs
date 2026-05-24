@@ -6,13 +6,14 @@ use App\Models\User;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
-class VerifyUserSuccessEmail extends BaseEmail
+class VerifyUserMail extends BaseMailAble
 {
     /**
      * Create a new message instance.
      */
     public function __construct(
         private User $user,
+        private string $token,
     ) {
         parent::__construct();
     }
@@ -23,7 +24,7 @@ class VerifyUserSuccessEmail extends BaseEmail
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your Account Has Been Verified',
+            subject: 'Verify User Email',
         );
     }
 
@@ -33,10 +34,13 @@ class VerifyUserSuccessEmail extends BaseEmail
     public function content(): Content
     {
         return new Content(
-            view: 'emails.verify_user_email_success',
+            view: 'emails.verify_user_email',
             with: [
                 'name' => $this->user->name,
-                'homeUrl' => config('app.frontend_url'),
+                'verifyUrl' => config('app.frontend_url')
+                    .'/en/verify-email?token='.urlencode($this->token)
+                    .'&email='.urlencode($this->user->email),
+                'expiration' => config('auth.verification.expire'),
             ],
         );
     }

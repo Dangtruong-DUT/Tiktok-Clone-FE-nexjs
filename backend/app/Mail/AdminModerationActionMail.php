@@ -7,16 +7,16 @@ use App\Models\User;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
-/**
- * Mail for positive/restorative admin actions:
- * unban, restore account, restore post/comment, approve appeal.
- */
-class AdminPositiveActionEmail extends BaseEmail
+class AdminModerationActionMail extends BaseMailAble
 {
+    /**
+     * Admin identity is intentionally hidden from the email.
+ */
     public function __construct(
         private readonly User $targetUser,
         private readonly AdminActionEnum $action,
-        private readonly string $adminMessage,
+        private readonly string $reason,
+        private readonly ?string $appealLink,
     ) {
         parent::__construct();
     }
@@ -24,22 +24,26 @@ class AdminPositiveActionEmail extends BaseEmail
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Account Notice: '.$this->action->label(),
+            subject: 'Moderation Notice: '.$this->action->label(),
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'emails.admin_positive_action',
+            view: 'emails.admin_moderation_action',
             with: [
                 'targetUserName' => $this->targetUser->name ?? $this->targetUser->username,
                 'actionLabel' => $this->action->label(),
-                'adminMessage' => $this->adminMessage,
+                'reason' => $this->reason,
+                'appealLink' => $this->appealLink,
             ],
         );
     }
 
+    /**
+     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+ */
     public function attachments(): array
     {
         return [];
