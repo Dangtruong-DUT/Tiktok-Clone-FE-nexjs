@@ -1,7 +1,7 @@
 'use client'
 
 import Header from '@/app/[locale]/(public)/(home)/search/_components/tabbar-header'
-import { SearchParamsLoader, useSearchParamsLoader } from '@/components/search-params-loader'
+import { SearchParamsLoader, useSearchParamsLoader } from '@/components/common/search-params-loader'
 import { useSearchPostsInfiniteQuery, useSearchUsersInfiniteQuery } from '@/store/services/search.service'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'

@@ -1,7 +1,7 @@
 'use client'
 
-import { ModeToggle } from '@/components/dark-mode-toggle'
-import SelectLanguage from '@/components/select-language'
+import { ModeToggle } from '@/components/common/dark-mode-toggle'
+import SelectLanguage from '@/components/common/select-language'
 import { useTranslations } from 'next-intl'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'

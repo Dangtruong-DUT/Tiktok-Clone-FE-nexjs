@@ -1,7 +1,7 @@
 'use client'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import FollowToggleButton from '@/components/follow-toggle-button'
+import FollowToggleButton from '@/components/public/follow-toggle-button'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'

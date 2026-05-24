@@ -13,7 +13,7 @@ import { AuthStatus } from '@/constants/status/async'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useAppSelector } from '@/store/hooks'
 import { useLocale, useTranslations } from 'next-intl'
-import { ShareMenuDialog } from '@/components/share-menu-dialog'
+import { ShareMenuDialog } from '@/components/public/share-menu-dialog'
 import envConfig from '@/config/app.config'
 
 interface ProfileActionButtonsProps {

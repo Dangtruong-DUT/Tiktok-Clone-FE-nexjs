@@ -1,6 +1,6 @@
 import userRequestApi from '@/apis/user.request'
 import ProfileUser from '@/app/[locale]/(public)/(home)/[username]/_components/profile-user'
-import TabBar from '@/app/[locale]/(public)/(home)/[username]/_components/TabBar'
+import TabBar from '@/app/[locale]/(public)/(home)/[username]/_components/tab-bar'
 import VideoGrid from '@/app/[locale]/(public)/(home)/[username]/_components/video-grid'
 import TAB_ITEMS from '@/app/[locale]/(public)/(home)/[username]/_config/tab-items.config'
 import VideosProvider from '@/app/[locale]/(public)/(home)/[username]/_context/videos.context'

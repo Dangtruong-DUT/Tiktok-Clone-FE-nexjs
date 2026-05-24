@@ -1,4 +1,4 @@
-import LazyLottie, { LottieProps } from '@/components/lazy-lottie'
+import LazyLottie, { LottieProps } from '@/components/common/lazy-lottie'
 import { memo } from 'react'
 
 function LoadingIcon({ ...props }: Omit<LottieProps, 'path'>) {

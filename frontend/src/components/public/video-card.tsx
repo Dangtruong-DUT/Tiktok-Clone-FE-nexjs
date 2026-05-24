@@ -14,7 +14,7 @@ import { HiOutlinePlay } from 'react-icons/hi2'
 import { FaRegHeart } from 'react-icons/fa6'
 import { timeAgo } from '@/utils/formatting/format-time.util'
 import { useLocale } from 'next-intl'
-import RichTextContent from '@/components/rich-text-content'
+import RichTextContent from '@/components/common/rich-text-content'
 
 export default function CardVideoItem({
     post,

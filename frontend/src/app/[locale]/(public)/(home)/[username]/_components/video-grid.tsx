@@ -1,7 +1,7 @@
 'use client'
 
 import { useVideosContext } from '@/app/[locale]/(public)/(home)/[username]/_context/videos.context'
-import CardVideoItem from '@/components/video-card'
+import CardVideoItem from '@/components/public/video-card'
 import { useAppDispatch } from '@/store/hooks'
 import { useInViewport } from '@/hooks/ui/useInViewport'
 import { Link, usePathname } from '@/i18n/navigation'

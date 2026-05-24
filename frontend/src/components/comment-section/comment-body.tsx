@@ -16,7 +16,7 @@ import { X } from 'lucide-react'
 import { useLocale } from 'next-intl'
 import { useState } from 'react'
 import { FaHeart, FaRegHeart } from 'react-icons/fa6'
-import RichTextContent from '@/components/rich-text-content'
+import RichTextContent from '@/components/common/rich-text-content'
 
 type CommentBodyProps = {
     comment: CommentType

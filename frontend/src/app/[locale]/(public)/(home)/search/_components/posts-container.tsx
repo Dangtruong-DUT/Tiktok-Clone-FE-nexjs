@@ -3,7 +3,7 @@
 import LoadingIcon from '@/components/lottie-icons/loading'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useInViewport } from '@/hooks/ui/useInViewport'
-import CardVideoItem from '@/components/video-card'
+import CardVideoItem from '@/components/public/video-card'
 import { TikTokPostType } from '@/types/models/post.model'
 import { Link, usePathname } from '@/i18n/navigation'
 import { useAppDispatch } from '@/store/hooks'

@@ -1,5 +1,5 @@
-import { GoBack } from '@/app/[locale]/(public)/(auth)/button-go-back'
-import SignUpForm from '@/app/[locale]/(public)/(auth)/signup/email/sign-up-form'
+import { GoBack } from '@/app/[locale]/(public)/(auth)/_components/button-go-back'
+import SignUpForm from '@/app/[locale]/(public)/(auth)/signup/email/_components/sign-up-form'
 import { getTranslations } from 'next-intl/server'
 
 export default async function EmailSignUpPage() {

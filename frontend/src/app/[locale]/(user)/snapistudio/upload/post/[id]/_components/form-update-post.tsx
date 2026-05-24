@@ -11,12 +11,12 @@ import { Info, Loader } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import VideoPreview from '@/app/[locale]/(user)/snapistudio/upload/_components/video-preview'
 import SelectThumbnailDialog from '@/app/[locale]/(user)/snapistudio/upload/_components/select-thumbnail-dialog'
-import AudienceSelect from '@/components/audience-select'
+import AudienceSelect from '@/components/forms/audience-select'
 
 import { useUploadImageMutation } from '@/store/services/upload.service'
 import { useGetPostDetailQuery, useUpdatePostMutation } from '@/store/services/posts.service'
 import { handleFormError } from '@/utils/errors/handle-form-errors.util'
-import { SearchParamsLoader, useSearchParamsLoader } from '@/components/search-params-loader'
+import { SearchParamsLoader, useSearchParamsLoader } from '@/components/common/search-params-loader'
 import { useRouter } from '@/i18n/navigation'
 import { useParams } from 'next/navigation'
 import useVideoFrames from '@/hooks/video/useVideoFrames'
@@ -27,7 +27,7 @@ import AlertDialogExitPage from '@/app/[locale]/(user)/snapistudio/upload/_compo
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
 import { extractHashtags } from '@/utils/social-token.util'
-import MentionHashtagTextField from '@/components/mention-hashtag-text-field'
+import MentionHashtagTextField from '@/components/forms/mention-hashtag-text-field'
 import { logger } from '@/utils/logger.util'
 
 export default function FormUpdatePost() {

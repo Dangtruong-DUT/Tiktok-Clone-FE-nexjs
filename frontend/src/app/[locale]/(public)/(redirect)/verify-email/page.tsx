@@ -3,7 +3,7 @@
 import ErrorIcon from '@/components/lottie-icons/error-icon'
 import Loading from '@/components/lottie-icons/loading'
 import VerifyIcon from '@/components/lottie-icons/verify-icon'
-import { SearchParamsLoader, useSearchParamsLoader } from '@/components/search-params-loader'
+import { SearchParamsLoader, useSearchParamsLoader } from '@/components/common/search-params-loader'
 import { useAppDispatch } from '@/store/hooks'
 import { useRouter } from '@/i18n/navigation'
 import { useVerifyEmailMutation } from '@/store/services/auth.service'

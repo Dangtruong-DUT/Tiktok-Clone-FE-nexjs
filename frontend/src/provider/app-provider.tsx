@@ -5,7 +5,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import NextTopLoader from 'nextjs-toploader'
 import { Toaster } from '@/components/ui/sonner'
 import { useGetMeQuery } from '@/store/services/user.service'
-import GlobalAppLoader from '@/components/global-app-loader'
+import GlobalAppLoader from '@/components/common/global-app-loader'
 import { useProactiveTokenRefresh } from '@/hooks/useProactiveTokenRefresh'
 import { AuthStatus, AuthStatusType } from '@/constants/status/async'
 

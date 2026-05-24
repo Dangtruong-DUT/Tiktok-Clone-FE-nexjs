@@ -1,4 +1,4 @@
-import SelectLanguage from '@/components/select-language'
+import SelectLanguage from '@/components/common/select-language'
 import { BRAND_CONFIG } from '@/config/brand.config'
 import { cn } from '@/lib/utils'
 

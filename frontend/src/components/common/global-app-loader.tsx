@@ -1,6 +1,6 @@
 'use client'
 
-import AppLoader from '@/components/app-loader'
+import AppLoader from '@/components/common/app-loader'
 import { useAppSelector } from '@/store/hooks'
 
 export default function GlobalAppLoader() {

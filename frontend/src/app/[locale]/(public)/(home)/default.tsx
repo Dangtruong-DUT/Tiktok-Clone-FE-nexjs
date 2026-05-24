@@ -1,4 +1,4 @@
-import FullPageReload from '@/components/full-page-reload'
+import FullPageReload from '@/components/common/full-page-reload'
 
 export default async function DefaultPage() {
     return <FullPageReload />

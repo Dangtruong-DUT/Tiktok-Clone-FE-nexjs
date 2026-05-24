@@ -2,7 +2,7 @@
 
 import { AuthModal } from '@/components/auth-modal'
 import LikedIcon from '@/components/lottie-icons/liked-icon'
-import ShowMore from '@/components/show-more'
+import ShowMore from '@/components/ui/show-more'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import envConfig from '@/config/app.config'

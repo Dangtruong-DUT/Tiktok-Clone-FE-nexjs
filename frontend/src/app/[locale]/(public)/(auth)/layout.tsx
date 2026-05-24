@@ -1,4 +1,4 @@
-import { AuthNav } from '@/app/[locale]/(public)/(auth)/auth-nav'
+import { AuthNav } from '@/app/[locale]/(public)/(auth)/_components/auth-nav'
 import Footer from '@/components/public/footer-v1'
 import Header from '@/components/public/header-v1'
 import { LocalesType } from '@/i18n/config'

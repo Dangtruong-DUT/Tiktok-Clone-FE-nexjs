@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils'
 import CallToAction from '@/app/[locale]/(public)/(home)/_components/sidebar/_components/call-to-action'
 import SidebarHeader from '@/app/[locale]/(public)/(home)/_components/sidebar/_components/sidebar-header'
-import SidebarFooter from '@/app/[locale]/(public)/(home)/_components/sidebar/_components/SidebarFooter'
+import SidebarFooter from '@/app/[locale]/(public)/(home)/_components/sidebar/_components/sidebar-footer'
 
 import NavItems from '@/app/[locale]/(public)/(home)/_components/sidebar/_components/nav-items'
 import useSidebar from '@/app/[locale]/(public)/(home)/_components/sidebar/_context/sidebar.context'

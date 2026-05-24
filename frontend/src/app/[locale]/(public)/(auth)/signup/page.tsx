@@ -1,4 +1,4 @@
-import { MenuItemsList } from '@/app/[locale]/(public)/(auth)/menu-items'
+import { MenuItemsList } from '@/app/[locale]/(public)/(auth)/_components/menu-items'
 import { getTranslations } from 'next-intl/server'
 import { Metadata } from 'next'
 import { LocalesType } from '@/i18n/config'

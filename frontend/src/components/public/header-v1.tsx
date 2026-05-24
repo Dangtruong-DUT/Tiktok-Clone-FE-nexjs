@@ -1,4 +1,4 @@
-import LogoBrand from '@/components/logo-brand'
+import LogoBrand from '@/components/common/logo-brand'
 import { Link } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
 import { MessageCircleQuestionMark } from 'lucide-react'

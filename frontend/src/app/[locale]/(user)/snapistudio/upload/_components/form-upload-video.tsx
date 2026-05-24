@@ -13,7 +13,7 @@ import { Info, Loader } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import VideoPreview from '@/app/[locale]/(user)/snapistudio/upload/_components/video-preview'
 import SelectThumbnailDialog from '@/app/[locale]/(user)/snapistudio/upload/_components/select-thumbnail-dialog'
-import AudienceSelect from '@/components/audience-select'
+import AudienceSelect from '@/components/forms/audience-select'
 import { convertBase64ToFile } from '@/utils/file.util'
 import { useUploadImageMutation, useUploadVideoMutation } from '@/store/services/upload.service'
 import { useCreatePostMutation } from '@/store/services/posts.service'
@@ -26,7 +26,7 @@ import AlertDialogExitPage from '@/app/[locale]/(user)/snapistudio/upload/_compo
 import { useAppDispatch } from '@/store/hooks'
 import { setLoadingByKey } from '@/store/features/appSlice'
 import { extractHashtags } from '@/utils/social-token.util'
-import MentionHashtagTextField from '@/components/mention-hashtag-text-field'
+import MentionHashtagTextField from '@/components/forms/mention-hashtag-text-field'
 import { logger } from '@/utils/logger.util'
 
 const APP_LOADING_KEYS = {

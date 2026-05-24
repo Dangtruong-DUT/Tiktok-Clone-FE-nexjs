@@ -13,7 +13,7 @@ import ActionButton from '@/components/detail-action-bar/action-button'
 import { useAppSelector } from '@/store/hooks'
 import { useAnimatedState } from '@/hooks/ui/useAnimatedState'
 import envConfig from '@/config/app.config'
-import { ShareMenuDialog } from '@/components/share-menu-dialog'
+import { ShareMenuDialog } from '@/components/public/share-menu-dialog'
 import { useLocale } from 'use-intl'
 
 interface ActionBarProps {

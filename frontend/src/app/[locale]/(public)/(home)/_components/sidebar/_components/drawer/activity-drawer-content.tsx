@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useMemo, useState } from 'react'
-import DialogHeader from '@/components/modal-header'
+import DialogHeader from '@/components/ui/modal-header'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { useLocale, useTranslations } from 'next-intl'
@@ -18,7 +18,7 @@ import {
 import { NotificationTabType } from '@/types/dtos/notification/notification-request.dto'
 import { NotificationType } from '@/types/models/notification.model'
 import { useFollowUserMutation, useUnfollowUserMutation } from '@/store/services/user.service'
-import FollowToggleButton from '@/components/follow-toggle-button'
+import FollowToggleButton from '@/components/public/follow-toggle-button'
 import { useAppSelector } from '@/store/hooks'
 
 import LoadingIcon from '@/components/lottie-icons/loading'

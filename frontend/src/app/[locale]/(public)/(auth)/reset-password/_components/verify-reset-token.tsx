@@ -1,7 +1,7 @@
 'use client'
 
 import Loading from '@/components/lottie-icons/loading'
-import { SearchParamsLoader, useSearchParamsLoader } from '@/components/search-params-loader'
+import { SearchParamsLoader, useSearchParamsLoader } from '@/components/common/search-params-loader'
 import { useVerifyForgotPasswordMutation } from '@/store/services/user.service'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'

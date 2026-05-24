@@ -2,7 +2,7 @@
 
 import { useVideoPlaylist } from '@/app/[locale]/(public)/(home)/[username]/video/[id]/_context/video-playlist-context'
 import { useVideoRouterNavigation } from '@/app/[locale]/(public)/(home)/[username]/video/[id]/_hook/useVideoRouterNavigation'
-import CardVideoItem from '@/components/video-card'
+import CardVideoItem from '@/components/public/video-card'
 import { useInViewport } from '@/hooks/ui/useInViewport'
 import { useEffect, useRef } from 'react'
 import LoadingIcon from '@/components/lottie-icons/loading'

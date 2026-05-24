@@ -1,10 +1,10 @@
-import EmailCircleIcon from '@/components/icons/EmailCircleIcon'
-import FacebookCircleIcon from '@/components/icons/FacebookCircleIcon'
-import LinkCircleIcon from '@/components/icons/LinkCircleIcon'
-import LinkedinCircleIcon from '@/components/icons/LinkedinCircleIcon'
-import TelegramCircleIcon from '@/components/icons/TelegramCircleIcon'
-import WhatsAppCircleIcon from '@/components/icons/WhatsAppCircleIcon'
-import XCircleIcon from '@/components/icons/XCircleIcon'
+import EmailCircleIcon from '@/components/icons/email-circle-icon'
+import FacebookCircleIcon from '@/components/icons/facebook-circle-icon'
+import LinkCircleIcon from '@/components/icons/link-circle-icon'
+import LinkedinCircleIcon from '@/components/icons/linkedin-circle-icon'
+import TelegramCircleIcon from '@/components/icons/telegram-circle-icon'
+import WhatsAppCircleIcon from '@/components/icons/whats-app-circle-icon'
+import XCircleIcon from '@/components/icons/x-circle-icon'
 
 export const createShareItems = (url: string, handleCopyLink: () => void) => {
     return [

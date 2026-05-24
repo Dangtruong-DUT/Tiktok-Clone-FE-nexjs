@@ -1,7 +1,7 @@
 'use client'
 
 import { AuthModal } from '@/components/auth-modal'
-import EmojiPicker from '@/components/emoji-picker'
+import EmojiPicker from '@/components/forms/emoji-picker'
 import { FormControl, FormField, FormItem, Form } from '@/components/ui/form'
 import { Audience, PosterType } from '@/constants/enum'
 import { useAppSelector } from '@/store/hooks'
@@ -13,7 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { extractHashtags } from '@/utils/social-token.util'
-import MentionHashtagTextField from '@/components/mention-hashtag-text-field'
+import MentionHashtagTextField from '@/components/forms/mention-hashtag-text-field'
 import { logger } from '@/utils/logger.util'
 
 interface CommentFormProps {

@@ -4,7 +4,7 @@ import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/comp
 import { cn } from '@/lib/utils'
 import { Link, usePathname } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
-import LogoBrand from '@/components/logo-brand'
+import LogoBrand from '@/components/common/logo-brand'
 import { navItems } from '@/app/[locale]/(user)/snapistudio/_config/navItems'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft, Plus } from 'lucide-react'

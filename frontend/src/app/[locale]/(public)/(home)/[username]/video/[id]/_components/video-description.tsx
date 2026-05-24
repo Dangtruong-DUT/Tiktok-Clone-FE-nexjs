@@ -1,6 +1,6 @@
 "'use client';"
 import { AuthModal } from '@/components/auth-modal'
-import ShowMore from '@/components/show-more'
+import ShowMore from '@/components/ui/show-more'
 import { AvatarFallback, AvatarImage, Avatar } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'

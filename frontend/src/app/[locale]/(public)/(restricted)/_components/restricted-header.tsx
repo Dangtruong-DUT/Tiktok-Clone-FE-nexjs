@@ -6,7 +6,7 @@ import { useAppSelector } from '@/store/hooks'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { LogOut } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import LogoBrand from '@/components/logo-brand'
+import LogoBrand from '@/components/common/logo-brand'
 import { useTranslations } from 'next-intl'
 import DialogConfirmLogout from '@/components/common/confirm-logout-dialog'
 

@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import { cn } from '@/lib/utils'
-import RichTextContent from '@/components/rich-text-content'
+import RichTextContent from '@/components/common/rich-text-content'
 import type { MentionType } from '@/types/models/mention.model'
 import type { HashtagType } from '@/types/models/hashtag.model'
 

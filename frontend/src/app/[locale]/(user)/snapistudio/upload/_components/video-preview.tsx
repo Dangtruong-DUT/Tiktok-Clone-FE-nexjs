@@ -13,7 +13,7 @@ import { useTranslations } from 'next-intl'
 import { ImVolumeMute2 } from 'react-icons/im'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
-import RichTextContent from '@/components/rich-text-content'
+import RichTextContent from '@/components/common/rich-text-content'
 
 interface VideoPreviewProps {
     videoSrc: string | null

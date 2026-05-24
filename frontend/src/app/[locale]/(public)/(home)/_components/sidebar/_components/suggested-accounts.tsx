@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import AccountItem from '@/components/account-item'
+import AccountItem from '@/components/public/account-item'
 
 export interface SuggestedAccountsProps {
     title: string

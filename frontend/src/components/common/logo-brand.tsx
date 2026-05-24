@@ -1,5 +1,5 @@
-import FullLogo from '@/components/full-logo'
-import SmallLogo from '@/components/small-logo'
+import FullLogo from '@/components/common/full-logo'
+import SmallLogo from '@/components/common/small-logo'
 
 type LogoBrandProps = {
     className?: string

@@ -1,5 +1,5 @@
 import { Search } from 'lucide-react'
-import LogoBrand from '@/components/logo-brand'
+import LogoBrand from '@/components/common/logo-brand'
 import { Link } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
