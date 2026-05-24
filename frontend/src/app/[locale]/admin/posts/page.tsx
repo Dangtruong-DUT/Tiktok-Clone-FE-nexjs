@@ -4,6 +4,7 @@ import { AdminLayout, AdminContainer } from '@/components/admin'
 import { Suspense } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { PostModerationTable } from './_components/post-moderation-table'
+import { ADMIN_ROUTES } from '@/constants/routes/routes'
 
 export const metadata: Metadata = {
     title: 'Post Moderation',
@@ -17,7 +18,7 @@ export default async function AdminPostsPage() {
         <AdminLayout
             title={t('posts.title')}
             description={t('posts.description')}
-            breadcrumbs={[{ label: t('breadcrumbs.admin'), href: '/admin' }, { label: t('posts.title') }]}
+            breadcrumbs={[{ label: t('breadcrumbs.admin'), href: ADMIN_ROUTES.DASHBOARD }, { label: t('posts.title') }]}
         >
             <AdminContainer>
                 <Suspense

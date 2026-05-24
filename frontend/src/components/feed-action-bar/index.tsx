@@ -24,6 +24,7 @@ import { useAnimatedState } from '@/hooks/ui/useAnimatedState'
 import envConfig from '@/config/app.config'
 import { useLocale } from 'use-intl'
 import { ModalVideoDetailType } from '@/constants/ui/video-dialog'
+import { USER_ROUTES } from '@/constants/routes/routes'
 interface ActionBarProps {
     post: TikTokPostType
     className?: string
@@ -69,12 +70,12 @@ export default function ActionBar({ post, className }: ActionBarProps) {
     }, [openModalVideoDetailType, dispatch, pathname])
 
     const local = useLocale()
-    const videoUrl = `${envConfig.NEXT_PUBLIC_URL}${local}/@${author.username}/video/${post.uuid}`
+    const videoUrl = `${envConfig.NEXT_PUBLIC_URL}${local}${USER_ROUTES.VIDEO(author.username, post.uuid)}`
 
     return (
         <section className={cn('flex flex-col items-center gap-3  relative', className)}>
             <div className='flex flex-col items-center text-5xl'>
-                <Link href={`/@${fetchedAuthor?.username ?? author.username}`}>
+                <Link href={USER_ROUTES.PROFILE(fetchedAuthor?.username ?? author.username)}>
                     <Avatar className='w-[1em] h-[1em] shrink-0'>
                         <AvatarImage
                             src={fetchedAuthor?.avatar ?? author.avatar}

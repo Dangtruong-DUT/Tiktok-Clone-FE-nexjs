@@ -7,6 +7,7 @@ import admin from './messages/en/admin.json'
 import studio from './messages/en/studio.json'
 import appeal from './messages/en/appeal.json'
 import legal from './messages/en/legal.json'
+import error from './messages/en/error.json'
 
 type Messages = typeof common &
     typeof auth &
@@ -15,7 +16,8 @@ type Messages = typeof common &
     typeof admin &
     typeof studio &
     typeof appeal &
-    typeof legal
+    typeof legal &
+    typeof error
 
 declare module 'next-intl' {
     interface AppConfig {

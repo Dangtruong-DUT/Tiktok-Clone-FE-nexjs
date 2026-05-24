@@ -27,6 +27,7 @@ import { usePostTableContext } from '@/app/[locale]/(user)/snapistudio/content/_
 import { useColumns } from '@/app/[locale]/(user)/snapistudio/content/_components/columns'
 import { TableSkeleton } from '@/components/data-display/table-skeleton'
 import { Audience } from '@/constants/enum'
+import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
 
 export default function TableContent() {
     const t = useTranslations('SnapiStudio.content')
@@ -193,7 +194,7 @@ export default function TableContent() {
                     perPageOptions={[10, 20, 50]}
                     perPageLabel={t('perPage')}
                     showingResultsFormatter={(from, to, total) => t('showingResults', { from, to, total })}
-                    pathname='/snapistudio/content'
+                    pathname={SNAPISTUDIO_ROUTES.CONTENT}
                 />
             )}
         </div>

@@ -4,6 +4,7 @@ import { AdminLayout, AdminContainer } from '@/components/admin'
 import { Suspense } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AppealTable } from './_components/appeal-table'
+import { ADMIN_ROUTES } from '@/constants/routes/routes'
 
 export const metadata: Metadata = {
     title: 'Appeal Moderation',
@@ -17,7 +18,10 @@ export default async function AdminAppealsPage() {
         <AdminLayout
             title={t('appeals.title')}
             description={t('appeals.description')}
-            breadcrumbs={[{ label: t('breadcrumbs.admin'), href: '/admin' }, { label: t('appeals.title') }]}
+            breadcrumbs={[
+                { label: t('breadcrumbs.admin'), href: ADMIN_ROUTES.DASHBOARD },
+                { label: t('appeals.title') }
+            ]}
         >
             <AdminContainer>
                 <Suspense

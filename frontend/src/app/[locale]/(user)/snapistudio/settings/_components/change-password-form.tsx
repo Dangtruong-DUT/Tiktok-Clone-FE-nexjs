@@ -15,6 +15,7 @@ import { ChangePasswordBody, ChangePasswordBodyType } from '@/types/dtos/user/us
 import { useChangePasswordMutation } from '@/store/services/user.service'
 import { Loader } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
+import { AUTH_ROUTES } from '@/constants/routes/routes'
 
 export default function ChangePasswordForm() {
     const t = useTranslations('SnapiStudio.settings')
@@ -94,7 +95,7 @@ export default function ChangePasswordForm() {
                             />
                             <div className='-mt-3'>
                                 <Button asChild variant='link' size='sm' className='h-auto px-0 text-muted-foreground'>
-                                    <Link href='/forgot-password'>{t('changePassword.forgotPassword')}</Link>
+                                    <Link href={AUTH_ROUTES.FORGOT_PASSWORD}>{t('changePassword.forgotPassword')}</Link>
                                 </Button>
                             </div>
                             <FormField

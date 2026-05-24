@@ -4,6 +4,7 @@ import { AdminLayout, AdminContainer } from '@/components/admin'
 import { Suspense } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { UserTable } from './_components/user-table'
+import { ADMIN_ROUTES } from '@/constants/routes/routes'
 
 export const metadata: Metadata = {
     title: 'User Management',
@@ -17,7 +18,7 @@ export default async function AdminUsersPage() {
         <AdminLayout
             title={t('users.title')}
             description={t('users.description')}
-            breadcrumbs={[{ label: t('breadcrumbs.admin'), href: '/admin' }, { label: t('users.title') }]}
+            breadcrumbs={[{ label: t('breadcrumbs.admin'), href: ADMIN_ROUTES.DASHBOARD }, { label: t('users.title') }]}
         >
             <AdminContainer>
                 <Suspense

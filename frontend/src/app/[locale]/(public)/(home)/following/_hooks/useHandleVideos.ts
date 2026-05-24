@@ -6,6 +6,7 @@ import { useAppSelector } from '@/store/hooks'
 import useScrollIndexObserver from '@/hooks/ui/useScrollIndexObserver'
 import { TikTokPostType } from '@/types/models/post.model'
 import { ModalVideoDetailType } from '@/constants/ui/video-dialog'
+import { USER_ROUTES } from '@/constants/routes/routes'
 export const keyDataScroll = 'data-scroll-index'
 
 export function useHandleVideos(postList: TikTokPostType[]) {
@@ -22,7 +23,7 @@ export function useHandleVideos(postList: TikTokPostType[]) {
     const handleUpdateNewPathForVideo = useCallback(() => {
         const currentPost = postList[currentIndex]
         if (!currentPost) return
-        const newUrl = `/@${currentPost.author.username}/video/${currentPost.uuid}`
+        const newUrl = USER_ROUTES.VIDEO(currentPost.author.username, currentPost.uuid)
         if (pathname?.includes('video')) {
             router.replace(newUrl)
         } else {

@@ -23,6 +23,7 @@ import { BsFillImageFill } from 'react-icons/bs'
 import { useEffect, useMemo, useState } from 'react'
 import { TikTokPostType } from '@/types/models/post.model'
 import VideoDetailDialog from '@/components/video-dialog'
+import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
 
 export function useColumns(): ColumnDef<TikTokPostType>[] {
     const t = useTranslations('SnapiStudio.content.table')
@@ -141,7 +142,7 @@ export function useColumns(): ColumnDef<TikTokPostType>[] {
                             <Tooltip>
                                 <TooltipTrigger asChild>
                                     <Link
-                                        href={`/snapistudio/upload/post/${post.uuid}?from=${encodeURIComponent('/snapistudio/content')}`}
+                                        href={`${SNAPISTUDIO_ROUTES.UPLOAD_POST(post.uuid)}?from=${encodeURIComponent(SNAPISTUDIO_ROUTES.CONTENT)}`}
                                     >
                                         <Button
                                             variant='ghost'
@@ -170,7 +171,7 @@ export function useColumns(): ColumnDef<TikTokPostType>[] {
                                 <DropdownMenuContent align='end' className='w-40'>
                                     <DropdownMenuItem asChild>
                                         <Link
-                                            href={`/snapistudio/upload/post/${post.uuid}?from=${encodeURIComponent('/snapistudio/content')}`}
+                                            href={`${SNAPISTUDIO_ROUTES.UPLOAD_POST(post.uuid)}?from=${encodeURIComponent(SNAPISTUDIO_ROUTES.CONTENT)}`}
                                             className='cursor-pointer'
                                         >
                                             <PencilLine className='mr-2 h-4 w-4' />

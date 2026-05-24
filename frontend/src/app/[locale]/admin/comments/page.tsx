@@ -4,6 +4,7 @@ import { AdminLayout, AdminContainer } from '@/components/admin'
 import { Suspense } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { CommentTable } from './_components/comment-table'
+import { ADMIN_ROUTES } from '@/constants/routes/routes'
 
 export const metadata: Metadata = {
     title: 'Comment Moderation',
@@ -17,7 +18,10 @@ export default async function AdminCommentsPage() {
         <AdminLayout
             title={t('comments.title')}
             description={t('comments.description')}
-            breadcrumbs={[{ label: t('breadcrumbs.admin'), href: '/admin' }, { label: t('comments.title') }]}
+            breadcrumbs={[
+                { label: t('breadcrumbs.admin'), href: ADMIN_ROUTES.DASHBOARD },
+                { label: t('comments.title') }
+            ]}
         >
             <AdminContainer>
                 <Suspense

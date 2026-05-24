@@ -6,6 +6,7 @@ import { Link } from '@/i18n/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { Metadata, ResolvingMetadata } from 'next'
 import { set } from 'lodash'
+import { LEGAL_ROUTES } from '@/constants/routes/routes'
 
 export async function generateMetadata(
     { params }: { params: Promise<{ locale: LocalesType }> },
@@ -49,7 +50,7 @@ export default async function AuthLayout({
                     {t.rich('notice', {
                         terms: (chunks) => (
                             <Link
-                                href='/terms-of-service'
+                                href={LEGAL_ROUTES.TERMS_OF_SERVICE}
                                 target='_blank'
                                 className='font-semibold text-black hover:underline'
                             >
@@ -58,7 +59,7 @@ export default async function AuthLayout({
                         ),
                         privacy: (chunks) => (
                             <Link
-                                href='/privacy-policy'
+                                href={LEGAL_ROUTES.PRIVACY_POLICY}
                                 target='_blank'
                                 className='font-semibold text-black hover:underline'
                             >

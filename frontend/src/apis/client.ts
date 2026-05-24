@@ -2,6 +2,7 @@
 import envConfig from '@/config/app.config'
 import { AUTH_COOKIE } from '@/constants/auth'
 import { HTTP_STATUS } from '@/constants/api/http-status'
+import { AUTH_ROUTES } from '@/constants/routes/routes'
 import { BusinessException } from '@/exceptions/BussinessException.exception'
 import { HttpException } from '@/exceptions/HttpException.exception'
 import { redirect } from '@/i18n/navigation'
@@ -54,7 +55,7 @@ export async function clientRequest<response>({ method, url, options = {} }: Req
             ])
             cookieStore.delete(AUTH_COOKIE.ACCESS_TOKEN)
             cookieStore.delete(AUTH_COOKIE.REFRESH_TOKEN)
-            redirect({ href: '/login', locale })
+            redirect({ href: AUTH_ROUTES.LOGIN, locale })
         }
         throw error
     }

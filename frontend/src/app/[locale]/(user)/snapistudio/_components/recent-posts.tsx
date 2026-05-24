@@ -12,6 +12,7 @@ import { BsFillImageFill } from 'react-icons/bs'
 import { FaChevronRight, FaCommentDots, FaHeart, FaPlay } from 'react-icons/fa6'
 import { useTranslations } from 'next-intl'
 import VideoDetailDialog from '@/components/video-dialog'
+import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
 
 interface RecentPostProps {
     classNames?: string
@@ -33,7 +34,7 @@ export default function RecentPosts({ classNames }: RecentPostProps) {
     const posts = data?.data || []
 
     const handleRecentPostClick = () => {
-        router.push(`/snapistudio/content`)
+        router.push(SNAPISTUDIO_ROUTES.CONTENT)
     }
 
     return (

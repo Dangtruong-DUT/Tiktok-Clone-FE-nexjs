@@ -25,6 +25,7 @@ import { useBookmarkPost, useLikePost } from '@/hooks/data/useVideo'
 import { useGetPostDetailQuery } from '@/store/services/posts.service'
 import BookmarkIcon from '@/components/lottie-icons/bookmark-icon'
 import ActionButton from '@/components/video-dialog/action-button'
+import { USER_ROUTES } from '@/constants/routes/routes'
 
 type VideoDescriptionProps = {
     post: TikTokPostType
@@ -73,7 +74,7 @@ export default function VideoDescription({ post, className }: VideoDescriptionPr
         userId: user.uuid,
         initialFollowState: userProfileRes?.data.is_followed ?? false
     })
-    const linkToVideo = `${envConfig.NEXT_PUBLIC_URL}/${locale}/@${user.username}/video/${post.uuid}`
+    const linkToVideo = `${envConfig.NEXT_PUBLIC_URL}/${locale}${USER_ROUTES.VIDEO(user.username, post.uuid)}`
 
     const role = useAppSelector((state) => state.auth.role)
     const { data: postDetailRes } = useGetPostDetailQuery(post.uuid)
@@ -103,14 +104,14 @@ export default function VideoDescription({ post, className }: VideoDescriptionPr
             <div className='mb-4 bg-muted rounded-lg p-4 '>
                 <div className='flex items-center justify-between mb-4'>
                     <div className='flex items-center gap-3'>
-                        <Link href={`/@${user.username}`}>
+                        <Link href={USER_ROUTES.PROFILE(user.username)}>
                             <Avatar className='size-12'>
                                 <AvatarImage src={user.avatar} alt={user.username} className='shrink-0 object-cover' />
                                 <AvatarFallback>{user.username.charAt(0).toUpperCase()}</AvatarFallback>
                             </Avatar>
                         </Link>
                         <div className='flex flex-col'>
-                            <Link href={`/@${user.username}`}>
+                            <Link href={USER_ROUTES.PROFILE(user.username)}>
                                 <span className='font-semibold text-sm hover:underline'>{user.username}</span>
                             </Link>
                             <span className='text-sm text-muted-foreground'>

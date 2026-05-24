@@ -270,10 +270,7 @@ export default function PhotoEditorDialog({ photoUrl, isVisible, setVisible, onC
                 </div>
                 <div className='flex items-center justify-center gap-4'>
                     <span className='text-sm font-medium'>Zoom</span>
-                    <Slider
-                        onChange={handleSliderChange}
-                        value={((scale - 1) / 2) * 100}
-                    />
+                    <Slider onChange={handleSliderChange} value={((scale - 1) / 2) * 100} />
                 </div>
 
                 <footer className='flex items-center justify-end gap-4 p-4 border-t  bg-card'>

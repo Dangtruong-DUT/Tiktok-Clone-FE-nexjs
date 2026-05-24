@@ -3,10 +3,11 @@
 import { Link } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
 import { usePathname } from 'next/navigation'
+import { AUTH_ROUTES } from '@/constants/routes/routes'
 
 export function AuthNav() {
     const pathname = usePathname()
-    const isLoginPage = (pathname ?? '').includes('/login')
+    const isLoginPage = (pathname ?? '').includes(AUTH_ROUTES.LOGIN)
     const t = useTranslations('AuthLayout')
 
     return (
@@ -18,7 +19,7 @@ export function AuthNav() {
                 {!isLoginPage ? t('haveAccount') : t('noAccount')}
             </p>
             <Link
-                href={isLoginPage ? '/signup' : '/login'}
+                href={isLoginPage ? AUTH_ROUTES.SIGN_UP : AUTH_ROUTES.LOGIN}
                 className='text-sm font-semibold text-brand hover:underline'
             >
                 {!isLoginPage ? t('login') : t('signUp')}

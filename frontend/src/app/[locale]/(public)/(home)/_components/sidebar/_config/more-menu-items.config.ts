@@ -1,4 +1,5 @@
 import { MenuOption } from '@/components/nested-menu/types'
+import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
 
 const MENU_ITEMS: MenuOption[] = [
     {
@@ -66,7 +67,7 @@ const MENU_ITEMS: MenuOption[] = [
     {
         type: 'item',
         title: 'menuMore.settings',
-        to: '/snapistudio/settings',
+        to: SNAPISTUDIO_ROUTES.SETTINGS,
         for: ['user']
     },
     {

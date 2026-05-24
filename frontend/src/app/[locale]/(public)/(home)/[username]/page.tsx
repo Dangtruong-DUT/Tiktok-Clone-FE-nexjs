@@ -8,6 +8,7 @@ import envConfig from '@/config/app.config'
 import { WrapperServerCallApi } from '@/utils/errors/handle-server-error.util'
 import { Metadata, ResolvingMetadata } from 'next'
 import { notFound } from 'next/navigation'
+import { USER_ROUTES } from '@/constants/routes/routes'
 
 type Props = {
     params: Promise<{ username: string; locale: string }>
@@ -40,15 +41,15 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
             title: user?.name ? `${user.name} (@${user.username})` : 'Snapi Profile',
             description: user?.bio || `Check out ${user?.name || user?.username}'s profile on Snapi`,
             type: 'profile',
-            url: `${process.env.NEXT_PUBLIC_URL}/${locale}/@${cleanUsername}`,
+            url: `${process.env.NEXT_PUBLIC_URL}/${locale}${USER_ROUTES.PROFILE(cleanUsername)}`,
             siteName: 'Snapi',
             locale
         },
         alternates: {
-            canonical: `${envConfig.NEXT_PUBLIC_URL}/${locale}/@${cleanUsername}`,
+            canonical: `${envConfig.NEXT_PUBLIC_URL}/${locale}${USER_ROUTES.PROFILE(cleanUsername)}`,
             languages: {
-                'en-US': `${envConfig.NEXT_PUBLIC_URL}/en/@${cleanUsername}`,
-                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}/vi/@${cleanUsername}`
+                'en-US': `${envConfig.NEXT_PUBLIC_URL}/en${USER_ROUTES.PROFILE(cleanUsername)}`,
+                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}/vi${USER_ROUTES.PROFILE(cleanUsername)}`
             }
         },
         twitter: {

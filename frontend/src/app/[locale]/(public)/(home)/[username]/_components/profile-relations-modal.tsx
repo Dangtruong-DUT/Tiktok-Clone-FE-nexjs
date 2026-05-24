@@ -20,6 +20,7 @@ import { UserType } from '@/types/models/user.model'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 import { HTTP_STATUS } from '@/constants/api/http-status'
+import { USER_ROUTES } from '@/constants/routes/routes'
 
 type RelationTab = 'following' | 'followers' | 'friends' | 'suggested'
 
@@ -350,7 +351,7 @@ export default function ProfileRelationsModal({
                                 {users.map((user) => (
                                     <div key={user.uuid} className='flex items-center justify-between gap-3'>
                                         <Link
-                                            href={`/@${user.username}`}
+                                            href={USER_ROUTES.PROFILE(user.username)}
                                             onClick={() => setIsOpen(false)}
                                             className='min-w-0'
                                         >

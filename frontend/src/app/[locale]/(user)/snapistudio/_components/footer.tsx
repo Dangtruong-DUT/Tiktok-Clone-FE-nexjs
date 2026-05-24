@@ -1,5 +1,6 @@
 import { Link } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
+import { LEGAL_ROUTES } from '@/constants/routes/routes'
 
 export default function Footer() {
     const t = useTranslations('SnapiStudio.footer')
@@ -8,10 +9,10 @@ export default function Footer() {
         <footer className=' border-t border-border p-8 flex justify-between items-center'>
             <span className='text-muted-foreground text-xs'>{t('copyright')}</span>
             <div className='flex gap-6'>
-                <Link href='/privacy-policy' className='text-muted-foreground text-xs'>
+                <Link href={LEGAL_ROUTES.PRIVACY_POLICY} className='text-muted-foreground text-xs'>
                     {t('privacyPolicy')}
                 </Link>
-                <Link href='/terms-of-service' className='text-muted-foreground text-xs'>
+                <Link href={LEGAL_ROUTES.TERMS_OF_SERVICE} className='text-muted-foreground text-xs'>
                     {t('termsOfService')}
                 </Link>
             </div>

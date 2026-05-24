@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { Loader } from 'lucide-react'
 import { useLoginWithEmail } from '@/hooks/data/useAuth'
+import { AUTH_ROUTES } from '@/constants/routes/routes'
 
 export function LoginForm() {
     const t = useTranslations('LoginPage.email')
@@ -43,7 +44,10 @@ export function LoginForm() {
                         </FormItem>
                     )}
                 />
-                <Link href='/forgot-password' className='text-xs text-neutral-500  hover:underline block pb-4'>
+                <Link
+                    href={AUTH_ROUTES.FORGOT_PASSWORD}
+                    className='text-xs text-neutral-500  hover:underline block pb-4'
+                >
                     {t('forgotPassword')}
                 </Link>
                 <Button

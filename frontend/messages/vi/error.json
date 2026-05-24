@@ -1,0 +1,18 @@
+{
+    "notFound": {
+        "title": "Không tìm thấy trang",
+        "description": "Oops! Trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển.",
+        "backHome": "Về trang chủ"
+    },
+    "serverError": {
+        "title": "Đã xảy ra lỗi",
+        "description": "Có lỗi không mong muốn xảy ra. Vui lòng thử lại sau.",
+        "tryAgain": "Thử lại",
+        "backHome": "Về trang chủ"
+    },
+    "errorBoundary": {
+        "title": "Đã xảy ra lỗi",
+        "description": "Có lỗi không mong muốn xảy ra trong khu vực này.",
+        "tryAgain": "Thử lại"
+    }
+}

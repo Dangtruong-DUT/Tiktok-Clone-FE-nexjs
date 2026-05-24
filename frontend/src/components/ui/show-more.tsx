@@ -44,7 +44,10 @@ const ShowMore: React.FC<ShowMoreProps> = ({
             <div
                 ref={contentRef}
                 style={{ maxHeight: expanded ? 'none' : `${maxHeight}px` }}
-                className={cn('text-sm overflow-hidden transition-[max-height] duration-300 ease-in-out', textClassName)}
+                className={cn(
+                    'text-sm overflow-hidden transition-[max-height] duration-300 ease-in-out',
+                    textClassName
+                )}
             >
                 {enableRichText ? <RichTextContent text={text} mentions={mentions} hashtags={hashtags} /> : text}
             </div>

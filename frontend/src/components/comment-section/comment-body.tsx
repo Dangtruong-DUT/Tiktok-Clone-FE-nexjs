@@ -17,6 +17,7 @@ import { useLocale } from 'next-intl'
 import { useState } from 'react'
 import { FaHeart, FaRegHeart } from 'react-icons/fa6'
 import RichTextContent from '@/components/common/rich-text-content'
+import { USER_ROUTES } from '@/constants/routes/routes'
 
 type CommentBodyProps = {
     comment: CommentType
@@ -74,7 +75,7 @@ export function CommentBody({ comment, parent_id, parent_uuid }: CommentBodyProp
     return (
         <div className=' mb-2 space-y-4'>
             <div className='flex  items-start gap-3'>
-                <Link href={`/@${comment.author.username}`}>
+                <Link href={USER_ROUTES.PROFILE(comment.author.username)}>
                     <Avatar className='size-10 shrink-0'>
                         <AvatarImage
                             src={comment.author.avatar}
@@ -87,7 +88,7 @@ export function CommentBody({ comment, parent_id, parent_uuid }: CommentBodyProp
                     </Avatar>
                 </Link>
                 <div className='flex flex-col w-full'>
-                    <Link href={`/@${comment.author.username}`}>
+                    <Link href={USER_ROUTES.PROFILE(comment.author.username)}>
                         <span className=' text-sm hover:underline text-accent-foreground font-semibold'>
                             {comment.author.username}
                         </span>

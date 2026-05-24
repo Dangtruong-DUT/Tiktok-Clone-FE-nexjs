@@ -1,5 +1,6 @@
 import AuthRequestApi from '@/apis/auth.request'
 import { AUTH_COOKIE } from '@/constants/auth'
+import { AUTH_ROUTES } from '@/constants/routes/routes'
 import { setAuthCookies } from '@/utils/auth/cookies.util'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -45,7 +46,7 @@ export async function refreshTokenMiddleware({
 
         return response
     } catch {
-        const url = new URL(`/${locale}/login`, request.url)
+        const url = new URL(`/${locale}${AUTH_ROUTES.LOGIN}`, request.url)
         url.searchParams.set('redirect', pathname)
         return NextResponse.redirect(url)
     }

@@ -15,6 +15,7 @@ import { FaRegHeart } from 'react-icons/fa6'
 import { timeAgo } from '@/utils/formatting/format-time.util'
 import { useLocale } from 'next-intl'
 import RichTextContent from '@/components/common/rich-text-content'
+import { USER_ROUTES } from '@/constants/routes/routes'
 
 export default function CardVideoItem({
     post,
@@ -100,7 +101,7 @@ export default function CardVideoItem({
                     </p>
                     <button
                         type='button'
-                        onClick={() => router.push(`/@${author.username}`)}
+                        onClick={() => router.push(USER_ROUTES.PROFILE(author.username))}
                         className='text-sm font-semibold hover:underline text-muted-foreground truncate block max-w-[90%] '
                     >
                         {author.username}

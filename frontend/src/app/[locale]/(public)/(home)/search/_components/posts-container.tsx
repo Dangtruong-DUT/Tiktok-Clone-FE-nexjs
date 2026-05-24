@@ -10,6 +10,7 @@ import { useAppDispatch } from '@/store/hooks'
 import { setOpenModal } from '@/store/features/modalSlide'
 import { ModalVideoDetailType } from '@/constants/ui/video-dialog'
 import VideoItemSkeleton from '@/app/[locale]/(public)/(home)/search/_components/video-item-skeleton'
+import { USER_ROUTES } from '@/constants/routes/routes'
 
 interface PostsContainerProps {
     fetchNextPage: () => void
@@ -67,7 +68,7 @@ export default function PostsContainer({
                 {data.map((post) => (
                     <Link
                         key={post.uuid}
-                        href={`/@${post.author.username}/video/${post.uuid}`}
+                        href={USER_ROUTES.VIDEO(post.author.username, post.uuid)}
                         className='w-full'
                         onClick={handleVideoClick}
                     >

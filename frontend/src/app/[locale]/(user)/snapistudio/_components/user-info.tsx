@@ -6,13 +6,14 @@ import useCurrentUserData from '@/hooks/data/useCurrentUserData'
 import { Link } from '@/i18n/navigation'
 import { MdOutlineShortcut } from 'react-icons/md'
 import { useTranslations } from 'next-intl'
+import { USER_ROUTES } from '@/constants/routes/routes'
 
 export default function UserInfo() {
     const userData = useCurrentUserData()
     const t = useTranslations('SnapiStudio.dashboard.userInfo')
     return (
         <div className='flex items-center gap-4  border rounded-lg p-5 bg-card '>
-            <Link href={`/@${userData?.username}`} className=' relative'>
+            <Link href={USER_ROUTES.PROFILE(userData?.username ?? '')} className=' relative'>
                 <Avatar className='size-12 shrink-0'>
                     <AvatarImage src={userData?.avatar} alt={userData?.username} className='shrink-0 object-cover' />
                     <AvatarFallback> {userData?.name?.charAt(0)?.toUpperCase() ?? 'U'}</AvatarFallback>
@@ -23,7 +24,7 @@ export default function UserInfo() {
             </Link>
             <div className='flex flex-col '>
                 <p className='flex items-center gap-1'>
-                    <Link href={`/@${userData?.username}`}>
+                    <Link href={USER_ROUTES.PROFILE(userData?.username ?? '')}>
                         <span className='inline-block text-base font-bold truncate max-w-[400px] hover:underline'>
                             {userData?.username}
                         </span>

@@ -12,6 +12,7 @@ import LoadingIcon from '@/components/lottie-icons/loading'
 import { CiGrid41 } from 'react-icons/ci'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useTranslations } from 'next-intl'
+import { USER_ROUTES } from '@/constants/routes/routes'
 
 function VideoGrid() {
     const [showSkeleton, setShowSkeleton] = useState<boolean>(true)
@@ -55,7 +56,7 @@ function VideoGrid() {
             {postList.length > 0 && (
                 <div className='grid gap-6 gap-x-4 grid-cols-[repeat(auto-fill,minmax(240px,1fr))] w-full  md:grid-cols-[repeat(auto-fill,minmax(180px,1fr))]'>
                     {postList.map((video) => {
-                        const videoLink = `/@${video.author.username}/video/${video.uuid}`
+                        const videoLink = USER_ROUTES.VIDEO(video.author.username, video.uuid)
                         return (
                             <Link key={video.uuid} href={videoLink} className='w-full' onClick={handleVideoClick}>
                                 <CardVideoItem post={video} isDescriptionVisible={false} />

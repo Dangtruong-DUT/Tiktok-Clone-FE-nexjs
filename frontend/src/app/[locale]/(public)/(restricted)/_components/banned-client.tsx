@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { Link } from '@/i18n/navigation'
 import { AlertOctagon, ArrowRight, FileText, Scale, ShieldAlert, CheckCircle2 } from 'lucide-react'
+import { APP_ROUTES } from '@/constants/routes/routes'
 
 interface BannedClientProps {
     remainingDays: number | null
@@ -90,7 +91,7 @@ export function BannedClient({
 
                 <div className='space-y-3'>
                     <Link
-                        href='/appeal?appeal_type=user_ban&resource_type=user'
+                        href={`${APP_ROUTES.APPEAL}?appeal_type=user_ban&resource_type=user`}
                         className='group flex w-full items-center justify-center gap-2 rounded-lg bg-black px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-neutral-800'
                     >
                         <Scale className='h-4 w-4' />

@@ -9,6 +9,7 @@ import { useParams } from 'next/navigation'
 import { ModalVideoDetailType } from '@/constants/ui/video-dialog'
 import { useCallback, useEffect, useRef } from 'react'
 import { VIDEO_PATH_REGEX } from '@/constants/regex'
+import { APP_ROUTES } from '@/constants/routes/routes'
 
 export default function CommentsPage() {
     const typeOpenModal = useAppSelector((state) => state.modal.typeOpenModal)
@@ -32,7 +33,7 @@ export default function CommentsPage() {
             router.push(prevPathnameRef.current, { scroll: false })
             prevPathnameRef.current = null
         } else {
-            router.replace('/')
+            router.replace(APP_ROUTES.HOME)
         }
     }, [router, prevPathnameRef])
 

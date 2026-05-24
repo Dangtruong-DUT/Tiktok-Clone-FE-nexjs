@@ -1,5 +1,6 @@
 import { Link } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
+import { LEGAL_ROUTES } from '@/constants/routes/routes'
 
 export function LegalNotice() {
     const tAuth = useTranslations('AuthLayout')
@@ -10,7 +11,7 @@ export function LegalNotice() {
                 {tAuth.rich('notice', {
                     terms: (chunks) => (
                         <Link
-                            href='/terms-of-service'
+                            href={LEGAL_ROUTES.TERMS_OF_SERVICE}
                             target='_blank'
                             className='font-semibold hover:underline text-card-foreground'
                         >
@@ -19,7 +20,7 @@ export function LegalNotice() {
                     ),
                     privacy: (chunks) => (
                         <Link
-                            href='/privacy-policy'
+                            href={LEGAL_ROUTES.PRIVACY_POLICY}
                             target='_blank'
                             className='font-semibold hover:underline text-card-foreground'
                         >

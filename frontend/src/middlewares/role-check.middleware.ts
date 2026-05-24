@@ -1,5 +1,6 @@
 import { SUPER_ADMIN_ROUTE_PREFIXES, USER_PROTECTED_ROUTE_PREFIXES } from '@/constants/routes/route-access'
 import { Role } from '@/constants/enum'
+import { ADMIN_ROUTES } from '@/constants/routes/routes'
 import { isPathMatched } from '@/utils/auth/path-check.util'
 import { NextRequest, NextResponse } from 'next/server'
 import { LocalesType } from '@/i18n/config'
@@ -27,7 +28,7 @@ export function roleCheckMiddleware({
     }
 
     if (isUserProtectedPath && role === Role.SUPER_ADMIN) {
-        return NextResponse.redirect(new URL(`/${locale}/admin`, request.url))
+        return NextResponse.redirect(new URL(`/${locale}${ADMIN_ROUTES.DASHBOARD}`, request.url))
     }
 
     return null

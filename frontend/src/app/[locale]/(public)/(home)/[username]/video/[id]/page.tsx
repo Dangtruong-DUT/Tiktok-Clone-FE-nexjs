@@ -8,6 +8,7 @@ import { notFound } from 'next/navigation'
 import { VideoPlaylistProvider } from '@/app/[locale]/(public)/(home)/[username]/video/[id]/_context/video-playlist-context'
 import VideoDetailContent from '@/app/[locale]/(public)/(home)/[username]/video/[id]/_components/video-detail-content'
 import envConfig from '@/config/app.config'
+import { USER_ROUTES } from '@/constants/routes/routes'
 
 interface VideoDetailPageProps {
     params: Promise<{
@@ -48,7 +49,7 @@ export async function generateMetadata({ params }: VideoDetailPageProps, parent:
 
     const pageDescription = postContent || `Watch ${displayName}'s video on Snapi.`
 
-    const canonicalUrl = `${envConfig.NEXT_PUBLIC_URL}/${locale}/@${cleanUsername}/video/${id}`
+    const canonicalUrl = `${envConfig.NEXT_PUBLIC_URL}/${locale}${USER_ROUTES.VIDEO(cleanUsername, id)}`
 
     return {
         title: pageTitle,
@@ -65,8 +66,8 @@ export async function generateMetadata({ params }: VideoDetailPageProps, parent:
         alternates: {
             canonical: canonicalUrl,
             languages: {
-                'en-US': `${envConfig.NEXT_PUBLIC_URL}/en/@${cleanUsername}/video/${id}`,
-                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}/vi/@${cleanUsername}/video/${id}`
+                'en-US': `${envConfig.NEXT_PUBLIC_URL}/en${USER_ROUTES.VIDEO(cleanUsername, id)}`,
+                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}/vi${USER_ROUTES.VIDEO(cleanUsername, id)}`
             }
         },
         twitter: {

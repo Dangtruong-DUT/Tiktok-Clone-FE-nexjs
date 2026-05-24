@@ -3,14 +3,15 @@ import { AiOutlineHome, AiOutlineCloudUpload, AiFillHome } from 'react-icons/ai'
 import { HiOutlineUsers, HiOutlineUserGroup, HiUsers, HiUserGroup, HiCloudArrowUp } from 'react-icons/hi2'
 
 import { IconType } from 'react-icons'
+import { APP_ROUTES, SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
 export const sidebarConfig = {
     routes: {
-        home: '/',
-        explore: '/explore',
-        friends: '/friends',
-        following: '/following',
-        messages: '/messages',
-        upload: '/snapistudio/upload'
+        home: APP_ROUTES.HOME,
+        explore: APP_ROUTES.EXPLORE,
+        friends: APP_ROUTES.FRIENDS,
+        following: APP_ROUTES.FOLLOWING,
+        messages: APP_ROUTES.MESSAGES,
+        upload: SNAPISTUDIO_ROUTES.UPLOAD
     }
 } as const
 

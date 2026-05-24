@@ -1,0 +1,18 @@
+{
+    "notFound": {
+        "title": "Page not found",
+        "description": "Oops! The page you're looking for doesn't exist or has been moved.",
+        "backHome": "Back to Home"
+    },
+    "serverError": {
+        "title": "Something went wrong",
+        "description": "An unexpected error occurred. Please try again later.",
+        "tryAgain": "Try again",
+        "backHome": "Back to Home"
+    },
+    "errorBoundary": {
+        "title": "Something went wrong",
+        "description": "An unexpected error occurred in this section.",
+        "tryAgain": "Try again"
+    }
+}

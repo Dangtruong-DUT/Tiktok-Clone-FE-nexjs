@@ -13,6 +13,7 @@ import { timeAgo } from '@/utils/formatting/format-time.util'
 import { useLocale } from 'next-intl'
 import type { MentionType } from '@/types/models/mention.model'
 import type { HashtagType } from '@/types/models/hashtag.model'
+import { USER_ROUTES } from '@/constants/routes/routes'
 
 type VideoDescriptionProps = {
     author: UserType
@@ -74,7 +75,7 @@ export default function VideoDescription({
     return (
         <div className={cn('p-4 rounded-lg bg-accent mt-4', className)}>
             <div className='flex items-center pb-4'>
-                <Link href={`/@${author.username}`} className='flex items-center'>
+                <Link href={USER_ROUTES.PROFILE(author.username)} className='flex items-center'>
                     <Avatar className='w-12 h-12  mr-3'>
                         <AvatarImage src={author.avatar} alt={author.name} className='shrink-0 object-cover' />
                         <AvatarFallback>{author.name.charAt(0).toUpperCase()}</AvatarFallback>

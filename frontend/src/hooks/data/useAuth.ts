@@ -19,6 +19,7 @@ import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { logger } from '@/utils/logger.util'
+import { ADMIN_ROUTES, APP_ROUTES } from '@/constants/routes/routes'
 
 const LOGOUT_LOADING_KEY = 'logout'
 
@@ -39,7 +40,8 @@ export function useLoginWithEmail() {
         async (data: LoginReqBodyType) => {
             try {
                 const result = await loginMutate(data).unwrap()
-                const destination = result.data.user.role === Role.SUPER_ADMIN ? '/admin' : '/'
+                const destination =
+                    result.data.user.role === Role.SUPER_ADMIN ? ADMIN_ROUTES.DASHBOARD : APP_ROUTES.HOME
                 router.push(destination)
                 toast.success(result.message)
             } catch (error) {
@@ -78,7 +80,7 @@ export function useRegisterWithEmail() {
         async (data: RegisterReqBodyType) => {
             try {
                 const result = await registerMutate(data).unwrap()
-                router.push('/')
+                router.push(APP_ROUTES.HOME)
                 toast.success(result.message)
             } catch (error) {
                 handleFormError<RegisterReqBodyType>({
@@ -114,7 +116,7 @@ export function useLogout(props?: UseLogoutProps) {
             clearStore(dispatch)
             dispatch(startLoadingByKey(LOGOUT_LOADING_KEY))
             const res = await logoutMutate().unwrap()
-            router.replace('/')
+            router.replace(APP_ROUTES.HOME)
             router.refresh()
             props?.onSuccess?.(res)
         } catch (error) {

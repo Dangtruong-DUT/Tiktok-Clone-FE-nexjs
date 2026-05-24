@@ -11,6 +11,7 @@ import { MdVerified } from 'react-icons/md'
 import { UserVerifyStatus } from '@/constants/enum'
 import { useSearchUsersGetQuery } from '@/store/services/search.service'
 import { useTranslations } from 'next-intl'
+import { APP_ROUTES, USER_ROUTES } from '@/constants/routes/routes'
 
 type SearchDrawerContentProps = {
     searchValue: string
@@ -49,7 +50,7 @@ export default function SearchDrawerContent({ searchValue, setSearchValue }: Sea
     const handleOnEnterOnSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && searchValue) {
             e.preventDefault()
-            router.push(`/search?q=${searchValue}`)
+            router.push(`${APP_ROUTES.SEARCH}?q=${searchValue}`)
         }
     }
 
@@ -96,7 +97,7 @@ export default function SearchDrawerContent({ searchValue, setSearchValue }: Sea
                         <ul tabIndex={-1} className='space-y-1'>
                             {searchResults.map((user) => (
                                 <li key={user.uuid}>
-                                    <Link href={`/@${user.username}`} className='inline-block w-full'>
+                                    <Link href={USER_ROUTES.PROFILE(user.username)} className='inline-block w-full'>
                                         <Button
                                             variant={'ghost'}
                                             className='space-x-2 w-full justify-start py-[9px] min-h-[58px]'
@@ -123,7 +124,7 @@ export default function SearchDrawerContent({ searchValue, setSearchValue }: Sea
                                 </li>
                             ))}
                         </ul>
-                        <Link href={`/search?q=${searchValue}`} className='inline-block w-full'>
+                        <Link href={`${APP_ROUTES.SEARCH}?q=${searchValue}`} className='inline-block w-full'>
                             <span className='inline-block max-w-full text-base font-semibold truncate mt-4'>
                                 {t('viewAllResults', { query: searchValue })}
                             </span>

@@ -1,4 +1,5 @@
 import { BANNED_ROUTE_PREFIXES, PUBLIC_ROUTE_PREFIXES } from '@/constants/routes/route-access'
+import { APP_ROUTES } from '@/constants/routes/routes'
 import { JwtPayloadType } from '@/types/common/jwt-payload.type'
 import { decodeJwt } from '@/utils/auth/jwt.util'
 import { isPathMatched } from '@/utils/auth/path-check.util'
@@ -20,7 +21,7 @@ export function bannedUserMiddleware({
     const isBanned = payload.banned === true
     const isBannedRoute = isPathMatched(BANNED_ROUTE_PREFIXES, pathname)
     const isPublicRoute = isPathMatched(PUBLIC_ROUTE_PREFIXES, pathname)
-    const isAppealRoute = pathname.endsWith('/appeal')
+    const isAppealRoute = pathname.endsWith(APP_ROUTES.APPEAL)
 
     if (!isBanned && isBannedRoute) {
         return NextResponse.redirect(new URL(`/${locale}`, request.url))
@@ -32,7 +33,7 @@ export function bannedUserMiddleware({
         const bannedUntil = payload.ban_until
         const remainingDays = payload.ban_remaining_days
 
-        const targetUrl = new URL(`/${locale}/banned`, request.url)
+        const targetUrl = new URL(`/${locale}${APP_ROUTES.BANNED}`, request.url)
         if (bannedUntil) {
             targetUrl.searchParams.set('ban_until', bannedUntil)
         }

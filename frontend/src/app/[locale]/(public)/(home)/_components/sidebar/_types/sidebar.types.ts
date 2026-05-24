@@ -1,4 +1,5 @@
 import { routesValuesType } from '@/app/[locale]/(public)/(home)/_components/sidebar/_config/menu-items-sidebar.config'
+import { APP_ROUTES, SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
 
 export enum SidebarActiveType {
     HOME = 'home',
@@ -20,10 +21,10 @@ export interface SidebarActiveState {
 }
 
 export const routeToActiveType: Record<routesValuesType, SidebarActiveType> = {
-    '/': SidebarActiveType.HOME,
-    '/explore': SidebarActiveType.EXPLORE,
-    '/friends': SidebarActiveType.FRIENDS,
-    '/following': SidebarActiveType.FOLLOWING,
-    '/messages': SidebarActiveType.MESSAGES,
-    '/snapistudio/upload': SidebarActiveType.UPLOAD
+    [APP_ROUTES.HOME]: SidebarActiveType.HOME,
+    [APP_ROUTES.EXPLORE]: SidebarActiveType.EXPLORE,
+    [APP_ROUTES.FRIENDS]: SidebarActiveType.FRIENDS,
+    [APP_ROUTES.FOLLOWING]: SidebarActiveType.FOLLOWING,
+    [APP_ROUTES.MESSAGES]: SidebarActiveType.MESSAGES,
+    [SNAPISTUDIO_ROUTES.UPLOAD]: SidebarActiveType.UPLOAD
 }

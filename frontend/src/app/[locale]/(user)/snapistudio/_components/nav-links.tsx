@@ -9,6 +9,7 @@ import { navItems } from '@/app/[locale]/(user)/snapistudio/_config/navItems'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft, Plus } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
+import { APP_ROUTES, SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
 
 export default function NavLinks() {
     const t = useTranslations('SnapiStudio.navigation')
@@ -18,7 +19,7 @@ export default function NavLinks() {
         <>
             <aside className='hidden w-62 flex-col border-r  lg:flex max-h-screen overflow-hidden'>
                 <div className='flex h-17 items-center px-5 border-b'>
-                    <Link href='/snapistudio' className='flex items-center gap-1'>
+                    <Link href={SNAPISTUDIO_ROUTES.ROOT} className='flex items-center gap-1'>
                         <LogoBrand small={false} />
                         <Badge>
                             <span>Studio</span>
@@ -29,17 +30,20 @@ export default function NavLinks() {
                 <div className='flex flex-col justify-between flex-1 py-4 px-5'>
                     <div className='flex flex-col gap-4'>
                         <Link
-                            href='/snapistudio/upload'
+                            href={SNAPISTUDIO_ROUTES.UPLOAD}
                             className={cn('mb-4 mt-5', {
-                                'select-none opacity-40 cursor-not-allowed': pathname.includes('/snapistudio/upload')
+                                'select-none opacity-40 cursor-not-allowed': pathname.includes(
+                                    SNAPISTUDIO_ROUTES.UPLOAD
+                                )
                             })}
                         >
                             <Button
                                 className={cn(
                                     ' h-9 font-medium text-sm rounded-lg gap-1! w-full cursor-pointer bg-brand text-white hover:bg-brand/90 transition-colors',
                                     {
-                                        'select-none opacity-40 cursor-not-allowed':
-                                            pathname?.includes('/snapistudio/upload')
+                                        'select-none opacity-40 cursor-not-allowed': pathname?.includes(
+                                            SNAPISTUDIO_ROUTES.UPLOAD
+                                        )
                                     }
                                 )}
                             >
@@ -76,7 +80,7 @@ export default function NavLinks() {
                     </div>
 
                     <div>
-                        <Link href='/'>
+                        <Link href={APP_ROUTES.HOME}>
                             <Button
                                 variant='ghost'
                                 className='w-full text-sm font-medium transition-colors flex justify-start gap-2'
@@ -92,25 +96,27 @@ export default function NavLinks() {
             <TooltipProvider>
                 <aside className=' w-14 flex-col border-r bg-background sm:flex lg:hidden max-h-screen overflow-hidden'>
                     <nav className='flex flex-col items-center gap-4 px-2 py-4'>
-                        <Link href='/snapistudio' className='flex h-8 w-8 items-center justify-center'>
+                        <Link href={SNAPISTUDIO_ROUTES.ROOT} className='flex h-8 w-8 items-center justify-center'>
                             <LogoBrand small={true} />
                         </Link>
 
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <Link
-                                    href='/snapistudio/upload'
+                                    href={SNAPISTUDIO_ROUTES.UPLOAD}
                                     className={cn('mb-4 mt-5', {
-                                        'select-none opacity-40 cursor-not-allowed':
-                                            pathname?.includes('/snapistudio/upload')
+                                        'select-none opacity-40 cursor-not-allowed': pathname?.includes(
+                                            SNAPISTUDIO_ROUTES.UPLOAD
+                                        )
                                     })}
                                 >
                                     <Button
                                         className={cn(
                                             '  font-medium text-sm rounded-lg gap-1! cursor-pointer bg-brand text-white hover:bg-brand/90 transition-colors h-9 w-9',
                                             {
-                                                'select-none opacity-40 cursor-not-allowed':
-                                                    pathname?.includes('/snapistudio/upload')
+                                                'select-none opacity-40 cursor-not-allowed': pathname?.includes(
+                                                    SNAPISTUDIO_ROUTES.UPLOAD
+                                                )
                                             }
                                         )}
                                     >

@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useInViewport } from '@/hooks/ui/useInViewport'
 import AccountItemSkeleton from '@/app/[locale]/(public)/(home)/search/_components/account-item-skeleton'
 import { useTranslations } from 'next-intl'
+import { USER_ROUTES } from '@/constants/routes/routes'
 
 interface UsersContainerProps {
     fetchNextPage: () => void
@@ -61,7 +62,7 @@ export default function UsersContainer({
         <ul className='flex flex-col overflow-y-auto scrollbar-hidden mt-2'>
             {data.map((user) => (
                 <li key={user.uuid}>
-                    <Link href={`/@${user.username}`} className='inline-block w-full'>
+                    <Link href={USER_ROUTES.PROFILE(user.username)} className='inline-block w-full'>
                         <Button
                             variant={'ghost'}
                             className='space-x-2 w-full justify-start py-[9px] min-h-[97px] rounded-none!'

@@ -1,5 +1,6 @@
 import { Link } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
+import { LEGAL_ROUTES } from '@/constants/routes/routes'
 
 export default function SidebarFooter() {
     const t = useTranslations('HomePage.sidebar.footer')
@@ -8,14 +9,14 @@ export default function SidebarFooter() {
         <footer className='px-2 pt-2 pb-[75px]'>
             <div className='mt-5 flex flex-col gap-4'>
                 <Link
-                    href='/privacy-policy'
+                    href={LEGAL_ROUTES.PRIVACY_POLICY}
                     target='_blank'
                     className='text-muted-foreground text-sm hover:underline font-semibold'
                 >
                     {t('privacyPolicy')}
                 </Link>
                 <Link
-                    href='/terms-of-service'
+                    href={LEGAL_ROUTES.TERMS_OF_SERVICE}
                     target='_blank'
                     className='text-muted-foreground text-sm hover:underline font-semibold'
                 >

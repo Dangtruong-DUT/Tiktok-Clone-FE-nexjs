@@ -1,4 +1,5 @@
 import { Role } from '@/constants/enum'
+import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
 import { Settings, LayoutPanelLeft, BookUp, Scale } from 'lucide-react'
 
 interface NavItem {
@@ -12,25 +13,25 @@ interface NavItem {
 export const navItems: NavItem[] = [
     {
         title: 'home',
-        href: '/snapistudio',
+        href: SNAPISTUDIO_ROUTES.ROOT,
         Icon: LayoutPanelLeft,
         role: [Role.USER, Role.SUPER_ADMIN]
     },
     {
         title: 'posts',
-        href: '/snapistudio/content',
+        href: SNAPISTUDIO_ROUTES.CONTENT,
         Icon: BookUp,
         role: [Role.USER, Role.SUPER_ADMIN]
     },
     {
         title: 'appeals',
-        href: '/snapistudio/appeals',
+        href: SNAPISTUDIO_ROUTES.APPEALS,
         Icon: Scale,
         role: [Role.USER, Role.SUPER_ADMIN]
     },
     {
         title: 'settings',
-        href: '/snapistudio/settings',
+        href: SNAPISTUDIO_ROUTES.SETTINGS,
         Icon: Settings,
         role: [Role.USER, Role.SUPER_ADMIN]
     }

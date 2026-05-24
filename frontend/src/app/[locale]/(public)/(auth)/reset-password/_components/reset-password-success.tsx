@@ -5,6 +5,7 @@ import { Link } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
 import { CheckCircle, ArrowRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { AUTH_ROUTES } from '@/constants/routes/routes'
 
 export default function ResetPasswordSuccess() {
     const t = useTranslations('resetPasswordPage')
@@ -40,7 +41,7 @@ export default function ResetPasswordSuccess() {
                         isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
                     }`}
                 >
-                    <Link href='/login'>
+                    <Link href={AUTH_ROUTES.LOGIN}>
                         <Button className='w-full primary-button '>
                             <span className='flex items-center justify-center space-x-2'>
                                 <span>{t('success.goToLogin')}</span>

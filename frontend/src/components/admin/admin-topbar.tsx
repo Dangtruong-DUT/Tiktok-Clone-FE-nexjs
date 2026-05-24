@@ -13,7 +13,7 @@ import {
     BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
 import { Link } from '@/i18n/navigation'
-import { ADMIN_ROUTES } from '@/constants/admin/routes'
+import { ADMIN_ROUTES, USER_ROUTES } from '@/constants/routes/routes'
 import { useTranslations } from 'next-intl'
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'
 import DialogConfirmLogout from '@/components/common/confirm-logout-dialog'
@@ -106,7 +106,7 @@ export function AdminTopbar({ title, breadcrumbs, actions, onToggleSidebar }: Ad
                                         {t('shell.settings')}
                                     </Button>
                                 </Link>
-                                <Link href={`/@${currentUser?.username || ''}`} className='block'>
+                                <Link href={USER_ROUTES.PROFILE(currentUser?.username || '')} className='block'>
                                     <Button variant='ghost' size='sm' className='w-full justify-start'>
                                         {t('shell.profile')}
                                     </Button>

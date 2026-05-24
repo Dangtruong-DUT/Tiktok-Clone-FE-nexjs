@@ -15,6 +15,7 @@ import { useAppSelector } from '@/store/hooks'
 import { useLocale, useTranslations } from 'next-intl'
 import { ShareMenuDialog } from '@/components/public/share-menu-dialog'
 import envConfig from '@/config/app.config'
+import { SNAPISTUDIO_ROUTES, USER_ROUTES } from '@/constants/routes/routes'
 
 interface ProfileActionButtonsProps {
     username: string
@@ -34,7 +35,7 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
     })
 
     const local = useLocale()
-    const ProfileUserUrl = `${envConfig.NEXT_PUBLIC_URL}${local}/@${username}`
+    const ProfileUserUrl = `${envConfig.NEXT_PUBLIC_URL}${local}${USER_ROUTES.PROFILE(username)}`
 
     const handleMessage = () => {
         if (!currentUser) {
@@ -58,7 +59,7 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
         return (
             <div className='flex items-center'>
                 <EditProfileDialog />
-                <Link href='/snapistudio/settings'>
+                <Link href={SNAPISTUDIO_ROUTES.SETTINGS}>
                     <Button variant='secondary' className='ml-2 h-10 font-medium rounded-sm text-base cursor-pointer'>
                         <span className='flex justify-center  items-center mr-1 max-lg:flex max-md:mr-0'>
                             <Settings size={19} />

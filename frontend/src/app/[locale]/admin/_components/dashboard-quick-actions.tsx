@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Flag, UserX, Trash2, MessageSquareWarning } from 'lucide-react'
 import { useRouter } from '@/i18n/navigation'
+import { ADMIN_ROUTES } from '@/constants/routes/routes'
 
 export function DashboardQuickActions() {
     const t = useTranslations('AdminPage')
@@ -14,25 +15,25 @@ export function DashboardQuickActions() {
         {
             label: t('dashboard.quickActions.reviewAppeals'),
             icon: Flag,
-            href: '/admin/appeals',
+            href: ADMIN_ROUTES.APPEALS,
             variant: 'outline' as const
         },
         {
             label: t('dashboard.quickActions.manageUsers'),
             icon: UserX,
-            href: '/admin/users',
+            href: ADMIN_ROUTES.USERS,
             variant: 'outline' as const
         },
         {
             label: t('dashboard.quickActions.moderatePosts'),
             icon: Trash2,
-            href: '/admin/posts',
+            href: ADMIN_ROUTES.POSTS,
             variant: 'outline' as const
         },
         {
             label: t('dashboard.quickActions.moderateComments'),
             icon: MessageSquareWarning,
-            href: '/admin/comments',
+            href: ADMIN_ROUTES.COMMENTS,
             variant: 'outline' as const
         }
     ]

@@ -23,6 +23,7 @@ import { useAppContext } from '@/provider/app-provider'
 import { AuthStatus } from '@/constants/status/async'
 import { EvidenceDropzone } from './evidence-dropzone'
 import { Link } from '@/i18n/navigation'
+import { APP_ROUTES, AUTH_ROUTES } from '@/constants/routes/routes'
 interface AppealFormClientProps {
     appealUuid?: string
     appealType?: string
@@ -213,7 +214,7 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
                     <h1 className='text-xl font-bold text-amber-900'>{t('pending.title')}</h1>
                     <p className='text-amber-700 max-w-md text-sm'>{t('pending.description')}</p>
                     <Link
-                        href={`/appeal?appeal_uuid=${pendingAppealUuid}`}
+                        href={`${APP_ROUTES.APPEAL}?appeal_uuid=${pendingAppealUuid}`}
                         className='inline-flex items-center gap-2 rounded-full bg-amber-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-amber-700'
                     >
                         {t('pending.viewAppeal')}
@@ -235,10 +236,10 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
 
     if (!isAuthenticated) {
         const redirectUrl = isNewFlow
-            ? `/appeal?appeal_type=${appealType}&resource_type=${resourceType}${resourceUuid ? `&resource_uuid=${resourceUuid}` : ''}`
+            ? `${APP_ROUTES.APPEAL}?appeal_type=${appealType}&resource_type=${resourceType}${resourceUuid ? `&resource_uuid=${resourceUuid}` : ''}`
             : isEditFlow
-              ? `/appeal?appeal_uuid=${appealUuid}`
-              : '/appeal'
+              ? `${APP_ROUTES.APPEAL}?appeal_uuid=${appealUuid}`
+              : APP_ROUTES.APPEAL
         return (
             <div className='w-full rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-10'>
                 <div className='flex flex-col items-center text-center gap-4'>
@@ -248,7 +249,7 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
                     <h1 className='text-2xl font-bold text-slate-900'>{t('auth.loginRequired')}</h1>
                     <p className='text-slate-600 max-w-md'>{t('auth.loginDescription')}</p>
                     <Link
-                        href={`/login?redirect=${encodeURIComponent(redirectUrl)}`}
+                        href={`${AUTH_ROUTES.LOGIN}?redirect=${encodeURIComponent(redirectUrl)}`}
                         className='inline-flex items-center gap-2 rounded-full bg-slate-900 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800'
                     >
                         <LogIn className='h-4 w-4' />

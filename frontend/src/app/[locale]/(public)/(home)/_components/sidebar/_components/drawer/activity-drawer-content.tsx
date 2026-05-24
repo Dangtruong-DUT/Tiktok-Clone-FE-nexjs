@@ -20,6 +20,7 @@ import { NotificationType } from '@/types/models/notification.model'
 import { useFollowUserMutation, useUnfollowUserMutation } from '@/store/services/user.service'
 import FollowToggleButton from '@/components/public/follow-toggle-button'
 import { useAppSelector } from '@/store/hooks'
+import { APP_ROUTES, USER_ROUTES } from '@/constants/routes/routes'
 
 import LoadingIcon from '@/components/lottie-icons/loading'
 
@@ -172,7 +173,7 @@ function getNotificationLink(notification: NotificationType): string | null {
         (action === 'approve_appeal' || action === 'reject_appeal')
     ) {
         const appealUuid = typeof notification.data?.appeal_uuid === 'string' ? notification.data.appeal_uuid : null
-        return appealUuid ? `/appeal?appeal_uuid=${appealUuid}` : null
+        return appealUuid ? `${APP_ROUTES.APPEAL}?appeal_uuid=${appealUuid}` : null
     }
 
     const appealAvailable = notification.data?.appeal_available === true
@@ -182,7 +183,7 @@ function getNotificationLink(notification: NotificationType): string | null {
     const appealLink = typeof notification.data?.appeal_link === 'string' ? notification.data.appeal_link : null
 
     if (appealAvailable && appealType && resourceType && resourceUuid !== null) {
-        return `/appeal?appeal_type=${appealType}&resource_type=${resourceType}&resource_uuid=${resourceUuid}`
+        return `${APP_ROUTES.APPEAL}?appeal_type=${appealType}&resource_type=${resourceType}&resource_uuid=${resourceUuid}`
     }
 
     if (appealLink) {
@@ -206,15 +207,15 @@ function getNotificationLink(notification: NotificationType): string | null {
         notification.actor?.username
     ) {
         const query = dataCommentUuid ? `?comment_uuid=${dataCommentUuid}` : ''
-        return `/@${notification.actor.username}/video/${dataPostUuid}${query}`
+        return `${USER_ROUTES.VIDEO(notification.actor.username, dataPostUuid)}${query}`
     }
 
     if (notification.entity?.type === 'post' && notification.entity?.uuid && notification.actor?.username) {
-        return `/@${notification.actor.username}/video/${notification.entity.uuid}`
+        return USER_ROUTES.VIDEO(notification.actor.username, notification.entity.uuid)
     }
 
     if (notification.actor?.username) {
-        return `/@${notification.actor.username}`
+        return USER_ROUTES.PROFILE(notification.actor.username)
     }
 
     return null

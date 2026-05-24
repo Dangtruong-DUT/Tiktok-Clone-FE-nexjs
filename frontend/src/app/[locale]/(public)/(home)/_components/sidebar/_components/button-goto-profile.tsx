@@ -12,6 +12,7 @@ import { Link } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
 import { FaRegUser } from 'react-icons/fa6'
+import { USER_ROUTES } from '@/constants/routes/routes'
 
 interface ButtonGotoProfileProps {
     isOpenDrawer: boolean
@@ -42,7 +43,7 @@ export default function ButtonGotoProfile({ isOpenDrawer, activeState, setActive
     if (user != null) {
         return (
             <Link
-                href={`/@${user?.username}`}
+                href={USER_ROUTES.PROFILE(user?.username ?? '')}
                 className={cn(
                     'flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent',
                     activeState.type === SidebarActiveType.PROFILE && 'bg-accent'
@@ -50,7 +51,7 @@ export default function ButtonGotoProfile({ isOpenDrawer, activeState, setActive
                 onClick={() =>
                     setActiveState({
                         type: SidebarActiveType.PROFILE,
-                        route: `/@${user.username}`
+                        route: USER_ROUTES.PROFILE(user.username)
                     })
                 }
             >

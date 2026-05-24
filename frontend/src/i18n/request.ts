@@ -2,7 +2,7 @@ import { getRequestConfig } from 'next-intl/server'
 import { hasLocale } from 'next-intl'
 import { routing } from './routing'
 
-const NAMESPACES = ['common', 'auth', 'home', 'profile', 'admin', 'studio', 'appeal', 'legal'] as const
+const NAMESPACES = ['common', 'auth', 'home', 'profile', 'admin', 'studio', 'appeal', 'legal', 'error'] as const
 
 export default getRequestConfig(async ({ requestLocale }) => {
     const requested = await requestLocale

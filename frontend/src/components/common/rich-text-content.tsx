@@ -6,6 +6,7 @@ import { Fragment } from 'react'
 import { HASHTAG_EXACT_REGEX, SOCIAL_SPLIT_REGEX, USERNAME_EXACT_REGEX } from '@/constants/regex'
 import type { MentionType } from '@/types/models/mention.model'
 import type { HashtagType } from '@/types/models/hashtag.model'
+import { APP_ROUTES, USER_ROUTES } from '@/constants/routes/routes'
 
 interface RichTextContentProps {
     text: string
@@ -72,7 +73,7 @@ export default function RichTextContent({
                 rendered.push(
                     <Link
                         key={`mention-${token.start}-${token.end}`}
-                        href={`/@${token.username}`}
+                        href={USER_ROUTES.PROFILE(token.username)}
                         className={cn('text-brand hover:underline', mentionClassName)}
                     >
                         {tokenText || `@${token.username}`}
@@ -86,7 +87,7 @@ export default function RichTextContent({
                 rendered.push(
                     <Link
                         key={`hashtag-${token.start}-${token.end}`}
-                        href={`/search?q=${encodeURIComponent(hashtagText)}`}
+                        href={`${APP_ROUTES.SEARCH}?q=${encodeURIComponent(hashtagText)}`}
                         className={cn('text-brand hover:underline', hashtagClassName)}
                     >
                         {hashtagText}
@@ -116,7 +117,7 @@ export default function RichTextContent({
                     return (
                         <Link
                             key={`${chunk}-${index}`}
-                            href={`/@${username}`}
+                            href={USER_ROUTES.PROFILE(username)}
                             className={cn('text-brand hover:underline', mentionClassName)}
                         >
                             {chunk}
@@ -128,7 +129,7 @@ export default function RichTextContent({
                     return (
                         <Link
                             key={`${chunk}-${index}`}
-                            href={`/search?q=${encodeURIComponent(chunk)}`}
+                            href={`${APP_ROUTES.SEARCH}?q=${encodeURIComponent(chunk)}`}
                             className={cn('text-brand hover:underline', hashtagClassName)}
                         >
                             {chunk}

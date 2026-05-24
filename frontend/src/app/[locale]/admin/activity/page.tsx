@@ -4,6 +4,7 @@ import { AdminLayout, AdminContainer } from '@/components/admin'
 import { Suspense } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ActivityLog } from './_components/activity-log'
+import { ADMIN_ROUTES } from '@/constants/routes/routes'
 
 export const metadata: Metadata = {
     title: 'Activity Logs',
@@ -17,7 +18,10 @@ export default async function AdminActivityPage() {
         <AdminLayout
             title={t('activity.title')}
             description={t('activity.description')}
-            breadcrumbs={[{ label: t('breadcrumbs.admin'), href: '/admin' }, { label: t('activity.title') }]}
+            breadcrumbs={[
+                { label: t('breadcrumbs.admin'), href: ADMIN_ROUTES.DASHBOARD },
+                { label: t('activity.title') }
+            ]}
         >
             <AdminContainer>
                 <Suspense

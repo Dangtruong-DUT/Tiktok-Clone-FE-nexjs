@@ -15,6 +15,7 @@ import { useAnimatedState } from '@/hooks/ui/useAnimatedState'
 import envConfig from '@/config/app.config'
 import { ShareMenuDialog } from '@/components/public/share-menu-dialog'
 import { useLocale } from 'use-intl'
+import { USER_ROUTES } from '@/constants/routes/routes'
 
 interface ActionBarProps {
     post: TikTokPostType
@@ -54,7 +55,7 @@ export default function ActionBar({ post, className }: ActionBarProps) {
     }, [postDetail, post])
 
     const local = useLocale()
-    const videoUrl = `${envConfig.NEXT_PUBLIC_URL}${local}/@${post.author.username}/video/${post.uuid}`
+    const videoUrl = `${envConfig.NEXT_PUBLIC_URL}${local}${USER_ROUTES.VIDEO(post.author.username, post.uuid)}`
 
     return (
         <section className={cn('flex flex-col items-center relative', className)}>

@@ -28,6 +28,7 @@ import { setLoadingByKey } from '@/store/features/appSlice'
 import { extractHashtags } from '@/utils/social-token.util'
 import MentionHashtagTextField from '@/components/forms/mention-hashtag-text-field'
 import { logger } from '@/utils/logger.util'
+import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
 
 const APP_LOADING_KEYS = {
     uploadVideoPost: 'upload.video-post'
@@ -164,7 +165,7 @@ export default function FormUploadVideo() {
                 position: 'top-center'
             })
             onReset()
-            router.push('/snapistudio/content')
+            router.push(SNAPISTUDIO_ROUTES.CONTENT)
         } catch (error) {
             logger.error(error)
             handleFormError<CreatePostReqBodyType>({

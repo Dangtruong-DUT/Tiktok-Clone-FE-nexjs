@@ -29,6 +29,7 @@ import { useTranslations } from 'next-intl'
 import { extractHashtags } from '@/utils/social-token.util'
 import MentionHashtagTextField from '@/components/forms/mention-hashtag-text-field'
 import { logger } from '@/utils/logger.util'
+import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
 
 export default function FormUpdatePost() {
     const t = useTranslations('SnapiStudio.upload')
@@ -70,7 +71,7 @@ export default function FormUpdatePost() {
 
     useEffect(() => {
         if (!id) {
-            router.push(`/snapistudio/upload`)
+            router.push(SNAPISTUDIO_ROUTES.UPLOAD)
         }
     }, [id, router])
 
@@ -140,7 +141,7 @@ export default function FormUpdatePost() {
         if (redirectFrom) {
             router.push(redirectFrom)
         } else {
-            router.push('/snapistudio/content')
+            router.push(SNAPISTUDIO_ROUTES.CONTENT)
         }
     }
     const content = form.watch('content')

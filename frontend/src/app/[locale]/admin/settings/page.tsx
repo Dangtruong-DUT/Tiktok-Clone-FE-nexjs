@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import { AdminLayout, AdminContainer } from '@/components/admin'
 import { AdminSettingsContent } from './_components/admin-settings-content'
+import { ADMIN_ROUTES } from '@/constants/routes/routes'
 
 export const metadata: Metadata = {
     title: 'Admin Settings',
@@ -15,7 +16,10 @@ export default async function AdminSettingsPage() {
         <AdminLayout
             title={t('settings.title')}
             description={t('settings.description')}
-            breadcrumbs={[{ label: t('breadcrumbs.admin'), href: '/admin' }, { label: t('settings.title') }]}
+            breadcrumbs={[
+                { label: t('breadcrumbs.admin'), href: ADMIN_ROUTES.DASHBOARD },
+                { label: t('settings.title') }
+            ]}
         >
             <AdminContainer>
                 <AdminSettingsContent />

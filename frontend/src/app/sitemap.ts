@@ -1,4 +1,5 @@
 import envConfig from '@/config/app.config'
+import { APP_ROUTES, AUTH_ROUTES, LEGAL_ROUTES, SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
 import { locales } from '@/i18n/config'
 import type { MetadataRoute } from 'next'
 
@@ -12,79 +13,73 @@ const staticRoutes: MetadataRoute.Sitemap = [
         priority: 1
     },
     {
-        url: '/upload',
+        url: APP_ROUTES.UPLOAD,
         lastModified: new Date(),
         changeFrequency: 'daily' as const,
         priority: 0.8
     },
     {
-        url: '/explore',
+        url: APP_ROUTES.EXPLORE,
         lastModified: new Date(),
         changeFrequency: 'daily' as const,
         priority: 0.8
     },
     {
-        url: '/messages',
+        url: APP_ROUTES.ACTIVITY,
         lastModified: new Date(),
         changeFrequency: 'daily' as const,
         priority: 0.7
     },
     {
-        url: '/activity',
-        lastModified: new Date(),
-        changeFrequency: 'daily' as const,
-        priority: 0.7
-    },
-    {
-        url: '/snapistudio',
+        url: SNAPISTUDIO_ROUTES.ROOT,
         lastModified: new Date(),
         changeFrequency: 'daily' as const,
         priority: 0.9
     },
     {
-        url: '/snapistudio/content',
+        url: SNAPISTUDIO_ROUTES.CONTENT,
         lastModified: new Date(),
         changeFrequency: 'daily' as const,
         priority: 0.8
     },
     {
-        url: '/snapistudio/settings',
+        url: SNAPISTUDIO_ROUTES.SETTINGS,
         lastModified: new Date(),
         changeFrequency: 'weekly' as const,
         priority: 0.6
     },
     {
-        url: '/auth/login',
+        url: AUTH_ROUTES.LOGIN,
         lastModified: new Date(),
         changeFrequency: 'monthly' as const,
         priority: 0.5
     },
     {
-        url: '/signup',
+        url: AUTH_ROUTES.SIGN_UP,
         lastModified: new Date(),
         changeFrequency: 'monthly' as const,
         priority: 0.5
     },
     {
-        url: '/forgot-password',
+        url: AUTH_ROUTES.FORGOT_PASSWORD,
         lastModified: new Date(),
         changeFrequency: 'monthly' as const,
         priority: 0.4
     },
     {
-        url: '/reset-password',
+        url: AUTH_ROUTES.RESET_PASSWORD,
         lastModified: new Date(),
         changeFrequency: 'monthly' as const,
         priority: 0.4
     },
     {
-        url: '/terms-of-service',
+        url: LEGAL_ROUTES.TERMS_OF_SERVICE,
         lastModified: new Date(),
         changeFrequency: 'monthly' as const,
         priority: 0.3
     },
     {
-        url: '/privacy-policy',
+        url: LEGAL_ROUTES.PRIVACY_POLICY,
         lastModified: new Date(),
         changeFrequency: 'monthly' as const,
         priority: 0.3
