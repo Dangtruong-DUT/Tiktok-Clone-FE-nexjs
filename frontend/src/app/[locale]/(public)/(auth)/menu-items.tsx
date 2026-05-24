@@ -1,6 +1,6 @@
 'use client'
 
-import { getOauthGoogleUrl } from '@/helpers/oauth'
+import { getOauthGoogleUrl } from '@/utils/auth/oauth.util'
 import { UserRound } from 'lucide-react'
 import { FcGoogle } from 'react-icons/fc'
 import { useTranslations } from 'next-intl'

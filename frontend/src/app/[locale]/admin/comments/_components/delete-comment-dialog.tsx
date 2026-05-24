@@ -22,7 +22,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { extractApiErrorMessage } from '@/utils/handleErrors/extractApiError.util'
+import { extractApiErrorMessage } from '@/utils/errors/extract-api-error.util'
 
 interface DeleteCommentDialogProps {
     open: boolean

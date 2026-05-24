@@ -5,7 +5,7 @@ import { SearchParamsLoader, useSearchParamsLoader } from '@/components/search-p
 import { useVerifyForgotPasswordMutation } from '@/store/services/user.service'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
-import { logger } from '@/utils/logger'
+import { logger } from '@/utils/logger.util'
 
 interface VerifyResetTokenProps {
     onTokenVerified: (token: string) => void

@@ -14,10 +14,10 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import VideoPreview from '@/app/[locale]/(user)/snapistudio/upload/_components/video-preview'
 import SelectThumbnailDialog from '@/app/[locale]/(user)/snapistudio/upload/_components/select-thumbnail-dialog'
 import AudienceSelect from '@/components/audience-select'
-import { convertBase64ToFileToFile } from '@/utils/file.util'
+import { convertBase64ToFile } from '@/utils/file.util'
 import { useUploadImageMutation, useUploadVideoMutation } from '@/store/services/upload.service'
 import { useCreatePostMutation } from '@/store/services/posts.service'
-import { handleFormError } from '@/utils/handleErrors/handleFormErrors.util'
+import { handleFormError } from '@/utils/errors/handle-form-errors.util'
 import { toast } from 'sonner'
 import useVideoFrames from '@/hooks/video/useVideoFrames'
 import { useRouter } from '@/i18n/navigation'
@@ -25,9 +25,9 @@ import { useConfirmNavigation } from '@/hooks/shared/useConfirmNavigation'
 import AlertDialogExitPage from '@/app/[locale]/(user)/snapistudio/upload/_components/alert-confirm-leave-page'
 import { useAppDispatch } from '@/store/hooks'
 import { setLoadingByKey } from '@/store/features/appSlice'
-import { extractHashtags } from '@/utils/socialToken.util'
+import { extractHashtags } from '@/utils/social-token.util'
 import MentionHashtagTextField from '@/components/mention-hashtag-text-field'
-import { logger } from '@/utils/logger'
+import { logger } from '@/utils/logger.util'
 
 const APP_LOADING_KEYS = {
     uploadVideoPost: 'upload.video-post'
@@ -99,7 +99,7 @@ export default function FormUploadVideo() {
     useEffect(() => {
         const fetchFrame = async () => {
             if (videoUrl && videoFrames.length > 0) {
-                const file = await convertBase64ToFileToFile(videoFrames[0]!.image, 'video_thumbnail.png')
+                const file = await convertBase64ToFile(videoFrames[0]!.image, 'video_thumbnail.png')
                 if (file) setThumbnailFile(file)
             }
         }

@@ -1,6 +1,6 @@
-import { logger } from '@/utils/logger'
+import { logger } from '@/utils/logger.util'
 
-export async function convertBase64ToFileToFile(image: string, filename: string) {
+export async function convertBase64ToFile(image: string, filename: string) {
     try {
         const res = await fetch(image)
         const blob = await res.blob()

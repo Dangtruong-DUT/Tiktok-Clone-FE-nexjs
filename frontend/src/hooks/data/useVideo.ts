@@ -8,7 +8,7 @@ import {
     useUnlikePostMutation
 } from '@/store/services/posts.service'
 import { useCallback, useEffect, useState } from 'react'
-import { logger } from '@/utils/logger'
+import { logger } from '@/utils/logger.util'
 
 interface UseLikePostProps {
     postId: string

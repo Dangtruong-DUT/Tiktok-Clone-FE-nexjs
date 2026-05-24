@@ -1,4 +1,4 @@
-import { isPayloadErrorWithMessage } from './apiErrorGuards.util'
+import { isPayloadErrorWithMessage } from './api-error-guards.util'
 
 /**
  * Extracts a user-friendly error message from an API error object.

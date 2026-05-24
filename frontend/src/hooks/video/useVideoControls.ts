@@ -2,7 +2,7 @@
 
 import { useCallback } from 'react'
 import { useTemporaryIcon } from '@/hooks/ui/useTemporaryIcon'
-import { logger } from '@/utils/logger'
+import { logger } from '@/utils/logger.util'
 
 interface UseVideoControlsProps {
     videoRef: React.RefObject<HTMLVideoElement | null>

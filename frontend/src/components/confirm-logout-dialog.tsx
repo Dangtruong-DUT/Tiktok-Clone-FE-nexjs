@@ -9,7 +9,7 @@ interface DialogConfirmLogoutProps {
 }
 
 export default function DialogConfirmLogout({ isOpen, onOpenChange }: DialogConfirmLogoutProps) {
-    const { handleLogout, logoutResult } = useLogout({
+    const { handleLogout } = useLogout({
         onLogout: () => {
             onOpenChange(false)
         }

@@ -8,8 +8,9 @@ import { Skeleton } from '@/components/ui/skeleton'
 import VideoPlayer from '@/components/dialog-video-player'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useGetPostDetailQuery } from '@/store/services/posts.service'
-import { formatAdminDate, getPostStatus, getPostStatusColor } from '@/helpers/admin-helpers'
-import { formatNumber } from '@/utils/formatting/formatNumber.util'
+import { getPostStatus, getPostStatusColor } from '@/utils/admin/admin.util'
+import { formatNumber } from '@/utils/formatting/format-number.util'
+import { formatDateTime } from '@/utils/formatting/format-time.util'
 import type { AdminPost } from '@/types/dtos/admin/admin-response.dto'
 
 interface PostPreviewDialogProps {
@@ -63,7 +64,7 @@ export function PostPreviewDialog({ open, post, onOpenChange }: PostPreviewDialo
                                 <div>
                                     <p className='text-sm font-semibold'>{authorName}</p>
                                     <p className='text-xs text-muted-foreground'>
-                                        {formatAdminDate(postDetail?.created_at || post.created_at)}
+                                        {formatDateTime(postDetail?.created_at || post.created_at)}
                                     </p>
                                 </div>
                             </div>

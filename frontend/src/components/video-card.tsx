@@ -2,7 +2,7 @@
 
 import { Audience } from '@/constants/enum'
 import { TikTokPostType } from '@/types/models/post.model'
-import { formatCompactNumber } from '@/utils/formatting/formatNumber.util'
+import { formatCompactNumber } from '@/utils/formatting/format-number.util'
 import { IoLockClosedOutline } from 'react-icons/io5'
 import Image from 'next/image'
 import React from 'react'
@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils'
 import PlayingIcon from '@/components/lottie-icons/playing'
 import { HiOutlinePlay } from 'react-icons/hi2'
 import { FaRegHeart } from 'react-icons/fa6'
-import { timeAgo } from '@/utils/formatting/formatTime.util'
+import { timeAgo } from '@/utils/formatting/format-time.util'
 import { useLocale } from 'next-intl'
 import RichTextContent from '@/components/rich-text-content'
 

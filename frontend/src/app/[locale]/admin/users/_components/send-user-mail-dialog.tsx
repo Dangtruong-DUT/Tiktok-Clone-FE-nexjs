@@ -20,7 +20,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { extractApiErrorMessage } from '@/utils/handleErrors/extractApiError.util'
+import { extractApiErrorMessage } from '@/utils/errors/extract-api-error.util'
 
 interface SendUserMailDialogProps {
     open: boolean

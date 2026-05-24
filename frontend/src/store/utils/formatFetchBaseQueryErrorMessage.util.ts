@@ -1,5 +1,5 @@
 import { HTTP_STATUS } from '@/constants/api/http-status'
-import { isPayloadErrorWithMessage } from '@/utils/handleErrors/apiErrorGuards.util'
+import { isPayloadErrorWithMessage } from '@/utils/errors/api-error-guards.util'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 
 export interface ReadableErrorMessageReturn {

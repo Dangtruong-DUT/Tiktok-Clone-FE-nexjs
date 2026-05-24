@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { formatNumber } from '@/utils/formatting/formatNumber.util'
+import { formatNumber } from '@/utils/formatting/format-number.util'
 import type { DashboardStats } from '@/types/dtos/admin/admin-response.dto'
 import { useGetDashboardStatsQuery } from '@/store/services/admin'
 import { Users, Video, ShieldOff, Activity } from 'lucide-react'

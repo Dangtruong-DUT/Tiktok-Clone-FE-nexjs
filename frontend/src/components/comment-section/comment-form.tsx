@@ -7,14 +7,14 @@ import { Audience, PosterType } from '@/constants/enum'
 import { useAppSelector } from '@/store/hooks'
 import { cn } from '@/lib/utils'
 import { useCreateCommentMutation } from '@/store/services/posts.service'
-import { handleFormError } from '@/utils/handleErrors/handleFormErrors.util'
+import { handleFormError } from '@/utils/errors/handle-form-errors.util'
 import { CreateCommentsReqBody, CreateCommentsReqBodyType } from '@/types/dtos/post/post-request.dto'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
-import { extractHashtags } from '@/utils/socialToken.util'
+import { extractHashtags } from '@/utils/social-token.util'
 import MentionHashtagTextField from '@/components/mention-hashtag-text-field'
-import { logger } from '@/utils/logger'
+import { logger } from '@/utils/logger.util'
 
 interface CommentFormProps {
     className?: string

@@ -3,7 +3,7 @@
 import useDebounceCallback from '@/hooks/shared/useCallback'
 import { useFollowUserMutation, useUnfollowUserMutation } from '@/store/services/user.service'
 import { useCallback, useEffect, useState } from 'react'
-import { logger } from '@/utils/logger'
+import { logger } from '@/utils/logger.util'
 
 export function useFollowUser({ userId, initialFollowState }: { userId: string; initialFollowState: boolean }) {
     const [followUser, { isLoading: isFollowLoading }] = useFollowUserMutation()

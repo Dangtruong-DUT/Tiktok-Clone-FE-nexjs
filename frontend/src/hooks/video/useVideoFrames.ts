@@ -2,7 +2,7 @@
 
 import { generateTimeLineFrames, TimelineFrameType } from '@/utils/video.util'
 import { useEffect, useState } from 'react'
-import { logger } from '@/utils/logger'
+import { logger } from '@/utils/logger.util'
 
 export default function useVideoFrames(VideoSrc: string | null, frameCount: number) {
     const [frames, setFrames] = useState<TimelineFrameType[]>([])

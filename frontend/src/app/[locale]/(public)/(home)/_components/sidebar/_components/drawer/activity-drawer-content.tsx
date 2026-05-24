@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { useLocale, useTranslations } from 'next-intl'
 import { BellRing, MessageCircle, ShieldCheck, Sparkles, Video } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { timeAgo } from '@/utils/formatting/formatTime.util'
+import { timeAgo } from '@/utils/formatting/format-time.util'
 import { NotificationTypeCode } from '@/constants/enum'
 import { useDrawerSidebar } from '@/app/[locale]/(public)/(home)/_components/sidebar/_components/drawer/drawer'
 import {

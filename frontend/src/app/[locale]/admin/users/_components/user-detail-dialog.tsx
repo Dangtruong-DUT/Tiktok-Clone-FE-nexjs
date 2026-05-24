@@ -9,8 +9,9 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetUserByUsernameQuery } from '@/store/services/user.service'
 import { useGetPostOfUserPagingQuery } from '@/store/services/posts.service'
-import { formatAdminDate, getUserStatus, getUserStatusColor } from '@/helpers/admin-helpers'
-import { formatNumber } from '@/utils/formatting/formatNumber.util'
+import { getUserStatus, getUserStatusColor } from '@/utils/admin/admin.util'
+import { formatNumber } from '@/utils/formatting/format-number.util'
+import { formatDateTime } from '@/utils/formatting/format-time.util'
 import type { AdminUser } from '@/types/dtos/admin/admin-response.dto'
 
 interface UserDetailDialogProps {
@@ -88,19 +89,16 @@ export function UserDetailDialog({ open, user, onOpenChange }: UserDetailDialogP
 
                     <div className='grid grid-cols-1 gap-4 rounded-lg border bg-muted/30 p-4 text-sm sm:grid-cols-2'>
                         <DetailRow label={t('users.detail.fields.email')} value={user.email} />
-                        <DetailRow
-                            label={t('users.detail.fields.createdAt')}
-                            value={formatAdminDate(user.created_at)}
-                        />
+                        <DetailRow label={t('users.detail.fields.createdAt')} value={formatDateTime(user.created_at)} />
                         <DetailRow label={t('users.detail.fields.role')} value={profile?.role ?? '--'} />
                         <DetailRow label={t('users.detail.fields.verify')} value={profile?.verify ?? '--'} />
                         <DetailRow
                             label={t('users.detail.fields.bannedAt')}
-                            value={user.banned_at ? formatAdminDate(user.banned_at) : '--'}
+                            value={user.banned_at ? formatDateTime(user.banned_at) : '--'}
                         />
                         <DetailRow
                             label={t('users.detail.fields.deletedAt')}
-                            value={user.deleted_at ? formatAdminDate(user.deleted_at) : '--'}
+                            value={user.deleted_at ? formatDateTime(user.deleted_at) : '--'}
                         />
                         {user.ban_duration_days != null && (
                             <DetailRow
@@ -109,7 +107,7 @@ export function UserDetailDialog({ open, user, onOpenChange }: UserDetailDialogP
                             />
                         )}
                         {user.ban_expires_at && (
-                            <DetailRow label='Ban Expires' value={formatAdminDate(user.ban_expires_at)} />
+                            <DetailRow label='Ban Expires' value={formatDateTime(user.ban_expires_at)} />
                         )}
                         <DetailRow
                             label={t('users.detail.fields.banReason')}

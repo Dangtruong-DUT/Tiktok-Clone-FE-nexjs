@@ -9,8 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import AutoPagination from '@/components/auto-pagination'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
-import { formatAdminDate, getActivityKey, truncateText } from '@/helpers/admin-helpers'
-import { timeAgo } from '@/utils/formatting/formatTime.util'
+import { getActivityKey, truncateText } from '@/utils/admin/admin.util'
+import { formatDateTime, timeAgo } from '@/utils/formatting/format-time.util'
 import type { LocalesType } from '@/i18n/config'
 import { ACTIVITY_TYPES } from '@/constants/admin/ui'
 import { AdminActivityListItem } from '@/types/dtos/admin/admin-response.dto'
@@ -362,7 +362,7 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
                                                     {log.resource_id && (
                                                         <span className='font-mono'>#{log.resource_id}</span>
                                                     )}
-                                                    <span>{formatAdminDate(log.created_at)}</span>
+                                                    <span>{formatDateTime(log.created_at)}</span>
                                                     <Button
                                                         variant='ghost'
                                                         size='sm'

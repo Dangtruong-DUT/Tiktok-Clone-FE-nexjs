@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { convertBase64ToFileToFile } from '@/utils/file.util'
+import { convertBase64ToFile } from '@/utils/file.util'
 import { TimelineFrameType } from '@/utils/video.util'
 import Image from 'next/image'
 import { useEffect, useRef, useState, TouchEvent, MouseEvent as ReactMouseEvent, MouseEvent } from 'react'
@@ -74,7 +74,7 @@ export default function SelectThumbnailFromOriginalVideo({
     const onConfirm = async (e: ReactMouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         if (!selectedFrame.image) return
-        const file = await convertBase64ToFileToFile(selectedFrame.image, 'thumbnail.png')
+        const file = await convertBase64ToFile(selectedFrame.image, 'thumbnail.png')
         if (file) setCoverImage(file)
     }
 

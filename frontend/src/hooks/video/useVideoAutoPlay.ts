@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { useInViewport } from '@/hooks/ui/useInViewport'
-import { logger } from '@/utils/logger'
+import { logger } from '@/utils/logger.util'
 
 interface UseVideoAutoPlayProps {
     videoRef: React.RefObject<HTMLVideoElement | null>

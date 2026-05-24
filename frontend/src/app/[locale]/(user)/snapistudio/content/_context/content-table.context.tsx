@@ -3,7 +3,7 @@
 import { Audience, AudienceValue } from '@/constants/enum'
 import { useUpdatePostMutation } from '@/store/services/posts.service'
 import { createContext, use, useState } from 'react'
-import { logger } from '@/utils/logger'
+import { logger } from '@/utils/logger.util'
 
 type PostTableContextType = {
     setPostIdEdit: (value: number | undefined) => void

@@ -1,7 +1,7 @@
 import { createElement } from 'react'
 import { UserRound } from 'lucide-react'
 import { FcGoogle } from 'react-icons/fc'
-import { getOauthGoogleUrl } from '@/helpers/oauth'
+import { getOauthGoogleUrl } from '@/utils/auth/oauth.util'
 import { AuthMenuItemProps } from '../components/auth-menu-item'
 
 type AuthMode = 'login' | 'signup' | 'login-email' | 'signup-email'

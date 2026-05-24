@@ -3,7 +3,7 @@
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { setIsMute, setVolume as setVolumeToStore } from '@/store/features/videoSlice'
 import { useCallback, useEffect, useState } from 'react'
-import { logger } from '@/utils/logger'
+import { logger } from '@/utils/logger.util'
 
 interface UseVideoPlayerOptions {
     onVideoEnd?: () => void

@@ -3,7 +3,8 @@
 import { useTranslations } from 'next-intl'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { formatAdminDate, getActivityKey, truncateText } from '@/helpers/admin-helpers'
+import { getActivityKey, truncateText } from '@/utils/admin/admin.util'
+import { formatDateTime } from '@/utils/formatting/format-time.util'
 import type { AdminActivityListItem } from '@/types/dtos/admin/admin-response.dto'
 
 interface ActivityLogDetailDialogProps {
@@ -45,7 +46,7 @@ export function ActivityLogDetailDialog({ open, log, onOpenChange }: ActivityLog
                         />
                         <DetailItem
                             label={t('activity.detail.fields.timestamp')}
-                            value={formatAdminDate(log.created_at)}
+                            value={formatDateTime(log.created_at)}
                         />
                         <DetailItem
                             label={t('activity.detail.fields.reason')}

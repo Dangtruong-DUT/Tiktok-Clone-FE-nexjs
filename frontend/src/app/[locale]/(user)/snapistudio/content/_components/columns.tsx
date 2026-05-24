@@ -5,7 +5,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import AudienceSelect from '@/components/audience-select'
 import { Audience } from '@/constants/enum'
 import Image from 'next/image'
-import { formatISOToDisplayDate } from '@/utils/formatting/formatTime.util'
+import { formatISOToDisplayDate } from '@/utils/formatting/format-time.util'
 import { Button } from '@/components/ui/button'
 import { MoreHorizontal, PencilLine, Trash2 } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
@@ -17,7 +17,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { formatCompactNumber } from '@/utils/formatting/formatNumber.util'
+import { formatCompactNumber } from '@/utils/formatting/format-number.util'
 import { usePostTableContext } from '@/app/[locale]/(user)/snapistudio/content/_context/content-table.context'
 import { BsFillImageFill } from 'react-icons/bs'
 import { useEffect, useMemo, useState } from 'react'

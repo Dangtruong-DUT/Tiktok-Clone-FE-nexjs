@@ -1,6 +1,6 @@
 import React from 'react'
 import { cn } from '@/lib/utils'
-import { timeAgo } from '@/utils/formatting/formatTime.util'
+import { timeAgo } from '@/utils/formatting/format-time.util'
 import { TikTokPostType } from '@/types/models/post.model'
 import { UserType } from '@/types/models/user.model'
 import ProgressBar from './progress-bar'

@@ -19,7 +19,7 @@ import { Label } from '@/components/ui/label'
 import { PasswordInput } from '@/components/ui/password-input'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { extractApiErrorMessage } from '@/utils/handleErrors/extractApiError.util'
+import { extractApiErrorMessage } from '@/utils/errors/extract-api-error.util'
 
 interface ResetUserPasswordDialogProps {
     open: boolean

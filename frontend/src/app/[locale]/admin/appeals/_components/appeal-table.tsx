@@ -28,7 +28,7 @@ import { TableSkeleton } from '@/components/table-skeleton'
 import { EmptyState } from '@/components/empty-state'
 import { EvidenceGalleryDialog } from './evidence-gallery-dialog'
 import { AppealDetailDialog } from './appeal-detail-dialog'
-import { formatAdminDate } from '@/helpers/admin-helpers'
+import { formatDateTime } from '@/utils/formatting/format-time.util'
 import { TABLE_HEAD_CLASS } from '@/constants/admin/ui'
 import type { AdminAppeal } from '@/types/dtos/admin/admin-response.dto'
 import {
@@ -40,7 +40,7 @@ import {
     type AppealStatus,
     type AppealType
 } from '@/constants/appeal'
-import { extractApiErrorMessage } from '@/utils/handleErrors/extractApiError.util'
+import { extractApiErrorMessage } from '@/utils/errors/extract-api-error.util'
 
 const FILTER_ALL = 'all' as const
 
@@ -381,7 +381,7 @@ export function AppealTable() {
                                                         </Badge>
                                                     </TableCell>
                                                     <TableCell className='text-sm text-muted-foreground'>
-                                                        {formatAdminDate(appeal.created_at)}
+                                                        {formatDateTime(appeal.created_at)}
                                                     </TableCell>
                                                     <TableCell className='text-right'>
                                                         {appeal.status === APPEAL_STATUSES.PENDING ? (
@@ -520,9 +520,7 @@ export function AppealTable() {
                                                                                         'appeals.detail.fields.reviewedAt'
                                                                                     )}
                                                                                     :{' '}
-                                                                                    {formatAdminDate(
-                                                                                        appeal.reviewed_at
-                                                                                    )}
+                                                                                    {formatDateTime(appeal.reviewed_at)}
                                                                                 </span>
                                                                             )}
                                                                             {appeal.reviewer && (

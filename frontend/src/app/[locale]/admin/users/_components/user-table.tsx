@@ -27,7 +27,8 @@ import { RestoreUserDialog } from './restore-user-dialog'
 import { ResetUserPasswordDialog } from './reset-user-password-dialog'
 import { SendUserMailDialog } from './send-user-mail-dialog'
 import { UserDetailDialog } from './user-detail-dialog'
-import { formatAdminDate, getUserStatus, getUserStatusColor, truncateText } from '@/helpers/admin-helpers'
+import { getUserStatus, getUserStatusColor, truncateText } from '@/utils/admin/admin.util'
+import { formatDateTime } from '@/utils/formatting/format-time.util'
 import { useAdminTableState } from '@/hooks/use-admin-table-state'
 import { useDialog } from '@/hooks/use-dialog'
 import { TABLE_HEAD_CLASS } from '@/constants/admin/ui'
@@ -182,7 +183,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                                             </Badge>
                                         </TableCell>
                                         <TableCell className='text-sm text-muted-foreground'>
-                                            {formatAdminDate(user.created_at)}
+                                            {formatDateTime(user.created_at)}
                                         </TableCell>
                                         <TableCell className='text-right'>
                                             <div className='flex items-center justify-end gap-1'>

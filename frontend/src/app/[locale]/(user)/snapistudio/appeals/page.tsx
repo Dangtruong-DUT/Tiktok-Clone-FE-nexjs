@@ -14,7 +14,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { TableSkeleton } from '@/components/table-skeleton'
 import { TablePagination } from '@/components/table-pagination'
 import { useDialog } from '@/hooks/use-dialog'
-import { formatAdminDate } from '@/helpers/admin-helpers'
+import { formatDateTime } from '@/utils/formatting/format-time.util'
 import { AlertCircle, CheckCircle2, Clock, Eye, FileText, Search, User, X, XCircle } from 'lucide-react'
 import { APPEAL_STATUSES, APPEAL_STATUS_VALUES, type AppealStatus } from '@/constants/appeal'
 import type { Appeal, ResourcePreview } from '@/types/models/appeal.model'
@@ -153,11 +153,11 @@ function AppealDetailDialog({ open, appeal, onClose }: { open: boolean; appeal: 
                                 </Badge>
                             </div>
                             <InfoRow label={t('detail.fields.type')} value={t(`types.${appeal.appeal_type}`)} />
-                            <InfoRow label={t('detail.fields.createdAt')} value={formatAdminDate(appeal.created_at)} />
+                            <InfoRow label={t('detail.fields.createdAt')} value={formatDateTime(appeal.created_at)} />
                             {appeal.reviewed_at && (
                                 <InfoRow
                                     label={t('detail.fields.reviewedAt')}
-                                    value={formatAdminDate(appeal.reviewed_at)}
+                                    value={formatDateTime(appeal.reviewed_at)}
                                 />
                             )}
                             {appeal.resource_type && (
@@ -217,9 +217,7 @@ function AppealDetailDialog({ open, appeal, onClose }: { open: boolean; appeal: 
                                 <li className='pl-5'>
                                     <span className='absolute -left-1.5 mt-1 h-3 w-3 rounded-full border border-background bg-emerald-500' />
                                     <p className='text-xs font-medium text-foreground'>Appeal submitted</p>
-                                    <p className='text-xs text-muted-foreground'>
-                                        {formatAdminDate(appeal.created_at)}
-                                    </p>
+                                    <p className='text-xs text-muted-foreground'>{formatDateTime(appeal.created_at)}</p>
                                 </li>
                                 {appeal.reviewed_at && (
                                     <li className='pl-5'>
@@ -235,7 +233,7 @@ function AppealDetailDialog({ open, appeal, onClose }: { open: boolean; appeal: 
                                             {appeal.status === APPEAL_STATUSES.APPROVED ? 'approved' : 'rejected'}
                                         </p>
                                         <p className='text-xs text-muted-foreground'>
-                                            {formatAdminDate(appeal.reviewed_at)}
+                                            {formatDateTime(appeal.reviewed_at)}
                                         </p>
                                     </li>
                                 )}
@@ -486,7 +484,7 @@ export default function StudioAppealsPage() {
                                         </Badge>
                                     </TableCell>
                                     <TableCell className='text-sm text-muted-foreground'>
-                                        {formatAdminDate(appeal.created_at)}
+                                        {formatDateTime(appeal.created_at)}
                                     </TableCell>
                                     <TableCell>
                                         <Button

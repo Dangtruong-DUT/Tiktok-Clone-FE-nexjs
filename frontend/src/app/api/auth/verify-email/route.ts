@@ -3,7 +3,7 @@ import { HTTP_STATUS } from '@/constants/api/http-status'
 import { VerifyEmailReqBodyType } from '@/types/dtos/user/user-request.dto'
 import { VerifyEmailResType } from '@/types/dtos/user/user-response.dto'
 import { setAuthCookies } from '@/utils/auth/cookies.util'
-import { logger } from '@/utils/logger'
+import { logger } from '@/utils/logger.util'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 

@@ -7,7 +7,7 @@ import { clearStore } from '@/store'
 import { startLoadingByKey, stopLoadingByKey } from '@/store/features/appSlice'
 import { Role } from '@/constants/enum'
 import { LogoutResType } from '@/types/dtos/auth/auth-response.dto'
-import { handleFormError } from '@/utils/handleErrors/handleFormErrors.util'
+import { handleFormError } from '@/utils/errors/handle-form-errors.util'
 import {
     LoginReqBody,
     LoginReqBodyType,
@@ -18,7 +18,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { logger } from '@/utils/logger'
+import { logger } from '@/utils/logger.util'
 
 const LOGOUT_LOADING_KEY = 'logout'
 

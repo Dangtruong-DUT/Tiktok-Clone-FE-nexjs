@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl'
 import { useRestoreUserMutation } from '@/store/services/admin'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { toast } from 'sonner'
-import { extractApiErrorMessage } from '@/utils/handleErrors/extractApiError.util'
+import { extractApiErrorMessage } from '@/utils/errors/extract-api-error.util'
 
 interface RestoreUserDialogProps {
     open: boolean

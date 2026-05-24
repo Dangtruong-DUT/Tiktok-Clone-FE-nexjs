@@ -14,7 +14,8 @@ import { TooltipIconButton } from '@/components/ui/tooltip-icon-button'
 import { EmptyState } from '@/components/empty-state'
 import { DeleteCommentDialog } from './delete-comment-dialog'
 import { CommentDetailDialog } from './comment-detail-dialog'
-import { formatAdminDate, truncateText } from '@/helpers/admin-helpers'
+import { truncateText } from '@/utils/admin/admin.util'
+import { formatDateTime } from '@/utils/formatting/format-time.util'
 import { useAdminTableState } from '@/hooks/use-admin-table-state'
 import { useDialog } from '@/hooks/use-dialog'
 import { TABLE_HEAD_CLASS } from '@/constants/admin/ui'
@@ -144,7 +145,7 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
                                         {comment.parent_id ? `#${comment.parent_id}` : '—'}
                                     </TableCell>
                                     <TableCell className='text-sm text-muted-foreground'>
-                                        {formatAdminDate(comment.created_at)}
+                                        {formatDateTime(comment.created_at)}
                                     </TableCell>
                                     <TableCell className='text-right'>
                                         <div className='flex items-center justify-end gap-1'>

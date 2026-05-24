@@ -6,7 +6,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { toast } from 'sonner'
 import { createShareItems } from '@/utils/social-share.util'
 import { useCallback, useMemo } from 'react'
-import { logger } from '@/utils/logger'
+import { logger } from '@/utils/logger.util'
 import { DialogTitle } from '@radix-ui/react-dialog'
 
 interface ShareMenuDialogProps {

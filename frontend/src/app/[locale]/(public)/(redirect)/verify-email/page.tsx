@@ -9,7 +9,7 @@ import { useRouter } from '@/i18n/navigation'
 import { useVerifyEmailMutation } from '@/store/services/auth.service'
 import { setAuthenticated, setRole, setUserProfile } from '@/store/features/authSlice'
 import { useCallback, useEffect, useState } from 'react'
-import { logger } from '@/utils/logger'
+import { logger } from '@/utils/logger.util'
 export default function VerifyPage() {
     const { searchParams, setSearchParams } = useSearchParamsLoader()
 

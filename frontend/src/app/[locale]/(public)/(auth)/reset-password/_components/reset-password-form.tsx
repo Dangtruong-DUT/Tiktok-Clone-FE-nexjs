@@ -11,7 +11,7 @@ import { useTranslations } from 'next-intl'
 import { resetPasswordReqBody, ResetPasswordReqBodyType } from '@/types/dtos/auth/auth-request.dto'
 import { useResetPasswordMutation } from '@/store/services/user.service'
 import { Loader } from 'lucide-react'
-import { handleFormError } from '@/utils/handleErrors/handleFormErrors.util'
+import { handleFormError } from '@/utils/errors/handle-form-errors.util'
 import { useState } from 'react'
 import ResetPasswordSuccess from './reset-password-success'
 

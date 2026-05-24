@@ -7,8 +7,8 @@ import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { CheckCircle2, XCircle, FileText, MessageCircle, User as UserIcon, ImageOff } from 'lucide-react'
 import Image from 'next/image'
-import { formatAdminDate } from '@/helpers/admin-helpers'
-import { formatNumber } from '@/utils/formatting/formatNumber.util'
+import { formatDateTime } from '@/utils/formatting/format-time.util'
+import { formatNumber } from '@/utils/formatting/format-number.util'
 import { APPEAL_STATUSES } from '@/constants/appeal'
 import type { AdminAppeal } from '@/types/dtos/admin/admin-response.dto'
 import type { ResourcePreview } from '@/types/models/appeal.model'
@@ -179,11 +179,11 @@ export function AppealDetailDialog({ open, appeal, onOpenChange }: AppealDetailD
                                 <DetailRow label={t('appeals.detail.fields.status')} value={appeal.status} />
                                 <DetailRow
                                     label={t('appeals.detail.fields.createdAt')}
-                                    value={formatAdminDate(appeal.created_at)}
+                                    value={formatDateTime(appeal.created_at)}
                                 />
                                 <DetailRow
                                     label={t('appeals.detail.fields.reviewedAt')}
-                                    value={appeal.reviewed_at ? formatAdminDate(appeal.reviewed_at) : '—'}
+                                    value={appeal.reviewed_at ? formatDateTime(appeal.reviewed_at) : '—'}
                                 />
                                 <DetailRow
                                     label={t('appeals.detail.fields.resourceType')}

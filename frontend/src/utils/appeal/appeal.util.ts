@@ -1,3 +1,5 @@
+import { APPEAL_STATUSES } from '@/constants/appeal'
+
 export const getAppealTypeLabel = (type: string | undefined, t: (key: string) => string) => {
     if (!type) return ''
     switch (type) {
@@ -17,11 +19,11 @@ export const getAppealTypeLabel = (type: string | undefined, t: (key: string) =>
 export const getAppealStatusLabel = (status: string | undefined, t: (key: string) => string) => {
     if (!status) return ''
     switch (status) {
-        case 'pending':
+        case APPEAL_STATUSES.PENDING:
             return t('statuses.pending')
-        case 'approved':
+        case APPEAL_STATUSES.APPROVED:
             return t('statuses.approved')
-        case 'rejected':
+        case APPEAL_STATUSES.REJECTED:
             return t('statuses.rejected')
         default:
             return status

@@ -15,7 +15,7 @@ import AudienceSelect from '@/components/audience-select'
 
 import { useUploadImageMutation } from '@/store/services/upload.service'
 import { useGetPostDetailQuery, useUpdatePostMutation } from '@/store/services/posts.service'
-import { handleFormError } from '@/utils/handleErrors/handleFormErrors.util'
+import { handleFormError } from '@/utils/errors/handle-form-errors.util'
 import { SearchParamsLoader, useSearchParamsLoader } from '@/components/search-params-loader'
 import { useRouter } from '@/i18n/navigation'
 import { useParams } from 'next/navigation'
@@ -26,9 +26,9 @@ import { useConfirmNavigation } from '@/hooks/shared/useConfirmNavigation'
 import AlertDialogExitPage from '@/app/[locale]/(user)/snapistudio/upload/_components/alert-confirm-leave-page'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
-import { extractHashtags } from '@/utils/socialToken.util'
+import { extractHashtags } from '@/utils/social-token.util'
 import MentionHashtagTextField from '@/components/mention-hashtag-text-field'
-import { logger } from '@/utils/logger'
+import { logger } from '@/utils/logger.util'
 
 export default function FormUpdatePost() {
     const t = useTranslations('SnapiStudio.upload')

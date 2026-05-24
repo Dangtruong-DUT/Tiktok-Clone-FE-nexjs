@@ -2,7 +2,7 @@ import ProgressBar from '@/components/dialog-video-player/components/progress-ba
 import VolumeBar from '@/components/dialog-video-player/components/volume-bar'
 import { cn } from '@/lib/utils'
 import { TikTokPostType } from '@/types/models/post.model'
-import { formatSecondsToTime } from '@/utils/formatting/formatTime.util'
+import { formatSecondsToTime } from '@/utils/formatting/format-time.util'
 import { FaPause, FaPlay } from 'react-icons/fa6'
 
 interface VideoControlsBottomProps {

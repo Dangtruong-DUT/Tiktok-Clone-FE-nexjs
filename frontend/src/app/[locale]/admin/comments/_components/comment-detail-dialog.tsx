@@ -4,8 +4,8 @@ import { useTranslations } from 'next-intl'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { formatAdminDate } from '@/helpers/admin-helpers'
-import { formatNumber } from '@/utils/formatting/formatNumber.util'
+import { formatDateTime } from '@/utils/formatting/format-time.util'
+import { formatNumber } from '@/utils/formatting/format-number.util'
 import type { AdminComment } from '@/types/dtos/admin/admin-response.dto'
 
 interface CommentDetailDialogProps {
@@ -33,7 +33,7 @@ export function CommentDetailDialog({ open, comment, onOpenChange }: CommentDeta
                         </Avatar>
                         <div>
                             <p className='text-sm font-semibold'>{authorName}</p>
-                            <p className='text-xs text-muted-foreground'>{formatAdminDate(comment.created_at)}</p>
+                            <p className='text-xs text-muted-foreground'>{formatDateTime(comment.created_at)}</p>
                         </div>
                     </div>
 

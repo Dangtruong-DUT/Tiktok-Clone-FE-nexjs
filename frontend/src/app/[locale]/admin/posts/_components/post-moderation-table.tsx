@@ -14,7 +14,8 @@ import { TooltipIconButton } from '@/components/ui/tooltip-icon-button'
 import { EmptyState } from '@/components/empty-state'
 import { DeletePostDialog } from './delete-post-dialog'
 import { PostPreviewDialog } from './post-preview-dialog'
-import { formatAdminDate, getPostStatusColor, getPostStatus, truncateText } from '@/helpers/admin-helpers'
+import { getPostStatusColor, getPostStatus, truncateText } from '@/utils/admin/admin.util'
+import { formatDateTime } from '@/utils/formatting/format-time.util'
 import { useAdminTableState } from '@/hooks/use-admin-table-state'
 import { useDialog } from '@/hooks/use-dialog'
 import { TABLE_HEAD_CLASS } from '@/constants/admin/ui'
@@ -169,7 +170,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
                                             </Badge>
                                         </TableCell>
                                         <TableCell className='text-sm text-muted-foreground'>
-                                            {formatAdminDate(post.created_at)}
+                                            {formatDateTime(post.created_at)}
                                         </TableCell>
                                         <TableCell className='text-right'>
                                             <div className='flex items-center justify-end gap-1'>

@@ -9,7 +9,7 @@ import { MailCheck, Loader } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
-import { logger } from '@/utils/logger'
+import { logger } from '@/utils/logger.util'
 
 const RESEND_COOLDOWN_SECONDS = 180
 const RESEND_COOLDOWN_STORAGE_KEY = 'settings:verify-email:resend-cooldown-until'
