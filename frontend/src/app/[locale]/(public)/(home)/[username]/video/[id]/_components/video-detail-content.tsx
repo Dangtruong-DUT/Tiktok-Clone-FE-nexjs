@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { useParams } from 'next/navigation'
-import VideoPlayer from '@/components/video-player-v2'
+import VideoPlayer from '@/components/detail-video-player'
 import LoadingIcon from '@/components/lottie-icons/loading'
 import { useVideoPlaylist } from '@/app/[locale]/(public)/(home)/[username]/video/[id]/_context/video-playlist-context'
 import VideoDescription from '@/app/[locale]/(public)/(home)/[username]/video/[id]/_components/video-description'

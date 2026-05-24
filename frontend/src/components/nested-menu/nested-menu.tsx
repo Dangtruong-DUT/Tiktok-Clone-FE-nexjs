@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useCallback, useState } from 'react'
-import DialogHeader from '@/components/dialog-header'
+import DialogHeader from '@/components/modal-header'
 import NestedMenuItem from './nested-menu-item'
 import { MenuOption, MenuItem, MenuGroup, RoleType } from './types'
 import { useTranslations } from 'next-intl'

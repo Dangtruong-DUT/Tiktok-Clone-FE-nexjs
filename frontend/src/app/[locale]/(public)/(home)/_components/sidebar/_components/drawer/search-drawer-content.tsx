@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react'
 import { X, Search as SearchIcon, Loader2 } from 'lucide-react'
 import useDebounce from '@/hooks/shared/useDebounce'
-import DialogHeader from '@/components/dialog-header'
+import DialogHeader from '@/components/modal-header'
 import { useDrawerSidebar } from '@/app/[locale]/(public)/(home)/_components/sidebar/_components/drawer/drawer'
 import { UserType } from '@/types/models/user.model'
 import { Link, useRouter } from '@/i18n/navigation'

@@ -2,7 +2,7 @@
 
 import Header from '@/app/[locale]/(public)/(home)/search/_components/tabbar-header'
 import { TabbarItemsId } from '@/app/[locale]/(public)/(home)/search/_config/tabbar-items'
-import { SearchParamsLoader, useSearchParamsLoader } from '@/components/searchparams-loader'
+import { SearchParamsLoader, useSearchParamsLoader } from '@/components/search-params-loader'
 import { useSearchPostsInfiniteQuery, useSearchUsersInfiniteQuery } from '@/store/services/search.service'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'

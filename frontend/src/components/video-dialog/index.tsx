@@ -1,7 +1,7 @@
 'use client'
 
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
-import VideoPlayer from '@/components/video-player-v3'
+import VideoPlayer from '@/components/dialog-video-player'
 import CommentForm from '@/components/comment-section/comment-form'
 import CommentList from '@/components/comment-section/comment-list'
 import { useCallback, useEffect, useRef, useState } from 'react'

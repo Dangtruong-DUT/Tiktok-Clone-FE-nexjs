@@ -2,11 +2,11 @@
 
 import { keyDataScroll } from '@/app/[locale]/(public)/(home)/following/_hooks/useHandleVideos'
 import { TikTokPostType } from '@/types/models/post.model'
-import VideoPlayer from '@/components/video-player'
+import VideoPlayer from '@/components/feed-video-player'
 import { useInViewport } from '@/hooks/ui/useInViewport'
 import { useEffect, useRef } from 'react'
 import LoadingIcon from '@/components/lottie-icons/loading'
-import ActionBar from '@/components/action-video-bar-v1'
+import ActionBar from '@/components/feed-action-bar'
 import VideoWithActionSkeleton from '@/components/infinite-video-feed/video-skeleton'
 import NavigationVideoSkeleton from '@/components/infinite-video-feed/navigation-video-skeleton'
 

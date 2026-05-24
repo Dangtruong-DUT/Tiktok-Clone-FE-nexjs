@@ -1,7 +1,7 @@
 'use client'
 
 import { AuthModal } from '@/components/auth-modal'
-import EmojiPiker from '@/components/emoji-picker'
+import EmojiPicker from '@/components/emoji-picker'
 import { FormControl, FormField, FormItem, Form } from '@/components/ui/form'
 import { Audience, PosterType } from '@/constants/enum'
 import { useAppSelector } from '@/store/hooks'
@@ -105,7 +105,7 @@ function CommentForm({
                             </FormItem>
                         )}
                     />
-                    <EmojiPiker
+                    <EmojiPicker
                         onEmojiSelect={handleEmojiSelect}
                         className='[&>svg]:size-5.5! cursor-pointer'
                         popoverClassName={popoverEmojiClassName}

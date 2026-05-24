@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server'
 import { Metadata } from 'next'
 import { LocalesType } from '@/i18n/config'
-import ResetPasswordMain from '@/app/[locale]/(public)/(auth)/reset-password/reset-password-main'
+import ResetPasswordMain from '@/app/[locale]/(public)/(auth)/reset-password/_components/reset-password-main'
 import envConfig from '@/config/app.config'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: LocalesType }> }): Promise<Metadata> {

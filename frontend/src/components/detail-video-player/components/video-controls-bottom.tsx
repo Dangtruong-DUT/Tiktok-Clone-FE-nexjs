@@ -1,5 +1,5 @@
-import ProgressBar from '@/components/video-player-v2/components/progress-bar'
-import VolumeBar from '@/components/video-player-v2/components/volume-bar'
+import ProgressBar from '@/components/detail-video-player/components/progress-bar'
+import VolumeBar from '@/components/detail-video-player/components/volume-bar'
 import { cn } from '@/lib/utils'
 import { TikTokPostType } from '@/types/models/post.model'
 import { formatSecondsToTime } from '@/utils/formatting/formatTime.util'

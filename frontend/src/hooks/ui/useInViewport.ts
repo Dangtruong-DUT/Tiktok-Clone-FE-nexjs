@@ -6,7 +6,7 @@ export function useInViewport(ref: React.RefObject<HTMLElement | null>, threshol
     const [isInView, setIsInView] = useState(false)
 
     useEffect(() => {
-        const observer = new IntersectionObserver(([entry]) => setIsInView(entry.isIntersecting), { threshold })
+        const observer = new IntersectionObserver(([entry]) => setIsInView(entry?.isIntersecting ?? false), { threshold })
         const current = ref.current
         if (current) observer.observe(current)
 

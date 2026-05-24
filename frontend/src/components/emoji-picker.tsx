@@ -2,19 +2,24 @@
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { Button } from '@/components/ui/button'
-import { EmojiPicker, EmojiPickerSearch, EmojiPickerContent, EmojiPickerFooter } from '@/components/ui/emoji-picker'
+import {
+    EmojiPicker as EmojiPickerPrimitive,
+    EmojiPickerSearch,
+    EmojiPickerContent,
+    EmojiPickerFooter
+} from '@/components/ui/emoji-picker'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Smile } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { cn } from '@/lib/utils'
 
-type EmojiPikerProps = {
+type EmojiPickerProps = {
     className?: string
     popoverClassName?: string
     onEmojiSelect?: (emoji: string) => void
 }
 
-export default function EmojiPiker({ className, popoverClassName, onEmojiSelect }: EmojiPikerProps) {
+export default function EmojiPicker({ className, popoverClassName, onEmojiSelect }: EmojiPickerProps) {
     const [isOpen, setIsOpen] = useState<boolean>(false)
 
     const handleEmojiSelectInternal = useCallback(
@@ -45,11 +50,11 @@ export default function EmojiPiker({ className, popoverClassName, onEmojiSelect 
                         e.preventDefault()
                     }}
                 >
-                    <EmojiPicker className='h-[342px]' onEmojiSelect={handleEmojiSelectInternal}>
+                    <EmojiPickerPrimitive className='h-[342px]' onEmojiSelect={handleEmojiSelectInternal}>
                         <EmojiPickerSearch />
                         <EmojiPickerContent />
                         <EmojiPickerFooter />
-                    </EmojiPicker>
+                    </EmojiPickerPrimitive>
                 </PopoverContent>
             </Popover>
         </div>

@@ -1,20 +1,10 @@
-import jwt from 'jsonwebtoken'
-import { logger } from '@/utils/logger'
-
 export const decodeJwt = <T>(token: string): T => {
-    const decoded = jwt.decode(token)
-    if (!decoded || typeof decoded !== 'object') {
-        return {} as T
-    }
-    return decoded as T
-}
-
-export const verifyJwt = (token: string, secret: string): boolean => {
     try {
-        jwt.verify(token, secret)
-        return true
-    } catch (error) {
-        logger.error('JWT verification failed:', error)
-        return false
+        const payload = token.split('.')[1]
+        if (!payload) return {} as T
+        const decoded = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')))
+        return decoded as T
+    } catch {
+        return {} as T
     }
 }

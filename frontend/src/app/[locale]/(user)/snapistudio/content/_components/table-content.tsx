@@ -14,7 +14,7 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { Search, X } from 'lucide-react'
 
-import { SearchParamsLoader, useSearchParamsLoader } from '@/components/searchparams-loader'
+import { SearchParamsLoader, useSearchParamsLoader } from '@/components/search-params-loader'
 import { useGetPostOfUserPagingQuery } from '@/store/services/posts.service'
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'
 import { DataTable } from '@/components/ui/data-table'

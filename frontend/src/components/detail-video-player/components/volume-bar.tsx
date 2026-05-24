@@ -21,7 +21,7 @@ function VolumeBar({ className, volume, onVolumeChange, isMuted, onMuteToggle }:
         if (!volumeRef.current) return volume
 
         const rect = volumeRef.current.getBoundingClientRect()
-        const clientY = 'touches' in event ? event.touches[0].clientY : event.clientY
+        const clientY = 'touches' in event ? (event.touches[0]?.clientY ?? 0) : event.clientY
         const offsetY = Math.min(Math.max(clientY - rect.top, 0), rect.height)
         return 1 - offsetY / rect.height
     }

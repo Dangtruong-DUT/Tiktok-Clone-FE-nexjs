@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useMemo, useState } from 'react'
-import DialogHeader from '@/components/dialog-header'
+import DialogHeader from '@/components/modal-header'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { useLocale, useTranslations } from 'next-intl'

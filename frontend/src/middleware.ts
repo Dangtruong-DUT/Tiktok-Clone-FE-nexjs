@@ -47,8 +47,6 @@ export async function middleware(request: NextRequest) {
     return response
 }
 
-export const runtime = 'nodejs'
-
 export const config = {
     matcher: ['/', '/(vi|en)/:path*']
 }

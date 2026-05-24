@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/components
 import { CardContent } from '@/components/ui/card'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 import { toast } from 'sonner'
-import { createShareItems } from '@/components/share-items'
+import { createShareItems } from '@/utils/social-share.util'
 import { useCallback, useMemo } from 'react'
 import { logger } from '@/utils/logger'
 import { DialogTitle } from '@radix-ui/react-dialog'

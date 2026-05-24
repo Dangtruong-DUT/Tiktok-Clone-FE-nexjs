@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import VideoPlayer from '@/components/video-player-v3'
+import VideoPlayer from '@/components/dialog-video-player'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useGetPostDetailQuery } from '@/store/services/posts.service'
 import { formatAdminDate, getPostStatus, getPostStatusColor } from '@/helpers/admin-helpers'
