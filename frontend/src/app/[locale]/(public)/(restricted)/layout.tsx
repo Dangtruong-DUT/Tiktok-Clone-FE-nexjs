@@ -1,4 +1,4 @@
-import Footer from '@/components/footer-v1'
+import Footer from '@/components/public/footer-v1'
 import { RestrictedHeader } from './_components/restricted-header'
 import { LocalesType } from '@/i18n/config'
 import { setRequestLocale } from 'next-intl/server'

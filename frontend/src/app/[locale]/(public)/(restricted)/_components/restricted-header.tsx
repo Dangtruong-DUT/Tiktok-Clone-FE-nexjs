@@ -8,7 +8,7 @@ import { LogOut } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import LogoBrand from '@/components/logo-brand'
 import { useTranslations } from 'next-intl'
-import DialogConfirmLogout from '@/components/confirm-logout-dialog'
+import DialogConfirmLogout from '@/components/common/confirm-logout-dialog'
 
 export function RestrictedHeader() {
     const t = useTranslations('BannedPage')

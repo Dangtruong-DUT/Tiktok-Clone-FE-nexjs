@@ -1,7 +1,7 @@
 'use client'
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import AutoPagination from '@/components/auto-pagination'
+import AutoPagination from '@/components/data-display/auto-pagination'
 import type { PaginationMeta } from '@/types/common/pagination-meta.type'
 
 interface TablePaginationProps {

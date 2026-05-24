@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import { useUnbanUserMutation } from '@/store/services/admin'
-import { ConfirmDialog } from '@/components/confirm-dialog'
+import { ConfirmDialog } from '@/components/common/confirm-dialog'
 import { toast } from 'sonner'
 import { extractApiErrorMessage } from '@/utils/errors/extract-api-error.util'
 

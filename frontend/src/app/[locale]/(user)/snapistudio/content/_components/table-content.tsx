@@ -18,14 +18,14 @@ import { SearchParamsLoader, useSearchParamsLoader } from '@/components/search-p
 import { useGetPostOfUserPagingQuery } from '@/store/services/posts.service'
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'
 import { DataTable } from '@/components/ui/data-table'
-import { TablePagination } from '@/components/table-pagination'
+import { TablePagination } from '@/components/data-display/table-pagination'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import AudienceSelect from '@/components/audience-select'
 import AlertDialogDeleteDish from '@/app/[locale]/(user)/snapistudio/content/_components/alert-confirm-delete-post'
 import { usePostTableContext } from '@/app/[locale]/(user)/snapistudio/content/_context/content-table.context'
 import { useColumns } from '@/app/[locale]/(user)/snapistudio/content/_components/columns'
-import { TableSkeleton } from '@/components/table-skeleton'
+import { TableSkeleton } from '@/components/data-display/table-skeleton'
 import { Audience } from '@/constants/enum'
 
 export default function TableContent() {

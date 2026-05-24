@@ -5,7 +5,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/ui/password-input'
 import { useTranslations } from 'next-intl'
-import DateTimePicker from '@/components/date-time-picker'
+import DateTimePicker from '@/components/forms/date-time-picker'
 import { Loader } from 'lucide-react'
 import { useRegisterWithEmail } from '@/hooks/data/useAuth'
 

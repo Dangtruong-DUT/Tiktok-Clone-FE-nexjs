@@ -1,6 +1,6 @@
 import { useDrawerSidebar } from '@/app/[locale]/(public)/(home)/_components/sidebar/_components/drawer/drawer'
 import MENU_ITEMS from '@/app/[locale]/(public)/(home)/_components/sidebar/_config/more-menu-items.config'
-import DialogConfirmLogout from '@/components/confirm-logout-dialog'
+import DialogConfirmLogout from '@/components/common/confirm-logout-dialog'
 import NestedMenu from '@/components/nested-menu/nested-menu'
 import { MenuGroup, MenuOption } from '@/components/nested-menu/types'
 import useLanguage from '@/hooks/shared/useLanguage'
