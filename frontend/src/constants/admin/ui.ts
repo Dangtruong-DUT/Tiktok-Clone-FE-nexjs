@@ -1,13 +1,6 @@
-import { ADMIN_ACTIONS } from '@/constants/admin'
-
-export type SortOrder = 'recent' | 'oldest'
+import { ADMIN_ACTIONS } from '@/constants/admin/actions'
 
 export const TABLE_HEAD_CLASS = 'text-xs font-semibold uppercase tracking-wide text-muted-foreground' as const
-
-export const PAGINATION_DEFAULTS = {
-    PER_PAGE: 20,
-    MAX_PER_PAGE: 100
-} as const
 
 export const TIME_PERIODS = {
     TODAY: 'today',

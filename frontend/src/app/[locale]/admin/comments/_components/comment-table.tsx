@@ -17,7 +17,8 @@ import { CommentDetailDialog } from './comment-detail-dialog'
 import { formatAdminDate, truncateText } from '@/helpers/admin-helpers'
 import { useAdminTableState } from '@/hooks/use-admin-table-state'
 import { useDialog } from '@/hooks/use-dialog'
-import { TABLE_HEAD_CLASS, type SortOrder } from '@/constants/ui/admin'
+import { TABLE_HEAD_CLASS } from '@/constants/admin/ui'
+import type { SortOrder } from '@/constants/ui/table'
 import type { AdminComment } from '@/types/dtos/admin/admin-response.dto'
 
 interface CommentTableProps {

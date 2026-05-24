@@ -9,7 +9,7 @@ import { CheckCircle2, XCircle, FileText, MessageCircle, User as UserIcon, Image
 import Image from 'next/image'
 import { formatAdminDate } from '@/helpers/admin-helpers'
 import { formatNumber } from '@/utils/formatting/formatNumber.util'
-import { APPEAL_STATUSES } from '@/constants/status/appeal'
+import { APPEAL_STATUSES } from '@/constants/appeal'
 import type { AdminAppeal } from '@/types/dtos/admin/admin-response.dto'
 import type { ResourcePreview } from '@/types/models/appeal.model'
 import { EvidenceGalleryDialog } from './evidence-gallery-dialog'

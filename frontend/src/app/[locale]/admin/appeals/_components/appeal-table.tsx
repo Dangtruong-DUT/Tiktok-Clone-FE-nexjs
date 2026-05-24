@@ -29,7 +29,7 @@ import { EmptyState } from '@/components/empty-state'
 import { EvidenceGalleryDialog } from './evidence-gallery-dialog'
 import { AppealDetailDialog } from './appeal-detail-dialog'
 import { formatAdminDate } from '@/helpers/admin-helpers'
-import { TABLE_HEAD_CLASS } from '@/constants/ui/admin'
+import { TABLE_HEAD_CLASS } from '@/constants/admin/ui'
 import type { AdminAppeal } from '@/types/dtos/admin/admin-response.dto'
 import {
     APPEAL_REVIEW_ACTIONS,
@@ -39,7 +39,7 @@ import {
     type AppealReviewAction,
     type AppealStatus,
     type AppealType
-} from '@/constants/status/appeal'
+} from '@/constants/appeal'
 import { extractApiErrorMessage } from '@/utils/handleErrors/extractApiError.util'
 
 const FILTER_ALL = 'all' as const

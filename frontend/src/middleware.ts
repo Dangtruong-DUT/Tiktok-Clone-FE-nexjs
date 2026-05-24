@@ -2,22 +2,18 @@ import { guestRouteMiddleware } from '@/middlewares/guest-route.middleware'
 import { i18nMiddleware } from '@/middlewares/i18n.middleware'
 import { privateRouteMiddleware } from '@/middlewares/private-route.middleware'
 import { roleCheckMiddleware } from '@/middlewares/role-check.middleware'
-import { getAuthTokens } from '@/utils/auth/token.util'
+import { getAuthCookies } from '@/utils/auth/cookies.util'
 import { NextRequest } from 'next/server'
 import { refreshTokenMiddleware } from './middlewares/auth.middleware'
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
     const { response, locale } = i18nMiddleware(request)
     const { pathname } = request.nextUrl
 
-    const { access_token, refresh_token, user_role } = getAuthTokens(request)
+    const { access_token, refresh_token, user_role } = getAuthCookies(request.cookies)
     const isAuthenticated = !!refresh_token
 
-    if (pathname.endsWith('/refresh-token')) {
-        return response
-    }
-
-    const refreshRedirect = refreshTokenMiddleware({
+    const refreshRedirect = await refreshTokenMiddleware({
         accessToken: access_token,
         refreshToken: refresh_token,
         pathname,
@@ -50,6 +46,8 @@ export function middleware(request: NextRequest) {
 
     return response
 }
+
+export const runtime = 'nodejs'
 
 export const config = {
     matcher: ['/', '/(vi|en)/:path*']

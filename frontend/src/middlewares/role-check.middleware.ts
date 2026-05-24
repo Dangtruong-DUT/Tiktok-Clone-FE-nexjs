@@ -1,4 +1,4 @@
-import { SUPER_ADMIN_ROUTE_PREFIXES, USER_PROTECTED_ROUTE_PREFIXES } from '@/config/route-access.config'
+import { SUPER_ADMIN_ROUTE_PREFIXES, USER_PROTECTED_ROUTE_PREFIXES } from '@/constants/routes/route-access'
 import { Role } from '@/constants/enum'
 import { isPathMatched } from '@/utils/auth/path-check.util'
 import { NextRequest, NextResponse } from 'next/server'

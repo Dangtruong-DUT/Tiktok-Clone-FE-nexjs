@@ -1,5 +1,5 @@
 import type { ApiSuccessResponseWithData, ApiSuccessResponseWithMeta } from '@/types/common/http-response.type'
-import type { AdminResourceType } from '@/constants/admin'
+import type { AdminResourceType } from '@/constants/admin/actions'
 
 interface LogActor {
     readonly id: number

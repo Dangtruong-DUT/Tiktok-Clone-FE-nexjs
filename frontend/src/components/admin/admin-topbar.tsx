@@ -13,7 +13,7 @@ import {
     BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
 import { Link } from '@/i18n/navigation'
-import { ADMIN_ROUTES } from '@/constants/routes/admin'
+import { ADMIN_ROUTES } from '@/constants/admin/routes'
 import { useTranslations } from 'next-intl'
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'
 import DialogConfirmLogout from '@/components/confirm-logout-dialog'

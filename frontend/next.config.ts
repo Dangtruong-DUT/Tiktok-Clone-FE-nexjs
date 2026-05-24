@@ -3,6 +3,9 @@ import createNextIntlPlugin from 'next-intl/plugin'
 
 const nextConfig: NextConfig = {
     output: 'standalone',
+    experimental: {
+        nodeMiddleware: true
+    },
     images: {
         domains: [
             'ttl.edu.vn',

@@ -6,6 +6,7 @@ import NextTopLoader from 'nextjs-toploader'
 import { Toaster } from '@/components/ui/sonner'
 import { useGetMeQuery } from '@/store/services/user.service'
 import GlobalAppLoader from '@/components/global-app-loader'
+import { useProactiveTokenRefresh } from '@/hooks/useProactiveTokenRefresh'
 
 interface AppContextType {
     authStatus: AuthStatus
@@ -26,16 +27,12 @@ const queryClient = new QueryClient({
 
 type AuthStatus = 'ready' | 'loading'
 
-function AuthInitializer({
-    initialAuthenticated,
-    onReady
-}: {
-    initialAuthenticated: boolean
-    onReady: () => void
-}) {
+function AuthInitializer({ initialAuthenticated, onReady }: { initialAuthenticated: boolean; onReady: () => void }) {
     const { isSuccess, isError } = useGetMeQuery(undefined, {
         skip: !initialAuthenticated
     })
+
+    useProactiveTokenRefresh()
 
     useEffect(() => {
         if (!initialAuthenticated || isSuccess || isError) {
@@ -58,10 +55,7 @@ export function AppProvider({
     return (
         <AppContext value={{ authStatus }}>
             <QueryClientProvider client={queryClient}>
-                <AuthInitializer
-                    initialAuthenticated={initialAuthenticated}
-                    onReady={() => setAuthStatus('ready')}
-                />
+                <AuthInitializer initialAuthenticated={initialAuthenticated} onReady={() => setAuthStatus('ready')} />
                 {children}
                 <Toaster position='top-center' />
                 <GlobalAppLoader />

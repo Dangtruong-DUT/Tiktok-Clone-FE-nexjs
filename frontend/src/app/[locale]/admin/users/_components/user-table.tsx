@@ -30,7 +30,8 @@ import { UserDetailDialog } from './user-detail-dialog'
 import { formatAdminDate, getUserStatus, getUserStatusColor, truncateText } from '@/helpers/admin-helpers'
 import { useAdminTableState } from '@/hooks/use-admin-table-state'
 import { useDialog } from '@/hooks/use-dialog'
-import { TABLE_HEAD_CLASS, type SortOrder } from '@/constants/ui/admin'
+import { TABLE_HEAD_CLASS } from '@/constants/admin/ui'
+import type { SortOrder } from '@/constants/ui/table'
 import type { AdminUser } from '@/types/dtos/admin/admin-response.dto'
 
 interface UserTableProps {

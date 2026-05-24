@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import envConfig from '@/config/app.config'
+import { AUTH_COOKIE } from '@/constants/auth'
 import { HTTP_STATUS } from '@/constants/api/http-status'
 import { BusinessException } from '@/exceptions/BussinessException.exception'
 import { HttpException } from '@/exceptions/HttpException.exception'
@@ -51,8 +52,8 @@ export async function clientRequest<response>({ method, url, options = {} }: Req
                 import('next/headers').then((mod) => mod.cookies()),
                 getLocale()
             ])
-            cookieStore.delete('access_token')
-            cookieStore.delete('refresh_token')
+            cookieStore.delete(AUTH_COOKIE.ACCESS_TOKEN)
+            cookieStore.delete(AUTH_COOKIE.REFRESH_TOKEN)
             redirect({ href: '/login', locale })
         }
         throw error

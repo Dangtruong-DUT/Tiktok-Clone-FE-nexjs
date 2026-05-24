@@ -6,13 +6,13 @@ import {
     type AppealResourceType,
     type AppealStatus,
     type AppealType
-} from '@/constants/status/appeal'
+} from '@/constants/appeal'
 
 export const AppealTypeSchema = z.enum(APPEAL_TYPE_VALUES)
 export const AppealStatusSchema = z.enum(APPEAL_STATUS_VALUES)
 export const AppealResourceTypeSchema = z.enum(APPEAL_RESOURCE_TYPE_VALUES)
 
-export type { AppealType, AppealStatus, AppealResourceType, AppealReviewAction } from '@/constants/status/appeal'
+export type { AppealType, AppealStatus, AppealResourceType, AppealReviewAction } from '@/constants/appeal'
 
 interface ResourcePreviewAuthor {
     readonly username: string

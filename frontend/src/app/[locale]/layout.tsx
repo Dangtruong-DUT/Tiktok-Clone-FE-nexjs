@@ -9,6 +9,8 @@ import { ThemeProvider } from '@/provider/theme-provider'
 import { AppProvider } from '@/provider/app-provider'
 import StoreProvider from '@/provider/store-provider'
 import envConfig from '@/config/app.config'
+import { AUTH_COOKIE } from '@/constants/auth'
+import { getAuthCookies } from '@/utils/auth/cookies.util'
 import { cookies } from 'next/headers'
 
 export function generateStaticParams() {
@@ -74,7 +76,7 @@ export default async function LocaleLayout({
     }
 
     const cookieStore = await cookies()
-    const hasAccessToken = !!cookieStore.get('access_token')?.value
+    const hasAccessToken = !!getAuthCookies(cookieStore, AUTH_COOKIE.ACCESS_TOKEN)
 
     return (
         <html lang={locale} suppressHydrationWarning>

@@ -11,7 +11,7 @@ import LoadingIcon from '@/components/lottie-icons/loading'
 import Image from 'next/image'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import { APPEAL_STATUSES } from '@/constants/status/appeal'
+import { APPEAL_STATUSES } from '@/constants/appeal'
 import {
     useGetAppealQuery,
     useCreateAppealMutation,

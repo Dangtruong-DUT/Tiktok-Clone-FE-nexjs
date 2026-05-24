@@ -1,4 +1,4 @@
-import { BANNED_ROUTE_PREFIXES, PUBLIC_ROUTE_PREFIXES } from '@/config/route-access.config'
+import { BANNED_ROUTE_PREFIXES, PUBLIC_ROUTE_PREFIXES } from '@/constants/routes/route-access'
 import { JwtPayloadType } from '@/types/common/jwt-payload.type'
 import { decodeJwt } from '@/utils/auth/jwt.util'
 import { isPathMatched } from '@/utils/auth/path-check.util'

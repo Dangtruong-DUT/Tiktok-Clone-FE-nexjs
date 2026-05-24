@@ -1,4 +1,4 @@
-import ForgotPasswordForm from '@/app/[locale]/(public)/(auth)/forgot-password/forgot-password-form'
+import ForgotPasswordForm from '@/app/[locale]/(public)/(auth)/forgot-password/_components/forgot-password-form'
 import { getTranslations } from 'next-intl/server'
 import { Metadata, ResolvingMetadata } from 'next'
 import { LocalesType } from '@/i18n/config'

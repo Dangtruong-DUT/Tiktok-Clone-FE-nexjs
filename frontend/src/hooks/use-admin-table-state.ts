@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { SortOrder } from '@/constants/ui/admin'
+import type { SortOrder } from '@/constants/ui/table'
 
 interface UseAdminTableStateReturn {
     page: number

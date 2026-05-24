@@ -1,5 +1,5 @@
 import httpClient from '@/apis/client'
-import { BACKEND_API_ENDPOINT } from '@/config/endpoint.config'
+import { BACKEND_API_ENDPOINT } from '@/constants/api/endpoints'
 import { BackendAuthTokensResponse, LogoutResType } from '@/types/dtos/auth/auth-response.dto'
 import {
     ForgotPasswordReqBodyType,
@@ -13,8 +13,7 @@ import {
 import { VerifyEmailReqBodyType } from '@/types/dtos/user/user-request.dto'
 
 const AuthRequestApi = {
-    login: (body: LoginReqBodyType) =>
-        httpClient.post<BackendAuthTokensResponse>(BACKEND_API_ENDPOINT.API_LOGIN, body),
+    login: (body: LoginReqBodyType) => httpClient.post<BackendAuthTokensResponse>(BACKEND_API_ENDPOINT.API_LOGIN, body),
     register: (body: RegisterReqBodyType) =>
         httpClient.post<BackendAuthTokensResponse>(BACKEND_API_ENDPOINT.API_REGISTER, body),
     logout: (data: LogoutReqBodyType & { access_token: string }) => {

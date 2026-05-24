@@ -1,4 +1,4 @@
-import { NEXT_API_ENDPOINT } from '@/config/endpoint.config'
+import { NEXT_API_ENDPOINT } from '@/constants/api/endpoints'
 import { BffBaseQuery } from '@/store/services/client'
 import {
     LoginResponseType,

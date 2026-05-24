@@ -1,4 +1,4 @@
-import { GUEST_ONLY_ROUTE_PREFIXES } from '@/config/route-access.config'
+import { GUEST_ONLY_ROUTE_PREFIXES } from '@/constants/routes/route-access'
 import { Role } from '@/constants/enum'
 import { isPathMatched } from '@/utils/auth/path-check.util'
 import { getSafeInternalRedirectPath } from '@/utils/auth/redirect-path.util'

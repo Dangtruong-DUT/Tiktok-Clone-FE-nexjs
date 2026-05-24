@@ -1,4 +1,4 @@
-import { BACKEND_API_ENDPOINT } from '@/config/endpoint.config'
+import { BACKEND_API_ENDPOINT } from '@/constants/api/endpoints'
 import baseQueryWithReauth from '@/store/services/client'
 import { UserIndicatorsResponse } from '@/types/dtos/stats/stats-response.dto'
 import {

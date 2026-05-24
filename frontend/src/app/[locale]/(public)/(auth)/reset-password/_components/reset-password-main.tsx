@@ -1,9 +1,9 @@
 'use client'
 
-import ResetPasswordForm from '@/app/[locale]/(public)/(auth)/reset-password/reset-password-form'
-import VerifyResetToken from '@/app/[locale]/(public)/(auth)/reset-password/verify-reset-token'
+import VerifyResetToken from '@/app/[locale]/(public)/(auth)/reset-password/_components/verify-reset-token'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
+import ResetPasswordForm from './reset-password-form'
 
 export default function ResetPasswordMain() {
     const [verifiedToken, setVerifiedToken] = useState<string | null>(null)

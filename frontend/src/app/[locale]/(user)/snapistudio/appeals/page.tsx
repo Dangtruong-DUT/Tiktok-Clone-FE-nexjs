@@ -16,7 +16,7 @@ import { TablePagination } from '@/components/table-pagination'
 import { useDialog } from '@/hooks/use-dialog'
 import { formatAdminDate } from '@/helpers/admin-helpers'
 import { AlertCircle, CheckCircle2, Clock, Eye, FileText, Search, User, X, XCircle } from 'lucide-react'
-import { APPEAL_STATUSES, APPEAL_STATUS_VALUES, type AppealStatus } from '@/constants/status/appeal'
+import { APPEAL_STATUSES, APPEAL_STATUS_VALUES, type AppealStatus } from '@/constants/appeal'
 import type { Appeal, ResourcePreview } from '@/types/models/appeal.model'
 import Image from 'next/image'
 

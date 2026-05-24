@@ -1,4 +1,4 @@
-import { PROTECTED_ROUTE_PREFIXES } from '@/config/route-access.config'
+import { PROTECTED_ROUTE_PREFIXES } from '@/constants/routes/route-access'
 import { isPathMatched } from '@/utils/auth/path-check.util'
 import { NextRequest, NextResponse } from 'next/server'
 
