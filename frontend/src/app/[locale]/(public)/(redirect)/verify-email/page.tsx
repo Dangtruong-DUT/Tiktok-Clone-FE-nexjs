@@ -10,16 +10,35 @@ import { useVerifyEmailMutation } from '@/store/services/auth.service'
 import { setAuthenticated, setRole, setUserProfile } from '@/store/features/authSlice'
 import { useCallback, useEffect, useState } from 'react'
 import { logger } from '@/utils/logger.util'
+import { AsyncStatus, AsyncStatusType } from '@/constants/status/async'
+
+type VerifyEmailStatus = Exclude<AsyncStatusType, 'idle'>
+
+type StatusIconConfig = {
+    Icon: React.ComponentType<{ className?: string; loop?: boolean }>
+    className: string
+    loop?: boolean
+}
+
+const STATUS_ICON_CONFIG: Record<VerifyEmailStatus, StatusIconConfig> = {
+    [AsyncStatus.LOADING]: { Icon: Loading, className: 'size-18', loop: true },
+    [AsyncStatus.SUCCESS]: { Icon: VerifyIcon, className: 'size-35', loop: true },
+    [AsyncStatus.ERROR]: { Icon: ErrorIcon, className: 'size-20' }
+}
+
+const STATUS_TITLE: Record<VerifyEmailStatus, string> = {
+    [AsyncStatus.LOADING]: 'Verifying...',
+    [AsyncStatus.SUCCESS]: 'Verification Successful!',
+    [AsyncStatus.ERROR]: 'Sorry your verify code invalid or you have already verified your email.'
+}
+
 export default function VerifyPage() {
     const { searchParams, setSearchParams } = useSearchParamsLoader()
-
     const dispatch = useAppDispatch()
-
     const router = useRouter()
-
     const token = searchParams?.get('token')
     const [verifyEmailMutate] = useVerifyEmailMutation()
-    const [VerifyStatus, setVerifyStatus] = useState<'loading' | 'success' | 'error'>('loading')
+    const [verifyStatus, setVerifyStatus] = useState<VerifyEmailStatus>(AsyncStatus.LOADING)
 
     const handleVerifyEmail = useCallback(
         async (token: string) => {
@@ -30,10 +49,10 @@ export default function VerifyPage() {
                 dispatch(setRole(user.role))
                 dispatch(setUserProfile(user))
                 router.push('/')
-                setVerifyStatus('success')
+                setVerifyStatus(AsyncStatus.SUCCESS)
             } catch (error) {
                 logger.error('Error verifying email:', error)
-                setVerifyStatus('error')
+                setVerifyStatus(AsyncStatus.ERROR)
             }
         },
         [verifyEmailMutate]
@@ -45,21 +64,14 @@ export default function VerifyPage() {
         }
     }, [token, handleVerifyEmail])
 
-    const statusTitle = {
-        loading: 'Verifying...',
-        success: 'Verification Successful!',
-        error: 'Sorry your verify code invalid or you have already verified your email.'
-    }
+    const { Icon, className, loop } = STATUS_ICON_CONFIG[verifyStatus]
 
     return (
         <div className='m-auto flex flex-col items-center gap-4'>
             <div className='size-35 flex items-center justify-center'>
-                {VerifyStatus === 'loading' && <Loading loop className='size-18' />}
-                {VerifyStatus === 'success' && <VerifyIcon className='size-35' loop />}
-                {VerifyStatus === 'error' && <ErrorIcon className='size-20' />}
+                <Icon className={className} loop={loop} />
             </div>
-
-            <h1 className='text-center font-semibold text-xl w-md '>{statusTitle[VerifyStatus]}</h1>
+            <h1 className='text-center font-semibold text-xl w-md'>{STATUS_TITLE[verifyStatus]}</h1>
             <SearchParamsLoader onParamsReceived={setSearchParams} />
         </div>
     )

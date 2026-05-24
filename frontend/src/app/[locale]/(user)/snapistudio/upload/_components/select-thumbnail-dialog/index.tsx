@@ -7,8 +7,7 @@ import { BsFillImageFill } from 'react-icons/bs'
 import { useRef, useState } from 'react'
 import { TimelineFrameType } from '@/utils/video.util'
 import { useTranslations } from 'next-intl'
-
-type SelectThumbnailMode = 'UPLOAD' | 'SELECT_FROM_VIDEO'
+import { SelectThumbnailMode, SelectThumbnailModeType } from '@/constants/ui/thumbnail'
 
 interface SelectThumbnailDialogProps {
     setCoverImage: (image: File) => void
@@ -24,7 +23,7 @@ export default function SelectThumbnailDialog({
     videoFrames
 }: SelectThumbnailDialogProps) {
     const t = useTranslations('SnapiStudio.upload.selectThumbnail')
-    const [mode, setMode] = useState<SelectThumbnailMode>('SELECT_FROM_VIDEO')
+    const [mode, setMode] = useState<SelectThumbnailModeType>(SelectThumbnailMode.SELECT_FROM_VIDEO)
     const buttonCloseRef = useRef<HTMLButtonElement>(null)
     const handleSetCoverImage = (image: File) => {
         setCoverImage(image)
@@ -61,24 +60,24 @@ export default function SelectThumbnailDialog({
                 </DialogHeader>
                 <ul className='flex gap-6 text-base font-semibold '>
                     <li
-                        onClick={() => setMode('SELECT_FROM_VIDEO')}
+                        onClick={() => setMode(SelectThumbnailMode.SELECT_FROM_VIDEO)}
                         className={cn(
                             'relative px-6 py-3 cursor-pointer transition-colors duration-200 hover:text-brand',
                             {
-                                'text-brand border-b-2 border-brand': mode === 'SELECT_FROM_VIDEO',
-                                'text-muted-foreground': mode !== 'SELECT_FROM_VIDEO'
+                                'text-brand border-b-2 border-brand': mode === SelectThumbnailMode.SELECT_FROM_VIDEO,
+                                'text-muted-foreground': mode !== SelectThumbnailMode.SELECT_FROM_VIDEO
                             }
                         )}
                     >
                         {t('selectCover')}
                     </li>
                     <li
-                        onClick={() => setMode('UPLOAD')}
+                        onClick={() => setMode(SelectThumbnailMode.UPLOAD)}
                         className={cn(
                             'relative px-6 py-3 cursor-pointer transition-colors duration-200 hover:text-brand',
                             {
-                                'text-brand border-b-2 border-brand': mode === 'UPLOAD',
-                                'text-muted-foreground': mode !== 'UPLOAD'
+                                'text-brand border-b-2 border-brand': mode === SelectThumbnailMode.UPLOAD,
+                                'text-muted-foreground': mode !== SelectThumbnailMode.UPLOAD
                             }
                         )}
                     >
@@ -89,7 +88,7 @@ export default function SelectThumbnailDialog({
                 <SelectThumbnailFromOriginalVideo
                     setCoverImage={handleSetCoverImage}
                     className={cn('bg-muted', {
-                        hidden: mode !== 'SELECT_FROM_VIDEO'
+                        hidden: mode !== SelectThumbnailMode.SELECT_FROM_VIDEO
                     })}
                     videoFrames={videoFrames}
                 />
@@ -97,7 +96,7 @@ export default function SelectThumbnailDialog({
                 <UploadThumbnailFromDevice
                     setCoverImage={handleSetCoverImage}
                     className={cn('bg-muted', {
-                        hidden: mode !== 'UPLOAD'
+                        hidden: mode !== SelectThumbnailMode.UPLOAD
                     })}
                 />
                 <DialogClose className='hidden' ref={buttonCloseRef} />

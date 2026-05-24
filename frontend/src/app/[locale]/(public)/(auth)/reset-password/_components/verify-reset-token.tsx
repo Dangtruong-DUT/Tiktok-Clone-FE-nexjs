@@ -6,6 +6,7 @@ import { useVerifyForgotPasswordMutation } from '@/store/services/user.service'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
 import { logger } from '@/utils/logger.util'
+import { AsyncStatus } from '@/constants/status/async'
 
 interface VerifyResetTokenProps {
     onTokenVerified: (token: string) => void
@@ -16,7 +17,9 @@ export default function VerifyResetToken({ onTokenVerified }: VerifyResetTokenPr
     const { searchParams, setSearchParams } = useSearchParamsLoader()
 
     const [verifyForgotPasswordMutate] = useVerifyForgotPasswordMutation()
-    const [verifyStatus, setVerifyStatus] = useState<'loading' | 'error'>('loading')
+    const [verifyStatus, setVerifyStatus] = useState<typeof AsyncStatus.LOADING | typeof AsyncStatus.ERROR>(
+        AsyncStatus.LOADING
+    )
 
     const token = searchParams?.get('token')
 
@@ -27,7 +30,7 @@ export default function VerifyResetToken({ onTokenVerified }: VerifyResetTokenPr
                 onTokenVerified(token)
             } catch (error) {
                 logger.error('Error verifying reset password token:', error)
-                setVerifyStatus('error')
+                setVerifyStatus(AsyncStatus.ERROR)
             }
         },
         [verifyForgotPasswordMutate, onTokenVerified]
@@ -39,7 +42,7 @@ export default function VerifyResetToken({ onTokenVerified }: VerifyResetTokenPr
         }
     }, [token, handleVerifyToken])
 
-    if (verifyStatus === 'loading') {
+    if (verifyStatus === AsyncStatus.LOADING) {
         return (
             <div className='w-full max-w-sm mx-auto px-4 text-center'>
                 <div className='mt-16 mb-8'>

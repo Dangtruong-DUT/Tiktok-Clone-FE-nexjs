@@ -2,11 +2,10 @@ import { useTranslations } from 'next-intl'
 import { ModalLoginForm } from '../modal-login-form'
 import { ModalSignUpForm } from '../modal-signup-form'
 import { ChevronLeft } from 'lucide-react'
-
-type AuthMode = 'login' | 'signup' | 'login-email' | 'signup-email'
+import { AuthMode, AuthModeType } from '@/constants/ui/auth-modal'
 
 export interface EmailFormViewProps {
-    mode: AuthMode
+    mode: AuthModeType
     onBack: () => void
 }
 
@@ -14,7 +13,7 @@ export function EmailFormView({ mode, onBack }: EmailFormViewProps) {
     const tLogin = useTranslations('LoginPage')
     const tSignUp = useTranslations('SignUpPage')
 
-    if (mode === 'login-email') {
+    if (mode === AuthMode.LOGIN_EMAIL) {
         return (
             <div>
                 <button onClick={onBack} className='mb-4 text-sm text-muted-foreground cursor-pointer '>
@@ -28,7 +27,7 @@ export function EmailFormView({ mode, onBack }: EmailFormViewProps) {
         )
     }
 
-    if (mode === 'signup-email') {
+    if (mode === AuthMode.SIGNUP_EMAIL) {
         return (
             <div>
                 <button onClick={onBack} className='mb-4 text-sm text-muted-foreground  cursor-pointer'>

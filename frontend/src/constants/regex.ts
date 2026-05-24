@@ -8,3 +8,5 @@ export const SOCIAL_SPLIT_REGEX = /(@[a-zA-Z0-9._]{3,20}|#[\p{L}\p{N}_]{1,100})/
 
 export const USERNAME_EXACT_REGEX = /^[a-zA-Z0-9._]{3,20}$/
 export const HASHTAG_EXACT_REGEX = /^[\p{L}\p{N}_]{1,100}$/u
+
+export const VIDEO_PATH_REGEX = /\/@[^\/]+\/video\/[^\/]+$/

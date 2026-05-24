@@ -20,6 +20,7 @@ import {
 } from '@/store/services/appeal.service'
 import { useAppSelector } from '@/store/hooks'
 import { useAppContext } from '@/provider/app-provider'
+import { AuthStatus } from '@/constants/status/async'
 import { EvidenceDropzone } from './evidence-dropzone'
 import { Link } from '@/i18n/navigation'
 interface AppealFormClientProps {
@@ -222,7 +223,7 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
         )
     }
 
-    if (authStatus === 'loading') {
+    if (authStatus === AuthStatus.LOADING) {
         return (
             <div className='w-full rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-10'>
                 <div className='flex flex-col items-center justify-center gap-2 py-8'>

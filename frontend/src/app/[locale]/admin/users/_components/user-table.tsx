@@ -32,6 +32,7 @@ import { formatDateTime } from '@/utils/formatting/format-time.util'
 import { useAdminTableState } from '@/hooks/use-admin-table-state'
 import { useDialog } from '@/hooks/use-dialog'
 import { TABLE_HEAD_CLASS } from '@/constants/admin/ui'
+import { UserStatus, UserStatusFilter, type UserStatusFilterType } from '@/constants/status/user'
 import type { SortOrder } from '@/constants/ui/table'
 import type { AdminUser } from '@/types/dtos/admin/admin-response.dto'
 
@@ -39,7 +40,6 @@ interface UserTableProps {
     onUserDeleted?: () => void
 }
 
-type UserStatusFilter = 'all' | 'banned' | 'active' | 'deleted'
 type DialogType = 'detail' | 'ban' | 'unban' | 'delete' | 'restore' | 'reset-password' | 'send-mail'
 
 export function UserTable({ onUserDeleted }: UserTableProps) {
@@ -60,7 +60,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
         handleSearch,
         handleReset,
         handlePerPageChange
-    } = useAdminTableState('all')
+    } = useAdminTableState(UserStatusFilter.ALL)
 
     const { selectedItem: selectedUser, dialogType, openDialog, closeDialog } = useDialog<AdminUser, DialogType>()
 
@@ -68,7 +68,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
         page,
         per_page: perPage,
         q: searchTerm || undefined,
-        status: statusFilter as UserStatusFilter,
+        status: statusFilter as UserStatusFilterType,
         order_by: [sortBy === 'recent' ? '-created_at' : 'created_at']
     })
 
@@ -106,16 +106,24 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                             <>
                                 <Select
                                     value={draftStatus}
-                                    onValueChange={(v) => setDraftStatus(v as UserStatusFilter)}
+                                    onValueChange={(v) => setDraftStatus(v as UserStatusFilterType)}
                                 >
                                     <SelectTrigger className='h-7 w-36 rounded text-xs'>
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value='all'>{t('users.filters.allStatuses')}</SelectItem>
-                                        <SelectItem value='active'>{t('users.filters.active')}</SelectItem>
-                                        <SelectItem value='banned'>{t('users.filters.banned')}</SelectItem>
-                                        <SelectItem value='deleted'>{t('users.filters.deleted')}</SelectItem>
+                                        <SelectItem value={UserStatusFilter.ALL}>
+                                            {t('users.filters.allStatuses')}
+                                        </SelectItem>
+                                        <SelectItem value={UserStatusFilter.ACTIVE}>
+                                            {t('users.filters.active')}
+                                        </SelectItem>
+                                        <SelectItem value={UserStatusFilter.BANNED}>
+                                            {t('users.filters.banned')}
+                                        </SelectItem>
+                                        <SelectItem value={UserStatusFilter.DELETED}>
+                                            {t('users.filters.deleted')}
+                                        </SelectItem>
                                     </SelectContent>
                                 </Select>
                                 <Select value={draftSort} onValueChange={(v) => setDraftSort(v as SortOrder)}>
@@ -187,7 +195,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                                         </TableCell>
                                         <TableCell className='text-right'>
                                             <div className='flex items-center justify-end gap-1'>
-                                                {status === 'deleted' ? (
+                                                {status === UserStatus.DELETED ? (
                                                     <TooltipIconButton
                                                         icon={ShieldCheck}
                                                         tooltip={t('users.actions.restore')}
@@ -195,7 +203,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                                                         disabled={isFetching}
                                                         className='text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950'
                                                     />
-                                                ) : status === 'banned' ? (
+                                                ) : status === UserStatus.BANNED ? (
                                                     <TooltipIconButton
                                                         icon={ShieldCheck}
                                                         tooltip={t('users.actions.unban')}
@@ -213,7 +221,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                                                     />
                                                 )}
 
-                                                {status !== 'deleted' && (
+                                                {status !== UserStatus.DELETED && (
                                                     <TooltipIconButton
                                                         icon={Trash2}
                                                         tooltip={t('users.actions.delete')}

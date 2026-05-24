@@ -23,7 +23,7 @@ import { ShareMenuDialog } from '@/components/share-menu-dialog'
 import { useAnimatedState } from '@/hooks/ui/useAnimatedState'
 import envConfig from '@/config/app.config'
 import { useLocale } from 'use-intl'
-
+import { ModalVideoDetailType } from '@/constants/ui/video-dialog'
 interface ActionBarProps {
     post: TikTokPostType
     className?: string
@@ -61,10 +61,10 @@ export default function ActionBar({ post, className }: ActionBarProps) {
     })
 
     const handleToggleOpenComment = useCallback(() => {
-        if (openModalVideoDetailType === 'commentsVideoDetail') {
+        if (openModalVideoDetailType === ModalVideoDetailType.COMMENTS) {
             dispatch(closeModal())
         } else {
-            dispatch(setOpenModal({ prevPathname: pathname, type: 'commentsVideoDetail' }))
+            dispatch(setOpenModal({ prevPathname: pathname, type: ModalVideoDetailType.COMMENTS }))
         }
     }, [openModalVideoDetailType, dispatch, pathname])
 

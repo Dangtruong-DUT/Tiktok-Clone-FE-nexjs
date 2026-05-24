@@ -19,6 +19,7 @@ import { formatDateTime } from '@/utils/formatting/format-time.util'
 import { useAdminTableState } from '@/hooks/use-admin-table-state'
 import { useDialog } from '@/hooks/use-dialog'
 import { TABLE_HEAD_CLASS } from '@/constants/admin/ui'
+import { PostStatusFilter, type PostStatusFilterType } from '@/constants/status/post'
 import type { SortOrder } from '@/constants/ui/table'
 import type { AdminPost } from '@/types/dtos/admin/admin-response.dto'
 
@@ -26,7 +27,6 @@ interface PostModerationTableProps {
     onPostDeleted?: () => void
 }
 
-type PostStatusFilter = 'all' | 'visible'
 type DialogType = 'preview' | 'delete'
 
 export function PostModerationTable({ onPostDeleted }: PostModerationTableProps) {
@@ -47,7 +47,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
         handleSearch,
         handleReset,
         handlePerPageChange
-    } = useAdminTableState('all')
+    } = useAdminTableState(PostStatusFilter.ALL)
 
     const { selectedItem: selectedPost, dialogType, openDialog, closeDialog } = useDialog<AdminPost, DialogType>()
 
@@ -55,7 +55,10 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
         page,
         per_page: perPage,
         q: searchTerm || undefined,
-        status: statusFilter !== 'all' ? (statusFilter as PostStatusFilter) : undefined,
+        status:
+            (statusFilter as PostStatusFilterType) !== PostStatusFilter.ALL
+                ? (statusFilter as PostStatusFilterType)
+                : undefined,
         order_by: [sortBy === 'recent' ? '-created_at' : 'created_at']
     })
 
@@ -92,15 +95,19 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
                         filters={
                             <>
                                 <Select
-                                    value={draftStatus}
-                                    onValueChange={(v) => setDraftStatus(v as PostStatusFilter)}
+                                    value={draftStatus as PostStatusFilterType}
+                                    onValueChange={(v) => setDraftStatus(v as PostStatusFilterType)}
                                 >
                                     <SelectTrigger className='h-7 w-36 rounded text-xs'>
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value='all'>{t('posts.filters.allStatuses')}</SelectItem>
-                                        <SelectItem value='visible'>{t('posts.filters.visible')}</SelectItem>
+                                        <SelectItem value={PostStatusFilter.ALL}>
+                                            {t('posts.filters.allStatuses')}
+                                        </SelectItem>
+                                        <SelectItem value={PostStatusFilter.VISIBLE}>
+                                            {t('posts.filters.visible')}
+                                        </SelectItem>
                                     </SelectContent>
                                 </Select>
                                 <Select value={draftSort} onValueChange={(v) => setDraftSort(v as SortOrder)}>

@@ -7,24 +7,23 @@ import { LegalNotice } from './components/legal-notice'
 import { AuthMenuItem } from './components/auth-menu-item'
 import { EmailFormView } from './components/email-form-view'
 import { useAuthMenuItems } from './hooks/use-auth-menu-items'
-
-type AuthMode = 'login' | 'signup' | 'login-email' | 'signup-email'
+import { AuthMode, AuthModeType, EMAIL_AUTH_MODES, LOGIN_MODES } from '@/constants/ui/auth-modal'
 
 export function AuthModalContent() {
-    const [mode, setMode] = useState<AuthMode>('login')
+    const [mode, setMode] = useState<AuthModeType>(AuthMode.LOGIN)
     const tLogin = useTranslations('LoginPage')
     const tSignUp = useTranslations('SignUpPage')
 
     const menuItems = useAuthMenuItems(mode, setMode)
-    const isEmailMode = mode === 'login-email' || mode === 'signup-email'
-    const isLoginMode = mode === 'login' || mode === 'login-email'
+    const isEmailMode = (EMAIL_AUTH_MODES as readonly AuthModeType[]).includes(mode)
+    const isLoginMode = (LOGIN_MODES as readonly AuthModeType[]).includes(mode)
 
-    const handleModeChange = (newMode: 'login' | 'signup') => {
+    const handleModeChange = (newMode: typeof AuthMode.LOGIN | typeof AuthMode.SIGNUP) => {
         setMode(newMode)
     }
 
     const handleBackToMenu = () => {
-        setMode(mode === 'login-email' ? 'login' : 'signup')
+        setMode(mode === AuthMode.LOGIN_EMAIL ? AuthMode.LOGIN : AuthMode.SIGNUP)
     }
 
     if (isEmailMode) {

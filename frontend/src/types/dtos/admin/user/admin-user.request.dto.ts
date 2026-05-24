@@ -1,11 +1,12 @@
 import { z } from 'zod'
+import { USER_STATUS_FILTER_VALUES } from '@/constants/status/user'
 
 export const GetAdminUsersParamsSchema = z
     .object({
         page: z.number().int().positive().optional(),
         per_page: z.number().int().positive().optional(),
         q: z.string().optional(),
-        status: z.enum(['active', 'banned', 'deleted', 'all']).optional(),
+        status: z.enum(USER_STATUS_FILTER_VALUES).optional(),
         order_by: z
             .array(z.enum(['id', 'username', 'email', 'created_at', '-id', '-username', '-email', '-created_at']))
             .optional()

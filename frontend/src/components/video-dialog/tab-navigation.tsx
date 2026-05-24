@@ -1,10 +1,9 @@
 import { cn } from '@/lib/utils'
-
-export type TabNavigationType = 'comments' | 'creator'
+import { VideoDialogTab, VideoDialogTabType } from '@/constants/ui/video-dialog'
 
 export type TabNavigationProps = {
-    activeTab: TabNavigationType
-    setActiveTab: (tab: TabNavigationType) => void
+    activeTab: VideoDialogTabType
+    setActiveTab: (tab: VideoDialogTabType) => void
     className?: string
     commentCount?: number
 }
@@ -13,9 +12,9 @@ export default function TabNavigation({ activeTab, setActiveTab, className, comm
     return (
         <div className={cn('flex border-b', className)}>
             <button
-                onClick={() => setActiveTab('comments')}
+                onClick={() => setActiveTab(VideoDialogTab.COMMENTS)}
                 className={`flex-1 py-3 px-4 text-sm font-medium border-b-2 transition-colors ${
-                    activeTab === 'comments'
+                    activeTab === VideoDialogTab.COMMENTS
                         ? 'border-foreground text-foreground'
                         : 'border-transparent text-muted-foreground hover:text-foreground'
                 }`}
@@ -23,9 +22,9 @@ export default function TabNavigation({ activeTab, setActiveTab, className, comm
                 Comments ({commentCount ?? 0})
             </button>
             <button
-                onClick={() => setActiveTab('creator')}
+                onClick={() => setActiveTab(VideoDialogTab.CREATOR)}
                 className={`flex-1 py-3 px-4 text-sm font-medium border-b-2 transition-colors ${
-                    activeTab === 'creator'
+                    activeTab === VideoDialogTab.CREATOR
                         ? 'border-foreground text-foreground'
                         : 'border-transparent text-muted-foreground hover:text-foreground'
                 }`}

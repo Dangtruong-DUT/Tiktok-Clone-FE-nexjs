@@ -6,6 +6,7 @@ import { useAppDispatch } from '@/store/hooks'
 import { useInViewport } from '@/hooks/ui/useInViewport'
 import { Link, usePathname } from '@/i18n/navigation'
 import { setOpenModal } from '@/store/features/modalSlide'
+import { ModalVideoDetailType } from '@/constants/ui/video-dialog'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import LoadingIcon from '@/components/lottie-icons/loading'
 import { CiGrid41 } from 'react-icons/ci'
@@ -28,7 +29,7 @@ function VideoGrid() {
     }, [activeTabId])
 
     const handleVideoClick = useCallback(() => {
-        dispatch(setOpenModal({ prevPathname: pathnameRef.current, type: 'modalVideoDetail' }))
+        dispatch(setOpenModal({ prevPathname: pathnameRef.current, type: ModalVideoDetailType.MODAL }))
     }, [dispatch, pathnameRef])
 
     const sentinelScrollRef = useRef<HTMLDivElement>(null)

@@ -9,6 +9,7 @@ import ButtonFollow from '@/app/[locale]/(public)/(home)/[username]/_components/
 import { Link } from '@/i18n/navigation'
 import EditProfileDialog from '@/app/[locale]/(public)/(home)/[username]/_components/edit-profile-dialog'
 import { useAppContext } from '@/provider/app-provider'
+import { AuthStatus } from '@/constants/status/async'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useAppSelector } from '@/store/hooks'
 import { useLocale, useTranslations } from 'next-intl'
@@ -43,7 +44,7 @@ export default function ProfileActionButtons({ userId, username }: ProfileAction
         toast.info(t('messageComingSoon'))
     }
 
-    if (authStatus === 'loading' || (role != null && currentUser == null)) {
+    if (authStatus === AuthStatus.LOADING || (role != null && currentUser == null)) {
         return (
             <div className='flex items-center'>
                 <Skeleton className='w-[122px]  h-10 font-medium rounded-sm ' />

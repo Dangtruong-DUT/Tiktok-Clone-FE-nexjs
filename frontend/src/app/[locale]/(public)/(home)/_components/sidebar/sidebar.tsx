@@ -18,11 +18,10 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/store'
 import ButtonGotoProfile from '@/app/[locale]/(public)/(home)/_components/sidebar/_components/button-goto-profile'
 import { useAppContext } from '@/provider/app-provider'
+import { AuthStatus } from '@/constants/status/async'
 import SidebarSkeleton from '@/app/[locale]/(public)/(home)/_components/sidebar/_components/sidebar-skeleton'
-import {
-    SIDEBAR_ACTION_MENU_ITEMS,
-    SidebarActionMenuKey
-} from '@/app/[locale]/(public)/(home)/_components/sidebar/_config/sidebar-action-items.config'
+import { SIDEBAR_ACTION_MENU_ITEMS } from '@/app/[locale]/(public)/(home)/_components/sidebar/_config/sidebar-action-items.config'
+import { SidebarMenuKeyType, SidebarMenuPlacement } from '@/constants/ui/sidebar'
 
 export interface SidebarProps {
     className?: string
@@ -82,15 +81,19 @@ export default function Sidebar({ className }: SidebarProps) {
         setIsOpenActivity((prev) => !prev)
     }, [isOpenActivity, setIsOpenDrawer, resetToRouteActive, setActiveState])
 
-    const toggleActionMap: Record<SidebarActionMenuKey, () => void> = {
+    const toggleActionMap: Record<SidebarMenuKeyType, () => void> = {
         activity: toggleActivityDrawer,
         more: toggleSettingsDrawer
     }
 
-    const actionItemsBeforeProfile = SIDEBAR_ACTION_MENU_ITEMS.filter((item) => item.placement === 'before-profile')
-    const actionItemsAfterProfile = SIDEBAR_ACTION_MENU_ITEMS.filter((item) => item.placement === 'after-profile')
+    const actionItemsBeforeProfile = SIDEBAR_ACTION_MENU_ITEMS.filter(
+        (item) => item.placement === SidebarMenuPlacement.BEFORE_PROFILE
+    )
+    const actionItemsAfterProfile = SIDEBAR_ACTION_MENU_ITEMS.filter(
+        (item) => item.placement === SidebarMenuPlacement.AFTER_PROFILE
+    )
 
-    if (authStatus === 'loading') {
+    if (authStatus === AuthStatus.LOADING) {
         return <SidebarSkeleton />
     }
 

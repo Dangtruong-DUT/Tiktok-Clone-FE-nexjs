@@ -1,7 +1,6 @@
 'use client'
 
 import Header from '@/app/[locale]/(public)/(home)/search/_components/tabbar-header'
-import { TabbarItemsId } from '@/app/[locale]/(public)/(home)/search/_config/tabbar-items'
 import { SearchParamsLoader, useSearchParamsLoader } from '@/components/search-params-loader'
 import { useSearchPostsInfiniteQuery, useSearchUsersInfiniteQuery } from '@/store/services/search.service'
 import { useTranslations } from 'next-intl'
@@ -9,10 +8,11 @@ import { useState } from 'react'
 import UsersContainer from '@/app/[locale]/(public)/(home)/search/_components/users-container'
 import PostsContainer from '@/app/[locale]/(public)/(home)/search/_components/posts-container'
 import { MdSearchOff } from 'react-icons/md'
+import { SearchTabId, SearchTabIdType } from '@/constants/ui/search'
 
 export default function SearchResults() {
     const t = useTranslations('HomePage.search')
-    const [tabActive, setTabActive] = useState<TabbarItemsId>('USERS')
+    const [tabActive, setTabActive] = useState<SearchTabIdType>(SearchTabId.USERS)
     const { setSearchParams, searchParams } = useSearchParamsLoader()
     const query = searchParams?.get('q') || ''
     const {
@@ -21,7 +21,7 @@ export default function SearchResults() {
         data: dataUsers,
         isFetching: isFetchingUsers,
         isLoading: isLoadingUsers
-    } = useSearchUsersInfiniteQuery({ q: query ?? '' }, { skip: tabActive !== 'USERS' })
+    } = useSearchUsersInfiniteQuery({ q: query ?? '' }, { skip: tabActive !== SearchTabId.USERS })
 
     const {
         fetchNextPage: handleFetchNextPagePosts,
@@ -29,13 +29,13 @@ export default function SearchResults() {
         data: dataPosts,
         isFetching: isFetchingPosts,
         isLoading: isLoadingPosts
-    } = useSearchPostsInfiniteQuery({ q: query ?? '' }, { skip: tabActive !== 'VIDEOS' })
+    } = useSearchPostsInfiniteQuery({ q: query ?? '' }, { skip: tabActive !== SearchTabId.VIDEOS })
 
     const userDataResults = dataUsers?.pages.flatMap((page) => page.data) || []
     const postDataResults = dataPosts?.pages.flatMap((page) => page.data) || []
 
-    const activeResultUserTab = tabActive === 'USERS' && (userDataResults.length > 0 || isLoadingUsers)
-    const activeResultVideoTab = tabActive === 'VIDEOS' && (postDataResults.length > 0 || isLoadingPosts)
+    const activeResultUserTab = tabActive === SearchTabId.USERS && (userDataResults.length > 0 || isLoadingUsers)
+    const activeResultVideoTab = tabActive === SearchTabId.VIDEOS && (postDataResults.length > 0 || isLoadingPosts)
 
     return (
         <div className='p-4 mx-auto max-w-[800px] w-[73%] min-w-[420px]'>

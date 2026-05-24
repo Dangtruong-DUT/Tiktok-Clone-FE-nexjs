@@ -5,7 +5,7 @@ import NavigationVideo from '@/app/[locale]/(public)/(home)/friends/_components/
 import InfiniteVideoFeed from '@/components/infinite-video-feed'
 import UnfollowedFeed from '@/app/[locale]/(public)/(home)/following/_components/unfollowed-feed'
 import { useAppContext } from '@/provider/app-provider'
-
+import { AuthStatus } from '@/constants/status/async'
 export default function VideoScrollWrapper() {
     const { authStatus } = useAppContext()
 
@@ -14,7 +14,7 @@ export default function VideoScrollWrapper() {
 
     return (
         <>
-            {isFriendViewMode && authStatus == 'ready' && (
+            {isFriendViewMode && authStatus === AuthStatus.READY && (
                 <InfiniteVideoFeed
                     posts={feeds.friend.postList}
                     fetchNextPage={feeds.friend.fetchNextPage}

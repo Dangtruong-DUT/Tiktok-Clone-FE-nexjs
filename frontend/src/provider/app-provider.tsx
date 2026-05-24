@@ -7,13 +7,14 @@ import { Toaster } from '@/components/ui/sonner'
 import { useGetMeQuery } from '@/store/services/user.service'
 import GlobalAppLoader from '@/components/global-app-loader'
 import { useProactiveTokenRefresh } from '@/hooks/useProactiveTokenRefresh'
+import { AuthStatus, AuthStatusType } from '@/constants/status/async'
 
 interface AppContextType {
-    authStatus: AuthStatus
+    authStatus: AuthStatusType
 }
 
 const AppContext = createContext<AppContextType>({
-    authStatus: 'loading'
+    authStatus: AuthStatus.LOADING
 })
 
 const queryClient = new QueryClient({
@@ -24,8 +25,6 @@ const queryClient = new QueryClient({
         }
     }
 })
-
-type AuthStatus = 'ready' | 'loading'
 
 function AuthInitializer({ initialAuthenticated, onReady }: { initialAuthenticated: boolean; onReady: () => void }) {
     const { isSuccess, isError } = useGetMeQuery(undefined, {
@@ -50,12 +49,15 @@ export function AppProvider({
     children: React.ReactNode
     initialAuthenticated: boolean
 }) {
-    const [authStatus, setAuthStatus] = useState<AuthStatus>('loading')
+    const [authStatus, setAuthStatus] = useState<AuthStatusType>(AuthStatus.LOADING)
 
     return (
         <AppContext value={{ authStatus }}>
             <QueryClientProvider client={queryClient}>
-                <AuthInitializer initialAuthenticated={initialAuthenticated} onReady={() => setAuthStatus('ready')} />
+                <AuthInitializer
+                    initialAuthenticated={initialAuthenticated}
+                    onReady={() => setAuthStatus(AuthStatus.READY)}
+                />
                 {children}
                 <Toaster position='top-center' />
                 <GlobalAppLoader />

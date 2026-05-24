@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { ModalVideoDetailTypeValue } from '@/constants/ui/video-dialog'
 
-export type OpenModalVideoDetailType = 'commentsVideoDetail' | 'modalVideoDetail' | null
+export type OpenModalVideoDetailType = ModalVideoDetailTypeValue | null
 
 interface ModalStateType {
     typeOpenModal: OpenModalVideoDetailType

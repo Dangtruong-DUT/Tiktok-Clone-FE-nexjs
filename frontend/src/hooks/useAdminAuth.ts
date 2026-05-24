@@ -6,6 +6,7 @@ import { useAppContext } from '@/provider/app-provider'
 import { useLocale } from 'next-intl'
 import { Role } from '@/constants/enum'
 import { useRouter } from '@/i18n/navigation'
+import { AuthStatus } from '@/constants/status/async'
 
 export function useAdminAuth() {
     const { role, isAuthenticated } = useAppSelector((state) => state.auth)
@@ -16,7 +17,7 @@ export function useAdminAuth() {
     const isAdmin = role === Role.SUPER_ADMIN
 
     useEffect(() => {
-        if (authStatus !== 'ready') return
+        if (authStatus !== AuthStatus.READY) return
         if (!isAuthenticated || !isAdmin) {
             router.replace(`/${locale}`)
         }
@@ -24,6 +25,6 @@ export function useAdminAuth() {
 
     return {
         isAdmin,
-        isLoading: authStatus !== 'ready'
+        isLoading: authStatus !== AuthStatus.READY
     }
 }

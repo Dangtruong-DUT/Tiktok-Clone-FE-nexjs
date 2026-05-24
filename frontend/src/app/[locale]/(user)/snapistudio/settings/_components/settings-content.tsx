@@ -8,18 +8,17 @@ import UpdateProfileForm from './update-profile-form'
 import ChangePasswordForm from './change-password-form'
 import PrivacySettingsForm from './privacy-settings-form'
 import VerifyEmailForm from './verify-email-form'
-
-type Tab = 'profile' | 'security' | 'privacy' | 'email'
+import { UserSettingsTab, UserSettingsTabType } from '@/constants/ui/settings'
 
 export function SettingsContent() {
     const t = useTranslations('SnapiStudio.settings')
-    const [active, setActive] = useState<Tab>('profile')
+    const [active, setActive] = useState<UserSettingsTabType>(UserSettingsTab.PROFILE)
 
-    const tabs: { id: Tab; icon: React.ElementType; label: string }[] = [
-        { id: 'profile', icon: UserCircle, label: t('nav.profile') },
-        { id: 'security', icon: Lock, label: t('nav.security') },
-        { id: 'privacy', icon: ShieldCheck, label: t('nav.privacy') },
-        { id: 'email', icon: MailCheck, label: t('nav.email') }
+    const tabs: { id: UserSettingsTabType; icon: React.ElementType; label: string }[] = [
+        { id: UserSettingsTab.PROFILE, icon: UserCircle, label: t('nav.profile') },
+        { id: UserSettingsTab.SECURITY, icon: Lock, label: t('nav.security') },
+        { id: UserSettingsTab.PRIVACY, icon: ShieldCheck, label: t('nav.privacy') },
+        { id: UserSettingsTab.EMAIL, icon: MailCheck, label: t('nav.email') }
     ]
 
     return (
@@ -47,10 +46,10 @@ export function SettingsContent() {
 
             <div className='min-w-0 flex-1'>
                 <div className='rounded-xl border bg-card p-6 shadow-xs'>
-                    {active === 'profile' && <UpdateProfileForm />}
-                    {active === 'security' && <ChangePasswordForm />}
-                    {active === 'privacy' && <PrivacySettingsForm />}
-                    {active === 'email' && <VerifyEmailForm />}
+                    {active === UserSettingsTab.PROFILE && <UpdateProfileForm />}
+                    {active === UserSettingsTab.SECURITY && <ChangePasswordForm />}
+                    {active === UserSettingsTab.PRIVACY && <PrivacySettingsForm />}
+                    {active === UserSettingsTab.EMAIL && <VerifyEmailForm />}
                 </div>
             </div>
         </div>

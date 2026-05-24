@@ -8,6 +8,7 @@ import { TikTokPostType } from '@/types/models/post.model'
 import { Link, usePathname } from '@/i18n/navigation'
 import { useAppDispatch } from '@/store/hooks'
 import { setOpenModal } from '@/store/features/modalSlide'
+import { ModalVideoDetailType } from '@/constants/ui/video-dialog'
 import VideoItemSkeleton from '@/app/[locale]/(public)/(home)/search/_components/video-item-skeleton'
 
 interface PostsContainerProps {
@@ -32,7 +33,7 @@ export default function PostsContainer({
     const [isShowSkeleton, setShowSkeleton] = useState(isLoading)
 
     const handleVideoClick = useCallback(() => {
-        dispatch(setOpenModal({ prevPathname: pathname, type: 'modalVideoDetail' }))
+        dispatch(setOpenModal({ prevPathname: pathname, type: ModalVideoDetailType.MODAL }))
     }, [dispatch, pathname])
 
     useEffect(() => {

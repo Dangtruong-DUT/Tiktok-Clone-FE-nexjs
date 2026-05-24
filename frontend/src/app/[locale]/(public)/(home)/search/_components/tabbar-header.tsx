@@ -1,10 +1,11 @@
-import { TAB_ITEMS, TabbarItemsId } from '@/app/[locale]/(public)/(home)/search/_config/tabbar-items'
+import { TAB_ITEMS } from '@/app/[locale]/(public)/(home)/search/_config/tabbar-items'
+import { SearchTabIdType } from '@/constants/ui/search'
 import { cn } from '@/lib/utils'
 import { useEffect, useRef } from 'react'
 
 interface HeaderProps {
-    tabActive: TabbarItemsId
-    setTabActive: (id: TabbarItemsId) => void
+    tabActive: SearchTabIdType
+    setTabActive: (id: SearchTabIdType) => void
 }
 
 export default function Header({ tabActive, setTabActive }: HeaderProps) {
@@ -28,7 +29,7 @@ export default function Header({ tabActive, setTabActive }: HeaderProps) {
         updateUnderline(activeTabElement)
     }, [tabActive])
 
-    const handleMouseEnter = (tab: TabbarItemsId) => {
+    const handleMouseEnter = (tab: SearchTabIdType) => {
         const hoveredTabElement = document.querySelector(`[data-key="${tab}"]`)
         updateUnderline(hoveredTabElement)
     }

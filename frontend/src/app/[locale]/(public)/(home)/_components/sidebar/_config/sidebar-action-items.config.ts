@@ -1,37 +1,40 @@
 import { SidebarActiveType } from '@/app/[locale]/(public)/(home)/_components/sidebar/_types/sidebar.types'
+import {
+    SidebarMenuKey,
+    SidebarMenuKeyType,
+    SidebarMenuPlacement,
+    SidebarMenuPlacementType
+} from '@/constants/ui/sidebar'
 import { IconType } from 'react-icons'
 import { HiBell, HiEllipsisHorizontalCircle, HiOutlineBell, HiOutlineEllipsisHorizontalCircle } from 'react-icons/hi2'
 
-export type SidebarActionMenuKey = 'activity' | 'more'
-export type SidebarActionMenuPlacement = 'before-profile' | 'after-profile'
-
 export interface SidebarActionMenuItemConfig {
-    key: SidebarActionMenuKey
-    titleKey: 'activity' | 'more'
+    key: SidebarMenuKeyType
+    titleKey: SidebarMenuKeyType
     icon: IconType
     activeIcon: IconType
     activeType: SidebarActiveType
-    placement: SidebarActionMenuPlacement
+    placement: SidebarMenuPlacementType
     requiredAuth: boolean
 }
 
 export const SIDEBAR_ACTION_MENU_ITEMS: SidebarActionMenuItemConfig[] = [
     {
-        key: 'activity',
-        titleKey: 'activity',
+        key: SidebarMenuKey.ACTIVITY,
+        titleKey: SidebarMenuKey.ACTIVITY,
         icon: HiOutlineBell,
         activeIcon: HiBell,
         activeType: SidebarActiveType.ACTIVITY,
-        placement: 'before-profile',
+        placement: SidebarMenuPlacement.BEFORE_PROFILE,
         requiredAuth: true
     },
     {
-        key: 'more',
-        titleKey: 'more',
+        key: SidebarMenuKey.MORE,
+        titleKey: SidebarMenuKey.MORE,
         icon: HiOutlineEllipsisHorizontalCircle,
         activeIcon: HiEllipsisHorizontalCircle,
         activeType: SidebarActiveType.MORE,
-        placement: 'after-profile',
+        placement: SidebarMenuPlacement.AFTER_PROFILE,
         requiredAuth: false
     }
 ]

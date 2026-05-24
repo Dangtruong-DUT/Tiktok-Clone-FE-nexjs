@@ -5,7 +5,7 @@ import { useRouter } from '@/i18n/navigation'
 import { useAppSelector } from '@/store/hooks'
 import useScrollIndexObserver from '@/hooks/ui/useScrollIndexObserver'
 import { TikTokPostType } from '@/types/models/post.model'
-
+import { ModalVideoDetailType } from '@/constants/ui/video-dialog'
 export const keyDataScroll = 'data-scroll-index'
 
 export function useHandleVideos(postList: TikTokPostType[]) {
@@ -31,7 +31,7 @@ export function useHandleVideos(postList: TikTokPostType[]) {
     }, [currentIndex, postList, router, pathname])
 
     useEffect(() => {
-        if (openModalVideoDetailType === 'commentsVideoDetail') {
+        if (openModalVideoDetailType === ModalVideoDetailType.COMMENTS) {
             handleUpdateNewPathForVideo()
         } else if (pathname?.includes('video') && openModalVideoDetailType === null) {
             handleUpdateNewPathForVideo()

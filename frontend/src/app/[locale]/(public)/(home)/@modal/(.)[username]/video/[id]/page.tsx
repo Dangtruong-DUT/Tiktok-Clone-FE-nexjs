@@ -6,9 +6,9 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { usePathname, useRouter } from '@/i18n/navigation'
 import { closeModal } from '@/store/features/modalSlide'
 import { useParams } from 'next/navigation'
+import { ModalVideoDetailType } from '@/constants/ui/video-dialog'
 import { useCallback, useEffect, useRef } from 'react'
-
-const isVideoPathRegex = /\/@[^\/]+\/video\/[^\/]+$/
+import { VIDEO_PATH_REGEX } from '@/constants/regex'
 
 export default function CommentsPage() {
     const typeOpenModal = useAppSelector((state) => state.modal.typeOpenModal)
@@ -19,10 +19,10 @@ export default function CommentsPage() {
     const router = useRouter()
     const prevPathnameRef = useRef<string | null>(null)
 
-    const isVideoPath = isVideoPathRegex.test(pathname)
+    const isVideoPath = VIDEO_PATH_REGEX.test(pathname)
 
     useEffect(() => {
-        if (prevPathnameOpenDetailModal && !isVideoPathRegex.test(prevPathnameOpenDetailModal)) {
+        if (prevPathnameOpenDetailModal && !VIDEO_PATH_REGEX.test(prevPathnameOpenDetailModal)) {
             prevPathnameRef.current = prevPathnameOpenDetailModal
         }
     }, [prevPathnameOpenDetailModal])
@@ -49,14 +49,14 @@ export default function CommentsPage() {
     return (
         <>
             <CommentsSection
-                isVisible={typeOpenModal === 'commentsVideoDetail' && isVideoPath}
+                isVisible={typeOpenModal === ModalVideoDetailType.COMMENTS && isVideoPath}
                 id={id}
                 username={username.replace('%40', '')}
                 handleCloseComments={onClose}
             />
 
             <ModalVideoDetail
-                isVisible={typeOpenModal === 'modalVideoDetail' && isVideoPath}
+                isVisible={typeOpenModal === ModalVideoDetailType.MODAL && isVideoPath}
                 handleClose={onClose}
                 id={id}
             />

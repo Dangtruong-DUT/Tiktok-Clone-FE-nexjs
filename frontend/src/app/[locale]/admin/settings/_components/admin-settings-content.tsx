@@ -6,17 +6,16 @@ import { cn } from '@/lib/utils'
 import { UserCircle, Lock } from 'lucide-react'
 import UpdateProfileForm from '@/app/[locale]/(user)/snapistudio/settings/_components/update-profile-form'
 import ChangePasswordForm from '@/app/[locale]/(user)/snapistudio/settings/_components/change-password-form'
+import { AdminSettingsTab, AdminSettingsTabType } from '@/constants/ui/settings'
 
-type Tab = 'profile' | 'security'
-
-const TABS: { id: Tab; icon: React.ElementType; label: string }[] = [
-    { id: 'profile', icon: UserCircle, label: 'Profile' },
-    { id: 'security', icon: Lock, label: 'Security' }
+const TABS: { id: AdminSettingsTabType; icon: React.ElementType; label: string }[] = [
+    { id: AdminSettingsTab.PROFILE, icon: UserCircle, label: 'Profile' },
+    { id: AdminSettingsTab.SECURITY, icon: Lock, label: 'Security' }
 ]
 
 export function AdminSettingsContent() {
     const t = useTranslations('AdminPage')
-    const [active, setActive] = useState<Tab>('profile')
+    const [active, setActive] = useState<AdminSettingsTabType>(AdminSettingsTab.PROFILE)
 
     return (
         <div className='flex flex-col gap-6 lg:flex-row lg:gap-8'>
@@ -45,8 +44,8 @@ export function AdminSettingsContent() {
 
             <div className='min-w-0 flex-1'>
                 <div className='rounded-xl border bg-card p-6 shadow-xs'>
-                    {active === 'profile' && <UpdateProfileForm />}
-                    {active === 'security' && <ChangePasswordForm />}
+                    {active === AdminSettingsTab.PROFILE && <UpdateProfileForm />}
+                    {active === AdminSettingsTab.SECURITY && <ChangePasswordForm />}
                 </div>
             </div>
         </div>

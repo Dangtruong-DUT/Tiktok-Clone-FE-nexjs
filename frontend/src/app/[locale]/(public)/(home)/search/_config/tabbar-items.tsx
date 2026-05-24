@@ -1,11 +1,11 @@
-export type TabbarItemsId = 'USERS' | 'VIDEOS'
+import { SearchTabId, SearchTabIdType } from '@/constants/ui/search'
 
 export interface TabItem {
     label: string
-    id: TabbarItemsId
+    id: SearchTabIdType
 }
 
 export const TAB_ITEMS: TabItem[] = [
-    { label: 'Users', id: 'USERS' },
-    { label: 'Videos', id: 'VIDEOS' }
+    { label: 'Users', id: SearchTabId.USERS },
+    { label: 'Videos', id: SearchTabId.VIDEOS }
 ]
