@@ -19,7 +19,7 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
 
     return (
         <div className='flex min-h-screen flex-col items-center justify-center gap-6 px-4 text-center'>
-            <SomethingWentWrongIcon className='w-72 max-w-full' loop />
+            <SomethingWentWrongIcon className='w-90 max-w-full' loop />
             <div className='space-y-2'>
                 <h1 className='text-3xl font-bold tracking-tight'>{t('title')}</h1>
                 <p className='text-muted-foreground max-w-md text-base'>{t('description')}</p>
