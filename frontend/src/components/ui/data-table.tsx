@@ -11,7 +11,7 @@ interface DataTableProps<TData, TValue> {
 
 export function DataTable<TData, TValue>({ table, columns, emptyText = 'No results.' }: DataTableProps<TData, TValue>) {
     return (
-        <div className='rounded-xl border bg-background shadow-sm overflow-hidden'>
+        <div className='rounded-none border bg-background overflow-hidden'>
             <Table>
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (

@@ -1,6 +1,6 @@
 'use client'
 
-import { Loader2 } from 'lucide-react'
+import LoadingIcon from '@/components/lottie-icons/loading'
 import {
     AlertDialog,
     AlertDialogAction,
@@ -46,7 +46,7 @@ export function ConfirmDialog({
                 <AlertDialogFooter>
                     <AlertDialogCancel disabled={isLoading}>{cancelLabel}</AlertDialogCancel>
                     <AlertDialogAction onClick={onConfirm} disabled={isLoading} className={cn(confirmClassName)}>
-                        {isLoading ? <Loader2 className='h-4 w-4 animate-spin' /> : confirmLabel}
+                        {isLoading ? <LoadingIcon loop className='size-5' /> : confirmLabel}
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

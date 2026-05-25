@@ -44,7 +44,7 @@ export default function FileInfo({ file, onReplaceFile, className }: FileInfoPro
                     {<span>{t('size', { size: (size / (1024 * 1024)).toFixed(2) })}</span>}
                 </div>
             </div>
-            <Button variant='secondary' type='button' onClick={handleReplace} className='cursor-pointer'>
+            <Button size='lg' variant='secondary' type='button' onClick={handleReplace} className='cursor-pointer'>
                 <MdOutlinePublishedWithChanges />
                 {t('replace')}
             </Button>

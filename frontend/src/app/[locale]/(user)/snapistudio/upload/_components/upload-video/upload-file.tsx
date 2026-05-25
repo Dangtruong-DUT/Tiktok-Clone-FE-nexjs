@@ -155,7 +155,7 @@ const UploadFile = forwardRef<UploadFileRef, UploadFileProps>(
                     </div>
 
                     {isInitialRender && (
-                        <Button className='mb-6 bg-brand font-semibold text-white hover:bg-brand/90'>
+                        <Button size='lg' variant='brand' className='mb-6'>
                             {t('selectVideo')}
                         </Button>
                     )}

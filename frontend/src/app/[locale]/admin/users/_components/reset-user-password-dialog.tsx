@@ -17,7 +17,6 @@ import {
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { PasswordInput } from '@/components/ui/password-input'
-import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { extractApiErrorMessage } from '@/utils/errors/extract-api-error.util'
 
@@ -101,11 +100,11 @@ export function ResetUserPasswordDialog({
                 </div>
 
                 <DialogFooter className='gap-2'>
-                    <Button type='button' variant='outline' onClick={handleClose} disabled={isLoading}>
+                    <Button size='lg' type='button' variant='outline' onClick={handleClose} disabled={isLoading}>
                         {t('common.cancel')}
                     </Button>
-                    <Button type='button' onClick={form.handleSubmit(handleSubmit)} disabled={isLoading}>
-                        {isLoading ? <Loader2 className='h-4 w-4 animate-spin' /> : t('users.actions.resetPassword')}
+                    <Button size='lg' type='button' variant='brand' isLoading={isLoading} onClick={form.handleSubmit(handleSubmit)}>
+                        {t('users.actions.resetPassword')}
                     </Button>
                 </DialogFooter>
             </DialogContent>

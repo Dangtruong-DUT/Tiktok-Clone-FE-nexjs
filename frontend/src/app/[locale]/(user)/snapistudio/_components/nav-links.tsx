@@ -38,14 +38,13 @@ export default function NavLinks() {
                             })}
                         >
                             <Button
-                                className={cn(
-                                    ' h-9 font-medium text-sm rounded-lg gap-1! w-full cursor-pointer bg-brand text-white hover:bg-brand/90 transition-colors',
-                                    {
-                                        'select-none opacity-40 cursor-not-allowed': pathname?.includes(
-                                            SNAPISTUDIO_ROUTES.UPLOAD
-                                        )
-                                    }
-                                )}
+                                size='lg'
+                                variant='brand'
+                                className={cn('w-full gap-1!', {
+                                    'select-none opacity-40 cursor-not-allowed': pathname?.includes(
+                                        SNAPISTUDIO_ROUTES.UPLOAD
+                                    )
+                                })}
                             >
                                 <Plus className='size-5' />
                                 <span>{t2('upload')}</span>
@@ -111,14 +110,13 @@ export default function NavLinks() {
                                     })}
                                 >
                                     <Button
-                                        className={cn(
-                                            '  font-medium text-sm rounded-lg gap-1! cursor-pointer bg-brand text-white hover:bg-brand/90 transition-colors h-9 w-9',
-                                            {
-                                                'select-none opacity-40 cursor-not-allowed': pathname?.includes(
-                                                    SNAPISTUDIO_ROUTES.UPLOAD
-                                                )
-                                            }
-                                        )}
+                                        size='icon'
+                                        variant='brand'
+                                        className={cn({
+                                            'select-none opacity-40 cursor-not-allowed': pathname?.includes(
+                                                SNAPISTUDIO_ROUTES.UPLOAD
+                                            )
+                                        })}
                                     >
                                         <Plus className='size-5' />
                                     </Button>

@@ -17,7 +17,6 @@ import {
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
-import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { extractApiErrorMessage } from '@/utils/errors/extract-api-error.util'
 
@@ -98,16 +97,17 @@ export function DeleteUserDialog({ open, userUuid, username, onOpenChange, onSuc
                 </div>
 
                 <DialogFooter className='gap-2'>
-                    <Button type='button' variant='outline' onClick={handleClose} disabled={isLoading}>
+                    <Button size='lg' type='button' variant='outline' onClick={handleClose} disabled={isLoading}>
                         {t('common.cancel')}
                     </Button>
                     <Button
+                        size='lg'
                         type='button'
                         variant='destructive'
+                        isLoading={isLoading}
                         onClick={form.handleSubmit(handleDelete)}
-                        disabled={isLoading}
                     >
-                        {isLoading ? <Loader2 className='h-4 w-4 animate-spin' /> : t('users.actions.confirmDelete')}
+                        {t('users.actions.confirmDelete')}
                     </Button>
                 </DialogFooter>
             </DialogContent>

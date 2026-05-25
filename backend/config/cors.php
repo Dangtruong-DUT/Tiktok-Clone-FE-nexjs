@@ -7,22 +7,21 @@ return [
     | Cross-Origin Resource Sharing (CORS) Configuration
     |--------------------------------------------------------------------------
     |
-    | Allowed origins must be set explicitly for production.
-    | Use FRONTEND_URL env variable — never '*' in production.
+    | Temporary dev setup: allow all origins/methods/headers.
+    | WARNING: do not use this in production.
     |
     */
 
     'paths' => ['api/*'],
 
-    'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    'allowed_methods' => ['*'],
 
-    'allowed_origins' => array_filter(
-        explode(',', (string) env('CORS_ALLOWED_ORIGINS', env('FRONTEND_URL', '')))
-    ),
+    // Reflect any origin (works with credentials)
+    'allowed_origins' => [],
 
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => ['#.*#'],
 
-    'allowed_headers' => ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+    'allowed_headers' => ['*'],
 
     'exposed_headers' => [],
 

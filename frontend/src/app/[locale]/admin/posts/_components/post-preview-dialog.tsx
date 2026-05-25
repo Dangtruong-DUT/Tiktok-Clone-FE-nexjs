@@ -105,7 +105,7 @@ export function PostPreviewDialog({ open, post, onOpenChange }: PostPreviewDialo
                         </div>
 
                         <div className='mt-auto flex justify-end'>
-                            <Button variant='outline' onClick={() => onOpenChange(false)}>
+                            <Button size='lg' variant='outline' onClick={() => onOpenChange(false)}>
                                 {t('common.cancel')}
                             </Button>
                         </div>

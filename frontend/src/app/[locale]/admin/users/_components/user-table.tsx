@@ -93,6 +93,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
         <>
             <TablePanel
                 isFetching={isFetching}
+                panelClassName='rounded-md'
                 toolbar={
                     <AdminTableToolbar
                         searchValue={searchTerm}
@@ -108,7 +109,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                                     value={draftStatus}
                                     onValueChange={(v) => setDraftStatus(v as UserStatusFilterType)}
                                 >
-                                    <SelectTrigger className='h-7 w-36 rounded text-xs'>
+                                    <SelectTrigger className='h-11 w-36 rounded-xs text-sm'>
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -127,7 +128,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                                     </SelectContent>
                                 </Select>
                                 <Select value={draftSort} onValueChange={(v) => setDraftSort(v as SortOrder)}>
-                                    <SelectTrigger className='h-7 w-32 rounded text-xs'>
+                                    <SelectTrigger className='h-11 w-32 rounded-xs text-sm'>
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>

@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form'
 import { CreatePostReqBodyType, UpdatePostReqBody, UpdatePostReqBodyType } from '@/types/dtos/post/post-request.dto'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Audience } from '@/constants/enum'
-import { Info, Loader } from 'lucide-react'
+import { Info } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import VideoPreview from '@/app/[locale]/(user)/snapistudio/upload/_components/video-preview'
 import SelectThumbnailDialog from '@/app/[locale]/(user)/snapistudio/upload/_components/select-thumbnail-dialog'
@@ -230,16 +230,19 @@ export default function FormUpdatePost() {
                         </div>
                         <div className='flex gap-4 mt-10'>
                             <Button
-                                className='primary-button cursor-pointer h-9! rounded-lg! w-[200px]! font-medium!'
+                                size='lg'
+                                variant='brand'
                                 type='submit'
-                                disabled={isCreatePostLoading}
+                                isLoading={isCreatePostLoading}
+                                className='w-[200px]'
                             >
-                                {isCreatePostLoading ? <Loader className='animate-spin text-brand' /> : 'Save'}
+                                Save
                             </Button>
                             <Button
+                                size='lg'
                                 variant={'secondary'}
                                 type='button'
-                                className='cursor-pointer h-9 rounded-lg w-[200px] font-base'
+                                className='cursor-pointer w-[200px]'
                                 onClick={onCancel}
                                 disabled={isCreatePostLoading}
                             >

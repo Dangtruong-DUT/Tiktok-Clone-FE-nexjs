@@ -361,13 +361,13 @@ export default function StudioAppealsPage() {
     return (
         <div className='max-w-6xl mx-auto p-4 md:p-6 space-y-3'>
             <div className='flex flex-wrap items-center gap-2'>
-                <div className='relative min-w-0 flex-1 max-w-[320px]'>
+                <div className='relative min-w-0 flex-1 max-w-md'>
                     <Search className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground/50' />
                     <Input
                         value={draftSearch}
                         onChange={(e) => setDraftSearch(e.target.value)}
                         placeholder={t('list.searchPlaceholder')}
-                        className='h-8 rounded-md border-transparent bg-muted/50 pl-8 pr-8 text-sm focus-visible:border-border focus-visible:bg-background focus-visible:ring-0'
+                        className='pl-9 pr-9'
                     />
                     <button
                         type='button'
@@ -384,7 +384,7 @@ export default function StudioAppealsPage() {
                 </div>
 
                 <Select value={draftStatus} onValueChange={(v: typeof FILTER_ALL | AppealStatus) => setDraftStatus(v)}>
-                    <SelectTrigger className='h-8 w-40 rounded-md text-sm'>
+                    <SelectTrigger className='h-11 w-40 rounded-xs text-sm'>
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -397,25 +397,22 @@ export default function StudioAppealsPage() {
                     </SelectContent>
                 </Select>
 
-                <Button
-                    size='sm'
-                    onClick={handleSearch}
-                    disabled={isFetching}
-                    className='h-8 shrink-0 rounded-md bg-primary px-3 text-xs text-primary-foreground shadow-none hover:bg-primary/85 disabled:opacity-50'
-                >
+                <Button onClick={handleSearch} disabled={isFetching} size='lg' className='shrink-0'>
                     <Search className='h-3.5 w-3.5' />
                     <span className='ml-1.5 hidden sm:inline'>{t('list.search')}</span>
                 </Button>
 
-                <button
+                <Button
                     type='button'
+                    variant='outline'
+                    size='lg'
                     onClick={handleReset}
                     disabled={!hasActiveFilters}
-                    className='flex h-8 shrink-0 items-center gap-1 rounded-md border border-border/60 px-2.5 text-xs text-muted-foreground transition-colors hover:border-border hover:text-foreground disabled:pointer-events-none disabled:opacity-30'
+                    className='shrink-0'
                 >
-                    <X className='h-3 w-3' />
+                    <X className='h-4 w-4' />
                     {t('list.reset')}
-                </button>
+                </Button>
             </div>
 
             {isLoading ? (
@@ -431,7 +428,7 @@ export default function StudioAppealsPage() {
                     <p className='text-sm text-muted-foreground'>{t('list.emptyState')}</p>
                 </div>
             ) : (
-                <div className='rounded-xl border bg-background shadow-sm overflow-hidden'>
+                <div className='rounded-md border bg-background shadow-sm overflow-hidden'>
                     <Table>
                         <TableHeader>
                             <TableRow className='bg-muted/40 hover:bg-muted/40'>

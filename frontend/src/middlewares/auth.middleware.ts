@@ -1,6 +1,8 @@
 import AuthRequestApi from '@/apis/auth.request'
 import { AUTH_COOKIE } from '@/constants/auth'
 import { AUTH_ROUTES } from '@/constants/routes/routes'
+import { GUEST_ONLY_ROUTE_PREFIXES } from '@/constants/routes/route-access'
+import { isPathMatched } from '@/utils/auth/path-check.util'
 import { setAuthCookies } from '@/utils/auth/cookies.util'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -19,6 +21,10 @@ export async function refreshTokenMiddleware({
     request,
     locale
 }: RefreshTokenMiddlewareParams) {
+    // Skip refresh on guest-only routes (login, signup, etc.) — a failed refresh
+    // would redirect back to the same page, causing an infinite redirect loop.
+    if (isPathMatched(GUEST_ONLY_ROUTE_PREFIXES, pathname)) return null
+
     if (accessToken || !refreshToken) return null
 
     try {

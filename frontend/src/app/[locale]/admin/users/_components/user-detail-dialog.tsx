@@ -118,7 +118,7 @@ export function UserDetailDialog({ open, user, onOpenChange }: UserDetailDialogP
                 </div>
 
                 <DialogFooter>
-                    <Button type='button' variant='outline' onClick={() => onOpenChange(false)}>
+                    <Button size='lg' type='button' variant='outline' onClick={() => onOpenChange(false)}>
                         {t('common.cancel')}
                     </Button>
                 </DialogFooter>

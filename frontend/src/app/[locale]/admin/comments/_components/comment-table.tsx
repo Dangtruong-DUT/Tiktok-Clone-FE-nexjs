@@ -71,6 +71,7 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
         <TooltipProvider>
             <TablePanel
                 isFetching={isFetching}
+                panelClassName='rounded-md'
                 toolbar={
                     <AdminTableToolbar
                         searchValue={searchTerm}
@@ -82,7 +83,7 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
                         isFetching={isFetching}
                         filters={
                             <Select value={draftSort} onValueChange={(v) => setDraftSort(v as SortOrder)}>
-                                <SelectTrigger className='h-7 w-32 rounded text-xs'>
+                                <SelectTrigger className='h-11 w-32 rounded-xs text-sm'>
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>

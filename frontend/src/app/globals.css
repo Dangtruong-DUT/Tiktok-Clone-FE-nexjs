@@ -37,6 +37,7 @@
     --color-popover: var(--popover);
     --color-card-foreground: var(--card-foreground);
     --color-card: var(--card);
+    --radius-xs: calc(var(--radius) - 6px);
     --radius-sm: calc(var(--radius) - 4px);
     --radius-md: calc(var(--radius) - 2px);
     --radius-lg: var(--radius);
@@ -153,15 +154,19 @@
 }
 
 .brand-input {
-    @apply h-11 border rounded-xs border-stone-200 bg-neutral-100 placeholder:text-stone-500 
-           focus:outline-none focus:ring-0 focus:ring-offset-0 
-           focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 
-           focus-visible:border-stone-200 focus:shadow-none text-base;
+    @apply h-11 w-full rounded-xs border border-neutral-200 bg-neutral-100 px-3 py-2 text-base
+           text-neutral-900 placeholder:text-neutral-500 transition-colors
+           dark:border-neutral-200 dark:bg-neutral-100 dark:text-neutral-900 dark:placeholder:text-neutral-500
+           focus:outline-none focus:ring-0 focus:ring-offset-0
+           focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0
+           focus-visible:border-neutral-400 disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 .primary-button {
-    @apply h-11 rounded-xs bg-brand  text-base font-bold hover:bg-brand/90 text-white 
-           disabled:bg-neutral-300! disabled:text-neutral-500!;
+    @apply inline-flex h-11 items-center justify-center rounded-xs bg-brand px-4
+           text-base font-semibold text-white transition-colors
+           hover:bg-brand/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/30
+           disabled:pointer-events-none disabled:bg-neutral-300! disabled:text-neutral-500!;
 }
 
 body {

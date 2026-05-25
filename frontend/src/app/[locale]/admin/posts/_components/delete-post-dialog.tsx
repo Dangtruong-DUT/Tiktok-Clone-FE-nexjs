@@ -18,7 +18,6 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { VIOLATION_REASONS } from '@/constants/admin/ui'
 import { extractApiErrorMessage } from '@/utils/errors/extract-api-error.util'
@@ -136,16 +135,17 @@ export function DeletePostDialog({ open, postUuid, authorUsername, onOpenChange,
                 </div>
 
                 <DialogFooter className='gap-2'>
-                    <Button type='button' variant='outline' onClick={handleClose} disabled={isLoading}>
+                    <Button size='lg' type='button' variant='outline' onClick={handleClose} disabled={isLoading}>
                         {t('common.cancel')}
                     </Button>
                     <Button
+                        size='lg'
                         type='button'
                         variant='destructive'
+                        isLoading={isLoading}
                         onClick={form.handleSubmit(handleDelete)}
-                        disabled={isLoading}
                     >
-                        {isLoading ? <Loader2 className='h-4 w-4 animate-spin' /> : t('posts.actions.confirmDelete')}
+                        {t('posts.actions.confirmDelete')}
                     </Button>
                 </DialogFooter>
             </DialogContent>

@@ -10,7 +10,7 @@ import { useGetUserSettingsQuery, useUpdateUserSettingsMutation } from '@/store/
 import { UpdateUserSettingsBodyType } from '@/types/dtos/user/user-request.dto'
 import { UserSettingsType } from '@/types/models/user-settings.model'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
-import { Loader, ShieldCheck } from 'lucide-react'
+import { ShieldCheck } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
@@ -208,22 +208,24 @@ export default function PrivacySettingsForm() {
             <div className='items-center gap-2 md:ml-auto flex'>
                 <Button
                     variant='outline'
-                    size='sm'
+                    size='lg'
                     type='button'
-                    className='min-w-[90px]'
+                    className='min-w-[100px]'
                     onClick={handleReset}
                     disabled={!hasChanges || isUpdating}
                 >
                     {t('privacy.cancel')}
                 </Button>
                 <Button
-                    size='sm'
+                    size='lg'
                     type='button'
+                    variant='brand'
+                    isLoading={isUpdating}
                     disabled={!hasChanges || isUpdating}
-                    className='bg-brand hover:bg-brand/90 w-[90px] flex items-center justify-center [&_svg]:size-5! cursor-pointer text-white'
+                    className='min-w-[100px]'
                     onClick={handleSave}
                 >
-                    {isUpdating ? <Loader className='animate-spin' /> : t('privacy.save')}
+                    {t('privacy.save')}
                 </Button>
             </div>
         </div>

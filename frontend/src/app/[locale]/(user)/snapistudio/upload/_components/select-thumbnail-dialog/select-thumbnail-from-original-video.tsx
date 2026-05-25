@@ -109,11 +109,8 @@ export default function SelectThumbnailFromOriginalVideo({
                     <canvas width={384} height={64} className='rounded-xs bg-amber-50' ref={canvasRef} />
                 </div>
             </div>
-            <footer className=' flex items-center justify-end p-4 border-t  bg-background'>
-                <Button
-                    className='primary-button h-10! rounded-lg! cursor-pointer text-sm! font-medium!'
-                    onClick={onConfirm}
-                >
+            <footer className='flex items-center justify-end p-4 border-t bg-background'>
+                <Button size='lg' variant='brand' onClick={onConfirm}>
                     Confirm
                 </Button>
             </footer>

@@ -80,7 +80,7 @@ export function ActivityLogDetailDialog({ open, log, onOpenChange }: ActivityLog
                 </div>
 
                 <DialogFooter className='gap-2'>
-                    <Button variant='outline' onClick={() => onOpenChange(false)}>
+                    <Button size='lg' variant='outline' onClick={() => onOpenChange(false)}>
                         {t('common.cancel')}
                     </Button>
                 </DialogFooter>

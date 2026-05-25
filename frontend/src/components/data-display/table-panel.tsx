@@ -10,9 +10,10 @@ interface TablePanelProps {
     children: ReactNode
     isFetching?: boolean
     className?: string
+    panelClassName?: string
 }
 
-export function TablePanel({ toolbar, pagination, children, isFetching, className }: TablePanelProps) {
+export function TablePanel({ toolbar, pagination, children, isFetching, className, panelClassName }: TablePanelProps) {
     return (
         <div className={cn('flex flex-col gap-3', className)}>
             {toolbar}
@@ -20,6 +21,7 @@ export function TablePanel({ toolbar, pagination, children, isFetching, classNam
             <div
                 className={cn(
                     'relative rounded-xl border bg-card shadow-xs overflow-hidden transition-opacity duration-150',
+                    panelClassName,
                     isFetching && 'opacity-40 pointer-events-none select-none'
                 )}
             >

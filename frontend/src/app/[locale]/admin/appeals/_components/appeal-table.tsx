@@ -201,6 +201,7 @@ export function AppealTable() {
             <div className='space-y-2'>
                 <TablePanel
                     isFetching={isFetching}
+                    panelClassName='rounded-md'
                     toolbar={
                         <AdminTableToolbar
                             searchValue={searchTerm}
@@ -216,7 +217,7 @@ export function AppealTable() {
                                         value={draftStatus}
                                         onValueChange={(v) => setDraftStatus(v as typeof FILTER_ALL | AppealStatus)}
                                     >
-                                        <SelectTrigger className='h-7 w-40 rounded text-xs'>
+                                        <SelectTrigger className='h-11 w-40 rounded-xs text-sm'>
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -234,7 +235,7 @@ export function AppealTable() {
                                         value={draftType}
                                         onValueChange={(v) => setDraftType(v as typeof FILTER_ALL | AppealType)}
                                     >
-                                        <SelectTrigger className='h-7 w-40 rounded text-xs'>
+                                        <SelectTrigger className='h-11 w-40 rounded-xs text-sm'>
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -581,11 +582,12 @@ export function AppealTable() {
                         </div>
 
                         <DialogFooter>
-                            <Button variant='outline' onClick={closeDialog} disabled={isSubmitting}>
+                            <Button size='lg' variant='outline' onClick={closeDialog} disabled={isSubmitting}>
                                 {t('common.cancel')}
                             </Button>
                             <Button
-                                variant={actionType === APPEAL_REVIEW_ACTIONS.APPROVE ? 'default' : 'destructive'}
+                                size='lg'
+                                variant={actionType === APPEAL_REVIEW_ACTIONS.APPROVE ? 'brand' : 'destructive'}
                                 onClick={handleReviewAppeal}
                                 disabled={isSubmitting}
                             >

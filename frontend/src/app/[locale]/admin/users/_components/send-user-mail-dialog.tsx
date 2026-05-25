@@ -18,7 +18,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { extractApiErrorMessage } from '@/utils/errors/extract-api-error.util'
 
@@ -89,11 +88,11 @@ export function SendUserMailDialog({ open, userUuid, username, onOpenChange, onS
                 </div>
 
                 <DialogFooter className='gap-2'>
-                    <Button type='button' variant='outline' onClick={handleClose} disabled={isLoading}>
+                    <Button size='lg' type='button' variant='outline' onClick={handleClose} disabled={isLoading}>
                         {t('common.cancel')}
                     </Button>
-                    <Button type='button' onClick={form.handleSubmit(handleSubmit)} disabled={isLoading}>
-                        {isLoading ? <Loader2 className='h-4 w-4 animate-spin' /> : t('users.actions.sendEmail')}
+                    <Button size='lg' type='button' variant='brand' isLoading={isLoading} onClick={form.handleSubmit(handleSubmit)}>
+                        {t('users.actions.sendEmail')}
                     </Button>
                 </DialogFooter>
             </DialogContent>

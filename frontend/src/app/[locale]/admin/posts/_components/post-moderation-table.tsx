@@ -83,6 +83,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
         <>
             <TablePanel
                 isFetching={isFetching}
+                panelClassName='rounded-md'
                 toolbar={
                     <AdminTableToolbar
                         searchValue={searchTerm}
@@ -98,7 +99,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
                                     value={draftStatus as PostStatusFilterType}
                                     onValueChange={(v) => setDraftStatus(v as PostStatusFilterType)}
                                 >
-                                    <SelectTrigger className='h-7 w-36 rounded text-xs'>
+                                    <SelectTrigger className='h-11 w-36 rounded-xs text-sm'>
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -111,7 +112,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
                                     </SelectContent>
                                 </Select>
                                 <Select value={draftSort} onValueChange={(v) => setDraftSort(v as SortOrder)}>
-                                    <SelectTrigger className='h-7 w-32 rounded text-xs'>
+                                    <SelectTrigger className='h-11 w-32 rounded-xs text-sm'>
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>

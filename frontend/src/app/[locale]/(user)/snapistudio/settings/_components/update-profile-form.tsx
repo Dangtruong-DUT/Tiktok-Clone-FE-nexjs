@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Loader, Pencil, UserIcon } from 'lucide-react'
+import { Pencil, UserIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form'
@@ -170,12 +170,13 @@ export default function UpdateProfileForm() {
                             </div>
                         </div>
                         <Button
-                            size='sm'
+                            size='lg'
                             type='submit'
-                            disabled={isLoading}
-                            className='bg-brand hover:bg-brand/90 min-w-[90px] rounded-full flex items-center justify-center [&_svg]:size-5! cursor-pointer text-white'
+                            variant='brand'
+                            isLoading={isLoading}
+                            className='min-w-[100px]'
                         >
-                            {isLoading ? <Loader className='animate-spin' /> : t('updateProfile.save')}
+                            {t('updateProfile.save')}
                         </Button>
                     </div>
 
@@ -204,7 +205,8 @@ export default function UpdateProfileForm() {
                                         <Button
                                             type='button'
                                             size='icon'
-                                            className='absolute bottom-0 right-0 h-8 w-8 rounded-full bg-brand hover:bg-brand/90 text-white'
+                                            variant='brand'
+                                            className='absolute bottom-0 right-0 h-8 w-8 rounded-full'
                                             onClick={() => {
                                                 avatarPreviewRef.current?.click()
                                             }}
@@ -230,7 +232,7 @@ export default function UpdateProfileForm() {
                                         <Input
                                             id='name'
                                             type='text'
-                                            className='brand-input bg-muted! border-none!'
+                                            className=''
                                             {...field}
                                         />
                                         <FormMessage />

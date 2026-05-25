@@ -105,18 +105,20 @@ export default function UploadThumbnailFromDevice({ setCoverImage, className }: 
                 </div>
             )}
             {file && (
-                <footer className=' flex items-center justify-end p-4 border-t bg-background '>
+                <footer className='flex items-center justify-end p-4 border-t bg-background'>
                     <Button
+                        size='lg'
                         variant={'secondary'}
                         type='button'
-                        className='cursor-pointer h-10 rounded-lg mr-2'
+                        className='cursor-pointer mr-2'
                         onClick={handleOpenFileDialog}
                     >
                         {t('uploadNew')}
                     </Button>
                     <Button
+                        size='lg'
                         type='button'
-                        className='primary-button h-10! rounded-lg! cursor-pointer text-sm! font-medium!'
+                        variant='brand'
                         onClick={onConfirm}
                     >
                         {t('confirm')}

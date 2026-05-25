@@ -13,7 +13,6 @@ import { toast } from 'sonner'
 import { handleFormError } from '@/utils/errors/handle-form-errors.util'
 import { ChangePasswordBody, ChangePasswordBodyType } from '@/types/dtos/user/user-request.dto'
 import { useChangePasswordMutation } from '@/store/services/user.service'
-import { Loader } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
 import { AUTH_ROUTES } from '@/constants/routes/routes'
 
@@ -85,7 +84,7 @@ export default function ChangePasswordForm() {
                                             </Label>
                                             <PasswordInput
                                                 id='oldPassword'
-                                                className='brand-input bg-muted! border-none!'
+                                                className=''
                                                 {...field}
                                             />
                                             <FormMessage />
@@ -109,7 +108,7 @@ export default function ChangePasswordForm() {
                                             </Label>
                                             <PasswordInput
                                                 id='password'
-                                                className='brand-input bg-muted! border-none!'
+                                                className=''
                                                 {...field}
                                             />
                                             <FormMessage />
@@ -131,7 +130,7 @@ export default function ChangePasswordForm() {
                                             </Label>
                                             <PasswordInput
                                                 id='confirmPassword'
-                                                className='brand-input bg-muted! border-none!'
+                                                className=''
                                                 {...field}
                                             />
                                             <FormMessage />
@@ -140,20 +139,17 @@ export default function ChangePasswordForm() {
                                 )}
                             />
                             <div className='items-center gap-2 md:ml-auto flex flex-wrap'>
-                                <Button variant='outline' size='sm' type='reset' className='min-w-[90px]'>
+                                <Button variant='outline' size='lg' type='reset' className='min-w-[100px]'>
                                     {t('changePassword.cancel')}
                                 </Button>
                                 <Button
-                                    size='sm'
+                                    size='lg'
                                     type='submit'
-                                    disabled={changePasswordResult.isLoading}
-                                    className='bg-brand hover:bg-brand/90 w-[90px] flex items-center justify-center [&_svg]:size-5! cursor-pointer text-white'
+                                    variant='brand'
+                                    isLoading={changePasswordResult.isLoading}
+                                    className='min-w-[100px]'
                                 >
-                                    {changePasswordResult.isLoading ? (
-                                        <Loader className='animate-spin' />
-                                    ) : (
-                                        t('changePassword.save')
-                                    )}
+                                    {t('changePassword.save')}
                                 </Button>
                             </div>
                         </div>

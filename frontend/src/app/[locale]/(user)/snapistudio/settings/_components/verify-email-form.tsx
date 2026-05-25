@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { UserVerifyStatus } from '@/constants/enum'
 import { useResendVerifyEmailMutation } from '@/store/services/user.service'
-import { MailCheck, Loader } from 'lucide-react'
+import { MailCheck } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
@@ -134,11 +134,13 @@ export default function VerifyEmailForm() {
                     <Button
                         size='lg'
                         type='button'
+                        variant='brand'
+                        isLoading={isLoading}
                         disabled={isLoading || remainingCooldown > 0}
                         onClick={handleResendVerifyEmail}
-                        className='w-full rounded-full border border-brand/40 bg-transparent text-brand hover:bg-brand/10 hover:text-brand [&_svg]:size-5!'
+                        className='w-full'
                     >
-                        {isLoading ? <Loader className='animate-spin' /> : t('verifyEmail.resendButton')}
+                        {remainingCooldown > 0 ? cooldownLabel : t('verifyEmail.resendButton')}
                     </Button>
                 </div>
             )}
