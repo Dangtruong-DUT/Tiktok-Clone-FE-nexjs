@@ -84,7 +84,7 @@ export function StudioAppealsTable() {
                                 value={draftSearch}
                                 onChange={(e) => setDraftSearch(e.target.value)}
                                 placeholder={t('list.searchPlaceholder')}
-                                className='pl-9 pr-9'
+                                className='rounded-none pl-9 pr-9'
                             />
                             <button
                                 type='button'
@@ -122,7 +122,7 @@ export function StudioAppealsTable() {
                             onClick={handleSearch}
                             disabled={isFetching}
                             size='lg'
-                            className='shrink-0'
+                            className='shrink-0 rounded-none'
                         >
                             <Search className='h-3.5 w-3.5' />
                             <span className='ml-1.5 hidden sm:inline'>{t('list.search')}</span>
@@ -134,7 +134,7 @@ export function StudioAppealsTable() {
                             size='lg'
                             onClick={handleReset}
                             disabled={!hasActiveFilters}
-                            className='shrink-0'
+                            className='shrink-0 rounded-none'
                         >
                             <X className='h-4 w-4' />
                             {t('list.reset')}

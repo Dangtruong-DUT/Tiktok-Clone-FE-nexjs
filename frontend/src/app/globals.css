@@ -160,7 +160,7 @@
 
 /* Toolbar filter dropdowns — same height, radius, border, and bg as Input */
 .filter-select {
-    @apply h-11 rounded-xs bg-muted/50 border-border text-sm;
+    @apply h-11 rounded-none bg-muted/50 border-border text-sm;
 }
 
 .brand-input {

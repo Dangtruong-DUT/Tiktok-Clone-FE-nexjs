@@ -42,7 +42,7 @@ export default async function AdminUsersPage() {
                                 <Skeleton className='h-10 flex-1' />
                                 <Skeleton className='h-10 w-32' />
                             </div>
-                            <div className='rounded-xl border bg-background shadow-sm overflow-hidden'>
+                            <div className='border bg-background overflow-hidden'>
                                 <div className='p-4 space-y-3'>
                                     {Array.from({ length: 5 }).map((_, i) => (
                                         <Skeleton key={i} className='h-16' />

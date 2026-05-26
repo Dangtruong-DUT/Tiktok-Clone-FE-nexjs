@@ -59,6 +59,18 @@ interface AuthTokens {
     user_role: UserAuthType['role']
 }
 
+export function getClientAccessTokenTimes(): { iat: number; exp: number } {
+    if (typeof document === 'undefined') return { iat: 0, exp: 0 }
+    const getCookie = (name: string): number => {
+        const match = document.cookie.match(new RegExp(`(?:^|;\\s*)${name}=([^;]+)`))
+        return match?.[1] ? parseInt(match[1], 10) : 0
+    }
+    return {
+        iat: getCookie(AUTH_COOKIE.ACCESS_TOKEN_IAT),
+        exp: getCookie(AUTH_COOKIE.ACCESS_TOKEN_EXP)
+    }
+}
+
 export function setAuthCookies(cookieStore: CookieSettable, { access_token, refresh_token, user_role }: AuthTokens) {
     const decodedAccess = decodeJwt<JwtPayloadType>(access_token)
     const decodedRefresh = decodeJwt<JwtPayloadType>(refresh_token)

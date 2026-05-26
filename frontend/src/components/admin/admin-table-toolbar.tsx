@@ -3,7 +3,8 @@
 import { ReactNode, useEffect, useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Loader2, Search, X } from 'lucide-react'
+import LoadingIcon from '@/components/lottie-icons/loading'
+import { Search, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
 
@@ -42,14 +43,15 @@ export function AdminTableToolbar({
     const handleSubmit = () => onSearchChange(inputValue)
 
     return (
-        <div className={cn('flex flex-wrap items-center gap-2 px-4 py-3', className)}>
+        <div className={cn('flex flex-wrap items-center gap-2', className)}>
             <div className='relative w-full min-w-0 max-w-md flex-1'>
                 <Search className='pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground/50' />
                 <Input
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
                     placeholder={searchPlaceholder}
-                    className='pl-9 pr-9'
+                    className='rounded-none pl-9 pr-9'
                 />
                 <button
                     type='button'
@@ -67,23 +69,27 @@ export function AdminTableToolbar({
 
             {filters}
 
-            <Button size='lg' variant='brand' onClick={handleSubmit} disabled={isFetching} className='shrink-0'>
-                {isFetching ? <Loader2 className='h-3.5 w-3.5 animate-spin' /> : <Search className='h-3.5 w-3.5' />}
-                <span className='hidden sm:inline ml-1.5'>{t('common.search')}</span>
+            <Button
+                size='lg'
+                variant='brand'
+                onClick={handleSubmit}
+                disabled={isFetching}
+                className='shrink-0 rounded-none'
+            >
+                {isFetching ? <LoadingIcon loop className='size-4' /> : <Search className='h-3.5 w-3.5' />}
+                <span className='hidden sm:inline'>{t('common.search')}</span>
             </Button>
 
             {onResetFilters && (
-                <Button
+                <button
                     type='button'
-                    variant='outline'
-                    size='lg'
                     onClick={onResetFilters}
                     disabled={!hasActiveFilters}
-                    className='shrink-0'
+                    className='flex h-11 shrink-0 items-center gap-1.5 border border-border/60 px-3 text-sm text-muted-foreground transition-colors hover:border-border hover:text-foreground disabled:pointer-events-none disabled:opacity-30'
                 >
-                    <X className='h-4 w-4' />
+                    <X className='h-3.5 w-3.5' />
                     {resetLabel}
-                </Button>
+                </button>
             )}
 
             {actions && (
