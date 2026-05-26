@@ -31,7 +31,6 @@ import { getUserStatus, getUserStatusColor, truncateText } from '@/utils/admin/a
 import { formatDateTime } from '@/utils/formatting/format-time.util'
 import { useAdminTableState } from '@/hooks/use-admin-table-state'
 import { useDialog } from '@/hooks/use-dialog'
-import { TABLE_HEAD_CLASS } from '@/constants/admin/ui'
 import { UserStatus, UserStatusFilter, type UserStatusFilterType } from '@/constants/status/user'
 import type { SortOrder } from '@/constants/ui/table'
 import type { AdminUser } from '@/types/dtos/admin/admin-response.dto'
@@ -93,7 +92,6 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
         <>
             <TablePanel
                 isFetching={isFetching}
-                panelClassName='rounded-md'
                 toolbar={
                     <AdminTableToolbar
                         searchValue={searchTerm}
@@ -109,7 +107,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                                     value={draftStatus}
                                     onValueChange={(v) => setDraftStatus(v as UserStatusFilterType)}
                                 >
-                                    <SelectTrigger className='h-11 w-36 rounded-xs text-sm'>
+                                    <SelectTrigger className={`filter-select w-36`}>
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -128,7 +126,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                                     </SelectContent>
                                 </Select>
                                 <Select value={draftSort} onValueChange={(v) => setDraftSort(v as SortOrder)}>
-                                    <SelectTrigger className='h-11 w-32 rounded-xs text-sm'>
+                                    <SelectTrigger className={`filter-select w-32`}>
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -159,17 +157,17 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                 {users.length === 0 ? (
                     <EmptyState message={t('users.emptyState')} />
                 ) : (
-                    <Table>
+                    <Table dividers>
                         <TableHeader>
                             <TableRow className='hover:bg-muted/40'>
-                                <TableHead className={`${TABLE_HEAD_CLASS} w-16`}>{t('users.columns.id')}</TableHead>
-                                <TableHead className={TABLE_HEAD_CLASS}>{t('users.columns.username')}</TableHead>
-                                <TableHead className={TABLE_HEAD_CLASS}>{t('users.columns.email')}</TableHead>
-                                <TableHead className={`${TABLE_HEAD_CLASS} w-28`}>
+                                <TableHead className='table-head w-16'>{t('users.columns.id')}</TableHead>
+                                <TableHead className='table-head'>{t('users.columns.username')}</TableHead>
+                                <TableHead className='table-head'>{t('users.columns.email')}</TableHead>
+                                <TableHead className='table-head w-28'>
                                     {t('users.columns.status')}
                                 </TableHead>
-                                <TableHead className={TABLE_HEAD_CLASS}>{t('users.columns.joinDate')}</TableHead>
-                                <TableHead className={`text-right ${TABLE_HEAD_CLASS} w-28`}>
+                                <TableHead className='table-head'>{t('users.columns.joinDate')}</TableHead>
+                                <TableHead className='text-right table-head w-28'>
                                     {t('users.columns.actions')}
                                 </TableHead>
                             </TableRow>

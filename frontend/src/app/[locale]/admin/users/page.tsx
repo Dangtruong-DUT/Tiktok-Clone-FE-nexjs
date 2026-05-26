@@ -1,14 +1,28 @@
 import { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
+import { LocalesType } from '@/i18n/config'
+import envConfig from '@/config/app.config'
 import { AdminLayout, AdminContainer } from '@/components/admin'
 import { Suspense } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { UserTable } from './_components/user-table'
 import { ADMIN_ROUTES } from '@/constants/routes/routes'
 
-export const metadata: Metadata = {
-    title: 'User Management',
-    description: 'Manage users in the system'
+export async function generateMetadata({ params }: { params: Promise<{ locale: LocalesType }> }): Promise<Metadata> {
+    const { locale } = await params
+    const t = await getTranslations('AdminPage')
+
+    return {
+        title: t('users.title'),
+        description: t('users.description'),
+        alternates: {
+            canonical: `${envConfig.NEXT_PUBLIC_URL}/${locale}/admin/users`,
+            languages: {
+                'en-US': `${envConfig.NEXT_PUBLIC_URL}/en/admin/users`,
+                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}/vi/admin/users`
+            }
+        }
+    }
 }
 
 export default async function AdminUsersPage() {

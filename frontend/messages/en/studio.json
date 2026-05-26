@@ -291,7 +291,8 @@
                     "createdAt": "Created at",
                     "response": "Admin Response",
                     "resource": "Resource",
-                    "evidence": "Evidence"
+                    "evidence": "Evidence",
+                    "actions": "Action"
                 },
                 "viewDetail": "View Detail",
                 "resourcePreview": "Resource Preview",

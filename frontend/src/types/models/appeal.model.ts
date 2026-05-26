@@ -3,6 +3,7 @@ import {
     APPEAL_RESOURCE_TYPE_VALUES,
     APPEAL_STATUS_VALUES,
     APPEAL_TYPE_VALUES,
+    RESOURCE_PREVIEW_TYPES,
     type AppealResourceType,
     type AppealStatus,
     type AppealType
@@ -28,18 +29,18 @@ interface ResourcePreviewBase {
 }
 
 interface PostResourcePreview extends ResourcePreviewBase {
-    readonly type: 'post'
+    readonly type: typeof RESOURCE_PREVIEW_TYPES.POST
     readonly thumbnail_url?: string | null
     readonly likes_count?: number
     readonly comments_count?: number
 }
 
 interface CommentResourcePreview extends ResourcePreviewBase {
-    readonly type: 'comment'
+    readonly type: typeof RESOURCE_PREVIEW_TYPES.COMMENT
 }
 
 interface UserResourcePreview {
-    readonly type: 'user'
+    readonly type: typeof RESOURCE_PREVIEW_TYPES.USER
     readonly uuid?: string | null
     readonly username: string
     readonly avatar?: string | null

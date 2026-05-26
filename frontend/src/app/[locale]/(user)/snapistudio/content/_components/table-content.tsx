@@ -18,6 +18,7 @@ import { SearchParamsLoader, useSearchParamsLoader } from '@/components/common/s
 import { useGetPostOfUserPagingQuery } from '@/store/services/posts.service'
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'
 import { DataTable } from '@/components/ui/data-table'
+import { TablePanel } from '@/components/data-display/table-panel'
 import { TablePagination } from '@/components/data-display/table-pagination'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -112,88 +113,100 @@ export default function TableContent() {
     const hasActiveFilters = appliedSearchQuery || appliedAudience !== undefined
 
     return (
-        <div className='w-full space-y-4'>
+        <div className='w-full space-y-3'>
             <SearchParamsLoader onParamsReceived={setSearchParams} />
             <AlertDialogDeleteDish postIdDelete={postIdDelete} setPostIdDelete={setPostIdDelete} />
 
-            <div className='flex flex-wrap items-center gap-2'>
-                <div className='relative min-w-0 flex-1 max-w-md'>
-                    <Search className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground/50' />
-                    <Input
-                        placeholder={t('search.placeholder')}
-                        value={searchKeyword}
-                        onChange={(e) => setSearchKeyword(e.target.value)}
-                        className='pl-9 pr-9'
+            <TablePanel
+                isFetching={isFetchingPosts}
+                toolbar={
+                    <div className='flex flex-wrap items-center gap-2 px-4 py-3'>
+                        <div className='relative min-w-0 flex-1 max-w-md'>
+                            <Search className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground/50' />
+                            <Input
+                                placeholder={t('search.placeholder')}
+                                value={searchKeyword}
+                                onChange={(e) => setSearchKeyword(e.target.value)}
+                                className='pl-9 pr-9'
+                            />
+                            <button
+                                type='button'
+                                onClick={() => setSearchKeyword('')}
+                                disabled={!searchKeyword}
+                                className='absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground/50 transition-colors hover:text-muted-foreground disabled:pointer-events-none disabled:opacity-30'
+                            >
+                                <X className='h-3.5 w-3.5' />
+                            </button>
+                        </div>
+
+                        <AudienceSelect
+                            value={audienceFilter}
+                            onValueChange={setAudienceFilter}
+                            className='filter-select w-40'
+                            placeholder={t('filter.audiencePlaceholder')}
+                            includeAllOption
+                            allOptionLabel={t('filter.allAudience')}
+                            disabled={isFetchingPosts}
+                        />
+
+                        <Button
+                            variant='brand'
+                            onClick={handleSearch}
+                            disabled={isFetchingPosts}
+                            size='lg'
+                            className='shrink-0'
+                        >
+                            <Search className='h-3.5 w-3.5' />
+                            <span className='ml-1.5 hidden sm:inline'>
+                                {isFetchingPosts && pendingAction === 'search'
+                                    ? t('search.searchingButton')
+                                    : t('search.searchButton')}
+                            </span>
+                        </Button>
+
+                        <Button
+                            type='button'
+                            variant='outline'
+                            size='lg'
+                            onClick={handleClearFilters}
+                            disabled={!hasActiveFilters}
+                            className='shrink-0'
+                        >
+                            <X className='h-4 w-4' />
+                            {t('search.clearButton')}
+                        </Button>
+                    </div>
+                }
+                pagination={
+                    queryData?.meta ? (
+                        <TablePagination
+                            pagination={queryData.meta}
+                            page={table.getState().pagination.pageIndex + 1}
+                            perPage={table.getState().pagination.pageSize}
+                            onPerPageChange={(n) => {
+                                table.setPageSize(n)
+                                table.setPageIndex(0)
+                            }}
+                            onPageChange={(p) => table.setPageIndex(p - 1)}
+                            perPageOptions={[10, 20, 50]}
+                            perPageLabel={t('perPage')}
+                            showingResultsFormatter={(from, to, total) => t('showingResults', { from, to, total })}
+                            pathname={SNAPISTUDIO_ROUTES.CONTENT}
+                        />
+                    ) : undefined
+                }
+            >
+                {isLoadingPosts ? (
+                    <TableSkeleton
+                        rows={pagination.pageSize}
+                        showToolbar={false}
+                        showPagination={false}
+                        columnWidths={['w-48 shrink-0', 'w-36', 'w-8', 'w-8', 'w-16 ml-auto']}
                     />
-                    <button
-                        type='button'
-                        onClick={() => setSearchKeyword('')}
-                        disabled={!searchKeyword}
-                        className='absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground/50 transition-colors hover:text-muted-foreground disabled:pointer-events-none disabled:opacity-30'
-                    >
-                        <X className='h-3.5 w-3.5' />
-                    </button>
-                </div>
-
-                <AudienceSelect
-                    value={audienceFilter}
-                    onValueChange={setAudienceFilter}
-                    className='h-11 w-40 rounded-xs text-sm'
-                    placeholder={t('filter.audiencePlaceholder')}
-                    includeAllOption
-                    allOptionLabel={t('filter.allAudience')}
-                    disabled={isFetchingPosts}
-                />
-
-                <Button onClick={handleSearch} disabled={isFetchingPosts} size='lg' className='shrink-0'>
-                    <Search className='h-3.5 w-3.5' />
-                    <span className='ml-1.5 hidden sm:inline'>
-                        {isFetchingPosts && pendingAction === 'search'
-                            ? t('search.searchingButton')
-                            : t('search.searchButton')}
-                    </span>
-                </Button>
-
-                <Button
-                    type='button'
-                    variant='outline'
-                    size='lg'
-                    onClick={handleClearFilters}
-                    disabled={!hasActiveFilters}
-                    className='shrink-0'
-                >
-                    <X className='h-4 w-4' />
-                    {t('search.clearButton')}
-                </Button>
-            </div>
-
-            {isLoadingPosts ? (
-                <TableSkeleton
-                    rows={pagination.pageSize}
-                    showToolbar={false}
-                    showPagination={false}
-                    columnWidths={['w-48 shrink-0', 'w-36', 'w-8', 'w-8', 'w-16 ml-auto']}
-                />
-            ) : (
-                <DataTable columns={columns} table={table} emptyText={t('emptyState')} />
-            )}
-
-            {queryData?.meta && (
-                <TablePagination
-                    pagination={queryData.meta}
-                    page={table.getState().pagination.pageIndex + 1}
-                    perPage={table.getState().pagination.pageSize}
-                    onPerPageChange={(n) => {
-                        table.setPageSize(n)
-                        table.setPageIndex(0)
-                    }}
-                    onPageChange={(p) => table.setPageIndex(p - 1)}
-                    perPageOptions={[10, 20, 50]}
-                    perPageLabel={t('perPage')}
-                    showingResultsFormatter={(from, to, total) => t('showingResults', { from, to, total })}
-                    pathname={SNAPISTUDIO_ROUTES.CONTENT}
-                />
-            )}
+                ) : (
+                    <DataTable columns={columns} table={table} emptyText={t('emptyState')} />
+                )}
+            </TablePanel>
         </div>
     )
 }

@@ -1,7 +1,5 @@
 import { ADMIN_ACTIONS } from '@/constants/admin/actions'
 
-export const TABLE_HEAD_CLASS = 'text-xs font-semibold uppercase tracking-wide text-muted-foreground' as const
-
 export const TIME_PERIODS = {
     TODAY: 'today',
     WEEK: 'week',

@@ -1,14 +1,28 @@
 import { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
+import { LocalesType } from '@/i18n/config'
+import envConfig from '@/config/app.config'
 import { AdminLayout, AdminContainer } from '@/components/admin'
 import { Suspense } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { PostModerationTable } from './_components/post-moderation-table'
 import { ADMIN_ROUTES } from '@/constants/routes/routes'
 
-export const metadata: Metadata = {
-    title: 'Post Moderation',
-    description: 'Moderate and manage posts'
+export async function generateMetadata({ params }: { params: Promise<{ locale: LocalesType }> }): Promise<Metadata> {
+    const { locale } = await params
+    const t = await getTranslations('AdminPage')
+
+    return {
+        title: t('posts.title'),
+        description: t('posts.description'),
+        alternates: {
+            canonical: `${envConfig.NEXT_PUBLIC_URL}/${locale}/admin/posts`,
+            languages: {
+                'en-US': `${envConfig.NEXT_PUBLIC_URL}/en/admin/posts`,
+                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}/vi/admin/posts`
+            }
+        }
+    }
 }
 
 export default async function AdminPostsPage() {

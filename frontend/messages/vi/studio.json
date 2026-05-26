@@ -291,7 +291,8 @@
                     "createdAt": "Ngày tạo",
                     "response": "Phản hồi Admin",
                     "resource": "Tài nguyên",
-                    "evidence": "Bằng chứng"
+                    "evidence": "Bằng chứng",
+                    "actions": "Thao tác"
                 },
                 "viewDetail": "Xem chi tiết",
                 "resourcePreview": "Xem tài nguyên",

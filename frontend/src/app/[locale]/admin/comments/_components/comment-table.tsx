@@ -18,7 +18,6 @@ import { truncateText } from '@/utils/admin/admin.util'
 import { formatDateTime } from '@/utils/formatting/format-time.util'
 import { useAdminTableState } from '@/hooks/use-admin-table-state'
 import { useDialog } from '@/hooks/use-dialog'
-import { TABLE_HEAD_CLASS } from '@/constants/admin/ui'
 import type { SortOrder } from '@/constants/ui/table'
 import type { AdminComment } from '@/types/dtos/admin/admin-response.dto'
 
@@ -71,7 +70,6 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
         <TooltipProvider>
             <TablePanel
                 isFetching={isFetching}
-                panelClassName='rounded-md'
                 toolbar={
                     <AdminTableToolbar
                         searchValue={searchTerm}
@@ -83,7 +81,7 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
                         isFetching={isFetching}
                         filters={
                             <Select value={draftSort} onValueChange={(v) => setDraftSort(v as SortOrder)}>
-                                <SelectTrigger className='h-11 w-32 rounded-xs text-sm'>
+                                <SelectTrigger className={`filter-select w-32`}>
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -113,17 +111,17 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
                 {comments.length === 0 ? (
                     <EmptyState message={t('comments.emptyState')} />
                 ) : (
-                    <Table>
+                    <Table dividers>
                         <TableHeader>
                             <TableRow className='hover:bg-muted/40'>
-                                <TableHead className={`${TABLE_HEAD_CLASS} w-16`}>{t('comments.columns.id')}</TableHead>
-                                <TableHead className={TABLE_HEAD_CLASS}>{t('comments.columns.author')}</TableHead>
-                                <TableHead className={TABLE_HEAD_CLASS}>{t('comments.columns.content')}</TableHead>
-                                <TableHead className={`${TABLE_HEAD_CLASS} w-28`}>
+                                <TableHead className='table-head w-16'>{t('comments.columns.id')}</TableHead>
+                                <TableHead className='table-head'>{t('comments.columns.author')}</TableHead>
+                                <TableHead className='table-head'>{t('comments.columns.content')}</TableHead>
+                                <TableHead className='table-head w-28'>
                                     {t('comments.columns.parentPost')}
                                 </TableHead>
-                                <TableHead className={TABLE_HEAD_CLASS}>{t('comments.columns.date')}</TableHead>
-                                <TableHead className={`text-right ${TABLE_HEAD_CLASS} w-24`}>
+                                <TableHead className='table-head'>{t('comments.columns.date')}</TableHead>
+                                <TableHead className='text-right table-head w-24'>
                                     {t('comments.columns.actions')}
                                 </TableHead>
                             </TableRow>

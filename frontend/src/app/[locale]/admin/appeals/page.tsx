@@ -1,14 +1,28 @@
 import { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
+import { LocalesType } from '@/i18n/config'
+import envConfig from '@/config/app.config'
 import { AdminLayout, AdminContainer } from '@/components/admin'
 import { Suspense } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AppealTable } from './_components/appeal-table'
 import { ADMIN_ROUTES } from '@/constants/routes/routes'
 
-export const metadata: Metadata = {
-    title: 'Appeal Moderation',
-    description: 'Review and process user appeals'
+export async function generateMetadata({ params }: { params: Promise<{ locale: LocalesType }> }): Promise<Metadata> {
+    const { locale } = await params
+    const t = await getTranslations('AdminPage')
+
+    return {
+        title: t('appeals.title'),
+        description: t('appeals.description'),
+        alternates: {
+            canonical: `${envConfig.NEXT_PUBLIC_URL}/${locale}/admin/appeals`,
+            languages: {
+                'en-US': `${envConfig.NEXT_PUBLIC_URL}/en/admin/appeals`,
+                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}/vi/admin/appeals`
+            }
+        }
+    }
 }
 
 export default async function AdminAppealsPage() {

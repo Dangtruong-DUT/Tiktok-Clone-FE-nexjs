@@ -29,7 +29,6 @@ import { EmptyState } from '@/components/common/empty-state'
 import { EvidenceGalleryDialog } from './evidence-gallery-dialog'
 import { AppealDetailDialog } from './appeal-detail-dialog'
 import { formatDateTime } from '@/utils/formatting/format-time.util'
-import { TABLE_HEAD_CLASS } from '@/constants/admin/ui'
 import type { AdminAppeal } from '@/types/dtos/admin/admin-response.dto'
 import {
     APPEAL_REVIEW_ACTIONS,
@@ -198,10 +197,9 @@ export function AppealTable() {
 
     return (
         <TooltipProvider>
-            <div className='space-y-2'>
+            <div className='space-y-3'>
                 <TablePanel
                     isFetching={isFetching}
-                    panelClassName='rounded-md'
                     toolbar={
                         <AdminTableToolbar
                             searchValue={searchTerm}
@@ -217,7 +215,7 @@ export function AppealTable() {
                                         value={draftStatus}
                                         onValueChange={(v) => setDraftStatus(v as typeof FILTER_ALL | AppealStatus)}
                                     >
-                                        <SelectTrigger className='h-11 w-40 rounded-xs text-sm'>
+                                        <SelectTrigger className={`filter-select w-40`}>
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -235,7 +233,7 @@ export function AppealTable() {
                                         value={draftType}
                                         onValueChange={(v) => setDraftType(v as typeof FILTER_ALL | AppealType)}
                                     >
-                                        <SelectTrigger className='h-11 w-40 rounded-xs text-sm'>
+                                        <SelectTrigger className={`filter-select w-40`}>
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -271,28 +269,28 @@ export function AppealTable() {
                         <EmptyState message={t('appeals.emptyState')} />
                     ) : (
                         <div>
-                            <Table>
+                            <Table dividers>
                                 <TableHeader>
                                     <TableRow className='hover:bg-muted/40'>
                                         <TableHead className='w-10' />
-                                        <TableHead className={`${TABLE_HEAD_CLASS} w-16`}>
+                                        <TableHead className='table-head w-16'>
                                             {t('appeals.columns.id')}
                                         </TableHead>
-                                        <TableHead className={TABLE_HEAD_CLASS}>{t('appeals.columns.user')}</TableHead>
-                                        <TableHead className={TABLE_HEAD_CLASS}>{t('appeals.columns.type')}</TableHead>
-                                        <TableHead className={TABLE_HEAD_CLASS}>
+                                        <TableHead className='table-head'>{t('appeals.columns.user')}</TableHead>
+                                        <TableHead className='table-head'>{t('appeals.columns.type')}</TableHead>
+                                        <TableHead className='table-head'>
                                             {t('appeals.columns.reason')}
                                         </TableHead>
-                                        <TableHead className={`${TABLE_HEAD_CLASS} w-20`}>
+                                        <TableHead className='table-head w-20'>
                                             {t('appeals.columns.evidence')}
                                         </TableHead>
-                                        <TableHead className={`${TABLE_HEAD_CLASS} w-28`}>
+                                        <TableHead className='table-head w-28'>
                                             {t('appeals.columns.status')}
                                         </TableHead>
-                                        <TableHead className={TABLE_HEAD_CLASS}>
+                                        <TableHead className='table-head'>
                                             {t('appeals.columns.createdAt')}
                                         </TableHead>
-                                        <TableHead className={`text-right ${TABLE_HEAD_CLASS}`}>
+                                        <TableHead className='text-right table-head'>
                                             {t('appeals.columns.actions')}
                                         </TableHead>
                                     </TableRow>

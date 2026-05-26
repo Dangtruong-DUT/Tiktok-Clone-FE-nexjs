@@ -4,10 +4,23 @@ import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 
-function Table({ className, ...props }: React.ComponentProps<'table'>) {
+function Table({
+    className,
+    dividers,
+    ...props
+}: React.ComponentProps<'table'> & { dividers?: boolean }) {
     return (
         <div data-slot='table-container' className='relative w-full overflow-x-auto'>
-            <table data-slot='table' className={cn('w-full caption-bottom text-sm', className)} {...props} />
+            <table
+                data-slot='table'
+                className={cn(
+                    'w-full caption-bottom text-sm',
+                    dividers &&
+                        '[&_th:not(:last-child)]:border-r [&_th:not(:last-child)]:border-border/25 [&_td:not(:last-child)]:border-r [&_td:not(:last-child)]:border-border/25',
+                    className
+                )}
+                {...props}
+            />
         </div>
     )
 }

@@ -1,14 +1,28 @@
 import { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
+import { LocalesType } from '@/i18n/config'
+import envConfig from '@/config/app.config'
 import { AdminLayout, AdminContainer } from '@/components/admin'
 import { Suspense } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ActivityLog } from './_components/activity-log'
 import { ADMIN_ROUTES } from '@/constants/routes/routes'
 
-export const metadata: Metadata = {
-    title: 'Activity Logs',
-    description: 'View system activity and events'
+export async function generateMetadata({ params }: { params: Promise<{ locale: LocalesType }> }): Promise<Metadata> {
+    const { locale } = await params
+    const t = await getTranslations('AdminPage')
+
+    return {
+        title: t('activity.title'),
+        description: t('activity.description'),
+        alternates: {
+            canonical: `${envConfig.NEXT_PUBLIC_URL}/${locale}/admin/activity`,
+            languages: {
+                'en-US': `${envConfig.NEXT_PUBLIC_URL}/en/admin/activity`,
+                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}/vi/admin/activity`
+            }
+        }
+    }
 }
 
 export default async function AdminActivityPage() {

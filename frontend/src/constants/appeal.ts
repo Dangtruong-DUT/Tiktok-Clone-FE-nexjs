@@ -26,10 +26,17 @@ export const APPEAL_REVIEW_ACTIONS = {
     REJECT: 'reject'
 } as const
 
+export const RESOURCE_PREVIEW_TYPES = {
+    POST: 'post',
+    COMMENT: 'comment',
+    USER: 'user'
+} as const
+
 export type AppealType = (typeof APPEAL_TYPES)[keyof typeof APPEAL_TYPES]
 export type AppealStatus = (typeof APPEAL_STATUSES)[keyof typeof APPEAL_STATUSES]
 export type AppealResourceType = (typeof APPEAL_RESOURCE_TYPES)[keyof typeof APPEAL_RESOURCE_TYPES]
 export type AppealReviewAction = (typeof APPEAL_REVIEW_ACTIONS)[keyof typeof APPEAL_REVIEW_ACTIONS]
+export type ResourcePreviewType = (typeof RESOURCE_PREVIEW_TYPES)[keyof typeof RESOURCE_PREVIEW_TYPES]
 
 export const APPEAL_TYPE_VALUES = Object.values(APPEAL_TYPES) as [AppealType, ...AppealType[]]
 export const APPEAL_STATUS_VALUES = Object.values(APPEAL_STATUSES) as [AppealStatus, ...AppealStatus[]]
