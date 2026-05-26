@@ -61,7 +61,7 @@ return [
     | password reset links. You should set this to the root of your frontend application.
     |    */
 
-    'frontend_url' => env('FRONTEND_URL', 'http://localhost:9696'),
+    'frontend_url' => env('FRONTEND_URL', 'http://localhost:3000'),
 
     /*
     |--------------------------------------------------------------------------

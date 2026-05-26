@@ -1,4 +1,6 @@
 import json
+import re
+import unicodedata
 from pathlib import Path
 
 import numpy as np
@@ -49,16 +51,24 @@ class PhoBERTClassifier(nn.Module):
         return self.classifier(self.dropout(pooled))
 
 
+def clean_text(text: str) -> str:
+    text = unicodedata.normalize("NFC", text or "")
+    text = text.replace("​", " ")
+    text = re.sub(r"https?://\S+|www\.\S+", " ", text)
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()
+
+
 def main() -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     df = pd.read_csv(TEST_PATH, encoding="utf-8-sig")
-    texts = df["sentences"].astype(str).tolist()
+    texts = df["sentences"].astype(str).apply(clean_text).tolist()
     labels = df["toxic"].astype(int).tolist()
 
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, use_fast=False)
     model = PhoBERTClassifier(model_name=MODEL_NAME).to(device)
-    model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
+    model.load_state_dict(torch.load(MODEL_PATH, map_location=device, weights_only=True))
     model.eval()
 
     preds = []

@@ -1,6 +1,8 @@
 import argparse
 import json
 import random
+import re
+import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Optional
@@ -16,6 +18,14 @@ from transformers import AutoModel, AutoTokenizer
 
 
 BASE_DIR = Path(__file__).resolve().parents[1]
+
+
+def clean_text(text: str) -> str:
+    text = unicodedata.normalize("NFC", text or "")
+    text = text.replace("​", " ")
+    text = re.sub(r"https?://\S+|www\.\S+", " ", text)
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()
 
 
 def set_seed(seed: int) -> None:
@@ -78,9 +88,7 @@ def normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
     out = df[[sentence_col, label_col]].copy()
     out.columns = ["sentences", "toxic"]
 
-    out["sentences"] = (
-        out["sentences"].astype(str).str.replace(r"\s+", " ", regex=True).str.strip()
-    )
+    out["sentences"] = out["sentences"].astype(str).apply(clean_text)
     out["toxic"] = out["toxic"].astype(str).str.replace('"', "").str.strip()
     out = out[out["sentences"].str.len() > 0]
     out = out[out["toxic"].isin(["0", "1"])].copy()
