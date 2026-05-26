@@ -12,10 +12,14 @@ import { AuthStatus, AuthStatusType } from '@/constants/status/async'
 
 interface AppContextType {
     authStatus: AuthStatusType
+    /** True if an access_token cookie existed at server-render time.
+     *  Reliable for banned users whose getMe may fail but who ARE authenticated. */
+    hasSession: boolean
 }
 
 const AppContext = createContext<AppContextType>({
-    authStatus: AuthStatus.LOADING
+    authStatus: AuthStatus.LOADING,
+    hasSession: false
 })
 
 const queryClient = new QueryClient({
@@ -53,7 +57,7 @@ export function AppProvider({
     const [authStatus, setAuthStatus] = useState<AuthStatusType>(AuthStatus.LOADING)
 
     return (
-        <AppContext value={{ authStatus }}>
+        <AppContext value={{ authStatus, hasSession: initialAuthenticated }}>
             <QueryClientProvider client={queryClient}>
                 <AuthInitializer
                     initialAuthenticated={initialAuthenticated}

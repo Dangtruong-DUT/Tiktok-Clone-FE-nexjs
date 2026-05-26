@@ -96,8 +96,11 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
     const t = useTranslations('AppealPage')
     const tTypes = useTranslations('AppealPage.types')
     const tStatuses = useTranslations('AppealPage.statuses')
-    const { authStatus } = useAppContext()
-    const isAuthenticated = useAppSelector((state) => state.auth.role != null)
+    const { authStatus, hasSession } = useAppContext()
+    const storeAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
+    // hasSession is set from the server-rendered access_token cookie — reliable for
+    // banned users whose getMe fails (403) leaving Redux auth state empty.
+    const isAuthenticated = hasSession || storeAuthenticated
 
     const isEditFlow = !!appealUuid
     const isNewFlow = !appealUuid && !!appealType
