@@ -1,9 +1,9 @@
 import DirectorLineChart from '@/app/[locale]/(user)/snapistudio/_components/director-line-chart'
 import UserInfo from './_components/user-info'
 import RecentPosts from '@/app/[locale]/(user)/snapistudio/_components/recent-posts'
-import KnowledgeForYou from '@/app/[locale]/(user)/snapistudio/_components/knowledge-for-you'
 import Footer from '@/app/[locale]/(user)/snapistudio/_components/footer'
 import { Metadata } from 'next'
+import KnowledgeForYou from './_components/Knowledge-for-you'
 
 export const metadata: Metadata = {
     title: 'Dashboard',

@@ -3,13 +3,18 @@
 import { useLogoutMutation, useRefreshTokenMutation } from '@/store/services/auth.service'
 import { useEffect, useRef } from 'react'
 import { AUTH_COOKIE } from '@/constants/auth'
+import { logger } from '@/utils/logger.util'
 
-const REFRESH_BUFFER_SECONDS = 120
-
-function getAccessTokenExp(): number {
-    if (typeof document === 'undefined') return 0
-    const match = document.cookie.match(new RegExp(`(?:^|;\\s*)${AUTH_COOKIE.ACCESS_TOKEN_EXP}=([^;]+)`))
-    return match?.[1] ? parseInt(match[1], 10) : 0
+function getAccessTokenTimes(): { iat: number; exp: number } {
+    if (typeof document === 'undefined') return { iat: 0, exp: 0 }
+    const getCookie = (name: string) => {
+        const match = document.cookie.match(new RegExp(`(?:^|;\\s*)${name}=([^;]+)`))
+        return match?.[1] ? parseInt(match[1], 10) : 0
+    }
+    return {
+        iat: getCookie(AUTH_COOKIE.ACCESS_TOKEN_IAT),
+        exp: getCookie(AUTH_COOKIE.ACCESS_TOKEN_EXP)
+    }
 }
 
 export function useProactiveTokenRefresh() {
@@ -18,14 +23,20 @@ export function useProactiveTokenRefresh() {
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     useEffect(() => {
+        /**
+         * Schedules a token refresh to occur at 2/3 of the access token's lifetime.
+         * If the refresh fails, it will attempt to log the user out.
+         */
         function scheduleRefresh() {
             if (timerRef.current) clearTimeout(timerRef.current)
 
-            const exp = getAccessTokenExp()
-            if (!exp) return
+            const { iat, exp } = getAccessTokenTimes()
+            if (!exp || !iat) return
 
             const nowSeconds = Math.floor(Date.now() / 1000)
-            const secondsUntilRefresh = exp - nowSeconds - REFRESH_BUFFER_SECONDS
+            const lifetime = exp - iat
+            const refreshAt = exp - Math.floor(lifetime / 3)
+            const secondsUntilRefresh = refreshAt - nowSeconds
 
             if (secondsUntilRefresh <= 0) {
                 doRefresh()
@@ -42,8 +53,8 @@ export function useProactiveTokenRefresh() {
             } catch {
                 try {
                     await logout().unwrap()
-                } catch {
-                    // ignore logout errors
+                } catch (e) {
+                    logger.error('Failed to refresh token and logout', e)
                 }
             }
         }

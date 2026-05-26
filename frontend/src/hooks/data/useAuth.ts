@@ -1,7 +1,8 @@
 'use client'
 
 import { useAppDispatch } from '@/store/hooks'
-import { useRouter } from '@/i18n/navigation'
+import { useRouter as userI18nRouter } from '@/i18n/navigation'
+import { useRouter } from 'next/navigation'
 import { useLoginMutation, useLogoutMutation, useRegisterMutation } from '@/store/services/auth.service'
 import { clearStore } from '@/store'
 import { startLoadingByKey, stopLoadingByKey } from '@/store/features/appSlice'
@@ -61,7 +62,7 @@ export function useLoginWithEmail() {
 }
 
 export function useRegisterWithEmail() {
-    const router = useRouter()
+    const router = userI18nRouter()
 
     const [registerMutate, registerResult] = useRegisterMutation()
 
@@ -107,7 +108,7 @@ interface UseLogoutProps {
 
 export function useLogout(props?: UseLogoutProps) {
     const [logoutMutate, logoutResult] = useLogoutMutation()
-    const router = useRouter()
+    const router = userI18nRouter()
     const dispatch = useAppDispatch()
 
     const handleLogout = useCallback(async () => {

@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
         const { access_token, refresh_token, user_role } = getAuthCookies(request.cookies)
         const isAuthenticated = !!refresh_token
 
-        const refreshRedirect = await refreshTokenMiddleware({
+        const refreshRedirect = refreshTokenMiddleware({
             accessToken: access_token,
             refreshToken: refresh_token,
             pathname,

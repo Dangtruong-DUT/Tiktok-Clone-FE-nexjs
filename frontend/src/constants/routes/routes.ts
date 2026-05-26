@@ -24,7 +24,8 @@ export const AUTH_ROUTES = {
     OAUTH: '/oauth',
     FORGOT_PASSWORD: '/forgot-password',
     RESET_PASSWORD: '/reset-password',
-    VERIFY_EMAIL: '/verify-email'
+    VERIFY_EMAIL: '/verify-email',
+    TOKEN_REFRESH: '/token-refresh'
 } as const
 
 export const SNAPISTUDIO_ROUTES = {

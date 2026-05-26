@@ -24,7 +24,8 @@ export function getAuthCookies(store: CookieReader, key?: AuthCookieKey): AllAut
         [AUTH_COOKIE.ACCESS_TOKEN]: store.get(AUTH_COOKIE.ACCESS_TOKEN)?.value,
         [AUTH_COOKIE.REFRESH_TOKEN]: store.get(AUTH_COOKIE.REFRESH_TOKEN)?.value,
         [AUTH_COOKIE.USER_ROLE]: store.get(AUTH_COOKIE.USER_ROLE)?.value,
-        [AUTH_COOKIE.ACCESS_TOKEN_EXP]: store.get(AUTH_COOKIE.ACCESS_TOKEN_EXP)?.value
+        [AUTH_COOKIE.ACCESS_TOKEN_EXP]: store.get(AUTH_COOKIE.ACCESS_TOKEN_EXP)?.value,
+        [AUTH_COOKIE.ACCESS_TOKEN_IAT]: store.get(AUTH_COOKIE.ACCESS_TOKEN_IAT)?.value
     }
 }
 
@@ -70,6 +71,11 @@ export function setAuthCookies(cookieStore: CookieSettable, { access_token, refr
     cookieStore.set(AUTH_COOKIE.REFRESH_TOKEN, refresh_token, { ...base, httpOnly: true, expires: refreshExpires })
     cookieStore.set(AUTH_COOKIE.USER_ROLE, String(user_role), { ...base, httpOnly: false, expires: refreshExpires })
     cookieStore.set(AUTH_COOKIE.ACCESS_TOKEN_EXP, String(decodedAccess.exp), {
+        ...base,
+        httpOnly: false,
+        expires: accessExpires
+    })
+    cookieStore.set(AUTH_COOKIE.ACCESS_TOKEN_IAT, String(decodedAccess.iat), {
         ...base,
         httpOnly: false,
         expires: accessExpires

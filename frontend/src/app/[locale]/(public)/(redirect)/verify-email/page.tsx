@@ -11,6 +11,7 @@ import { setAuthenticated, setRole, setUserProfile } from '@/store/features/auth
 import { useCallback, useEffect, useState } from 'react'
 import { logger } from '@/utils/logger.util'
 import { AsyncStatus, AsyncStatusType } from '@/constants/status/async'
+import { APP_ROUTES } from '@/constants/routes/routes'
 
 type VerifyEmailStatus = Exclude<AsyncStatusType, 'idle'>
 
@@ -48,7 +49,7 @@ export default function VerifyPage() {
                 dispatch(setAuthenticated(true))
                 dispatch(setRole(user.role))
                 dispatch(setUserProfile(user))
-                router.push('/')
+                router.push(APP_ROUTES.HOME)
                 setVerifyStatus(AsyncStatus.SUCCESS)
             } catch (error) {
                 logger.error('Error verifying email:', error)
