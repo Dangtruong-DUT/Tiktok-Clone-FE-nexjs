@@ -117,9 +117,7 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
                                 <TableHead className='table-head w-16'>{t('comments.columns.id')}</TableHead>
                                 <TableHead className='table-head'>{t('comments.columns.author')}</TableHead>
                                 <TableHead className='table-head'>{t('comments.columns.content')}</TableHead>
-                                <TableHead className='table-head w-28'>
-                                    {t('comments.columns.parentPost')}
-                                </TableHead>
+                                <TableHead className='table-head w-28'>{t('comments.columns.parentPost')}</TableHead>
                                 <TableHead className='table-head'>{t('comments.columns.date')}</TableHead>
                                 <TableHead className='text-right table-head w-24'>
                                     {t('comments.columns.actions')}

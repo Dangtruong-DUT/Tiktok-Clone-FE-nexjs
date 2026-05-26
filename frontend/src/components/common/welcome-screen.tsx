@@ -5,6 +5,7 @@ import { useAppContext } from '@/provider/app-provider'
 import { AuthStatus } from '@/constants/status/async'
 import WelcomeIcon from '@/components/lottie-icons/welcome-icon'
 import { cn } from '@/lib/utils'
+import LoadingIcon from '@/components/lottie-icons/loading'
 
 export default function WelcomeScreen() {
     const { authStatus } = useAppContext()
@@ -31,9 +32,7 @@ export default function WelcomeScreen() {
             <WelcomeIcon loop={true} className='w-4/5 max-w-[560px]' />
 
             <div className='mt-6 flex items-center gap-1.5'>
-                <span className='h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground/40 [animation-delay:-0.3s]' />
-                <span className='h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground/40 [animation-delay:-0.15s]' />
-                <span className='h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground/40' />
+                <LoadingIcon className='size-[3rem]' loop />
             </div>
         </div>
     )

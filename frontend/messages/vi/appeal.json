@@ -56,7 +56,18 @@
         "success": {
             "title": "Đã gửi kháng cáo!",
             "description": "Kháng cáo của bạn đã được gửi thành công. Đội kiểm duyệt sẽ xem xét và thông báo kết quả cho bạn.",
-            "notice": "Bạn sẽ nhận được email thông báo khi có quyết định."
+            "notice": "Bạn sẽ nhận được email thông báo khi có quyết định.",
+            "viewAppeal": "Xem kháng cáo của tôi",
+            "goBack": "Về trang chủ"
+        },
+        "existing": {
+            "title": "Kháng Cáo Đang Được Xử Lý",
+            "description": "Bạn đã có một kháng cáo đang chờ xét duyệt. Bạn có thể chỉnh sửa hoặc xem trạng thái hiện tại.",
+            "submittedAt": "Ngày gửi",
+            "yourReason": "Lý do của bạn",
+            "adminResponse": "Phản hồi từ quản trị viên",
+            "editAppeal": "Chỉnh sửa kháng cáo",
+            "goBack": "Về trang chủ"
         },
         "pending": {
             "title": "Đã Có Kháng Cáo Đang Chờ",
