@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useSearchParams } from 'next/navigation'
 import { useLocale } from 'next-intl'
 import { useLogoutMutation, useRefreshTokenMutation } from '@/store/services/auth.service'
-import { AUTH_ROUTES, APP_ROUTES } from '@/constants/routes/routes'
+import { APP_ROUTES } from '@/constants/routes/routes'
 import { getSafeInternalRedirectPath } from '@/utils/auth/redirect-path.util'
 import { logger } from '@/utils/logger.util'
 
@@ -26,9 +26,8 @@ export default function RefreshToken() {
             await refreshToken().unwrap()
             router.replace(redirectTo)
         } catch (error) {
-            logger.error('Failed to refresh token', error)
             await logout().unwrap()
-            router.replace(`/${locale}${AUTH_ROUTES.LOGIN}?redirect=${redirectTo}`)
+            router.replace(APP_ROUTES.HOME)
         }
     }, [refreshToken, logout, router, redirectTo, locale])
 

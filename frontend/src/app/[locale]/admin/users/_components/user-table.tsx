@@ -163,9 +163,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                                 <TableHead className='table-head w-16'>{t('users.columns.id')}</TableHead>
                                 <TableHead className='table-head'>{t('users.columns.username')}</TableHead>
                                 <TableHead className='table-head'>{t('users.columns.email')}</TableHead>
-                                <TableHead className='table-head w-28'>
-                                    {t('users.columns.status')}
-                                </TableHead>
+                                <TableHead className='table-head w-28'>{t('users.columns.status')}</TableHead>
                                 <TableHead className='table-head'>{t('users.columns.joinDate')}</TableHead>
                                 <TableHead className='text-right table-head w-28'>
                                     {t('users.columns.actions')}
