@@ -511,7 +511,7 @@ def main() -> None:
     balanced_df = add_length_column(balanced_df)
     save_visualizations(balanced_df, output_dir, prefix="after")
 
-    print("Splitting data with ratio train/test/valid = 1/1/8...")
+    print("Splitting data with ratio train/valid/test = 8/1/1...")
     train_df, valid_df, test_df = split_8_1_1(balanced_df[["sentences", "toxic"]])
 
     train_df.to_csv(output_dir / "train.csv", index=False, encoding="utf-8-sig")

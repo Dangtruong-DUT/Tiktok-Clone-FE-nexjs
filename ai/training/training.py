@@ -259,7 +259,13 @@ def train_pipeline(args: argparse.Namespace) -> None:
 
     model = build_model(model_name=args.model_name, num_labels=2).to(device)
 
-    criterion = nn.CrossEntropyLoss()
+    label_counts = train_df["toxic"].value_counts().sort_index()
+    total = label_counts.sum()
+    class_weights = torch.tensor(
+        [total / (2 * label_counts[i]) for i in range(2)], dtype=torch.float
+    ).to(device)
+    criterion = nn.CrossEntropyLoss(weight=class_weights)
+    print(f"Class weights: {class_weights.tolist()}")
     optimizer = AdamW(model.parameters(), lr=args.learning_rate)
 
     print(f"Using device: {device}")
@@ -297,7 +303,7 @@ def train_pipeline(args: argparse.Namespace) -> None:
             print(f"Saved best model to: {output_path}")
 
     print("Evaluating on test set using best checkpoint...")
-    model.load_state_dict(torch.load(output_path, map_location=device))
+    model.load_state_dict(torch.load(output_path, map_location=device, weights_only=True))
     test_metrics = evaluate_on_test(
         model=model,
         test_loader=test_loader,
