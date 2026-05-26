@@ -6,6 +6,7 @@ import NextTopLoader from 'nextjs-toploader'
 import { Toaster } from '@/components/ui/sonner'
 import { useGetMeQuery } from '@/store/services/user.service'
 import GlobalAppLoader from '@/components/common/global-app-loader'
+import WelcomeScreen from '@/components/common/welcome-screen'
 import { useProactiveTokenRefresh } from '@/hooks/useProactiveTokenRefresh'
 import { AuthStatus, AuthStatusType } from '@/constants/status/async'
 
@@ -61,6 +62,7 @@ export function AppProvider({
                 {children}
                 <Toaster position='top-center' />
                 <GlobalAppLoader />
+                <WelcomeScreen />
                 <NextTopLoader showSpinner={false} color='var(--color-brand)' />
             </QueryClientProvider>
         </AppContext>
