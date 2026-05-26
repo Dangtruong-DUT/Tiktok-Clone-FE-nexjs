@@ -175,7 +175,7 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
     return (
         <div className='space-y-6'>
             <div className='border bg-background p-4 md:p-5'>
-                <div className='flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between'>
+                <div className='flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between'>
                     <div className='flex-1 space-y-3'>
                         <div className='relative'>
                             <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
