@@ -7,7 +7,6 @@ import { useLocale } from 'next-intl'
 import { useLogoutMutation, useRefreshTokenMutation } from '@/store/services/auth.service'
 import { APP_ROUTES } from '@/constants/routes/routes'
 import { getSafeInternalRedirectPath } from '@/utils/auth/redirect-path.util'
-import { logger } from '@/utils/logger.util'
 
 export default function RefreshToken() {
     const [refreshToken] = useRefreshTokenMutation()
