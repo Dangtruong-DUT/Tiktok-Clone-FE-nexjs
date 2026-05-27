@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserSettingsController;
+use App\Http\Controllers\Api\VideoStreamController;
 use Illuminate\Support\Facades\Route;
 
 /*|--------------------------------------------------------------------------
@@ -203,4 +204,12 @@ Route::prefix('search')
         Route::get('/users', [UserController::class, 'index'])->name('users');
         Route::get('/posts', [PostController::class, 'index'])->name('posts');
         Route::get('/hashtags', [HashtagController::class, 'index'])->name('hashtags');
+    });
+
+// video streaming routes
+Route::prefix('videos')
+    ->name('videos.')
+    ->group(function () {
+        Route::get('{upload_file_uuid}/encoding-status', [VideoStreamController::class, 'encodingStatus'])
+            ->name('encoding-status');
     });

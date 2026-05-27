@@ -7,6 +7,7 @@ interface VideoControlsTopProps {
     isMuted: boolean
     onMuteToggle: () => void
     isParentHovered: boolean
+    children?: React.ReactNode
 }
 
 export function VideoControlsTop({
@@ -14,10 +15,11 @@ export function VideoControlsTop({
     onVolumeChange,
     isMuted,
     onMuteToggle,
-    isParentHovered
+    isParentHovered,
+    children,
 }: VideoControlsTopProps) {
     return (
-        <div className='absolute top-0 flex flex-row items-start w-full z-[2] bg-transparent rounded-t-2xl'>
+        <div className='absolute top-0 flex flex-row items-start justify-between w-full z-[2] bg-transparent rounded-t-2xl'>
             <VolumeBar
                 volume={volume}
                 onVolumeChange={onVolumeChange}
@@ -25,6 +27,7 @@ export function VideoControlsTop({
                 onMuteToggle={onMuteToggle}
                 isParentHovered={isParentHovered}
             />
+            {children && <div className='p-2'>{children}</div>}
         </div>
     )
 }

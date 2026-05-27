@@ -58,17 +58,18 @@ class UploadFile extends Model
         return $this->expires_at !== null && $this->expires_at->isPast();
     }
 
-    /**
-     * Get the URL of the file.
-     *
-     * @return string The URL of the file.
-     */
+    public function videoEncoding(): HasOne
+    {
+        return $this->hasOne(VideoEncoding::class);
+    }
+
     public function url(): Attribute
     {
         return Attribute::make(
             get: function () {
                 /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
                 $disk = Storage::disk($this->disk);
+
                 return $disk->url($this->file_path);
             }
         );

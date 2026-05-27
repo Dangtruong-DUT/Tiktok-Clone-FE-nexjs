@@ -4,12 +4,16 @@ import React, { useRef, useState, useCallback } from 'react'
 import { cn } from '@/lib/utils'
 import { useLocale } from 'next-intl'
 import { TikTokPostType } from '@/types/models/post.model'
+import { MediaType } from '@/constants/enum'
 import { useVideoPlayer } from '@/hooks/video/useVideoPlayer'
 import { useVideoAutoPlay } from '@/hooks/video/useVideoAutoPlay'
 import { useVideoControls } from '@/hooks/video/useVideoControls'
+import { useHlsPlayer } from '@/hooks/video/useHlsPlayer'
 import { VideoControlsTop } from '@/components/feed-video-player/components/video-controls-top'
 import { VideoOverlayIcons } from '@/components/feed-video-player/components/video-overlay-icons'
 import { VideoControlsBottom } from '@/components/feed-video-player/components/video-controls-bottom'
+import { VideoQualitySelector } from '@/components/feed-video-player/components/video-quality-selector'
+
 interface VideoPlayerProps {
     className?: string
     post: TikTokPostType
@@ -22,8 +26,16 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
 
     const locale = useLocale()
 
+    const media = post.medias[0]
+    const isHls = media?.type === MediaType.HLS_VIDEO
+
     const { isPlaying, setIsPlaying, isMuted, setIsMuted, volume, setVolume, currentTime, duration } =
         useVideoPlayer(videoRef)
+
+    const { qualityLevels, currentLevel, switchLevel, switchToAuto } = useHlsPlayer(
+        videoRef,
+        isHls ? media?.url : null
+    )
 
     useVideoAutoPlay({ videoRef })
 
@@ -34,7 +46,7 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
             isMuted,
             setIsPlaying,
             setIsMuted,
-            setVolume
+            setVolume,
         })
 
     const handleProgressBarActive = useCallback((active: boolean) => {
@@ -53,7 +65,16 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
                 isMuted={isMuted}
                 onMuteToggle={handleMuteToggle}
                 isParentHovered={isHovered}
-            />
+            >
+                {isHls && isHovered && qualityLevels.length > 0 && (
+                    <VideoQualitySelector
+                        levels={qualityLevels}
+                        currentLevel={currentLevel}
+                        onSelectLevel={switchLevel}
+                        onSelectAuto={switchToAuto}
+                    />
+                )}
+            </VideoControlsTop>
 
             <VideoOverlayIcons
                 showPlayPauseIcon={showPlayPauseIcon}
@@ -64,14 +85,15 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
 
             <video
                 onClick={handlePlayPause}
-                className='w-full h-full rounded-2xl object-contain  bg-accent transition-all duration-400'
+                className='w-full h-full rounded-2xl object-contain bg-accent transition-all duration-400'
                 ref={videoRef}
                 playsInline
                 loop
                 preload='metadata'
                 muted={isMuted}
             >
-                <source src={post.medias[0]?.url} type='video/mp4' />
+                {/* HLS source is injected by hls.js; standard MP4 is set via <source> */}
+                {!isHls && <source src={media?.url} type='video/mp4' />}
             </video>
 
             <VideoControlsBottom

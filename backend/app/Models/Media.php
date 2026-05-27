@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Media\MediaTypeEnum;
+use App\Enums\Video\VideoEncodingStatusEnum;
 use App\Traits\HasUuidObservable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -74,15 +75,20 @@ class Media extends Model
         return $this->belongsTo(UploadFile::class, 'upload_file_id');
     }
 
-    /**
-     * Get the URL of the media.
-     *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute The URL attribute instance.
-     */
     public function url(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->file?->url
+            get: function () {
+                if ($this->type === MediaTypeEnum::HLS_VIDEO) {
+                    $encoding = $this->file?->videoEncoding;
+
+                    if ($encoding && $encoding->status === VideoEncodingStatusEnum::READY) {
+                        return $encoding->master_playlist_url;
+                    }
+                }
+
+                return $this->file?->url;
+            }
         );
     }
 }
