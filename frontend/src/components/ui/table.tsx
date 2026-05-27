@@ -4,11 +4,7 @@ import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 
-function Table({
-    className,
-    dividers,
-    ...props
-}: React.ComponentProps<'table'> & { dividers?: boolean }) {
+function Table({ className, dividers, ...props }: React.ComponentProps<'table'> & { dividers?: boolean }) {
     return (
         <div data-slot='table-container' className='relative w-full overflow-x-auto'>
             <table
@@ -16,7 +12,7 @@ function Table({
                 className={cn(
                     'w-full caption-bottom text-sm',
                     dividers &&
-                        '[&_th:not(:last-child)]:border-r [&_th:not(:last-child)]:border-border/25 [&_td:not(:last-child)]:border-r [&_td:not(:last-child)]:border-border/25',
+                        '[&_th:not(:last-child)]:border-r [&_th:not(:last-child)]:border-border/50 [&_td:not(:last-child)]:border-r [&_td:not(:last-child)]:border-border/50',
                     className
                 )}
                 {...props}
@@ -26,7 +22,7 @@ function Table({
 }
 
 function TableHeader({ className, ...props }: React.ComponentProps<'thead'>) {
-    return <thead data-slot='table-header' className={cn('bg-muted/40 [&_tr]:border-b', className)} {...props} />
+    return <thead data-slot='table-header' className={cn('bg-muted/60 [&_tr]:border-b', className)} {...props} />
 }
 
 function TableBody({ className, ...props }: React.ComponentProps<'tbody'>) {
@@ -58,7 +54,7 @@ function TableHead({ className, ...props }: React.ComponentProps<'th'>) {
         <th
             data-slot='table-head'
             className={cn(
-                'text-muted-foreground h-11 px-3 text-left align-middle text-xs font-semibold uppercase tracking-wide whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
+                'text-foreground/60 h-9 px-3 text-left align-middle text-xs font-semibold uppercase tracking-widest whitespace-nowrap border-border/40 [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
                 className
             )}
             {...props}

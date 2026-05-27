@@ -16,7 +16,6 @@ return [
 
     'allowed_methods' => ['*'],
 
-    // Reflect any origin (works with credentials)
     'allowed_origins' => [],
 
     'allowed_origins_patterns' => ['#.*#'],

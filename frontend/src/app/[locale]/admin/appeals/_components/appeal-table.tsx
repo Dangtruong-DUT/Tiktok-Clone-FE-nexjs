@@ -7,6 +7,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { TooltipIconButton } from '@/components/ui/tooltip-icon-button'
+import { Eye, CheckCircle2, XCircle } from 'lucide-react'
 import {
     Dialog,
     DialogContent,
@@ -273,23 +275,15 @@ export function AppealTable() {
                                 <TableHeader>
                                     <TableRow className='hover:bg-muted/40'>
                                         <TableHead className='w-10' />
-                                        <TableHead className='table-head w-16'>
-                                            {t('appeals.columns.id')}
-                                        </TableHead>
+                                        <TableHead className='table-head w-16'>{t('appeals.columns.id')}</TableHead>
                                         <TableHead className='table-head'>{t('appeals.columns.user')}</TableHead>
                                         <TableHead className='table-head'>{t('appeals.columns.type')}</TableHead>
-                                        <TableHead className='table-head'>
-                                            {t('appeals.columns.reason')}
-                                        </TableHead>
+                                        <TableHead className='table-head'>{t('appeals.columns.reason')}</TableHead>
                                         <TableHead className='table-head w-20'>
                                             {t('appeals.columns.evidence')}
                                         </TableHead>
-                                        <TableHead className='table-head w-28'>
-                                            {t('appeals.columns.status')}
-                                        </TableHead>
-                                        <TableHead className='table-head'>
-                                            {t('appeals.columns.createdAt')}
-                                        </TableHead>
+                                        <TableHead className='table-head w-28'>{t('appeals.columns.status')}</TableHead>
+                                        <TableHead className='table-head'>{t('appeals.columns.createdAt')}</TableHead>
                                         <TableHead className='text-right table-head'>
                                             {t('appeals.columns.actions')}
                                         </TableHead>
@@ -383,59 +377,40 @@ export function AppealTable() {
                                                         {formatDateTime(appeal.created_at)}
                                                     </TableCell>
                                                     <TableCell className='text-right'>
-                                                        {appeal.status === APPEAL_STATUSES.PENDING ? (
-                                                            <div
-                                                                className='flex flex-wrap justify-end gap-1.5'
-                                                                onClick={(e) => e.stopPropagation()}
-                                                            >
-                                                                <Button
-                                                                    size='sm'
-                                                                    variant='ghost'
-                                                                    className='h-7 text-xs'
-                                                                    onClick={() => setDetailAppeal(appeal)}
-                                                                >
-                                                                    {t('appeals.actions.viewDetails')}
-                                                                </Button>
-                                                                <Button
-                                                                    size='sm'
-                                                                    variant='outline'
-                                                                    disabled={isFetching}
-                                                                    className='h-7 text-xs'
-                                                                    onClick={() => {
-                                                                        setSelectedAppeal(appeal)
-                                                                        setActionType(APPEAL_REVIEW_ACTIONS.APPROVE)
-                                                                    }}
-                                                                >
-                                                                    {t('appeals.actions.approve')}
-                                                                </Button>
-                                                                <Button
-                                                                    size='sm'
-                                                                    variant='destructive'
-                                                                    disabled={isFetching}
-                                                                    className='h-7 text-xs'
-                                                                    onClick={() => {
-                                                                        setSelectedAppeal(appeal)
-                                                                        setActionType(APPEAL_REVIEW_ACTIONS.REJECT)
-                                                                    }}
-                                                                >
-                                                                    {t('appeals.actions.reject')}
-                                                                </Button>
-                                                            </div>
-                                                        ) : (
-                                                            <div
-                                                                className='flex justify-end'
-                                                                onClick={(e) => e.stopPropagation()}
-                                                            >
-                                                                <Button
-                                                                    size='sm'
-                                                                    variant='ghost'
-                                                                    className='h-7 text-xs'
-                                                                    onClick={() => setDetailAppeal(appeal)}
-                                                                >
-                                                                    {t('appeals.actions.viewDetails')}
-                                                                </Button>
-                                                            </div>
-                                                        )}
+                                                        <div
+                                                            className='flex items-center justify-end gap-1'
+                                                            onClick={(e) => e.stopPropagation()}
+                                                        >
+                                                            <TooltipIconButton
+                                                                icon={Eye}
+                                                                tooltip={t('appeals.actions.viewDetails')}
+                                                                onClick={() => setDetailAppeal(appeal)}
+                                                            />
+                                                            {appeal.status === APPEAL_STATUSES.PENDING && (
+                                                                <>
+                                                                    <TooltipIconButton
+                                                                        icon={CheckCircle2}
+                                                                        tooltip={t('appeals.actions.approve')}
+                                                                        disabled={isFetching}
+                                                                        className='text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950'
+                                                                        onClick={() => {
+                                                                            setSelectedAppeal(appeal)
+                                                                            setActionType(APPEAL_REVIEW_ACTIONS.APPROVE)
+                                                                        }}
+                                                                    />
+                                                                    <TooltipIconButton
+                                                                        icon={XCircle}
+                                                                        tooltip={t('appeals.actions.reject')}
+                                                                        disabled={isFetching}
+                                                                        className='text-destructive hover:text-destructive hover:bg-destructive/10'
+                                                                        onClick={() => {
+                                                                            setSelectedAppeal(appeal)
+                                                                            setActionType(APPEAL_REVIEW_ACTIONS.REJECT)
+                                                                        }}
+                                                                    />
+                                                                </>
+                                                            )}
+                                                        </div>
                                                     </TableCell>
                                                 </TableRow>
 

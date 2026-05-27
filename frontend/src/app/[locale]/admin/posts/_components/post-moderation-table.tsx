@@ -147,9 +147,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
                                 <TableHead className='table-head w-16'>{t('posts.columns.id')}</TableHead>
                                 <TableHead className='table-head'>{t('posts.columns.title')}</TableHead>
                                 <TableHead className='table-head'>{t('posts.columns.author')}</TableHead>
-                                <TableHead className='table-head w-28'>
-                                    {t('posts.columns.status')}
-                                </TableHead>
+                                <TableHead className='table-head w-28'>{t('posts.columns.status')}</TableHead>
                                 <TableHead className='table-head'>{t('posts.columns.uploadDate')}</TableHead>
                                 <TableHead className='text-right table-head w-24'>
                                     {t('posts.columns.actions')}

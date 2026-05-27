@@ -36,7 +36,7 @@ export function TablePagination({
             <div className='flex items-center gap-1.5 shrink-0'>
                 <span className='text-xs text-muted-foreground'>{perPageLabel}</span>
                 <Select value={String(perPage)} onValueChange={(v) => onPerPageChange(Number(v))}>
-                    <SelectTrigger className='h-7 w-14 rounded border-border/60 text-xs'>
+                    <SelectTrigger className='h-7 w-[72px] rounded border-border/60 text-xs'>
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent>

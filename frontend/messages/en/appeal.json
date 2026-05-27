@@ -56,7 +56,18 @@
         "success": {
             "title": "Appeal Submitted!",
             "description": "Your appeal has been submitted successfully. Our moderation team will review it and notify you of the outcome.",
-            "notice": "You'll receive an email notification once a decision has been made."
+            "notice": "You'll receive an email notification once a decision has been made.",
+            "viewAppeal": "View My Appeal",
+            "goBack": "Back to Home"
+        },
+        "existing": {
+            "title": "Appeal In Progress",
+            "description": "You already have a pending appeal for this issue. Edit it or check its current status below.",
+            "submittedAt": "Submitted",
+            "yourReason": "Your reason",
+            "adminResponse": "Admin response",
+            "editAppeal": "Edit Appeal",
+            "goBack": "Back to Home"
         },
         "pending": {
             "title": "Appeal Already Submitted",

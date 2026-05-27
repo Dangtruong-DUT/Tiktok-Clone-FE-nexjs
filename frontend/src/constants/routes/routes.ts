@@ -8,6 +8,7 @@ export const APP_ROUTES = {
     FRIENDS: '/friends',
     FOLLOWING: '/following',
     APPEAL: '/appeal',
+    TOKEN_REFRESH: '/token-refresh',
     BUSINESS_SUITE: '/business-suite',
     BANNED: '/banned'
 } as const

@@ -155,7 +155,7 @@ class ToxicInferenceService:
             **pretrained_kwargs,
         )
         self.model = PhoBERTClassifier(model_name=config.model_name, hf_token=hf_token).to(self.device)
-        self.model.load_state_dict(torch.load(model_path, map_location=self.device))
+        self.model.load_state_dict(torch.load(model_path, map_location=self.device, weights_only=True))
         self.model.eval()
 
     @torch.inference_mode()

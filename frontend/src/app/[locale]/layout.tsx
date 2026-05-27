@@ -76,14 +76,14 @@ export default async function LocaleLayout({
     }
 
     const cookieStore = await cookies()
-    const hasAccessToken = !!getAuthCookies(cookieStore, AUTH_COOKIE.ACCESS_TOKEN)
+    const hasRefreshToken = !!getAuthCookies(cookieStore, AUTH_COOKIE.REFRESH_TOKEN)
 
     return (
         <html lang={locale} suppressHydrationWarning>
             <body className={`${tiktokDisplayFont.variable} ${tiktokFont.variable} antialiased`}>
                 <NextIntlClientProvider>
                     <StoreProvider>
-                        <AppProvider initialAuthenticated={hasAccessToken}>
+                        <AppProvider initialAuthenticated={hasRefreshToken}>
                             <ThemeProvider
                                 attribute='class'
                                 defaultTheme='system'

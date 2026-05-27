@@ -30,41 +30,5 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 
 class EventServiceProvider extends ServiceProvider
 {
-    protected $listen = [
-        UserEmailVerificationRequestedEvent::class => [
-            SendVerifyEmailListener::class,
-        ],
-        UserEmailVerifiedEvent::class => [
-            SendVerifySuccessEmailListener::class,
-        ],
-        UserPasswordResetRequestedEvent::class => [
-            SendPasswordResetEmailListener::class,
-        ],
-        UserFollowedEvent::class => [
-            CreateFollowNotificationListener::class,
-        ],
-        PostLikedEvent::class => [
-            CreateLikeNotificationListener::class,
-        ],
-        PostCommentedEvent::class => [
-            CreateCommentNotificationListener::class,
-        ],
-        UserMentionedEvent::class => [
-            CreateMentionNotificationsListener::class,
-        ],
-        AdminModerationActionNotifiedEvent::class => [
-            NotifyModerationActionListener::class,
-            SendModerationEmailListener::class,
-        ],
-        AdminPositiveActionNotifiedEvent::class => [
-            NotifyPositiveActionListener::class,
-            SendPositiveActionEmailListener::class,
-        ],
-        AdminDirectMessageSentEvent::class => [
-            SendDirectMessageEmailListener::class,
-        ],
-        AdminActionLoggedEvent::class => [
-            CreateAdminLogListener::class,
-        ],
-    ];
+
 }

@@ -329,7 +329,7 @@ function NotificationItem({
 
     const content = (
         <>
-            <div className='flex min-w-0 items-start gap-2.5'>
+            <div className='flex min-w-0 flex-1 items-start gap-2.5'>
                 {isSystemNotification ? (
                     <div className='flex size-10 items-center justify-center rounded-full bg-muted text-muted-foreground'>
                         <SystemIcon size={18} />

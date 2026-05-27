@@ -415,26 +415,27 @@ def augment_to_target(
     return out_df
 
 
-def split_1_1_8(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+def split_8_1_1(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Split dataset 80% train / 10% valid / 10% test (stratified by label)."""
     train_df, rest_df = train_test_split(
         df,
-        train_size=0.1,
+        train_size=0.8,
         random_state=SEED,
         stratify=df["toxic"],
     )
 
-    # rest is 90%. Split rest into test (10% total) and valid (80% total).
-    test_df, valid_df = train_test_split(
+    # rest is 20%. Split evenly into valid (10% total) and test (10% total).
+    valid_df, test_df = train_test_split(
         rest_df,
-        train_size=(1 / 9),
+        train_size=0.5,
         random_state=SEED,
         stratify=rest_df["toxic"],
     )
 
     return (
         train_df.sample(frac=1, random_state=SEED).reset_index(drop=True),
-        test_df.sample(frac=1, random_state=SEED).reset_index(drop=True),
         valid_df.sample(frac=1, random_state=SEED).reset_index(drop=True),
+        test_df.sample(frac=1, random_state=SEED).reset_index(drop=True),
     )
 
 
@@ -510,8 +511,8 @@ def main() -> None:
     balanced_df = add_length_column(balanced_df)
     save_visualizations(balanced_df, output_dir, prefix="after")
 
-    print("Splitting data with ratio train/test/valid = 1/1/8...")
-    train_df, test_df, valid_df = split_1_1_8(balanced_df[["sentences", "toxic"]])
+    print("Splitting data with ratio train/valid/test = 8/1/1...")
+    train_df, valid_df, test_df = split_8_1_1(balanced_df[["sentences", "toxic"]])
 
     train_df.to_csv(output_dir / "train.csv", index=False, encoding="utf-8-sig")
     test_df.to_csv(output_dir / "test.csv", index=False, encoding="utf-8-sig")

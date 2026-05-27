@@ -117,7 +117,9 @@ class AppealRepository extends BaseRepository
         return $query
             ->with([
                 'user:id,uuid,username,name,avatar_file_id',
+                'user.avatarFile:id,file_path,disk',
                 'reviewer:id,uuid,username,name,avatar_file_id',
+                'reviewer.avatarFile:id,file_path,disk',
             ])
             ->paginate($perPage);
     }
@@ -141,7 +143,9 @@ class AppealRepository extends BaseRepository
         return $query
             ->with([
                 'user:id,uuid,username,name,avatar_file_id',
+                'user.avatarFile:id,file_path,disk',
                 'reviewer:id,uuid,username,name,avatar_file_id',
+                'reviewer.avatarFile:id,file_path,disk',
             ])
             ->paginate($perPage);
     }

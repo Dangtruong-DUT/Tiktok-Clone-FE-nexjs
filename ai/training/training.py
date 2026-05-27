@@ -1,6 +1,8 @@
 import argparse
 import json
 import random
+import re
+import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Optional
@@ -16,6 +18,14 @@ from transformers import AutoModel, AutoTokenizer
 
 
 BASE_DIR = Path(__file__).resolve().parents[1]
+
+
+def clean_text(text: str) -> str:
+    text = unicodedata.normalize("NFC", text or "")
+    text = text.replace("​", " ")
+    text = re.sub(r"https?://\S+|www\.\S+", " ", text)
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()
 
 
 def set_seed(seed: int) -> None:
@@ -78,9 +88,7 @@ def normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
     out = df[[sentence_col, label_col]].copy()
     out.columns = ["sentences", "toxic"]
 
-    out["sentences"] = (
-        out["sentences"].astype(str).str.replace(r"\s+", " ", regex=True).str.strip()
-    )
+    out["sentences"] = out["sentences"].astype(str).apply(clean_text)
     out["toxic"] = out["toxic"].astype(str).str.replace('"', "").str.strip()
     out = out[out["sentences"].str.len() > 0]
     out = out[out["toxic"].isin(["0", "1"])].copy()
@@ -251,7 +259,13 @@ def train_pipeline(args: argparse.Namespace) -> None:
 
     model = build_model(model_name=args.model_name, num_labels=2).to(device)
 
-    criterion = nn.CrossEntropyLoss()
+    label_counts = train_df["toxic"].value_counts().sort_index()
+    total = label_counts.sum()
+    class_weights = torch.tensor(
+        [total / (2 * label_counts[i]) for i in range(2)], dtype=torch.float
+    ).to(device)
+    criterion = nn.CrossEntropyLoss(weight=class_weights)
+    print(f"Class weights: {class_weights.tolist()}")
     optimizer = AdamW(model.parameters(), lr=args.learning_rate)
 
     print(f"Using device: {device}")
@@ -289,7 +303,7 @@ def train_pipeline(args: argparse.Namespace) -> None:
             print(f"Saved best model to: {output_path}")
 
     print("Evaluating on test set using best checkpoint...")
-    model.load_state_dict(torch.load(output_path, map_location=device))
+    model.load_state_dict(torch.load(output_path, map_location=device, weights_only=True))
     test_metrics = evaluate_on_test(
         model=model,
         test_loader=test_loader,
