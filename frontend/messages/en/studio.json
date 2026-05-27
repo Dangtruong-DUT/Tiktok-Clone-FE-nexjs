@@ -255,9 +255,17 @@
                     "placeholder": "Select audience"
                 }
             },
+            "encoding": {
+                "uploading": "Uploading {progress}%",
+                "pending": "Waiting in encoding queue...",
+                "processing": "Encoding {progress}%",
+                "ready": "Video ready — HLS streaming enabled",
+                "failed": "Encoding failed — video will be posted without HLS streaming"
+            },
             "buttons": {
                 "post": "Post",
-                "discard": "Discard"
+                "discard": "Discard",
+                "waitEncoding": "Waiting for encoding..."
             }
         },
         "appeals": {

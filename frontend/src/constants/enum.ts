@@ -19,7 +19,7 @@ export enum MediaType {
 export enum EncodingStatus {
     PENDING,
     PROCESSING,
-    COMPLETED,
+    READY,
     FAILED
 }
 

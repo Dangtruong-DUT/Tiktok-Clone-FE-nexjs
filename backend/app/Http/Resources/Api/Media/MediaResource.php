@@ -12,6 +12,7 @@ class MediaResource extends BaseJsonResource
             'id' => $this->id,
             'url' => $this->url,
             'type' => $this->type->value,
+            'upload_file_uuid' => $this->file?->uuid,
         ];
     }
 }

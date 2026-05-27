@@ -398,6 +398,7 @@ class PostRepository extends BaseRepository
                     ])
                     ->selectRaw('users.id = ? as is_owner', [$queryUserId]),
                 'media.file',
+                'media.file.videoEncoding',
                 'thumbnailFile',
             ])
             ->withExists([

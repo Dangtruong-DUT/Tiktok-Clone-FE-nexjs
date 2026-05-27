@@ -48,6 +48,7 @@ class UploadService
 
         return [
             'id' => $uploadFile->id,
+            'uuid' => $uploadFile->uuid,
             'url' => $uploadFile->url,
             'type' => MediaTypeEnum::VIDEO->value,
         ];

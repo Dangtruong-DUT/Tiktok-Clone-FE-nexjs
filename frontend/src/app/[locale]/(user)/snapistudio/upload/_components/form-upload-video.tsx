@@ -8,14 +8,14 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { useForm } from 'react-hook-form'
 import { CreatePostReqBody, CreatePostReqBodyType } from '@/types/dtos/post/post-request.dto'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Audience, MediaType, PosterType } from '@/constants/enum'
+import { Audience, PosterType } from '@/constants/enum'
 import { Info } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import VideoPreview from '@/app/[locale]/(user)/snapistudio/upload/_components/video-preview'
 import SelectThumbnailDialog from '@/app/[locale]/(user)/snapistudio/upload/_components/select-thumbnail-dialog'
 import AudienceSelect from '@/components/forms/audience-select'
 import { convertBase64ToFile } from '@/utils/file.util'
-import { useUploadImageMutation, useUploadVideoMutation } from '@/store/services/upload.service'
+import { useUploadImageMutation } from '@/store/services/upload.service'
 import { useCreatePostMutation } from '@/store/services/posts.service'
 import { handleFormError } from '@/utils/errors/handle-form-errors.util'
 import { toast } from 'sonner'
@@ -29,23 +29,32 @@ import { extractHashtags } from '@/utils/social-token.util'
 import MentionHashtagTextField from '@/components/forms/mention-hashtag-text-field'
 import { logger } from '@/utils/logger.util'
 import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
+import { useVideoUpload } from '@/hooks/video/useVideoUpload'
+import { useVideoEncoding } from '@/hooks/video/useVideoEncoding'
 
 const APP_LOADING_KEYS = {
-    uploadVideoPost: 'upload.video-post'
+    submitPost: 'upload.submit-post',
 } as const
 
 export default function FormUploadVideo() {
     const t = useTranslations('SnapiStudio.upload')
     const dispatch = useAppDispatch()
+
     const [uploadImage, uploadImageResult] = useUploadImageMutation()
-    const [uploadVideo, uploadVideoResult] = useUploadVideoMutation()
     const [createPost, createPostResult] = useCreatePostMutation()
 
     const router = useRouter()
 
-    const isCreatePostLoading = createPostResult.isLoading || uploadVideoResult.isLoading || uploadImageResult.isLoading
+    const isSubmitLoading = uploadImageResult.isLoading || createPostResult.isLoading
 
     const [isInitialRender, setIsInitialRender] = useState(true)
+    const [videoFile, setVideoFile] = useState<File | null>(null)
+    const [thumbnailFile, setThumbnailFile] = useState<File | null>(null)
+    const [videoUrl, setVideoUrl] = useState<string | null>(null)
+    const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null)
+
+    const { status: uploadStatus, uploadProgress, uploadedVideo, error: uploadError } = useVideoUpload(videoFile)
+    const encoding = useVideoEncoding(uploadedVideo?.uuid)
 
     const form = useForm<CreatePostReqBodyType>({
         resolver: zodResolver(CreatePostReqBody),
@@ -56,42 +65,25 @@ export default function FormUploadVideo() {
             medias: [],
             mentions: [],
             thumbnail: undefined,
-            type: PosterType.POST
-        }
+            type: PosterType.POST,
+        },
     })
 
-    const [videoUrl, setVideoUrl] = useState<string | null>(null)
-
-    const {
-        showModal: isOpenModalConfirmExit,
-        stayHere,
-        leavePage
-    } = useConfirmNavigation({
-        shouldConfirm: videoUrl != null
+    const { showModal: isOpenModalConfirmExit, stayHere, leavePage } = useConfirmNavigation({
+        shouldConfirm: videoFile != null,
     })
 
     const videoFrames = useVideoFrames(videoUrl, 10)
 
-    const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null)
-
-    const [videoFile, setVideoFile] = useState<File | null>(null)
-    const [thumbnailFile, setThumbnailFile] = useState<File | null>(null)
-
     useEffect(() => {
-        if (!videoFile) {
-            setVideoUrl(null)
-            return
-        }
+        if (!videoFile) { setVideoUrl(null); return }
         const url = URL.createObjectURL(videoFile)
         setVideoUrl(url)
         return () => URL.revokeObjectURL(url)
     }, [videoFile])
 
     useEffect(() => {
-        if (!thumbnailFile) {
-            setThumbnailUrl(null)
-            return
-        }
+        if (!thumbnailFile) { setThumbnailUrl(null); return }
         const url = URL.createObjectURL(thumbnailFile)
         setThumbnailUrl(url)
         return () => URL.revokeObjectURL(url)
@@ -108,86 +100,74 @@ export default function FormUploadVideo() {
     }, [videoUrl, videoFrames])
 
     useEffect(() => {
-        dispatch(
-            setLoadingByKey({
-                key: APP_LOADING_KEYS.uploadVideoPost,
-                isLoading: isCreatePostLoading
-            })
-        )
-
-        return () => {
-            dispatch(
-                setLoadingByKey({
-                    key: APP_LOADING_KEYS.uploadVideoPost,
-                    isLoading: false
-                })
-            )
+        if (uploadError) {
+            toast.error(uploadError)
+            setVideoFile(null)
         }
-    }, [dispatch, isCreatePostLoading])
+    }, [uploadError])
+
+    useEffect(() => {
+        dispatch(setLoadingByKey({ key: APP_LOADING_KEYS.submitPost, isLoading: isSubmitLoading }))
+        return () => {
+            dispatch(setLoadingByKey({ key: APP_LOADING_KEYS.submitPost, isLoading: false }))
+        }
+    }, [dispatch, isSubmitLoading])
 
     const onReset = () => {
-        if (isCreatePostLoading) return
+        if (isSubmitLoading) return
         setVideoFile(null)
         setThumbnailFile(null)
         form.reset()
     }
 
     const onsubmit = async (data: CreatePostReqBodyType) => {
-        if (isCreatePostLoading) return
-        try {
-            if (!videoFile || !thumbnailFile) return
+        if (isSubmitLoading || !videoFile || !thumbnailFile || !uploadedVideo) return
 
-            const formDataVideo = new FormData()
-            formDataVideo.append('file', videoFile)
+        try {
             const formDataThumbnail = new FormData()
             formDataThumbnail.append('file', thumbnailFile)
-
-            const [videoResponse, imageResponse] = await Promise.all([
-                uploadVideo(formDataVideo).unwrap(),
-                uploadImage(formDataThumbnail).unwrap()
-            ])
+            const imageResponse = await uploadImage(formDataThumbnail).unwrap()
 
             const body: CreatePostReqBodyType = {
                 ...data,
                 hashtags: extractHashtags(data.content),
                 mentions: undefined,
-                medias: [
-                    {
-                        type: MediaType.VIDEO,
-                        file_id: videoResponse.data.id
-                    }
-                ],
-                thumbnail: imageResponse.data.id
+                medias: [{ type: encoding.mediaType, file_id: uploadedVideo.id }],
+                thumbnail: imageResponse.data.id,
             }
 
             const res = await createPost(body).unwrap()
-            toast.success(res.message, {
-                position: 'top-center'
-            })
+            toast.success(res.message, { position: 'top-center' })
             onReset()
             router.push(SNAPISTUDIO_ROUTES.CONTENT)
         } catch (error) {
             logger.error(error)
-            handleFormError<CreatePostReqBodyType>({
-                error,
-                setFormError: form.setError
-            })
+            handleFormError<CreatePostReqBodyType>({ error, setFormError: form.setError })
         }
     }
 
+    const isUploading = uploadStatus === 'uploading'
+    const isSubmitDisabled = isSubmitLoading || isUploading || !uploadedVideo
+
     const content = form.watch('content')
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onsubmit)} onReset={onReset} method='POST'>
                 <AlertDialogExitPage isOpen={isOpenModalConfirmExit} onCancel={stayHere} onConfirm={leavePage} />
+
                 <UploadVideo
                     onFileSelect={setVideoFile}
                     file={videoFile}
+                    isUploading={isUploading}
+                    uploadProgress={uploadProgress}
+                    encoding={encoding}
                     className='mb-8'
                     onReset={onReset}
                     setIsInitialRender={setIsInitialRender}
                     isInitialRender={isInitialRender}
                 />
+
                 {!isInitialRender && (
                     <div className='grid grid-cols-[70%_30%] gap-4'>
                         <div>
@@ -237,7 +217,7 @@ export default function FormUploadVideo() {
                             </div>
 
                             <div className='mt-5 text-base font-bold'>{t('settings.title')}</div>
-                            <div className='rounded-lg border border-border p-5 mt-[16px] '>
+                            <div className='rounded-lg border border-border p-5 mt-[16px]'>
                                 <FormField
                                     control={form.control}
                                     name='audience'
@@ -256,23 +236,25 @@ export default function FormUploadVideo() {
                                     )}
                                 />
                             </div>
+
                             <div className='flex gap-4 mt-10'>
                                 <Button
                                     size='lg'
                                     variant='brand'
                                     type='submit'
-                                    isLoading={isCreatePostLoading}
+                                    isLoading={isSubmitLoading}
+                                    disabled={isSubmitDisabled}
                                     className='w-[200px]'
                                 >
                                     {t('buttons.post')}
                                 </Button>
                                 <Button
                                     size='lg'
-                                    variant={'secondary'}
+                                    variant='secondary'
                                     type='reset'
                                     className='cursor-pointer w-[200px]'
                                     onClick={onReset}
-                                    disabled={isCreatePostLoading}
+                                    disabled={isSubmitLoading || isUploading}
                                 >
                                     {t('buttons.discard')}
                                 </Button>
