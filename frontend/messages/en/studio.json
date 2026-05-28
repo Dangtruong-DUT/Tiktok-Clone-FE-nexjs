@@ -264,6 +264,20 @@
                 "failed": "Encoding failed",
                 "retry": "Retry"
             },
+            "errors": {
+                "invalidResponse": "Invalid server response",
+                "unauthorized": "Please log in to upload videos",
+                "serverError": "Upload failed (HTTP {status})",
+                "networkError": "Network error — check your connection and try again"
+            },
+            "processing": {
+                "title": "Processing videos",
+                "ready": "Your video \"{title}\" is ready!",
+                "readyNoTitle": "Your video is ready!",
+                "failed": "Video encoding failed",
+                "pending": "{count} video(s) processing",
+                "viewDetails": "View details"
+            },
             "buttons": {
                 "post": "Post",
                 "discard": "Discard",

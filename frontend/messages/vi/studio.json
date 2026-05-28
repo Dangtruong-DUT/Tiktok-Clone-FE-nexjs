@@ -264,6 +264,20 @@
                 "failed": "Mã hóa thất bại",
                 "retry": "Thử lại"
             },
+            "errors": {
+                "invalidResponse": "Phản hồi từ server không hợp lệ",
+                "unauthorized": "Vui lòng đăng nhập để tải video",
+                "serverError": "Tải lên thất bại (HTTP {status})",
+                "networkError": "Lỗi mạng — kiểm tra kết nối và thử lại"
+            },
+            "processing": {
+                "title": "Đang xử lý video",
+                "ready": "Video \"{title}\" của bạn đã sẵn sàng!",
+                "readyNoTitle": "Video của bạn đã sẵn sàng!",
+                "failed": "Mã hóa video thất bại",
+                "pending": "{count} video đang xử lý",
+                "viewDetails": "Xem chi tiết"
+            },
             "buttons": {
                 "post": "Đăng",
                 "discard": "Hủy",

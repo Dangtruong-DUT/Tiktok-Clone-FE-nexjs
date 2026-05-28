@@ -10,6 +10,7 @@ import authReducer from '@/store/features/authSlice'
 import appReducer, { clearAllLoading } from '@/store/features/appSlice'
 import modalReducer from '@/store/features/modalSlide'
 import videoReducer from '@/store/features/videoSlice'
+import videoProcessingReducer from '@/store/features/videoProcessingSlice'
 import { configureStore } from '@reduxjs/toolkit'
 import { errorHandleMiddleware } from './middlewares/errorHandling.middleware'
 import { authMiddleware } from './middlewares/auth.middleware'
@@ -29,7 +30,8 @@ export const makeStore = () => {
             auth: authReducer,
             app: appReducer,
             modal: modalReducer,
-            video: videoReducer
+            video: videoReducer,
+            videoProcessing: videoProcessingReducer
         },
         middleware: (getDefaultMiddleware) =>
             getDefaultMiddleware().concat(

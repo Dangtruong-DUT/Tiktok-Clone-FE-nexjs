@@ -18,6 +18,6 @@ class RetryVideoEncodingAction
             'completed_at' => null,
         ]);
 
-        ProcessVideoToHlsJob::dispatch($encoding)->onQueue('video-processing');
+        ProcessVideoToHlsJob::dispatch($encoding);
     }
 }

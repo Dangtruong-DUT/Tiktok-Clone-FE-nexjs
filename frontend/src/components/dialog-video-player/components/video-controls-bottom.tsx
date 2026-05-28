@@ -67,13 +67,15 @@ export function VideoControlsBottom({
                     </div>
                 </div>
                 <div className='flex items-center gap-3'>
-                    {isHovered && qualityLevels.length > 0 && (
-                        <VideoQualitySelector
-                            levels={qualityLevels}
-                            currentLevel={currentLevel}
-                            onSelectLevel={onSelectLevel}
-                            onSelectAuto={onSelectAuto}
-                        />
+                    {qualityLevels.length > 0 && (
+                        <div className={cn(!isHovered && 'opacity-0 pointer-events-none')}>
+                            <VideoQualitySelector
+                                levels={qualityLevels}
+                                currentLevel={currentLevel}
+                                onSelectLevel={onSelectLevel}
+                                onSelectAuto={onSelectAuto}
+                            />
+                        </div>
                     )}
                     <VolumeBar
                         onVolumeChange={onVolumeChange}

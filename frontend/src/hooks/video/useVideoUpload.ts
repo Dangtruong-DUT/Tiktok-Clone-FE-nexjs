@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import envConfig from '@/config/app.config'
+import { VIDEO_UPLOAD_ERROR } from '@/constants/ui/upload'
 
 export type VideoUploadStatus = 'idle' | 'uploading' | 'done' | 'error'
 
@@ -69,19 +70,19 @@ export function useVideoUpload(file: File | null): VideoUploadState {
                     setStatus('done')
                     setUploadProgress(100)
                 } catch {
-                    setError('Phản hồi từ server không hợp lệ')
+                    setError(VIDEO_UPLOAD_ERROR.INVALID_RESPONSE)
                     setStatus('error')
                 }
             } else {
                 setError(xhr.status === 401
-                    ? 'Vui lòng đăng nhập để tải video'
-                    : `Tải lên thất bại (HTTP ${xhr.status})`)
+                    ? VIDEO_UPLOAD_ERROR.UNAUTHORIZED
+                    : VIDEO_UPLOAD_ERROR.SERVER_ERROR)
                 setStatus('error')
             }
         }
 
         xhr.onerror = () => {
-            setError('Lỗi mạng — kiểm tra kết nối và thử lại')
+            setError(VIDEO_UPLOAD_ERROR.NETWORK_ERROR)
             setStatus('error')
         }
 

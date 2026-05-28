@@ -42,11 +42,21 @@ class VideoEncoding extends Model
         ];
     }
 
+    /**
+     * Get the upload file that owns the video encoding.
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function uploadFile(): BelongsTo
     {
         return $this->belongsTo(UploadFile::class);
     }
 
+    /**
+     * Get the master playlist URL for the video encoding.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return string|null The master playlist URL, or null if not available.
+     */
     public function masterPlaylistUrl(): Attribute
     {
         return Attribute::make(

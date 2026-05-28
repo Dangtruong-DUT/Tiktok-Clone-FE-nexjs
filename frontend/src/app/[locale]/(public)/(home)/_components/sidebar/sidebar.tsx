@@ -22,6 +22,7 @@ import { AuthStatus } from '@/constants/status/async'
 import SidebarSkeleton from '@/app/[locale]/(public)/(home)/_components/sidebar/_components/sidebar-skeleton'
 import { SIDEBAR_ACTION_MENU_ITEMS } from '@/app/[locale]/(public)/(home)/_components/sidebar/_config/sidebar-action-items.config'
 import { SidebarMenuKeyType, SidebarMenuPlacement } from '@/constants/ui/sidebar'
+import { VideoProcessingBadge } from '@/components/common/video-processing/VideoProcessingBadge'
 
 export interface SidebarProps {
     className?: string
@@ -128,6 +129,9 @@ export default function Sidebar({ className }: SidebarProps) {
                     )}
                 >
                     <NavItems roleUser={role} />
+                    {!isOpenDrawer && isAuth && (
+                        <VideoProcessingBadge className='px-2 mt-1 mb-1' />
+                    )}
                     <aside className='flex flex-col gap-[0.5rem]'>
                         {actionItemsBeforeProfile.map((item) => {
                             if (item.requiredAuth && !isAuth) {

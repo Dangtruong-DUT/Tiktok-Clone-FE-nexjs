@@ -1,3 +1,12 @@
+export const VIDEO_UPLOAD_ERROR = {
+    INVALID_RESPONSE: 'invalid_response',
+    UNAUTHORIZED: 'unauthorized',
+    SERVER_ERROR: 'server_error',
+    NETWORK_ERROR: 'network_error',
+} as const
+
+export type VideoUploadErrorCode = (typeof VIDEO_UPLOAD_ERROR)[keyof typeof VIDEO_UPLOAD_ERROR]
+
 export const UPLOAD_CONSTRAINTS = {
     image: {
         maxSizeKb: 10240,

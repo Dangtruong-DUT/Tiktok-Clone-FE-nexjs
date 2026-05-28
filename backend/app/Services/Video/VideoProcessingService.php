@@ -138,22 +138,11 @@ class VideoProcessingService
 
     private function buildMasterPlaylist(array $labels, array $variants, int $srcWidth, int $srcHeight): string
     {
-        $isPortrait = $srcHeight > $srcWidth;
         $lines = ['#EXTM3U', '#EXT-X-VERSION:3', ''];
 
         foreach ($labels as $label) {
             $v = $variants[$label];
-            $size = $v['size'];
-
-            if ($isPortrait) {
-                $encW = $size;
-                $encH = (int) (round($size * $srcHeight / $srcWidth / 2) * 2);
-            } else {
-                $encH = $size;
-                $encW = (int) (round($size * $srcWidth / $srcHeight / 2) * 2);
-            }
-
-            $lines[] = "#EXT-X-STREAM-INF:BANDWIDTH={$v['bandwidth']},RESOLUTION={$encW}x{$encH},NAME=\"{$label}\"";
+            $lines[] = "#EXT-X-STREAM-INF:BANDWIDTH={$v['bandwidth']},RESOLUTION={$srcWidth}x{$srcHeight},NAME=\"{$label}\"";
             $lines[] = "{$label}/index.m3u8";
         }
 

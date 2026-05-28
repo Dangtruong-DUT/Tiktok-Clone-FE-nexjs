@@ -132,6 +132,9 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::post('{upload_file_uuid}/retry-encoding', [VideoStreamController::class, 'retryEncoding'])
                 ->middleware('throttle:10,1')
                 ->name('retry-encoding');
+            Route::delete('{upload_file_uuid}', [VideoStreamController::class, 'destroy'])
+                ->middleware('throttle:10,1')
+                ->name('destroy');
         });
 });
 

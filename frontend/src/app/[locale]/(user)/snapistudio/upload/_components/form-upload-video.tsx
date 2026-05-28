@@ -1,165 +1,44 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import UploadVideo from '@/app/[locale]/(user)/snapistudio/upload/_components/upload-video'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { useForm } from 'react-hook-form'
-import { CreatePostReqBody, CreatePostReqBodyType } from '@/types/dtos/post/post-request.dto'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Audience, PosterType } from '@/constants/enum'
 import { Info } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import VideoPreview from '@/app/[locale]/(user)/snapistudio/upload/_components/video-preview'
 import SelectThumbnailDialog from '@/app/[locale]/(user)/snapistudio/upload/_components/select-thumbnail-dialog'
 import AudienceSelect from '@/components/forms/audience-select'
-import { convertBase64ToFile } from '@/utils/file.util'
-import { useUploadImageMutation } from '@/store/services/upload.service'
-import { useCreatePostMutation } from '@/store/services/posts.service'
-import { handleFormError } from '@/utils/errors/handle-form-errors.util'
-import { toast } from 'sonner'
-import useVideoFrames from '@/hooks/video/useVideoFrames'
-import { useRouter } from '@/i18n/navigation'
-import { useConfirmNavigation } from '@/hooks/shared/useConfirmNavigation'
 import AlertDialogExitPage from '@/app/[locale]/(user)/snapistudio/upload/_components/alert-confirm-leave-page'
-import { useAppDispatch } from '@/store/hooks'
-import { setLoadingByKey } from '@/store/features/appSlice'
-import { extractHashtags } from '@/utils/social-token.util'
 import MentionHashtagTextField from '@/components/forms/mention-hashtag-text-field'
-import { logger } from '@/utils/logger.util'
-import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
-import { useVideoUpload } from '@/hooks/video/useVideoUpload'
-import { useVideoEncoding } from '@/hooks/video/useVideoEncoding'
-
-const APP_LOADING_KEYS = {
-    submitPost: 'upload.submit-post'
-} as const
+import { useUploadFormManager } from '@/app/[locale]/(user)/snapistudio/upload/_hooks/useUploadFormManager'
 
 export default function FormUploadVideo() {
     const t = useTranslations('SnapiStudio.upload')
-    const dispatch = useAppDispatch()
-
-    const [uploadImage, uploadImageResult] = useUploadImageMutation()
-    const [createPost, createPostResult] = useCreatePostMutation()
-
-    const router = useRouter()
-
-    const isSubmitLoading = uploadImageResult.isLoading || createPostResult.isLoading
-
-    const [isInitialRender, setIsInitialRender] = useState(true)
-    const [videoFile, setVideoFile] = useState<File | null>(null)
-    const [thumbnailFile, setThumbnailFile] = useState<File | null>(null)
-    const [videoUrl, setVideoUrl] = useState<string | null>(null)
-    const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null)
 
     const {
-        status: uploadStatus,
+        form,
+        isInitialRender,
+        setIsInitialRender,
+        videoFile,
+        setVideoFile,
+        setThumbnailFile,
+        videoUrl,
+        thumbnailUrl,
+        videoFrames,
+        uploadStatus,
         uploadProgress,
         uploadedVideo,
-        error: uploadError,
-        retry: retryUpload
-    } = useVideoUpload(videoFile)
-    const encoding = useVideoEncoding(uploadedVideo?.uuid)
-
-    const form = useForm<CreatePostReqBodyType>({
-        resolver: zodResolver(CreatePostReqBody),
-        defaultValues: {
-            audience: Audience.PUBLIC,
-            content: '',
-            hashtags: [],
-            medias: [],
-            mentions: [],
-            thumbnail: undefined,
-            type: PosterType.POST
-        }
-    })
-
-    const {
-        showModal: isOpenModalConfirmExit,
+        uploadError,
+        retryUpload,
+        encoding,
+        isSubmitLoading,
+        isOpenModalConfirmExit,
         stayHere,
-        leavePage
-    } = useConfirmNavigation({
-        shouldConfirm: videoFile != null
-    })
-
-    const videoFrames = useVideoFrames(videoUrl, 10)
-
-    useEffect(() => {
-        if (!videoFile) {
-            setVideoUrl(null)
-            return
-        }
-        const url = URL.createObjectURL(videoFile)
-        setVideoUrl(url)
-        return () => URL.revokeObjectURL(url)
-    }, [videoFile])
-
-    useEffect(() => {
-        if (!thumbnailFile) {
-            setThumbnailUrl(null)
-            return
-        }
-        const url = URL.createObjectURL(thumbnailFile)
-        setThumbnailUrl(url)
-        return () => URL.revokeObjectURL(url)
-    }, [thumbnailFile])
-
-    useEffect(() => {
-        const fetchFrame = async () => {
-            if (videoUrl && videoFrames.length > 0) {
-                const file = await convertBase64ToFile(videoFrames[0]!.image, 'video_thumbnail.png')
-                if (file) setThumbnailFile(file)
-            }
-        }
-        fetchFrame()
-    }, [videoUrl, videoFrames])
-
-    useEffect(() => {
-        if (uploadError) {
-            toast.error(uploadError)
-        }
-    }, [uploadError])
-
-    useEffect(() => {
-        dispatch(setLoadingByKey({ key: APP_LOADING_KEYS.submitPost, isLoading: isSubmitLoading }))
-        return () => {
-            dispatch(setLoadingByKey({ key: APP_LOADING_KEYS.submitPost, isLoading: false }))
-        }
-    }, [dispatch, isSubmitLoading])
-
-    const onReset = () => {
-        if (isSubmitLoading) return
-        setVideoFile(null)
-        setThumbnailFile(null)
-        form.reset()
-    }
-
-    const onsubmit = async (data: CreatePostReqBodyType) => {
-        if (isSubmitLoading || !videoFile || !thumbnailFile || !uploadedVideo) return
-
-        try {
-            const formDataThumbnail = new FormData()
-            formDataThumbnail.append('file', thumbnailFile)
-            const imageResponse = await uploadImage(formDataThumbnail).unwrap()
-
-            const body: CreatePostReqBodyType = {
-                ...data,
-                hashtags: extractHashtags(data.content),
-                mentions: undefined,
-                medias: [{ type: encoding.mediaType, file_id: uploadedVideo.id }],
-                thumbnail: imageResponse.data.id
-            }
-
-            const res = await createPost(body).unwrap()
-            toast.success(res.message, { position: 'top-center' })
-            onReset()
-            router.push(SNAPISTUDIO_ROUTES.CONTENT)
-        } catch (error) {
-            logger.error(error)
-            handleFormError<CreatePostReqBodyType>({ error, setFormError: form.setError })
-        }
-    }
+        leavePage,
+        onReset,
+        onSubmit
+    } = useUploadFormManager()
 
     const isUploading = uploadStatus === 'uploading'
     const isSubmitDisabled = isSubmitLoading || isUploading || !uploadedVideo
@@ -168,7 +47,7 @@ export default function FormUploadVideo() {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onsubmit)} onReset={onReset} method='POST'>
+            <form onSubmit={form.handleSubmit(onSubmit)} onReset={onReset} method='POST'>
                 <AlertDialogExitPage isOpen={isOpenModalConfirmExit} onCancel={stayHere} onConfirm={leavePage} />
 
                 <UploadVideo

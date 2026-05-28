@@ -7,6 +7,7 @@ import { Toaster } from '@/components/ui/sonner'
 import { useGetMeQuery } from '@/store/services/user.service'
 import GlobalAppLoader from '@/components/common/global-app-loader'
 import WelcomeScreen from '@/components/common/welcome-screen'
+import { VideoProcessingTracker } from '@/components/common/video-processing/VideoProcessingTracker'
 import { useProactiveTokenRefresh } from '@/hooks/useProactiveTokenRefresh'
 import { AuthStatus, AuthStatusType } from '@/constants/status/async'
 
@@ -67,6 +68,7 @@ export function AppProvider({
                 <Toaster position='top-center' />
                 <GlobalAppLoader />
                 <WelcomeScreen />
+                <VideoProcessingTracker />
                 <NextTopLoader showSpinner={false} color='var(--color-brand)' />
             </QueryClientProvider>
         </AppContext>

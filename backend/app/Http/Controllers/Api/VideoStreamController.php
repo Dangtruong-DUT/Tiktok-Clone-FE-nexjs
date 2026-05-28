@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Video\DeleteVideoUploadAction;
 use App\Actions\Video\RetryVideoEncodingAction;
 use App\Enums\Video\VideoEncodingStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Response\ApiResponse;
+use App\Models\Media;
+use App\Models\UploadFile;
 use App\Services\Video\VideoEncodingService;
 use Illuminate\Http\JsonResponse;
 
@@ -42,5 +45,18 @@ class VideoStreamController extends Controller
         $action->execute($encoding);
 
         return ApiResponse::success(['message' => 'Encoding job queued']);
+    }
+
+    public function destroy(string $uuid, DeleteVideoUploadAction $action): JsonResponse
+    {
+        $uploadFile = UploadFile::where('uuid', $uuid)->firstOrFail();
+
+        if (Media::where('upload_file_id', $uploadFile->id)->exists()) {
+            return ApiResponse::error('Cannot delete a video linked to a post', 422);
+        }
+
+        $action->execute($uploadFile);
+
+        return ApiResponse::success(null, 'Upload cancelled');
     }
 }

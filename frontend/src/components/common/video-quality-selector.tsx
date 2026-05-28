@@ -17,6 +17,7 @@ interface VideoQualitySelectorProps {
     onSelectLevel: (index: number) => void
     onSelectAuto: () => void
     className?: string
+    side?: 'top' | 'bottom' | 'left' | 'right'
 }
 
 export function VideoQualitySelector({
@@ -24,7 +25,8 @@ export function VideoQualitySelector({
     currentLevel,
     onSelectLevel,
     onSelectAuto,
-    className
+    className,
+    side = 'top'
 }: VideoQualitySelectorProps) {
     const currentLabel =
         currentLevel === -1 ? 'Auto' : (levels.find((l) => l.index === currentLevel)?.name ?? 'Auto')
@@ -46,7 +48,7 @@ export function VideoQualitySelector({
             </DropdownMenuTrigger>
 
             <DropdownMenuContent
-                side='top'
+                side={side}
                 align='end'
                 sideOffset={8}
                 onClick={(e) => e.stopPropagation()}

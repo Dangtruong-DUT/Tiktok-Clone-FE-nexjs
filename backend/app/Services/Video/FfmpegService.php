@@ -18,6 +18,14 @@ class FfmpegService
         $this->ffprobeBin = config('video.ffprobe_binary', 'ffprobe');
     }
 
+    /**
+     * Get video information using ffprobe.
+     *
+     * @param string $inputPath The path to the input video file.
+     * @return VideoInfoDto An object containing video information such as duration, dimensions, and bitrate.
+     *
+     * @throws \Symfony\Component\Process\Exception\ProcessFailedException If the ffprobe process fails.
+     */
     public function getVideoInfo(string $inputPath): VideoInfoDto
     {
         $process = new Process([
@@ -41,14 +49,40 @@ class FfmpegService
         $videoStream = collect($info['streams'] ?? [])
             ->first(fn ($s) => $s['codec_type'] === 'video');
 
+        $width = (int) ($videoStream['width'] ?? 0);
+        $height = (int) ($videoStream['height'] ?? 0);
+
+        // Phone videos often store landscape frames with a rotate tag (90/270°).
+        // Swap dimensions so the rest of the pipeline sees the display orientation.
+        $rotate = (int) ($videoStream['tags']['rotate'] ?? 0);
+        if (in_array(abs($rotate), [90, 270])) {
+            [$width, $height] = [$height, $width];
+        }
+
         return new VideoInfoDto(
             duration: (float) ($info['format']['duration'] ?? 0),
-            width: (int) ($videoStream['width'] ?? 0),
-            height: (int) ($videoStream['height'] ?? 0),
+            width: $width,
+            height: $height,
             bitrate: (int) ($info['format']['bit_rate'] ?? 0),
         );
     }
 
+    /**
+     * Encode a video to HLS format for a specific variant.
+     *
+     * @param string $inputPath The path to the input video file.
+     * @param string $outputDir The directory where the output HLS files should be saved.
+     * @param string $label A label for the variant (e.g., "720p").
+     * @param array $variant An array of encoding settings for the variant, including:
+     *                       - 'max_rate': The maximum video bitrate (e.g., "3000k").
+     *                       - 'buf_size': The buffer size for rate control (e.g., "6000k").
+     *                       - 'audio_bitrate': The audio bitrate (e.g., "128k").
+     * @param int $segmentDuration The duration of each HLS segment in seconds (default: 6).
+     * @param int $srcWidth The source video width for scaling (optional).
+     * @param int $srcHeight The source video height for scaling (optional).
+     *
+     * @throws \Symfony\Component\Process\Exception\ProcessFailedException If the ffmpeg process fails.
+     */
     public function encodeVariant(
         string $inputPath,
         string $outputDir,
@@ -64,13 +98,13 @@ class FfmpegService
             mkdir($variantDir, 0755, true);
         }
 
-        $size = $variant['size'];
-        $isPortrait = $srcHeight > $srcWidth;
-
-        // Scale the shorter side to $size, keep aspect ratio, ensure both dims are divisible by 2
-        $scaleFilter = $isPortrait
-            ? "scale={$size}:-2"   // portrait: fix width, auto height
-            : "scale=-2:{$size}";  // landscape/square: fix height, auto width
+        // Normalize rotation without resizing: srcWidth/srcHeight are rotation-corrected
+        // from getVideoInfo(), so this forces ffmpeg to apply any rotate metadata and
+        // output at the original display resolution.
+        // Falls back to iw:ih (identity scale) if caller didn't provide dimensions.
+        $scaleFilter = ($srcWidth > 0 && $srcHeight > 0)
+            ? "scale={$srcWidth}:{$srcHeight}"
+            : 'scale=iw:ih';
 
         $process = new Process([
             $this->ffmpegBin,

@@ -1,6 +1,8 @@
 import { Audience, PosterType } from '@/constants/enum'
 import baseQueryWithReauth from '@/store/services/client'
 import { GetListCommentRes, GetListPostRes, GetPostDetailRes } from '@/types/dtos/post/post-response.dto'
+import { ApiSuccessResponseWithData } from '@/types/common/http-response.type'
+import { TikTokPostType } from '@/types/models/post.model'
 import {
     CreateCommentsReqBodyType,
     CreatePostReqBodyType,
@@ -326,7 +328,7 @@ export const PostApi = createApi({
                 }
             }
         }),
-        createPost: builder.mutation<{ message: string }, CreatePostReqBodyType>({
+        createPost: builder.mutation<ApiSuccessResponseWithData<TikTokPostType>, CreatePostReqBodyType>({
             query: (body) => ({
                 url: '/posts',
                 method: 'POST',

@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { ChevronLeft, Plus } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { APP_ROUTES, SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
+import { VideoProcessingBadge } from '@/components/common/video-processing/VideoProcessingBadge'
 
 export default function NavLinks() {
     const t = useTranslations('SnapiStudio.navigation')
@@ -31,7 +32,7 @@ export default function NavLinks() {
                     <div className='flex flex-col gap-4'>
                         <Link
                             href={SNAPISTUDIO_ROUTES.UPLOAD}
-                            className={cn('mb-4 mt-5', {
+                            className={cn('mt-5', {
                                 'select-none opacity-40 cursor-not-allowed': pathname.includes(
                                     SNAPISTUDIO_ROUTES.UPLOAD
                                 )
@@ -50,6 +51,7 @@ export default function NavLinks() {
                                 <span>{t2('upload')}</span>
                             </Button>
                         </Link>
+                        <VideoProcessingBadge className='mb-4 px-1' />
                         <nav className='space-y-2 '>
                             <h2 className='text-sm font-semibold'>Manage</h2>
                             {navItems.map((item) => {

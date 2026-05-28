@@ -12,6 +12,7 @@ import { useHlsPlayer } from '@/hooks/video/useHlsPlayer'
 import { VideoControlsTop } from '@/components/feed-video-player/components/video-controls-top'
 import { VideoOverlayIcons } from '@/components/feed-video-player/components/video-overlay-icons'
 import { VideoControlsBottom } from '@/components/feed-video-player/components/video-controls-bottom'
+import { VideoQualitySelector } from '@/components/common/video-quality-selector'
 import LoadingIcon from '@/components/lottie-icons/loading'
 
 interface VideoPlayerProps {
@@ -66,7 +67,17 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
                 isMuted={isMuted}
                 onMuteToggle={handleMuteToggle}
                 isParentHovered={isHovered}
-            />
+            >
+                {qualityLevels.length > 0 && (
+                    <VideoQualitySelector
+                        levels={qualityLevels}
+                        currentLevel={currentLevel}
+                        onSelectLevel={switchLevel}
+                        onSelectAuto={switchToAuto}
+                        side='bottom'
+                    />
+                )}
+            </VideoControlsTop>
 
             <VideoOverlayIcons
                 showPlayPauseIcon={showPlayPauseIcon}
@@ -104,10 +115,6 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
                 onSeek={handleSeek}
                 onProgressBarActive={handleProgressBarActive}
                 onPlayPause={handlePlayPause}
-                qualityLevels={qualityLevels}
-                currentLevel={currentLevel}
-                onSelectLevel={switchLevel}
-                onSelectAuto={switchToAuto}
             />
         </section>
     )

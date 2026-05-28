@@ -20,8 +20,7 @@ class InitiateVideoProcessingAction
             'encoding_progress' => 0,
         ]);
 
-        ProcessVideoToHlsJob::dispatch($videoEncoding)
-            ->onQueue('video-processing');
+        ProcessVideoToHlsJob::dispatch($videoEncoding);
 
         return $videoEncoding;
     }

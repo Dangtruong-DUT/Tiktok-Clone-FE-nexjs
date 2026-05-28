@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class VideoEncodingService
 {
+    /**
+     * Get the video encoding associated with a given upload file UUID.
+     *
+     * @param string $uuid The UUID of the upload file.
+     * @return VideoEncoding The video encoding associated with the upload file.
+     */
     public function getEncodingByFileUuid(string $uuid): VideoEncoding
     {
         $uploadFile = UploadFile::where('uuid', $uuid)

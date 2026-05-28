@@ -5,8 +5,6 @@ import { TikTokPostType } from '@/types/models/post.model'
 import { UserType } from '@/types/models/user.model'
 import ProgressBar from './progress-bar'
 import VideoDescription from '@/components/feed-video-player/components/video-description'
-import { VideoQualitySelector } from '@/components/common/video-quality-selector'
-import type { HlsQualityLevel } from '@/hooks/video/useHlsPlayer'
 
 interface VideoControlsBottomProps {
     post: TikTokPostType
@@ -18,10 +16,6 @@ interface VideoControlsBottomProps {
     onSeek: (time: number) => void
     onProgressBarActive: (active: boolean) => void
     onPlayPause?: (event: React.MouseEvent<HTMLDivElement>) => void
-    qualityLevels: HlsQualityLevel[]
-    currentLevel: number
-    onSelectLevel: (index: number) => void
-    onSelectAuto: () => void
 }
 
 export function VideoControlsBottom({
@@ -32,11 +26,7 @@ export function VideoControlsBottom({
     duration,
     isProgressBarActive,
     onSeek,
-    onProgressBarActive,
-    qualityLevels,
-    currentLevel,
-    onSelectLevel,
-    onSelectAuto
+    onProgressBarActive
 }: VideoControlsBottomProps) {
     return (
         <div className='absolute bottom-0 left-0 flex justify-end flex-col z-[5] rounded-b-2xl w-full bg-gradient-to-b from-transparent to-black/50'>
@@ -57,16 +47,6 @@ export function VideoControlsBottom({
                 </a>
                 <VideoDescription description={post.content} mentions={post.mentions} hashtags={post.hashtags} />
             </div>
-            {qualityLevels.length > 0 && (
-                <div className='flex justify-end px-3 pb-1'>
-                    <VideoQualitySelector
-                        levels={qualityLevels}
-                        currentLevel={currentLevel}
-                        onSelectLevel={onSelectLevel}
-                        onSelectAuto={onSelectAuto}
-                    />
-                </div>
-            )}
             <ProgressBar currentTime={currentTime} duration={duration} onSeek={onSeek} onActive={onProgressBarActive} />
         </div>
     )

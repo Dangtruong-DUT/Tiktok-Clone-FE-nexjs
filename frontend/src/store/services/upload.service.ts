@@ -30,6 +30,12 @@ export const UploadApi = createApi({
                 url: VIDEO_API_ENDPOINT.API_VIDEO_RETRY_ENCODING(uuid),
                 method: 'POST'
             })
+        }),
+        cancelVideoUpload: builder.mutation<{ message: string }, string>({
+            query: (uuid) => ({
+                url: `/videos/${uuid}`,
+                method: 'DELETE'
+            })
         })
     })
 })
@@ -38,5 +44,6 @@ export const {
     useUploadImageMutation,
     useUploadVideoMutation,
     useGetVideoEncodingStatusQuery,
-    useRetryVideoEncodingMutation
+    useRetryVideoEncodingMutation,
+    useCancelVideoUploadMutation
 } = UploadApi
