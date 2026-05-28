@@ -33,7 +33,7 @@ import { useVideoUpload } from '@/hooks/video/useVideoUpload'
 import { useVideoEncoding } from '@/hooks/video/useVideoEncoding'
 
 const APP_LOADING_KEYS = {
-    submitPost: 'upload.submit-post',
+    submitPost: 'upload.submit-post'
 } as const
 
 export default function FormUploadVideo() {
@@ -53,7 +53,13 @@ export default function FormUploadVideo() {
     const [videoUrl, setVideoUrl] = useState<string | null>(null)
     const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null)
 
-    const { status: uploadStatus, uploadProgress, uploadedVideo, error: uploadError } = useVideoUpload(videoFile)
+    const {
+        status: uploadStatus,
+        uploadProgress,
+        uploadedVideo,
+        error: uploadError,
+        retry: retryUpload
+    } = useVideoUpload(videoFile)
     const encoding = useVideoEncoding(uploadedVideo?.uuid)
 
     const form = useForm<CreatePostReqBodyType>({
@@ -65,25 +71,35 @@ export default function FormUploadVideo() {
             medias: [],
             mentions: [],
             thumbnail: undefined,
-            type: PosterType.POST,
-        },
+            type: PosterType.POST
+        }
     })
 
-    const { showModal: isOpenModalConfirmExit, stayHere, leavePage } = useConfirmNavigation({
-        shouldConfirm: videoFile != null,
+    const {
+        showModal: isOpenModalConfirmExit,
+        stayHere,
+        leavePage
+    } = useConfirmNavigation({
+        shouldConfirm: videoFile != null
     })
 
     const videoFrames = useVideoFrames(videoUrl, 10)
 
     useEffect(() => {
-        if (!videoFile) { setVideoUrl(null); return }
+        if (!videoFile) {
+            setVideoUrl(null)
+            return
+        }
         const url = URL.createObjectURL(videoFile)
         setVideoUrl(url)
         return () => URL.revokeObjectURL(url)
     }, [videoFile])
 
     useEffect(() => {
-        if (!thumbnailFile) { setThumbnailUrl(null); return }
+        if (!thumbnailFile) {
+            setThumbnailUrl(null)
+            return
+        }
         const url = URL.createObjectURL(thumbnailFile)
         setThumbnailUrl(url)
         return () => URL.revokeObjectURL(url)
@@ -102,7 +118,6 @@ export default function FormUploadVideo() {
     useEffect(() => {
         if (uploadError) {
             toast.error(uploadError)
-            setVideoFile(null)
         }
     }, [uploadError])
 
@@ -133,7 +148,7 @@ export default function FormUploadVideo() {
                 hashtags: extractHashtags(data.content),
                 mentions: undefined,
                 medias: [{ type: encoding.mediaType, file_id: uploadedVideo.id }],
-                thumbnail: imageResponse.data.id,
+                thumbnail: imageResponse.data.id
             }
 
             const res = await createPost(body).unwrap()
@@ -161,7 +176,10 @@ export default function FormUploadVideo() {
                     file={videoFile}
                     isUploading={isUploading}
                     uploadProgress={uploadProgress}
+                    uploadError={uploadError}
+                    onRetryUpload={retryUpload}
                     encoding={encoding}
+                    uploadedVideoUuid={uploadedVideo?.uuid}
                     className='mb-8'
                     onReset={onReset}
                     setIsInitialRender={setIsInitialRender}

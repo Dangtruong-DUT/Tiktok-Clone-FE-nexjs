@@ -18,9 +18,6 @@ class FfmpegService
         $this->ffprobeBin = config('video.ffprobe_binary', 'ffprobe');
     }
 
-    /**
-     * Probe a video file and return its metadata.
-     */
     public function getVideoInfo(string $inputPath): VideoInfoDto
     {
         $process = new Process([
@@ -52,20 +49,14 @@ class FfmpegService
         );
     }
 
-    /**
-     * Encode a single HLS variant into $outputDir/$label/.
-     *
-     * Generates:  $outputDir/$label/index.m3u8
-     *             $outputDir/$label/segment_000.ts  ...
-     *
-     * @param  array  $variant  Entry from config('video.hls.variants')
-     */
     public function encodeVariant(
         string $inputPath,
         string $outputDir,
         string $label,
         array $variant,
-        int $segmentDuration = 6
+        int $segmentDuration = 6,
+        int $srcWidth = 0,
+        int $srcHeight = 0,
     ): void {
         $variantDir = $outputDir.DIRECTORY_SEPARATOR.$label;
 
@@ -73,11 +64,13 @@ class FfmpegService
             mkdir($variantDir, 0755, true);
         }
 
-        $w = $variant['width'];
-        $h = $variant['height'];
+        $size = $variant['size'];
+        $isPortrait = $srcHeight > $srcWidth;
 
-        // Maintain aspect ratio, pad to exact dimensions with black bars
-        $scaleFilter = "scale={$w}:{$h}:force_original_aspect_ratio=decrease,pad={$w}:{$h}:(ow-iw)/2:(oh-ih)/2";
+        // Scale the shorter side to $size, keep aspect ratio, ensure both dims are divisible by 2
+        $scaleFilter = $isPortrait
+            ? "scale={$size}:-2"   // portrait: fix width, auto height
+            : "scale=-2:{$size}";  // landscape/square: fix height, auto width
 
         $process = new Process([
             $this->ffmpegBin,
@@ -108,26 +101,4 @@ class FfmpegService
         }
     }
 
-    /**
-     * Extract a single JPEG frame from a video. Non-fatal — logs on failure.
-     */
-    public function extractThumbnail(string $inputPath, string $outputPath, float $atSecond = 1.0): void
-    {
-        $process = new Process([
-            $this->ffmpegBin,
-            '-ss', (string) max(0, $atSecond),
-            '-i', $inputPath,
-            '-vframes', '1',
-            '-q:v', '2',
-            '-y',
-            $outputPath,
-        ]);
-
-        $process->setTimeout(60);
-        $process->run();
-
-        if (! $process->isSuccessful()) {
-            Log::warning('FFmpeg thumbnail extraction failed', ['stderr' => $process->getErrorOutput()]);
-        }
-    }
 }

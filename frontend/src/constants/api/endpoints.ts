@@ -9,6 +9,7 @@ export const NEXT_API_ENDPOINT = {
 
 export const VIDEO_API_ENDPOINT = {
     API_VIDEO_ENCODING_STATUS: (uuid: string) => `/videos/${uuid}/encoding-status`,
+    API_VIDEO_RETRY_ENCODING: (uuid: string) => `/videos/${uuid}/retry-encoding`,
 } as const
 
 export const BACKEND_API_ENDPOINT = {

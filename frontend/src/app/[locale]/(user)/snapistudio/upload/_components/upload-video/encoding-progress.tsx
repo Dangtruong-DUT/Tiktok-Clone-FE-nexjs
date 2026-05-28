@@ -3,13 +3,17 @@
 import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
 import { EncodingStatus } from '@/constants/enum'
-import { CheckCircle2, AlertCircle, Loader2 } from 'lucide-react'
+import { CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react'
+import LoadingIcon from '@/components/lottie-icons/loading'
+import { Button } from '@/components/ui/button'
 
 interface EncodingProgressProps {
     isUploading: boolean
     uploadProgress: number
     encodingStatus: EncodingStatus
     encodingProgress: number
+    onRetry?: () => void
+    isRetrying?: boolean
     className?: string
 }
 
@@ -18,7 +22,9 @@ export function EncodingProgress({
     uploadProgress,
     encodingStatus,
     encodingProgress,
-    className,
+    onRetry,
+    isRetrying,
+    className
 }: EncodingProgressProps) {
     const t = useTranslations('SnapiStudio.upload.encoding')
 
@@ -27,22 +33,38 @@ export function EncodingProgress({
         uploadProgress,
         encodingStatus,
         encodingProgress,
-        t,
+        t
     })
 
     return (
         <div className={cn('w-full space-y-1.5', className)}>
-            <div className='flex items-center gap-2'>
-                <StatusIcon variant={variant} />
-                <span
-                    className={cn('text-sm', {
-                        'text-muted-foreground': variant === 'loading',
-                        'text-green-500': variant === 'success',
-                        'text-destructive': variant === 'error',
-                    })}
-                >
-                    {label}
-                </span>
+            <div className='flex items-center justify-between gap-2'>
+                <div className='flex items-center gap-2'>
+                    <StatusIcon variant={variant} />
+                    <span
+                        className={cn('text-sm', {
+                            'text-muted-foreground': variant === 'loading',
+                            'text-green-500': variant === 'success',
+                            'text-destructive': variant === 'error'
+                        })}
+                    >
+                        {label}
+                    </span>
+                </div>
+
+                {variant === 'error' && onRetry && (
+                    <Button
+                        size='sm'
+                        variant='outline'
+                        type='button'
+                        onClick={onRetry}
+                        disabled={isRetrying}
+                        className='h-7 gap-1.5 text-xs'
+                    >
+                        <RefreshCw className={cn('size-3', { 'animate-spin': isRetrying })} />
+                        {t('retry')}
+                    </Button>
+                )}
             </div>
 
             {variant === 'loading' && (
@@ -66,7 +88,7 @@ function resolveDisplay({
     uploadProgress,
     encodingStatus,
     encodingProgress,
-    t,
+    t
 }: {
     isUploading: boolean
     uploadProgress: number
@@ -78,7 +100,7 @@ function resolveDisplay({
         return {
             label: t('uploading', { progress: uploadProgress }),
             barPercent: uploadProgress,
-            variant: 'loading',
+            variant: 'loading'
         }
     }
 
@@ -90,7 +112,7 @@ function resolveDisplay({
             return {
                 label: t('processing', { progress: encodingProgress }),
                 barPercent: encodingProgress,
-                variant: 'loading',
+                variant: 'loading'
             }
 
         case EncodingStatus.READY:
@@ -104,7 +126,7 @@ function resolveDisplay({
 function StatusIcon({ variant }: { variant: Variant }) {
     switch (variant) {
         case 'loading':
-            return <Loader2 className='h-3.5 w-3.5 animate-spin text-muted-foreground shrink-0' />
+            return <LoadingIcon loop className='size-4 shrink-0' />
         case 'success':
             return <CheckCircle2 className='h-3.5 w-3.5 text-green-500 shrink-0' />
         case 'error':

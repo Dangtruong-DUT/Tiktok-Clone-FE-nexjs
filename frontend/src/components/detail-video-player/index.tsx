@@ -4,15 +4,18 @@ import React, { useRef, useState, useCallback } from 'react'
 import { cn } from '@/lib/utils'
 import { useLocale } from 'next-intl'
 import { TikTokPostType } from '@/types/models/post.model'
+import { MediaType } from '@/constants/enum'
 import { useVideoPlayer } from '@/hooks/video/useVideoPlayer'
 import { useVideoControls } from '@/hooks/video/useVideoControls'
 import { useVideoAutoPlay } from '@/hooks/video/useVideoAutoPlay'
+import { useHlsPlayer } from '@/hooks/video/useHlsPlayer'
 import { VideoOverlayIcons } from './components/video-overlay-icons'
 import Image from 'next/image'
 import { VideoControlsBottom } from '@/components/detail-video-player/components/video-controls-bottom'
 import ActionBar from '@/components/detail-action-bar'
 import { useVideoRouterNavigation } from '@/app/[locale]/(public)/(home)/[username]/video/[id]/_hook/useVideoRouterNavigation'
 import NavigationVideo from '@/components/detail-video-player/components/navigation-video'
+import LoadingIcon from '@/components/lottie-icons/loading'
 
 interface VideoPlayerProps {
     className?: string
@@ -21,7 +24,6 @@ interface VideoPlayerProps {
 
 export default function VideoPlayer({ className, post }: VideoPlayerProps) {
     const author = post.author
-
     const videoRef = useRef<HTMLVideoElement | null>(null)
     const [isHovered, setIsHovered] = useState(false)
     const [isProgressBarActive, setIsProgressBarActive] = useState(false)
@@ -29,15 +31,20 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
     const thumbnailUrl = post.thumbnail_url || '/images/desktop-wallpaper-tiktok.jpg'
     const locale = useLocale()
 
-    const { handleVideoEnd } = useVideoRouterNavigation({
-        autoPlayNext: true
-    })
+    const media = post.medias[0]
+    const isHls = media?.type === MediaType.HLS_VIDEO
+    const hlsUrl = isHls ? media?.url : null
 
-    const { isPlaying, setIsPlaying, isMuted, setIsMuted, volume, setVolume, currentTime, duration } = useVideoPlayer(
+    const { handleVideoEnd } = useVideoRouterNavigation({ autoPlayNext: true })
+
+    const { isPlaying, setIsPlaying, isMuted, setIsMuted, volume, setVolume, currentTime, duration, isLoading } = useVideoPlayer(
         videoRef,
-        {
-            onVideoEnd: handleVideoEnd
-        }
+        { onVideoEnd: handleVideoEnd }
+    )
+
+    const { isBuffering, qualityLevels, currentLevel, switchLevel, switchToAuto } = useHlsPlayer(
+        videoRef,
+        isHls ? hlsUrl : null
     )
 
     useVideoAutoPlay({ videoRef })
@@ -66,12 +73,7 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
             onMouseLeave={() => setIsHovered(false)}
         >
             <div className='absolute inset-0 blur-md opacity-30 transform: scale(11)'>
-                <Image
-                    src={thumbnailUrl || '/images/desktop-wallpaper-tiktok.jpg'}
-                    alt={author.username}
-                    className='object-cover w-full h-full'
-                    layout='fill'
-                />
+                <Image src={thumbnailUrl} alt={author.username} className='object-cover w-full h-full' layout='fill' />
             </div>
             <VideoOverlayIcons
                 showPlayPauseIcon={showPlayPauseIcon}
@@ -79,20 +81,29 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
                 isPlaying={isPlaying}
                 isMuted={isMuted}
             />
+
+            {(isBuffering || isLoading) && (
+                <div className='absolute inset-0 flex items-center justify-center pointer-events-none z-10'>
+                    <LoadingIcon loop className='size-12' />
+                </div>
+            )}
+
             <video
                 onClick={handlePlayPause}
-                className=' absolute block  top-0 left-0 w-full h-full'
+                className='absolute block top-0 left-0 w-full h-full'
                 ref={videoRef}
                 playsInline
                 preload='metadata'
-                loop={true}
+                loop
                 muted={isMuted}
-                autoPlay={true}
+                autoPlay
                 key={post.uuid}
+                poster={thumbnailUrl}
             >
-                <source src={post.medias[0]?.url} type='video/mp4' />
+                {!isHls && <source src={media?.url} type='video/mp4' />}
             </video>
-            <div className=' absolute bottom-20 right-5 flex flex-col items-center w-[57px]'>
+
+            <div className='absolute bottom-20 right-5 flex flex-col items-center w-[57px]'>
                 <NavigationVideo />
                 <ActionBar post={post} />
             </div>
@@ -112,6 +123,10 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
                 volume={volume}
                 onVolumeChange={handleVolumeChange}
                 isHovered={isHovered}
+                qualityLevels={qualityLevels}
+                currentLevel={currentLevel}
+                onSelectLevel={switchLevel}
+                onSelectAuto={switchToAuto}
             />
         </section>
     )

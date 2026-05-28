@@ -9,11 +9,10 @@ import { useVideoPlayer } from '@/hooks/video/useVideoPlayer'
 import { useVideoAutoPlay } from '@/hooks/video/useVideoAutoPlay'
 import { useVideoControls } from '@/hooks/video/useVideoControls'
 import { useHlsPlayer } from '@/hooks/video/useHlsPlayer'
-import { useVideoEncoding } from '@/hooks/video/useVideoEncoding'
 import { VideoControlsTop } from '@/components/feed-video-player/components/video-controls-top'
 import { VideoOverlayIcons } from '@/components/feed-video-player/components/video-overlay-icons'
 import { VideoControlsBottom } from '@/components/feed-video-player/components/video-controls-bottom'
-import { VideoQualitySelector } from '@/components/feed-video-player/components/video-quality-selector'
+import LoadingIcon from '@/components/lottie-icons/loading'
 
 interface VideoPlayerProps {
     className?: string
@@ -28,24 +27,13 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
     const locale = useLocale()
 
     const media = post.medias[0]
-    const isNativeHls = media?.type === MediaType.HLS_VIDEO
+    const isHls = media?.type === MediaType.HLS_VIDEO
+    const hlsUrl = isHls ? media?.url : null
 
-    // For posts uploaded as VIDEO (encoding may still be in progress),
-    // poll encoding status so the player can transparently upgrade to HLS
-    // once the backend finishes encoding.
-    const encoding = useVideoEncoding(
-        !isNativeHls ? (media?.upload_file_uuid ?? null) : null
-    )
-
-    // Use HLS when the media was created as HLS, or when it started as VIDEO
-    // and encoding has since completed.
-    const isHls = isNativeHls || encoding.hlsUrl !== null
-    const hlsUrl = isNativeHls ? media?.url : encoding.hlsUrl
-
-    const { isPlaying, setIsPlaying, isMuted, setIsMuted, volume, setVolume, currentTime, duration } =
+    const { isPlaying, setIsPlaying, isMuted, setIsMuted, volume, setVolume, currentTime, duration, isLoading } =
         useVideoPlayer(videoRef)
 
-    const { qualityLevels, currentLevel, switchLevel, switchToAuto } = useHlsPlayer(
+    const { qualityLevels, currentLevel, switchLevel, switchToAuto, isBuffering } = useHlsPlayer(
         videoRef,
         isHls ? hlsUrl : null
     )
@@ -59,7 +47,7 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
             isMuted,
             setIsPlaying,
             setIsMuted,
-            setVolume,
+            setVolume
         })
 
     const handleProgressBarActive = useCallback((active: boolean) => {
@@ -78,16 +66,7 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
                 isMuted={isMuted}
                 onMuteToggle={handleMuteToggle}
                 isParentHovered={isHovered}
-            >
-                {isHls && isHovered && qualityLevels.length > 0 && (
-                    <VideoQualitySelector
-                        levels={qualityLevels}
-                        currentLevel={currentLevel}
-                        onSelectLevel={switchLevel}
-                        onSelectAuto={switchToAuto}
-                    />
-                )}
-            </VideoControlsTop>
+            />
 
             <VideoOverlayIcons
                 showPlayPauseIcon={showPlayPauseIcon}
@@ -95,6 +74,12 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
                 isPlaying={isPlaying}
                 isMuted={isMuted}
             />
+
+            {(isBuffering || isLoading) && (
+                <div className='absolute inset-0 flex items-center justify-center pointer-events-none z-10'>
+                    <LoadingIcon loop className='size-12' />
+                </div>
+            )}
 
             <video
                 onClick={handlePlayPause}
@@ -104,8 +89,8 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
                 loop
                 preload='metadata'
                 muted={isMuted}
+                poster={post.thumbnail_url || undefined}
             >
-                {/* HLS source is injected by hls.js; plain MP4 fallback used for VIDEO type */}
                 {!isHls && <source src={media?.url} type='video/mp4' />}
             </video>
 
@@ -119,6 +104,10 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
                 onSeek={handleSeek}
                 onProgressBarActive={handleProgressBarActive}
                 onPlayPause={handlePlayPause}
+                qualityLevels={qualityLevels}
+                currentLevel={currentLevel}
+                onSelectLevel={switchLevel}
+                onSelectAuto={switchToAuto}
             />
         </section>
     )

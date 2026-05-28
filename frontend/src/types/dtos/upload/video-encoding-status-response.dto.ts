@@ -7,5 +7,7 @@ export type VideoEncodingStatusResponse = HttpResponseWithData<{
     progress: number
     master_playlist_url: string | null
     duration: number | null
+    width: number | null
+    height: number | null
     resolutions: string[] | null
 }>

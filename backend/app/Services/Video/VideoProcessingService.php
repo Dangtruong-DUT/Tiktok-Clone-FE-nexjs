@@ -16,22 +16,6 @@ class VideoProcessingService
         private readonly FfmpegService $ffmpegService,
     ) {}
 
-    /**
-     * Run the full HLS encoding pipeline for a given VideoEncoding record.
-     *
-     * Flow:
-     *   1. Mark as PROCESSING
-     *   2. Download original from MinIO → temp dir
-     *   3. Probe source (duration, dimensions)
-     *   4. Encode each applicable HLS variant
-     *   5. Generate master.m3u8
-     *   6. Extract thumbnail
-     *   7. Upload everything to MinIO
-     *   8. Mark as READY + upgrade Media.type to HLS_VIDEO
-     *
-     * On any failure the encoding is marked FAILED and the exception re-thrown
-     * so the queue can handle retries.
-     */
     public function process(VideoEncoding $videoEncoding): void
     {
         $uploadFile = $videoEncoding->uploadFile;
@@ -45,62 +29,37 @@ class VideoProcessingService
 
             $this->ensureDirectory($tempDir);
 
-            // Step 1 – download original
             $ext = pathinfo($uploadFile->file_path, PATHINFO_EXTENSION) ?: 'mp4';
             $inputPath = $tempDir.DIRECTORY_SEPARATOR.'input.'.$ext;
             $this->downloadFromStorage($uploadFile->file_path, $inputPath, $uploadFile->disk);
 
-            // Step 2 – probe source
             $videoInfo = $this->ffmpegService->getVideoInfo($inputPath);
             $videoEncoding->update(['duration' => $videoInfo->duration]);
 
-            // Step 3 – determine variants
-            $variants = $this->applicableVariants($videoInfo->height);
+            $variants = $this->applicableVariants($videoInfo->width, $videoInfo->height);
             throw_if(empty($variants), new \RuntimeException(
-                "No applicable HLS variants for source height {$videoInfo->height}px"
+                "No applicable HLS variants for source dimensions {$videoInfo->width}x{$videoInfo->height}"
             ));
 
             $variantLabels = array_keys($variants);
             $total = count($variantLabels);
             $segmentDuration = (int) config('video.hls.segment_duration', 6);
 
-            // Step 4 – encode each variant
             foreach ($variantLabels as $i => $label) {
-                $this->ffmpegService->encodeVariant($inputPath, $tempDir, $label, $variants[$label], $segmentDuration);
+                $this->ffmpegService->encodeVariant($inputPath, $tempDir, $label, $variants[$label], $segmentDuration, $videoInfo->width, $videoInfo->height);
 
-                // Reserve the last 10 % for upload, so progress tops at 90 here
                 $progress = (int) ((($i + 1) / ($total + 1)) * 90);
                 $videoEncoding->update(['encoding_progress' => $progress]);
                 VideoEncodingStatusUpdatedEvent::dispatch($videoEncoding);
             }
 
-            // Step 5 – write master playlist
-            $masterContent = $this->buildMasterPlaylist($variantLabels, $variants);
+            $masterContent = $this->buildMasterPlaylist($variantLabels, $variants, $videoInfo->width, $videoInfo->height);
             file_put_contents($tempDir.DIRECTORY_SEPARATOR.'master.m3u8', $masterContent);
 
-            // Step 6 – thumbnail (non-fatal)
-            $thumbnailPath = $tempDir.DIRECTORY_SEPARATOR.'thumbnail.jpg';
-            $this->ffmpegService->extractThumbnail(
-                $inputPath,
-                $thumbnailPath,
-                min(1.0, $videoInfo->duration * 0.1)
-            );
-
-            // Step 7 – upload to MinIO
-            $hlsBase = 'videos/'.$uploadFile->uuid;
+            $hlsPrefix = rtrim(config('video.hls_storage_prefix', 'hls'), '/');
+            $hlsBase = $hlsPrefix.'/'.$uploadFile->uuid;
             $this->uploadHlsDirectory($tempDir, $hlsBase, $variantLabels);
 
-            $thumbnailStoragePath = null;
-            if (file_exists($thumbnailPath)) {
-                $thumbnailStoragePath = $hlsBase.'/thumbnails/thumbnail.jpg';
-                Storage::disk('s3')->put(
-                    $thumbnailStoragePath,
-                    file_get_contents($thumbnailPath),
-                    'public'
-                );
-            }
-
-            // Step 8 – mark READY
             $videoEncoding->update([
                 'status' => VideoEncodingStatusEnum::READY,
                 'master_playlist_path' => $hlsBase.'/master.m3u8',
@@ -110,12 +69,10 @@ class VideoProcessingService
                     'original_width' => $videoInfo->width,
                     'original_height' => $videoInfo->height,
                     'original_bitrate' => $videoInfo->bitrate,
-                    'thumbnail_path' => $thumbnailStoragePath,
                 ],
                 'completed_at' => now(),
             ]);
 
-            // Upgrade all Media records pointing to this file
             Media::where('upload_file_id', $uploadFile->id)
                 ->update(['type' => MediaTypeEnum::HLS_VIDEO]);
 
@@ -140,10 +97,6 @@ class VideoProcessingService
             $this->cleanupDirectory($tempDir);
         }
     }
-
-    // -----------------------------------------------------------------------
-    // Helpers
-    // -----------------------------------------------------------------------
 
     private function tempPath(string $uuid): string
     {
@@ -174,21 +127,33 @@ class VideoProcessingService
         }
     }
 
-    /** Return only variants whose height ≤ the source height. */
-    private function applicableVariants(int $sourceHeight): array
+    private function applicableVariants(int $srcWidth, int $srcHeight): array
     {
+        $shorterSide = min($srcWidth, $srcHeight);
+
         return collect(config('video.hls.variants', []))
-            ->filter(fn ($v) => $v['height'] <= $sourceHeight)
+            ->filter(fn ($v) => $v['size'] <= $shorterSide)
             ->toArray();
     }
 
-    private function buildMasterPlaylist(array $labels, array $variants): string
+    private function buildMasterPlaylist(array $labels, array $variants, int $srcWidth, int $srcHeight): string
     {
+        $isPortrait = $srcHeight > $srcWidth;
         $lines = ['#EXTM3U', '#EXT-X-VERSION:3', ''];
 
         foreach ($labels as $label) {
             $v = $variants[$label];
-            $lines[] = "#EXT-X-STREAM-INF:BANDWIDTH={$v['bandwidth']},RESOLUTION={$v['width']}x{$v['height']},NAME=\"{$label}\"";
+            $size = $v['size'];
+
+            if ($isPortrait) {
+                $encW = $size;
+                $encH = (int) (round($size * $srcHeight / $srcWidth / 2) * 2);
+            } else {
+                $encH = $size;
+                $encW = (int) (round($size * $srcWidth / $srcHeight / 2) * 2);
+            }
+
+            $lines[] = "#EXT-X-STREAM-INF:BANDWIDTH={$v['bandwidth']},RESOLUTION={$encW}x{$encH},NAME=\"{$label}\"";
             $lines[] = "{$label}/index.m3u8";
         }
 
@@ -202,7 +167,11 @@ class VideoProcessingService
         $disk->put(
             $storageBase.'/master.m3u8',
             file_get_contents($tempDir.DIRECTORY_SEPARATOR.'master.m3u8'),
-            ['visibility' => 'public', 'ContentType' => 'application/vnd.apple.mpegurl']
+            [
+                'visibility' => 'public',
+                'ContentType' => 'application/vnd.apple.mpegurl',
+                'CacheControl' => 'no-cache, no-store, must-revalidate',
+            ]
         );
 
         foreach ($variantLabels as $label) {
@@ -214,14 +183,18 @@ class VideoProcessingService
 
             foreach (glob($variantDir.DIRECTORY_SEPARATOR.'*') as $file) {
                 $filename = basename($file);
-                $contentType = str_ends_with($filename, '.m3u8')
-                    ? 'application/vnd.apple.mpegurl'
-                    : 'video/mp2t';
+                $isPlaylist = str_ends_with($filename, '.m3u8');
 
                 $disk->put(
                     $storageBase.'/'.$label.'/'.$filename,
                     file_get_contents($file),
-                    ['visibility' => 'public', 'ContentType' => $contentType]
+                    [
+                        'visibility' => 'public',
+                        'ContentType' => $isPlaylist ? 'application/vnd.apple.mpegurl' : 'video/mp2t',
+                        'CacheControl' => $isPlaylist
+                            ? 'no-cache, must-revalidate'
+                            : 'public, max-age=604800, immutable',
+                    ]
                 );
             }
         }

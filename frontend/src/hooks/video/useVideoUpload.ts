@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import envConfig from '@/config/app.config'
 
 export type VideoUploadStatus = 'idle' | 'uploading' | 'done' | 'error'
@@ -16,38 +16,48 @@ export interface VideoUploadState {
     uploadProgress: number
     uploadedVideo: UploadedVideo | null
     error: string | null
+    retry: () => void
 }
 
-const IDLE: VideoUploadState = {
-    status: 'idle',
-    uploadProgress: 0,
-    uploadedVideo: null,
-    error: null,
-}
+const UPLOAD_URL = `${envConfig.NEXT_PUBLIC_API_ENDPOINT}/medias/upload-video`
 
 /**
  * Uploads a video file via XHR so we can expose real byte-level progress.
  * RTK Query's fetch-based mutations don't support upload progress events.
  *
- * The hook watches `file` and starts a new upload whenever it changes.
- * Cleanup (xhr.abort) fires on file change or unmount, preventing stale uploads.
+ * Exposes `retry()` to re-attempt the same file after a network/server error
+ * without requiring the user to re-select the file.
  */
 export function useVideoUpload(file: File | null): VideoUploadState {
-    const [state, setState] = useState<VideoUploadState>(IDLE)
+    const [status, setStatus] = useState<VideoUploadStatus>('idle')
+    const [uploadProgress, setUploadProgress] = useState(0)
+    const [uploadedVideo, setUploadedVideo] = useState<UploadedVideo | null>(null)
+    const [error, setError] = useState<string | null>(null)
+    const [retryCount, setRetryCount] = useState(0)
+
+    const xhrRef = useRef<XMLHttpRequest | null>(null)
 
     useEffect(() => {
         if (!file) {
-            setState(IDLE)
+            xhrRef.current?.abort()
+            setStatus('idle')
+            setUploadProgress(0)
+            setUploadedVideo(null)
+            setError(null)
             return
         }
 
-        setState({ status: 'uploading', uploadProgress: 0, uploadedVideo: null, error: null })
+        setStatus('uploading')
+        setUploadProgress(0)
+        setUploadedVideo(null)
+        setError(null)
 
         const xhr = new XMLHttpRequest()
+        xhrRef.current = xhr
 
         xhr.upload.onprogress = (e) => {
             if (e.lengthComputable) {
-                setState((prev) => ({ ...prev, uploadProgress: Math.round((e.loaded / e.total) * 100) }))
+                setUploadProgress(Math.round((e.loaded / e.total) * 100))
             }
         }
 
@@ -55,34 +65,46 @@ export function useVideoUpload(file: File | null): VideoUploadState {
             if (xhr.status >= 200 && xhr.status < 300) {
                 try {
                     const { data } = JSON.parse(xhr.responseText)
-                    setState({
-                        status: 'done',
-                        uploadProgress: 100,
-                        uploadedVideo: { id: data.id, uuid: data.uuid, url: data.url },
-                        error: null,
-                    })
+                    setUploadedVideo({ id: data.id, uuid: data.uuid, url: data.url })
+                    setStatus('done')
+                    setUploadProgress(100)
                 } catch {
-                    setState({ status: 'error', uploadProgress: 0, uploadedVideo: null, error: 'Invalid server response' })
+                    setError('Phản hồi từ server không hợp lệ')
+                    setStatus('error')
                 }
             } else {
-                setState({ status: 'error', uploadProgress: 0, uploadedVideo: null, error: `Upload failed (HTTP ${xhr.status})` })
+                setError(xhr.status === 401
+                    ? 'Vui lòng đăng nhập để tải video'
+                    : `Tải lên thất bại (HTTP ${xhr.status})`)
+                setStatus('error')
             }
         }
 
-        xhr.onerror = () =>
-            setState({ status: 'error', uploadProgress: 0, uploadedVideo: null, error: 'Network error — check your connection' })
+        xhr.onerror = () => {
+            setError('Lỗi mạng — kiểm tra kết nối và thử lại')
+            setStatus('error')
+        }
 
-        xhr.onabort = () => setState(IDLE)
+        xhr.onabort = () => {
+            setStatus('idle')
+            setUploadProgress(0)
+        }
 
         const formData = new FormData()
         formData.append('file', file)
 
         xhr.withCredentials = true
-        xhr.open('POST', `${envConfig.NEXT_PUBLIC_API_ENDPOINT}/medias/upload-video`)
+        xhr.open('POST', UPLOAD_URL)
         xhr.send(formData)
 
         return () => xhr.abort()
-    }, [file])
+    }, [file, retryCount])
 
-    return state
+    const retry = useCallback(() => {
+        if (status === 'error') {
+            setRetryCount((c) => c + 1)
+        }
+    }, [status])
+
+    return { status, uploadProgress, uploadedVideo, error, retry }
 }

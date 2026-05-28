@@ -31,8 +31,28 @@ export function useVideoPlayer(
     )
     const [currentTime, setCurrentTime] = useState(0)
     const [duration, setDuration] = useState(0)
+    const [isLoading, setIsLoading] = useState(false)
 
     const { onVideoEnd } = options
+
+    useEffect(() => {
+        const video = videoRef.current
+        if (!video) return
+
+        const onWaiting = () => setIsLoading(true)
+        const onCanPlay = () => setIsLoading(false)
+        const onPlaying = () => setIsLoading(false)
+
+        video.addEventListener('waiting', onWaiting)
+        video.addEventListener('canplay', onCanPlay)
+        video.addEventListener('playing', onPlaying)
+
+        return () => {
+            video.removeEventListener('waiting', onWaiting)
+            video.removeEventListener('canplay', onCanPlay)
+            video.removeEventListener('playing', onPlaying)
+        }
+    }, [videoRef])
 
     useEffect(() => {
         const video = videoRef.current
@@ -106,6 +126,7 @@ export function useVideoPlayer(
         volume,
         setVolume,
         currentTime,
-        duration
+        duration,
+        isLoading
     }
 }

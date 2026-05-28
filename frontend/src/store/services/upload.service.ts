@@ -24,6 +24,12 @@ export const UploadApi = createApi({
         }),
         getVideoEncodingStatus: builder.query<VideoEncodingStatusResponse, string>({
             query: (uuid) => VIDEO_API_ENDPOINT.API_VIDEO_ENCODING_STATUS(uuid)
+        }),
+        retryVideoEncoding: builder.mutation<void, string>({
+            query: (uuid) => ({
+                url: VIDEO_API_ENDPOINT.API_VIDEO_RETRY_ENCODING(uuid),
+                method: 'POST'
+            })
         })
     })
 })
@@ -31,5 +37,6 @@ export const UploadApi = createApi({
 export const {
     useUploadImageMutation,
     useUploadVideoMutation,
-    useGetVideoEncodingStatusQuery
+    useGetVideoEncodingStatusQuery,
+    useRetryVideoEncodingMutation
 } = UploadApi

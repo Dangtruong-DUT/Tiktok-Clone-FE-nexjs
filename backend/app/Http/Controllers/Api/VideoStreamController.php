@@ -2,30 +2,22 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Video\RetryVideoEncodingAction;
+use App\Enums\Video\VideoEncodingStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Response\ApiResponse;
-use App\Models\UploadFile;
+use App\Services\Video\VideoEncodingService;
 use Illuminate\Http\JsonResponse;
 
 class VideoStreamController extends Controller
 {
-    /**
-     * Return the HLS encoding status for a given upload file UUID.
-     *
-     * Used by the frontend to poll until status === 'ready' or to display
-     * the master playlist URL when embedding the HLS player.
-     */
+    public function __construct(
+        private readonly VideoEncodingService $encodingService,
+    ) {}
+
     public function encodingStatus(string $uuid): JsonResponse
     {
-        $uploadFile = UploadFile::where('uuid', $uuid)
-            ->with('videoEncoding')
-            ->firstOrFail();
-
-        $encoding = $uploadFile->videoEncoding;
-
-        if (! $encoding) {
-            return ApiResponse::notFound('No encoding record found for this file');
-        }
+        $encoding = $this->encodingService->getEncodingByFileUuid($uuid);
 
         return ApiResponse::success([
             'status' => $encoding->status->value,
@@ -33,7 +25,22 @@ class VideoStreamController extends Controller
             'progress' => $encoding->encoding_progress,
             'master_playlist_url' => $encoding->master_playlist_url,
             'duration' => $encoding->duration,
+            'width' => $encoding->metadata['original_width'] ?? null,
+            'height' => $encoding->metadata['original_height'] ?? null,
             'resolutions' => $encoding->resolutions,
         ]);
+    }
+
+    public function retryEncoding(string $uuid, RetryVideoEncodingAction $action): JsonResponse
+    {
+        $encoding = $this->encodingService->getEncodingByFileUuid($uuid);
+
+        if ($encoding->status !== VideoEncodingStatusEnum::FAILED) {
+            return ApiResponse::error('Encoding can only be retried when status is FAILED', 422);
+        }
+
+        $action->execute($encoding);
+
+        return ApiResponse::success(['message' => 'Encoding job queued']);
     }
 }

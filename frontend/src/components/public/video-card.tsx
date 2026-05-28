@@ -1,6 +1,6 @@
 'use client'
 
-import { Audience } from '@/constants/enum'
+import { Audience, MediaType } from '@/constants/enum'
 import { TikTokPostType } from '@/types/models/post.model'
 import { formatCompactNumber } from '@/utils/formatting/format-number.util'
 import { IoLockClosedOutline } from 'react-icons/io5'
@@ -30,9 +30,11 @@ export default function CardVideoItem({
     const locale = useLocale()
     const router = useRouter()
 
+    const hasVideoPreview = post?.medias?.at(0)?.type === MediaType.VIDEO
+
     return (
         <article className='w-full'>
-            <div className={cn('relative block w-full pt-[133.333%] aspect-[3/4] overflow-hidden rounded-md group')}>
+            <div className={cn('relative block w-full pt-[133.333%] aspect-[3/4] overflow-hidden rounded-md group bg-black')}>
                 {isCurrentlyPlaying && (
                     <div className='absolute inset-0 z-5 flex flex-col items-center justify-center bg-black/30 backdrop-blur-sm'>
                         <PlayingIcon className='h-5.5 text-white' loop={true} />
@@ -43,7 +45,7 @@ export default function CardVideoItem({
                 <div
                     className={cn(
                         'absolute inset-0 z-2 transition-opacity duration-300',
-                        isCurrentlyPlaying ? 'blur-sm brightness-75' : 'group-hover:opacity-0'
+                        isCurrentlyPlaying ? 'blur-sm brightness-75' : hasVideoPreview && 'group-hover:opacity-0'
                     )}
                 >
                     <Image
@@ -55,22 +57,24 @@ export default function CardVideoItem({
                     />
                 </div>
 
-                <div
-                    className={cn(
-                        'absolute inset-0 opacity-0 transition-opacity duration-300 z-1',
-                        !isCurrentlyPlaying && 'group-hover:opacity-100 group-hover:z-2'
-                    )}
-                >
-                    <video
-                        autoPlay
-                        muted
-                        playsInline
-                        loop
-                        preload='metadata'
-                        className='w-full h-full object-contain'
-                        src={post?.medias?.at(0)?.url}
-                    />
-                </div>
+                {post?.medias?.at(0)?.type === MediaType.VIDEO && (
+                    <div
+                        className={cn(
+                            'absolute inset-0 opacity-0 transition-opacity duration-300 z-1',
+                            !isCurrentlyPlaying && 'group-hover:opacity-100 group-hover:z-2'
+                        )}
+                    >
+                        <video
+                            autoPlay
+                            muted
+                            playsInline
+                            loop
+                            preload='metadata'
+                            className='w-full h-full object-contain'
+                            src={post?.medias?.at(0)?.url}
+                        />
+                    </div>
+                )}
 
                 {!isDescriptionVisible && (
                     <div className='absolute bottom-0 left-0 w-full z-4 flex justify-between items-end px-3 pt-[67px] pb-[17px] h-[40%] bg-gradient-to-t from-[rgba(22,24,35,0.5)] via-transparent'>

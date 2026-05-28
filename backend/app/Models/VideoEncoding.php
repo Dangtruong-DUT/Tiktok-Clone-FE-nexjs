@@ -7,6 +7,7 @@ use App\Traits\HasUuidObservable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Storage;
 
 class VideoEncoding extends Model
@@ -54,7 +55,10 @@ class VideoEncoding extends Model
                     return null;
                 }
 
-                return Storage::disk('s3')->url($this->master_playlist_path);
+                /** @var FilesystemAdapter $disk */
+                $disk = Storage::disk('s3');
+
+                return $disk->url($this->master_playlist_path);
             }
         );
     }

@@ -178,7 +178,8 @@
             "mp4OrWebmOnly": "Chỉ hỗ trợ MP4 hoặc WebM",
             "fileInfo": {
                 "size": "{size} MB",
-                "replace": "Thay thế"
+                "replace": "Thay thế",
+                "retry": "Thử lại"
             },
             "validation": {
                 "invalidType": "Định dạng tệp không hợp lệ. Chỉ hỗ trợ {accepted}.",
@@ -260,7 +261,8 @@
                 "pending": "Đang chờ trong hàng đợi xử lý...",
                 "processing": "Đang mã hóa {progress}%",
                 "ready": "Video sẵn sàng — HLS streaming đã bật",
-                "failed": "Mã hóa thất bại — video sẽ được đăng mà không có HLS streaming"
+                "failed": "Mã hóa thất bại",
+                "retry": "Thử lại"
             },
             "buttons": {
                 "post": "Đăng",

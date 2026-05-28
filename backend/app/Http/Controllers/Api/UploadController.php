@@ -15,11 +15,6 @@ class UploadController extends Controller
         private readonly UploadService $uploadService
     ) {}
 
-    /**
-        * Handle image upload
-     * @param  UploadImageRequest  $request
-     * @return JsonResponse
-     */
     public function uploadImage(UploadImageRequest $request): JsonResponse
     {
         $data = $this->uploadService->image($request->file('file'));
@@ -27,11 +22,6 @@ class UploadController extends Controller
         return ApiResponse::success($data, 'Image uploaded successfully');
     }
 
-    /**
-        * Handle video upload
-     * @param  UploadVideoRequest  $request
-     * @return JsonResponse
-     */
     public function uploadVideo(UploadVideoRequest $request): JsonResponse
     {
         $data = $this->uploadService->video($request->file('file'));

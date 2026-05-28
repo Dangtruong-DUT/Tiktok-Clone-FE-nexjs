@@ -4,6 +4,7 @@ FROM php:8.2-fpm AS builder
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     unzip \
+    ffmpeg \
     libpq-dev \
     libonig-dev \
     libssl-dev \
@@ -44,6 +45,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libfcgi-bin \
     procps \
     supervisor \
+    ffmpeg \
     && apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN curl -o /usr/local/bin/php-fpm-healthcheck \

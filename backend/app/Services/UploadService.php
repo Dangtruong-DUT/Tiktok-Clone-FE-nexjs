@@ -14,11 +14,6 @@ class UploadService
         protected readonly InitiateVideoProcessingAction $initiateVideoProcessingAction,
     ) {}
 
-    /**
-     * Upload an image file and return its metadata.
-     * @param  UploadedFile  $file
-     * @return array{id: string, url: string, type: string}
-     */
     public function image(UploadedFile $file): array
     {
         $uploadFile = $this->uploadFileService->uploadFile($file, 'images');
@@ -30,16 +25,6 @@ class UploadService
         ];
     }
 
-    /**
-     * Upload a video file, dispatch HLS encoding, and return its metadata.
-     *
-     * The response type is VIDEO while encoding is in progress.
-     * Once the job completes, all Media records pointing to this file
-     * are upgraded to HLS_VIDEO and the URL resolves to the master playlist.
-     *
-     * @param  UploadedFile  $file
-     * @return array{id: string, url: string, type: string}
-     */
     public function video(UploadedFile $file): array
     {
         $uploadFile = $this->uploadFileService->uploadFile($file, 'videos');

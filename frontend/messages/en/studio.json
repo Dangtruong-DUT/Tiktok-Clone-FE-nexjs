@@ -178,7 +178,8 @@
             "mp4OrWebmOnly": "Only MP4 or MOV supported",
             "fileInfo": {
                 "size": "{size} MB",
-                "replace": "Replace"
+                "replace": "Replace",
+                "retry": "Retry"
             },
             "validation": {
                 "invalidType": "Invalid file format. Only {accepted} files are supported.",
@@ -260,7 +261,8 @@
                 "pending": "Waiting in encoding queue...",
                 "processing": "Encoding {progress}%",
                 "ready": "Video ready — HLS streaming enabled",
-                "failed": "Encoding failed — video will be posted without HLS streaming"
+                "failed": "Encoding failed",
+                "retry": "Retry"
             },
             "buttons": {
                 "post": "Post",

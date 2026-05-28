@@ -1,9 +1,11 @@
 import ProgressBar from '@/components/detail-video-player/components/progress-bar'
 import VolumeBar from '@/components/detail-video-player/components/volume-bar'
+import { VideoQualitySelector } from '@/components/common/video-quality-selector'
 import { cn } from '@/lib/utils'
 import { TikTokPostType } from '@/types/models/post.model'
 import { formatSecondsToTime } from '@/utils/formatting/format-time.util'
 import { FaPause, FaPlay } from 'react-icons/fa6'
+import type { HlsQualityLevel } from '@/hooks/video/useHlsPlayer'
 
 interface VideoControlsBottomProps {
     post: TikTokPostType
@@ -20,6 +22,10 @@ interface VideoControlsBottomProps {
     volume: number
     onVolumeChange: (volume: number) => void
     isHovered: boolean
+    qualityLevels: HlsQualityLevel[]
+    currentLevel: number
+    onSelectLevel: (index: number) => void
+    onSelectAuto: () => void
 }
 
 export function VideoControlsBottom({
@@ -33,7 +39,11 @@ export function VideoControlsBottom({
     onMuteToggle,
     volume,
     onVolumeChange,
-    isHovered
+    isHovered,
+    qualityLevels,
+    currentLevel,
+    onSelectLevel,
+    onSelectAuto
 }: VideoControlsBottomProps) {
     return (
         <div
@@ -56,12 +66,22 @@ export function VideoControlsBottom({
                         <span>{formatSecondsToTime(duration)}</span>
                     </div>
                 </div>
-                <VolumeBar
-                    onVolumeChange={onVolumeChange}
-                    volume={volume}
-                    isMuted={isMuted}
-                    onMuteToggle={onMuteToggle}
-                />
+                <div className='flex items-center gap-3'>
+                    {isHovered && qualityLevels.length > 0 && (
+                        <VideoQualitySelector
+                            levels={qualityLevels}
+                            currentLevel={currentLevel}
+                            onSelectLevel={onSelectLevel}
+                            onSelectAuto={onSelectAuto}
+                        />
+                    )}
+                    <VolumeBar
+                        onVolumeChange={onVolumeChange}
+                        volume={volume}
+                        isMuted={isMuted}
+                        onMuteToggle={onMuteToggle}
+                    />
+                </div>
             </div>
         </div>
     )

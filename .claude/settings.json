@@ -4,7 +4,8 @@
       "Bash(python -m training.training)",
       "Bash(awk '{print \"PID:\", $2, \"| CPU:\", $3\"%\", \"| RAM:\", $4\"%\", \"| Time:\", $10}')",
       "Bash(docker exec *)",
-      "Bash(docker compose *)"
+      "Bash(docker compose *)",
+      "Bash(xargs ls)"
     ]
   }
 }

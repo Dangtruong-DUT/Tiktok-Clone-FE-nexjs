@@ -121,6 +121,18 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::post('/appeals/{appeal_uuid}/approve', [AppealAdminController::class, 'approve'])->name('approve-appeal');
             Route::post('/appeals/{appeal_uuid}/reject', [AppealAdminController::class, 'reject'])->name('reject-appeal');
         });
+
+    // video encoding management
+    Route::prefix('videos')
+        ->name('videos.')
+        ->middleware('throttle:60,1')
+        ->group(function () {
+            Route::get('{upload_file_uuid}/encoding-status', [VideoStreamController::class, 'encodingStatus'])
+                ->name('encoding-status');
+            Route::post('{upload_file_uuid}/retry-encoding', [VideoStreamController::class, 'retryEncoding'])
+                ->middleware('throttle:10,1')
+                ->name('retry-encoding');
+        });
 });
 
 /*|--------------------------------------------------------------------------
@@ -206,10 +218,3 @@ Route::prefix('search')
         Route::get('/hashtags', [HashtagController::class, 'index'])->name('hashtags');
     });
 
-// video streaming routes
-Route::prefix('videos')
-    ->name('videos.')
-    ->group(function () {
-        Route::get('{upload_file_uuid}/encoding-status', [VideoStreamController::class, 'encodingStatus'])
-            ->name('encoding-status');
-    });

@@ -1,23 +1,40 @@
 import { Button } from '@/components/ui/button'
 import { MdOutlinePublishedWithChanges } from 'react-icons/md'
+import { AlertCircle, RefreshCw } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useTranslations } from 'next-intl'
 import { EncodingProgress } from '@/app/[locale]/(user)/snapistudio/upload/_components/upload-video/encoding-progress'
 import type { VideoEncodingState } from '@/hooks/video/useVideoEncoding'
+import { useRetryVideoEncodingMutation } from '@/store/services/upload.service'
+import { toast } from 'sonner'
 
 interface FileInfoProps {
     file: File | null
     onReplaceFile: () => void
     isUploading: boolean
     uploadProgress: number
+    uploadError?: string | null
+    onRetryUpload?: () => void
     encoding: VideoEncodingState
+    uploadedVideoUuid?: string | null
     className?: string
 }
 
-export default function FileInfo({ file, onReplaceFile, isUploading, uploadProgress, encoding, className }: FileInfoProps) {
+export default function FileInfo({
+    file,
+    onReplaceFile,
+    isUploading,
+    uploadProgress,
+    uploadError,
+    onRetryUpload,
+    encoding,
+    uploadedVideoUuid,
+    className,
+}: FileInfoProps) {
     const t = useTranslations('SnapiStudio.upload.fileInfo')
+    const [retryEncoding, { isLoading: isRetrying }] = useRetryVideoEncodingMutation()
 
     if (!file) return null
 
@@ -26,6 +43,16 @@ export default function FileInfo({ file, onReplaceFile, isUploading, uploadProgr
     const handleReplace = (e: React.MouseEvent) => {
         e.preventDefault()
         onReplaceFile()
+    }
+
+    const handleRetry = async () => {
+        if (!uploadedVideoUuid) return
+        try {
+            await retryEncoding(uploadedVideoUuid).unwrap()
+            encoding.restartPolling()
+        } catch {
+            toast.error('Không thể gửi lại yêu cầu xử lý video')
+        }
     }
 
     return (
@@ -60,12 +87,35 @@ export default function FileInfo({ file, onReplaceFile, isUploading, uploadProgr
                 </Button>
             </div>
 
-            <EncodingProgress
-                isUploading={isUploading}
-                uploadProgress={uploadProgress}
-                encodingStatus={encoding.status}
-                encodingProgress={encoding.progress}
-            />
+            {uploadError ? (
+                <div className='flex items-center justify-between gap-2'>
+                    <div className='flex items-center gap-2'>
+                        <AlertCircle className='h-3.5 w-3.5 text-destructive shrink-0' />
+                        <span className='text-sm text-destructive'>{uploadError}</span>
+                    </div>
+                    {onRetryUpload && (
+                        <Button
+                            size='sm'
+                            variant='outline'
+                            type='button'
+                            onClick={onRetryUpload}
+                            className='h-7 gap-1.5 text-xs'
+                        >
+                            <RefreshCw className='size-3' />
+                            {t('retry')}
+                        </Button>
+                    )}
+                </div>
+            ) : (
+                <EncodingProgress
+                    isUploading={isUploading}
+                    uploadProgress={uploadProgress}
+                    encodingStatus={encoding.status}
+                    encodingProgress={encoding.progress}
+                    onRetry={handleRetry}
+                    isRetrying={isRetrying}
+                />
+            )}
         </div>
     )
 }

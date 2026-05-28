@@ -4,12 +4,15 @@ import React, { useRef, useState, useCallback } from 'react'
 import { cn } from '@/lib/utils'
 import { useLocale } from 'next-intl'
 import { TikTokPostType } from '@/types/models/post.model'
+import { MediaType } from '@/constants/enum'
 import { useVideoPlayer } from '@/hooks/video/useVideoPlayer'
 import { useVideoControls } from '@/hooks/video/useVideoControls'
 import { useVideoAutoPlay } from '@/hooks/video/useVideoAutoPlay'
+import { useHlsPlayer } from '@/hooks/video/useHlsPlayer'
 import { VideoOverlayIcons } from './components/video-overlay-icons'
 import Image from 'next/image'
 import { VideoControlsBottom } from '@/components/dialog-video-player/components/video-controls-bottom'
+import LoadingIcon from '@/components/lottie-icons/loading'
 
 interface VideoPlayerProps {
     className?: string
@@ -25,8 +28,17 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
     const thumbnailUrl = post.thumbnail_url || '/images/desktop-wallpaper-tiktok.jpg'
     const locale = useLocale()
 
-    const { isPlaying, setIsPlaying, isMuted, setIsMuted, volume, setVolume, currentTime, duration } =
+    const media = post.medias[0]
+    const isHls = media?.type === MediaType.HLS_VIDEO
+    const hlsUrl = isHls ? media?.url : null
+
+    const { isPlaying, setIsPlaying, isMuted, setIsMuted, volume, setVolume, currentTime, duration, isLoading } =
         useVideoPlayer(videoRef)
+
+    const { isBuffering, qualityLevels, currentLevel, switchLevel, switchToAuto } = useHlsPlayer(
+        videoRef,
+        isHls ? hlsUrl : null
+    )
 
     useVideoAutoPlay({ videoRef })
 
@@ -44,9 +56,6 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
         setIsProgressBarActive(active)
     }, [])
 
-    const displayPost = post
-    const displayAuthor = author
-
     return (
         <section
             className={cn(
@@ -58,8 +67,8 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
         >
             <div className='absolute inset-0 blur-md opacity-30 transform: scale(11)'>
                 <Image
-                    src={thumbnailUrl || '/images/desktop-wallpaper-tiktok.jpg'}
-                    alt={displayAuthor.username}
+                    src={thumbnailUrl}
+                    alt={author.username}
                     className='object-cover w-full h-full'
                     layout='fill'
                 />
@@ -70,22 +79,30 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
                 isPlaying={isPlaying}
                 isMuted={isMuted}
             />
+
+            {(isBuffering || isLoading) && (
+                <div className='absolute inset-0 flex items-center justify-center pointer-events-none z-10'>
+                    <LoadingIcon loop className='size-12' />
+                </div>
+            )}
+
             <video
                 onClick={handlePlayPause}
-                className=' absolute block  top-0 left-0 w-full h-full'
+                className='absolute block top-0 left-0 w-full h-full'
                 ref={videoRef}
                 playsInline
-                loop={true}
+                loop
                 preload='metadata'
                 muted={isMuted}
-                autoPlay={true}
-                key={displayPost.uuid}
+                autoPlay
+                key={post.uuid}
+                poster={thumbnailUrl}
             >
-                <source src={displayPost.medias[0]?.url} type='video/mp4' />
+                {!isHls && <source src={media?.url} type='video/mp4' />}
             </video>
 
             <VideoControlsBottom
-                post={displayPost}
+                post={post}
                 locale={locale}
                 currentTime={currentTime}
                 duration={duration}
@@ -99,6 +116,10 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
                 volume={volume}
                 onVolumeChange={handleVolumeChange}
                 isHovered={isHovered}
+                qualityLevels={qualityLevels}
+                currentLevel={currentLevel}
+                onSelectLevel={switchLevel}
+                onSelectAuto={switchToAuto}
             />
         </section>
     )

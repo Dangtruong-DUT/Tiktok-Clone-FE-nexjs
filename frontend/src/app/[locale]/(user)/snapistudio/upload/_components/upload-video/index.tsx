@@ -13,7 +13,10 @@ interface UploadVideoProps {
     file: File | null
     isUploading: boolean
     uploadProgress: number
+    uploadError?: string | null
+    onRetryUpload?: () => void
     encoding: VideoEncodingState
+    uploadedVideoUuid?: string | null
     className?: string
     isInitialRender?: boolean
     setIsInitialRender: (value: boolean) => void
@@ -25,7 +28,10 @@ export default function UploadVideo({
     file,
     isUploading,
     uploadProgress,
+    uploadError,
+    onRetryUpload,
     encoding,
+    uploadedVideoUuid,
     className,
     isInitialRender,
     setIsInitialRender,
@@ -51,7 +57,10 @@ export default function UploadVideo({
                 file={file}
                 isUploading={isUploading}
                 uploadProgress={uploadProgress}
+                uploadError={uploadError}
+                onRetryUpload={onRetryUpload}
                 encoding={encoding}
+                uploadedVideoUuid={uploadedVideoUuid}
                 className={cn(className, { hidden: file == null })}
                 onReplaceFile={handleReplaceFile}
             />
