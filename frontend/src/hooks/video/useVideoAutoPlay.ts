@@ -16,12 +16,29 @@ export function useVideoAutoPlay({ videoRef, threshold = 0.5 }: UseVideoAutoPlay
         const video = videoRef.current
         if (!video) return
 
+        const tryPlay = () => {
+            if (isInViewport) {
+                video.play().catch((error) => {
+                    logger.error('Error attempting to play video:', error)
+                })
+            }
+        }
+
+        // canplay fires when the browser / hls.js has buffered enough data to start.
+        // For HLS videos the first play() call often happens before hls.js has loaded
+        // any segments, so it silently fails. Listening for canplay lets us retry.
+        video.addEventListener('canplay', tryPlay)
+
         if (isInViewport) {
             video.play().catch((error) => {
                 logger.error('Error attempting to play video:', error)
             })
         } else {
             video.pause()
+        }
+
+        return () => {
+            video.removeEventListener('canplay', tryPlay)
         }
     }, [isInViewport, videoRef])
 

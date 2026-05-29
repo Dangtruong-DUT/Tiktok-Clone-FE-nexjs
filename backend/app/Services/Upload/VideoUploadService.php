@@ -134,7 +134,8 @@ class VideoUploadService
             /** @var VideoUploadSession $session */
             $session = VideoUploadSession::lockForUpdate()->findOrFail($session->id);
 
-            if ($session->status->isTerminal()) {
+            // Already canceled — nothing left to clean up.
+            if ($session->status === VideoUploadStatusEnum::CANCELED) {
                 return;
             }
 
@@ -174,13 +175,15 @@ class VideoUploadService
             $this->storage->abortMultipartUpload($session->storage_key, $session->upload_id);
         }
 
-        $statusesWithRawFile = [
-            VideoUploadStatusEnum::UPLOADED,
-            VideoUploadStatusEnum::ANALYZING,
-            VideoUploadStatusEnum::TRANSCODING,
+        // Raw file exists for every status except PENDING/UPLOADING (not yet uploaded)
+        // and CANCELED (already deleted in a prior abort).
+        $statusesWithoutRawFile = [
+            VideoUploadStatusEnum::PENDING,
+            VideoUploadStatusEnum::UPLOADING,
+            VideoUploadStatusEnum::CANCELED,
         ];
 
-        if (in_array($session->status, $statusesWithRawFile, strict: true)) {
+        if (! in_array($session->status, $statusesWithoutRawFile, strict: true)) {
             $this->storage->deleteObject($session->storage_key);
         }
 

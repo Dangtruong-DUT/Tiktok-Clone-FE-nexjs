@@ -7,41 +7,33 @@ interface UploadGuideLineProps {
     className?: string
 }
 
+const guidelines = [
+    { icon: Video, key: 'sizeAndDuration' },
+    { icon: File, key: 'fileFormats' },
+    { icon: MonitorPlay, key: 'videoResolutions' },
+    { icon: MdAspectRatio, key: 'aspectRatios' }
+] as const
+
 export default function UploadGuideLine({ className }: UploadGuideLineProps) {
     const t = useTranslations('SnapiStudio.upload')
     return (
-        <div className={cn('grid grid-cols-4 gap-3', className)}>
-            <div className='flex items-start gap-3'>
-                <Video className='mt-1 size-6 ' />
-                <div>
-                    <h3 className='font-semibold'>{t('guidelines.sizeAndDuration.title')}</h3>
-                    <p className='text-sm text-muted-foreground'>{t('guidelines.sizeAndDuration.description')}</p>
+        <div className={cn('grid grid-cols-2 gap-3 sm:grid-cols-4', className)}>
+            {guidelines.map(({ icon: Icon, key }) => (
+                <div
+                    key={key}
+                    className='flex items-start gap-2.5 rounded-lg border border-border bg-card px-3 py-3 shadow-xs'
+                >
+                    <div className='mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-md bg-muted'>
+                        <Icon className='size-3.5 text-muted-foreground' />
+                    </div>
+                    <div>
+                        <h3 className='text-xs font-semibold leading-snug'>{t(`guidelines.${key}.title`)}</h3>
+                        <p className='mt-0.5 text-[11px] text-muted-foreground leading-snug'>
+                            {t(`guidelines.${key}.description`)}
+                        </p>
+                    </div>
                 </div>
-            </div>
-
-            <div className='flex items-start gap-3'>
-                <File className='mt-1 size-6 ' />
-                <div>
-                    <h3 className='font-semibold'>{t('guidelines.fileFormats.title')}</h3>
-                    <p className='text-sm text-muted-foreground'>{t('guidelines.fileFormats.description')}</p>
-                </div>
-            </div>
-
-            <div className='flex items-start gap-3'>
-                <MonitorPlay className='mt-1 size-6 ' />
-                <div>
-                    <h3 className='font-semibold'>{t('guidelines.videoResolutions.title')}</h3>
-                    <p className='text-sm text-muted-foreground'>{t('guidelines.videoResolutions.description')}</p>
-                </div>
-            </div>
-
-            <div className='flex items-start gap-3'>
-                <MdAspectRatio className='mt-1 size-6 ' />
-                <div>
-                    <h3 className='font-semibold'>{t('guidelines.aspectRatios.title')}</h3>
-                    <p className='text-sm text-muted-foreground'>{t('guidelines.aspectRatios.description')}</p>
-                </div>
-            </div>
+            ))}
         </div>
     )
 }

@@ -11,6 +11,7 @@ import useCurrentUserData from '@/hooks/data/useCurrentUserData'
 import { Link } from '@/i18n/navigation'
 import { Loader, LogOut, User } from 'lucide-react'
 import { USER_ROUTES } from '@/constants/routes/routes'
+import { EncodingTracker } from '@/components/studio/encoding-tracker'
 
 export default function Header() {
     const t = useTranslations('SnapiStudio.header')
@@ -20,6 +21,7 @@ export default function Header() {
     return (
         <header className=' flex h-17 items-center justify-between border-b bg-background px-8'>
             <div className='ml-auto flex items-center gap-4'>
+                <EncodingTracker />
                 <SelectLanguage />
                 <ModeToggle />
                 <Popover>

@@ -175,6 +175,8 @@
         "upload": {
             "selectVideo": "Chọn video để tải lên",
             "dragAndDrop": "Hoặc kéo và thả tệp",
+            "dropHere": "Thả video vào đây",
+            "preview": "Xem trước",
             "mp4OrWebmOnly": "Chỉ hỗ trợ MP4 hoặc WebM",
             "fileInfo": {
                 "size": "{size} MB",

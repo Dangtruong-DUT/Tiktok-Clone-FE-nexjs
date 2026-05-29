@@ -175,6 +175,8 @@
         "upload": {
             "selectVideo": "Select Video to Upload",
             "dragAndDrop": "Or drag and drop files",
+            "dropHere": "Drop your video here",
+            "preview": "Preview",
             "mp4OrWebmOnly": "Only MP4 or MOV supported",
             "fileInfo": {
                 "size": "{size} MB",

@@ -1,13 +1,13 @@
 'use client'
 
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react'
-import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import UploadGuideLine from '@/app/[locale]/(user)/snapistudio/upload/_components/upload-video/upload-guide-lines'
 import { cn } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 import { getAcceptedFileAttribute, validateUploadFile } from '@/utils/validation/upload-file.util'
+import { CloudUpload } from 'lucide-react'
 
 interface UploadFileProps {
     onFileSelect: (file: File | null) => void
@@ -39,85 +39,55 @@ const UploadFile = forwardRef<UploadFileRef, UploadFileProps>(
         const handleDrag = (e: React.DragEvent) => {
             e.preventDefault()
             e.stopPropagation()
-            if (e.type === 'dragenter' || e.type === 'dragover') {
-                setIsDragActive(true)
-            } else if (e.type === 'dragleave') {
-                setIsDragActive(false)
-            }
+            if (e.type === 'dragenter' || e.type === 'dragover') setIsDragActive(true)
+            else if (e.type === 'dragleave') setIsDragActive(false)
         }
 
         const handleDrop = (e: React.DragEvent) => {
             e.preventDefault()
             e.stopPropagation()
             setIsDragActive(false)
-
             const droppedFile = e.dataTransfer.files[0]
-            if (!droppedFile) {
-                return
-            }
-
+            if (!droppedFile) return
             const validation = validateUploadFile(droppedFile, 'video')
             if (!validation.isValid) {
-                if (validation.code === 'invalid_type') {
-                    toast.error(
-                        t('validation.invalidType', {
-                            accepted: validation.acceptedExtensions
-                        })
-                    )
-                    return
-                }
-
                 toast.error(
-                    t('validation.tooLarge', {
-                        maxSizeMb: validation.maxSizeMb
-                    })
+                    validation.code === 'invalid_type'
+                        ? t('validation.invalidType', { accepted: validation.acceptedExtensions })
+                        : t('validation.tooLarge', { maxSizeMb: validation.maxSizeMb })
                 )
                 return
             }
-
             onFileSelect(droppedFile)
             setIsInitialRender(false)
         }
 
         const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             const selectedFile = e.target.files?.[0]
-            if (!selectedFile) {
-                return
-            }
-
+            if (!selectedFile) return
             const validation = validateUploadFile(selectedFile, 'video')
             if (!validation.isValid) {
-                if (validation.code === 'invalid_type') {
-                    toast.error(
-                        t('validation.invalidType', {
-                            accepted: validation.acceptedExtensions
-                        })
-                    )
-                    return
-                }
-
                 toast.error(
-                    t('validation.tooLarge', {
-                        maxSizeMb: validation.maxSizeMb
-                    })
+                    validation.code === 'invalid_type'
+                        ? t('validation.invalidType', { accepted: validation.acceptedExtensions })
+                        : t('validation.tooLarge', { maxSizeMb: validation.maxSizeMb })
                 )
                 return
             }
-
             onFileSelect(selectedFile)
             setIsInitialRender(false)
         }
 
         return (
-            <div className={cn('border border-border rounded-lg p-6', className)}>
+            <div className={cn('rounded-xl overflow-hidden', className)}>
                 <div
                     className={cn(
-                        'relative  flex min-h-[400px] flex-col items-center justify-center rounded-lg border border-dashed  bg-muted',
-                        isDragActive && 'border-primary bg-primary/5',
-                        {
-                            'min-h-[400px] flex-col': isInitialRender,
-                            'min-h-[200px] flex-row gap-4': !isInitialRender
-                        }
+                        'relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed transition-all duration-200 cursor-pointer',
+                        'bg-muted/40 hover:bg-muted/60',
+                        isDragActive
+                            ? 'border-brand bg-brand/5 scale-[1.01]'
+                            : 'border-border hover:border-brand/50',
+                        isInitialRender ? 'min-h-[360px] py-12 gap-3' : 'min-h-[140px] flex-row gap-6 px-8'
                     )}
                     onDragEnter={handleDrag}
                     onDragLeave={handleDrag}
@@ -129,38 +99,67 @@ const UploadFile = forwardRef<UploadFileRef, UploadFileProps>(
                         accept={getAcceptedFileAttribute('video')}
                         onChange={handleFileChange}
                         className='absolute inset-0 cursor-pointer opacity-0'
-                        onClick={(event) => {
-                            ;(event.target as HTMLInputElement).value = ''
+                        onClick={(e) => {
+                            ;(e.target as HTMLInputElement).value = ''
                         }}
                         ref={inputRef}
                     />
 
-                    <div className='mb-3'>
-                        <Image
-                            src='/images/upload-page/upload.svg'
-                            alt='Upload video'
-                            className='mx-auto h-20 w-20'
-                            width={72}
-                            height={72}
-                        />
-                    </div>
-                    <div
-                        className={cn('flex flex-col', {
-                            'items-center': isInitialRender,
-                            'items-start': !isInitialRender
-                        })}
-                    >
-                        <h1 className='mb-1 text-2xl font-bold'>{t('selectVideo')}</h1>
-                        <p className='mb-4 text-base text-muted-foreground'>{t('dragAndDrop')}</p>
-                    </div>
-
-                    {isInitialRender && (
-                        <Button size='lg' variant='brand' className='mb-6'>
-                            {t('selectVideo')}
-                        </Button>
+                    {isInitialRender ? (
+                        <>
+                            <div
+                                className={cn(
+                                    'flex size-20 items-center justify-center rounded-full transition-colors duration-200',
+                                    isDragActive ? 'bg-brand/15' : 'bg-muted'
+                                )}
+                            >
+                                <Image
+                                    src='/images/upload-page/upload.svg'
+                                    alt='Upload video'
+                                    width={40}
+                                    height={40}
+                                    className='size-10'
+                                />
+                            </div>
+                            <div className='text-center space-y-1'>
+                                <p className='text-lg font-semibold'>
+                                    {isDragActive ? t('dropHere') : t('selectVideo')}
+                                </p>
+                                <p className='text-sm text-muted-foreground'>{t('dragAndDrop')}</p>
+                            </div>
+                            <div className='flex items-center gap-2 mt-1'>
+                                <div className='h-px w-12 bg-border' />
+                                <span className='text-xs text-muted-foreground uppercase tracking-wider'>or</span>
+                                <div className='h-px w-12 bg-border' />
+                            </div>
+                            <button
+                                type='button'
+                                className='relative z-10 pointer-events-none inline-flex items-center gap-2 rounded-lg bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand/90 transition-colors'
+                            >
+                                <CloudUpload className='size-4' />
+                                {t('selectVideo')}
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <div className='flex size-12 shrink-0 items-center justify-center rounded-full bg-muted'>
+                                <Image
+                                    src='/images/upload-page/upload.svg'
+                                    alt='Upload video'
+                                    width={24}
+                                    height={24}
+                                    className='size-6'
+                                />
+                            </div>
+                            <div>
+                                <p className='font-semibold'>{t('selectVideo')}</p>
+                                <p className='text-sm text-muted-foreground'>{t('dragAndDrop')}</p>
+                            </div>
+                        </>
                     )}
                 </div>
-                {isInitialRender && <UploadGuideLine className='mt-8' />}
+
+                {isInitialRender && <UploadGuideLine className='mt-6' />}
             </div>
         )
     }
