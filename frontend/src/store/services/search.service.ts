@@ -20,13 +20,13 @@ export const SearchApi = createApi({
             infiniteQueryOptions: {
                 initialPageParam: 1,
                 getNextPageParam: ({ meta }) => {
-                    if (!meta) return undefined
+                    if (!meta || meta.type !== 'offset') return undefined
                     const { current_page, last_page } = meta
                     if (current_page >= last_page) return undefined
                     return current_page + 1
                 },
                 getPreviousPageParam: ({ meta }) => {
-                    if (!meta) return undefined
+                    if (!meta || meta.type !== 'offset') return undefined
                     const { current_page } = meta
                     if (current_page <= 1) return undefined
                     return current_page - 1
@@ -40,13 +40,13 @@ export const SearchApi = createApi({
             infiniteQueryOptions: {
                 initialPageParam: 1,
                 getNextPageParam: ({ meta }) => {
-                    if (!meta) return undefined
+                    if (!meta || meta.type !== 'offset') return undefined
                     const { current_page, last_page } = meta
                     if (current_page >= last_page) return undefined
                     return current_page + 1
                 },
                 getPreviousPageParam: ({ meta }) => {
-                    if (!meta) return undefined
+                    if (!meta || meta.type !== 'offset') return undefined
                     const { current_page } = meta
                     if (current_page <= 1) return undefined
                     return current_page - 1
@@ -62,13 +62,13 @@ export const SearchApi = createApi({
             infiniteQueryOptions: {
                 initialPageParam: 1,
                 getNextPageParam: ({ meta }) => {
-                    if (!meta) return undefined
+                    if (!meta || meta.type !== 'offset') return undefined
                     const { current_page, last_page } = meta
                     if (current_page >= last_page) return undefined
                     return current_page + 1
                 },
                 getPreviousPageParam: ({ meta }) => {
-                    if (!meta) return undefined
+                    if (!meta || meta.type !== 'offset') return undefined
                     const { current_page } = meta
                     if (current_page <= 1) return undefined
                     return current_page - 1

@@ -20,7 +20,7 @@ interface VideosProviderContextProps {
     fetchNextPage: () => InfiniteQueryActionCreatorResult<
         InfiniteQueryDefinition<
             'friend' | 'foryou',
-            number,
+            string | null,
             BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>,
             'Posts',
             GetListPostRes,

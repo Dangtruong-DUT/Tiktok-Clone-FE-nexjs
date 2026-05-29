@@ -21,7 +21,7 @@ class GetFriendPostsRequest extends BaseListRequest
                 self::SOMETIMES,
                 self::REQUIRED,
             ],
-            'page' => [
+            'cursor' => [
                 self::SOMETIMES,
                 self::REQUIRED,
             ],

@@ -14,6 +14,7 @@ import { formatDateTime, timeAgo } from '@/utils/formatting/format-time.util'
 import type { LocalesType } from '@/i18n/config'
 import { ACTIVITY_TYPES } from '@/constants/admin/ui'
 import { AdminActivityListItem } from '@/types/dtos/admin/admin-response.dto'
+import type { OffsetPaginationMeta } from '@/types/common/pagination-meta.type'
 import { ActivityLogDetailDialog } from './activity-log-detail-dialog'
 import { Button } from '@/components/ui/button'
 
@@ -60,7 +61,7 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
     })
 
     const logs: AdminActivityListItem[] = data?.data ?? []
-    const pagination = data?.meta
+    const pagination = data?.meta as OffsetPaginationMeta | undefined
     const filteredLogs = useMemo(() => {
         const normalizedSearch = searchTerm.trim().toLowerCase()
         if (!normalizedSearch) return logs

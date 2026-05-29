@@ -20,6 +20,7 @@ import useCurrentUserData from '@/hooks/data/useCurrentUserData'
 import { DataTable } from '@/components/ui/data-table'
 import { TablePanel } from '@/components/data-display/table-panel'
 import { TablePagination } from '@/components/data-display/table-pagination'
+import type { OffsetPaginationMeta } from '@/types/common/pagination-meta.type'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import AudienceSelect from '@/components/forms/audience-select'
@@ -83,7 +84,7 @@ export default function TableContent() {
         autoResetPageIndex: false,
         state: { sorting, columnFilters, columnVisibility, rowSelection, pagination },
         manualPagination: true,
-        pageCount: queryData?.meta?.last_page ?? -1
+        pageCount: (queryData?.meta as OffsetPaginationMeta | undefined)?.last_page ?? -1
     })
 
     useEffect(() => {
@@ -180,7 +181,7 @@ export default function TableContent() {
                 pagination={
                     queryData?.meta ? (
                         <TablePagination
-                            pagination={queryData.meta}
+                            pagination={queryData.meta as OffsetPaginationMeta}
                             page={table.getState().pagination.pageIndex + 1}
                             perPage={table.getState().pagination.pageSize}
                             onPerPageChange={(n) => {

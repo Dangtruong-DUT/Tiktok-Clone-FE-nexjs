@@ -11,6 +11,7 @@ import { TablePanel } from '@/components/data-display/table-panel'
 import { TablePagination } from '@/components/data-display/table-pagination'
 import { TableSkeleton } from '@/components/data-display/table-skeleton'
 import { TooltipIconButton } from '@/components/ui/tooltip-icon-button'
+import type { OffsetPaginationMeta } from '@/types/common/pagination-meta.type'
 import { EmptyState } from '@/components/common/empty-state'
 import { DeleteCommentDialog } from './delete-comment-dialog'
 import { CommentDetailDialog } from './comment-detail-dialog'
@@ -95,7 +96,7 @@ export function CommentTable({ onCommentDeleted }: CommentTableProps) {
                 pagination={
                     pagination ? (
                         <TablePagination
-                            pagination={pagination}
+                            pagination={pagination as OffsetPaginationMeta}
                             page={page}
                             perPage={perPage}
                             onPageChange={setPage}

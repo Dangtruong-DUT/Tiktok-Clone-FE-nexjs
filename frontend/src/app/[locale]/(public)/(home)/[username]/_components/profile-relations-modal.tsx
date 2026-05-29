@@ -17,6 +17,7 @@ import {
     useUnfollowUserMutation
 } from '@/store/services/user.service'
 import { UserType } from '@/types/models/user.model'
+import type { OffsetPaginationMeta } from '@/types/common/pagination-meta.type'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useState } from 'react'
 import { HTTP_STATUS } from '@/constants/api/http-status'
@@ -177,14 +178,18 @@ export default function ProfileRelationsModal({
         const baseTabs: Array<{ key: RelationTab; label: string; count?: number }> = [
             { key: 'following', label: t('stats.following'), count: optimisticFollowingCount },
             { key: 'followers', label: t('stats.followers'), count: optimisticFollowersCount },
-            { key: 'friends', label: t('relationsModal.tabs.friends'), count: friendsQuery.data?.meta.total }
+            {
+                key: 'friends',
+                label: t('relationsModal.tabs.friends'),
+                count: (friendsQuery.data?.meta as OffsetPaginationMeta | undefined)?.total
+            }
         ]
 
         if (isOwnProfile) {
             baseTabs.push({
                 key: 'suggested',
                 label: t('relationsModal.tabs.suggested'),
-                count: suggestedQuery.data?.meta.total
+                count: (suggestedQuery.data?.meta as OffsetPaginationMeta | undefined)?.total
             })
         }
 
@@ -193,9 +198,9 @@ export default function ProfileRelationsModal({
         t,
         optimisticFollowingCount,
         optimisticFollowersCount,
-        friendsQuery.data?.meta.total,
+        friendsQuery.data?.meta,
         isOwnProfile,
-        suggestedQuery.data?.meta.total
+        suggestedQuery.data?.meta
     ])
 
     const openWithTab = (tab: RelationTab) => {

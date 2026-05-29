@@ -23,16 +23,18 @@ export default function SearchDrawerContent({ searchValue, setSearchValue }: Sea
     const router = useRouter()
     const t = useTranslations('HomePage.sidebar.search')
     const debounceValue = useDebounce(searchValue, 500)
+    const trimmedSearchValue = searchValue.trim()
     const { data, isLoading: showLoading } = useSearchUsersGetQuery(
-        { q: debounceValue as string },
+        { q: debounceValue.trim() as string },
         {
-            skip: !debounceValue
+            skip: !debounceValue.trim()
         }
     )
 
     const searchResults: UserType[] = data?.data || []
 
     const inputRef = useRef<HTMLInputElement>(null)
+    const isComposingRef = useRef(false)
 
     const handleClearSearch = useCallback(() => {
         setSearchValue('')
@@ -41,16 +43,16 @@ export default function SearchDrawerContent({ searchValue, setSearchValue }: Sea
 
     const handleSetSearchValue = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
-            const value = e.target.value.trim()
-            setSearchValue(value)
+            setSearchValue(e.target.value)
         },
         [setSearchValue]
     )
 
     const handleOnEnterOnSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' && searchValue) {
+        if (e.nativeEvent.isComposing || isComposingRef.current) return
+        if (e.key === 'Enter' && trimmedSearchValue) {
             e.preventDefault()
-            router.push(`${APP_ROUTES.SEARCH}?q=${searchValue}`)
+            router.push(`${APP_ROUTES.SEARCH}?q=${trimmedSearchValue}`)
         }
     }
 
@@ -70,6 +72,12 @@ export default function SearchDrawerContent({ searchValue, setSearchValue }: Sea
                     value={searchValue}
                     onChange={handleSetSearchValue}
                     onKeyDown={handleOnEnterOnSearch}
+                    onCompositionStart={() => {
+                        isComposingRef.current = true
+                    }}
+                    onCompositionEnd={() => {
+                        isComposingRef.current = false
+                    }}
                 />
 
                 {!showLoading && searchValue.length > 0 && (
@@ -89,7 +97,7 @@ export default function SearchDrawerContent({ searchValue, setSearchValue }: Sea
             </div>
 
             <div className='w-full max-w-[510px] min-w-[200px] mt-4'>
-                {debounceValue && searchResults.length > 0 && (
+                {debounceValue.trim() && searchResults.length > 0 && (
                     <>
                         <h4 className='h-[30px] px-3 py-1.5 text-sm leading-[1.29] font-semibold text-muted-foreground mb-2'>
                             {t('accounts')}
@@ -124,7 +132,7 @@ export default function SearchDrawerContent({ searchValue, setSearchValue }: Sea
                                 </li>
                             ))}
                         </ul>
-                        <Link href={`${APP_ROUTES.SEARCH}?q=${searchValue}`} className='inline-block w-full'>
+                        <Link href={`${APP_ROUTES.SEARCH}?q=${trimmedSearchValue}`} className='inline-block w-full'>
                             <span className='inline-block max-w-full text-base font-semibold truncate mt-4'>
                                 {t('viewAllResults', { query: searchValue })}
                             </span>

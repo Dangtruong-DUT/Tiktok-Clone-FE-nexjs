@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Enums\Post\PostTypeEnum;
 use App\Models\Post;
+use Illuminate\Contracts\Pagination\CursorPaginator;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -271,9 +272,9 @@ class PostRepository extends BaseRepository
     /**
      * Get posts of mutual friends.
      * @param  array<string,mixed>  $filters
-     * @return LengthAwarePaginator
+     * @return CursorPaginator
      */
-    public function getMutualFriendsPosts(array $filters, ?int $authUserId): LengthAwarePaginator
+    public function getMutualFriendsPosts(array $filters, ?int $authUserId): CursorPaginator
     {
         $filterCollection = collect($filters);
 
@@ -284,19 +285,21 @@ class PostRepository extends BaseRepository
                     ->whereHas('followings', fn (Builder $query) => $query->whereKey($authUserId))
                     ->whereHas('followers', fn (Builder $query) => $query->whereKey($authUserId));
             })
-            ->orderByDesc('created_at');
+            ->orderByDesc('created_at')
+            ->orderByDesc('id');
 
         $perPage = (int) $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
+        $cursor = $filterCollection->get('cursor');
 
-        return $this->withDetail($searchQuery, $authUserId)->paginate($perPage);
+        return $this->withDetail($searchQuery, $authUserId)->cursorPaginate($perPage, ['*'], 'cursor', $cursor);
     }
 
     /**
      * Get posts of following users.
      * @param  array<string,mixed>  $filters
-     * @return LengthAwarePaginator
+     * @return CursorPaginator
      */
-    public function getFollowingPosts(array $filters, ?int $authUserId): LengthAwarePaginator
+    public function getFollowingPosts(array $filters, ?int $authUserId): CursorPaginator
     {
         $filterCollection = collect($filters);
 
@@ -305,11 +308,13 @@ class PostRepository extends BaseRepository
             ->whereHas('user', function (Builder $userQuery) use ($authUserId) {
                 $userQuery->whereHas('followers', fn (Builder $query) => $query->whereKey($authUserId));
             })
-            ->orderByDesc('created_at');
+            ->orderByDesc('created_at')
+            ->orderByDesc('id');
 
         $perPage = (int) $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
+        $cursor = $filterCollection->get('cursor');
 
-        return $this->withDetail($searchQuery, $authUserId)->paginate($perPage);
+        return $this->withDetail($searchQuery, $authUserId)->cursorPaginate($perPage, ['*'], 'cursor', $cursor);
     }
 
     /**
@@ -355,11 +360,11 @@ class PostRepository extends BaseRepository
     }
 
     /**
-     * Search posts with filters and keyword.
+     * Search posts with offset pagination (used for comments/children).
      * @param  array<string,mixed>  $filters
      * @return LengthAwarePaginator
      */
-    public function search(array $filters, ?int $authUserId): LengthAwarePaginator
+    public function searchOffset(array $filters, ?int $authUserId): LengthAwarePaginator
     {
         $filterCollection = collect($filters);
 
@@ -370,6 +375,26 @@ class PostRepository extends BaseRepository
         $perPage = (int) $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
 
         return $this->withDetail($searchQuery, $authUserId)->paginate($perPage);
+    }
+
+    /**
+     * Search posts with filters and keyword.
+     * @param  array<string,mixed>  $filters
+     * @return CursorPaginator
+     */
+    public function search(array $filters, ?int $authUserId): CursorPaginator
+    {
+        $filterCollection = collect($filters);
+
+        $searchQuery = $this->buildSearchQuery($filterCollection)
+            ->visibleFor($authUserId)
+            ->orderByDesc('created_at')
+            ->orderByDesc('id');
+
+        $perPage = (int) $filterCollection->get('per_page', config('const.pagination.default_per_page', 10));
+        $cursor = $filterCollection->get('cursor');
+
+        return $this->withDetail($searchQuery, $authUserId)->cursorPaginate($perPage, ['*'], 'cursor', $cursor);
     }
 
     /**

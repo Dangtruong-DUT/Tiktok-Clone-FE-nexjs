@@ -18,6 +18,7 @@ use App\Repositories\UserRepository;
 use App\Repositories\VideoUploadSessionRepository;
 use App\Models\User;
 use App\Traits\HasAuthUser;
+use Illuminate\Contracts\Pagination\CursorPaginator;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
@@ -217,7 +218,7 @@ class PostService
         $post = $this->findPostOrFail($postUuid);
         $authUserId = auth_user_id();
 
-        return $this->postRepository->search([
+        return $this->postRepository->searchOffset([
             'q' => $payload['q'] ?? null,
             'audience' => $payload['audience'] ?? null,
             'type' => $payload['post_type'] ?? null,
@@ -229,9 +230,9 @@ class PostService
 
     /**
      * Search for posts.
-     * @param  array{q?: string, audience?: string, post_type?: string, per_page?: int, page?: int}  $payload
+     * @param  array{q?: string, audience?: string, post_type?: string, per_page?: int, cursor?: string|null}  $payload
      */
-    public function search(array $payload): LengthAwarePaginator
+    public function search(array $payload): CursorPaginator
     {
         $authUserId = auth_user_id();
 
@@ -240,7 +241,7 @@ class PostService
             'audience' => $payload['audience'] ?? null,
             'type' => $payload['post_type'] ?? null,
             'per_page' => $payload['per_page'] ?? config('const.pagination.default_per_page'),
-            'page' => $payload['page'] ?? config('const.pagination.default_page'),
+            'cursor' => $payload['cursor'] ?? null,
         ], $authUserId);
     }
 
@@ -269,9 +270,9 @@ class PostService
 
     /**
      * Get posts of friends.
-     * @param  array{q?: string, per_page?: int, page?: int}  $payload
+     * @param  array{q?: string, per_page?: int, cursor?: string|null}  $payload
      */
-    public function getMutualFriendsPosts(array $payload): LengthAwarePaginator
+    public function getMutualFriendsPosts(array $payload): CursorPaginator
     {
         $authUserId = auth_user_id();
 
@@ -279,7 +280,7 @@ class PostService
             filters: [
                 'q' => $payload['q'] ?? null,
                 'per_page' => $payload['per_page'] ?? config('const.pagination.default_per_page'),
-                'page' => $payload['page'] ?? config('const.pagination.default_page'),
+                'cursor' => $payload['cursor'] ?? null,
             ],
             authUserId: $authUserId
         );
@@ -287,9 +288,9 @@ class PostService
 
     /**
      * Get posts of following users.
-     * @param  array{q?: string, per_page?: int, page?: int}  $payload
+     * @param  array{q?: string, per_page?: int, cursor?: string|null}  $payload
      */
-    public function getFollowingPosts(array $payload): LengthAwarePaginator
+    public function getFollowingPosts(array $payload): CursorPaginator
     {
         $authUserId = auth_user_id();
 
@@ -297,7 +298,7 @@ class PostService
             filters: [
                 'q' => $payload['q'] ?? null,
                 'per_page' => $payload['per_page'] ?? config('const.pagination.default_per_page'),
-                'page' => $payload['page'] ?? config('const.pagination.default_page'),
+                'cursor' => $payload['cursor'] ?? null,
             ],
             authUserId: $authUserId
         );

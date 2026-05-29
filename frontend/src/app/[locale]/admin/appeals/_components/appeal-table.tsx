@@ -28,6 +28,7 @@ import { TablePanel } from '@/components/data-display/table-panel'
 import { TablePagination } from '@/components/data-display/table-pagination'
 import { TableSkeleton } from '@/components/data-display/table-skeleton'
 import { EmptyState } from '@/components/common/empty-state'
+import type { OffsetPaginationMeta } from '@/types/common/pagination-meta.type'
 import { EvidenceGalleryDialog } from './evidence-gallery-dialog'
 import { AppealDetailDialog } from './appeal-detail-dialog'
 import { formatDateTime } from '@/utils/formatting/format-time.util'
@@ -254,7 +255,7 @@ export function AppealTable() {
                     pagination={
                         pagination ? (
                             <TablePagination
-                                pagination={pagination}
+                                pagination={pagination as OffsetPaginationMeta}
                                 page={page}
                                 perPage={perPage}
                                 onPageChange={setPage}

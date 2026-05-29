@@ -13,6 +13,7 @@ import { getUserStatus, getUserStatusColor } from '@/utils/admin/admin.util'
 import { formatNumber } from '@/utils/formatting/format-number.util'
 import { formatDateTime } from '@/utils/formatting/format-time.util'
 import type { AdminUser } from '@/types/dtos/admin/admin-response.dto'
+import type { OffsetPaginationMeta } from '@/types/common/pagination-meta.type'
 
 interface UserDetailDialogProps {
     open: boolean
@@ -34,7 +35,7 @@ export function UserDetailDialog({ open, user, onOpenChange }: UserDetailDialogP
 
     const profile = profileRes?.data
     const status = useMemo(() => getUserStatus(user), [user])
-    const postsTotal = postsRes?.meta?.total
+    const postsTotal = (postsRes?.meta as OffsetPaginationMeta | undefined)?.total
 
     const displayName = profile?.name || user.username
     const fallbackAvatar = displayName.charAt(0)?.toUpperCase() || 'U'

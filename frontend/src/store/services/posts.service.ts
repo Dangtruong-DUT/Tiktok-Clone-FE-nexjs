@@ -98,13 +98,16 @@ export const PostApi = createApi({
                 { type: 'Posts' as const, id: `${arg.post_uuid}-COMMENT-LIST` }
             ]
         }),
-        getListPost: builder.infiniteQuery<GetListPostRes, 'friend' | 'foryou', number>({
+        getListPost: builder.infiniteQuery<GetListPostRes, 'friend' | 'foryou', string | null>({
             query: ({ pageParam, queryArg }) => {
                 const params = new URLSearchParams({
-                    page: String(pageParam),
                     per_page: '10',
                     type: String(PosterType.POST)
                 })
+
+                if (pageParam) {
+                    params.set('cursor', pageParam)
+                }
 
                 if (queryArg === 'friend') {
                     params.set('audience', String(Audience.FRIENDS))
@@ -127,19 +130,11 @@ export const PostApi = createApi({
                 return [{ type: 'Posts' as const, id: `${arg}-LIST` }]
             },
             infiniteQueryOptions: {
-                initialPageParam: 1,
+                initialPageParam: null,
                 maxPages: 10,
                 getNextPageParam: ({ meta }) => {
-                    if (!meta) return undefined
-                    const { current_page, last_page } = meta
-                    if (current_page >= last_page) return undefined
-                    return current_page + 1
-                },
-                getPreviousPageParam: ({ meta }) => {
-                    if (!meta) return undefined
-                    const { current_page } = meta
-                    if (current_page <= 1) return undefined
-                    return current_page - 1
+                    if (!meta || meta.type !== 'cursor') return undefined
+                    return meta.next_cursor ?? undefined
                 }
             }
         }),
@@ -169,13 +164,13 @@ export const PostApi = createApi({
             infiniteQueryOptions: {
                 initialPageParam: 1,
                 getNextPageParam: ({ meta }) => {
-                    if (!meta) return undefined
+                    if (!meta || meta.type !== 'offset') return undefined
                     const { current_page, last_page } = meta
                     if (current_page >= last_page) return undefined
                     return current_page + 1
                 },
                 getPreviousPageParam: ({ meta }) => {
-                    if (!meta) return undefined
+                    if (!meta || meta.type !== 'offset') return undefined
                     const { current_page } = meta
                     if (current_page <= 1) return undefined
                     return current_page - 1
@@ -198,13 +193,13 @@ export const PostApi = createApi({
             infiniteQueryOptions: {
                 initialPageParam: 1,
                 getNextPageParam: ({ meta }) => {
-                    if (!meta) return undefined
+                    if (!meta || meta.type !== 'offset') return undefined
                     const { current_page, last_page } = meta
                     if (current_page >= last_page) return undefined
                     return current_page + 1
                 },
                 getPreviousPageParam: ({ meta }) => {
-                    if (!meta) return undefined
+                    if (!meta || meta.type !== 'offset') return undefined
                     const { current_page } = meta
                     if (current_page <= 1) return undefined
                     return current_page - 1
@@ -258,13 +253,13 @@ export const PostApi = createApi({
             infiniteQueryOptions: {
                 initialPageParam: 1,
                 getNextPageParam: ({ meta }) => {
-                    if (!meta) return undefined
+                    if (!meta || meta.type !== 'offset') return undefined
                     const { current_page, last_page } = meta
                     if (current_page >= last_page) return undefined
                     return current_page + 1
                 },
                 getPreviousPageParam: ({ meta }) => {
-                    if (!meta) return undefined
+                    if (!meta || meta.type !== 'offset') return undefined
                     const { current_page } = meta
                     if (current_page <= 1) return undefined
                     return current_page - 1
@@ -288,13 +283,13 @@ export const PostApi = createApi({
             infiniteQueryOptions: {
                 initialPageParam: 1,
                 getNextPageParam: ({ meta }) => {
-                    if (!meta) return undefined
+                    if (!meta || meta.type !== 'offset') return undefined
                     const { current_page, last_page } = meta
                     if (current_page >= last_page) return undefined
                     return current_page + 1
                 },
                 getPreviousPageParam: ({ meta }) => {
-                    if (!meta) return undefined
+                    if (!meta || meta.type !== 'offset') return undefined
                     const { current_page } = meta
                     if (current_page <= 1) return undefined
                     return current_page - 1
@@ -310,9 +305,12 @@ export const PostApi = createApi({
             invalidatesTags: (result) =>
                 result ? [{ type: 'Posts' as const, id: 'POST-OF-CONTENT-OF-CURRENT-USER-LIST' }] : []
         }),
-        getUnfollowedPosts: builder.infiniteQuery<GetListPostRes, void, number>({
-            query: ({ pageParam }) =>
-                `${BACKEND_API_ENDPOINT.POST.LIST}?page=${pageParam}&per_page=10&type=${PosterType.POST}`,
+        getUnfollowedPosts: builder.infiniteQuery<GetListPostRes, void, string | null>({
+            query: ({ pageParam }) => {
+                const params = new URLSearchParams({ per_page: '10', type: String(PosterType.POST) })
+                if (pageParam) params.set('cursor', pageParam)
+                return `${BACKEND_API_ENDPOINT.POST.LIST}?${params.toString()}`
+            },
             providesTags: (result) => {
                 if (result) {
                     return [
@@ -323,24 +321,19 @@ export const PostApi = createApi({
                 return [{ type: 'Posts' as const, id: 'POST-UNFOLLOWED-LIST' }]
             },
             infiniteQueryOptions: {
-                initialPageParam: 1,
+                initialPageParam: null,
                 getNextPageParam: ({ meta }) => {
-                    if (!meta) return undefined
-                    const { current_page, last_page } = meta
-                    if (current_page >= last_page) return undefined
-                    return current_page + 1
-                },
-                getPreviousPageParam: ({ meta }) => {
-                    if (!meta) return undefined
-                    const { current_page } = meta
-                    if (current_page <= 1) return undefined
-                    return current_page - 1
+                    if (!meta || meta.type !== 'cursor') return undefined
+                    return meta.next_cursor ?? undefined
                 }
             }
         }),
-        getFollowingPosts: builder.infiniteQuery<GetListPostRes, void, number>({
-            query: ({ pageParam }) =>
-                `${BACKEND_API_ENDPOINT.POST.FOLLOWING}?page=${pageParam}&per_page=10&type=${PosterType.POST}`,
+        getFollowingPosts: builder.infiniteQuery<GetListPostRes, void, string | null>({
+            query: ({ pageParam }) => {
+                const params = new URLSearchParams({ per_page: '10', type: String(PosterType.POST) })
+                if (pageParam) params.set('cursor', pageParam)
+                return `${BACKEND_API_ENDPOINT.POST.FOLLOWING}?${params.toString()}`
+            },
             providesTags: (result) => {
                 if (result) {
                     return [
@@ -351,24 +344,19 @@ export const PostApi = createApi({
                 return [{ type: 'Posts' as const, id: 'POST-FOLLOWING-LIST' }]
             },
             infiniteQueryOptions: {
-                initialPageParam: 1,
+                initialPageParam: null,
                 getNextPageParam: ({ meta }) => {
-                    if (!meta) return undefined
-                    const { current_page, last_page } = meta
-                    if (current_page >= last_page) return undefined
-                    return current_page + 1
-                },
-                getPreviousPageParam: ({ meta }) => {
-                    if (!meta) return undefined
-                    const { current_page } = meta
-                    if (current_page <= 1) return undefined
-                    return current_page - 1
+                    if (!meta || meta.type !== 'cursor') return undefined
+                    return meta.next_cursor ?? undefined
                 }
             }
         }),
-        getFriendPosts: builder.infiniteQuery<GetListPostRes, void, number>({
-            query: ({ pageParam }) =>
-                `${BACKEND_API_ENDPOINT.POST.FRIEND}?page=${pageParam}&per_page=10&type=${PosterType.POST}`,
+        getFriendPosts: builder.infiniteQuery<GetListPostRes, void, string | null>({
+            query: ({ pageParam }) => {
+                const params = new URLSearchParams({ per_page: '10', type: String(PosterType.POST) })
+                if (pageParam) params.set('cursor', pageParam)
+                return `${BACKEND_API_ENDPOINT.POST.FRIEND}?${params.toString()}`
+            },
             providesTags: (result) => {
                 if (result) {
                     return [
@@ -379,18 +367,10 @@ export const PostApi = createApi({
                 return [{ type: 'Posts' as const, id: 'POST-FRIEND-LIST' }]
             },
             infiniteQueryOptions: {
-                initialPageParam: 1,
+                initialPageParam: null,
                 getNextPageParam: ({ meta }) => {
-                    if (!meta) return undefined
-                    const { current_page, last_page } = meta
-                    if (current_page >= last_page) return undefined
-                    return current_page + 1
-                },
-                getPreviousPageParam: ({ meta }) => {
-                    if (!meta) return undefined
-                    const { current_page } = meta
-                    if (current_page <= 1) return undefined
-                    return current_page - 1
+                    if (!meta || meta.type !== 'cursor') return undefined
+                    return meta.next_cursor ?? undefined
                 }
             }
         }),

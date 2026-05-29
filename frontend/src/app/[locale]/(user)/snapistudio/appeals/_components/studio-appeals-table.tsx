@@ -12,6 +12,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { TableSkeleton } from '@/components/data-display/table-skeleton'
 import { TablePanel } from '@/components/data-display/table-panel'
 import { TablePagination } from '@/components/data-display/table-pagination'
+import type { OffsetPaginationMeta } from '@/types/common/pagination-meta.type'
 import { EmptyState } from '@/components/common/empty-state'
 import { useDialog } from '@/hooks/use-dialog'
 import { formatDateTime } from '@/utils/formatting/format-time.util'
@@ -144,7 +145,7 @@ export function StudioAppealsTable() {
                 pagination={
                     pagination ? (
                         <TablePagination
-                            pagination={pagination}
+                            pagination={pagination as OffsetPaginationMeta}
                             page={page}
                             perPage={perPage}
                             onPageChange={setPage}

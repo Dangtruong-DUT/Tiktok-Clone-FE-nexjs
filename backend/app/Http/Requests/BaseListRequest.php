@@ -27,6 +27,7 @@ abstract class BaseListRequest extends BaseRequest
             'q' => [self::STRING, self::MAX.':'.'100'],
             'created_date_from' => [self::DATE_FORMAT.':'.DateTimeInterface::ATOM],
             'created_date_to' => [self::DATE_FORMAT.':'.DateTimeInterface::ATOM],
+            'cursor' => [self::STRING],
             'page' => [
                 self::INTEGER,
                 self::MIN.':'.config('const.pagination.min_page', 1),

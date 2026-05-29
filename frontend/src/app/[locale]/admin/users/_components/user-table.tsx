@@ -17,6 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AdminTableToolbar } from '@/components/admin'
 import { TablePanel } from '@/components/data-display/table-panel'
 import { TablePagination } from '@/components/data-display/table-pagination'
+import type { OffsetPaginationMeta } from '@/types/common/pagination-meta.type'
 import { TableSkeleton } from '@/components/data-display/table-skeleton'
 import { TooltipIconButton } from '@/components/ui/tooltip-icon-button'
 import { EmptyState } from '@/components/common/empty-state'
@@ -141,7 +142,7 @@ export function UserTable({ onUserDeleted }: UserTableProps) {
                 pagination={
                     pagination ? (
                         <TablePagination
-                            pagination={pagination}
+                            pagination={pagination as OffsetPaginationMeta}
                             page={page}
                             perPage={perPage}
                             onPageChange={setPage}

@@ -2,10 +2,10 @@
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import AutoPagination from '@/components/data-display/auto-pagination'
-import type { PaginationMeta } from '@/types/common/pagination-meta.type'
+import type { OffsetPaginationMeta } from '@/types/common/pagination-meta.type'
 
 interface TablePaginationProps {
-    pagination: PaginationMeta
+    pagination: OffsetPaginationMeta
     page: number
     perPage: number
     onPageChange: (page: number) => void
