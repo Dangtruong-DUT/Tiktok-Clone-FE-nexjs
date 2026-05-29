@@ -8,10 +8,10 @@ import { toast } from 'sonner'
 import { useAppDispatch } from '@/store/hooks'
 import { setLoadingByKey } from '@/store/features/appSlice'
 import { trackEncoding } from '@/store/features/videoProcessingSlice'
-import { useUploadImageMutation, useCancelVideoUploadMutation } from '@/store/services/upload.service'
+import { useUploadImageMutation } from '@/store/services/upload.service'
 import { useCreatePostMutation } from '@/store/services/posts.service'
 import { useVideoUpload } from '@/hooks/video/useVideoUpload'
-import { useVideoEncoding } from '@/hooks/video/useVideoEncoding'
+import { useVideoStatus } from '@/hooks/video/useVideoStatus'
 import { convertBase64ToFile } from '@/utils/file.util'
 import { extractHashtags } from '@/utils/social-token.util'
 import { handleFormError } from '@/utils/errors/handle-form-errors.util'
@@ -19,9 +19,10 @@ import { logger } from '@/utils/logger.util'
 import { useConfirmNavigation } from '@/hooks/shared/useConfirmNavigation'
 import { useRouter } from '@/i18n/navigation'
 import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
-import { Audience, PosterType } from '@/constants/enum'
+import { Audience, MediaType, PosterType, VideoUploadStatus } from '@/constants/enum'
 import { CreatePostReqBody, CreatePostReqBodyType } from '@/types/dtos/post/post-request.dto'
 import useVideoFrames from '@/hooks/video/useVideoFrames'
+import UploadSessionApi from '@/apis/upload-session.request'
 
 const APP_LOADING_KEYS = {
     submitPost: 'upload.submit-post'
@@ -34,7 +35,6 @@ export function useUploadFormManager() {
 
     const [uploadImage, uploadImageResult] = useUploadImageMutation()
     const [createPost, createPostResult] = useCreatePostMutation()
-    const [cancelVideoUpload] = useCancelVideoUploadMutation()
 
     const [isInitialRender, setIsInitialRender] = useState(true)
     const [videoFile, setVideoFile] = useState<File | null>(null)
@@ -47,12 +47,14 @@ export function useUploadFormManager() {
     const {
         status: uploadStatus,
         uploadProgress,
-        uploadedVideo,
+        sessionUuid,
         error: uploadError,
-        retry: retryUpload
-    } = useVideoUpload(videoFile)
+        upload,
+        cancel: cancelUpload,
+        retry: retryUpload,
+    } = useVideoUpload()
 
-    const encoding = useVideoEncoding(uploadedVideo?.uuid)
+    const videoStatus = useVideoStatus(sessionUuid)
 
     const videoFrames = useVideoFrames(videoUrl, 10)
 
@@ -112,6 +114,13 @@ export function useUploadFormManager() {
         fetchFrame()
     }, [videoUrl, videoFrames])
 
+    // Trigger upload when file is selected
+    useEffect(() => {
+        if (videoFile) {
+            upload(videoFile)
+        }
+    }, [videoFile]) // eslint-disable-line react-hooks/exhaustive-deps
+
     // Show upload error toasts
     useEffect(() => {
         if (!uploadError) return
@@ -130,10 +139,11 @@ export function useUploadFormManager() {
     }, [dispatch, isSubmitLoading])
 
     const cancelUploadIfNeeded = useCallback(() => {
-        if (uploadedVideo?.uuid && !postCreatedRef.current) {
-            cancelVideoUpload(uploadedVideo.uuid)
+        if (sessionUuid && !postCreatedRef.current) {
+            UploadSessionApi.abort(sessionUuid).catch(() => {})
+            cancelUpload()
         }
-    }, [uploadedVideo, cancelVideoUpload])
+    }, [sessionUuid, cancelUpload])
 
     const leavePage = useCallback(() => {
         cancelUploadIfNeeded()
@@ -150,31 +160,35 @@ export function useUploadFormManager() {
     }, [isSubmitLoading, cancelUploadIfNeeded, form])
 
     const onSubmit = async (data: CreatePostReqBodyType) => {
-        if (isSubmitLoading || !videoFile || !thumbnailFile || !uploadedVideo) return
+        if (isSubmitLoading || !videoFile || !thumbnailFile || !sessionUuid) return
 
         try {
             const formDataThumbnail = new FormData()
             formDataThumbnail.append('file', thumbnailFile)
             const imageResponse = await uploadImage(formDataThumbnail).unwrap()
 
+            const mediaType = videoStatus.status === VideoUploadStatus.READY
+                ? MediaType.HLS_VIDEO
+                : MediaType.VIDEO
+
             const body: CreatePostReqBodyType = {
                 ...data,
                 hashtags: extractHashtags(data.content),
                 mentions: undefined,
-                medias: [{ type: encoding.mediaType, file_id: uploadedVideo.id }],
+                medias: [{ type: mediaType, session_uuid: sessionUuid }],
                 thumbnail: imageResponse.data.id
             }
 
             const res = await createPost(body).unwrap()
             postCreatedRef.current = true
 
-            if (!encoding.isTerminal) {
+            if (!videoStatus.isTerminal) {
                 dispatch(
                     trackEncoding({
-                        uploadFileUuid: uploadedVideo.uuid,
+                        sessionUuid,
                         postUuid: res.data.uuid,
-                        status: encoding.status,
-                        progress: encoding.progress,
+                        status: videoStatus.status,
+                        progress: videoStatus.encodingProgress,
                         trackedAt: new Date().toISOString()
                     })
                 )
@@ -202,10 +216,10 @@ export function useUploadFormManager() {
         videoFrames,
         uploadStatus,
         uploadProgress,
-        uploadedVideo,
+        sessionUuid,
         uploadError,
         retryUpload,
-        encoding,
+        videoStatus,
         isSubmitLoading,
         isOpenModalConfirmExit,
         stayHere,

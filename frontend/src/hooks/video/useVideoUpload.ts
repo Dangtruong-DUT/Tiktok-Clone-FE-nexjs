@@ -1,111 +1,122 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
-import envConfig from '@/config/app.config'
-import { VIDEO_UPLOAD_ERROR } from '@/constants/ui/upload'
+import { useCallback, useRef, useState } from 'react'
+import UploadSessionApi from '@/apis/upload-session.request'
+import { multipartUpload, singlePresignedUpload } from '@/lib/multipart-upload'
+import { MULTIPART_CONFIG, VIDEO_UPLOAD_ERROR } from '@/constants/ui/upload'
+import type { VideoUploadErrorCode } from '@/constants/ui/upload'
 
-export type VideoUploadStatus = 'idle' | 'uploading' | 'done' | 'error'
-
-export interface UploadedVideo {
-    id: number
-    uuid: string
-    url: string
-}
+/** Lifecycle phase of the client-side upload operation (distinct from VideoUploadStatus enum). */
+export type VideoUploadPhase = 'idle' | 'uploading' | 'done' | 'error'
 
 export interface VideoUploadState {
-    status: VideoUploadStatus
+    status: VideoUploadPhase
     uploadProgress: number
-    uploadedVideo: UploadedVideo | null
-    error: string | null
+    sessionUuid: string | null
+    error: VideoUploadErrorCode | null
+    upload: (file: File) => Promise<void>
+    cancel: () => void
     retry: () => void
 }
 
-const UPLOAD_URL = `${envConfig.NEXT_PUBLIC_API_ENDPOINT}/medias/upload-video`
+export function useVideoUpload(): VideoUploadState {
+    const [status, setStatus]           = useState<VideoUploadPhase>('idle')
+    const [uploadProgress, setProgress] = useState(0)
+    const [sessionUuid, setSessionUuid] = useState<string | null>(null)
+    const [error, setError]             = useState<VideoUploadErrorCode | null>(null)
 
-/**
- * Uploads a video file via XHR so we can expose real byte-level progress.
- * RTK Query's fetch-based mutations don't support upload progress events.
- *
- * Exposes `retry()` to re-attempt the same file after a network/server error
- * without requiring the user to re-select the file.
- */
-export function useVideoUpload(file: File | null): VideoUploadState {
-    const [status, setStatus] = useState<VideoUploadStatus>('idle')
-    const [uploadProgress, setUploadProgress] = useState(0)
-    const [uploadedVideo, setUploadedVideo] = useState<UploadedVideo | null>(null)
-    const [error, setError] = useState<string | null>(null)
-    const [retryCount, setRetryCount] = useState(0)
+    const abortControllerRef = useRef<AbortController | null>(null)
+    const lastFileRef        = useRef<File | null>(null)
 
-    const xhrRef = useRef<XMLHttpRequest | null>(null)
-
-    useEffect(() => {
-        if (!file) {
-            xhrRef.current?.abort()
-            setStatus('idle')
-            setUploadProgress(0)
-            setUploadedVideo(null)
-            setError(null)
-            return
-        }
+    const upload = useCallback(async (file: File) => {
+        lastFileRef.current        = file
+        abortControllerRef.current = new AbortController()
+        const signal               = abortControllerRef.current.signal
 
         setStatus('uploading')
-        setUploadProgress(0)
-        setUploadedVideo(null)
+        setProgress(0)
         setError(null)
+        setSessionUuid(null)
 
-        const xhr = new XMLHttpRequest()
-        xhrRef.current = xhr
+        try {
+            const sessionRes = await UploadSessionApi.init({
+                file_name: file.name,
+                file_size: file.size,
+                mime_type: file.type,
+            })
 
-        xhr.upload.onprogress = (e) => {
-            if (e.lengthComputable) {
-                setUploadProgress(Math.round((e.loaded / e.total) * 100))
-            }
-        }
+            const session = sessionRes.data
+            setSessionUuid(session.session_uuid)
 
-        xhr.onload = () => {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                try {
-                    const { data } = JSON.parse(xhr.responseText)
-                    setUploadedVideo({ id: data.id, uuid: data.uuid, url: data.url })
-                    setStatus('done')
-                    setUploadProgress(100)
-                } catch {
-                    setError(VIDEO_UPLOAD_ERROR.INVALID_RESPONSE)
-                    setStatus('error')
-                }
+            let parts: Array<{ part_number: number; etag: string }> | undefined
+
+            if (session.upload_type === 'multipart') {
+                const uploadedParts = await multipartUpload(file, session.session_uuid, {
+                    chunkSizeBytes: MULTIPART_CONFIG.chunkSizeBytes,
+                    maxConcurrency: MULTIPART_CONFIG.maxConcurrency,
+                    onProgress: setProgress,
+                    signal,
+                })
+                parts = uploadedParts.map((p) => ({
+                    part_number: p.partNumber,
+                    etag: p.etag,
+                }))
             } else {
-                setError(xhr.status === 401
-                    ? VIDEO_UPLOAD_ERROR.UNAUTHORIZED
-                    : VIDEO_UPLOAD_ERROR.SERVER_ERROR)
-                setStatus('error')
+                await singlePresignedUpload(
+                    file,
+                    session.presigned_url!,
+                    setProgress,
+                    signal
+                )
             }
-        }
 
-        xhr.onerror = () => {
-            setError(VIDEO_UPLOAD_ERROR.NETWORK_ERROR)
+            await UploadSessionApi.complete(session.session_uuid, { parts })
+
+            setStatus('done')
+            setProgress(100)
+        } catch (err) {
+            if (isAbortError(err)) {
+                setStatus('idle')
+                setProgress(0)
+                return
+            }
+
+            setError(mapError(err))
             setStatus('error')
         }
+    }, [])
 
-        xhr.onabort = () => {
-            setStatus('idle')
-            setUploadProgress(0)
+    const cancel = useCallback(() => {
+        abortControllerRef.current?.abort()
+
+        const uuid = sessionUuid
+        if (uuid) {
+            UploadSessionApi.abort(uuid).catch(() => {})
         }
 
-        const formData = new FormData()
-        formData.append('file', file)
-
-        xhr.withCredentials = true
-        xhr.open('POST', UPLOAD_URL)
-        xhr.send(formData)
-
-        return () => xhr.abort()
-    }, [file, retryCount])
+        setStatus('idle')
+        setProgress(0)
+        setSessionUuid(null)
+        setError(null)
+    }, [sessionUuid])
 
     const retry = useCallback(() => {
-        if (status === 'error') {
-            setRetryCount((c) => c + 1)
+        if (lastFileRef.current) {
+            upload(lastFileRef.current)
         }
-    }, [status])
+    }, [upload])
 
-    return { status, uploadProgress, uploadedVideo, error, retry }
+    return { status, uploadProgress, sessionUuid, error, upload, cancel, retry }
+}
+
+function isAbortError(err: unknown): boolean {
+    return err instanceof DOMException && err.name === 'AbortError'
+}
+
+function mapError(err: unknown): VideoUploadErrorCode {
+    if (err instanceof Response && err.status === 401) return VIDEO_UPLOAD_ERROR.UNAUTHORIZED
+    if (err instanceof TypeError || (err instanceof Error && err.message.includes('Network'))) {
+        return VIDEO_UPLOAD_ERROR.NETWORK_ERROR
+    }
+    return VIDEO_UPLOAD_ERROR.SERVER_ERROR
 }

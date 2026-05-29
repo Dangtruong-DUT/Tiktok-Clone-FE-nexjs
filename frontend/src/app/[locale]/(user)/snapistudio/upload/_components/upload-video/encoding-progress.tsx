@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
-import { EncodingStatus } from '@/constants/enum'
+import { VideoUploadStatus } from '@/constants/enum'
 import { CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react'
 import LoadingIcon from '@/components/lottie-icons/loading'
 import { Button } from '@/components/ui/button'
@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 interface EncodingProgressProps {
     isUploading: boolean
     uploadProgress: number
-    encodingStatus: EncodingStatus
+    videoStatus: VideoUploadStatus
     encodingProgress: number
     onRetry?: () => void
     isRetrying?: boolean
@@ -20,7 +20,7 @@ interface EncodingProgressProps {
 export function EncodingProgress({
     isUploading,
     uploadProgress,
-    encodingStatus,
+    videoStatus,
     encodingProgress,
     onRetry,
     isRetrying,
@@ -31,7 +31,7 @@ export function EncodingProgress({
     const { label, barPercent, variant } = resolveDisplay({
         isUploading,
         uploadProgress,
-        encodingStatus,
+        videoStatus,
         encodingProgress,
         t
     })
@@ -43,16 +43,16 @@ export function EncodingProgress({
                     <StatusIcon variant={variant} />
                     <span
                         className={cn('text-sm', {
-                            'text-muted-foreground': variant === 'loading',
-                            'text-green-500': variant === 'success',
-                            'text-destructive': variant === 'error'
+                            'text-muted-foreground': variant === ENCODING_PROGRESS_VARIANT.LOADING,
+                            'text-green-500': variant === ENCODING_PROGRESS_VARIANT.SUCCESS,
+                            'text-destructive': variant === ENCODING_PROGRESS_VARIANT.ERROR
                         })}
                     >
                         {label}
                     </span>
                 </div>
 
-                {variant === 'error' && onRetry && (
+                {variant === ENCODING_PROGRESS_VARIANT.ERROR && onRetry && (
                     <Button
                         size='sm'
                         variant='outline'
@@ -67,7 +67,7 @@ export function EncodingProgress({
                 )}
             </div>
 
-            {variant === 'loading' && (
+            {variant === ENCODING_PROGRESS_VARIANT.LOADING && (
                 <div className='h-1.5 w-full overflow-hidden rounded-full bg-muted'>
                     <div
                         className='h-full rounded-full bg-primary transition-all duration-300'
@@ -81,18 +81,23 @@ export function EncodingProgress({
 
 // ---------------------------------------------------------------------------
 
-type Variant = 'loading' | 'success' | 'error'
+const ENCODING_PROGRESS_VARIANT = {
+    LOADING: 'loading',
+    SUCCESS: 'success',
+    ERROR:   'error',
+} as const
+type Variant = (typeof ENCODING_PROGRESS_VARIANT)[keyof typeof ENCODING_PROGRESS_VARIANT]
 
 function resolveDisplay({
     isUploading,
     uploadProgress,
-    encodingStatus,
+    videoStatus,
     encodingProgress,
     t
 }: {
     isUploading: boolean
     uploadProgress: number
-    encodingStatus: EncodingStatus
+    videoStatus: VideoUploadStatus
     encodingProgress: number
     t: ReturnType<typeof useTranslations<'SnapiStudio.upload.encoding'>>
 }): { label: string; barPercent: number; variant: Variant } {
@@ -100,36 +105,44 @@ function resolveDisplay({
         return {
             label: t('uploading', { progress: uploadProgress }),
             barPercent: uploadProgress,
-            variant: 'loading'
+            variant: ENCODING_PROGRESS_VARIANT.LOADING
         }
     }
 
-    switch (encodingStatus) {
-        case EncodingStatus.PENDING:
+    switch (videoStatus) {
+        case VideoUploadStatus.PENDING:
+        case VideoUploadStatus.UPLOADED:
             return { label: t('pending'), barPercent: 2, variant: 'loading' }
 
-        case EncodingStatus.PROCESSING:
+        case VideoUploadStatus.ANALYZING:
+            return { label: t('analyzing'), barPercent: 5, variant: 'loading' }
+
+        case VideoUploadStatus.TRANSCODING:
             return {
                 label: t('processing', { progress: encodingProgress }),
                 barPercent: encodingProgress,
-                variant: 'loading'
+                variant: ENCODING_PROGRESS_VARIANT.LOADING
             }
 
-        case EncodingStatus.READY:
-            return { label: t('ready'), barPercent: 100, variant: 'success' }
+        case VideoUploadStatus.READY:
+            return { label: t('ready'), barPercent: 100, variant: ENCODING_PROGRESS_VARIANT.SUCCESS }
 
-        case EncodingStatus.FAILED:
-            return { label: t('failed'), barPercent: 100, variant: 'error' }
+        case VideoUploadStatus.FAILED:
+        case VideoUploadStatus.CANCELED:
+            return { label: t('failed'), barPercent: 100, variant: ENCODING_PROGRESS_VARIANT.ERROR }
+
+        default:
+            return { label: t('pending'), barPercent: 2, variant: 'loading' }
     }
 }
 
 function StatusIcon({ variant }: { variant: Variant }) {
     switch (variant) {
-        case 'loading':
+        case ENCODING_PROGRESS_VARIANT.LOADING:
             return <LoadingIcon loop className='size-4 shrink-0' />
-        case 'success':
+        case ENCODING_PROGRESS_VARIANT.SUCCESS:
             return <CheckCircle2 className='h-3.5 w-3.5 text-green-500 shrink-0' />
-        case 'error':
+        case ENCODING_PROGRESS_VARIANT.ERROR:
             return <AlertCircle className='h-3.5 w-3.5 text-destructive shrink-0' />
     }
 }

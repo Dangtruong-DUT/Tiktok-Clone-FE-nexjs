@@ -1,4 +1,5 @@
 import baseQueryWithReauth from '@/store/services/client'
+import { BACKEND_API_ENDPOINT } from '@/constants/api/endpoints'
 import { SearchPostRes } from '@/types/dtos/post/post-response.dto'
 import { GetListUserResType } from '@/types/dtos/user/user-response.dto'
 import { GetListHashtagResType } from '@/types/dtos/hashtag/hashtag-response.dto'
@@ -15,7 +16,7 @@ export const SearchApi = createApi({
     endpoints: (builder) => ({
         searchPosts: builder.infiniteQuery<SearchPostRes, { q: string }, number>({
             query: ({ pageParam, queryArg }) =>
-                `/search/posts?page=${pageParam}&per_page=10&type=${PosterType.POST}&q=${queryArg.q}`,
+                `${BACKEND_API_ENDPOINT.SEARCH.POSTS}?page=${pageParam}&per_page=10&type=${PosterType.POST}&q=${queryArg.q}`,
             infiniteQueryOptions: {
                 initialPageParam: 1,
                 getNextPageParam: ({ meta }) => {
@@ -34,7 +35,8 @@ export const SearchApi = createApi({
         }),
 
         searchUsers: builder.infiniteQuery<GetListUserResType, { q: string }, number>({
-            query: ({ pageParam, queryArg }) => `/search/users?page=${pageParam}&per_page=10&q=${queryArg.q}`,
+            query: ({ pageParam, queryArg }) =>
+                `${BACKEND_API_ENDPOINT.SEARCH.USERS}?page=${pageParam}&per_page=10&q=${queryArg.q}`,
             infiniteQueryOptions: {
                 initialPageParam: 1,
                 getNextPageParam: ({ meta }) => {
@@ -52,10 +54,11 @@ export const SearchApi = createApi({
             }
         }),
         searchUsersGet: builder.query<GetListUserResType, { q: string }>({
-            query: ({ q }) => `/search/users?q=${q}`
+            query: ({ q }) => `${BACKEND_API_ENDPOINT.SEARCH.USERS}?q=${q}`
         }),
         searchHashtags: builder.infiniteQuery<GetListHashtagResType, { q: string }, number>({
-            query: ({ pageParam, queryArg }) => `/search/hashtags?page=${pageParam}&per_page=10&q=${queryArg.q}`,
+            query: ({ pageParam, queryArg }) =>
+                `${BACKEND_API_ENDPOINT.SEARCH.HASHTAGS}?page=${pageParam}&per_page=10&q=${queryArg.q}`,
             infiniteQueryOptions: {
                 initialPageParam: 1,
                 getNextPageParam: ({ meta }) => {
@@ -73,7 +76,7 @@ export const SearchApi = createApi({
             }
         }),
         searchHashtagsGet: builder.query<GetListHashtagResType, { q: string }>({
-            query: ({ q }) => `/search/hashtags?q=${q}`
+            query: ({ q }) => `${BACKEND_API_ENDPOINT.SEARCH.HASHTAGS}?q=${q}`
         })
     })
 })

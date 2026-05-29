@@ -3,6 +3,7 @@ import z from 'zod'
 
 export const MediaSchema = z.object({
     file_id: z.number().int().positive().optional(),
+    session_uuid: z.string().uuid().optional(),
     url: z.string().optional(),
     type: z.union([z.literal(MediaType.IMAGE), z.literal(MediaType.VIDEO), z.literal(MediaType.HLS_VIDEO)])
 })

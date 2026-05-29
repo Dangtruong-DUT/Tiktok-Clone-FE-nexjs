@@ -36,57 +36,37 @@ export const UserApi = createApi({
     endpoints: (builder) => ({
         forgotPassword: builder.mutation<{ message: string }, ForgotPasswordReqBodyType>({
             query: (data) => ({
-                url: BACKEND_API_ENDPOINT.API_FORGOT_PASSWORD,
+                url: BACKEND_API_ENDPOINT.AUTH.FORGOT_PASSWORD,
                 method: 'POST',
                 body: data
             })
         }),
         verifyForgotPassword: builder.mutation<{ message: string }, verifyForgotPasswordReqBodyType>({
             query: (data) => ({
-                url: BACKEND_API_ENDPOINT.API_VERIFY_FORGOT_PASSWORD,
+                url: BACKEND_API_ENDPOINT.AUTH.VERIFY_FORGOT_PASSWORD,
                 method: 'POST',
                 body: data
             })
         }),
         resetPassword: builder.mutation<{ message: string }, ResetPasswordReqBodyType>({
             query: (data) => ({
-                url: BACKEND_API_ENDPOINT.API_RESET_PASSWORD,
+                url: BACKEND_API_ENDPOINT.AUTH.RESET_PASSWORD,
                 method: 'POST',
                 body: data
             })
         }),
         getMe: builder.query<GetUserProfileResType, void>({
-            query: () => ({
-                url: BACKEND_API_ENDPOINT.API_GET_ME,
-                method: 'GET'
-            }),
+            query: () => ({ url: BACKEND_API_ENDPOINT.USER.ME, method: 'GET' }),
             providesTags: (result) => (result ? [{ type: 'Users', id: result.data.uuid }] : [])
         }),
         getUserByUsername: builder.query<GetUserProfileResType, string>({
-            query: (username) => ({
-                url: `/users/${username}`,
-                method: 'GET'
-            }),
+            query: (username) => ({ url: BACKEND_API_ENDPOINT.USER.BY_USERNAME(username), method: 'GET' }),
             providesTags: (result) => (result ? [{ type: 'Users', id: result.data.uuid }] : [])
         }),
         getFollowersOfUser: builder.query<GetListUserResType, GetUserListPagingQueryType>({
             query: ({ user_uuid, page = 1, per_page = 10, q }) => {
-                const query = queryString.stringify(
-                    {
-                        page,
-                        per_page,
-                        q
-                    },
-                    {
-                        skipNull: true,
-                        skipEmptyString: true
-                    }
-                )
-
-                return {
-                    url: `/users/${user_uuid}/followers${query ? `?${query}` : ''}`,
-                    method: 'GET'
-                }
+                const qs = queryString.stringify({ page, per_page, q }, { skipNull: true, skipEmptyString: true })
+                return `${BACKEND_API_ENDPOINT.USER.FOLLOWERS(user_uuid)}${qs ? `?${qs}` : ''}`
             },
             providesTags: (result) =>
                 result
@@ -98,22 +78,8 @@ export const UserApi = createApi({
         }),
         getFollowingOfUser: builder.query<GetListUserResType, GetUserListPagingQueryType>({
             query: ({ user_uuid, page = 1, per_page = 10, q }) => {
-                const query = queryString.stringify(
-                    {
-                        page,
-                        per_page,
-                        q
-                    },
-                    {
-                        skipNull: true,
-                        skipEmptyString: true
-                    }
-                )
-
-                return {
-                    url: `/users/${user_uuid}/following${query ? `?${query}` : ''}`,
-                    method: 'GET'
-                }
+                const qs = queryString.stringify({ page, per_page, q }, { skipNull: true, skipEmptyString: true })
+                return `${BACKEND_API_ENDPOINT.USER.FOLLOWING(user_uuid)}${qs ? `?${qs}` : ''}`
             },
             providesTags: (result) =>
                 result
@@ -125,22 +91,8 @@ export const UserApi = createApi({
         }),
         getFriendsOfUser: builder.query<GetListUserResType, GetUserListPagingQueryType>({
             query: ({ user_uuid, page = 1, per_page = 10, q }) => {
-                const query = queryString.stringify(
-                    {
-                        page,
-                        per_page,
-                        q
-                    },
-                    {
-                        skipNull: true,
-                        skipEmptyString: true
-                    }
-                )
-
-                return {
-                    url: `/users/${user_uuid}/friends${query ? `?${query}` : ''}`,
-                    method: 'GET'
-                }
+                const qs = queryString.stringify({ page, per_page, q }, { skipNull: true, skipEmptyString: true })
+                return `${BACKEND_API_ENDPOINT.USER.FRIENDS(user_uuid)}${qs ? `?${qs}` : ''}`
             },
             providesTags: (result) =>
                 result
@@ -152,22 +104,11 @@ export const UserApi = createApi({
         }),
         getSuggestedUsers: builder.query<GetListUserResType, GetSuggestedUsersQueryType | void>({
             query: (params) => {
-                const query = queryString.stringify(
-                    {
-                        page: params?.page ?? 1,
-                        per_page: params?.per_page ?? 10,
-                        q: params?.q
-                    },
-                    {
-                        skipNull: true,
-                        skipEmptyString: true
-                    }
+                const qs = queryString.stringify(
+                    { page: params?.page ?? 1, per_page: params?.per_page ?? 10, q: params?.q },
+                    { skipNull: true, skipEmptyString: true }
                 )
-
-                return {
-                    url: `/users/suggested${query ? `?${query}` : ''}`,
-                    method: 'GET'
-                }
+                return `${BACKEND_API_ENDPOINT.USER.SUGGESTED}${qs ? `?${qs}` : ''}`
             },
             providesTags: (result) =>
                 result
@@ -179,7 +120,7 @@ export const UserApi = createApi({
         }),
         followUser: builder.mutation<{ message: string }, FollowUserReqBodyType>({
             query: (body) => ({
-                url: `/users/${body.user_uuid}/follow`,
+                url: BACKEND_API_ENDPOINT.USER.FOLLOW(body.user_uuid),
                 method: 'POST'
             }),
             invalidatesTags: (result, error, arg) => [
@@ -189,7 +130,7 @@ export const UserApi = createApi({
         }),
         unfollowUser: builder.mutation<{ message: string }, string>({
             query: (user_uuid) => ({
-                url: `/users/${user_uuid}/follow`,
+                url: BACKEND_API_ENDPOINT.USER.FOLLOW(user_uuid),
                 method: 'DELETE'
             }),
             invalidatesTags: (result, error, user_uuid) => [
@@ -199,20 +140,20 @@ export const UserApi = createApi({
         }),
         changePassword: builder.mutation<{ message: string }, ChangePasswordBodyType>({
             query: (data) => ({
-                url: `/users/change-password`,
+                url: BACKEND_API_ENDPOINT.USER.CHANGE_PASSWORD,
                 method: 'PUT',
                 body: data
             })
         }),
         resendVerifyEmail: builder.mutation<{ message: string }, void>({
             query: () => ({
-                url: BACKEND_API_ENDPOINT.API_RESEND_VERIFY_EMAIL,
+                url: BACKEND_API_ENDPOINT.AUTH.RESEND_VERIFY_EMAIL,
                 method: 'POST'
             })
         }),
         updateMe: builder.mutation<UpdateUserResType, UpdateUserBodyType>({
             query: (data) => ({
-                url: `/users/me`,
+                url: BACKEND_API_ENDPOINT.USER.ME,
                 method: 'PATCH',
                 body: data
             }),
@@ -220,20 +161,13 @@ export const UserApi = createApi({
         }),
         getUserIndicator: builder.query<UserIndicatorsResponse, GetUserIndicatorQueryParamsType | void>({
             query: (params) => {
-                const query = params
-                    ? `?${queryString.stringify({
-                          fromDate: params.fromDate,
-                          toDate: params.toDate
-                      })}`
+                const qs = params
+                    ? `?${queryString.stringify({ fromDate: params.fromDate, toDate: params.toDate })}`
                     : ''
-
-                return {
-                    url: `/users/me/indicators${query}`,
-                    method: 'GET'
-                }
+                return `${BACKEND_API_ENDPOINT.USER.INDICATORS}${qs}`
             },
-            providesTags: (result, error, arg) => {
-                return result
+            providesTags: (result, error, arg) =>
+                result
                     ? [
                           {
                               type: 'UserIndicators',
@@ -241,18 +175,14 @@ export const UserApi = createApi({
                           }
                       ]
                     : []
-            }
         }),
         getUserSettings: builder.query<GetUserSettingsResType, void>({
-            query: () => ({
-                url: BACKEND_API_ENDPOINT.API_GET_USER_SETTINGS,
-                method: 'GET'
-            }),
+            query: () => ({ url: BACKEND_API_ENDPOINT.USER.SETTINGS, method: 'GET' }),
             providesTags: ['UserSettings']
         }),
         updateUserSettings: builder.mutation<UpdateUserSettingsResType, UpdateUserSettingsBodyType>({
             query: (data) => ({
-                url: BACKEND_API_ENDPOINT.API_UPDATE_USER_SETTINGS,
+                url: BACKEND_API_ENDPOINT.USER.SETTINGS,
                 method: 'PATCH',
                 body: data
             }),

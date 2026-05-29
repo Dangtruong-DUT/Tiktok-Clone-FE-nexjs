@@ -6,9 +6,7 @@ import { cn } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useTranslations } from 'next-intl'
 import { EncodingProgress } from '@/app/[locale]/(user)/snapistudio/upload/_components/upload-video/encoding-progress'
-import type { VideoEncodingState } from '@/hooks/video/useVideoEncoding'
-import { useRetryVideoEncodingMutation } from '@/store/services/upload.service'
-import { toast } from 'sonner'
+import type { VideoStatusState } from '@/hooks/video/useVideoStatus'
 
 interface FileInfoProps {
     file: File | null
@@ -17,8 +15,7 @@ interface FileInfoProps {
     uploadProgress: number
     uploadError?: string | null
     onRetryUpload?: () => void
-    encoding: VideoEncodingState
-    uploadedVideoUuid?: string | null
+    videoStatus: VideoStatusState
     className?: string
 }
 
@@ -29,12 +26,10 @@ export default function FileInfo({
     uploadProgress,
     uploadError,
     onRetryUpload,
-    encoding,
-    uploadedVideoUuid,
+    videoStatus,
     className,
 }: FileInfoProps) {
     const t = useTranslations('SnapiStudio.upload.fileInfo')
-    const [retryEncoding, { isLoading: isRetrying }] = useRetryVideoEncodingMutation()
 
     if (!file) return null
 
@@ -43,16 +38,6 @@ export default function FileInfo({
     const handleReplace = (e: React.MouseEvent) => {
         e.preventDefault()
         onReplaceFile()
-    }
-
-    const handleRetry = async () => {
-        if (!uploadedVideoUuid) return
-        try {
-            await retryEncoding(uploadedVideoUuid).unwrap()
-            encoding.restartPolling()
-        } catch {
-            toast.error('Không thể gửi lại yêu cầu xử lý video')
-        }
     }
 
     return (
@@ -79,7 +64,7 @@ export default function FileInfo({
                     variant='secondary'
                     type='button'
                     onClick={handleReplace}
-                    disabled={isUploading || !encoding.isTerminal}
+                    disabled={isUploading || !videoStatus.isTerminal}
                     className='cursor-pointer'
                 >
                     <MdOutlinePublishedWithChanges />
@@ -110,10 +95,9 @@ export default function FileInfo({
                 <EncodingProgress
                     isUploading={isUploading}
                     uploadProgress={uploadProgress}
-                    encodingStatus={encoding.status}
-                    encodingProgress={encoding.progress}
-                    onRetry={handleRetry}
-                    isRetrying={isRetrying}
+                    videoStatus={videoStatus.status}
+                    encodingProgress={videoStatus.encodingProgress}
+                    onRetry={onRetryUpload}
                 />
             )}
         </div>

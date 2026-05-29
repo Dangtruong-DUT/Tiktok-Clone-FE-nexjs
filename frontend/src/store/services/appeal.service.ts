@@ -1,5 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import baseQueryWithReauth from '@/store/services/client'
+import { BACKEND_API_ENDPOINT } from '@/constants/api/endpoints'
 import type { GetMyAppealsParams } from '@/types/dtos/appeal/appeal-request.dto'
 import type {
     CreateAppealResponse,
@@ -9,14 +10,6 @@ import type {
 } from '@/types/dtos/appeal/appeal-response.dto'
 import { toQueryParams } from '@/utils/common/query-params.util'
 
-/**
- * Appeal API service — handles authenticated appeal flows only.
- *
- * - getMyAppeals: List user's appeals.
- * - getAppeal: Fetch appeal by UUID.
- * - createAppeal: Create a new appeal (auth required).
- * - updateAppeal: Update an existing appeal (auth required).
- */
 export const AppealApi = createApi({
     reducerPath: 'AppealApi',
     baseQuery: baseQueryWithReauth,
@@ -27,29 +20,27 @@ export const AppealApi = createApi({
             { resourceType: string; resourceUuid?: string | null }
         >({
             query: ({ resourceType, resourceUuid }) => ({
-                url: '/appeals/resource-preview',
+                url: BACKEND_API_ENDPOINT.APPEAL.RESOURCE_PREVIEW,
                 params: { resource_type: resourceType, resource_uuid: resourceUuid ?? undefined }
             })
         }),
 
         getMyAppeals: builder.query<GetMyAppealsResponse, GetMyAppealsParams>({
             query: (params) => ({
-                url: '/appeals',
+                url: BACKEND_API_ENDPOINT.APPEAL.LIST,
                 params: toQueryParams(params)
             }),
             providesTags: [{ type: 'Appeals', id: 'LIST' }]
         }),
 
         getAppeal: builder.query<GetAppealResponse, { uuid: string }>({
-            query: ({ uuid }) => ({
-                url: `/appeals/${uuid}`
-            }),
+            query: ({ uuid }) => ({ url: BACKEND_API_ENDPOINT.APPEAL.DETAIL(uuid) }),
             providesTags: (_result, _error, { uuid }) => [{ type: 'Appeals', id: uuid }]
         }),
 
         createAppeal: builder.mutation<CreateAppealResponse, FormData>({
             query: (formData) => ({
-                url: '/appeals',
+                url: BACKEND_API_ENDPOINT.APPEAL.LIST,
                 method: 'POST',
                 body: formData
             }),
@@ -58,7 +49,7 @@ export const AppealApi = createApi({
 
         updateAppeal: builder.mutation<CreateAppealResponse, { uuid: string; data: FormData }>({
             query: ({ uuid, data }) => ({
-                url: `/appeals/${uuid}`,
+                url: BACKEND_API_ENDPOINT.APPEAL.DETAIL(uuid),
                 method: 'POST',
                 body: data
             }),

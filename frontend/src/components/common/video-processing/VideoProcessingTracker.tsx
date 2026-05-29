@@ -18,7 +18,7 @@ export function VideoProcessingTracker() {
     return (
         <>
             {pending.map((enc) => (
-                <VideoEncodingPoller key={enc.uploadFileUuid} encoding={enc} />
+                <VideoEncodingPoller key={enc.sessionUuid} encoding={enc} />
             ))}
         </>
     )

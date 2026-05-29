@@ -42,7 +42,7 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
         const release = await mutex.acquire()
         try {
             const refreshResult = await BffBaseQuery(
-                { url: NEXT_API_ENDPOINT.API_REFRESH_TOKEN, method: 'POST' },
+                { url: NEXT_API_ENDPOINT.AUTH.REFRESH_TOKEN, method: 'POST' },
                 api,
                 extraOptions
             )
@@ -60,7 +60,7 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
     }
 
     if (result.error?.status === HTTP_STATUS.UNAUTHORIZED) {
-        await BffBaseQuery({ url: NEXT_API_ENDPOINT.API_LOGOUT, method: 'POST' }, api, extraOptions)
+        await BffBaseQuery({ url: NEXT_API_ENDPOINT.AUTH.LOGOUT, method: 'POST' }, api, extraOptions)
         api.dispatch(setLoggedOutAction())
     }
 

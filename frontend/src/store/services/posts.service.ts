@@ -1,4 +1,5 @@
 import { Audience, PosterType } from '@/constants/enum'
+import { BACKEND_API_ENDPOINT } from '@/constants/api/endpoints'
 import baseQueryWithReauth from '@/store/services/client'
 import { GetListCommentRes, GetListPostRes, GetPostDetailRes } from '@/types/dtos/post/post-response.dto'
 import { ApiSuccessResponseWithData } from '@/types/common/http-response.type'
@@ -30,45 +31,42 @@ export const PostApi = createApi({
     endpoints: (builder) => ({
         likePost: builder.mutation<{ message: string }, string>({
             query: (post_uuid) => ({
-                url: `/posts/${post_uuid}/like`,
+                url: BACKEND_API_ENDPOINT.POST.LIKE(post_uuid),
                 method: 'POST'
             }),
             invalidatesTags: (result, error, arg) => [{ type: 'Posts' as const, id: arg }]
         }),
         unlikePost: builder.mutation<{ message: string }, string>({
             query: (post_uuid) => ({
-                url: `/posts/${post_uuid}/like`,
+                url: BACKEND_API_ENDPOINT.POST.LIKE(post_uuid),
                 method: 'DELETE'
             }),
             invalidatesTags: (result, error, arg) => [{ type: 'Posts' as const, id: arg }]
         }),
         bookmarkPost: builder.mutation<{ message: string }, string>({
             query: (post_uuid) => ({
-                url: `/posts/${post_uuid}/bookmark`,
+                url: BACKEND_API_ENDPOINT.POST.BOOKMARK(post_uuid),
                 method: 'POST'
             }),
             invalidatesTags: (result, error, arg) => [{ type: 'Posts' as const, id: arg }]
         }),
         unBookmarkPost: builder.mutation<{ message: string }, string>({
             query: (post_uuid) => ({
-                url: `/posts/${post_uuid}/bookmark`,
+                url: BACKEND_API_ENDPOINT.POST.BOOKMARK(post_uuid),
                 method: 'DELETE'
             }),
             invalidatesTags: (result, error, arg) => [{ type: 'Posts' as const, id: arg }]
         }),
         getComments: builder.infiniteQuery<GetListCommentRes, string, number>({
             query: ({ pageParam, queryArg }) =>
-                `/posts/${queryArg}/children?page=${pageParam}&per_page=10&type=${PosterType.COMMENT}`,
+                `${BACKEND_API_ENDPOINT.POST.CHILDREN(queryArg)}?page=${pageParam}&per_page=10&type=${PosterType.COMMENT}`,
             providesTags: (result, error, parentId) => {
                 void error
                 if (result) {
-                    const final = [
-                        ...result.pages.flatMap((page) => {
-                            return page.data.flatMap((post) => getPostEntityTags(post))
-                        }),
+                    return [
+                        ...result.pages.flatMap((page) => page.data.flatMap((post) => getPostEntityTags(post))),
                         { type: 'Posts' as const, id: `${parentId}-COMMENT-LIST` }
                     ]
-                    return final
                 }
                 return [{ type: 'Posts' as const, id: `${parentId}-COMMENT-LIST` }]
             },
@@ -91,7 +89,7 @@ export const PostApi = createApi({
         }),
         createComment: builder.mutation<{ message: string }, CreateCommentsReqBodyType & { post_uuid: string }>({
             query: (payload) => ({
-                url: `/posts`,
+                url: BACKEND_API_ENDPOINT.POST.LIST,
                 method: 'POST',
                 body: _.omit(payload, 'post_uuid')
             }),
@@ -116,18 +114,15 @@ export const PostApi = createApi({
                     params.set('audience', String(Audience.PUBLIC))
                 }
 
-                return `/posts?${params.toString()}`
+                return `${BACKEND_API_ENDPOINT.POST.LIST}?${params.toString()}`
             },
             providesTags: (result, error, arg) => {
                 void error
                 if (result) {
-                    const final = [
-                        ...result.pages.flatMap((page) => {
-                            return page.data.flatMap((post) => getPostEntityTags(post))
-                        }),
+                    return [
+                        ...result.pages.flatMap((page) => page.data.flatMap((post) => getPostEntityTags(post))),
                         { type: 'Posts' as const, id: `${arg}-LIST` }
                     ]
-                    return final
                 }
                 return [{ type: 'Posts' as const, id: `${arg}-LIST` }]
             },
@@ -149,7 +144,7 @@ export const PostApi = createApi({
             }
         }),
         getPostDetail: builder.query<GetPostDetailRes, string>({
-            query: (id) => `/posts/${id}`,
+            query: (id) => BACKEND_API_ENDPOINT.POST.DETAIL(id),
             providesTags: (result, error, id) => {
                 void error
                 if (result?.data) {
@@ -161,16 +156,13 @@ export const PostApi = createApi({
 
         getRelatedPosts: builder.infiniteQuery<GetListPostRes, string, number>({
             query: ({ pageParam, queryArg }) =>
-                `/posts/${queryArg}/related?page=${pageParam}&per_page=10&type=${PosterType.POST}`,
+                `${BACKEND_API_ENDPOINT.POST.RELATED(queryArg)}?page=${pageParam}&per_page=10&type=${PosterType.POST}`,
             providesTags: (result, error, arg) => {
                 if (result) {
-                    const final = [
-                        ...result.pages.flatMap((page) => {
-                            return page.data.flatMap((post) => getPostEntityTags(post))
-                        }),
+                    return [
+                        ...result.pages.flatMap((page) => page.data.flatMap((post) => getPostEntityTags(post))),
                         { type: 'Posts' as const, id: `RELATED-${arg}-LIST` }
                     ]
-                    return final
                 }
                 return [{ type: 'Posts' as const, id: `RELATED-${arg}-LIST` }]
             },
@@ -193,16 +185,13 @@ export const PostApi = createApi({
 
         getPostOfUser: builder.infiniteQuery<GetListPostRes, string, number>({
             query: ({ pageParam, queryArg }) =>
-                `/users/${queryArg}/posts?page=${pageParam}&per_page=10&type=${PosterType.POST}`,
+                `${BACKEND_API_ENDPOINT.USER.POSTS(queryArg)}?page=${pageParam}&per_page=10&type=${PosterType.POST}`,
             providesTags: (result, error, arg) => {
                 if (result) {
-                    const final = [
-                        ...result.pages.flatMap((page) => {
-                            return page.data.flatMap((post) => getPostEntityTags(post))
-                        }),
+                    return [
+                        ...result.pages.flatMap((page) => page.data.flatMap((post) => getPostEntityTags(post))),
                         { type: 'Posts' as const, id: `POST-OF-${arg}-LIST` }
                     ]
-                    return final
                 }
                 return [{ type: 'Posts' as const, id: `POST-OF-${arg}-LIST` }]
             },
@@ -241,41 +230,28 @@ export const PostApi = createApi({
                     params.set('audience', String(audience))
                 }
 
-                return `/users/${userId}/posts?${params.toString()}`
+                return `${BACKEND_API_ENDPOINT.USER.POSTS(userId)}?${params.toString()}`
             },
             providesTags: (result) => {
                 if (result) {
-                    const final = [
+                    return [
                         ...result.data.flatMap((post) => getPostEntityTags(post)),
-                        {
-                            type: 'Posts' as const,
-                            id: `POST-OF-CONTENT-OF-CURRENT-USER-LIST`
-                        }
+                        { type: 'Posts' as const, id: 'POST-OF-CONTENT-OF-CURRENT-USER-LIST' }
                     ]
-
-                    return final
                 }
-                return [
-                    {
-                        type: 'Posts' as const,
-                        id: `POST-OF-CONTENT-OF-CURRENT-USER-LIST`
-                    }
-                ]
+                return [{ type: 'Posts' as const, id: 'POST-OF-CONTENT-OF-CURRENT-USER-LIST' }]
             }
         }),
         getBookmarkedPostsOfUser: builder.infiniteQuery<GetListPostRes, string, number>({
             query: ({ pageParam, queryArg }) =>
-                `/users/${queryArg}/bookmark?page=${pageParam}&per_page=10&type=${PosterType.POST}`,
+                `${BACKEND_API_ENDPOINT.USER.BOOKMARKS(queryArg)}?page=${pageParam}&per_page=10&type=${PosterType.POST}`,
             providesTags: (result, error, arg) => {
                 void error
                 if (result) {
-                    const final = [
-                        ...result.pages.flatMap((page) => {
-                            return page.data.flatMap((post) => getPostEntityTags(post))
-                        }),
+                    return [
+                        ...result.pages.flatMap((page) => page.data.flatMap((post) => getPostEntityTags(post))),
                         { type: 'Posts' as const, id: `POST-BOOKMARKS-OF-${arg}-LIST` }
                     ]
-                    return final
                 }
                 return [{ type: 'Posts' as const, id: `POST-BOOKMARKS-OF-${arg}-LIST` }]
             },
@@ -298,17 +274,14 @@ export const PostApi = createApi({
 
         getLikedPostsOfUser: builder.infiniteQuery<GetListPostRes, string, number>({
             query: ({ pageParam, queryArg }) =>
-                `/users/${queryArg}/like?page=${pageParam}&per_page=10&type=${PosterType.POST}`,
+                `${BACKEND_API_ENDPOINT.USER.LIKES(queryArg)}?page=${pageParam}&per_page=10&type=${PosterType.POST}`,
             providesTags: (result, error, arg) => {
                 void error
                 if (result) {
-                    const final = [
-                        ...result.pages.flatMap((page) => {
-                            return page.data.flatMap((post) => getPostEntityTags(post))
-                        }),
+                    return [
+                        ...result.pages.flatMap((page) => page.data.flatMap((post) => getPostEntityTags(post))),
                         { type: 'Posts' as const, id: `POST-LIKED-OF-${arg}-LIST` }
                     ]
-                    return final
                 }
                 return [{ type: 'Posts' as const, id: `POST-LIKED-OF-${arg}-LIST` }]
             },
@@ -330,33 +303,24 @@ export const PostApi = createApi({
         }),
         createPost: builder.mutation<ApiSuccessResponseWithData<TikTokPostType>, CreatePostReqBodyType>({
             query: (body) => ({
-                url: '/posts',
+                url: BACKEND_API_ENDPOINT.POST.LIST,
                 method: 'POST',
                 body
             }),
             invalidatesTags: (result) =>
-                result
-                    ? [
-                          {
-                              type: 'Posts' as const,
-                              id: `POST-OF-CONTENT-OF-CURRENT-USER-LIST`
-                          }
-                      ]
-                    : []
+                result ? [{ type: 'Posts' as const, id: 'POST-OF-CONTENT-OF-CURRENT-USER-LIST' }] : []
         }),
         getUnfollowedPosts: builder.infiniteQuery<GetListPostRes, void, number>({
-            query: ({ pageParam }) => `/posts?page=${pageParam}&per_page=10&type=${PosterType.POST}`,
+            query: ({ pageParam }) =>
+                `${BACKEND_API_ENDPOINT.POST.LIST}?page=${pageParam}&per_page=10&type=${PosterType.POST}`,
             providesTags: (result) => {
                 if (result) {
-                    const final = [
-                        ...result.pages.flatMap((page) => {
-                            return page.data.flatMap((post) => getPostEntityTags(post))
-                        }),
-                        { type: 'Posts' as const, id: `POST-UNFOLLOWED-LIST` }
+                    return [
+                        ...result.pages.flatMap((page) => page.data.flatMap((post) => getPostEntityTags(post))),
+                        { type: 'Posts' as const, id: 'POST-UNFOLLOWED-LIST' }
                     ]
-                    return final
                 }
-                return [{ type: 'Posts' as const, id: `POST-UNFOLLOWED-LIST` }]
+                return [{ type: 'Posts' as const, id: 'POST-UNFOLLOWED-LIST' }]
             },
             infiniteQueryOptions: {
                 initialPageParam: 1,
@@ -375,18 +339,16 @@ export const PostApi = createApi({
             }
         }),
         getFollowingPosts: builder.infiniteQuery<GetListPostRes, void, number>({
-            query: ({ pageParam }) => `/posts/following?page=${pageParam}&per_page=10&type=${PosterType.POST}`,
+            query: ({ pageParam }) =>
+                `${BACKEND_API_ENDPOINT.POST.FOLLOWING}?page=${pageParam}&per_page=10&type=${PosterType.POST}`,
             providesTags: (result) => {
                 if (result) {
-                    const final = [
-                        ...result.pages.flatMap((page) => {
-                            return page.data.flatMap((post) => getPostEntityTags(post))
-                        }),
-                        { type: 'Posts' as const, id: `POST-FOLLOWING-LIST` }
+                    return [
+                        ...result.pages.flatMap((page) => page.data.flatMap((post) => getPostEntityTags(post))),
+                        { type: 'Posts' as const, id: 'POST-FOLLOWING-LIST' }
                     ]
-                    return final
                 }
-                return [{ type: 'Posts' as const, id: `POST-FOLLOWING-LIST` }]
+                return [{ type: 'Posts' as const, id: 'POST-FOLLOWING-LIST' }]
             },
             infiniteQueryOptions: {
                 initialPageParam: 1,
@@ -405,18 +367,16 @@ export const PostApi = createApi({
             }
         }),
         getFriendPosts: builder.infiniteQuery<GetListPostRes, void, number>({
-            query: ({ pageParam }) => `/posts/friend?page=${pageParam}&per_page=10&type=${PosterType.POST}`,
+            query: ({ pageParam }) =>
+                `${BACKEND_API_ENDPOINT.POST.FRIEND}?page=${pageParam}&per_page=10&type=${PosterType.POST}`,
             providesTags: (result) => {
                 if (result) {
-                    const final = [
-                        ...result.pages.flatMap((page) => {
-                            return page.data.flatMap((post) => getPostEntityTags(post))
-                        }),
-                        { type: 'Posts' as const, id: `POST-FRIEND-LIST` }
+                    return [
+                        ...result.pages.flatMap((page) => page.data.flatMap((post) => getPostEntityTags(post))),
+                        { type: 'Posts' as const, id: 'POST-FRIEND-LIST' }
                     ]
-                    return final
                 }
-                return [{ type: 'Posts' as const, id: `POST-FRIEND-LIST` }]
+                return [{ type: 'Posts' as const, id: 'POST-FRIEND-LIST' }]
             },
             infiniteQueryOptions: {
                 initialPageParam: 1,
@@ -436,14 +396,14 @@ export const PostApi = createApi({
         }),
         deletePost: builder.mutation<{ message: string }, string>({
             query: (id) => ({
-                url: `/posts/${id}`,
+                url: BACKEND_API_ENDPOINT.POST.DETAIL(id),
                 method: 'DELETE'
             }),
             invalidatesTags: (result, error, arg) => [{ type: 'Posts' as const, id: arg }]
         }),
         updatePost: builder.mutation<{ message: string }, { post_uuid: string; body: UpdatePostReqBodyType }>({
             query: ({ post_uuid, body }) => ({
-                url: `/posts/${post_uuid}`,
+                url: BACKEND_API_ENDPOINT.POST.DETAIL(post_uuid),
                 method: 'PATCH',
                 body
             }),

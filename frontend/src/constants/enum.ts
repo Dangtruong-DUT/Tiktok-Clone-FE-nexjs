@@ -63,5 +63,22 @@ export enum NotificationTypeCode {
     SECURITY = 8
 }
 
+export enum VideoUploadStatus {
+    PENDING     = 0,
+    UPLOADING   = 1,
+    UPLOADED    = 2,
+    ANALYZING   = 3,
+    TRANSCODING = 4,
+    READY       = 5,
+    FAILED      = 6,
+    CANCELED    = 7,
+}
+
+export const TERMINAL_UPLOAD_STATUSES = [
+    VideoUploadStatus.READY,
+    VideoUploadStatus.FAILED,
+    VideoUploadStatus.CANCELED,
+] as const
+
 export type AudienceValue = Exclude<Audience, Audience.FOLLOWING>
 export const AUDIENCE_VALUES = [Audience.PUBLIC, Audience.PRIVATE, Audience.FRIENDS] as const satisfies AudienceValue[]

@@ -259,6 +259,7 @@
             "encoding": {
                 "uploading": "Uploading {progress}%",
                 "pending": "Waiting in encoding queue...",
+                "analyzing": "Analyzing video...",
                 "processing": "Encoding {progress}%",
                 "ready": "Video ready — HLS streaming enabled",
                 "failed": "Encoding failed",

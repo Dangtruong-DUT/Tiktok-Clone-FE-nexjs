@@ -1,13 +1,13 @@
-import { EncodingStatus } from '@/constants/enum'
+import { TERMINAL_UPLOAD_STATUSES, VideoUploadStatus } from '@/constants/enum'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 const STORAGE_KEY = 'videoProcessing'
 const STALE_HOURS = 24
 
 export interface TrackedEncoding {
-    uploadFileUuid: string
+    sessionUuid: string
     postUuid: string | null
-    status: EncodingStatus
+    status: VideoUploadStatus
     progress: number
     trackedAt: string
 }
@@ -16,8 +16,8 @@ interface VideoProcessingState {
     tracked: TrackedEncoding[]
 }
 
-function isTerminalStatus(status: EncodingStatus): boolean {
-    return status === EncodingStatus.READY || status === EncodingStatus.FAILED
+function isTerminalStatus(status: VideoUploadStatus): boolean {
+    return (TERMINAL_UPLOAD_STATUSES as readonly VideoUploadStatus[]).includes(status)
 }
 
 function loadFromStorage(): TrackedEncoding[] {
@@ -49,7 +49,7 @@ const videoProcessingSlice = createSlice({
     }),
     reducers: {
         trackEncoding(state, action: PayloadAction<TrackedEncoding>) {
-            const idx = state.tracked.findIndex((e) => e.uploadFileUuid === action.payload.uploadFileUuid)
+            const idx = state.tracked.findIndex((e) => e.sessionUuid === action.payload.sessionUuid)
             if (idx >= 0) {
                 state.tracked[idx] = action.payload
             } else {
@@ -59,9 +59,9 @@ const videoProcessingSlice = createSlice({
         },
         updateEncodingStatus(
             state,
-            action: PayloadAction<{ uuid: string; status: EncodingStatus; progress: number }>
+            action: PayloadAction<{ sessionUuid: string; status: VideoUploadStatus; progress: number }>
         ) {
-            const enc = state.tracked.find((e) => e.uploadFileUuid === action.payload.uuid)
+            const enc = state.tracked.find((e) => e.sessionUuid === action.payload.sessionUuid)
             if (enc) {
                 enc.status = action.payload.status
                 enc.progress = action.payload.progress
@@ -69,7 +69,7 @@ const videoProcessingSlice = createSlice({
             }
         },
         untrackEncoding(state, action: PayloadAction<string>) {
-            state.tracked = state.tracked.filter((e) => e.uploadFileUuid !== action.payload)
+            state.tracked = state.tracked.filter((e) => e.sessionUuid !== action.payload)
             saveToStorage(state.tracked)
         },
         clearStaleEncodings(state) {

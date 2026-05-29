@@ -20,7 +20,8 @@ export const getAcceptedFileAttribute = (type: UploadConstraintType) => {
 
 export const validateUploadFile = (file: File, type: UploadConstraintType): UploadValidationResult => {
     const config = UPLOAD_CONSTRAINTS[type]
-    const maxSizeBytes = config.maxSizeKb * 1024
+    const maxSizeBytes = 'maxSizeKb' in config ? config.maxSizeKb * 1024 : config.maxSizeBytes
+    const maxSizeMb    = Math.floor(maxSizeBytes / (1024 * 1024))
     const extension = file.name.split('.').pop()?.toLowerCase() ?? ''
     const acceptedExtensions = config.mimes.map((item) => item.toUpperCase()).join(', ')
     const mimeTypeList = Array.from(config.mimeTypes) as string[]
@@ -33,7 +34,7 @@ export const validateUploadFile = (file: File, type: UploadConstraintType): Uplo
         return {
             isValid: false,
             code: 'invalid_type',
-            maxSizeMb: Math.floor(config.maxSizeKb / 1024),
+            maxSizeMb,
             acceptedExtensions
         }
     }
@@ -42,7 +43,7 @@ export const validateUploadFile = (file: File, type: UploadConstraintType): Uplo
         return {
             isValid: false,
             code: 'too_large',
-            maxSizeMb: Math.floor(config.maxSizeKb / 1024),
+            maxSizeMb,
             acceptedExtensions
         }
     }

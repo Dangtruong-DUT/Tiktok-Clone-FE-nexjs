@@ -6,7 +6,7 @@ import UploadFile, {
 } from '@/app/[locale]/(user)/snapistudio/upload/_components/upload-video/upload-file'
 import { cn } from '@/lib/utils'
 import { useRef } from 'react'
-import type { VideoEncodingState } from '@/hooks/video/useVideoEncoding'
+import type { VideoStatusState } from '@/hooks/video/useVideoStatus'
 
 interface UploadVideoProps {
     onFileSelect: (file: File | null) => void
@@ -15,8 +15,7 @@ interface UploadVideoProps {
     uploadProgress: number
     uploadError?: string | null
     onRetryUpload?: () => void
-    encoding: VideoEncodingState
-    uploadedVideoUuid?: string | null
+    videoStatus: VideoStatusState
     className?: string
     isInitialRender?: boolean
     setIsInitialRender: (value: boolean) => void
@@ -30,8 +29,7 @@ export default function UploadVideo({
     uploadProgress,
     uploadError,
     onRetryUpload,
-    encoding,
-    uploadedVideoUuid,
+    videoStatus,
     className,
     isInitialRender,
     setIsInitialRender,
@@ -59,8 +57,7 @@ export default function UploadVideo({
                 uploadProgress={uploadProgress}
                 uploadError={uploadError}
                 onRetryUpload={onRetryUpload}
-                encoding={encoding}
-                uploadedVideoUuid={uploadedVideoUuid}
+                videoStatus={videoStatus}
                 className={cn(className, { hidden: file == null })}
                 onReplaceFile={handleReplaceFile}
             />

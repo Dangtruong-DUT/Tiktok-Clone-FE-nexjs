@@ -259,6 +259,7 @@
             "encoding": {
                 "uploading": "Đang tải lên {progress}%",
                 "pending": "Đang chờ trong hàng đợi xử lý...",
+                "analyzing": "Đang phân tích video...",
                 "processing": "Đang mã hóa {progress}%",
                 "ready": "Video sẵn sàng — HLS streaming đã bật",
                 "failed": "Mã hóa thất bại",

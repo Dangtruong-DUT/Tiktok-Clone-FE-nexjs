@@ -18,33 +18,33 @@ export const AuthApi = createApi({
     endpoints: (builder) => ({
         login: builder.mutation<LoginResponseType, LoginReqBodyType>({
             query: (body) => ({
-                url: NEXT_API_ENDPOINT.API_LOGIN,
+                url: NEXT_API_ENDPOINT.AUTH.LOGIN,
                 method: 'POST',
                 body
             })
         }),
         logout: builder.mutation<LogoutResType, void>({
             query: () => ({
-                url: NEXT_API_ENDPOINT.API_LOGOUT,
+                url: NEXT_API_ENDPOINT.AUTH.LOGOUT,
                 method: 'POST'
             })
         }),
         register: builder.mutation<RegisterResponseType, RegisterReqBodyType>({
             query: (body) => ({
-                url: NEXT_API_ENDPOINT.API_REGISTER,
+                url: NEXT_API_ENDPOINT.AUTH.REGISTER,
                 method: 'POST',
                 body
             })
         }),
         refreshToken: builder.mutation<RefreshTokenRes, void>({
             query: () => ({
-                url: NEXT_API_ENDPOINT.API_REFRESH_TOKEN,
+                url: NEXT_API_ENDPOINT.AUTH.REFRESH_TOKEN,
                 method: 'POST'
             })
         }),
         verifyEmail: builder.mutation<VerifyEmailResType, VerifyEmailReqBodyType>({
             query: (data) => ({
-                url: NEXT_API_ENDPOINT.API_VERIFY_EMAIL,
+                url: NEXT_API_ENDPOINT.AUTH.VERIFY_EMAIL,
                 method: 'POST',
                 body: data
             })

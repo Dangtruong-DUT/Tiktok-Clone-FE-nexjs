@@ -28,10 +28,10 @@ export default function FormUploadVideo() {
         videoFrames,
         uploadStatus,
         uploadProgress,
-        uploadedVideo,
+        sessionUuid,
         uploadError,
         retryUpload,
-        encoding,
+        videoStatus,
         isSubmitLoading,
         isOpenModalConfirmExit,
         stayHere,
@@ -41,7 +41,7 @@ export default function FormUploadVideo() {
     } = useUploadFormManager()
 
     const isUploading = uploadStatus === 'uploading'
-    const isSubmitDisabled = isSubmitLoading || isUploading || !uploadedVideo
+    const isSubmitDisabled = isSubmitLoading || isUploading || !sessionUuid
 
     const content = form.watch('content')
 
@@ -57,8 +57,7 @@ export default function FormUploadVideo() {
                     uploadProgress={uploadProgress}
                     uploadError={uploadError}
                     onRetryUpload={retryUpload}
-                    encoding={encoding}
-                    uploadedVideoUuid={uploadedVideo?.uuid}
+                    videoStatus={videoStatus}
                     className='mb-8'
                     onReset={onReset}
                     setIsInitialRender={setIsInitialRender}
