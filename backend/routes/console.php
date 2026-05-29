@@ -19,3 +19,7 @@ Schedule::command('posts:sync-views')
 Schedule::command('video:cleanup --days=7')
     ->dailyAt('03:00')
     ->withoutOverlapping();
+
+Schedule::job(new \App\Jobs\CleanupAbandonedUploadsJob())
+    ->dailyAt('04:00')
+    ->withoutOverlapping();

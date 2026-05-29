@@ -2,22 +2,22 @@
 
 namespace App\Actions\Video;
 
-use App\Libraries\Upload\UploadFileServiceInterface;
+use App\Contracts\Upload\UploadFileServiceInterface;
+use App\Contracts\Upload\UploadStorageInterface;
 use App\Models\UploadFile;
-use Illuminate\Support\Facades\Storage;
 
 class DeleteVideoUploadAction
 {
     public function __construct(
         private readonly UploadFileServiceInterface $uploadFileService,
+        private readonly UploadStorageInterface $storage,
     ) {}
 
     public function execute(UploadFile $uploadFile): void
     {
-        $uuid = $uploadFile->uuid;
         $hlsPrefix = rtrim(config('video.hls_storage_prefix', 'hls'), '/');
 
-        Storage::disk('s3')->deleteDirectory("{$hlsPrefix}/{$uuid}");
+        $this->storage->deleteObjectsByPrefix("{$hlsPrefix}/{$uploadFile->uuid}");
 
         $this->uploadFileService->deleteFile($uploadFile);
     }

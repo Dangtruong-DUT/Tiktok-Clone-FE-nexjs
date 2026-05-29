@@ -1,11 +1,29 @@
 <?php
 
 return [
-    'ffmpeg_binary' => env('FFMPEG_BINARY', 'ffmpeg'),
-    'ffprobe_binary' => env('FFPROBE_BINARY', 'ffprobe'),
-    'temp_directory' => storage_path('app/temp/videos'),
+    'ffmpeg_binary'      => env('FFMPEG_BINARY', 'ffmpeg'),
+    'ffprobe_binary'     => env('FFPROBE_BINARY', 'ffprobe'),
+    'temp_directory'     => storage_path('app/temp/videos'),
     'hls_storage_prefix' => env('VIDEO_HLS_STORAGE_PREFIX', 'hls'),
-    'encoding_timeout' => env('VIDEO_ENCODING_TIMEOUT', 7200), // seconds
+    'encoding_timeout'   => env('VIDEO_ENCODING_TIMEOUT', 7200), // seconds
+
+    /*
+    |--------------------------------------------------------------------------
+    | Upload Session Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Controls limits and thresholds for direct-to-storage upload sessions.
+    | Files >= multipart_threshold_bytes will use S3 multipart upload.
+    |
+    */
+    'upload' => [
+        'max_file_size_bytes'       => env('VIDEO_UPLOAD_MAX_FILE_SIZE', 500 * 1024 * 1024),  // 500 MB
+        'multipart_threshold_bytes' => env('VIDEO_UPLOAD_MULTIPART_THRESHOLD', 50 * 1024 * 1024),  // 50 MB
+        'chunk_size_bytes'          => env('VIDEO_UPLOAD_CHUNK_SIZE', 15 * 1024 * 1024),  // 15 MB
+        'presigned_ttl_seconds'     => env('VIDEO_UPLOAD_PRESIGNED_TTL', 3600),  // 1 hour
+        'session_ttl_hours'         => env('VIDEO_UPLOAD_SESSION_TTL', 24),  // 24 hours
+        'allowed_mime_types'        => ['video/mp4', 'video/quicktime', 'video/webm'],
+    ],
 
     'hls' => [
         'segment_duration' => 6,

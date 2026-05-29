@@ -9,6 +9,7 @@ use App\Http\Requests\BaseRequest;
 use App\Rules\PostId;
 use App\Rules\UploadFileId;
 use App\Rules\UserId;
+use App\Rules\VideoSessionUuid;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
@@ -80,8 +81,17 @@ class CreatePostRequest extends BaseRequest
                 ),
             ],
             'medias.*.file_id' => [
+                self::SOMETIMES,
+                self::NULLABLE,
                 self::INTEGER,
                 new UploadFileId,
+            ],
+            'medias.*.session_uuid' => [
+                self::SOMETIMES,
+                self::NULLABLE,
+                self::STRING,
+                self::UUID,
+                new VideoSessionUuid,
             ],
             'medias.*.type' => [
                 self::REQUIRED,

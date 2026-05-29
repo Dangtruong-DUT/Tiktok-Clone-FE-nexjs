@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Contracts\Upload\UploadStorageInterface;
 use App\Libraries\Upload\LocalUploadFileService;
 use App\Libraries\Upload\MinioUploadFileService;
-use App\Libraries\Upload\UploadFileServiceInterface;
+use App\Contracts\Upload\UploadFileServiceInterface;
+use App\Services\Upload\PresignedUploadService;
 use Illuminate\Support\ServiceProvider;
 
 class UploadFileServiceProvider extends ServiceProvider
@@ -14,7 +16,7 @@ class UploadFileServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(UploadFileServiceInterface::class, function ($app) {
+        $this->app->bind(UploadFileServiceInterface::class, function () {
             $storage_driver = config('filesystems.default', 'local');
 
             return match ($storage_driver) {
@@ -22,5 +24,7 @@ class UploadFileServiceProvider extends ServiceProvider
                 default => new LocalUploadFileService,
             };
         });
+
+        $this->app->bind(UploadStorageInterface::class, PresignedUploadService::class);
     }
 }

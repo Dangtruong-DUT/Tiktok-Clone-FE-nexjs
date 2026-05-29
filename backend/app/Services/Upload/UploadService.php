@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Upload;
 
 use App\Actions\Video\InitiateVideoProcessingAction;
+use App\Contracts\Upload\UploadFileServiceInterface;
 use App\Enums\Media\MediaTypeEnum;
-use App\Libraries\Upload\UploadFileServiceInterface;
 use Illuminate\Http\UploadedFile;
 
 class UploadService
@@ -19,8 +19,8 @@ class UploadService
         $uploadFile = $this->uploadFileService->uploadFile($file, 'images');
 
         return [
-            'id' => $uploadFile->id,
-            'url' => $uploadFile->url,
+            'id'   => $uploadFile->id,
+            'url'  => $uploadFile->url,
             'type' => MediaTypeEnum::IMAGE->value,
         ];
     }
@@ -32,9 +32,9 @@ class UploadService
         $this->initiateVideoProcessingAction->execute($uploadFile);
 
         return [
-            'id' => $uploadFile->id,
+            'id'   => $uploadFile->id,
             'uuid' => $uploadFile->uuid,
-            'url' => $uploadFile->url,
+            'url'  => $uploadFile->url,
             'type' => MediaTypeEnum::VIDEO->value,
         ];
     }

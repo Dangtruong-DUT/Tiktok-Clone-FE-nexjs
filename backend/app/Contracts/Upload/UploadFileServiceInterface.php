@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Libraries\Upload;
+namespace App\Contracts\Upload;
 
 use App\Models\UploadFile;
 use Illuminate\Database\Eloquent\Relations\Relation;

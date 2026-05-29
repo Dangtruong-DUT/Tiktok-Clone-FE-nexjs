@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Upload\UploadImageRequest;
 use App\Http\Requests\Upload\UploadVideoRequest;
 use App\Http\Response\ApiResponse;
-use App\Services\UploadService;
+use App\Services\Upload\UploadService;
 use Illuminate\Http\JsonResponse;
 
 class UploadController extends Controller

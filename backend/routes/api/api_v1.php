@@ -14,6 +14,8 @@ use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserSettingsController;
 use App\Http\Controllers\Api\VideoStreamController;
+use App\Http\Controllers\Api\VideoUploadSessionController;
+use App\Models\VideoUploadSession;
 use Illuminate\Support\Facades\Route;
 
 /*|--------------------------------------------------------------------------
@@ -122,7 +124,7 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::post('/appeals/{appeal_uuid}/reject', [AppealAdminController::class, 'reject'])->name('reject-appeal');
         });
 
-    // video encoding management
+    // video encoding management (legacy — kept for backward compat)
     Route::prefix('videos')
         ->name('videos.')
         ->middleware('throttle:60,1')
@@ -135,6 +137,32 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::delete('{upload_file_uuid}', [VideoStreamController::class, 'destroy'])
                 ->middleware('throttle:10,1')
                 ->name('destroy');
+        });
+
+    // video upload sessions (direct-to-S3 flow)
+    Route::prefix('videos/upload-sessions')
+        ->name('video-upload-sessions.')
+        ->group(function () {
+            Route::post('/', [VideoUploadSessionController::class, 'init'])
+                ->middleware('throttle:10,1')
+                ->name('init');
+
+            Route::get('{session:uuid}/parts/{partNumber}', [VideoUploadSessionController::class, 'getPartUrl'])
+                ->middleware('throttle:200,1')
+                ->name('part-url')
+                ->whereNumber('partNumber');
+
+            Route::put('{session:uuid}/complete', [VideoUploadSessionController::class, 'complete'])
+                ->middleware('throttle:20,1')
+                ->name('complete');
+
+            Route::get('{session:uuid}/status', [VideoUploadSessionController::class, 'status'])
+                ->middleware('throttle:120,1')
+                ->name('status');
+
+            Route::delete('{session:uuid}', [VideoUploadSessionController::class, 'abort'])
+                ->middleware('throttle:20,1')
+                ->name('abort');
         });
 });
 
@@ -220,4 +248,3 @@ Route::prefix('search')
         Route::get('/posts', [PostController::class, 'index'])->name('posts');
         Route::get('/hashtags', [HashtagController::class, 'index'])->name('hashtags');
     });
-

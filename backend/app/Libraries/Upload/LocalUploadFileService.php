@@ -2,6 +2,7 @@
 
 namespace App\Libraries\Upload;
 
+use App\Contracts\Upload\UploadFileServiceInterface;
 use App\Models\UploadFile;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\UploadedFile;

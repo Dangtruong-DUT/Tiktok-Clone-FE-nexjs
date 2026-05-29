@@ -15,6 +15,7 @@ use App\Repositories\HashtagRepository;
 use App\Repositories\MediaRepository;
 use App\Repositories\PostRepository;
 use App\Repositories\UserRepository;
+use App\Repositories\VideoUploadSessionRepository;
 use App\Models\User;
 use App\Traits\HasAuthUser;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -29,6 +30,7 @@ class PostService
         private readonly PostRepository $postRepository,
         private readonly MediaRepository $mediaRepository,
         private readonly HashtagRepository $hashtagRepository,
+        private readonly VideoUploadSessionRepository $uploadSessionRepository,
         private readonly AiModerationService $aiModerationService,
     ) {}
 
@@ -88,7 +90,8 @@ class PostService
             }
 
             if (! empty($payload['medias'])) {
-                $this->mediaRepository->createMany($payload['medias'], $post->id);
+                $resolvedMedias = $this->resolveMediaFileIds($payload['medias']);
+                $this->mediaRepository->createMany($resolvedMedias, $post->id);
             }
 
             if ($parentPost && $postType === PostTypeEnum::COMMENT->value) {
@@ -513,6 +516,40 @@ class PostService
         }
 
         $post->hashtags()->sync($syncData);
+    }
+
+    /**
+     * Resolve session_uuid references in media items to their upload_file_id.
+     * Supports mixed payloads where items may carry either file_id or session_uuid.
+     *
+     * @param  array<int, array{file_id?: int, session_uuid?: string, type: string}>  $medias
+     * @return array<int, array{file_id: int, type: string}>
+     * @throws BusinessException  If a session UUID cannot be resolved to a completed upload.
+     */
+    private function resolveMediaFileIds(array $medias): array
+    {
+        $sessionUuids = array_values(array_filter(
+            array_column($medias, 'session_uuid'),
+            fn ($v) => ! empty($v)
+        ));
+
+        $sessionMap = $this->uploadSessionRepository->getFileIdsByUuids($sessionUuids);
+
+        return array_map(function (array $media) use ($sessionMap): array {
+            if (empty($media['session_uuid'])) {
+                return $media;
+            }
+
+            $fileId = $sessionMap[$media['session_uuid']] ?? null;
+
+            if (! $fileId) {
+                throw new BusinessException(
+                    "Upload session [{$media['session_uuid']}] has not been completed yet."
+                );
+            }
+
+            return ['file_id' => $fileId, 'type' => $media['type']];
+        }, $medias);
     }
 
     /**
