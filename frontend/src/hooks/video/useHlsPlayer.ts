@@ -159,7 +159,7 @@ export function useHlsPlayer(
         qualityLevels,
         currentLevel,
         switchLevel,
-        switchToAuto,
+        switchToAuto
     }
 }
 

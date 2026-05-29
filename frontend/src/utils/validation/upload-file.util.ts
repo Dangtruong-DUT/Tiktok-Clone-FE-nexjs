@@ -21,7 +21,7 @@ export const getAcceptedFileAttribute = (type: UploadConstraintType) => {
 export const validateUploadFile = (file: File, type: UploadConstraintType): UploadValidationResult => {
     const config = UPLOAD_CONSTRAINTS[type]
     const maxSizeBytes = 'maxSizeKb' in config ? config.maxSizeKb * 1024 : config.maxSizeBytes
-    const maxSizeMb    = Math.floor(maxSizeBytes / (1024 * 1024))
+    const maxSizeMb = Math.floor(maxSizeBytes / (1024 * 1024))
     const extension = file.name.split('.').pop()?.toLowerCase() ?? ''
     const acceptedExtensions = config.mimes.map((item) => item.toUpperCase()).join(', ')
     const mimeTypeList = Array.from(config.mimeTypes) as string[]

@@ -7,7 +7,12 @@ import { toast } from 'sonner'
 import { VideoUploadStatus } from '@/constants/enum'
 import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
 import { useAppDispatch } from '@/store/hooks'
-import { TrackedEncoding, isTerminalStatus, untrackEncoding, updateEncodingStatus } from '@/store/features/videoProcessingSlice'
+import {
+    TrackedEncoding,
+    isTerminalStatus,
+    untrackEncoding,
+    updateEncodingStatus
+} from '@/store/features/videoProcessingSlice'
 import { useGetVideoUploadStatusQuery } from '@/store/services/upload.service'
 
 interface VideoEncodingPollerProps {

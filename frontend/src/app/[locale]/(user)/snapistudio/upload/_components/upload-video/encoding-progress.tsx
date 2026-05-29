@@ -84,7 +84,7 @@ export function EncodingProgress({
 const ENCODING_PROGRESS_VARIANT = {
     LOADING: 'loading',
     SUCCESS: 'success',
-    ERROR:   'error',
+    ERROR: 'error'
 } as const
 type Variant = (typeof ENCODING_PROGRESS_VARIANT)[keyof typeof ENCODING_PROGRESS_VARIANT]
 

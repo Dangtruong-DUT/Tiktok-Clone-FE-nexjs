@@ -16,7 +16,7 @@ export function VideoControlsTop({
     isMuted,
     onMuteToggle,
     isParentHovered,
-    children,
+    children
 }: VideoControlsTopProps) {
     return (
         <div className='absolute top-0 flex flex-row items-start justify-between w-full z-[2] bg-transparent rounded-t-2xl'>

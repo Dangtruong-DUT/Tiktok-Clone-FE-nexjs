@@ -51,10 +51,10 @@ export function useUploadFormManager() {
         error: uploadError,
         upload,
         cancel: cancelUpload,
-        retry: retryUpload,
+        retry: retryUpload
     } = useVideoUpload()
 
-    const videoStatus = useVideoStatus(sessionUuid)
+    const videoStatus = useVideoStatus(uploadStatus === 'done' ? sessionUuid : null)
 
     const videoFrames = useVideoFrames(videoUrl, 10)
 
@@ -119,7 +119,7 @@ export function useUploadFormManager() {
         if (videoFile) {
             upload(videoFile)
         }
-    }, [videoFile]) // eslint-disable-line react-hooks/exhaustive-deps
+    }, [videoFile])
 
     // Show upload error toasts
     useEffect(() => {
@@ -167,9 +167,7 @@ export function useUploadFormManager() {
             formDataThumbnail.append('file', thumbnailFile)
             const imageResponse = await uploadImage(formDataThumbnail).unwrap()
 
-            const mediaType = videoStatus.status === VideoUploadStatus.READY
-                ? MediaType.HLS_VIDEO
-                : MediaType.VIDEO
+            const mediaType = videoStatus.status === VideoUploadStatus.READY ? MediaType.HLS_VIDEO : MediaType.VIDEO
 
             const body: CreatePostReqBodyType = {
                 ...data,

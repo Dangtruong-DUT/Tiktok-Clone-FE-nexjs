@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Slider from '@/components/photo-editor-dialog/slider'
+import { logger } from '@/utils/logger'
 
 interface PhotoEditorProps {
     photoUrl?: string
@@ -131,7 +132,9 @@ export default function PhotoEditorDialog({ photoUrl, isVisible, setVisible, onC
 
         try {
             ;(e.currentTarget as Element).releasePointerCapture(e.pointerId)
-        } catch {}
+        } catch {
+            logger.warn('Failed to release pointer capture, it may have already been released.')
+        }
         ;(e.currentTarget as HTMLElement).style.cursor = 'grab'
     }
 

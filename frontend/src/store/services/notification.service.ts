@@ -58,8 +58,7 @@ export const NotificationApi = createApi({
             }
         }),
         getUnreadCount: builder.query<GetUnreadCountNotificationResType, GetListNotificationQueryType | void>({
-            query: (params) =>
-                `${BACKEND_API_ENDPOINT.NOTIFICATION.UNREAD_COUNT}?tab=${params?.tab ?? 'all'}`,
+            query: (params) => `${BACKEND_API_ENDPOINT.NOTIFICATION.UNREAD_COUNT}?tab=${params?.tab ?? 'all'}`,
             providesTags: (result, error, arg) => {
                 void result
                 void error

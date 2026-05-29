@@ -66,12 +66,7 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
             onMouseLeave={() => setIsHovered(false)}
         >
             <div className='absolute inset-0 blur-md opacity-30 transform: scale(11)'>
-                <Image
-                    src={thumbnailUrl}
-                    alt={author.username}
-                    className='object-cover w-full h-full'
-                    layout='fill'
-                />
+                <Image src={thumbnailUrl} alt={author.username} className='object-cover w-full h-full' layout='fill' />
             </div>
             <VideoOverlayIcons
                 showPlayPauseIcon={showPlayPauseIcon}

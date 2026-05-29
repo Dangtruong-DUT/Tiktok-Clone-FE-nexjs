@@ -31,7 +31,7 @@ export function useVideoEncoding(fileUuid: string | null | undefined): VideoEnco
 
     const { data, isError } = useGetVideoEncodingStatusQuery(fileUuid ?? '', {
         skip: !fileUuid || !shouldPoll,
-        pollingInterval: POLL_INTERVAL_MS,
+        pollingInterval: POLL_INTERVAL_MS
     })
 
     useEffect(() => {
@@ -60,6 +60,6 @@ export function useVideoEncoding(fileUuid: string | null | undefined): VideoEnco
         width: width ?? null,
         height: height ?? null,
         duration: duration ?? null,
-        restartPolling,
+        restartPolling
     }
 }

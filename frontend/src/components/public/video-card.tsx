@@ -34,7 +34,11 @@ export default function CardVideoItem({
 
     return (
         <article className='w-full'>
-            <div className={cn('relative block w-full pt-[133.333%] aspect-[3/4] overflow-hidden rounded-md group bg-black')}>
+            <div
+                className={cn(
+                    'relative block w-full pt-[133.333%] aspect-[3/4] overflow-hidden rounded-md group bg-black'
+                )}
+            >
                 {isCurrentlyPlaying && (
                     <div className='absolute inset-0 z-5 flex flex-col items-center justify-center bg-black/30 backdrop-blur-sm'>
                         <PlayingIcon className='h-5.5 text-white' loop={true} />

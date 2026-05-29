@@ -91,7 +91,13 @@ export function SendUserMailDialog({ open, userUuid, username, onOpenChange, onS
                     <Button size='lg' type='button' variant='outline' onClick={handleClose} disabled={isLoading}>
                         {t('common.cancel')}
                     </Button>
-                    <Button size='lg' type='button' variant='brand' isLoading={isLoading} onClick={form.handleSubmit(handleSubmit)}>
+                    <Button
+                        size='lg'
+                        type='button'
+                        variant='brand'
+                        isLoading={isLoading}
+                        onClick={form.handleSubmit(handleSubmit)}
+                    >
                         {t('users.actions.sendEmail')}
                     </Button>
                 </DialogFooter>

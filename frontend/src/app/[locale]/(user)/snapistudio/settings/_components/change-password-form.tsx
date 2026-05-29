@@ -82,11 +82,7 @@ export default function ChangePasswordForm() {
                                             >
                                                 {t('changePassword.oldPassword')}
                                             </Label>
-                                            <PasswordInput
-                                                id='oldPassword'
-                                                className=''
-                                                {...field}
-                                            />
+                                            <PasswordInput id='oldPassword' className='' {...field} />
                                             <FormMessage />
                                         </div>
                                     </FormItem>
@@ -106,11 +102,7 @@ export default function ChangePasswordForm() {
                                             <Label htmlFor='password' className='font-semibold text-muted-foreground'>
                                                 {t('changePassword.newPassword')}
                                             </Label>
-                                            <PasswordInput
-                                                id='password'
-                                                className=''
-                                                {...field}
-                                            />
+                                            <PasswordInput id='password' className='' {...field} />
                                             <FormMessage />
                                         </div>
                                     </FormItem>
@@ -128,11 +120,7 @@ export default function ChangePasswordForm() {
                                             >
                                                 {t('changePassword.confirmPassword')}
                                             </Label>
-                                            <PasswordInput
-                                                id='confirmPassword'
-                                                className=''
-                                                {...field}
-                                            />
+                                            <PasswordInput id='confirmPassword' className='' {...field} />
                                             <FormMessage />
                                         </div>
                                     </FormItem>

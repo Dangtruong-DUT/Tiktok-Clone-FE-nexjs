@@ -21,7 +21,7 @@ export function ShareMenuDialog({ url, children }: ShareMenuDialogProps) {
             toast.success('Link copied to clipboard!', {
                 position: 'top-center'
             })
-        } catch (_) {
+        } catch {
             logger.warn('Clipboard API not supported, using fallback method.')
         }
     }, [url])

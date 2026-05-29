@@ -33,7 +33,7 @@ export default function UploadVideo({
     className,
     isInitialRender,
     setIsInitialRender,
-    onReset,
+    onReset
 }: UploadVideoProps) {
     const uploadFileRef = useRef<UploadFileRef>(null)
 

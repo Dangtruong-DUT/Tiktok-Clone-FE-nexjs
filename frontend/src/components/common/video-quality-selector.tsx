@@ -28,8 +28,7 @@ export function VideoQualitySelector({
     className,
     side = 'top'
 }: VideoQualitySelectorProps) {
-    const currentLabel =
-        currentLevel === -1 ? 'Auto' : (levels.find((l) => l.index === currentLevel)?.name ?? 'Auto')
+    const currentLabel = currentLevel === -1 ? 'Auto' : (levels.find((l) => l.index === currentLevel)?.name ?? 'Auto')
 
     return (
         <DropdownMenu>

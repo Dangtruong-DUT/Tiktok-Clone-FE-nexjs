@@ -27,7 +27,7 @@ export default function FileInfo({
     uploadError,
     onRetryUpload,
     videoStatus,
-    className,
+    className
 }: FileInfoProps) {
     const t = useTranslations('SnapiStudio.upload.fileInfo')
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { TERMINAL_UPLOAD_STATUSES, VideoUploadStatus } from '@/constants/enum'
 import { useGetVideoUploadStatusQuery } from '@/store/services/upload.service'
 
@@ -26,7 +26,7 @@ export function useVideoStatus(sessionUuid: string | null | undefined): VideoSta
 
     const { data, isError } = useGetVideoUploadStatusQuery(sessionUuid ?? '', {
         skip: !sessionUuid || !shouldPoll,
-        pollingInterval: POLL_INTERVAL_MS,
+        pollingInterval: POLL_INTERVAL_MS
     })
 
     const statusData = data?.data
@@ -55,6 +55,6 @@ export function useVideoStatus(sessionUuid: string | null | undefined): VideoSta
         duration: statusData?.metadata?.duration ?? null,
         width: statusData?.metadata?.width ?? null,
         height: statusData?.metadata?.height ?? null,
-        restartPolling,
+        restartPolling
     }
 }

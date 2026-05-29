@@ -37,10 +37,8 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
 
     const { handleVideoEnd } = useVideoRouterNavigation({ autoPlayNext: true })
 
-    const { isPlaying, setIsPlaying, isMuted, setIsMuted, volume, setVolume, currentTime, duration, isLoading } = useVideoPlayer(
-        videoRef,
-        { onVideoEnd: handleVideoEnd }
-    )
+    const { isPlaying, setIsPlaying, isMuted, setIsMuted, volume, setVolume, currentTime, duration, isLoading } =
+        useVideoPlayer(videoRef, { onVideoEnd: handleVideoEnd })
 
     const { isBuffering, qualityLevels, currentLevel, switchLevel, switchToAuto } = useHlsPlayer(
         videoRef,

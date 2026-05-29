@@ -129,9 +129,7 @@ export default function Sidebar({ className }: SidebarProps) {
                     )}
                 >
                     <NavItems roleUser={role} />
-                    {!isOpenDrawer && isAuth && (
-                        <VideoProcessingBadge className='px-2 mt-1 mb-1' />
-                    )}
+                    {!isOpenDrawer && isAuth && <VideoProcessingBadge className='px-2 mt-1 mb-1' />}
                     <aside className='flex flex-col gap-[0.5rem]'>
                         {actionItemsBeforeProfile.map((item) => {
                             if (item.requiredAuth && !isAuth) {

@@ -16,7 +16,6 @@ export const BffBaseQuery = fetchBaseQuery({ baseUrl: '' })
 
 const mutex = new Mutex()
 const MAX_REFRESH_RETRIES = 3
-const INITIAL_DELAY = 1000
 
 const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
     args,

@@ -20,18 +20,18 @@ export interface VideoUploadState {
 }
 
 export function useVideoUpload(): VideoUploadState {
-    const [status, setStatus]           = useState<VideoUploadPhase>('idle')
+    const [status, setStatus] = useState<VideoUploadPhase>('idle')
     const [uploadProgress, setProgress] = useState(0)
     const [sessionUuid, setSessionUuid] = useState<string | null>(null)
-    const [error, setError]             = useState<VideoUploadErrorCode | null>(null)
+    const [error, setError] = useState<VideoUploadErrorCode | null>(null)
 
     const abortControllerRef = useRef<AbortController | null>(null)
-    const lastFileRef        = useRef<File | null>(null)
+    const lastFileRef = useRef<File | null>(null)
 
     const upload = useCallback(async (file: File) => {
-        lastFileRef.current        = file
+        lastFileRef.current = file
         abortControllerRef.current = new AbortController()
-        const signal               = abortControllerRef.current.signal
+        const signal = abortControllerRef.current.signal
 
         setStatus('uploading')
         setProgress(0)
@@ -42,7 +42,7 @@ export function useVideoUpload(): VideoUploadState {
             const sessionRes = await UploadSessionApi.init({
                 file_name: file.name,
                 file_size: file.size,
-                mime_type: file.type,
+                mime_type: file.type
             })
 
             const session = sessionRes.data
@@ -55,19 +55,14 @@ export function useVideoUpload(): VideoUploadState {
                     chunkSizeBytes: MULTIPART_CONFIG.chunkSizeBytes,
                     maxConcurrency: MULTIPART_CONFIG.maxConcurrency,
                     onProgress: setProgress,
-                    signal,
+                    signal
                 })
                 parts = uploadedParts.map((p) => ({
                     part_number: p.partNumber,
-                    etag: p.etag,
+                    etag: p.etag
                 }))
             } else {
-                await singlePresignedUpload(
-                    file,
-                    session.presigned_url!,
-                    setProgress,
-                    signal
-                )
+                await singlePresignedUpload(file, session.presigned_url!, setProgress, signal)
             }
 
             await UploadSessionApi.complete(session.session_uuid, { parts })

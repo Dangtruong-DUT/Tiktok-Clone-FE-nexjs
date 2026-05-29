@@ -154,9 +154,7 @@ export function StudioAppealsTable() {
                             }}
                             perPageOptions={[10, 20, 50]}
                             perPageLabel={t('list.perPage')}
-                            showingResultsFormatter={(from, to, total) =>
-                                t('list.showingResults', { from, to, total })
-                            }
+                            showingResultsFormatter={(from, to, total) => t('list.showingResults', { from, to, total })}
                         />
                     ) : undefined
                 }
@@ -179,7 +177,9 @@ export function StudioAppealsTable() {
                                 <TableHead className='table-head'>{t('list.columns.reason')}</TableHead>
                                 <TableHead className='table-head'>{t('list.columns.status')}</TableHead>
                                 <TableHead className='table-head'>{t('list.columns.createdAt')}</TableHead>
-                                <TableHead className='table-head w-10 text-right'>{t('list.columns.actions')}</TableHead>
+                                <TableHead className='table-head w-10 text-right'>
+                                    {t('list.columns.actions')}
+                                </TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>

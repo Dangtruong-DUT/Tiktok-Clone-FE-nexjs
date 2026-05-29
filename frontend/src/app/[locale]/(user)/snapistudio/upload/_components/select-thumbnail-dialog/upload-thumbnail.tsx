@@ -115,12 +115,7 @@ export default function UploadThumbnailFromDevice({ setCoverImage, className }: 
                     >
                         {t('uploadNew')}
                     </Button>
-                    <Button
-                        size='lg'
-                        type='button'
-                        variant='brand'
-                        onClick={onConfirm}
-                    >
+                    <Button size='lg' type='button' variant='brand' onClick={onConfirm}>
                         {t('confirm')}
                     </Button>
                 </footer>

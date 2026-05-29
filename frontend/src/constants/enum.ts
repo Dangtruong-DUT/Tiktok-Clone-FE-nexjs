@@ -64,20 +64,20 @@ export enum NotificationTypeCode {
 }
 
 export enum VideoUploadStatus {
-    PENDING     = 0,
-    UPLOADING   = 1,
-    UPLOADED    = 2,
-    ANALYZING   = 3,
+    PENDING = 0,
+    UPLOADING = 1,
+    UPLOADED = 2,
+    ANALYZING = 3,
     TRANSCODING = 4,
-    READY       = 5,
-    FAILED      = 6,
-    CANCELED    = 7,
+    READY = 5,
+    FAILED = 6,
+    CANCELED = 7
 }
 
 export const TERMINAL_UPLOAD_STATUSES = [
     VideoUploadStatus.READY,
     VideoUploadStatus.FAILED,
-    VideoUploadStatus.CANCELED,
+    VideoUploadStatus.CANCELED
 ] as const
 
 export type AudienceValue = Exclude<Audience, Audience.FOLLOWING>

@@ -13,7 +13,8 @@ import {
 import { VerifyEmailReqBodyType } from '@/types/dtos/user/user-request.dto'
 
 const AuthRequestApi = {
-    login: (body: LoginReqBodyType) => httpClient.post<BackendAuthTokensResponse>(BACKEND_API_ENDPOINT.AUTH.LOGIN, body),
+    login: (body: LoginReqBodyType) =>
+        httpClient.post<BackendAuthTokensResponse>(BACKEND_API_ENDPOINT.AUTH.LOGIN, body),
     register: (body: RegisterReqBodyType) =>
         httpClient.post<BackendAuthTokensResponse>(BACKEND_API_ENDPOINT.AUTH.REGISTER, body),
     logout: (data: LogoutReqBodyType & { access_token: string }) => {

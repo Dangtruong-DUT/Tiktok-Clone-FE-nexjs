@@ -33,13 +33,13 @@ export async function multipartUpload(
 ): Promise<UploadedPart[]> {
     const { chunkSizeBytes, maxConcurrency, onProgress, signal } = options
 
-    const totalParts    = Math.ceil(file.size / chunkSizeBytes)
+    const totalParts = Math.ceil(file.size / chunkSizeBytes)
     const uploadedBytes = new Array<number>(totalParts).fill(0)
     const results: UploadedPart[] = []
 
     const uploadPart = async (partNumber: number): Promise<UploadedPart> => {
         const start = (partNumber - 1) * chunkSizeBytes
-        const end   = Math.min(start + chunkSizeBytes, file.size)
+        const end = Math.min(start + chunkSizeBytes, file.size)
         const chunk = file.slice(start, end)
 
         for (let attempt = 0; attempt < MAX_PART_RETRIES; attempt++) {
@@ -50,7 +50,7 @@ export async function multipartUpload(
             const response = await fetch(data.presigned_url, {
                 method: 'PUT',
                 body: chunk,
-                signal,
+                signal
             })
 
             if (!response.ok) {
@@ -64,7 +64,7 @@ export async function multipartUpload(
             }
 
             const rawEtag = response.headers.get('ETag') ?? ''
-            const etag    = rawEtag.replace(/"/g, '')
+            const etag = rawEtag.replace(/"/g, '')
 
             uploadedBytes[partNumber - 1] = end - start
             onProgress?.(calcProgress(uploadedBytes, file.size))
@@ -79,7 +79,7 @@ export async function multipartUpload(
 
     while (queue.length > 0) {
         signal?.throwIfAborted()
-        const batch        = queue.splice(0, maxConcurrency)
+        const batch = queue.splice(0, maxConcurrency)
         const batchResults = await Promise.all(batch.map(uploadPart))
         results.push(...batchResults)
     }

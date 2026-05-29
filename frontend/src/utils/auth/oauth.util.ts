@@ -1,4 +1,4 @@
-import envConfig from '@/config/app.config'
+//import envConfig from '@/config/app.config'z
 
 export function getOauthGoogleUrl(): string {
     return '#!'

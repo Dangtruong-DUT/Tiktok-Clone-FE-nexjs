@@ -169,13 +169,7 @@ export default function UpdateProfileForm() {
                                 <p className='text-sm text-muted-foreground'>{t('updateProfile.description')}</p>
                             </div>
                         </div>
-                        <Button
-                            size='lg'
-                            type='submit'
-                            variant='brand'
-                            isLoading={isLoading}
-                            className='min-w-[100px]'
-                        >
+                        <Button size='lg' type='submit' variant='brand' isLoading={isLoading} className='min-w-[100px]'>
                             {t('updateProfile.save')}
                         </Button>
                     </div>
@@ -229,12 +223,7 @@ export default function UpdateProfileForm() {
                                         <Label htmlFor='name' className='font-semibold text-muted-foreground'>
                                             {t('updateProfile.fullNameLabel')}
                                         </Label>
-                                        <Input
-                                            id='name'
-                                            type='text'
-                                            className=''
-                                            {...field}
-                                        />
+                                        <Input id='name' type='text' className='' {...field} />
                                         <FormMessage />
                                     </div>
                                 </FormItem>
