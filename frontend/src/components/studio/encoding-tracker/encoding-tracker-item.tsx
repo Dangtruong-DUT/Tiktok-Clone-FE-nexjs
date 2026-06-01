@@ -2,7 +2,12 @@
 
 import { useEffect } from 'react'
 import { useAppDispatch } from '@/store/hooks'
-import { updateEncodingStatus, untrackEncoding, isTerminalStatus, TrackedEncoding } from '@/store/features/videoProcessingSlice'
+import {
+    updateEncodingStatus,
+    untrackEncoding,
+    isTerminalStatus,
+    TrackedEncoding
+} from '@/store/features/videoProcessingSlice'
 import { useGetVideoUploadStatusQuery } from '@/store/services/upload.service'
 import { VideoUploadStatus } from '@/constants/enum'
 import { cn } from '@/lib/utils'
@@ -29,11 +34,13 @@ export function EncodingTrackerItem({ item }: EncodingTrackerItemProps) {
         if (!data?.data) return
         const { status, encoding_progress } = data.data
         if (status !== item.status || encoding_progress !== item.progress) {
-            dispatch(updateEncodingStatus({
-                sessionUuid: item.sessionUuid,
-                status,
-                progress: encoding_progress
-            }))
+            dispatch(
+                updateEncodingStatus({
+                    sessionUuid: item.sessionUuid,
+                    status,
+                    progress: encoding_progress
+                })
+            )
         }
     }, [data, dispatch, item.sessionUuid, item.status, item.progress])
 
@@ -115,8 +122,7 @@ function resolveDisplay(item: TrackedEncoding): { label: string; barPercent: num
 }
 
 function StatusIcon({ status }: { status: VideoUploadStatus }) {
-    if (status === VideoUploadStatus.READY)
-        return <CheckCircle2 className='size-3.5 shrink-0 text-green-500' />
+    if (status === VideoUploadStatus.READY) return <CheckCircle2 className='size-3.5 shrink-0 text-green-500' />
     if (status === VideoUploadStatus.FAILED || status === VideoUploadStatus.CANCELED)
         return <AlertCircle className='size-3.5 shrink-0 text-destructive' />
     return <Loader2 className='size-3.5 shrink-0 animate-spin text-brand' />

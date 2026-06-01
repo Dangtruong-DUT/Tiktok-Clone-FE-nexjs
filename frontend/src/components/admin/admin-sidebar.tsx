@@ -22,6 +22,7 @@ import {
     Moon,
     PanelLeftClose,
     Settings,
+    Sparkles,
     Sun,
     UserRound,
     Video
@@ -56,7 +57,8 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
         { title: t('comments.title'), href: ADMIN_ROUTES.COMMENTS, icon: MessageCircle },
         { title: t('appeals.title'), href: ADMIN_ROUTES.APPEALS, icon: Flag },
         { title: t('activity.title'), href: ADMIN_ROUTES.ACTIVITY, icon: Activity },
-        { title: t('settings.title'), href: ADMIN_ROUTES.SETTINGS, icon: Settings }
+        { title: t('settings.title'), href: ADMIN_ROUTES.SETTINGS, icon: Settings },
+        { title: 'AI Studio', href: ADMIN_ROUTES.AI_STUDIO, icon: Sparkles }
     ]
 
     const ThemeIcon = theme === 'dark' ? Moon : theme === 'light' ? Sun : Monitor

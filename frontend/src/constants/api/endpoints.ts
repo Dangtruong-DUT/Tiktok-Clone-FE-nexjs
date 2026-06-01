@@ -81,5 +81,18 @@ export const BACKEND_API_ENDPOINT = {
         LIST: '/appeals',
         RESOURCE_PREVIEW: '/appeals/resource-preview',
         DETAIL: (uuid: string) => `/appeals/${uuid}`
+    },
+    AI_STUDIO: {
+        GENERATE: '/studio/ai/content-suggestions',
+        LIST: '/studio/ai/content-suggestions',
+        BY_UUID: (uuid: string) => `/studio/ai/content-suggestions/${uuid}`,
+        APPLY: (uuid: string) => `/studio/ai/content-suggestions/${uuid}/apply`
+    },
+    ADMIN: {
+        AI_STUDIO: {
+            METRICS: '/admin/ai-studio/metrics',
+            SETTINGS: '/admin/ai-studio/settings',
+            REQUESTS: '/admin/ai-studio/requests'
+        }
     }
 } as const

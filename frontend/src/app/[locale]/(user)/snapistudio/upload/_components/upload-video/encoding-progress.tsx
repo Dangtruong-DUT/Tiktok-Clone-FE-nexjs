@@ -39,27 +39,28 @@ export function EncodingProgress({
         <div className={cn('w-full space-y-3', className)}>
             {/* Step indicators */}
             <div className='flex items-center gap-1'>
-                <StepDot
-                    icon={<Upload className='size-2.5' />}
-                    active={step >= 1}
-                    done={step > 1}
-                    label='Upload'
+                <StepDot icon={<Upload className='size-2.5' />} active={step >= 1} done={step > 1} label='Upload' />
+                <div
+                    className={cn('h-px flex-1 transition-colors duration-500', step > 1 ? 'bg-brand' : 'bg-border')}
                 />
-                <div className={cn('h-px flex-1 transition-colors duration-500', step > 1 ? 'bg-brand' : 'bg-border')} />
                 <StepDot
                     icon={<ScanSearch className='size-2.5' />}
                     active={step >= 2}
                     done={step > 2}
                     label='Analyze'
                 />
-                <div className={cn('h-px flex-1 transition-colors duration-500', step > 2 ? 'bg-brand' : 'bg-border')} />
+                <div
+                    className={cn('h-px flex-1 transition-colors duration-500', step > 2 ? 'bg-brand' : 'bg-border')}
+                />
                 <StepDot
                     icon={<Clapperboard className='size-2.5' />}
                     active={step >= 3}
                     done={step > 3}
                     label='Encode'
                 />
-                <div className={cn('h-px flex-1 transition-colors duration-500', step > 3 ? 'bg-brand' : 'bg-border')} />
+                <div
+                    className={cn('h-px flex-1 transition-colors duration-500', step > 3 ? 'bg-brand' : 'bg-border')}
+                />
                 <StepDot
                     icon={<CheckCircle2 className='size-2.5' />}
                     active={step >= 4}

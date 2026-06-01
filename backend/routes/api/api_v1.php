@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\AppealAdminController;
+use App\Http\Controllers\Api\Admin\AiStudioAdminController;
 use App\Http\Controllers\Api\Admin\CommentAdminController;
 use App\Http\Controllers\Api\Admin\PostAdminController;
 use App\Http\Controllers\Api\Admin\SystemAdminController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\HashtagController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\Studio\AiContentStudioController;
 use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserSettingsController;
@@ -122,6 +124,30 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::get('/appeals', [AppealAdminController::class, 'index'])->name('list-appeals');
             Route::post('/appeals/{appeal_uuid}/approve', [AppealAdminController::class, 'approve'])->name('approve-appeal');
             Route::post('/appeals/{appeal_uuid}/reject', [AppealAdminController::class, 'reject'])->name('reject-appeal');
+
+            // AI Studio admin
+            Route::prefix('ai-studio')->name('ai-studio.')->group(function () {
+                Route::get('metrics', [AiStudioAdminController::class, 'metrics'])->name('metrics');
+                Route::get('settings', [AiStudioAdminController::class, 'settings'])->name('settings');
+                Route::put('settings', [AiStudioAdminController::class, 'updateSettings'])->name('settings.update');
+                Route::get('requests', [AiStudioAdminController::class, 'requests'])->name('requests');
+            });
+        });
+
+    // AI Content Studio — creator routes
+    Route::prefix('studio/ai')
+        ->name('studio.ai.')
+        ->group(function () {
+            Route::post('content-suggestions', [AiContentStudioController::class, 'generate'])
+                ->middleware('throttle:10,1')
+                ->name('content-suggestions.generate');
+            Route::get('content-suggestions', [AiContentStudioController::class, 'index'])
+                ->name('content-suggestions.index');
+            Route::get('content-suggestions/{uuid}', [AiContentStudioController::class, 'show'])
+                ->middleware('throttle:60,1')
+                ->name('content-suggestions.show');
+            Route::post('content-suggestions/{uuid}/apply', [AiContentStudioController::class, 'apply'])
+                ->name('content-suggestions.apply');
         });
 
     // video encoding management (legacy — kept for backward compat)
