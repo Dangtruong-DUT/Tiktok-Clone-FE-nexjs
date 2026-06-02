@@ -1,5 +1,67 @@
 {
     "SnapiStudio": {
+        "aiChat": {
+            "title": "AI Studio",
+            "status": {
+                "generating": "Đang tạo...",
+                "done": "Xong",
+                "completed": "Xong",
+                "fallback": "Dự phòng"
+            },
+            "actions": {
+                "applyToPost": "Áp dụng vào bài đăng",
+                "applied": "Đã áp dụng",
+                "addHashtags": "+ {count} hashtag",
+                "clearHistory": "Xóa lịch sử"
+            },
+            "meta": {
+                "category": "Danh mục",
+                "intent": "Mục đích",
+                "audience": "Đối tượng",
+                "confidence": "Độ tin cậy"
+            },
+            "input": {
+                "placeholder": "Mô tả video của bạn...",
+                "regenerateHint": "Nhập để tạo lại",
+                "hintRegenerate": "Nhập để tạo lại",
+                "sendHint": "Enter để gửi · Shift+Enter xuống dòng",
+                "hintNew": "Enter để gửi · Shift+Enter xuống dòng"
+            },
+            "caption": {
+                "empty": "Chưa có caption được tạo",
+                "chars": "{count} ký tự"
+            },
+            "tabs": {
+                "short": "Ngắn",
+                "professional": "Chuyên nghiệp",
+                "viral": "Viral"
+            },
+            "hashtags": {
+                "title": "Hashtags",
+                "count": "({selected}/{total})",
+                "selectAll": "Chọn tất cả",
+                "deselect": "Bỏ chọn",
+                "copied": "Đã sao chép",
+                "copyAll": "Sao chép tất cả"
+            },
+            "toast": {
+                "applied": "Caption và hashtag đã được áp dụng!",
+                "captionCopied": "Đã sao chép caption!",
+                "hashtagsCopied": "Đã sao chép hashtags!",
+                "tagCopied": "Đã sao chép {tag}!"
+            },
+            "emptyCaption": "Chưa có caption được tạo",
+            "charCount": "{count} ký tự",
+            "welcome": {
+                "intro": "Xin chào! Tôi là <strong>AI Studio</strong> — trợ lý tạo nội dung cho video của bạn.",
+                "subtitle": "Nhập mô tả video bên dưới và nhấn <strong>Gửi</strong> để nhận:",
+                "items": {
+                    "shortCaption": "Caption ngắn gọn, chuyên nghiệp hoặc viral",
+                    "hashtags": "Hashtag phù hợp với nội dung",
+                    "meta": "Thông tin danh mục và đối tượng mục tiêu"
+                }
+            }
+        },
         "footer": {
             "copyright": "Bản quyền © 2025 Snapi",
             "privacyPolicy": "Chính sách quyền riêng tư",

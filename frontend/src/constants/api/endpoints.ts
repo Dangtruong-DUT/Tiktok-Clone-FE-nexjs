@@ -86,13 +86,62 @@ export const BACKEND_API_ENDPOINT = {
         GENERATE: '/studio/ai/content-suggestions',
         LIST: '/studio/ai/content-suggestions',
         BY_UUID: (uuid: string) => `/studio/ai/content-suggestions/${uuid}`,
-        APPLY: (uuid: string) => `/studio/ai/content-suggestions/${uuid}/apply`
+        APPLY: (uuid: string) => `/studio/ai/content-suggestions/${uuid}/apply`,
+
+        CREATOR_CHAT: {
+            START:    '/studio/ai/creator-chat/start',
+            BY_UUID:  (uuid: string) => `/studio/ai/creator-chat/${uuid}`,
+            ANSWER:   (uuid: string) => `/studio/ai/creator-chat/${uuid}/answer`,
+            SKIP:     (uuid: string) => `/studio/ai/creator-chat/${uuid}/skip`,
+            GENERATE: (uuid: string) => `/studio/ai/creator-chat/${uuid}/generate`,
+        },
+
+        VIRAL_SCORE: {
+            ANALYZE: '/studio/ai/viral-score/analyze',
+            BY_UUID: (uuid: string) => `/studio/ai/viral-score/${uuid}`,
+        },
+
+        CALENDAR: {
+            GENERATE:     '/studio/ai/content-calendar/generate',
+            LIST:         '/studio/ai/content-calendar',
+            BY_UUID:      (uuid: string) => `/studio/ai/content-calendar/${uuid}`,
+            CREATE_DRAFT: (itemUuid: string) => `/studio/ai/content-calendar/items/${itemUuid}/create-draft`,
+            SCHEDULE:     (itemUuid: string) => `/studio/ai/content-calendar/items/${itemUuid}/schedule`,
+        },
+    },
+
+    WELLNESS: {
+        STATS:         '/users/me/wellness/stats',
+        HISTORY:       '/users/me/wellness/history',
+        SESSION_START: '/users/me/wellness/sessions/start',
+        HEARTBEAT:     (uuid: string) => `/users/me/wellness/sessions/${uuid}/heartbeat`,
+        VIDEO_TIME:    (uuid: string) => `/users/me/wellness/sessions/${uuid}/video-time`,
+        SESSION_END:   (uuid: string) => `/users/me/wellness/sessions/${uuid}/end`,
+        RULES:         '/users/me/wellness/rules',
+        RULE:          (uuid: string) => `/users/me/wellness/rules/${uuid}`,
+        PARSE_RULE:    '/users/me/wellness/rules/parse',
+        ANALYZE:       '/users/me/wellness/analyze',
+    },
+
+    STUDIO_POSTS: {
+        LIST:        '/studio/posts',
+        SCHEDULED:   '/studio/posts/scheduled',
+        SCHEDULE:    (postUuid: string) => `/studio/posts/${postUuid}/schedule`,
+        RESCHEDULE:  (schedUuid: string) => `/studio/posts/scheduled/${schedUuid}/reschedule`,
+        PUBLISH_NOW: (postUuid: string) => `/studio/posts/${postUuid}/publish-now`,
+        CANCEL:      (schedUuid: string) => `/studio/posts/scheduled/${schedUuid}/cancel`,
     },
     ADMIN: {
         AI_STUDIO: {
-            METRICS: '/admin/ai-studio/metrics',
+            METRICS:  '/admin/ai-studio/metrics',
             SETTINGS: '/admin/ai-studio/settings',
-            REQUESTS: '/admin/ai-studio/requests'
-        }
+            REQUESTS: '/admin/ai-studio/requests',
+        },
+        SCHEDULED_POSTS: {
+            METRICS:      '/admin/scheduled-posts/metrics',
+            REQUESTS:     '/admin/scheduled-posts/requests',
+            CANCEL:       (uuid: string) => `/admin/scheduled-posts/${uuid}/cancel`,
+            RETRY:        (uuid: string) => `/admin/scheduled-posts/${uuid}/retry`,
+        },
     }
 } as const

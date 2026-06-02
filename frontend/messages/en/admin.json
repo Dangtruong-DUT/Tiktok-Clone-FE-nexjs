@@ -25,7 +25,23 @@
             "settings": "Settings",
             "profile": "Profile",
             "logout": "Log out",
-            "unknownUser": "Administrator"
+            "unknownUser": "Administrator",
+            "theme": "Theme",
+            "themeLight": "Light",
+            "themeDark": "Dark",
+            "themeSystem": "System",
+            "expandSidebar": "Expand sidebar",
+            "collapseSidebar": "Collapse sidebar",
+            "language": {
+                "english": "🇺🇸 English",
+                "vietnamese": "🇻🇳 Vietnamese"
+            }
+        },
+        "aiStudio": {
+            "title": "AI Studio"
+        },
+        "scheduledPosts": {
+            "title": "Scheduled Posts"
         },
         "dashboard": {
             "title": "Admin Dashboard",

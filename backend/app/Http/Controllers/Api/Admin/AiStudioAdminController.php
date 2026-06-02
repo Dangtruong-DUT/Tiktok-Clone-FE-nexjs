@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\AiStudio\GetAiStudioMetricsRequest;
 use App\Http\Requests\Admin\AiStudio\ListAiSuggestionsAdminRequest;
 use App\Http\Requests\Admin\AiStudio\UpdateAiStudioSettingsRequest;
 use App\Http\Resources\Api\Admin\AiStudioSettingResource;
@@ -11,33 +12,36 @@ use App\Http\Response\ApiResponse;
 use App\Models\AiStudioSetting;
 use App\Services\Admin\AiStudioAdminService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class AiStudioAdminController extends Controller
 {
+    /**
+     * Create the controller instance.
+     *
+     * @param  AiStudioAdminService  $service
+     */
     public function __construct(
         private readonly AiStudioAdminService $service,
     ) {}
 
     /**
-     * Get aggregated AI Studio metrics for a period.
+     * Get AI Studio metrics for the requested period.
      *
-     * Query param: period = today | week | month
+     * @param  GetAiStudioMetricsRequest  $request
+     * @return JsonResponse
      */
-    public function metrics(Request $request): JsonResponse
+    public function metrics(GetAiStudioMetricsRequest $request): JsonResponse
     {
-        $period = in_array($request->input('period'), ['today', 'week', 'month'], true)
-            ? $request->input('period')
-            : 'today';
-
         return ApiResponse::success(
-            data: $this->service->getMetrics($period),
+            data: $this->service->getMetrics($request->period()),
             message: 'AI Studio metrics retrieved.',
         );
     }
 
     /**
-     * Get current AI Studio admin settings.
+     * Get current AI Studio settings.
+      *
+      * @return JsonResponse
      */
     public function settings(): JsonResponse
     {
@@ -48,13 +52,16 @@ class AiStudioAdminController extends Controller
     }
 
     /**
-     * Update AI Studio admin settings.
+     * Update AI Studio settings.
+      *
+      * @param  UpdateAiStudioSettingsRequest  $request
+      * @return JsonResponse
      */
     public function updateSettings(UpdateAiStudioSettingsRequest $request): JsonResponse
     {
         $settings = $this->service->updateSettings(
             $request->validated(),
-            (int) auth('api')->id(),
+            (int) auth_user_id(),
         );
 
         return ApiResponse::success(
@@ -64,7 +71,10 @@ class AiStudioAdminController extends Controller
     }
 
     /**
-     * List all AI suggestion requests with optional filters.
+     * List AI Studio content requests for admin.
+      *
+      * @param  ListAiSuggestionsAdminRequest  $request
+      * @return JsonResponse
      */
     public function requests(ListAiSuggestionsAdminRequest $request): JsonResponse
     {

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Admin\AppealAdminController;
 use App\Http\Controllers\Api\Admin\AiStudioAdminController;
+use App\Http\Controllers\Api\Admin\ScheduledPostAdminController;
 use App\Http\Controllers\Api\Admin\CommentAdminController;
 use App\Http\Controllers\Api\Admin\PostAdminController;
 use App\Http\Controllers\Api\Admin\SystemAdminController;
@@ -11,13 +12,18 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\HashtagController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\ScreenTimeController;
 use App\Http\Controllers\Api\Studio\AiContentStudioController;
+use App\Http\Controllers\Api\WellnessRuleController;
+use App\Http\Controllers\Api\Studio\AiCreatorChatController;
+use App\Http\Controllers\Api\Studio\AiViralScoreController;
+use App\Http\Controllers\Api\Studio\AiContentCalendarController;
+use App\Http\Controllers\Api\Studio\StudioPostScheduleController;
 use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserSettingsController;
 use App\Http\Controllers\Api\VideoStreamController;
 use App\Http\Controllers\Api\VideoUploadSessionController;
-use App\Models\VideoUploadSession;
 use Illuminate\Support\Facades\Route;
 
 /*|--------------------------------------------------------------------------
@@ -132,12 +138,41 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
                 Route::put('settings', [AiStudioAdminController::class, 'updateSettings'])->name('settings.update');
                 Route::get('requests', [AiStudioAdminController::class, 'requests'])->name('requests');
             });
+
+            // Scheduled posts admin
+            Route::prefix('scheduled-posts')->name('scheduled-posts.')->group(function () {
+                Route::get('metrics',          [ScheduledPostAdminController::class, 'metrics'])->name('metrics');
+                Route::get('requests',         [ScheduledPostAdminController::class, 'requests'])->name('requests');
+                Route::post('{uuid}/cancel',   [ScheduledPostAdminController::class, 'forceCancel'])->name('cancel');
+                Route::post('{uuid}/retry',    [ScheduledPostAdminController::class, 'forceRetry'])->name('retry');
+            });
+        });
+
+    // Wellness / Screen Time routes
+    Route::prefix('users/me/wellness')
+        ->name('wellness.')
+        ->group(function () {
+            Route::get('stats',   [ScreenTimeController::class, 'stats'])->name('stats');
+            Route::get('history', [ScreenTimeController::class, 'history'])->name('history');
+
+            Route::post('sessions/start',               [ScreenTimeController::class, 'startSession'])->middleware('throttle:5,1')->name('sessions.start');
+            Route::post('sessions/{uuid}/heartbeat',    [ScreenTimeController::class, 'heartbeat'])->middleware('throttle:120,1')->name('sessions.heartbeat');
+            Route::post('sessions/{uuid}/video-time',   [ScreenTimeController::class, 'updateVideoTime'])->middleware('throttle:60,1')->name('sessions.video-time');
+            Route::post('sessions/{uuid}/end',          [ScreenTimeController::class, 'endSession'])->middleware('throttle:5,1')->name('sessions.end');
+
+            Route::get('rules',                         [WellnessRuleController::class, 'index'])->name('rules.index');
+            Route::post('rules',                        [WellnessRuleController::class, 'store'])->middleware('throttle:10,1')->name('rules.store');
+            Route::put('rules/{uuid}',                  [WellnessRuleController::class, 'update'])->name('rules.update');
+            Route::delete('rules/{uuid}',               [WellnessRuleController::class, 'destroy'])->name('rules.destroy');
+            Route::post('rules/parse',                  [WellnessRuleController::class, 'parseNaturalLanguage'])->middleware('throttle:5,1')->name('rules.parse');
+            Route::post('analyze',                      [WellnessRuleController::class, 'analyze'])->middleware('throttle:3,1')->name('analyze');
         });
 
     // AI Content Studio — creator routes
     Route::prefix('studio/ai')
         ->name('studio.ai.')
         ->group(function () {
+            // Existing: content suggestions (caption helper)
             Route::post('content-suggestions', [AiContentStudioController::class, 'generate'])
                 ->middleware('throttle:10,1')
                 ->name('content-suggestions.generate');
@@ -148,6 +183,58 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
                 ->name('content-suggestions.show');
             Route::post('content-suggestions/{uuid}/apply', [AiContentStudioController::class, 'apply'])
                 ->name('content-suggestions.apply');
+
+            // AI Creator Chat
+            Route::post('creator-chat/start', [AiCreatorChatController::class, 'start'])
+                ->middleware('throttle:5,1')
+                ->name('creator-chat.start');
+            Route::get('creator-chat/{uuid}', [AiCreatorChatController::class, 'show'])
+                ->middleware('throttle:60,1')
+                ->name('creator-chat.show');
+            Route::post('creator-chat/{uuid}/answer', [AiCreatorChatController::class, 'answer'])
+                ->middleware('throttle:30,1')
+                ->name('creator-chat.answer');
+            Route::post('creator-chat/{uuid}/skip', [AiCreatorChatController::class, 'skip'])
+                ->middleware('throttle:30,1')
+                ->name('creator-chat.skip');
+            Route::post('creator-chat/{uuid}/generate', [AiCreatorChatController::class, 'generate'])
+                ->middleware('throttle:5,1')
+                ->name('creator-chat.generate');
+
+            // Viral Score
+            Route::post('viral-score/analyze', [AiViralScoreController::class, 'analyze'])
+                ->middleware('throttle:10,1')
+                ->name('viral-score.analyze');
+            Route::get('viral-score/{uuid}', [AiViralScoreController::class, 'show'])
+                ->middleware('throttle:60,1')
+                ->name('viral-score.show');
+
+            // Content Calendar
+            Route::post('content-calendar/generate', [AiContentCalendarController::class, 'generate'])
+                ->middleware('throttle:5,1')
+                ->name('content-calendar.generate');
+            Route::get('content-calendar', [AiContentCalendarController::class, 'index'])
+                ->name('content-calendar.index');
+            Route::get('content-calendar/{uuid}', [AiContentCalendarController::class, 'show'])
+                ->name('content-calendar.show');
+            Route::post('content-calendar/items/{uuid}/create-draft', [AiContentCalendarController::class, 'createDraft'])
+                ->middleware('throttle:10,1')
+                ->name('content-calendar.items.create-draft');
+            Route::post('content-calendar/items/{uuid}/schedule', [AiContentCalendarController::class, 'scheduleItem'])
+                ->middleware('throttle:10,1')
+                ->name('content-calendar.items.schedule');
+        });
+
+    // Studio post management routes
+    Route::prefix('studio/posts')
+        ->name('studio.posts.')
+        ->group(function () {
+            Route::get('/',                             [StudioPostScheduleController::class, 'posts'])      ->name('index');
+            Route::get('scheduled',                    [StudioPostScheduleController::class, 'index'])      ->name('scheduled.index');
+            Route::post('{post_uuid}/schedule',        [StudioPostScheduleController::class, 'schedule'])   ->middleware('throttle:10,1')->name('schedule');
+            Route::put('scheduled/{uuid}/reschedule',  [StudioPostScheduleController::class, 'reschedule'])->middleware('throttle:10,1')->name('scheduled.reschedule');
+            Route::post('{post_uuid}/publish-now',     [StudioPostScheduleController::class, 'publishNow'])->middleware('throttle:10,1')->name('publish-now');
+            Route::post('scheduled/{uuid}/cancel',     [StudioPostScheduleController::class, 'cancel'])     ->middleware('throttle:10,1')->name('scheduled.cancel');
         });
 
     // video encoding management (legacy — kept for backward compat)

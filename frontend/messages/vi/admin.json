@@ -25,7 +25,21 @@
             "settings": "Cài đặt",
             "profile": "Hồ sơ",
             "logout": "Đăng xuất",
-            "unknownUser": "Quản trị viên"
+            "unknownUser": "Quản trị viên",
+            "theme": "Giao diện",
+            "themeLight": "Chế độ sáng",
+            "themeDark": "Chế độ tối",
+            "themeSystem": "Theo hệ thống",
+            "language": {
+                "english": "🇺🇸 Tiếng Anh",
+                "vietnamese": "🇻🇳 Tiếng Việt"
+            }
+        },
+        "aiStudio": {
+            "title": "AI Studio"
+        },
+        "scheduledPosts": {
+            "title": "Bài viết đã lên lịch"
         },
         "dashboard": {
             "title": "Bảng điều khiển",
@@ -56,8 +70,20 @@
                 "username": "Tên người dùng",
                 "email": "Email",
                 "status": "Trạng thái",
-                "joinDate": "Ngày tham gia",
+            "unknownUser": "Quản trị viên",
+            "theme": "Giao diện",
+            "themeLight": "Sáng",
+            "themeDark": "Tối",
+            "themeSystem": "Hệ thống",
+            "expandSidebar": "Mở thanh bên",
+            "collapseSidebar": "Thu gọn thanh bên"
                 "actions": "Thao tác"
+        "aiStudio": {
+            "title": "AI Studio"
+        },
+        "scheduledPosts": {
+            "title": "Bài đăng hẹn giờ"
+        },
             },
             "filters": {
                 "allStatuses": "Tất cả trạng thái",

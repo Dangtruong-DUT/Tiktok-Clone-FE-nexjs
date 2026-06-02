@@ -1,5 +1,67 @@
 {
     "SnapiStudio": {
+        "aiChat": {
+            "title": "AI Studio",
+            "status": {
+                "generating": "Generating...",
+                "done": "Done",
+                "completed": "Done",
+                "fallback": "Fallback"
+            },
+            "actions": {
+                "applyToPost": "Apply to post",
+                "applied": "Applied",
+                "addHashtags": "+ {count} hashtag",
+                "clearHistory": "Clear history"
+            },
+            "meta": {
+                "category": "Category",
+                "intent": "Intent",
+                "audience": "Audience",
+                "confidence": "Confidence"
+            },
+            "input": {
+                "placeholder": "Describe your video...",
+                "regenerateHint": "Type to regenerate",
+                "hintRegenerate": "Type to regenerate",
+                "sendHint": "Press Enter to send · Shift+Enter for new line",
+                "hintNew": "Press Enter to send · Shift+Enter for new line"
+            },
+            "caption": {
+                "empty": "No caption generated",
+                "chars": "{count} chars"
+            },
+            "tabs": {
+                "short": "Short",
+                "professional": "Professional",
+                "viral": "Viral"
+            },
+            "hashtags": {
+                "title": "Hashtags",
+                "count": "({selected}/{total})",
+                "selectAll": "Select all",
+                "deselect": "Deselect",
+                "copied": "Copied",
+                "copyAll": "Copy all"
+            },
+            "toast": {
+                "applied": "Caption and hashtags applied!",
+                "captionCopied": "Caption copied!",
+                "hashtagsCopied": "Hashtags copied!",
+                "tagCopied": "{tag} copied!"
+            },
+            "emptyCaption": "No caption generated",
+            "charCount": "{count} chars",
+            "welcome": {
+                "intro": "Hi! I am <strong>AI Studio</strong> — your video content assistant.",
+                "subtitle": "Enter a video description below and press <strong>Send</strong> to get:",
+                "items": {
+                    "shortCaption": "Short, professional, or viral captions",
+                    "hashtags": "Hashtags tailored to your content",
+                    "meta": "Category and target audience info"
+                }
+            }
+        },
         "footer": {
             "copyright": "Copyright © 2025 Snapi",
             "privacyPolicy": "Privacy Policy",
