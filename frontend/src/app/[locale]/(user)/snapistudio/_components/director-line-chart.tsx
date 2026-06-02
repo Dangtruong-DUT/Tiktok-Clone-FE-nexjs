@@ -70,8 +70,8 @@ export default function DirectorLineChart() {
         toDate: rangeDay.to
     })
 
-    const chartData = data?.data.Indicator || []
-    const total: Omit<UserIndicatorsData, 'Indicator'> = _.omit(data?.data, ['Indicator'])
+    const chartData = data?.data.indicator || []
+    const total = _.omit(data?.data, ['indicator']) as Omit<UserIndicatorsData, 'indicator'>
     return (
         <div>
             <div className='text-base font-bold flex justify-between items-center'>

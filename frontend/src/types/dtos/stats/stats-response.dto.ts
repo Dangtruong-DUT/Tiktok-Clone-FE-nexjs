@@ -11,7 +11,7 @@ export interface UserIndicatorsData {
     readonly guests_view: number
     readonly users_view: number
     readonly comments_count: number
-    readonly Indicator: UserIndicatorItem[]
+    readonly indicator: UserIndicatorItem[]
 }
 
 export interface UserIndicatorsResponse {
