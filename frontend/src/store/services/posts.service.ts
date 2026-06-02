@@ -135,6 +135,10 @@ export const PostApi = createApi({
                 getNextPageParam: ({ meta }) => {
                     if (!meta || meta.type !== 'cursor') return undefined
                     return meta.next_cursor ?? undefined
+                },
+                getPreviousPageParam: ({ meta }) => {
+                    if (!meta || meta.type !== 'cursor') return undefined
+                    return meta.prev_cursor ?? undefined
                 }
             }
         }),

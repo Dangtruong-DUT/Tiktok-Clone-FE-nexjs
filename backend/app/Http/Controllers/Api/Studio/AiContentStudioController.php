@@ -10,14 +10,11 @@ use App\Http\Resources\AiContentSuggestionResource;
 use App\Http\Response\ApiResponse;
 use App\Models\AiContentSuggestion;
 use App\Services\AI\ContentStudio\AiContentStudioService;
-use App\Traits\HasAuthUser;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class AiContentStudioController extends Controller
 {
-    use HasAuthUser;
-
     public function __construct(
         private readonly AiContentStudioService $service,
     ) {}
@@ -31,8 +28,8 @@ class AiContentStudioController extends Controller
     public function generate(GenerateAiContentSuggestionRequest $request): JsonResponse
     {
         $input      = AiContentStudioInputData::fromRequest($request);
-        $user       = $this->getAuthUser();
-        $suggestion = $this->service->initiateAsync($user->id, $input);
+        $userId     = (int) auth('api')->id();
+        $suggestion = $this->service->initiateAsync($userId, $input);
 
         return ApiResponse::success(
             data: new AiContentSuggestionResource($suggestion),
@@ -46,8 +43,8 @@ class AiContentStudioController extends Controller
      */
     public function index(ListAiContentSuggestionRequest $request): JsonResponse
     {
-        $user  = $this->getAuthUser();
-        $items = AiContentSuggestion::where('user_id', $user->id)
+        $userId = (int) auth('api')->id();
+        $items  = AiContentSuggestion::where('user_id', $userId)
             ->orderByDesc('created_at')
             ->paginate($request->input('per_page', 15));
 
@@ -64,9 +61,9 @@ class AiContentStudioController extends Controller
      */
     public function show(string $uuid): JsonResponse
     {
-        $user       = $this->getAuthUser();
+        $userId     = (int) auth('api')->id();
         $suggestion = AiContentSuggestion::where('uuid', $uuid)
-            ->where('user_id', $user->id)
+            ->where('user_id', $userId)
             ->firstOrFail();
 
         return ApiResponse::success(
@@ -80,9 +77,9 @@ class AiContentStudioController extends Controller
      */
     public function apply(string $uuid): JsonResponse
     {
-        $user       = $this->getAuthUser();
+        $userId     = (int) auth('api')->id();
         $suggestion = AiContentSuggestion::where('uuid', $uuid)
-            ->where('user_id', $user->id)
+            ->where('user_id', $userId)
             ->firstOrFail();
 
         $updated = $this->service->applySuggestion($suggestion);

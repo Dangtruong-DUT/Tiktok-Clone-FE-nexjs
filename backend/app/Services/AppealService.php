@@ -13,6 +13,7 @@ use App\Models\Appeal;
 use App\Repositories\AppealRepository;
 use App\Repositories\PostRepository;
 use App\Models\User;
+use App\Services\Upload\UploadService;
 use App\Traits\HasAuthUser;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 

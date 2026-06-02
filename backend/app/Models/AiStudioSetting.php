@@ -33,23 +33,33 @@ class AiStudioSetting extends Model
     }
 
     /**
-     * Get or create the singleton settings record.
+     * Get or create the singleton settings record (id = 1).
+     *
+     * Uses find + manual save to avoid mass-assignment on the primary key.
      */
     public static function current(): self
     {
-        return self::firstOrCreate(['id' => 1], [
-            'daily_limit_per_user'  => 20,
-            'global_daily_limit'    => 5000,
-            'rate_limit_per_minute' => 10,
-            'is_enabled'            => true,
-            'require_min_input'     => true,
-            'gemini_model'          => 'gemini-1.5-flash',
-            'max_output_tokens'     => 2048,
-            'temperature'           => 0.70,
-            'timeout_seconds'       => 30,
-            'cache_ttl_hours'       => 6,
-            'async_mode'            => true,
-        ]);
+        $setting = self::find(1);
+
+        if ($setting) {
+            return $setting;
+        }
+
+        $setting = new self();
+        $setting->daily_limit_per_user  = 20;
+        $setting->global_daily_limit    = 5000;
+        $setting->rate_limit_per_minute = 10;
+        $setting->is_enabled            = true;
+        $setting->require_min_input     = true;
+        $setting->gemini_model          = 'gemini-1.5-flash';
+        $setting->max_output_tokens     = 2048;
+        $setting->temperature           = 0.70;
+        $setting->timeout_seconds       = 30;
+        $setting->cache_ttl_hours       = 6;
+        $setting->async_mode            = true;
+        $setting->save();
+
+        return $setting;
     }
 
     public function updatedBy(): BelongsTo

@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Exceptions\Http;
+namespace App\Exceptions\http;
 
-use App\Exceptions\Http\BaseException;
 use Symfony\Component\HttpFoundation\Response;
 
 class ServiceUnavailableException extends BaseException

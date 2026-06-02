@@ -115,8 +115,8 @@ export function AiStudioRequests() {
                         <SelectItem value='failed'>Failed</SelectItem>
                     </SelectContent>
                 </Select>
-                {meta && (
-                    <span className='text-xs text-muted-foreground ml-auto'>{meta.total?.toLocaleString()} total</span>
+                {meta && meta.type === 'offset' && meta.total != null && (
+                    <span className='text-xs text-muted-foreground ml-auto'>{meta.total.toLocaleString()} total</span>
                 )}
             </div>
 
@@ -173,7 +173,7 @@ export function AiStudioRequests() {
             </Card>
 
             {/* Pagination */}
-            {meta && meta.last_page > 1 && (
+            {meta && meta.type === 'offset' && meta.last_page > 1 && (
                 <div className='flex items-center justify-center gap-2'>
                     <button
                         onClick={() => setPage((p) => Math.max(1, p - 1))}

@@ -5,6 +5,7 @@ use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\CheckUserStatus;
 use App\Http\Middleware\CookieToBearer;
 use App\Http\Middleware\ForceJsonResponse;
+use App\Http\Middleware\SetLocaleFromHeader;
 use App\Http\Response\ApiResponse;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
@@ -36,6 +37,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append([
             CookieToBearer::class,
             ForceJsonResponse::class,
+            SetLocaleFromHeader::class,
         ]);
 
         $middleware->appendToGroup('api', [

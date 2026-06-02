@@ -4,18 +4,43 @@ import { Mutex } from 'async-mutex'
 import envConfig from '@/config/app.config'
 import { NEXT_API_ENDPOINT } from '@/constants/api/endpoints'
 import { setLoggedOutAction } from '@/store/features/authSlice'
+import type { RootState } from '@/store'
 import { HTTP_STATUS } from '@/constants/api/http-status'
 import { getExponentialBackoffDelay, sleep } from '@/utils/backoff.util'
 
+const SUPPORTED_LOCALES = ['vi', 'en'] as const
+
+function getLocaleFromPath(): string {
+    if (typeof window === 'undefined') return 'vi'
+    const segment = window.location.pathname.split('/')[1] ?? ''
+    return (SUPPORTED_LOCALES as readonly string[]).includes(segment) ? segment : 'vi'
+}
+
 export const BackendBaseQuery = fetchBaseQuery({
     baseUrl: envConfig.NEXT_PUBLIC_API_ENDPOINT,
-    credentials: 'include'
+    credentials: 'include',
+    prepareHeaders: (headers) => {
+        headers.set('X-Locale', getLocaleFromPath())
+        return headers
+    }
 })
 
 export const BffBaseQuery = fetchBaseQuery({ baseUrl: '' })
 
 const mutex = new Mutex()
 const MAX_REFRESH_RETRIES = 3
+
+function getRequestUrl(args: string | FetchArgs): string {
+    return typeof args === 'string' ? args : args.url
+}
+
+function shouldSkipReauth(args: string | FetchArgs, state: RootState): boolean {
+    const requestUrl = getRequestUrl(args)
+    const isAuthRoute =
+        requestUrl === NEXT_API_ENDPOINT.AUTH.LOGOUT || requestUrl === NEXT_API_ENDPOINT.AUTH.REFRESH_TOKEN
+
+    return isAuthRoute || !state.auth.isAuthenticated
+}
 
 const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
     args,
@@ -24,6 +49,13 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 ) => {
     await mutex.waitForUnlock()
     let result = await BackendBaseQuery(args, api, extraOptions)
+    const state = api.getState() as RootState
+
+    if (result.error?.status === HTTP_STATUS.UNAUTHORIZED && shouldSkipReauth(args, state)) {
+        await BffBaseQuery({ url: NEXT_API_ENDPOINT.AUTH.LOGOUT, method: 'POST' }, api, extraOptions)
+        api.dispatch(setLoggedOutAction())
+        return result
+    }
 
     let refreshAttempts = 0
 

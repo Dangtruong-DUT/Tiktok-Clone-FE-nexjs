@@ -10,14 +10,11 @@ use App\Http\Resources\Api\Admin\AiSuggestionAdminResource;
 use App\Http\Response\ApiResponse;
 use App\Models\AiStudioSetting;
 use App\Services\Admin\AiStudioAdminService;
-use App\Traits\HasAuthUser;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AiStudioAdminController extends Controller
 {
-    use HasAuthUser;
-
     public function __construct(
         private readonly AiStudioAdminService $service,
     ) {}
@@ -57,7 +54,7 @@ class AiStudioAdminController extends Controller
     {
         $settings = $this->service->updateSettings(
             $request->validated(),
-            $this->getAuthUser()->id,
+            (int) auth('api')->id(),
         );
 
         return ApiResponse::success(

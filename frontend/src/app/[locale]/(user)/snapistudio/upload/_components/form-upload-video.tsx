@@ -13,7 +13,6 @@ import AlertDialogExitPage from '@/app/[locale]/(user)/snapistudio/upload/_compo
 import MentionHashtagTextField from '@/components/forms/mention-hashtag-text-field'
 import { useUploadFormManager } from '@/app/[locale]/(user)/snapistudio/upload/_hooks/useUploadFormManager'
 import { AiFloatingChat } from '@/app/[locale]/(user)/snapistudio/upload/_components/ai-floating-chat/AiFloatingChat'
-import { AiContentSuggestionType } from '@/types/models/ai-content-suggestion.model'
 
 export default function FormUploadVideo() {
     const t = useTranslations('SnapiStudio.upload')
@@ -47,14 +46,8 @@ export default function FormUploadVideo() {
 
     const content = form.watch('content')
 
-    const handleAiCaptionSelect = (caption: string) => {
-        form.setValue('content', caption, { shouldDirty: true, shouldValidate: true })
-    }
-
-    const handleAiApplied = (suggestion: AiContentSuggestionType) => {
-        if (suggestion.short_caption) {
-            form.setValue('content', suggestion.short_caption, { shouldDirty: true })
-        }
+    const handleAiApply = (text: string) => {
+        form.setValue('content', text, { shouldDirty: true, shouldValidate: true })
     }
 
     return (
@@ -217,13 +210,7 @@ export default function FormUploadVideo() {
             </Form>
 
             {/* AI Floating Chat — only show after video is uploaded */}
-            {!isInitialRender && (
-                <AiFloatingChat
-                    initialDescription={content ?? ''}
-                    onCaptionSelect={handleAiCaptionSelect}
-                    onApplied={handleAiApplied}
-                />
-            )}
+            {!isInitialRender && <AiFloatingChat currentContent={content ?? ''} onApply={handleAiApply} />}
         </>
     )
 }

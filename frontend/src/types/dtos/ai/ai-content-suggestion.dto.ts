@@ -6,7 +6,7 @@ export const GenerateAiSuggestionReqBody = z
         video_description: z.string().max(2000).optional(),
         video_transcript: z.string().max(5000).optional(),
         ocr_text: z.string().max(1000).optional(),
-        creator_language: z.enum(['vi', 'en', 'ja', 'ko', 'zh', 'other']),
+        creator_language: z.enum(['vi', 'en', 'ja', 'ko', 'zh', 'other']).optional(),
         video_category: z.string().max(100).optional(),
         regenerate: z.boolean().optional()
     })
