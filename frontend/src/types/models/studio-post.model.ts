@@ -13,6 +13,8 @@ interface StudioScheduledPostBrief {
 export interface StudioPostItem {
     uuid:           string
     content:        string | null
+    thumbnail_url:  string | null
+    audience:       number | null
     status:         StudioPostStatus
     status_label:   string
     published_at:   string | null

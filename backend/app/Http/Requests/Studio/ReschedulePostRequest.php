@@ -16,7 +16,7 @@ class ReschedulePostRequest extends FormRequest
     {
         return [
             'scheduled_at' => ['required', 'date', 'after:now'],
-            'timezone'     => ['sometimes', 'string', 'timezone', 'max:50'],
+            'timezone'     => ['sometimes', 'nullable', 'string', 'max:100'],
         ];
     }
 

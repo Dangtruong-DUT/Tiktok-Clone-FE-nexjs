@@ -73,7 +73,7 @@ export function AiStudioMetrics() {
                     ))}
                 </div>
             ) : metrics ? (
-                <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4'>
+                <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4'>
                     <StatCard
                         label={t('aiStudio.metrics.stats.totalRequests')}
                         value={metrics.total_requests.toLocaleString()}
@@ -94,21 +94,14 @@ export function AiStudioMetrics() {
                         color={metrics.failed > 0 ? 'text-red-500' : 'text-foreground'}
                     />
                     <StatCard
-                        label={t('aiStudio.metrics.stats.applyRate')}
-                        value={`${metrics.apply_rate}%`}
-                        sub={t('aiStudio.metrics.sub.suggestionsUsed')}
-                        icon={TrendingUp}
-                        color='text-blue-600'
-                    />
-                    <StatCard
                         label={t('aiStudio.metrics.stats.uniqueUsers')}
                         value={metrics.unique_users.toLocaleString()}
                         icon={Users}
                     />
                     <StatCard
                         label={t('aiStudio.metrics.stats.estCost')}
-                        value={`$${metrics.estimated_cost_usd.toFixed(4)}`}
-                        sub={t('aiStudio.metrics.sub.tokens', { count: metrics.total_tokens.toLocaleString() })}
+                        value={`$${(metrics.total_cost_usd ?? metrics.estimated_cost_usd ?? 0).toFixed(4)}`}
+                        sub={t('aiStudio.metrics.sub.tokens', { count: (metrics.total_tokens ?? 0).toLocaleString() })}
                         icon={DollarSign}
                     />
                 </div>
@@ -133,15 +126,9 @@ export function AiStudioMetrics() {
                             />
                             <Legend wrapperStyle={{ fontSize: 12 }} />
                             <Bar
-                                dataKey='completed'
-                                fill='hsl(142 76% 36%)'
-                                name={t('aiStudio.metrics.charts.completed')}
-                                radius={[4, 4, 0, 0]}
-                            />
-                            <Bar
-                                dataKey='failed'
-                                fill='hsl(0 84% 60%)'
-                                name={t('aiStudio.metrics.charts.failed')}
+                                dataKey='total'
+                                fill='hsl(var(--primary))'
+                                name='Requests'
                                 radius={[4, 4, 0, 0]}
                             />
                         </BarChart>

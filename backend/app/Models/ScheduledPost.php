@@ -22,7 +22,6 @@ class ScheduledPost extends Model
         'user_timezone',
         'status',
         'source',
-        'calendar_item_id',
         'published_at',
         'error_message',
     ];
@@ -50,8 +49,5 @@ class ScheduledPost extends Model
         return $this->belongsTo(Post::class);
     }
 
-    public function calendarItem(): BelongsTo
-    {
-        return $this->belongsTo(AiContentCalendarItem::class, 'calendar_item_id');
-    }
+
 }

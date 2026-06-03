@@ -2,10 +2,8 @@ import { AppealApi } from '@/store/services/appeal.service'
 import { AdminApi } from '@/store/services/admin/admin-api.service'
 import { AdminAiStudioApi } from '@/store/services/admin/admin-ai-studio.service'
 import { AdminScheduledPostsApi } from '@/store/services/admin/admin-scheduled-posts.service'
-import { AiContentCalendarApi } from '@/store/services/ai-content-calendar.service'
-import { AiContentStudioApi } from '@/store/services/ai-content-studio.service'
-import { AiCreatorChatApi } from '@/store/services/ai-creator-chat.service'
-import { AiViralScoreApi } from '@/store/services/ai-viral-score.service'
+import { AiCopilotApi } from '@/store/services/ai-copilot.service'
+import { AdminAiCopilotApi } from '@/store/services/admin/admin-ai-copilot.service'
 import { AuthApi } from '@/store/services/auth.service'
 import { NotificationApi } from '@/store/services/notification.service'
 import { PostApi } from '@/store/services/posts.service'
@@ -37,15 +35,13 @@ export const makeStore = () => {
             [NotificationApi.reducerPath]:       NotificationApi.reducer,
             [AdminApi.reducerPath]:              AdminApi.reducer,
             [AppealApi.reducerPath]:             AppealApi.reducer,
-            [AiContentStudioApi.reducerPath]:    AiContentStudioApi.reducer,
             [AdminAiStudioApi.reducerPath]:      AdminAiStudioApi.reducer,
             [AdminScheduledPostsApi.reducerPath]: AdminScheduledPostsApi.reducer,
-            [AiCreatorChatApi.reducerPath]:      AiCreatorChatApi.reducer,
-            [AiViralScoreApi.reducerPath]:       AiViralScoreApi.reducer,
-            [AiContentCalendarApi.reducerPath]:  AiContentCalendarApi.reducer,
             [StudioPostScheduleApi.reducerPath]: StudioPostScheduleApi.reducer,
             [ScreenTimeApi.reducerPath]:         ScreenTimeApi.reducer,
             [WellnessRuleApi.reducerPath]:       WellnessRuleApi.reducer,
+            [AiCopilotApi.reducerPath]:          AiCopilotApi.reducer,
+            [AdminAiCopilotApi.reducerPath]:     AdminAiCopilotApi.reducer,
             auth:            authReducer,
             app:             appReducer,
             modal:           modalReducer,
@@ -63,18 +59,16 @@ export const makeStore = () => {
                 NotificationApi.middleware,
                 AdminApi.middleware,
                 AppealApi.middleware,
-                AiContentStudioApi.middleware,
                 AdminAiStudioApi.middleware,
                 AdminScheduledPostsApi.middleware,
-                AiCreatorChatApi.middleware,
-                AiViralScoreApi.middleware,
-                AiContentCalendarApi.middleware,
                 StudioPostScheduleApi.middleware,
                 ScreenTimeApi.middleware,
                 WellnessRuleApi.middleware,
+                AiCopilotApi.middleware,
+                AdminAiCopilotApi.middleware,
                 authMiddleware,
-                errorHandleMiddleware
-            )
+                errorHandleMiddleware,
+            ),
     })
 }
 

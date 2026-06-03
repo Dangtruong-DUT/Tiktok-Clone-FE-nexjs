@@ -2,17 +2,12 @@
 
 namespace App\Services\AI\Schedule;
 
-use App\Enums\Ai\CalendarItemStatusEnum;
 use App\Enums\Ai\ScheduledPostSourceEnum;
 use App\Enums\Ai\ScheduledPostStatusEnum;
 use App\Enums\Post\PostPublishStatusEnum;
 use App\Exceptions\http\BadRequestException;
-use App\Exceptions\http\UnprocessableException;
-use App\Models\AiContentCalendarItem;
 use App\Models\Post;
 use App\Models\ScheduledPost;
-use App\Repositories\AiContentCalendarItemRepository;
-use App\Repositories\AiContentSuggestionRepository;
 use App\Repositories\ScheduledPostRepository;
 use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -21,8 +16,7 @@ use Illuminate\Support\Str;
 class PostScheduleService
 {
     public function __construct(
-        private readonly ScheduledPostRepository           $scheduledPostRepository,
-        private readonly AiContentCalendarItemRepository   $calendarItemRepository,
+        private readonly ScheduledPostRepository $scheduledPostRepository,
     ) {}
 
     public function schedulePost(Post $post, int $userId, string $scheduledAtInput, string $timezone): ScheduledPost
@@ -39,7 +33,8 @@ class PostScheduleService
             throw new BadRequestException('This post is already scheduled. Cancel the existing schedule first.');
         }
 
-        $scheduledAt = Carbon::parse($scheduledAtInput, $timezone)->utc();
+        // scheduled_at is sent as UTC ISO from frontend — parse without timezone interpretation
+        $scheduledAt = Carbon::parse($scheduledAtInput)->utc();
 
         if ($scheduledAt->isPast()) {
             throw new BadRequestException('Scheduled time must be in the future.');
@@ -59,49 +54,6 @@ class PostScheduleService
         ]);
     }
 
-    public function scheduleFromCalendarItem(
-        AiContentCalendarItem $item,
-        int $userId,
-        string $scheduledAtInput,
-        string $timezone
-    ): ScheduledPost {
-        $post = $item->draftPost;
-
-        if (! $post) {
-            throw new BadRequestException('Create a draft post first before scheduling.');
-        }
-
-        if ($this->scheduledPostRepository->findByPostForUser($post->id, $userId)) {
-            throw new BadRequestException('This post is already scheduled. Cancel the existing schedule first.');
-        }
-
-        $scheduledAt = Carbon::parse($scheduledAtInput, $timezone)->utc();
-
-        if ($scheduledAt->isPast()) {
-            throw new BadRequestException('Scheduled time must be in the future.');
-        }
-
-        $post->update(['status' => PostPublishStatusEnum::SCHEDULED]);
-
-        /** @var ScheduledPost */
-        $scheduledPost = $this->scheduledPostRepository->create([
-            'uuid'             => (string) Str::uuid(),
-            'user_id'          => $userId,
-            'post_id'          => $post->id,
-            'scheduled_at'     => $scheduledAt,
-            'user_timezone'    => $timezone,
-            'status'           => ScheduledPostStatusEnum::PENDING,
-            'source'           => ScheduledPostSourceEnum::CALENDAR,
-            'calendar_item_id' => $item->id,
-        ]);
-
-        $this->calendarItemRepository->update($item->id, [
-            'status' => CalendarItemStatusEnum::SCHEDULED,
-        ]);
-
-        return $scheduledPost;
-    }
-
     public function cancelSchedule(ScheduledPost $scheduledPost, int $userId): ScheduledPost
     {
         if ($scheduledPost->user_id !== $userId) {
@@ -113,12 +65,6 @@ class PostScheduleService
         }
 
         $scheduledPost->post->update(['status' => PostPublishStatusEnum::DRAFT]);
-
-        if ($scheduledPost->calendar_item_id) {
-            $this->calendarItemRepository->update($scheduledPost->calendar_item_id, [
-                'status' => CalendarItemStatusEnum::DRAFT,
-            ]);
-        }
 
         /** @var ScheduledPost */
         return $this->scheduledPostRepository->update($scheduledPost->id, [
@@ -180,12 +126,6 @@ class PostScheduleService
             'status'       => ScheduledPostStatusEnum::PUBLISHED,
             'published_at' => now(),
         ]);
-
-        if ($scheduledPost->calendar_item_id) {
-            $this->calendarItemRepository->update($scheduledPost->calendar_item_id, [
-                'status' => CalendarItemStatusEnum::PUBLISHED,
-            ]);
-        }
     }
 
     public function markFailed(ScheduledPost $scheduledPost, string $reason): void
@@ -208,7 +148,8 @@ class PostScheduleService
             throw new BadRequestException('Only pending schedules can be rescheduled.');
         }
 
-        $scheduledAt = Carbon::parse($scheduledAtInput, $timezone)->utc();
+        // scheduled_at is sent as UTC ISO from frontend — parse without timezone interpretation
+        $scheduledAt = Carbon::parse($scheduledAtInput)->utc();
 
         if ($scheduledAt->isPast()) {
             throw new BadRequestException('Scheduled time must be in the future.');

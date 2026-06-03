@@ -376,6 +376,13 @@
                 "published": "Đã đăng",
                 "failed": "Thất bại"
             },
+            "filters": {
+                "all": "Tất cả",
+                "draft": "Bản nháp",
+                "scheduled": "Lên lịch",
+                "published": "Đã đăng",
+                "failed": "Thất bại"
+            },
             "noContent": "Không có bài đăng nào.",
             "noContentPreview": "Chưa có nội dung",
             "actions": {
@@ -524,6 +531,47 @@
                     "deleted": "Đã xóa quy tắc."
                 }
             },
+            "ruleChat": {
+                "title": "Wellness Rule",
+                "modeAI": "AI Prompt",
+                "modeManual": "Thủ công",
+                "aiHint": "Mô tả rule của bạn — AI sẽ parse thành cấu trúc tự động.",
+                "aiPlaceholder": "Ví dụ: Nhắc tôi nghỉ sau 1 tiếng dùng liên tục...",
+                "analyzeBtn": "Phân tích",
+                "analyzing": "Đang phân tích…",
+                "saveRule": "Lưu rule",
+                "saving": "Đang lưu…",
+                "dismiss": "Bỏ",
+                "ruleType": "Loại rule",
+                "duration": "Thời gian (phút)",
+                "action": "Hành động",
+                "titleLabel": "Tiêu đề",
+                "titleRequired": "Tiêu đề *",
+                "titlePlaceholder": "Ví dụ: Nghỉ ngơi mắt",
+                "messageLabel": "Nội dung thông báo",
+                "messagePlaceholder": "Bỏ trống = tự động",
+                "confidencePct": "{pct}% confidence",
+                "errorParse": "Không thể phân tích. Hãy thử diễn đạt khác.",
+                "errorSave": "Không thể lưu rule.",
+                "errorTitle": "Vui lòng nhập tiêu đề rule.",
+                "toastSaved": "Đã lưu rule!",
+                "types": {
+                    "continuous_usage": "Dùng liên tục",
+                    "daily_limit": "Giới hạn ngày",
+                    "video_watch_time": "Xem video",
+                    "late_night": "Sử dụng khuya"
+                },
+                "actions": {
+                    "warning": "Cảnh báo",
+                    "soft_block": "Yêu cầu xác nhận"
+                },
+                "quickPrompts": [
+                    "Nhắc tôi nghỉ sau 1 tiếng",
+                    "Giới hạn 3 tiếng mỗi ngày",
+                    "Cảnh báo sau 2 tiếng xem video",
+                    "Khoá màn hình sau 90 phút"
+                ]
+            },
             "analysis": {
                 "analyzeBtn": "Phân tích 7 ngày gần đây",
                 "analyzing": "Đang phân tích...",
@@ -535,6 +583,48 @@
                 "toast": {
                     "ruleAdded": "Quy tắc đã được thêm!"
                 }
+            }
+        },
+        "aiCopilot": {
+            "title": "AI Copilot",
+            "thinking": "Đang suy nghĩ…",
+            "startingSession": "Đang khởi động…",
+            "ready": "AI Copilot sẵn sàng",
+            "largeVideo": "Video của bạn khá lớn — hãy mô tả nội dung và tôi sẽ hỗ trợ!",
+            "emptyHint": "Hãy hỏi tôi để viết caption, tạo hashtag, phân tích hook và nhiều hơn nữa.",
+            "quickPrompts": ["Viết caption", "Tạo hashtag", "Phân tích viral", "Đánh giá hook"],
+            "input": {
+                "placeholder": "Hỏi AI Copilot bất cứ điều gì…"
+            },
+            "contentCard": {
+                "applied": "Đã áp dụng vào form",
+                "dismissed": "Đã bỏ qua",
+                "accept": "Chấp nhận",
+                "reject": "Bỏ qua"
+            },
+            "scheduleCard": {
+                "panelTitle": "Đề xuất lịch đăng bài",
+                "scheduledAs": "Đã lên lịch: {time}",
+                "cancelled": "Đã huỷ",
+                "schedule": "Lên lịch ngay",
+                "changeTime": "Đổi thời gian",
+                "toastSuccess": "Đã lên lịch đăng vào {time}",
+                "toastError": "Không thể lên lịch. Vui lòng thử lại."
+            },
+            "attachments": {
+                "panelTitle": "AI — Chọn đoạn / khung hình",
+                "timelineLabel": "Chọn đoạn video",
+                "frameLabel": "Chụp khung hình",
+                "frameHint": "Tua video đến vị trí muốn chụp rồi nhấn nút camera. Tối đa 5 khung.",
+                "selectSegment": "Chọn đoạn",
+                "enable": "Bật",
+                "clear": "Xoá",
+                "start": "Bắt đầu",
+                "end": "Kết thúc",
+                "captureFrame": "Chụp khung hình hiện tại",
+                "framesCount": "{count}/{max} khung đã chọn",
+                "extracting": "Đang tải khung hình…",
+                "openFilmstrip": "Chọn khung hình từ video"
             }
         },
         "appeals": {

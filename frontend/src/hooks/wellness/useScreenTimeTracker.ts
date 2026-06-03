@@ -47,7 +47,8 @@ export function useScreenTimeTracker(isAuthenticated: boolean) {
     const sessionUuidRef       = useRef<string | null>(null)
     const sessionStartedAtRef  = useRef<number | null>(null)
     const videoAccumulatorRef  = useRef(0)
-    const lastAlertRuleRef     = useRef<string | null>(null)
+    // Tracks which "cycle" (0,1,2...) each rule last fired at, so it repeats every threshold interval
+    const lastAlertCycleRef    = useRef<Map<string, number>>(new Map())
 
     // Sync Redux state into refs so cleanup closures see current values
     useEffect(() => { sessionUuidRef.current = sessionUuid },      [sessionUuid])
@@ -140,46 +141,69 @@ export function useScreenTimeTracker(isAuthenticated: boolean) {
     const evaluateRules = useCallback((rules: WellnessRuleItem[]) => {
         if (isAlertVisible) return
 
-        const elapsedMinutes    = sessionStartedAt ? (Date.now() - sessionStartedAt) / 60_000 : 0
-        const totalMinutesToday = (todayTotalSeconds + elapsedMinutes * 60) / 60
+        const now               = Date.now()
+        const totalMinutesToday = (todayTotalSeconds) / 60
         const videoMinutesToday = (todayVideoSeconds + videoWatchSeconds) / 60
-        const currentHour       = new Date().getHours()
+        const currentHour       = new Date(now).getHours()
 
         for (const rule of rules) {
             if (!rule.is_enabled) continue
-            if (lastAlertRuleRef.current === rule.uuid) continue
 
             let triggered = false
+            let cycleKey  = rule.uuid
 
             if (rule.type === WELLNESS_RULE_TYPES.CONTINUOUS_USAGE) {
-                const threshold = Number(rule.conditions['minutes'] ?? 120)
-                triggered = elapsedMinutes >= threshold
+                // Count from when the rule was CREATED, fire every threshold interval
+                const threshold         = Number(rule.conditions['minutes'] ?? 120)
+                const ruleCreatedAt     = new Date(rule.created_at).getTime()
+                const minutesSinceCreated = (now - ruleCreatedAt) / 60_000
+                const currentCycle      = Math.floor(minutesSinceCreated / threshold)
+                const lastCycle         = lastAlertCycleRef.current.get(cycleKey) ?? -1
+                if (currentCycle > lastCycle && minutesSinceCreated >= threshold) {
+                    triggered = true
+                    lastAlertCycleRef.current.set(cycleKey, currentCycle)
+                }
             } else if (rule.type === WELLNESS_RULE_TYPES.DAILY_LIMIT) {
-                const threshold = Number(rule.conditions['minutes'] ?? 180)
-                triggered = totalMinutesToday >= threshold
+                const threshold  = Number(rule.conditions['minutes'] ?? 180)
+                const lastCycle  = lastAlertCycleRef.current.get(cycleKey) ?? -1
+                const currentCycle = totalMinutesToday >= threshold ? 1 : 0
+                if (currentCycle > lastCycle) {
+                    triggered = true
+                    lastAlertCycleRef.current.set(cycleKey, currentCycle)
+                }
             } else if (rule.type === WELLNESS_RULE_TYPES.VIDEO_WATCH_TIME) {
-                const threshold = Number(rule.conditions['minutes'] ?? 90)
-                triggered = videoMinutesToday >= threshold
+                const threshold  = Number(rule.conditions['minutes'] ?? 90)
+                const lastCycle  = lastAlertCycleRef.current.get(cycleKey) ?? -1
+                const currentCycle = videoMinutesToday >= threshold ? 1 : 0
+                if (currentCycle > lastCycle) {
+                    triggered = true
+                    lastAlertCycleRef.current.set(cycleKey, currentCycle)
+                }
             } else if (rule.type === WELLNESS_RULE_TYPES.LATE_NIGHT) {
-                const fromHour = Number(rule.conditions['from_hour'] ?? 22)
-                const toHour   = Number(rule.conditions['to_hour']   ?? 6)
-                triggered = fromHour > toHour
-                    ? currentHour >= fromHour || currentHour < toHour  // spans midnight
+                const fromHour   = Number(rule.conditions['from_hour'] ?? 22)
+                const toHour     = Number(rule.conditions['to_hour']   ?? 6)
+                const inLateNight = fromHour > toHour
+                    ? currentHour >= fromHour || currentHour < toHour
                     : currentHour >= fromHour && currentHour < toHour
+                const lastCycle  = lastAlertCycleRef.current.get(cycleKey) ?? -1
+                const currentCycle = inLateNight ? currentHour : -1
+                if (inLateNight && currentCycle !== lastCycle) {
+                    triggered = true
+                    lastAlertCycleRef.current.set(cycleKey, currentCycle)
+                }
             }
 
             if (triggered) {
-                lastAlertRuleRef.current = rule.uuid
                 dispatch(showAlert({
                     title:    rule.title,
                     message:  rule.message,
                     ruleUuid: rule.uuid,
                     action:   rule.action,
                 }))
-                break // show one alert at a time
+                break
             }
         }
-    }, [isAlertVisible, sessionStartedAt, todayTotalSeconds, todayVideoSeconds, videoWatchSeconds, dispatch])
+    }, [isAlertVisible, todayTotalSeconds, todayVideoSeconds, videoWatchSeconds, dispatch])
 
     useEffect(() => {
         const rules = rulesData?.data

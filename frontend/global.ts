@@ -1,3 +1,4 @@
+// Types auto-generated from message JSON files — restart TS server if new namespaces are missing
 import { routing } from '@/i18n/routing'
 import common from './messages/en/common.json'
 import auth from './messages/en/auth.json'

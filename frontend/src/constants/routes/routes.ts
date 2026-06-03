@@ -36,10 +36,6 @@ export const SNAPISTUDIO_ROUTES = {
     SETTINGS: '/snapistudio/settings',
     UPLOAD: '/snapistudio/upload',
     UPLOAD_POST: (postId: string) => `/snapistudio/upload/post/${postId}`,
-    AI_STUDIO: '/snapistudio/ai',
-    AI_CHAT: '/snapistudio/ai/chat',
-    AI_VIRAL_SCORE: '/snapistudio/ai/viral-score',
-    AI_CALENDAR: '/snapistudio/ai/calendar',
     SCHEDULED_POSTS: '/snapistudio/scheduled-posts',
     WELLNESS: '/snapistudio/wellness'
 } as const

@@ -3,27 +3,29 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
-    /**
-     * A list of the exception types that are not reported.
-     *
-     * @var array<int, class-string<Throwable>>
-     */
-    protected $dontReport = [
-        //
-    ];
+    protected $dontReport = [];
 
-    /**
-     * A list of the inputs that are never flashed for validation exceptions.
-     *
-     * @var array<int, string>
-     */
     protected $dontFlash = [
         'current_password',
         'password',
         'password_confirmation',
     ];
+
+    public function render($request, Throwable $e): mixed
+    {
+        if ($request->expectsJson() && $e instanceof GeminiQuotaExceededException) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'AI quota exceeded. Please wait a few minutes and try again.',
+                'code'    => 'AI_QUOTA_EXCEEDED',
+            ], 429);
+        }
+
+        return parent::render($request, $e);
+    }
 }

@@ -376,6 +376,13 @@
                 "published": "Published",
                 "failed": "Failed"
             },
+            "filters": {
+                "all": "All",
+                "draft": "Draft",
+                "scheduled": "Scheduled",
+                "published": "Published",
+                "failed": "Failed"
+            },
             "noContent": "No posts yet.",
             "noContentPreview": "No content",
             "actions": {
@@ -524,6 +531,47 @@
                     "deleted": "Rule deleted."
                 }
             },
+            "ruleChat": {
+                "title": "Wellness Rule",
+                "modeAI": "AI Prompt",
+                "modeManual": "Manual",
+                "aiHint": "Describe your rule — AI will parse it into structure automatically.",
+                "aiPlaceholder": "E.g.: Remind me to rest after 1 hour of continuous use...",
+                "analyzeBtn": "Analyze",
+                "analyzing": "Analyzing…",
+                "saveRule": "Save rule",
+                "saving": "Saving…",
+                "dismiss": "Dismiss",
+                "ruleType": "Rule type",
+                "duration": "Duration (minutes)",
+                "action": "Action",
+                "titleLabel": "Title",
+                "titleRequired": "Title *",
+                "titlePlaceholder": "E.g.: Eye rest reminder",
+                "messageLabel": "Notification message",
+                "messagePlaceholder": "Leave blank for auto-generated",
+                "confidencePct": "{pct}% confidence",
+                "errorParse": "Could not analyze. Try rephrasing.",
+                "errorSave": "Could not save rule.",
+                "errorTitle": "Please enter a rule title.",
+                "toastSaved": "Rule saved!",
+                "types": {
+                    "continuous_usage": "Continuous use",
+                    "daily_limit": "Daily limit",
+                    "video_watch_time": "Video watch time",
+                    "late_night": "Late night use"
+                },
+                "actions": {
+                    "warning": "Warning",
+                    "soft_block": "Require confirmation"
+                },
+                "quickPrompts": [
+                    "Remind me to rest after 1 hour",
+                    "Limit 3 hours per day",
+                    "Warn after 2 hours of video",
+                    "Block after 90 minutes"
+                ]
+            },
             "analysis": {
                 "analyzeBtn": "Analyze last 7 days",
                 "analyzing": "Analyzing...",
@@ -535,6 +583,48 @@
                 "toast": {
                     "ruleAdded": "Rule added!"
                 }
+            }
+        },
+        "aiCopilot": {
+            "title": "AI Copilot",
+            "thinking": "Thinking…",
+            "startingSession": "Starting session…",
+            "ready": "AI Copilot ready",
+            "largeVideo": "Your video is large — describe it to me and I'll help!",
+            "emptyHint": "Ask me to write a caption, generate hashtags, analyze your hook, and more.",
+            "quickPrompts": ["Write a caption", "Generate hashtags", "Analyze viral potential", "Evaluate the hook"],
+            "input": {
+                "placeholder": "Ask the AI Copilot anything…"
+            },
+            "contentCard": {
+                "applied": "Applied to form",
+                "dismissed": "Dismissed",
+                "accept": "Accept",
+                "reject": "Reject"
+            },
+            "scheduleCard": {
+                "panelTitle": "Proposed publish time",
+                "scheduledAs": "Scheduled: {time}",
+                "cancelled": "Cancelled",
+                "schedule": "Schedule now",
+                "changeTime": "Change time",
+                "toastSuccess": "Scheduled for {time}",
+                "toastError": "Could not schedule. Please try again."
+            },
+            "attachments": {
+                "panelTitle": "AI — Select segment / frame",
+                "timelineLabel": "Select video segment",
+                "frameLabel": "Capture frame",
+                "frameHint": "Seek to the position you want, then click the camera icon. Max 5 frames.",
+                "selectSegment": "Select segment",
+                "enable": "Enable",
+                "clear": "Clear",
+                "start": "Start",
+                "end": "End",
+                "captureFrame": "Capture current frame",
+                "framesCount": "{count}/{max} frames selected",
+                "extracting": "Loading frames…",
+                "openFilmstrip": "Select frames from video"
             }
         },
         "appeals": {

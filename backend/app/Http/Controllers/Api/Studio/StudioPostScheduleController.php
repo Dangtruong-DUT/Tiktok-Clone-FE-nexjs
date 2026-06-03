@@ -45,6 +45,21 @@ class StudioPostScheduleController extends Controller
         $query = Post::where('user_id', $userId)
             ->orderByDesc('updated_at');
 
+        // Full-text search on content
+        if ($q = trim((string) $request->input('q', ''))) {
+            $query->where('content', 'ilike', "%{$q}%");
+        }
+
+        // Schedule status: has_schedule=1 (scheduled posts only), has_schedule=0 (no schedule)
+        if ($request->has('has_schedule')) {
+            $hasSchedule = (bool) $request->input('has_schedule');
+            if ($hasSchedule) {
+                $query->whereHas('scheduledPost');
+            } else {
+                $query->whereDoesntHave('scheduledPost');
+            }
+        }
+
         if ($status && in_array($status, $allowedStatuses, true)) {
             $query->where('status', $status);
         } else {
@@ -57,11 +72,17 @@ class StudioPostScheduleController extends Controller
             ]);
         }
 
-        $posts = $query->with(['scheduledPost'])->paginate($request->integer('per_page', 20));
+        $paginator = $query->with(['scheduledPost'])->paginate($request->integer('per_page', 20));
 
         return ApiResponse::success(
-            data:    $this->formatPosts($posts),
+            data:    $this->formatPostItems($paginator),
             message: 'Studio posts retrieved.',
+            meta:    [
+                'current_page' => $paginator->currentPage(),
+                'last_page'    => $paginator->lastPage(),
+                'per_page'     => $paginator->perPage(),
+                'total'        => $paginator->total(),
+            ],
         );
     }
 
@@ -125,11 +146,13 @@ class StudioPostScheduleController extends Controller
 
     // ── Private helpers ──────────────────────────────────────────────────────
 
-    private function formatPosts(\Illuminate\Pagination\LengthAwarePaginator $paginator): array
+    private function formatPostItems(\Illuminate\Pagination\LengthAwarePaginator $paginator): array
     {
-        $data = $paginator->getCollection()->map(fn (Post $post) => [
+        return $paginator->getCollection()->map(fn (Post $post) => [
             'uuid'          => $post->uuid,
             'content'       => $post->content,
+            'thumbnail_url' => $post->thumbnail_url,
+            'audience'      => $post->audience,
             'status'        => $post->status?->value,
             'status_label'  => $post->status?->translate(),
             'published_at'  => $post->published_at?->toIso8601String(),
@@ -142,16 +165,6 @@ class StudioPostScheduleController extends Controller
                 'user_timezone' => $post->scheduledPost->user_timezone,
                 'error_message' => $post->scheduledPost->error_message,
             ] : null,
-        ]);
-
-        return [
-            'data' => $data,
-            'meta' => [
-                'current_page' => $paginator->currentPage(),
-                'last_page'    => $paginator->lastPage(),
-                'per_page'     => $paginator->perPage(),
-                'total'        => $paginator->total(),
-            ],
-        ];
+        ])->values()->toArray();
     }
 }

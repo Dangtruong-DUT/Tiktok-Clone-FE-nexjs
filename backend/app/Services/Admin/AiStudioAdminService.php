@@ -2,17 +2,16 @@
 
 namespace App\Services\Admin;
 
-use App\Models\AiContentSuggestion;
 use App\Models\AiStudioSetting;
+use App\Models\AiUsageLog;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 
 class AiStudioAdminService
 {
     /**
-     * Get aggregated metrics for the AI Studio admin dashboard.
+     * Get aggregated copilot usage metrics for the admin dashboard.
      *
      * @param  'today'|'week'|'month'  $period
      * @return array<string,mixed>
@@ -25,38 +24,24 @@ class AiStudioAdminService
             default => now()->startOfDay(),
         };
 
-        $base      = AiContentSuggestion::where('created_at', '>=', $from);
-        $total     = (clone $base)->count();
-        $completed = (clone $base)->where('status', 'completed')->count();
-        $failed    = (clone $base)->where('status', 'failed')->count();
-        $applied   = (clone $base)->whereNotNull('applied_at')->count();
-        $unique    = (clone $base)->distinct('user_id')->count('user_id');
+        $base = AiUsageLog::where('created_at', '>=', $from);
 
-        $tokenStats = DB::table('ai_content_suggestions')
-            ->where('created_at', '>=', $from)
-            ->whereNotNull('token_usage')
-            ->selectRaw("
-                SUM((token_usage->>'total_tokens')::int)      AS total_tokens,
-                AVG((token_usage->>'total_tokens')::int)      AS avg_tokens,
-                SUM((token_usage->>'prompt_tokens')::int)     AS prompt_tokens,
-                SUM((token_usage->>'completion_tokens')::int) AS completion_tokens
-            ")
-            ->first();
+        $total       = (clone $base)->count();
+        $failed      = (clone $base)->where('status', 'failed')->count();
+        $completed   = $total - $failed;
+        $unique      = (clone $base)->distinct('user_id')->count('user_id');
+        $totalTokens = (clone $base)->sum('total_tokens');
+        $totalCost   = (clone $base)->sum('cost_usd');
 
         return [
             'period'             => $period,
             'total_requests'     => $total,
             'completed'          => $completed,
             'failed'             => $failed,
-            'pending'            => (clone $base)->whereIn('status', ['pending', 'processing'])->count(),
             'success_rate'       => $total > 0 ? round($completed / $total * 100, 1) : 0,
-            'apply_rate'         => $completed > 0 ? round($applied / $completed * 100, 1) : 0,
             'unique_users'       => $unique,
-            'total_tokens'       => (int) ($tokenStats->total_tokens ?? 0),
-            'avg_tokens'         => (int) round((float) ($tokenStats->avg_tokens ?? 0)),
-            'prompt_tokens'      => (int) ($tokenStats->prompt_tokens ?? 0),
-            'completion_tokens'  => (int) ($tokenStats->completion_tokens ?? 0),
-            'estimated_cost_usd' => $this->estimateCost((int) ($tokenStats->total_tokens ?? 0)),
+            'total_tokens'       => (int) $totalTokens,
+            'total_cost_usd'     => round((float) $totalCost, 4),
             'intent_breakdown'   => $this->intentBreakdown($from),
             'daily_series'       => $this->dailySeries($from),
         ];
@@ -85,20 +70,20 @@ class AiStudioAdminService
     }
 
     /**
-     * Get paginated list of all AI suggestion requests (admin view).
+     * Get paginated list of copilot usage logs (admin view).
      *
      * @param  array<string,mixed>  $filters
      */
     public function listRequests(array $filters): LengthAwarePaginator
     {
-        return AiContentSuggestion::with('user')
+        return AiUsageLog::with('user:id,uuid,username')
+            ->when(
+                isset($filters['intent']),
+                fn ($q) => $q->where('intent', $filters['intent'])
+            )
             ->when(
                 isset($filters['status']),
                 fn ($q) => $q->where('status', $filters['status'])
-            )
-            ->when(
-                isset($filters['user_uuid']),
-                fn ($q) => $q->whereHas('user', fn ($uq) => $uq->where('uuid', $filters['user_uuid']))
             )
             ->when(
                 isset($filters['date_from']),
@@ -114,20 +99,14 @@ class AiStudioAdminService
 
     // ─── Private helpers ─────────────────────────────────────────────────────
 
-    private function estimateCost(int $totalTokens): float
-    {
-        // Gemini 1.5 Flash blended rate ~$0.15/1M tokens
-        return round($totalTokens / 1_000_000 * 0.15, 6);
-    }
-
     /** @return array<string,int> */
     private function intentBreakdown(Carbon $from): array
     {
-        return AiContentSuggestion::where('created_at', '>=', $from)
-            ->whereNotNull('content_intent')
-            ->groupBy('content_intent')
-            ->selectRaw('content_intent, COUNT(*) as count')
-            ->pluck('count', 'content_intent')
+        return AiUsageLog::where('created_at', '>=', $from)
+            ->whereNotNull('intent')
+            ->groupBy('intent')
+            ->selectRaw('intent, COUNT(*) as count')
+            ->pluck('count', 'intent')
             ->map(fn ($v) => (int) $v)
             ->toArray();
     }
@@ -135,14 +114,14 @@ class AiStudioAdminService
     /** @return array<int,array<string,mixed>> */
     private function dailySeries(Carbon $from): array
     {
-        return AiContentSuggestion::where('created_at', '>=', $from)
+        return AiUsageLog::where('created_at', '>=', $from)
             ->selectRaw("
                 DATE(created_at) as date,
                 COUNT(*) as total,
-                SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed,
-                SUM(CASE WHEN status = 'failed'    THEN 1 ELSE 0 END) as failed
+                SUM(total_tokens) as tokens,
+                SUM(cost_usd) as cost
             ")
-            ->groupBy('date')
+            ->groupByRaw('DATE(created_at)')
             ->orderBy('date')
             ->get()
             ->toArray();

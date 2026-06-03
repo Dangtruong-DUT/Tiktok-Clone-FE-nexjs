@@ -21,7 +21,8 @@ class ScreenTimeTrackingService
         // Close any lingering active sessions from previous context
         $stale = $this->repository->findActiveForUser($userId);
         if ($stale) {
-            $elapsed = (int) now()->diffInSeconds($stale->started_at);
+            // Use Unix timestamps to avoid Carbon direction ambiguity
+            $elapsed = max(0, now()->timestamp - $stale->started_at->timestamp);
             $this->repository->update($stale->id, [
                 'ended_at'         => now(),
                 'duration_seconds' => $elapsed,

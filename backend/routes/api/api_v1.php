@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\AppealAdminController;
+use App\Http\Controllers\Api\Admin\AiCopilotAdminController;
 use App\Http\Controllers\Api\Admin\AiStudioAdminController;
 use App\Http\Controllers\Api\Admin\ScheduledPostAdminController;
 use App\Http\Controllers\Api\Admin\CommentAdminController;
@@ -13,11 +14,8 @@ use App\Http\Controllers\Api\HashtagController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\ScreenTimeController;
-use App\Http\Controllers\Api\Studio\AiContentStudioController;
 use App\Http\Controllers\Api\WellnessRuleController;
-use App\Http\Controllers\Api\Studio\AiCreatorChatController;
-use App\Http\Controllers\Api\Studio\AiViralScoreController;
-use App\Http\Controllers\Api\Studio\AiContentCalendarController;
+use App\Http\Controllers\Api\Studio\AiCopilotController;
 use App\Http\Controllers\Api\Studio\StudioPostScheduleController;
 use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\UserController;
@@ -131,12 +129,19 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::post('/appeals/{appeal_uuid}/approve', [AppealAdminController::class, 'approve'])->name('approve-appeal');
             Route::post('/appeals/{appeal_uuid}/reject', [AppealAdminController::class, 'reject'])->name('reject-appeal');
 
-            // AI Studio admin
+            // AI Studio admin (legacy per-tool settings)
             Route::prefix('ai-studio')->name('ai-studio.')->group(function () {
                 Route::get('metrics', [AiStudioAdminController::class, 'metrics'])->name('metrics');
                 Route::get('settings', [AiStudioAdminController::class, 'settings'])->name('settings');
                 Route::put('settings', [AiStudioAdminController::class, 'updateSettings'])->name('settings.update');
                 Route::get('requests', [AiStudioAdminController::class, 'requests'])->name('requests');
+
+                // AI Copilot admin
+                Route::get('copilot/metrics',            [AiCopilotAdminController::class, 'metrics'])->name('copilot.metrics');
+                Route::get('copilot/sessions',           [AiCopilotAdminController::class, 'sessions'])->name('copilot.sessions');
+                Route::get('prompt-templates',           [AiCopilotAdminController::class, 'listPromptTemplates'])->name('prompt-templates.index');
+                Route::put('prompt-templates/{intent}',  [AiCopilotAdminController::class, 'updatePromptTemplate'])->name('prompt-templates.update');
+                Route::post('feature-flags',             [AiCopilotAdminController::class, 'updateFeatureFlags'])->name('feature-flags.update');
             });
 
             // Scheduled posts admin
@@ -168,61 +173,27 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::post('analyze',                      [WellnessRuleController::class, 'analyze'])->middleware('throttle:3,1')->name('analyze');
         });
 
-    // AI Content Studio — creator routes
+    // AI Copilot — unified conversational assistant
     Route::prefix('studio/ai')
         ->name('studio.ai.')
         ->group(function () {
-            // Existing: content suggestions (caption helper)
-            Route::post('content-suggestions', [AiContentStudioController::class, 'generate'])
-                ->middleware('throttle:10,1')
-                ->name('content-suggestions.generate');
-            Route::get('content-suggestions', [AiContentStudioController::class, 'index'])
-                ->name('content-suggestions.index');
-            Route::get('content-suggestions/{uuid}', [AiContentStudioController::class, 'show'])
-                ->middleware('throttle:60,1')
-                ->name('content-suggestions.show');
-            Route::post('content-suggestions/{uuid}/apply', [AiContentStudioController::class, 'apply'])
-                ->name('content-suggestions.apply');
-
-            // AI Creator Chat
-            Route::post('creator-chat/start', [AiCreatorChatController::class, 'start'])
-                ->middleware('throttle:5,1')
-                ->name('creator-chat.start');
-            Route::get('creator-chat/{uuid}', [AiCreatorChatController::class, 'show'])
-                ->middleware('throttle:60,1')
-                ->name('creator-chat.show');
-            Route::post('creator-chat/{uuid}/answer', [AiCreatorChatController::class, 'answer'])
+            Route::post('copilot/sessions', [AiCopilotController::class, 'startSession'])
                 ->middleware('throttle:30,1')
-                ->name('creator-chat.answer');
-            Route::post('creator-chat/{uuid}/skip', [AiCreatorChatController::class, 'skip'])
+                ->name('copilot.sessions.start');
+            Route::get('copilot/sessions/{uuid}', [AiCopilotController::class, 'showSession'])
+                ->name('copilot.sessions.show');
+            Route::post('copilot/sessions/{uuid}/messages', [AiCopilotController::class, 'sendMessage'])
                 ->middleware('throttle:30,1')
-                ->name('creator-chat.skip');
-            Route::post('creator-chat/{uuid}/generate', [AiCreatorChatController::class, 'generate'])
-                ->middleware('throttle:5,1')
-                ->name('creator-chat.generate');
-
-            // Viral Score
-            Route::post('viral-score/analyze', [AiViralScoreController::class, 'analyze'])
-                ->middleware('throttle:10,1')
-                ->name('viral-score.analyze');
-            Route::get('viral-score/{uuid}', [AiViralScoreController::class, 'show'])
+                ->name('copilot.sessions.messages.send');
+            Route::get('copilot/sessions/{uuid}/stream/{message_uuid}', [AiCopilotController::class, 'stream'])
                 ->middleware('throttle:60,1')
-                ->name('viral-score.show');
-
-            // Content Calendar
-            Route::post('content-calendar/generate', [AiContentCalendarController::class, 'generate'])
-                ->middleware('throttle:5,1')
-                ->name('content-calendar.generate');
-            Route::get('content-calendar', [AiContentCalendarController::class, 'index'])
-                ->name('content-calendar.index');
-            Route::get('content-calendar/{uuid}', [AiContentCalendarController::class, 'show'])
-                ->name('content-calendar.show');
-            Route::post('content-calendar/items/{uuid}/create-draft', [AiContentCalendarController::class, 'createDraft'])
-                ->middleware('throttle:10,1')
-                ->name('content-calendar.items.create-draft');
-            Route::post('content-calendar/items/{uuid}/schedule', [AiContentCalendarController::class, 'scheduleItem'])
-                ->middleware('throttle:10,1')
-                ->name('content-calendar.items.schedule');
+                ->name('copilot.stream');
+            Route::post('copilot/messages/{uuid}/accept', [AiCopilotController::class, 'accept'])
+                ->name('copilot.messages.accept');
+            Route::post('copilot/messages/{uuid}/reject', [AiCopilotController::class, 'reject'])
+                ->name('copilot.messages.reject');
+            Route::delete('copilot/sessions/{uuid}', [AiCopilotController::class, 'destroySession'])
+                ->name('copilot.sessions.destroy');
         });
 
     // Studio post management routes

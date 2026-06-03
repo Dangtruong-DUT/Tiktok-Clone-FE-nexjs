@@ -14,7 +14,7 @@ export const StudioPostScheduleApi = createApi({
     endpoints: (builder) => ({
         listStudioPosts: builder.query<
             ApiSuccessResponseWithMeta<StudioPostItem[]>,
-            { status?: StudioPostStatus; page?: number; per_page?: number }
+            { status?: StudioPostStatus; page?: number; per_page?: number; q?: string; has_schedule?: 0 | 1 }
         >({
             query: (params) => ({ url: BACKEND_API_ENDPOINT.STUDIO_POSTS.LIST, params }),
             providesTags: ['StudioPost'],

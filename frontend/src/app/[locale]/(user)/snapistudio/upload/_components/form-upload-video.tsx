@@ -13,13 +13,14 @@ import AudienceSelect from '@/components/forms/audience-select'
 import AlertDialogExitPage from '@/app/[locale]/(user)/snapistudio/upload/_components/alert-confirm-leave-page'
 import MentionHashtagTextField from '@/components/forms/mention-hashtag-text-field'
 import { useUploadFormManager } from '@/app/[locale]/(user)/snapistudio/upload/_hooks/useUploadFormManager'
-import { useAiChatContext } from '@/app/[locale]/(user)/snapistudio/_components/ai-unified-chat/AiChatContext'
+import { useAiCopilotContext } from '@/app/[locale]/(user)/snapistudio/_components/ai-copilot/AiCopilotContext'
+import { AiVideoAttachments } from '@/app/[locale]/(user)/snapistudio/_components/ai-copilot/attachments/AiVideoAttachments'
 
 export default function FormUploadVideo() {
     const t = useTranslations('SnapiStudio.upload')
     const [scheduledAt, setScheduledAtLocal] = useState('')
     const [showSchedule, setShowSchedule] = useState(false)
-    const { setUploadContent, setApplyToUpload } = useAiChatContext()
+    const { setVideoContext, registerFormPatch, unregisterFormPatch } = useAiCopilotContext()
 
     const {
         form,
@@ -51,18 +52,27 @@ export default function FormUploadVideo() {
 
     const content = form.watch('content')
 
-    // Sync form content → AiChatContext so AiUnifiedChat can read & apply
+    // Sync form content to AI Copilot context
     useEffect(() => {
-        setUploadContent(content ?? '')
-    }, [content, setUploadContent])
+        setVideoContext({
+            video_description:    content ?? '',
+            upload_session_uuid:  sessionUuid ?? undefined,
+        })
+    }, [content, sessionUuid, setVideoContext])
 
+    // Register form field patch callbacks for Accept flow
     useEffect(() => {
-        const apply = (text: string) => {
-            form.setValue('content', text, { shouldDirty: true, shouldValidate: true })
+        registerFormPatch('content', (val) =>
+            form.setValue('content', val, { shouldDirty: true, shouldValidate: true }),
+        )
+        registerFormPatch('title', (val) =>
+            form.setValue('content', val, { shouldDirty: true, shouldValidate: true }),
+        )
+        return () => {
+            unregisterFormPatch('content')
+            unregisterFormPatch('title')
         }
-        setApplyToUpload(apply)
-        return () => setApplyToUpload(null)
-    }, [form, setApplyToUpload])
+    }, [form, registerFormPatch, unregisterFormPatch])
 
     const handleScheduleChange = (value: string) => {
         setScheduledAtLocal(value)
@@ -110,6 +120,9 @@ export default function FormUploadVideo() {
                                     setIsInitialRender={setIsInitialRender}
                                     isInitialRender={isInitialRender}
                                 />
+
+                                {/* AI: Timeline segment + frame picker */}
+                                <AiVideoAttachments videoUrl={videoUrl ?? null} />
 
                                 {/* Details card */}
                                 <section className='rounded-xl border border-border bg-card shadow-sm'>

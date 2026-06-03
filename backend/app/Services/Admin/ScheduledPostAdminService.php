@@ -2,11 +2,9 @@
 
 namespace App\Services\Admin;
 
-use App\Enums\Ai\CalendarItemStatusEnum;
 use App\Enums\Ai\ScheduledPostSourceEnum;
 use App\Enums\Ai\ScheduledPostStatusEnum;
 use App\Models\ScheduledPost;
-use App\Repositories\AiContentCalendarItemRepository;
 use App\Repositories\ScheduledPostRepository;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -15,8 +13,7 @@ use Illuminate\Support\Facades\DB;
 class ScheduledPostAdminService
 {
     public function __construct(
-        private readonly ScheduledPostRepository          $repository,
-        private readonly AiContentCalendarItemRepository $calendarItemRepository,
+        private readonly ScheduledPostRepository $repository,
     ) {}
 
     /**
@@ -111,13 +108,6 @@ class ScheduledPostAdminService
             'error_message' => 'Cancelled by admin.',
         ]);
 
-        // Sync calendar item back to draft so studio state stays consistent
-        if ($scheduledPost->calendar_item_id) {
-            $this->calendarItemRepository->update($scheduledPost->calendar_item_id, [
-                'status' => CalendarItemStatusEnum::DRAFT,
-            ]);
-        }
-
         return $updated;
     }
 
@@ -134,13 +124,6 @@ class ScheduledPostAdminService
             'status'        => ScheduledPostStatusEnum::PENDING,
             'error_message' => null,
         ]);
-
-        // Re-sync calendar item to scheduled
-        if ($scheduledPost->calendar_item_id) {
-            $this->calendarItemRepository->update($scheduledPost->calendar_item_id, [
-                'status' => CalendarItemStatusEnum::SCHEDULED,
-            ]);
-        }
 
         return $updated;
     }

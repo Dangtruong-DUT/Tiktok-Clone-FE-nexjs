@@ -86,16 +86,43 @@
                     "cacheAsync": "Cache & bất đồng bộ"
                 },
                 "fields": {
-                    "dailyLimitPerUser":  { "label": "Giới hạn hàng ngày mỗi người dùng", "description": "Số yêu cầu AI tối đa một người dùng có thể thực hiện mỗi ngày" },
-                    "globalDailyLimit":   { "label": "Giới hạn hàng ngày toàn cầu",        "description": "Tổng số yêu cầu AI tối đa của tất cả người dùng mỗi ngày" },
-                    "rateLimitPerMinute": { "label": "Giới hạn mỗi phút",                  "description": "Giới hạn mỗi người dùng (cấp middleware API)" },
-                    "model":              { "label": "Mô hình",                             "description": "Mô hình Gemini dùng để tạo nội dung" },
-                    "maxOutputTokens":    { "label": "Số token đầu ra tối đa",              "description": "Số token tối đa trong phản hồi AI" },
-                    "temperature":        { "label": "Temperature",                         "description": "Mức sáng tạo (0.0 = xác định, 1.0 = sáng tạo)" },
-                    "timeoutSeconds":     { "label": "Thời gian chờ (giây)",                "description": "Thời gian tối đa chờ phản hồi từ Gemini" },
-                    "cacheTtlHours":      { "label": "Cache TTL (giờ)",                     "description": "Thời gian lưu cache cho các yêu cầu giống nhau" },
-                    "asyncMode":          { "label": "Chế độ bất đồng bộ",                  "description": "Xử lý qua hàng đợi (khuyến nghị) thay vì chặn HTTP" },
-                    "requireMinInput":    { "label": "Yêu cầu đầu vào tối thiểu",           "description": "Chặn yêu cầu không có tiêu đề/mô tả/phụ đề/OCR" }
+                    "dailyLimitPerUser": {
+                        "label": "Giới hạn hàng ngày mỗi người dùng",
+                        "description": "Số yêu cầu AI tối đa một người dùng có thể thực hiện mỗi ngày"
+                    },
+                    "globalDailyLimit": {
+                        "label": "Giới hạn hàng ngày toàn cầu",
+                        "description": "Tổng số yêu cầu AI tối đa của tất cả người dùng mỗi ngày"
+                    },
+                    "rateLimitPerMinute": {
+                        "label": "Giới hạn mỗi phút",
+                        "description": "Giới hạn mỗi người dùng (cấp middleware API)"
+                    },
+                    "model": { "label": "Mô hình", "description": "Mô hình Gemini dùng để tạo nội dung" },
+                    "maxOutputTokens": {
+                        "label": "Số token đầu ra tối đa",
+                        "description": "Số token tối đa trong phản hồi AI"
+                    },
+                    "temperature": {
+                        "label": "Temperature",
+                        "description": "Mức sáng tạo (0.0 = xác định, 1.0 = sáng tạo)"
+                    },
+                    "timeoutSeconds": {
+                        "label": "Thời gian chờ (giây)",
+                        "description": "Thời gian tối đa chờ phản hồi từ Gemini"
+                    },
+                    "cacheTtlHours": {
+                        "label": "Cache TTL (giờ)",
+                        "description": "Thời gian lưu cache cho các yêu cầu giống nhau"
+                    },
+                    "asyncMode": {
+                        "label": "Chế độ bất đồng bộ",
+                        "description": "Xử lý qua hàng đợi (khuyến nghị) thay vì chặn HTTP"
+                    },
+                    "requireMinInput": {
+                        "label": "Yêu cầu đầu vào tối thiểu",
+                        "description": "Chặn yêu cầu không có tiêu đề/mô tả/phụ đề/OCR"
+                    }
                 },
                 "lastUpdatedBy": "Cập nhật lần cuối bởi {name}",
                 "buttons": {
@@ -234,13 +261,13 @@
                 "username": "Tên người dùng",
                 "email": "Email",
                 "status": "Trạng thái",
-                "actions": "Thao tác"
-        "aiStudio": {
-            "title": "AI Studio"
-        },
-        "scheduledPosts": {
-            "title": "Bài đăng hẹn giờ"
-        },
+                "actions": "Thao tác",
+                "aiStudio": {
+                    "title": "AI Studio"
+                },
+                "scheduledPosts": {
+                    "title": "Bài đăng hẹn giờ"
+                }
             },
             "filters": {
                 "allStatuses": "Tất cả trạng thái",

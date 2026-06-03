@@ -6,10 +6,25 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
 import { useGetAiSettingsQuery, useUpdateAiSettingsMutation } from '@/store/services/admin/admin-ai-studio.service'
-import {
-    UpdateAiStudioSettingsReqBody,
-    UpdateAiStudioSettingsReqBodyType
-} from '@/types/dtos/ai/ai-content-suggestion.dto'
+import { z } from 'zod'
+
+const GEMINI_MODELS = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-2.0-flash'] as const
+
+const UpdateAiStudioSettingsReqBody = z.object({
+    daily_limit_per_user:  z.number().min(1).max(1000).optional(),
+    global_daily_limit:    z.number().min(1).max(100000).optional(),
+    rate_limit_per_minute: z.number().min(1).max(60).optional(),
+    is_enabled:            z.boolean().optional(),
+    require_min_input:     z.boolean().optional(),
+    gemini_model:          z.enum(GEMINI_MODELS).optional(),
+    max_output_tokens:     z.number().min(256).max(8192).optional(),
+    temperature:           z.number().min(0).max(1).optional(),
+    timeout_seconds:       z.number().min(10).max(120).optional(),
+    cache_ttl_hours:       z.number().min(1).max(168).optional(),
+    async_mode:            z.boolean().optional(),
+})
+
+type UpdateAiStudioSettingsReqBodyType = z.infer<typeof UpdateAiStudioSettingsReqBody>
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'

@@ -82,32 +82,15 @@ export const BACKEND_API_ENDPOINT = {
         RESOURCE_PREVIEW: '/appeals/resource-preview',
         DETAIL: (uuid: string) => `/appeals/${uuid}`
     },
-    AI_STUDIO: {
-        GENERATE: '/studio/ai/content-suggestions',
-        LIST: '/studio/ai/content-suggestions',
-        BY_UUID: (uuid: string) => `/studio/ai/content-suggestions/${uuid}`,
-        APPLY: (uuid: string) => `/studio/ai/content-suggestions/${uuid}/apply`,
-
-        CREATOR_CHAT: {
-            START:    '/studio/ai/creator-chat/start',
-            BY_UUID:  (uuid: string) => `/studio/ai/creator-chat/${uuid}`,
-            ANSWER:   (uuid: string) => `/studio/ai/creator-chat/${uuid}/answer`,
-            SKIP:     (uuid: string) => `/studio/ai/creator-chat/${uuid}/skip`,
-            GENERATE: (uuid: string) => `/studio/ai/creator-chat/${uuid}/generate`,
-        },
-
-        VIRAL_SCORE: {
-            ANALYZE: '/studio/ai/viral-score/analyze',
-            BY_UUID: (uuid: string) => `/studio/ai/viral-score/${uuid}`,
-        },
-
-        CALENDAR: {
-            GENERATE:     '/studio/ai/content-calendar/generate',
-            LIST:         '/studio/ai/content-calendar',
-            BY_UUID:      (uuid: string) => `/studio/ai/content-calendar/${uuid}`,
-            CREATE_DRAFT: (itemUuid: string) => `/studio/ai/content-calendar/items/${itemUuid}/create-draft`,
-            SCHEDULE:     (itemUuid: string) => `/studio/ai/content-calendar/items/${itemUuid}/schedule`,
-        },
+    AI_COPILOT: {
+        SESSIONS:       '/studio/ai/copilot/sessions',
+        SESSION:        (uuid: string) => `/studio/ai/copilot/sessions/${uuid}`,
+        MESSAGES:       (uuid: string) => `/studio/ai/copilot/sessions/${uuid}/messages`,
+        STREAM:         (sessionUuid: string, msgUuid: string) =>
+                            `/studio/ai/copilot/sessions/${sessionUuid}/stream/${msgUuid}`,
+        ACCEPT:         (msgUuid: string) => `/studio/ai/copilot/messages/${msgUuid}/accept`,
+        REJECT:         (msgUuid: string) => `/studio/ai/copilot/messages/${msgUuid}/reject`,
+        DELETE_SESSION: (uuid: string) => `/studio/ai/copilot/sessions/${uuid}`,
     },
 
     WELLNESS: {
@@ -136,6 +119,12 @@ export const BACKEND_API_ENDPOINT = {
             METRICS:  '/admin/ai-studio/metrics',
             SETTINGS: '/admin/ai-studio/settings',
             REQUESTS: '/admin/ai-studio/requests',
+            // AI Copilot admin
+            COPILOT_METRICS:   '/admin/ai-studio/copilot/metrics',
+            COPILOT_SESSIONS:  '/admin/ai-studio/copilot/sessions',
+            PROMPT_TEMPLATES:  '/admin/ai-studio/prompt-templates',
+            PROMPT_TEMPLATE:   (intent: string) => `/admin/ai-studio/prompt-templates/${intent}`,
+            FEATURE_FLAGS:     '/admin/ai-studio/feature-flags',
         },
         SCHEDULED_POSTS: {
             METRICS:      '/admin/scheduled-posts/metrics',

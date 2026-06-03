@@ -19,6 +19,10 @@ class AiStudioSetting extends Model
         'timeout_seconds',
         'cache_ttl_hours',
         'async_mode',
+        'feature_flags',
+        'copilot_enabled',
+        'copilot_session_ttl_hours',
+        'copilot_max_messages_per_session',
         'updated_by',
     ];
 
@@ -28,8 +32,17 @@ class AiStudioSetting extends Model
             'is_enabled'        => 'boolean',
             'require_min_input' => 'boolean',
             'async_mode'        => 'boolean',
+            'copilot_enabled'   => 'boolean',
             'temperature'       => 'float',
+            'feature_flags'     => 'array',
         ];
+    }
+
+    public function isFeatureEnabled(string $flag): bool
+    {
+        $flags = $this->feature_flags ?? [];
+
+        return (bool) ($flags[$flag] ?? true);
     }
 
     /**
@@ -51,12 +64,21 @@ class AiStudioSetting extends Model
         $setting->rate_limit_per_minute = 10;
         $setting->is_enabled            = true;
         $setting->require_min_input     = true;
-        $setting->gemini_model          = 'gemini-1.5-flash';
+        $setting->gemini_model          = 'gemini-2.0-flash';
         $setting->max_output_tokens     = 2048;
         $setting->temperature           = 0.70;
         $setting->timeout_seconds       = 30;
         $setting->cache_ttl_hours       = 6;
         $setting->async_mode            = true;
+        $setting->copilot_enabled       = true;
+        $setting->copilot_session_ttl_hours = 24;
+        $setting->copilot_max_messages_per_session = 50;
+        $setting->feature_flags         = [
+            'streaming'        => true,
+            'frame_analysis'   => true,
+            'timeline_context' => true,
+            'viral_analysis'   => true,
+        ];
         $setting->save();
 
         return $setting;

@@ -30,10 +30,13 @@ import { extractHashtags } from '@/utils/social-token.util'
 import MentionHashtagTextField from '@/components/forms/mention-hashtag-text-field'
 import { logger } from '@/utils/logger.util'
 import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
+import { useAiCopilotContext } from '@/app/[locale]/(user)/snapistudio/_components/ai-copilot/AiCopilotContext'
+import { AiVideoAttachments } from '@/app/[locale]/(user)/snapistudio/_components/ai-copilot/attachments/AiVideoAttachments'
 
 export default function FormUpdatePost() {
     const t = useTranslations('SnapiStudio.upload')
     const { id } = useParams<{ id: string }>() ?? { id: '' }
+    const { setVideoContext, registerFormPatch, unregisterFormPatch } = useAiCopilotContext()
     const [uploadImageMutate, uploadImageResult] = useUploadImageMutation()
     const [updatePostMutate, createPostResult] = useUpdatePostMutation()
     const { searchParams, setSearchParams } = useSearchParamsLoader()
@@ -87,8 +90,24 @@ export default function FormUpdatePost() {
             form.setValue('mentions', Array.from(new Set((post.mentions ?? []).map((mention) => mention.id))))
             setVideoUrl(post.medias?.[0]?.url || null)
             setThumbnailUrl(post.thumbnail_url || null)
+
+            // Push post context to AI Copilot
+            setVideoContext({
+                post_uuid:         post.uuid,
+                video_description: post.content,
+            })
         }
-    }, [post, form])
+    }, [post, form, setVideoContext])
+
+    // Register form field patches for AI Copilot Accept flow
+    useEffect(() => {
+        registerFormPatch('content', (val) =>
+            form.setValue('content', val, { shouldDirty: true, shouldValidate: true }),
+        )
+        return () => {
+            unregisterFormPatch('content')
+        }
+    }, [form, registerFormPatch, unregisterFormPatch])
 
     useEffect(() => {
         if (!thumbnailFile) {
@@ -163,6 +182,11 @@ export default function FormUpdatePost() {
             <form onSubmit={form.handleSubmit(onsubmit)} onReset={onReset} method='POST' className='relative'>
                 <div className='grid grid-cols-[70%_30%] gap-4'>
                     <div>
+                        {/* AI: Timeline segment + frame picker */}
+                        <div className='mt-4'>
+                            <AiVideoAttachments videoUrl={videoUrl} />
+                        </div>
+
                         <div className='mt-5 text-base font-bold'>{t('detail.title')}</div>
                         <div className='rounded-lg border border-border p-5 mt-[16px]'>
                             <FormField

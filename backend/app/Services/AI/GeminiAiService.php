@@ -30,12 +30,45 @@ class GeminiAiService
         for ($attempt = 1; $attempt <= self::MAX_RETRIES + 1; $attempt++) {
             try {
                 return $this->client->generate($systemPrompt, $userPrompt);
+            } catch (\App\Exceptions\GeminiQuotaExceededException $e) {
+                throw $e; // quota errors are not transient — do not retry
             } catch (\RuntimeException $e) {
                 $lastException = $e;
 
                 if ($attempt <= self::MAX_RETRIES) {
                     usleep(self::RETRY_DELAY_MS * 1000 * $attempt);
                     Log::channel('ai')->warning('Gemini transient failure, retrying', [
+                        'attempt' => $attempt,
+                        'error'   => mb_substr($e->getMessage(), 0, 200),
+                    ]);
+                }
+            }
+        }
+
+        throw $lastException ?? new \RuntimeException('Gemini generation failed after retries.');
+    }
+
+    /**
+     * Multi-turn conversation with retry logic (mirrors generate()).
+     *
+     * @param  array<array{role: string, parts: array}>  $contents
+     * @param  array<string,mixed>  $config  Optional generation config overrides
+     * @return array{text: string, token_usage: array<string,int>}
+     * @throws \RuntimeException when all retries are exhausted
+     */
+    public function generateWithHistory(string $systemPrompt, array $contents, array $config = []): array
+    {
+        $lastException = null;
+
+        for ($attempt = 1; $attempt <= self::MAX_RETRIES + 1; $attempt++) {
+            try {
+                return $this->client->generateWithHistory($systemPrompt, $contents, $config);
+            } catch (\RuntimeException $e) {
+                $lastException = $e;
+
+                if ($attempt <= self::MAX_RETRIES) {
+                    usleep(self::RETRY_DELAY_MS * 1000 * $attempt);
+                    Log::channel('ai')->warning('Gemini (history) transient failure, retrying', [
                         'attempt' => $attempt,
                         'error'   => mb_substr($e->getMessage(), 0, 200),
                     ]);
