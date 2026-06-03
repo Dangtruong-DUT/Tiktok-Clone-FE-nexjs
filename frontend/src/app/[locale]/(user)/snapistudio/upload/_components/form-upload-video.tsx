@@ -1,10 +1,11 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
+import { CalendarClock, X, Info } from 'lucide-react'
 import UploadVideo from '@/app/[locale]/(user)/snapistudio/upload/_components/upload-video'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Info } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import VideoPreview from '@/app/[locale]/(user)/snapistudio/upload/_components/video-preview'
 import SelectThumbnailDialog from '@/app/[locale]/(user)/snapistudio/upload/_components/select-thumbnail-dialog'
@@ -12,10 +13,13 @@ import AudienceSelect from '@/components/forms/audience-select'
 import AlertDialogExitPage from '@/app/[locale]/(user)/snapistudio/upload/_components/alert-confirm-leave-page'
 import MentionHashtagTextField from '@/components/forms/mention-hashtag-text-field'
 import { useUploadFormManager } from '@/app/[locale]/(user)/snapistudio/upload/_hooks/useUploadFormManager'
-import { AiFloatingChat } from '@/app/[locale]/(user)/snapistudio/upload/_components/ai-floating-chat/AiFloatingChat'
+import { useAiChatContext } from '@/app/[locale]/(user)/snapistudio/_components/ai-unified-chat/AiChatContext'
 
 export default function FormUploadVideo() {
     const t = useTranslations('SnapiStudio.upload')
+    const [scheduledAt, setScheduledAtLocal] = useState('')
+    const [showSchedule, setShowSchedule] = useState(false)
+    const { setUploadContent, setApplyToUpload } = useAiChatContext()
 
     const {
         form,
@@ -38,7 +42,8 @@ export default function FormUploadVideo() {
         stayHere,
         leavePage,
         onReset,
-        onSubmit
+        onSubmit,
+        setScheduledAt
     } = useUploadFormManager()
 
     const isUploading = uploadStatus === 'uploading'
@@ -46,8 +51,28 @@ export default function FormUploadVideo() {
 
     const content = form.watch('content')
 
-    const handleAiApply = (text: string) => {
-        form.setValue('content', text, { shouldDirty: true, shouldValidate: true })
+    // Sync form content → AiChatContext so AiUnifiedChat can read & apply
+    useEffect(() => {
+        setUploadContent(content ?? '')
+    }, [content, setUploadContent])
+
+    useEffect(() => {
+        const apply = (text: string) => {
+            form.setValue('content', text, { shouldDirty: true, shouldValidate: true })
+        }
+        setApplyToUpload(apply)
+        return () => setApplyToUpload(null)
+    }, [form, setApplyToUpload])
+
+    const handleScheduleChange = (value: string) => {
+        setScheduledAtLocal(value)
+        setScheduledAt(value ? new Date(value).toISOString() : null)
+    }
+
+    const handleClearSchedule = () => {
+        setScheduledAtLocal('')
+        setScheduledAt(null)
+        setShowSchedule(false)
     }
 
     return (
@@ -57,7 +82,6 @@ export default function FormUploadVideo() {
                     <AlertDialogExitPage isOpen={isOpenModalConfirmExit} onCancel={stayHere} onConfirm={leavePage} />
 
                     {isInitialRender ? (
-                        /* ── Initial state: full-width dropzone ── */
                         <UploadVideo
                             onFileSelect={setVideoFile}
                             file={videoFile}
@@ -74,7 +98,6 @@ export default function FormUploadVideo() {
                         <div className='grid grid-cols-1 gap-6 lg:grid-cols-[1fr_280px]'>
                             {/* Left column */}
                             <div className='space-y-5 min-w-0'>
-                                {/* File / encoding status */}
                                 <UploadVideo
                                     onFileSelect={setVideoFile}
                                     file={videoFile}
@@ -170,23 +193,77 @@ export default function FormUploadVideo() {
                                     </div>
                                 </section>
 
+                                {/* Schedule picker */}
+                                {showSchedule && (
+                                    <div className='rounded-xl border border-border bg-card p-4 space-y-3'>
+                                        <div className='flex items-center justify-between'>
+                                            <div className='flex items-center gap-2'>
+                                                <CalendarClock size={15} className='text-primary' />
+                                                <span className='text-sm font-medium'>Hẹn giờ đăng bài</span>
+                                            </div>
+                                            <button
+                                                type='button'
+                                                onClick={handleClearSchedule}
+                                                className='text-muted-foreground hover:text-foreground'
+                                            >
+                                                <X size={15} />
+                                            </button>
+                                        </div>
+                                        <input
+                                            type='datetime-local'
+                                            value={scheduledAt}
+                                            min={new Date(Date.now() + 60_000).toISOString().slice(0, 16)}
+                                            onChange={e => handleScheduleChange(e.target.value)}
+                                            className='w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary/50'
+                                        />
+                                        {scheduledAt && (
+                                            <p className='text-xs text-muted-foreground'>
+                                                Bài sẽ được đăng lúc{' '}
+                                                <strong>
+                                                    {new Date(scheduledAt).toLocaleString('vi-VN', {
+                                                        dateStyle: 'short',
+                                                        timeStyle: 'short'
+                                                    })}
+                                                </strong>
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
+
                                 {/* Action buttons */}
-                                <div className='flex gap-3 pb-6'>
+                                <div className='flex flex-wrap gap-3 pb-6'>
                                     <Button
                                         size='lg'
                                         variant='brand'
                                         type='submit'
                                         isLoading={isSubmitLoading}
-                                        disabled={isSubmitDisabled}
-                                        className='w-40'
+                                        disabled={isSubmitDisabled || (showSchedule && !scheduledAt)}
+                                        className='w-44'
                                     >
-                                        {t('buttons.post')}
+                                        {showSchedule && scheduledAt ? (
+                                            <><CalendarClock size={15} /> Hẹn giờ đăng</>
+                                        ) : (
+                                            t('buttons.post')
+                                        )}
                                     </Button>
+                                    {!showSchedule && (
+                                        <Button
+                                            size='lg'
+                                            variant='outline'
+                                            type='button'
+                                            className='gap-2'
+                                            onClick={() => setShowSchedule(true)}
+                                            disabled={isSubmitDisabled}
+                                        >
+                                            <CalendarClock size={15} />
+                                            Hẹn giờ
+                                        </Button>
+                                    )}
                                     <Button
                                         size='lg'
                                         variant='outline'
                                         type='reset'
-                                        className='w-40'
+                                        className='w-36'
                                         onClick={onReset}
                                         disabled={isSubmitLoading || isUploading}
                                     >
@@ -209,8 +286,6 @@ export default function FormUploadVideo() {
                 </form>
             </Form>
 
-            {/* AI Floating Chat — only show after video is uploaded */}
-            {!isInitialRender && <AiFloatingChat currentContent={content ?? ''} onApply={handleAiApply} />}
         </>
     )
 }

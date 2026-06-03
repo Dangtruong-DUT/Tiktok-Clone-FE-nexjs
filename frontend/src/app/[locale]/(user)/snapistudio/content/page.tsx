@@ -1,5 +1,4 @@
-import TableContent from '@/app/[locale]/(user)/snapistudio/content/_components/table-content'
-import PostTableProvider from '@/app/[locale]/(user)/snapistudio/content/_context/content-table.context'
+import ContentTabs from '@/app/[locale]/(user)/snapistudio/content/_components/content-tabs'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -8,11 +7,5 @@ export const metadata: Metadata = {
 }
 
 export default function ContentPage() {
-    return (
-        <div className='p-4 sm:px-6'>
-            <PostTableProvider>
-                <TableContent />
-            </PostTableProvider>
-        </div>
-    )
+    return <ContentTabs />
 }

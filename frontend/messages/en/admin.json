@@ -38,10 +38,196 @@
             }
         },
         "aiStudio": {
-            "title": "AI Studio"
+            "title": "AI Content Studio",
+            "description": "Monitor usage, tune Gemini settings, and review all AI generation requests.",
+            "breadcrumb": "AI Studio",
+            "tabs": {
+                "metrics": "Metrics",
+                "settings": "Settings",
+                "requests": "Requests"
+            },
+            "metrics": {
+                "periods": {
+                    "today": "Today",
+                    "week": "This week",
+                    "month": "This month"
+                },
+                "stats": {
+                    "totalRequests": "Total requests",
+                    "successRate": "Success rate",
+                    "failed": "Failed",
+                    "applyRate": "Apply rate",
+                    "uniqueUsers": "Unique users",
+                    "estCost": "Est. cost"
+                },
+                "sub": {
+                    "completed": "{count} completed",
+                    "failureRate": "{rate}% failure rate",
+                    "suggestionsUsed": "Suggestions used",
+                    "tokens": "{count} tokens"
+                },
+                "charts": {
+                    "dailyRequests": "Daily requests",
+                    "completed": "Completed",
+                    "failed": "Failed",
+                    "intentBreakdown": "Content intent breakdown"
+                }
+            },
+            "settings": {
+                "status": {
+                    "enabled": "AI Studio is ENABLED",
+                    "disabled": "AI Studio is DISABLED",
+                    "enabledDescription": "Users can generate AI content suggestions.",
+                    "disabledDescription": "All AI generation requests will be blocked."
+                },
+                "sections": {
+                    "rateLimits": "Rate limits",
+                    "geminiModel": "Gemini model",
+                    "cacheAsync": "Cache & async"
+                },
+                "fields": {
+                    "dailyLimitPerUser": {
+                        "label": "Daily limit per user",
+                        "description": "Max AI requests a single user can make per day"
+                    },
+                    "globalDailyLimit": {
+                        "label": "Global daily limit",
+                        "description": "Max total AI requests across all users per day"
+                    },
+                    "rateLimitPerMinute": {
+                        "label": "Rate limit per minute",
+                        "description": "Throttle per user (API middleware level)"
+                    },
+                    "model": { "label": "Model", "description": "Gemini model used for generation" },
+                    "maxOutputTokens": { "label": "Max output tokens", "description": "Max tokens in AI response" },
+                    "temperature": {
+                        "label": "Temperature",
+                        "description": "Creativity level (0.0 = deterministic, 1.0 = creative)"
+                    },
+                    "timeoutSeconds": {
+                        "label": "Timeout (seconds)",
+                        "description": "Max time to wait for Gemini response"
+                    },
+                    "cacheTtlHours": {
+                        "label": "Cache TTL (hours)",
+                        "description": "How long identical requests are cached"
+                    },
+                    "asyncMode": {
+                        "label": "Async mode",
+                        "description": "Process via queue (recommended) instead of blocking HTTP"
+                    },
+                    "requireMinInput": {
+                        "label": "Require minimum input",
+                        "description": "Block requests with no title/description/transcript/OCR"
+                    }
+                },
+                "lastUpdatedBy": "Last updated by {name}",
+                "buttons": {
+                    "save": "Save settings",
+                    "saving": "Saving..."
+                },
+                "toast": {
+                    "saved": "AI Studio settings saved.",
+                    "error": "Failed to save settings."
+                }
+            },
+            "requests": {
+                "filters": {
+                    "allStatuses": "All statuses",
+                    "pending": "Pending",
+                    "processing": "Processing",
+                    "completed": "Completed",
+                    "failed": "Failed"
+                },
+                "columns": {
+                    "uuid": "UUID",
+                    "status": "Status",
+                    "intent": "Intent",
+                    "model": "Model",
+                    "tokens": "Tokens",
+                    "applied": "Applied",
+                    "created": "Created"
+                },
+                "detail": {
+                    "shortCaption": "Short caption",
+                    "hashtags": "Hashtags",
+                    "error": "Error",
+                    "safetyNotes": "Safety notes"
+                },
+                "appliedMark": "✓ Applied",
+                "noRequests": "No requests found.",
+                "total": "{count} total",
+                "pagination": {
+                    "page": "Page {current} of {total}"
+                }
+            }
         },
         "scheduledPosts": {
-            "title": "Scheduled Posts"
+            "title": "Scheduled Posts",
+            "description": "Monitor, control, and audit all creator-scheduled posts across the platform.",
+            "breadcrumb": "Scheduled Posts",
+            "tabs": {
+                "metrics": "Metrics",
+                "requests": "Requests"
+            },
+            "metrics": {
+                "periods": { "today": "Today", "week": "This week", "month": "This month" },
+                "stats": {
+                    "totalScheduled": "Total Scheduled",
+                    "pending": "Pending",
+                    "published": "Published",
+                    "failed": "Failed",
+                    "cancelled": "Cancelled",
+                    "successRate": "Success Rate",
+                    "avgDelay": "Avg Publish Delay",
+                    "bySource": "By Source"
+                },
+                "sub": {
+                    "fromScheduledAt": "From scheduled_at → published_at",
+                    "manualCalendar": "Manual / Calendar"
+                },
+                "charts": {
+                    "dailyTrend": "Daily trend",
+                    "published": "Published",
+                    "failed": "Failed",
+                    "cancelled": "Cancelled",
+                    "pending": "Pending"
+                },
+                "topSchedulers": {
+                    "title": "Top Schedulers",
+                    "scheduled": "{count} scheduled",
+                    "published": "{count} published"
+                }
+            },
+            "table": {
+                "filters": {
+                    "allStatuses": "All statuses",
+                    "pending": "Pending",
+                    "published": "Published",
+                    "failed": "Failed",
+                    "cancelled": "Cancelled",
+                    "allSources": "All sources",
+                    "manual": "Manual",
+                    "calendar": "Calendar",
+                    "userUuidPlaceholder": "User UUID..."
+                },
+                "noResults": "No results.",
+                "labels": {
+                    "scheduled": "Scheduled",
+                    "published": "Published"
+                },
+                "actions": {
+                    "cancel": "Cancel",
+                    "retry": "Retry"
+                },
+                "toast": {
+                    "cancelled": "Schedule cancelled by admin.",
+                    "retried": "Schedule re-queued."
+                },
+                "pagination": {
+                    "page": "{current} / {total}"
+                }
+            }
         },
         "dashboard": {
             "title": "Admin Dashboard",

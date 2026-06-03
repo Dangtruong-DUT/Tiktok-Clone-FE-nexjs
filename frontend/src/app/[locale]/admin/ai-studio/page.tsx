@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { AdminLayout, AdminContainer } from '@/components/admin'
 import { ADMIN_ROUTES } from '@/constants/routes/routes'
 import { AiStudioMetrics } from './_components/AiStudioMetrics'
@@ -9,22 +10,26 @@ import { AiStudioRequests } from './_components/AiStudioRequests'
 import { cn } from '@/lib/utils'
 import { BarChart2, Settings, List } from 'lucide-react'
 
-const TABS = [
-    { key: 'metrics', label: 'Metrics', icon: BarChart2 },
-    { key: 'settings', label: 'Settings', icon: Settings },
-    { key: 'requests', label: 'Requests', icon: List }
-] as const
-
-type TabKey = (typeof TABS)[number]['key']
+type TabKey = 'metrics' | 'settings' | 'requests'
 
 export default function AdminAiStudioPage() {
+    const t = useTranslations('AdminPage')
     const [activeTab, setActiveTab] = useState<TabKey>('metrics')
+
+    const TABS = [
+        { key: 'metrics' as const,  label: t('aiStudio.tabs.metrics'),  icon: BarChart2 },
+        { key: 'settings' as const, label: t('aiStudio.tabs.settings'), icon: Settings },
+        { key: 'requests' as const, label: t('aiStudio.tabs.requests'), icon: List }
+    ]
 
     return (
         <AdminLayout
-            title='AI Content Studio'
-            description='Monitor usage, tune Gemini settings, and review all AI generation requests.'
-            breadcrumbs={[{ label: 'Admin', href: ADMIN_ROUTES.DASHBOARD }, { label: 'AI Studio' }]}
+            title={t('aiStudio.title')}
+            description={t('aiStudio.description')}
+            breadcrumbs={[
+                { label: t('breadcrumbs.admin'), href: ADMIN_ROUTES.DASHBOARD },
+                { label: t('aiStudio.breadcrumb') }
+            ]}
         >
             <AdminContainer>
                 {/* Tab navigation */}

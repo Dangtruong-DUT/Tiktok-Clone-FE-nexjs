@@ -6,7 +6,6 @@ import { SendHorizonal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
-
 export type ChatStatus = 'ready' | 'submitted' | 'streaming' | 'error'
 
 interface SubmitMessage {
@@ -19,7 +18,6 @@ interface PromptInputContextValue {
     onSubmit: (msg: SubmitMessage) => void
 }
 
-
 const PromptInputContext = createContext<PromptInputContextValue | null>(null)
 
 function usePromptInputContext() {
@@ -27,7 +25,6 @@ function usePromptInputContext() {
     if (!ctx) throw new Error('PromptInput subcomponents must be used inside <PromptInput>')
     return ctx
 }
-
 
 interface PromptInputProps extends PropsWithChildren {
     value?: string
@@ -43,7 +40,7 @@ export function PromptInput({
     status = 'ready',
     onSubmit,
     children,
-    className,
+    className
 }: PromptInputProps) {
     const handleFormSubmit = useCallback(
         (e: FormEvent) => {
@@ -57,16 +54,12 @@ export function PromptInput({
 
     return (
         <PromptInputContext.Provider value={{ value, status, onSubmit }}>
-            <form
-                onSubmit={handleFormSubmit}
-                className={cn('border-t border-border bg-background', className)}
-            >
+            <form onSubmit={handleFormSubmit} className={cn('border-t border-border bg-background', className)}>
                 {children}
             </form>
         </PromptInputContext.Provider>
     )
 }
-
 
 export type PromptInputTextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement>
 
@@ -110,13 +103,11 @@ export function PromptInputTextarea({ className, onKeyDown, ...props }: PromptIn
     )
 }
 
-
 export type PromptInputFooterProps = HTMLAttributes<HTMLDivElement>
 
 export function PromptInputFooter({ className, ...props }: PromptInputFooterProps) {
     return <div className={cn('flex items-center justify-between px-2 py-1.5', className)} {...props} />
 }
-
 
 export type PromptInputToolsProps = HTMLAttributes<HTMLDivElement>
 
@@ -124,21 +115,11 @@ export function PromptInputTools({ className, ...props }: PromptInputToolsProps)
     return <div className={cn('flex items-center gap-1', className)} {...props} />
 }
 
-
 export type PromptInputButtonProps = ComponentProps<typeof Button>
 
 export function PromptInputButton({ className, ...props }: PromptInputButtonProps) {
-    return (
-        <Button
-            type='button'
-            variant='ghost'
-            size='icon'
-            className={cn('size-8', className)}
-            {...props}
-        />
-    )
+    return <Button type='button' variant='ghost' size='icon' className={cn('size-8', className)} {...props} />
 }
-
 
 interface PromptInputSubmitProps extends Omit<ComponentProps<typeof Button>, 'type'> {
     status?: ChatStatus
@@ -150,14 +131,7 @@ export function PromptInputSubmit({ status: externalStatus, className, disabled,
     const isDisabled = disabled ?? (!value.trim() || status !== 'ready')
 
     return (
-        <Button
-            type='submit'
-            size='icon'
-            aria-label='Gửi'
-            className={cn('size-8 shrink-0', className)}
-            disabled={isDisabled}
-            {...props}
-        >
+        <Button type='submit' size='icon' className={cn('size-8 shrink-0', className)} disabled={isDisabled} {...props}>
             <SendHorizonal className='size-4' />
         </Button>
     )

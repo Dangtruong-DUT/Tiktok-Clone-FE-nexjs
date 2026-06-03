@@ -1,6 +1,6 @@
 import { Role } from '@/constants/enum'
 import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
-import { Settings, LayoutPanelLeft, BookUp, Scale, Sparkles, CalendarDays, Clock, HeartPulse } from 'lucide-react'
+import { Settings, LayoutPanelLeft, BookUp, Scale, HeartPulse } from 'lucide-react'
 
 interface NavItem {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -21,24 +21,6 @@ export const navItems: NavItem[] = [
         title: 'posts',
         href: SNAPISTUDIO_ROUTES.CONTENT,
         Icon: BookUp,
-        role: [Role.USER, Role.SUPER_ADMIN]
-    },
-    {
-        title: 'ai_chat',
-        href: SNAPISTUDIO_ROUTES.AI_CHAT,
-        Icon: Sparkles,
-        role: [Role.USER, Role.SUPER_ADMIN]
-    },
-    {
-        title: 'calendar',
-        href: SNAPISTUDIO_ROUTES.AI_CALENDAR,
-        Icon: CalendarDays,
-        role: [Role.USER, Role.SUPER_ADMIN]
-    },
-    {
-        title: 'scheduled',
-        href: SNAPISTUDIO_ROUTES.SCHEDULED_POSTS,
-        Icon: Clock,
         role: [Role.USER, Role.SUPER_ADMIN]
     },
     {

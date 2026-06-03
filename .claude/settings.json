@@ -5,7 +5,8 @@
       "Bash(awk '{print \"PID:\", $2, \"| CPU:\", $3\"%\", \"| RAM:\", $4\"%\", \"| Time:\", $10}')",
       "Bash(docker exec *)",
       "Bash(docker compose *)",
-      "Bash(xargs ls)"
+      "Bash(xargs ls)",
+      "Bash(node -e ' *)"
     ]
   }
 }

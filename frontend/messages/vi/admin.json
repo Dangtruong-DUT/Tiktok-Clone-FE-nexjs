@@ -30,16 +30,180 @@
             "themeLight": "Chế độ sáng",
             "themeDark": "Chế độ tối",
             "themeSystem": "Theo hệ thống",
+            "expandSidebar": "Mở thanh bên",
+            "collapseSidebar": "Thu gọn thanh bên",
             "language": {
                 "english": "🇺🇸 Tiếng Anh",
                 "vietnamese": "🇻🇳 Tiếng Việt"
             }
         },
         "aiStudio": {
-            "title": "AI Studio"
+            "title": "AI Content Studio",
+            "description": "Giám sát lượng dùng, điều chỉnh cài đặt Gemini và xem toàn bộ yêu cầu tạo AI.",
+            "breadcrumb": "AI Studio",
+            "tabs": {
+                "metrics": "Thống kê",
+                "settings": "Cài đặt",
+                "requests": "Yêu cầu"
+            },
+            "metrics": {
+                "periods": {
+                    "today": "Hôm nay",
+                    "week": "Tuần này",
+                    "month": "Tháng này"
+                },
+                "stats": {
+                    "totalRequests": "Tổng yêu cầu",
+                    "successRate": "Tỷ lệ thành công",
+                    "failed": "Thất bại",
+                    "applyRate": "Tỷ lệ áp dụng",
+                    "uniqueUsers": "Người dùng riêng",
+                    "estCost": "Chi phí ước tính"
+                },
+                "sub": {
+                    "completed": "{count} đã hoàn thành",
+                    "failureRate": "{rate}% tỷ lệ lỗi",
+                    "suggestionsUsed": "Gợi ý đã dùng",
+                    "tokens": "{count} tokens"
+                },
+                "charts": {
+                    "dailyRequests": "Yêu cầu hàng ngày",
+                    "completed": "Hoàn thành",
+                    "failed": "Thất bại",
+                    "intentBreakdown": "Phân tích mục đích nội dung"
+                }
+            },
+            "settings": {
+                "status": {
+                    "enabled": "AI Studio đang BẬT",
+                    "disabled": "AI Studio đang TẮT",
+                    "enabledDescription": "Người dùng có thể tạo gợi ý nội dung AI.",
+                    "disabledDescription": "Toàn bộ yêu cầu tạo AI sẽ bị chặn."
+                },
+                "sections": {
+                    "rateLimits": "Giới hạn tần suất",
+                    "geminiModel": "Mô hình Gemini",
+                    "cacheAsync": "Cache & bất đồng bộ"
+                },
+                "fields": {
+                    "dailyLimitPerUser":  { "label": "Giới hạn hàng ngày mỗi người dùng", "description": "Số yêu cầu AI tối đa một người dùng có thể thực hiện mỗi ngày" },
+                    "globalDailyLimit":   { "label": "Giới hạn hàng ngày toàn cầu",        "description": "Tổng số yêu cầu AI tối đa của tất cả người dùng mỗi ngày" },
+                    "rateLimitPerMinute": { "label": "Giới hạn mỗi phút",                  "description": "Giới hạn mỗi người dùng (cấp middleware API)" },
+                    "model":              { "label": "Mô hình",                             "description": "Mô hình Gemini dùng để tạo nội dung" },
+                    "maxOutputTokens":    { "label": "Số token đầu ra tối đa",              "description": "Số token tối đa trong phản hồi AI" },
+                    "temperature":        { "label": "Temperature",                         "description": "Mức sáng tạo (0.0 = xác định, 1.0 = sáng tạo)" },
+                    "timeoutSeconds":     { "label": "Thời gian chờ (giây)",                "description": "Thời gian tối đa chờ phản hồi từ Gemini" },
+                    "cacheTtlHours":      { "label": "Cache TTL (giờ)",                     "description": "Thời gian lưu cache cho các yêu cầu giống nhau" },
+                    "asyncMode":          { "label": "Chế độ bất đồng bộ",                  "description": "Xử lý qua hàng đợi (khuyến nghị) thay vì chặn HTTP" },
+                    "requireMinInput":    { "label": "Yêu cầu đầu vào tối thiểu",           "description": "Chặn yêu cầu không có tiêu đề/mô tả/phụ đề/OCR" }
+                },
+                "lastUpdatedBy": "Cập nhật lần cuối bởi {name}",
+                "buttons": {
+                    "save": "Lưu cài đặt",
+                    "saving": "Đang lưu..."
+                },
+                "toast": {
+                    "saved": "Đã lưu cài đặt AI Studio.",
+                    "error": "Lưu cài đặt thất bại."
+                }
+            },
+            "requests": {
+                "filters": {
+                    "allStatuses": "Tất cả trạng thái",
+                    "pending": "Đang chờ",
+                    "processing": "Đang xử lý",
+                    "completed": "Hoàn thành",
+                    "failed": "Thất bại"
+                },
+                "columns": {
+                    "uuid": "UUID",
+                    "status": "Trạng thái",
+                    "intent": "Mục đích",
+                    "model": "Mô hình",
+                    "tokens": "Tokens",
+                    "applied": "Đã dùng",
+                    "created": "Ngày tạo"
+                },
+                "detail": {
+                    "shortCaption": "Caption ngắn",
+                    "hashtags": "Hashtags",
+                    "error": "Lỗi",
+                    "safetyNotes": "Ghi chú an toàn"
+                },
+                "appliedMark": "✓ Đã áp dụng",
+                "noRequests": "Không tìm thấy yêu cầu nào.",
+                "total": "{count} yêu cầu",
+                "pagination": {
+                    "page": "Trang {current} / {total}"
+                }
+            }
         },
         "scheduledPosts": {
-            "title": "Bài viết đã lên lịch"
+            "title": "Bài viết đã lên lịch",
+            "description": "Giám sát, kiểm soát và kiểm toán toàn bộ bài đăng đã lên lịch của creator.",
+            "breadcrumb": "Bài viết đã lên lịch",
+            "tabs": {
+                "metrics": "Thống kê",
+                "requests": "Yêu cầu"
+            },
+            "metrics": {
+                "periods": { "today": "Hôm nay", "week": "Tuần này", "month": "Tháng này" },
+                "stats": {
+                    "totalScheduled": "Tổng đã lên lịch",
+                    "pending": "Đang chờ",
+                    "published": "Đã đăng",
+                    "failed": "Thất bại",
+                    "cancelled": "Đã hủy",
+                    "successRate": "Tỷ lệ thành công",
+                    "avgDelay": "Độ trễ trung bình",
+                    "bySource": "Theo nguồn"
+                },
+                "sub": {
+                    "fromScheduledAt": "Từ scheduled_at → published_at",
+                    "manualCalendar": "Thủ công / Lịch"
+                },
+                "charts": {
+                    "dailyTrend": "Xu hướng theo ngày",
+                    "published": "Đã đăng",
+                    "failed": "Thất bại",
+                    "cancelled": "Đã hủy",
+                    "pending": "Đang chờ"
+                },
+                "topSchedulers": {
+                    "title": "Top Schedulers",
+                    "scheduled": "{count} đã lên lịch",
+                    "published": "{count} đã đăng"
+                }
+            },
+            "table": {
+                "filters": {
+                    "allStatuses": "Tất cả trạng thái",
+                    "pending": "Đang chờ",
+                    "published": "Đã đăng",
+                    "failed": "Thất bại",
+                    "cancelled": "Đã hủy",
+                    "allSources": "Tất cả nguồn",
+                    "manual": "Thủ công",
+                    "calendar": "Lịch",
+                    "userUuidPlaceholder": "UUID người dùng..."
+                },
+                "noResults": "Không có kết quả nào.",
+                "labels": {
+                    "scheduled": "Scheduled",
+                    "published": "Published"
+                },
+                "actions": {
+                    "cancel": "Hủy",
+                    "retry": "Thử lại"
+                },
+                "toast": {
+                    "cancelled": "Schedule đã bị hủy bởi admin.",
+                    "retried": "Schedule đã được đưa vào hàng chờ lại."
+                },
+                "pagination": {
+                    "page": "{current} / {total}"
+                }
+            }
         },
         "dashboard": {
             "title": "Bảng điều khiển",
@@ -70,13 +234,6 @@
                 "username": "Tên người dùng",
                 "email": "Email",
                 "status": "Trạng thái",
-            "unknownUser": "Quản trị viên",
-            "theme": "Giao diện",
-            "themeLight": "Sáng",
-            "themeDark": "Tối",
-            "themeSystem": "Hệ thống",
-            "expandSidebar": "Mở thanh bên",
-            "collapseSidebar": "Thu gọn thanh bên"
                 "actions": "Thao tác"
         "aiStudio": {
             "title": "AI Studio"

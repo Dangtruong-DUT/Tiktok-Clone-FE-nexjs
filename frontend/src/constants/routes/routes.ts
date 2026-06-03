@@ -30,17 +30,18 @@ export const AUTH_ROUTES = {
 } as const
 
 export const SNAPISTUDIO_ROUTES = {
-    ROOT:             '/snapistudio',
-    CONTENT:          '/snapistudio/content',
-    APPEALS:          '/snapistudio/appeals',
-    SETTINGS:         '/snapistudio/settings',
-    UPLOAD:           '/snapistudio/upload',
-    UPLOAD_POST:      (postId: string) => `/snapistudio/upload/post/${postId}`,
-    AI_CHAT:          '/snapistudio/ai/chat',
-    AI_VIRAL_SCORE:   '/snapistudio/ai/viral-score',
-    AI_CALENDAR:      '/snapistudio/ai/calendar',
-    SCHEDULED_POSTS:  '/snapistudio/scheduled-posts',
-    WELLNESS:         '/snapistudio/wellness',
+    ROOT: '/snapistudio',
+    CONTENT: '/snapistudio/content',
+    APPEALS: '/snapistudio/appeals',
+    SETTINGS: '/snapistudio/settings',
+    UPLOAD: '/snapistudio/upload',
+    UPLOAD_POST: (postId: string) => `/snapistudio/upload/post/${postId}`,
+    AI_STUDIO: '/snapistudio/ai',
+    AI_CHAT: '/snapistudio/ai/chat',
+    AI_VIRAL_SCORE: '/snapistudio/ai/viral-score',
+    AI_CALENDAR: '/snapistudio/ai/calendar',
+    SCHEDULED_POSTS: '/snapistudio/scheduled-posts',
+    WELLNESS: '/snapistudio/wellness'
 } as const
 
 export const USER_ROUTES = {
@@ -49,15 +50,15 @@ export const USER_ROUTES = {
 } as const
 
 export const ADMIN_ROUTES = {
-    DASHBOARD:       '/admin',
-    USERS:           '/admin/users',
-    POSTS:           '/admin/posts',
-    COMMENTS:        '/admin/comments',
-    APPEALS:         '/admin/appeals',
-    ACTIVITY:        '/admin/activity',
-    SETTINGS:        '/admin/settings',
-    AI_STUDIO:       '/admin/ai-studio',
-    SCHEDULED_POSTS: '/admin/scheduled-posts',
+    DASHBOARD: '/admin',
+    USERS: '/admin/users',
+    POSTS: '/admin/posts',
+    COMMENTS: '/admin/comments',
+    APPEALS: '/admin/appeals',
+    ACTIVITY: '/admin/activity',
+    SETTINGS: '/admin/settings',
+    AI_STUDIO: '/admin/ai-studio',
+    SCHEDULED_POSTS: '/admin/scheduled-posts'
 } as const
 
 export type AdminRoute = (typeof ADMIN_ROUTES)[keyof typeof ADMIN_ROUTES]

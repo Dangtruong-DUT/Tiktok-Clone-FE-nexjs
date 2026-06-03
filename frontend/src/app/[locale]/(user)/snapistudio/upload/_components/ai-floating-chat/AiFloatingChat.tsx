@@ -393,7 +393,7 @@ export function AiFloatingChat({ currentContent, onApply }: AiFloatingChatProps)
                             <span className='pl-1 text-xs text-muted-foreground'>
                                 {hasHistory ? t('input.hintRegenerate') : t('input.hintNew')}
                             </span>
-                            <PromptInputSubmit status={chatStatus} />
+                            <PromptInputSubmit status={chatStatus} aria-label={t('input.submit')} />
                         </PromptInputFooter>
                     </PromptInput>
                 </div>

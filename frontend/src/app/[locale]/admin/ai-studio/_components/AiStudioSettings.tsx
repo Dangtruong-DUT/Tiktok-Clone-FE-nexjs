@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
+import { useTranslations } from 'next-intl'
 import { useGetAiSettingsQuery, useUpdateAiSettingsMutation } from '@/store/services/admin/admin-ai-studio.service'
 import {
     UpdateAiStudioSettingsReqBody,
@@ -61,6 +62,7 @@ function NumberInput({
 }
 
 export function AiStudioSettings() {
+    const t = useTranslations('AdminPage')
     const { data, isLoading } = useGetAiSettingsQuery()
     const [update, { isLoading: isSaving }] = useUpdateAiSettingsMutation()
 
@@ -89,9 +91,9 @@ export function AiStudioSettings() {
     const onSubmit = async (values: UpdateAiStudioSettingsReqBodyType) => {
         try {
             await update(values).unwrap()
-            toast.success('AI Studio settings saved.')
+            toast.success(t('aiStudio.settings.toast.saved'))
         } catch {
-            toast.error('Failed to save settings.')
+            toast.error(t('aiStudio.settings.toast.error'))
         }
     }
 
@@ -121,12 +123,14 @@ export function AiStudioSettings() {
                                     {!field.value && <AlertTriangle size={18} className='text-red-500' />}
                                     <div>
                                         <p className='text-sm font-semibold'>
-                                            AI Studio is {field.value ? 'ENABLED' : 'DISABLED'}
+                                            {field.value
+                                                ? t('aiStudio.settings.status.enabled')
+                                                : t('aiStudio.settings.status.disabled')}
                                         </p>
                                         <p className='text-xs text-muted-foreground mt-0.5'>
                                             {field.value
-                                                ? 'Users can generate AI content suggestions.'
-                                                : 'All AI generation requests will be blocked.'}
+                                                ? t('aiStudio.settings.status.enabledDescription')
+                                                : t('aiStudio.settings.status.disabledDescription')}
                                         </p>
                                     </div>
                                 </div>
@@ -138,15 +142,15 @@ export function AiStudioSettings() {
 
                 <div className='px-4'>
                     <p className='py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide'>
-                        Rate limits
+                        {t('aiStudio.settings.sections.rateLimits')}
                     </p>
                     <Controller
                         control={control}
                         name='daily_limit_per_user'
                         render={({ field }) => (
                             <SettingRow
-                                label='Daily limit per user'
-                                description='Max AI requests a single user can make per day'
+                                label={t('aiStudio.settings.fields.dailyLimitPerUser.label')}
+                                description={t('aiStudio.settings.fields.dailyLimitPerUser.description')}
                             >
                                 <NumberInput value={field.value ?? 20} onChange={field.onChange} min={1} max={1000} />
                             </SettingRow>
@@ -158,8 +162,8 @@ export function AiStudioSettings() {
                         name='global_daily_limit'
                         render={({ field }) => (
                             <SettingRow
-                                label='Global daily limit'
-                                description='Max total AI requests across all users per day'
+                                label={t('aiStudio.settings.fields.globalDailyLimit.label')}
+                                description={t('aiStudio.settings.fields.globalDailyLimit.description')}
                             >
                                 <NumberInput
                                     value={field.value ?? 5000}
@@ -176,8 +180,8 @@ export function AiStudioSettings() {
                         name='rate_limit_per_minute'
                         render={({ field }) => (
                             <SettingRow
-                                label='Rate limit per minute'
-                                description='Throttle per user (API middleware level)'
+                                label={t('aiStudio.settings.fields.rateLimitPerMinute.label')}
+                                description={t('aiStudio.settings.fields.rateLimitPerMinute.description')}
                             >
                                 <NumberInput value={field.value ?? 10} onChange={field.onChange} min={1} max={60} />
                             </SettingRow>
@@ -187,13 +191,16 @@ export function AiStudioSettings() {
 
                 <div className='px-4'>
                     <p className='py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide'>
-                        Gemini model
+                        {t('aiStudio.settings.sections.geminiModel')}
                     </p>
                     <Controller
                         control={control}
                         name='gemini_model'
                         render={({ field }) => (
-                            <SettingRow label='Model' description='Gemini model used for generation'>
+                            <SettingRow
+                                label={t('aiStudio.settings.fields.model.label')}
+                                description={t('aiStudio.settings.fields.model.description')}
+                            >
                                 <Select value={field.value} onValueChange={field.onChange}>
                                     <SelectTrigger className='w-44 h-8 text-sm'>
                                         <SelectValue />
@@ -212,7 +219,10 @@ export function AiStudioSettings() {
                         control={control}
                         name='max_output_tokens'
                         render={({ field }) => (
-                            <SettingRow label='Max output tokens' description='Max tokens in AI response'>
+                            <SettingRow
+                                label={t('aiStudio.settings.fields.maxOutputTokens.label')}
+                                description={t('aiStudio.settings.fields.maxOutputTokens.description')}
+                            >
                                 <NumberInput
                                     value={field.value ?? 2048}
                                     onChange={field.onChange}
@@ -228,8 +238,8 @@ export function AiStudioSettings() {
                         name='temperature'
                         render={({ field }) => (
                             <SettingRow
-                                label='Temperature'
-                                description='Creativity level (0.0 = deterministic, 1.0 = creative)'
+                                label={t('aiStudio.settings.fields.temperature.label')}
+                                description={t('aiStudio.settings.fields.temperature.description')}
                             >
                                 <input
                                     type='number'
@@ -248,7 +258,10 @@ export function AiStudioSettings() {
                         control={control}
                         name='timeout_seconds'
                         render={({ field }) => (
-                            <SettingRow label='Timeout (seconds)' description='Max time to wait for Gemini response'>
+                            <SettingRow
+                                label={t('aiStudio.settings.fields.timeoutSeconds.label')}
+                                description={t('aiStudio.settings.fields.timeoutSeconds.description')}
+                            >
                                 <NumberInput value={field.value ?? 30} onChange={field.onChange} min={10} max={120} />
                             </SettingRow>
                         )}
@@ -257,13 +270,16 @@ export function AiStudioSettings() {
 
                 <div className='px-4'>
                     <p className='py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide'>
-                        Cache & async
+                        {t('aiStudio.settings.sections.cacheAsync')}
                     </p>
                     <Controller
                         control={control}
                         name='cache_ttl_hours'
                         render={({ field }) => (
-                            <SettingRow label='Cache TTL (hours)' description='How long identical requests are cached'>
+                            <SettingRow
+                                label={t('aiStudio.settings.fields.cacheTtlHours.label')}
+                                description={t('aiStudio.settings.fields.cacheTtlHours.description')}
+                            >
                                 <NumberInput value={field.value ?? 6} onChange={field.onChange} min={1} max={168} />
                             </SettingRow>
                         )}
@@ -274,8 +290,8 @@ export function AiStudioSettings() {
                         name='async_mode'
                         render={({ field }) => (
                             <SettingRow
-                                label='Async mode'
-                                description='Process via queue (recommended) instead of blocking HTTP'
+                                label={t('aiStudio.settings.fields.asyncMode.label')}
+                                description={t('aiStudio.settings.fields.asyncMode.description')}
                             >
                                 <Switch checked={field.value ?? true} onCheckedChange={field.onChange} />
                             </SettingRow>
@@ -287,8 +303,8 @@ export function AiStudioSettings() {
                         name='require_min_input'
                         render={({ field }) => (
                             <SettingRow
-                                label='Require minimum input'
-                                description='Block requests with no title/description/transcript/OCR'
+                                label={t('aiStudio.settings.fields.requireMinInput.label')}
+                                description={t('aiStudio.settings.fields.requireMinInput.description')}
                             >
                                 <Switch checked={field.value ?? true} onCheckedChange={field.onChange} />
                             </SettingRow>
@@ -299,12 +315,14 @@ export function AiStudioSettings() {
                 <div className='p-4 flex justify-end'>
                     {data?.data.updated_by && (
                         <p className='text-xs text-muted-foreground mr-auto self-center'>
-                            Last updated by {data.data.updated_by.name}
+                            {t('aiStudio.settings.lastUpdatedBy', { name: data.data.updated_by.name })}
                         </p>
                     )}
                     <Button type='submit' size='sm' disabled={isSaving} className='gap-2'>
                         <Save size={14} />
-                        {isSaving ? 'Saving...' : 'Save settings'}
+                        {isSaving
+                            ? t('aiStudio.settings.buttons.saving')
+                            : t('aiStudio.settings.buttons.save')}
                     </Button>
                 </div>
             </Card>

@@ -10,6 +10,7 @@ import { setLoadingByKey } from '@/store/features/appSlice'
 import { trackEncoding } from '@/store/features/videoProcessingSlice'
 import { useUploadImageMutation } from '@/store/services/upload.service'
 import { useCreatePostMutation } from '@/store/services/posts.service'
+import { useSchedulePostMutation } from '@/store/services/studio-post-schedule.service'
 import { useVideoUpload } from '@/hooks/video/useVideoUpload'
 import { useVideoStatus } from '@/hooks/video/useVideoStatus'
 import { convertBase64ToFile } from '@/utils/file.util'
@@ -35,6 +36,12 @@ export function useUploadFormManager() {
 
     const [uploadImage, uploadImageResult] = useUploadImageMutation()
     const [createPost, createPostResult] = useCreatePostMutation()
+    const [schedulePost, schedulePostResult] = useSchedulePostMutation()
+
+    const scheduledAtRef = useRef<string | null>(null)
+    const setScheduledAt = useCallback((iso: string | null) => {
+        scheduledAtRef.current = iso
+    }, [])
 
     const [isInitialRender, setIsInitialRender] = useState(true)
     const [videoFile, setVideoFile] = useState<File | null>(null)
@@ -79,7 +86,7 @@ export function useUploadFormManager() {
         shouldConfirm: videoFile != null
     })
 
-    const isSubmitLoading = uploadImageResult.isLoading || createPostResult.isLoading
+    const isSubmitLoading = uploadImageResult.isLoading || createPostResult.isLoading || schedulePostResult.isLoading
 
     // Video URL lifecycle
     useEffect(() => {
@@ -192,7 +199,19 @@ export function useUploadFormManager() {
                 )
             }
 
-            toast.success(res.message, { position: 'top-center' })
+            const scheduledAt = scheduledAtRef.current
+            if (scheduledAt) {
+                await schedulePost({
+                    postUuid: res.data.uuid,
+                    scheduled_at: new Date(scheduledAt).toISOString(),
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+                }).unwrap()
+                toast.success('Bài đăng đã được hẹn giờ thành công!', { position: 'top-center' })
+            } else {
+                toast.success(res.message, { position: 'top-center' })
+            }
+
+            scheduledAtRef.current = null
             onReset()
             router.push(SNAPISTUDIO_ROUTES.CONTENT)
         } catch (error) {
@@ -223,6 +242,7 @@ export function useUploadFormManager() {
         stayHere,
         leavePage,
         onReset,
-        onSubmit
+        onSubmit,
+        setScheduledAt
     }
 }
