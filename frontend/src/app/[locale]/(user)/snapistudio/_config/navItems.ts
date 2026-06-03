@@ -1,6 +1,6 @@
 import { Role } from '@/constants/enum'
 import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
-import { Settings, LayoutPanelLeft, BookUp, Scale } from 'lucide-react'
+import { Settings, LayoutPanelLeft, BookUp, Scale, HeartPulse } from 'lucide-react'
 
 interface NavItem {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -21,6 +21,12 @@ export const navItems: NavItem[] = [
         title: 'posts',
         href: SNAPISTUDIO_ROUTES.CONTENT,
         Icon: BookUp,
+        role: [Role.USER, Role.SUPER_ADMIN]
+    },
+    {
+        title: 'wellness',
+        href: SNAPISTUDIO_ROUTES.WELLNESS,
+        Icon: HeartPulse,
         role: [Role.USER, Role.SUPER_ADMIN]
     },
     {

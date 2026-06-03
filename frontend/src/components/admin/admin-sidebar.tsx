@@ -15,6 +15,7 @@ import { useTheme } from 'next-themes'
 import {
     Activity,
     ArrowLeft,
+    Clock,
     Flag,
     LayoutDashboard,
     MessageCircle,
@@ -58,7 +59,8 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
         { title: t('appeals.title'), href: ADMIN_ROUTES.APPEALS, icon: Flag },
         { title: t('activity.title'), href: ADMIN_ROUTES.ACTIVITY, icon: Activity },
         { title: t('settings.title'), href: ADMIN_ROUTES.SETTINGS, icon: Settings },
-        { title: 'AI Studio', href: ADMIN_ROUTES.AI_STUDIO, icon: Sparkles }
+        { title: t('aiStudio.title'), href: ADMIN_ROUTES.AI_STUDIO, icon: Sparkles },
+        { title: t('scheduledPosts.title'), href: ADMIN_ROUTES.SCHEDULED_POSTS, icon: Clock }
     ]
 
     const ThemeIcon = theme === 'dark' ? Moon : theme === 'light' ? Sun : Monitor
@@ -178,19 +180,19 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent side='right' align='end'>
                                                 <DropdownMenuItem onClick={() => setTheme('light')}>
-                                                    <Sun className='mr-2 h-4 w-4' /> Light
+                                                    <Sun className='mr-2 h-4 w-4' /> {t('shell.themeLight')}
                                                 </DropdownMenuItem>
                                                 <DropdownMenuItem onClick={() => setTheme('dark')}>
-                                                    <Moon className='mr-2 h-4 w-4' /> Dark
+                                                    <Moon className='mr-2 h-4 w-4' /> {t('shell.themeDark')}
                                                 </DropdownMenuItem>
                                                 <DropdownMenuItem onClick={() => setTheme('system')}>
-                                                    <Monitor className='mr-2 h-4 w-4' /> System
+                                                    <Monitor className='mr-2 h-4 w-4' /> {t('shell.themeSystem')}
                                                 </DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TooltipTrigger>
                                     <TooltipContent side='right' className='text-xs'>
-                                        Theme
+                                        {t('shell.theme')}
                                     </TooltipContent>
                                 </Tooltip>
 
@@ -218,7 +220,9 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
                                         <SelectContent>
                                             {LANGUAGES.map(({ value, labelKey }) => (
                                                 <SelectItem key={value} value={value} className='text-xs'>
-                                                    {labelKey === 'en' ? '🇺🇸 English' : '🇻🇳 Tiếng Việt'}
+                                                    {labelKey === 'en'
+                                                        ? t('shell.language.english')
+                                                        : t('shell.language.vietnamese')}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
@@ -232,13 +236,13 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent side='top' align='end' className='min-w-[120px]'>
                                             <DropdownMenuItem onClick={() => setTheme('light')} className='text-xs'>
-                                                <Sun className='mr-2 h-3.5 w-3.5' /> Light
+                                                <Sun className='mr-2 h-3.5 w-3.5' /> {t('shell.themeLight')}
                                             </DropdownMenuItem>
                                             <DropdownMenuItem onClick={() => setTheme('dark')} className='text-xs'>
-                                                <Moon className='mr-2 h-3.5 w-3.5' /> Dark
+                                                <Moon className='mr-2 h-3.5 w-3.5' /> {t('shell.themeDark')}
                                             </DropdownMenuItem>
                                             <DropdownMenuItem onClick={() => setTheme('system')} className='text-xs'>
-                                                <Monitor className='mr-2 h-3.5 w-3.5' /> System
+                                                <Monitor className='mr-2 h-3.5 w-3.5' /> {t('shell.themeSystem')}
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>

@@ -1,5 +1,7 @@
 import NavLinks from '@/app/[locale]/(user)/snapistudio/_components/nav-links'
 import Header from './_components/header'
+import { AiUnifiedChat } from './_components/ai-unified-chat/AiUnifiedChat'
+import { AiChatProvider } from './_components/ai-unified-chat/AiChatContext'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -16,12 +18,15 @@ export const metadata: Metadata = {
 
 export default function StudioLayout({ children }: { children: React.ReactNode }) {
     return (
-        <div className='h-screen bg-background flex'>
-            <NavLinks />
-            <div className='flex-1 flex flex-col overflow-hidden'>
-                <Header />
-                <main className='flex-1 overflow-auto scrollbar-hidden'>{children}</main>
+        <AiChatProvider>
+            <div className='h-screen bg-background flex'>
+                <NavLinks />
+                <div className='flex-1 flex flex-col overflow-hidden'>
+                    <Header />
+                    <main className='flex-1 overflow-auto scrollbar-hidden'>{children}</main>
+                </div>
+                <AiUnifiedChat />
             </div>
-        </div>
+        </AiChatProvider>
     )
 }

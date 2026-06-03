@@ -17,6 +17,10 @@ export interface HlsQualityLevel {
 interface UseHlsPlayerOptions {
     onReady?: () => void
     onError?: (data: ErrorData) => void
+    messages?: {
+        videoUnavailable?: string
+        noHlsSupport?: string
+    }
 }
 
 export function useHlsPlayer(
@@ -31,7 +35,7 @@ export function useHlsPlayer(
     const [hlsError, setHlsError] = useState<string | null>(null)
     const [isBuffering, setIsBuffering] = useState(false)
 
-    const { onReady, onError } = options
+    const { onReady, onError, messages } = options
 
     useEffect(() => {
         const video = videoRef.current
@@ -107,7 +111,7 @@ export function useHlsPlayer(
                         default:
                             logger.error('HLS: unrecoverable error', data)
                             hls.destroy()
-                            setHlsError('Video không khả dụng. Vui lòng thử lại.')
+                            setHlsError(messages?.videoUnavailable ?? 'Video unavailable. Please try again.')
                     }
                 }
                 onError?.(data)
@@ -124,7 +128,7 @@ export function useHlsPlayer(
             setIsHlsReady(true)
             onReady?.()
         } else {
-            setHlsError('Trình duyệt không hỗ trợ HLS.')
+            setHlsError(messages?.noHlsSupport ?? 'Browser does not support HLS.')
         }
 
         return () => {

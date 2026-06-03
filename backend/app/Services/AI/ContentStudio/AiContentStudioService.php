@@ -11,7 +11,9 @@ use App\Exceptions\http\TooManyRequestsException;
 use App\Jobs\AI\GenerateAiContentSuggestionJob;
 use App\Models\AiContentSuggestion;
 use App\Models\AiStudioSetting;
+use App\Repositories\AiContentSuggestionRepository;
 use App\Services\AI\Providers\GeminiClient;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -108,14 +110,17 @@ Current Category: {{video_category}}
 PROMPT;
 
     public function __construct(
+        private readonly AiContentSuggestionRepository $repository,
         private readonly GeminiClient $geminiClient,
     ) {}
 
     /**
-     * Create a pending suggestion record and dispatch async queue job.
+     * Create an AI content suggestion request and enqueue generation.
      *
-     * @throws ServiceUnavailableException when AI Studio is disabled by admin
-     * @throws TooManyRequestsException when user or global daily quota is exceeded
+      * @param  int  $userId
+      * @param  AiContentStudioInputData  $input
+      * @return AiContentSuggestion
+     * @throws ServiceUnavailableException|TooManyRequestsException
      */
     public function initiateAsync(int $userId, AiContentStudioInputData $input): AiContentSuggestion
     {
@@ -132,15 +137,11 @@ PROMPT;
                 return $cached;
             }
 
-            $existing = AiContentSuggestion::where('user_id', $userId)
-                ->where('request_hash', $hash)
-                ->whereIn('status', [
-                    AiContentSuggestionStatusEnum::PENDING,
-                    AiContentSuggestionStatusEnum::PROCESSING,
-                    AiContentSuggestionStatusEnum::COMPLETED,
-                ])
-                ->latest()
-                ->first();
+            $existing = $this->repository->findLatestByHashAndUser($userId, $hash, [
+                AiContentSuggestionStatusEnum::PENDING,
+                AiContentSuggestionStatusEnum::PROCESSING,
+                AiContentSuggestionStatusEnum::COMPLETED,
+            ]);
 
             if ($existing) {
                 return $existing;
@@ -149,7 +150,8 @@ PROMPT;
 
         $this->checkQuota($userId, $settings);
 
-        $suggestion = AiContentSuggestion::create([
+        /** @var AiContentSuggestion $suggestion */
+        $suggestion = $this->repository->create([
             'uuid'              => (string) Str::uuid(),
             'user_id'           => $userId,
             'video_title'       => $input->videoTitle,
@@ -171,13 +173,17 @@ PROMPT;
     }
 
     /**
-     * Run generation synchronously — called by the queue job.
+     * Generate AI content suggestion output and persist results.
+     *
+     * @param  AiContentSuggestion  $suggestion
+     * @param  AiContentStudioInputData  $input
+     * @return void
      */
     public function generate(AiContentSuggestion $suggestion, AiContentStudioInputData $input): void
     {
         $startTime = microtime(true);
 
-        $suggestion->update(['status' => AiContentSuggestionStatusEnum::PROCESSING]);
+        $this->repository->update($suggestion->id, ['status' => AiContentSuggestionStatusEnum::PROCESSING]);
 
         try {
             $sanitized  = $this->sanitizeInput($input);
@@ -187,7 +193,7 @@ PROMPT;
             $parsedOutput = $this->parseAndValidate($result['text']);
             $latencyMs    = (int) ((microtime(true) - $startTime) * 1000);
 
-            $suggestion->update([
+            $updated = $this->repository->update($suggestion->id, [
                 'status'               => AiContentSuggestionStatusEnum::COMPLETED,
                 'short_caption'        => $parsedOutput->shortCaption,
                 'professional_caption' => $parsedOutput->professionalCaption,
@@ -200,19 +206,21 @@ PROMPT;
                 'confidence_score'     => $parsedOutput->confidenceScore,
                 'safety_notes'         => $parsedOutput->safetyNotes,
                 'token_usage'          => $result['token_usage'],
-                'raw_response'         => config('ai.logging.log_raw_response') ? ['text' => mb_substr($result['text'], 0, 2000)] : null,
+                'raw_response'         => config('ai.logging.log_raw_response')
+                    ? ['text' => mb_substr($result['text'], 0, 2000)]
+                    : null,
                 'generated_at'         => now(),
                 'error_message'        => null,
             ]);
 
-            $this->storeInCache($suggestion->user_id, $suggestion->request_hash, $suggestion);
-            $this->logRequest($suggestion, $latencyMs, 'success');
+            $this->storeInCache($suggestion->user_id, $suggestion->request_hash, $updated);
+            $this->logRequest($updated, $latencyMs, 'success');
 
         } catch (\Throwable $e) {
             $latencyMs = (int) ((microtime(true) - $startTime) * 1000);
             $fallback  = $this->buildFallback($input, $e->getMessage());
 
-            $suggestion->update([
+            $failed = $this->repository->update($suggestion->id, [
                 'status'               => AiContentSuggestionStatusEnum::FAILED,
                 'error_message'        => mb_substr($e->getMessage(), 0, 500),
                 'short_caption'        => $fallback->shortCaption,
@@ -228,51 +236,98 @@ PROMPT;
                 'generated_at'         => now(),
             ]);
 
-            $this->logRequest($suggestion, $latencyMs, 'failed', $e->getMessage());
+            $this->logRequest($failed, $latencyMs, 'failed', $e->getMessage());
         }
     }
 
     /**
-     * Mark a suggestion as applied and record timestamp.
+     * Mark a suggestion as applied.
+      *
+      * @param  AiContentSuggestion  $suggestion
+      * @return AiContentSuggestion
      */
     public function applySuggestion(AiContentSuggestion $suggestion): AiContentSuggestion
     {
-        $suggestion->update(['applied_at' => now()]);
-
-        return $suggestion->fresh();
+        /** @var AiContentSuggestion */
+        return $this->repository->update($suggestion->id, ['applied_at' => now()]);
     }
 
-    // ─── Private helpers ────────────────────────────────────────────────────
+    /**
+     * List suggestions for a given user.
+      *
+      * @param  int  $userId
+      * @param  int  $perPage
+      * @return LengthAwarePaginator
+     */
+    public function listByUser(int $userId, int $perPage): LengthAwarePaginator
+    {
+        return $this->repository->paginateByUser($userId, $perPage);
+    }
 
+    /**
+     * Find a suggestion by UUID scoped to a user.
+     *
+     * @param  string  $uuid
+     * @param  int  $userId
+     * @return AiContentSuggestion
+     */
+    public function findByUuidForUser(string $uuid, int $userId): AiContentSuggestion
+    {
+        return $this->repository->findByUuidAndUserOrFail($uuid, $userId);
+    }
+
+    /**
+     * Enforce per-user and global quota.
+     *
+     * @param  int  $userId
+     * @param  AiStudioSetting  $settings
+     * @return void
+     * @throws TooManyRequestsException
+     */
     private function checkQuota(int $userId, AiStudioSetting $settings): void
     {
-        $userDaily = AiContentSuggestion::where('user_id', $userId)
-            ->where('created_at', '>=', now()->startOfDay())
-            ->count();
-
-        if ($userDaily >= $settings->daily_limit_per_user) {
+        if ($this->repository->countTodayByUser($userId) >= $settings->daily_limit_per_user) {
             throw new TooManyRequestsException(
                 "Daily AI request limit ({$settings->daily_limit_per_user}) reached. Try again tomorrow."
             );
         }
 
-        $globalDaily = AiContentSuggestion::where('created_at', '>=', now()->startOfDay())->count();
-
-        if ($globalDaily >= $settings->global_daily_limit) {
+        if ($this->repository->countTodayGlobal() >= $settings->global_daily_limit) {
             throw new TooManyRequestsException('Global AI request limit reached. Try again later.');
         }
     }
 
+    /**
+     * Build a unique request hash for a user input.
+     *
+     * @param  int  $userId
+     * @param  AiContentStudioInputData  $input
+     * @return string
+     */
     private function buildRequestHash(int $userId, AiContentStudioInputData $input): string
     {
         return hash('sha256', $userId . json_encode($input->toArray()));
     }
 
+    /**
+     * Build cache key for a user/hash combination.
+     *
+     * @param  int  $userId
+     * @param  string  $hash
+     * @return string
+     */
     private function cacheKey(int $userId, string $hash): string
     {
         return "ai:content-studio:suggestion:{$userId}:{$hash}";
     }
 
+    /**
+     * Retrieve a completed suggestion from cache if present.
+     *
+     * @param  int  $userId
+     * @param  string  $hash
+     * @return AiContentSuggestion|null
+     */
     private function getFromCache(int $userId, string $hash): ?AiContentSuggestion
     {
         $id = Cache::get($this->cacheKey($userId, $hash));
@@ -280,7 +335,8 @@ PROMPT;
             return null;
         }
 
-        $suggestion = AiContentSuggestion::find($id);
+        /** @var AiContentSuggestion|null $suggestion */
+        $suggestion = $this->repository->find((int) $id);
 
         if ($suggestion && $suggestion->status === AiContentSuggestionStatusEnum::COMPLETED) {
             return $suggestion;
@@ -289,12 +345,26 @@ PROMPT;
         return null;
     }
 
+    /**
+     * Store suggestion ID in cache.
+     *
+     * @param  int  $userId
+     * @param  string  $hash
+     * @param  AiContentSuggestion  $suggestion
+     * @return void
+     */
     private function storeInCache(int $userId, string $hash, AiContentSuggestion $suggestion): void
     {
         $ttl = (int) config('ai.content_studio.cache_ttl_seconds', 21600);
         Cache::put($this->cacheKey($userId, $hash), $suggestion->id, $ttl);
     }
 
+    /**
+     * Sanitize input fields before sending to the model.
+     *
+     * @param  AiContentStudioInputData  $input
+     * @return AiContentStudioInputData
+     */
     private function sanitizeInput(AiContentStudioInputData $input): AiContentStudioInputData
     {
         $maxLen = (int) config('ai.content_studio.max_input_length', 3000);
@@ -309,6 +379,13 @@ PROMPT;
         );
     }
 
+    /**
+     * Sanitize a single text field.
+     *
+     * @param  string|null  $value
+     * @param  int  $maxLen
+     * @return string|null
+     */
     private function sanitizeField(?string $value, int $maxLen): ?string
     {
         if ($value === null || trim($value) === '') {
@@ -321,6 +398,12 @@ PROMPT;
         return mb_substr(trim($value), 0, $maxLen);
     }
 
+    /**
+     * Build the final user prompt from input data.
+     *
+     * @param  AiContentStudioInputData  $input
+     * @return string
+     */
     private function buildUserPrompt(AiContentStudioInputData $input): string
     {
         $replace = [
@@ -335,6 +418,12 @@ PROMPT;
         return str_replace(array_keys($replace), array_values($replace), self::USER_PROMPT_TEMPLATE);
     }
 
+    /**
+     * Parse, validate, and normalize AI output.
+     *
+     * @param  string  $rawText
+     * @return AiContentStudioOutputData
+     */
     private function parseAndValidate(string $rawText): AiContentStudioOutputData
     {
         $clean = (string) preg_replace('/^```(?:json)?\s*/m', '', $rawText);
@@ -390,6 +479,13 @@ PROMPT;
         );
     }
 
+    /**
+     * Build a fallback output when AI generation fails.
+     *
+     * @param  AiContentStudioInputData  $input
+     * @param  string  $reason
+     * @return AiContentStudioOutputData
+     */
     private function buildFallback(AiContentStudioInputData $input, string $reason): AiContentStudioOutputData
     {
         $title    = $input->videoTitle       ?? 'Video';
@@ -410,10 +506,19 @@ PROMPT;
             targetAudience:      'General audience',
             contentIntent:       'other',
             confidenceScore:     0.1,
-            safetyNotes:         "AI generation failed. Reason: " . mb_substr($reason, 0, 200) . ". Showing fallback suggestions.",
+            safetyNotes:         'AI generation failed. Reason: ' . mb_substr($reason, 0, 200) . '. Showing fallback suggestions.',
         );
     }
 
+    /**
+     * Log AI request results for monitoring.
+     *
+     * @param  AiContentSuggestion  $suggestion
+     * @param  int  $latencyMs
+     * @param  string  $status
+     * @param  string|null  $error
+     * @return void
+     */
     private function logRequest(AiContentSuggestion $suggestion, int $latencyMs, string $status, ?string $error = null): void
     {
         $channel = (string) config('ai.logging.channel', 'ai');

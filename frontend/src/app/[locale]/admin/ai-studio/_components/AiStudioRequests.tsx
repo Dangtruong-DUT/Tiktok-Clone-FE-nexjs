@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { useListAiRequestsQuery } from '@/store/services/admin/admin-ai-studio.service'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -17,6 +18,7 @@ const STATUS_COLORS: Record<AiSuggestionStatus, string> = {
 }
 
 function RequestRow({ item }: { item: AiContentSuggestionType }) {
+    const t = useTranslations('AdminPage')
     const [expanded, setExpanded] = useState(false)
     const totalTokens = (item as unknown as Record<string, unknown>).token_usage
         ? (((item as unknown as Record<string, unknown>).token_usage as Record<string, number>).total_tokens ?? 0)
@@ -39,7 +41,9 @@ function RequestRow({ item }: { item: AiContentSuggestionType }) {
                 <td className='px-4 py-3 text-xs text-muted-foreground text-right'>
                     {totalTokens != null ? totalTokens.toLocaleString() : '—'}
                 </td>
-                <td className='px-4 py-3 text-xs text-muted-foreground'>{item.applied_at ? '✓ Applied' : '—'}</td>
+                <td className='px-4 py-3 text-xs text-muted-foreground'>
+                    {item.applied_at ? t('aiStudio.requests.appliedMark') : '—'}
+                </td>
                 <td className='px-4 py-3 text-xs text-muted-foreground whitespace-nowrap'>
                     {new Date(item.created_at).toLocaleString()}
                 </td>
@@ -50,25 +54,33 @@ function RequestRow({ item }: { item: AiContentSuggestionType }) {
                         <div className='grid grid-cols-1 md:grid-cols-2 gap-3 text-xs'>
                             {item.short_caption && (
                                 <div>
-                                    <p className='font-medium text-muted-foreground mb-1'>Short caption</p>
+                                    <p className='font-medium text-muted-foreground mb-1'>
+                                        {t('aiStudio.requests.detail.shortCaption')}
+                                    </p>
                                     <p className='text-foreground'>{item.short_caption}</p>
                                 </div>
                             )}
                             {item.hashtags?.length > 0 && (
                                 <div>
-                                    <p className='font-medium text-muted-foreground mb-1'>Hashtags</p>
+                                    <p className='font-medium text-muted-foreground mb-1'>
+                                        {t('aiStudio.requests.detail.hashtags')}
+                                    </p>
                                     <p className='text-foreground'>{item.hashtags.join(' ')}</p>
                                 </div>
                             )}
                             {item.error_message && (
                                 <div className='col-span-2'>
-                                    <p className='font-medium text-red-500 mb-1'>Error</p>
+                                    <p className='font-medium text-red-500 mb-1'>
+                                        {t('aiStudio.requests.detail.error')}
+                                    </p>
                                     <p className='text-red-600 bg-red-50 rounded p-2'>{item.error_message}</p>
                                 </div>
                             )}
                             {item.safety_notes && (
                                 <div className='col-span-2'>
-                                    <p className='font-medium text-yellow-600 mb-1'>Safety notes</p>
+                                    <p className='font-medium text-yellow-600 mb-1'>
+                                        {t('aiStudio.requests.detail.safetyNotes')}
+                                    </p>
                                     <p className='text-yellow-700'>{item.safety_notes}</p>
                                 </div>
                             )}
@@ -81,6 +93,7 @@ function RequestRow({ item }: { item: AiContentSuggestionType }) {
 }
 
 export function AiStudioRequests() {
+    const t = useTranslations('AdminPage')
     const [status, setStatus] = useState<string>('all')
     const [page, setPage] = useState(1)
 
@@ -105,18 +118,20 @@ export function AiStudioRequests() {
                     }}
                 >
                     <SelectTrigger className='w-36 h-8 text-sm'>
-                        <SelectValue placeholder='Status' />
+                        <SelectValue placeholder={t('aiStudio.requests.filters.allStatuses')} />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value='all'>All statuses</SelectItem>
-                        <SelectItem value='pending'>Pending</SelectItem>
-                        <SelectItem value='processing'>Processing</SelectItem>
-                        <SelectItem value='completed'>Completed</SelectItem>
-                        <SelectItem value='failed'>Failed</SelectItem>
+                        <SelectItem value='all'>{t('aiStudio.requests.filters.allStatuses')}</SelectItem>
+                        <SelectItem value='pending'>{t('aiStudio.requests.filters.pending')}</SelectItem>
+                        <SelectItem value='processing'>{t('aiStudio.requests.filters.processing')}</SelectItem>
+                        <SelectItem value='completed'>{t('aiStudio.requests.filters.completed')}</SelectItem>
+                        <SelectItem value='failed'>{t('aiStudio.requests.filters.failed')}</SelectItem>
                     </SelectContent>
                 </Select>
                 {meta && meta.type === 'offset' && meta.total != null && (
-                    <span className='text-xs text-muted-foreground ml-auto'>{meta.total.toLocaleString()} total</span>
+                    <span className='text-xs text-muted-foreground ml-auto'>
+                        {t('aiStudio.requests.total', { count: meta.total.toLocaleString() })}
+                    </span>
                 )}
             </div>
 
@@ -134,25 +149,25 @@ export function AiStudioRequests() {
                             <thead>
                                 <tr className='border-b border-border bg-muted/50'>
                                     <th className='px-4 py-2.5 text-left text-xs font-medium text-muted-foreground'>
-                                        UUID
+                                        {t('aiStudio.requests.columns.uuid')}
                                     </th>
                                     <th className='px-4 py-2.5 text-left text-xs font-medium text-muted-foreground'>
-                                        Status
+                                        {t('aiStudio.requests.columns.status')}
                                     </th>
                                     <th className='px-4 py-2.5 text-left text-xs font-medium text-muted-foreground'>
-                                        Intent
+                                        {t('aiStudio.requests.columns.intent')}
                                     </th>
                                     <th className='px-4 py-2.5 text-left text-xs font-medium text-muted-foreground'>
-                                        Model
+                                        {t('aiStudio.requests.columns.model')}
                                     </th>
                                     <th className='px-4 py-2.5 text-right text-xs font-medium text-muted-foreground'>
-                                        Tokens
+                                        {t('aiStudio.requests.columns.tokens')}
                                     </th>
                                     <th className='px-4 py-2.5 text-left text-xs font-medium text-muted-foreground'>
-                                        Applied
+                                        {t('aiStudio.requests.columns.applied')}
                                     </th>
                                     <th className='px-4 py-2.5 text-left text-xs font-medium text-muted-foreground'>
-                                        Created
+                                        {t('aiStudio.requests.columns.created')}
                                     </th>
                                 </tr>
                             </thead>
@@ -160,7 +175,7 @@ export function AiStudioRequests() {
                                 {items.length === 0 ? (
                                     <tr>
                                         <td colSpan={7} className='py-12 text-center text-muted-foreground text-sm'>
-                                            No requests found.
+                                            {t('aiStudio.requests.noRequests')}
                                         </td>
                                     </tr>
                                 ) : (
@@ -183,7 +198,10 @@ export function AiStudioRequests() {
                         <ChevronLeft size={14} />
                     </button>
                     <span className='text-sm text-muted-foreground'>
-                        Page {meta.current_page} of {meta.last_page}
+                        {t('aiStudio.requests.pagination.page', {
+                            current: meta.current_page,
+                            total: meta.last_page
+                        })}
                     </span>
                     <button
                         onClick={() => setPage((p) => Math.min(meta.last_page, p + 1))}

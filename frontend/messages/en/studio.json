@@ -1,5 +1,71 @@
 {
     "SnapiStudio": {
+        "aiChat": {
+            "title": "AI Studio",
+            "status": {
+                "generating": "Generating...",
+                "done": "Done",
+                "completed": "Done",
+                "fallback": "Fallback"
+            },
+            "actions": {
+                "applyToPost": "Apply to post",
+                "applied": "Applied",
+                "addHashtags": "+ {count} hashtag",
+                "clearHistory": "Clear history"
+            },
+            "meta": {
+                "category": "Category",
+                "intent": "Intent",
+                "audience": "Audience",
+                "confidence": "Confidence"
+            },
+            "input": {
+                "placeholder": "Describe your video...",
+                "regenerateHint": "Type to regenerate",
+                "hintRegenerate": "Type to regenerate",
+                "sendHint": "Press Enter to send · Shift+Enter for new line",
+                "hintNew": "Press Enter to send · Shift+Enter for new line",
+                "submit": "Send"
+            },
+            "caption": {
+                "empty": "No caption generated",
+                "chars": "{count} chars"
+            },
+            "tabs": {
+                "short": "Short",
+                "professional": "Professional",
+                "viral": "Viral"
+            },
+            "hashtags": {
+                "title": "Hashtags",
+                "count": "({selected}/{total})",
+                "selectAll": "Select all",
+                "deselect": "Deselect",
+                "copied": "Copied",
+                "copyAll": "Copy all"
+            },
+            "toast": {
+                "applied": "Caption and hashtags applied!",
+                "captionCopied": "Caption copied!",
+                "hashtagsCopied": "Hashtags copied!",
+                "tagCopied": "{tag} copied!",
+                "ready": "AI suggestion ready!",
+                "fallback": "AI error — showing fallback suggestions.",
+                "startError": "Unable to start AI. Please try again."
+            },
+            "emptyCaption": "No caption generated",
+            "charCount": "{count} chars",
+            "welcome": {
+                "intro": "Hi! I am <strong>AI Studio</strong> — your video content assistant.",
+                "subtitle": "Enter a video description below and press <strong>Send</strong> to get:",
+                "items": {
+                    "shortCaption": "Short, professional, or viral captions",
+                    "hashtags": "Hashtags tailored to your content",
+                    "meta": "Category and target audience info"
+                }
+            }
+        },
         "footer": {
             "copyright": "Copyright © 2025 Snapi",
             "privacyPolicy": "Privacy Policy",
@@ -8,6 +74,11 @@
         "navigation": {
             "home": "Home",
             "posts": "Posts",
+            "ai": "AI Studio",
+            "ai_chat": "AI Creator Chat",
+            "calendar": "Content Calendar",
+            "scheduled": "Scheduled Posts",
+            "wellness": "Digital Wellness",
             "appeals": "Appeals",
             "settings": "Settings",
             "back": "Back to Snapi"
@@ -285,6 +356,180 @@
                 "post": "Post",
                 "discard": "Discard",
                 "waitEncoding": "Waiting for encoding..."
+            }
+        },
+        "aiStudio": {
+            "title": "AI Studio",
+            "subtitle": "Content creation, viral analysis, and scheduling — all in one place",
+            "tabs": {
+                "chat": "Creator Chat",
+                "viralScore": "Viral Score",
+                "calendar": "Content Calendar"
+            }
+        },
+        "scheduledPosts": {
+            "title": "Post Management",
+            "subtitle": "Drafts, scheduled, and published posts",
+            "tabs": {
+                "draft": "Draft",
+                "scheduled": "Scheduled",
+                "published": "Published",
+                "failed": "Failed"
+            },
+            "noContent": "No posts yet.",
+            "noContentPreview": "No content",
+            "actions": {
+                "schedule": "Schedule",
+                "publishNow": "Publish Now",
+                "reschedule": "Reschedule",
+                "cancelSchedule": "Cancel",
+                "retry": "Retry",
+                "confirm": "Confirm",
+                "cancel": "Cancel"
+            },
+            "toast": {
+                "updated": "Post time updated!",
+                "updateError": "Unable to update. Please try again.",
+                "scheduled": "Post has been scheduled!",
+                "scheduleError": "Unable to schedule. Please try again.",
+                "published": "Post published!",
+                "cancelled": "Schedule cancelled."
+            }
+        },
+        "aiCreatorChat": {
+            "title": "AI Creator Chat",
+            "subtitle": "Create video content step by step",
+            "startBtn": "Start",
+            "restartBtn": "Restart",
+            "emptyTitle": "AI Studio Creator Chat",
+            "emptySubtitle": "Click <strong>Start</strong> to let AI ask step-by-step questions and create captions and hashtags for your video.",
+            "generatedContent": "Generated content",
+            "generateBtn": "Generate with AI",
+            "inputPlaceholder": "Type your answer...",
+            "skipTitle": "Skip",
+            "allQuestionsComplete": "All questions complete! Click \"Generate Content\" for AI suggestions.",
+            "generatingContent": "Generating your content...",
+            "toast": {
+                "contentCreated": "Content generated!",
+                "error": "AI encountered an error. Please try again.",
+                "errorMessage": "Sorry, I encountered an error: {message}. Please start a new conversation."
+            }
+        },
+        "viralScore": {
+            "title": "AI Viral Score",
+            "subtitle": "Analyze the viral potential of your caption and hashtags",
+            "captionLabel": "Caption *",
+            "captionPlaceholder": "Enter your video caption...",
+            "hashtagLabel": "Hashtags (separated by space or comma)",
+            "analyzing": "Analyzing...",
+            "analyzeBtn": "Analyze Viral Score",
+            "detailedBreakdown": "Detailed breakdown",
+            "strengths": "Strengths",
+            "weaknesses": "Weaknesses",
+            "recommendations": "Recommendations",
+            "improvedCaption": "Improved caption",
+            "toast": {
+                "completed": "Analysis complete!",
+                "error": "Analysis failed. Please try again."
+            }
+        },
+        "contentCalendar": {
+            "title": "AI Content Calendar",
+            "subtitle": "AI-generated 7-day content schedule",
+            "newCalendarBtn": "New Calendar",
+            "generating": "Generating...",
+            "generateBtn": "Generate 7-day Calendar",
+            "defaultCalendarName": "Content Calendar",
+            "ideas": "{count} ideas",
+            "pendingMessage": "Generating content calendar... Please wait.",
+            "dayLabel": "Day {day}",
+            "scheduledAt": "Scheduled: {time}",
+            "dayLabel": "Day {day}",
+            "days": {
+                "1": "Mon", "2": "Tue", "3": "Wed",
+                "4": "Thu", "5": "Fri", "6": "Sat", "7": "Sun"
+            },
+            "fields": {
+                "niche": "Niche / Topic *",
+                "nichePlaceholder": "E.g.: Food, Fitness, Travel...",
+                "style": "Style",
+                "stylePlaceholder": "Comedy, Educational...",
+                "goals": "Goals (comma-separated)",
+                "goalsPlaceholder": "Grow followers, Increase reach...",
+                "audience": "Target audience",
+                "audiencePlaceholder": "Gen Z, Students, Housewives..."
+            },
+            "actions": {
+                "createDraft": "Create Draft",
+                "schedule": "Schedule",
+                "confirm": "Confirm",
+                "cancel": "Cancel"
+            },
+            "toast": {
+                "generating": "Generating content calendar...",
+                "completed": "Content calendar created!",
+                "failed": "Calendar generation failed. Please try again.",
+                "draftCreated": "Draft created!",
+                "scheduled": "Scheduled!"
+            }
+        },
+        "wellness": {
+            "title": "Digital Wellness",
+            "subtitle": "Track and balance your usage time",
+            "tabs": {
+                "today": "Today",
+                "stats": "Stats",
+                "rules": "Rules",
+                "analysis": "AI Analysis"
+            },
+            "today": {
+                "online": "Online",
+                "watchingVideo": "Watching video",
+                "comments": "Comments",
+                "posts": "Posts",
+                "peakHour": "Peak usage time: {hour}:00 – {hourEnd}:00"
+            },
+            "stats": {
+                "totalTime": "Total time",
+                "watchingVideo": "Watching video",
+                "dailyAvg": "Daily avg",
+                "sessions": "Sessions",
+                "comments": "Comments",
+                "posts": "Posts",
+                "chartTitle": "By day",
+                "periods": {
+                    "today": "Today",
+                    "week": "This week",
+                    "month": "This month"
+                }
+            },
+            "rules": {
+                "createTitle": "Create rule with natural language",
+                "inputPlaceholder": "E.g.: Remind me to take a break if I scroll videos for more than 2 hours",
+                "analyzeBtn": "Analyze with AI",
+                "analyzing": "Analyzing",
+                "confidence": "Confidence: {pct}%",
+                "saveBtn": "Save this rule",
+                "noRules": "No rules yet. Create with AI or add manually.",
+                "disabled": "Disabled",
+                "toggleOn": "Enable",
+                "toggleOff": "Disable",
+                "toast": {
+                    "saved": "Rule saved!",
+                    "deleted": "Rule deleted."
+                }
+            },
+            "analysis": {
+                "analyzeBtn": "Analyze last 7 days",
+                "analyzing": "Analyzing...",
+                "trends": "Trends",
+                "concerns": "Notable concerns",
+                "recommendations": "Recommendations",
+                "suggestedRules": "Suggested rules",
+                "addRule": "Add this rule",
+                "toast": {
+                    "ruleAdded": "Rule added!"
+                }
             }
         },
         "appeals": {

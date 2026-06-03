@@ -1,5 +1,71 @@
 {
     "SnapiStudio": {
+        "aiChat": {
+            "title": "AI Studio",
+            "status": {
+                "generating": "Đang tạo...",
+                "done": "Xong",
+                "completed": "Xong",
+                "fallback": "Dự phòng"
+            },
+            "actions": {
+                "applyToPost": "Áp dụng vào bài đăng",
+                "applied": "Đã áp dụng",
+                "addHashtags": "+ {count} hashtag",
+                "clearHistory": "Xóa lịch sử"
+            },
+            "meta": {
+                "category": "Danh mục",
+                "intent": "Mục đích",
+                "audience": "Đối tượng",
+                "confidence": "Độ tin cậy"
+            },
+            "input": {
+                "placeholder": "Mô tả video của bạn...",
+                "regenerateHint": "Nhập để tạo lại",
+                "hintRegenerate": "Nhập để tạo lại",
+                "sendHint": "Enter để gửi · Shift+Enter xuống dòng",
+                "hintNew": "Enter để gửi · Shift+Enter xuống dòng",
+                "submit": "Gửi"
+            },
+            "caption": {
+                "empty": "Chưa có caption được tạo",
+                "chars": "{count} ký tự"
+            },
+            "tabs": {
+                "short": "Ngắn",
+                "professional": "Chuyên nghiệp",
+                "viral": "Viral"
+            },
+            "hashtags": {
+                "title": "Hashtags",
+                "count": "({selected}/{total})",
+                "selectAll": "Chọn tất cả",
+                "deselect": "Bỏ chọn",
+                "copied": "Đã sao chép",
+                "copyAll": "Sao chép tất cả"
+            },
+            "toast": {
+                "applied": "Caption và hashtag đã được áp dụng!",
+                "captionCopied": "Đã sao chép caption!",
+                "hashtagsCopied": "Đã sao chép hashtags!",
+                "tagCopied": "Đã sao chép {tag}!",
+                "ready": "Gợi ý AI đã sẵn sàng!",
+                "fallback": "AI gặp lỗi — đang hiển thị gợi ý dự phòng.",
+                "startError": "Không thể khởi động AI. Vui lòng thử lại."
+            },
+            "emptyCaption": "Chưa có caption được tạo",
+            "charCount": "{count} ký tự",
+            "welcome": {
+                "intro": "Xin chào! Tôi là <strong>AI Studio</strong> — trợ lý tạo nội dung cho video của bạn.",
+                "subtitle": "Nhập mô tả video bên dưới và nhấn <strong>Gửi</strong> để nhận:",
+                "items": {
+                    "shortCaption": "Caption ngắn gọn, chuyên nghiệp hoặc viral",
+                    "hashtags": "Hashtag phù hợp với nội dung",
+                    "meta": "Thông tin danh mục và đối tượng mục tiêu"
+                }
+            }
+        },
         "footer": {
             "copyright": "Bản quyền © 2025 Snapi",
             "privacyPolicy": "Chính sách quyền riêng tư",
@@ -8,6 +74,11 @@
         "navigation": {
             "home": "Trang chủ",
             "posts": "Nội dung",
+            "ai": "AI Studio",
+            "ai_chat": "AI Creator Chat",
+            "calendar": "Lịch nội dung",
+            "scheduled": "Bài đăng đã lên lịch",
+            "wellness": "Digital Wellness",
             "appeals": "Kháng cáo",
             "settings": "Cài đặt",
             "back": "Quay lại Snapi"
@@ -285,6 +356,180 @@
                 "post": "Đăng",
                 "discard": "Hủy",
                 "waitEncoding": "Đang chờ mã hóa..."
+            }
+        },
+        "aiStudio": {
+            "title": "AI Studio",
+            "subtitle": "Tạo nội dung, phân tích viral và lên lịch — tất cả trong một nơi",
+            "tabs": {
+                "chat": "Tạo nội dung",
+                "viralScore": "Viral Score",
+                "calendar": "Lịch nội dung"
+            }
+        },
+        "scheduledPosts": {
+            "title": "Quản lý bài đăng",
+            "subtitle": "Bản nháp, lên lịch, và theo dõi bài đã đăng",
+            "tabs": {
+                "draft": "Bản nháp",
+                "scheduled": "Lên lịch",
+                "published": "Đã đăng",
+                "failed": "Thất bại"
+            },
+            "noContent": "Không có bài đăng nào.",
+            "noContentPreview": "Chưa có nội dung",
+            "actions": {
+                "schedule": "Lên lịch",
+                "publishNow": "Đăng ngay",
+                "reschedule": "Đổi giờ",
+                "cancelSchedule": "Hủy lịch",
+                "retry": "Thử lại",
+                "confirm": "Xác nhận",
+                "cancel": "Hủy"
+            },
+            "toast": {
+                "updated": "Đã cập nhật thời gian đăng!",
+                "updateError": "Không thể cập nhật. Vui lòng thử lại.",
+                "scheduled": "Bài đăng đã được lên lịch!",
+                "scheduleError": "Không thể lên lịch. Vui lòng thử lại.",
+                "published": "Bài đăng đã được đăng ngay!",
+                "cancelled": "Đã hủy lịch đăng."
+            }
+        },
+        "aiCreatorChat": {
+            "title": "AI Creator Chat",
+            "subtitle": "Tạo nội dung video theo từng bước",
+            "startBtn": "Bắt đầu",
+            "restartBtn": "Bắt đầu lại",
+            "emptyTitle": "AI Studio Creator Chat",
+            "emptySubtitle": "Nhấn <strong>Bắt đầu</strong> để AI hỏi từng bước và tạo caption, hashtag phù hợp cho video của bạn.",
+            "generatedContent": "Nội dung đã tạo",
+            "generateBtn": "Tạo nội dung với AI",
+            "inputPlaceholder": "Nhập câu trả lời...",
+            "skipTitle": "Bỏ qua",
+            "allQuestionsComplete": "Tất cả câu hỏi hoàn thành! Nhấn \"Tạo nội dung\" để AI tạo gợi ý.",
+            "generatingContent": "Đang tạo nội dung cho bạn...",
+            "toast": {
+                "contentCreated": "Nội dung đã được tạo!",
+                "error": "AI gặp lỗi. Vui lòng thử lại.",
+                "errorMessage": "Xin lỗi, tôi gặp sự cố: {message}. Hãy bắt đầu cuộc trò chuyện mới."
+            }
+        },
+        "viralScore": {
+            "title": "AI Viral Score",
+            "subtitle": "Phân tích tiềm năng viral của caption và hashtag",
+            "captionLabel": "Caption *",
+            "captionPlaceholder": "Nhập caption video của bạn...",
+            "hashtagLabel": "Hashtags (phân cách bằng dấu cách hoặc phẩy)",
+            "analyzing": "Đang phân tích...",
+            "analyzeBtn": "Phân tích Viral Score",
+            "detailedBreakdown": "Phân tích chi tiết",
+            "strengths": "Điểm mạnh",
+            "weaknesses": "Điểm yếu",
+            "recommendations": "Đề xuất cải thiện",
+            "improvedCaption": "Caption cải thiện",
+            "toast": {
+                "completed": "Phân tích hoàn thành!",
+                "error": "Phân tích thất bại. Vui lòng thử lại."
+            }
+        },
+        "contentCalendar": {
+            "title": "AI Content Calendar",
+            "subtitle": "Lịch nội dung 7 ngày được tạo bởi AI",
+            "newCalendarBtn": "Tạo lịch mới",
+            "generating": "Đang tạo...",
+            "generateBtn": "Tạo lịch 7 ngày",
+            "defaultCalendarName": "Lịch nội dung",
+            "ideas": "{count} ý tưởng",
+            "pendingMessage": "Đang tạo lịch nội dung... Vui lòng đợi.",
+            "dayLabel": "Ngày {day}",
+            "scheduledAt": "Đã lên lịch: {time}",
+            "dayLabel": "Ngày {day}",
+            "days": {
+                "1": "Thứ 2", "2": "Thứ 3", "3": "Thứ 4",
+                "4": "Thứ 5", "5": "Thứ 6", "6": "Thứ 7", "7": "CN"
+            },
+            "fields": {
+                "niche": "Lĩnh vực / Chủ đề *",
+                "nichePlaceholder": "Ví dụ: Ẩm thực, Fitness, Du lịch...",
+                "style": "Phong cách",
+                "stylePlaceholder": "Comedy, Educational...",
+                "goals": "Mục tiêu (phân cách bằng dấu phẩy)",
+                "goalsPlaceholder": "Tăng follower, Tăng reach...",
+                "audience": "Đối tượng mục tiêu",
+                "audiencePlaceholder": "Gen Z, Bà nội trợ, Sinh viên..."
+            },
+            "actions": {
+                "createDraft": "Tạo bản nháp",
+                "schedule": "Lên lịch",
+                "confirm": "Xác nhận",
+                "cancel": "Hủy"
+            },
+            "toast": {
+                "generating": "Đang tạo lịch nội dung...",
+                "completed": "Lịch nội dung đã được tạo!",
+                "failed": "Tạo lịch thất bại. Vui lòng thử lại.",
+                "draftCreated": "Bản nháp đã được tạo!",
+                "scheduled": "Đã lên lịch đăng!"
+            }
+        },
+        "wellness": {
+            "title": "Digital Wellness",
+            "subtitle": "Theo dõi và cân bằng thời gian sử dụng",
+            "tabs": {
+                "today": "Hôm nay",
+                "stats": "Thống kê",
+                "rules": "Quy tắc",
+                "analysis": "AI Phân tích"
+            },
+            "today": {
+                "online": "Online",
+                "watchingVideo": "Xem video",
+                "comments": "Bình luận",
+                "posts": "Bài đăng",
+                "peakHour": "Thời điểm sử dụng nhiều nhất: {hour}:00 – {hourEnd}:00"
+            },
+            "stats": {
+                "totalTime": "Tổng thời gian",
+                "watchingVideo": "Xem video",
+                "dailyAvg": "Trung bình/ngày",
+                "sessions": "Số phiên",
+                "comments": "Bình luận",
+                "posts": "Bài đăng",
+                "chartTitle": "Theo ngày",
+                "periods": {
+                    "today": "Hôm nay",
+                    "week": "Tuần này",
+                    "month": "Tháng này"
+                }
+            },
+            "rules": {
+                "createTitle": "Tạo rule bằng ngôn ngữ tự nhiên",
+                "inputPlaceholder": "Ví dụ: Nhắc tôi nghỉ ngơi nếu lướt video quá 2 tiếng",
+                "analyzeBtn": "Phân tích bằng AI",
+                "analyzing": "Đang phân tích",
+                "confidence": "Độ chắc chắn: {pct}%",
+                "saveBtn": "Lưu rule này",
+                "noRules": "Chưa có quy tắc nào. Tạo bằng AI hoặc thêm thủ công.",
+                "disabled": "Đã tắt",
+                "toggleOn": "Bật",
+                "toggleOff": "Tắt",
+                "toast": {
+                    "saved": "Quy tắc đã được lưu!",
+                    "deleted": "Đã xóa quy tắc."
+                }
+            },
+            "analysis": {
+                "analyzeBtn": "Phân tích 7 ngày gần đây",
+                "analyzing": "Đang phân tích...",
+                "trends": "Xu hướng",
+                "concerns": "Đáng chú ý",
+                "recommendations": "Khuyến nghị",
+                "suggestedRules": "Quy tắc gợi ý",
+                "addRule": "Thêm rule này",
+                "toast": {
+                    "ruleAdded": "Quy tắc đã được thêm!"
+                }
             }
         },
         "appeals": {

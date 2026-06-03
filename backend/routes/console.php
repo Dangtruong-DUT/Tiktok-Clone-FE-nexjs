@@ -16,6 +16,10 @@ Schedule::command('posts:sync-views')
     ->everyMinute()
     ->withoutOverlapping();
 
+Schedule::command('posts:publish-scheduled')
+    ->everyMinute()
+    ->withoutOverlapping();
+
 Schedule::command('video:cleanup --days=7')
     ->dailyAt('03:00')
     ->withoutOverlapping();

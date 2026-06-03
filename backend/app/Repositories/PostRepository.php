@@ -130,7 +130,10 @@ class PostRepository extends BaseRepository
         $filterCollection = collect($filters);
         $query = $this->buildSearchQuery($filterCollection);
 
-        if ($filterCollection->get('status') === 'deleted') {
+        $status = $filterCollection->get('status');
+
+        // Include soft-deleted rows when filtering for deleted or lifecycle statuses
+        if ($status === 'deleted' || $status === 'all') {
             $query->withTrashed();
         }
 
@@ -138,11 +141,13 @@ class PostRepository extends BaseRepository
             $query->whereHas('user',
                 fn (Builder $userQuery) => $userQuery->where('uuid', $userUuid));
         })
-            ->when($filterCollection->get('status'), function (Builder $query, $status) {
-                return match ($status) {
-                    'visible' => $query->whereNull('deleted_at'),
-                    'deleted' => $query->whereNotNull('deleted_at'),
-                    default => $query,
+            ->when($status, function (Builder $query, string $status) {
+                match ($status) {
+                    'visible'  => $query->whereNull('deleted_at'),
+                    'deleted'  => $query->whereNotNull('deleted_at'),
+                    'all'      => null,
+                    // Lifecycle status values from PostPublishStatusEnum
+                    default    => $query->where('posts.status', $status),
                 };
             })
             ->when($filterCollection->get('order_by'), function (Builder $query, $orderBy) {
@@ -160,7 +165,7 @@ class PostRepository extends BaseRepository
                 'media:id,post_id,type,upload_file_id',
                 'media.file:id',
             ])
-            ->select(['id', 'uuid', 'user_id', 'content', 'created_at', 'deleted_at','thumbnail_file_id'])
+            ->select(['id', 'uuid', 'user_id', 'content', 'status', 'published_at', 'created_at', 'deleted_at', 'thumbnail_file_id'])
             ->paginate($perPage);
     }
 

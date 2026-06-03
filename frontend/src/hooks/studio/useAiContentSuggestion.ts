@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import { toast } from 'sonner'
+import { useTranslations } from 'next-intl'
 import {
     useGenerateSuggestionMutation,
     useGetSuggestionQuery,
@@ -18,6 +19,7 @@ function isTerminal(status?: AiSuggestionStatus): boolean {
 }
 
 export function useAiContentSuggestion() {
+    const t = useTranslations('SnapiStudio.aiChat')
     const [pendingUuid, setPendingUuid]   = useState<string | null>(null)
     const [toastShown, setToastShown]     = useState(false)
 
@@ -44,9 +46,9 @@ export function useAiContentSuggestion() {
         setPendingUuid(null)
 
         if (isCompleted) {
-            toast.success('Gợi ý AI đã sẵn sàng!')
+            toast.success(t('toast.ready'))
         } else if (isFailed) {
-            toast.warning('AI gặp lỗi — đang hiển thị gợi ý dự phòng.')
+            toast.warning(t('toast.fallback'))
         }
     }, [currentStatus, suggestion, pendingUuid, toastShown, isCompleted, isFailed])
 
@@ -61,10 +63,10 @@ export function useAiContentSuggestion() {
 
                 if (isTerminal(res.data.status)) {
                     setPendingUuid(null)
-                    toast.success('Gợi ý AI đã sẵn sàng (cache)!')
+                    toast.success(t('toast.ready'))
                 }
             } catch {
-                toast.error('Không thể khởi động AI. Vui lòng thử lại.')
+                toast.error(t('toast.startError'))
             }
         },
         [generateMutation]

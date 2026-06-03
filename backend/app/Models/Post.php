@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Post\AudienceTypeEnum;
+use App\Enums\Post\PostPublishStatusEnum;
 use App\Enums\Post\PostTypeEnum;
 use App\Traits\HasUuidObservable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -32,6 +34,8 @@ class Post extends Model
         'parent_id',
         'file_id',
         'audience',
+        'status',
+        'published_at',
         'likes_count',
         'shares_count',
         'comments_count',
@@ -59,16 +63,18 @@ class Post extends Model
         'user_views' => 0,
     ];
 
-    /*
-    * Get the attributes that should be cast.
-    *
-    * @return array<string, string>
-    */
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
     protected function casts(): array
     {
         return [
-            'audience' => AudienceTypeEnum::class,
-            'type' => PostTypeEnum::class,
+            'audience'     => AudienceTypeEnum::class,
+            'type'         => PostTypeEnum::class,
+            'status'       => PostPublishStatusEnum::class,
+            'published_at' => 'datetime',
             'is_owner' => 'boolean',
             'is_liked' => 'boolean',
             'likes_count' => 'integer',
@@ -201,6 +207,16 @@ class Post extends Model
     }
 
     /**
+     * Get the scheduled post relation.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne The relationship instance.
+     */
+    public function scheduledPost(): HasOne
+    {
+        return $this->hasOne(ScheduledPost::class);
+    }
+
+    /**
      * Get the root post of the thread. If the post is a comment, repost, or quote post, it will return the original post.
      * If the post is already a root post, it will return itself.
      *
@@ -234,19 +250,25 @@ class Post extends Model
     public function visibleFor(Builder $query, ?int $authUserId): Builder
     {
         if (! $authUserId) {
-            return $query->where('audience', AudienceTypeEnum::PUBLIC->value);
+            return $query
+                ->where('status', PostPublishStatusEnum::PUBLISHED->value)
+                ->where('audience', AudienceTypeEnum::PUBLIC->value);
         }
 
         return $query->where(function ($q) use ($authUserId) {
-            $q->where('audience', AudienceTypeEnum::PUBLIC->value)
-                ->orWhere('user_id', $authUserId)
-                ->orWhere(function ($q3) use ($authUserId) {
-                    $q3->where('audience', AudienceTypeEnum::FRIENDS->value)
-                        ->whereHas('user', function ($uq) use ($authUserId) {
-                            $uq->whereHas('followings', fn ($q) => $q->whereKey($authUserId))
-                                ->whereHas('followers', fn ($q) => $q->whereKey($authUserId));
-                        });
-                });
+            $q->where('user_id', $authUserId)
+              ->orWhere(function ($pub) {
+                  $pub->where('status', PostPublishStatusEnum::PUBLISHED->value)
+                      ->where('audience', AudienceTypeEnum::PUBLIC->value);
+              })
+              ->orWhere(function ($friends) use ($authUserId) {
+                  $friends->where('status', PostPublishStatusEnum::PUBLISHED->value)
+                          ->where('audience', AudienceTypeEnum::FRIENDS->value)
+                          ->whereHas('user', function ($uq) use ($authUserId) {
+                              $uq->whereHas('followings', fn ($q) => $q->whereKey($authUserId))
+                                 ->whereHas('followers', fn ($q) => $q->whereKey($authUserId));
+                          });
+              });
         });
     }
 

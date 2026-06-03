@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import '../globals.css'
+import { WellnessTracker } from '@/components/wellness/WellnessTracker'
 import { hasLocale, NextIntlClientProvider } from 'next-intl'
 import { notFound } from 'next/navigation'
 import { routing } from '@/i18n/routing'
@@ -91,6 +92,7 @@ export default async function LocaleLayout({
                                 disableTransitionOnChange
                             >
                                 {children}
+                                <WellnessTracker />
                             </ThemeProvider>
                         </AppProvider>
                     </StoreProvider>

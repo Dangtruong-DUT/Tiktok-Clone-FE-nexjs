@@ -1,18 +1,26 @@
 import { AppealApi } from '@/store/services/appeal.service'
 import { AdminApi } from '@/store/services/admin/admin-api.service'
 import { AdminAiStudioApi } from '@/store/services/admin/admin-ai-studio.service'
+import { AdminScheduledPostsApi } from '@/store/services/admin/admin-scheduled-posts.service'
+import { AiContentCalendarApi } from '@/store/services/ai-content-calendar.service'
 import { AiContentStudioApi } from '@/store/services/ai-content-studio.service'
+import { AiCreatorChatApi } from '@/store/services/ai-creator-chat.service'
+import { AiViralScoreApi } from '@/store/services/ai-viral-score.service'
 import { AuthApi } from '@/store/services/auth.service'
 import { NotificationApi } from '@/store/services/notification.service'
 import { PostApi } from '@/store/services/posts.service'
 import { SearchApi } from '@/store/services/search.service'
+import { ScreenTimeApi } from '@/store/services/screen-time.service'
+import { StudioPostScheduleApi } from '@/store/services/studio-post-schedule.service'
 import { UploadApi } from '@/store/services/upload.service'
 import { UserApi } from '@/store/services/user.service'
+import { WellnessRuleApi } from '@/store/services/wellness-rule.service'
 import authReducer from '@/store/features/authSlice'
 import appReducer, { clearAllLoading } from '@/store/features/appSlice'
 import modalReducer from '@/store/features/modalSlide'
 import videoReducer from '@/store/features/videoSlice'
 import videoProcessingReducer from '@/store/features/videoProcessingSlice'
+import wellnessReducer from '@/store/features/wellnessSlice'
 import { configureStore } from '@reduxjs/toolkit'
 import { errorHandleMiddleware } from './middlewares/errorHandling.middleware'
 import { authMiddleware } from './middlewares/auth.middleware'
@@ -21,21 +29,29 @@ export const makeStore = () => {
     return configureStore({
         devTools: true,
         reducer: {
-            [UserApi.reducerPath]: UserApi.reducer,
-            [SearchApi.reducerPath]: SearchApi.reducer,
-            [UploadApi.reducerPath]: UploadApi.reducer,
-            [AuthApi.reducerPath]: AuthApi.reducer,
-            [PostApi.reducerPath]: PostApi.reducer,
-            [NotificationApi.reducerPath]: NotificationApi.reducer,
-            [AdminApi.reducerPath]: AdminApi.reducer,
-            [AppealApi.reducerPath]: AppealApi.reducer,
-            [AiContentStudioApi.reducerPath]: AiContentStudioApi.reducer,
-            [AdminAiStudioApi.reducerPath]: AdminAiStudioApi.reducer,
-            auth: authReducer,
-            app: appReducer,
-            modal: modalReducer,
-            video: videoReducer,
-            videoProcessing: videoProcessingReducer
+            [UserApi.reducerPath]:               UserApi.reducer,
+            [SearchApi.reducerPath]:             SearchApi.reducer,
+            [UploadApi.reducerPath]:             UploadApi.reducer,
+            [AuthApi.reducerPath]:               AuthApi.reducer,
+            [PostApi.reducerPath]:               PostApi.reducer,
+            [NotificationApi.reducerPath]:       NotificationApi.reducer,
+            [AdminApi.reducerPath]:              AdminApi.reducer,
+            [AppealApi.reducerPath]:             AppealApi.reducer,
+            [AiContentStudioApi.reducerPath]:    AiContentStudioApi.reducer,
+            [AdminAiStudioApi.reducerPath]:      AdminAiStudioApi.reducer,
+            [AdminScheduledPostsApi.reducerPath]: AdminScheduledPostsApi.reducer,
+            [AiCreatorChatApi.reducerPath]:      AiCreatorChatApi.reducer,
+            [AiViralScoreApi.reducerPath]:       AiViralScoreApi.reducer,
+            [AiContentCalendarApi.reducerPath]:  AiContentCalendarApi.reducer,
+            [StudioPostScheduleApi.reducerPath]: StudioPostScheduleApi.reducer,
+            [ScreenTimeApi.reducerPath]:         ScreenTimeApi.reducer,
+            [WellnessRuleApi.reducerPath]:       WellnessRuleApi.reducer,
+            auth:            authReducer,
+            app:             appReducer,
+            modal:           modalReducer,
+            video:           videoReducer,
+            videoProcessing: videoProcessingReducer,
+            wellness:        wellnessReducer,
         },
         middleware: (getDefaultMiddleware) =>
             getDefaultMiddleware().concat(
@@ -49,14 +65,21 @@ export const makeStore = () => {
                 AppealApi.middleware,
                 AiContentStudioApi.middleware,
                 AdminAiStudioApi.middleware,
+                AdminScheduledPostsApi.middleware,
+                AiCreatorChatApi.middleware,
+                AiViralScoreApi.middleware,
+                AiContentCalendarApi.middleware,
+                StudioPostScheduleApi.middleware,
+                ScreenTimeApi.middleware,
+                WellnessRuleApi.middleware,
                 authMiddleware,
                 errorHandleMiddleware
             )
     })
 }
 
-export type AppStore = ReturnType<typeof makeStore>
-export type RootState = ReturnType<AppStore['getState']>
+export type AppStore    = ReturnType<typeof makeStore>
+export type RootState   = ReturnType<AppStore['getState']>
 export type AppDispatch = AppStore['dispatch']
 
 export type storeApiType = { dispatch: AppDispatch; getState: () => RootState }

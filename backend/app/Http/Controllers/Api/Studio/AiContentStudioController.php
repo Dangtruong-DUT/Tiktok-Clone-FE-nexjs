@@ -8,28 +8,33 @@ use App\Http\Requests\Studio\GenerateAiContentSuggestionRequest;
 use App\Http\Requests\Studio\ListAiContentSuggestionRequest;
 use App\Http\Resources\AiContentSuggestionResource;
 use App\Http\Response\ApiResponse;
-use App\Models\AiContentSuggestion;
 use App\Services\AI\ContentStudio\AiContentStudioService;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class AiContentStudioController extends Controller
 {
+    /**
+     * Create the controller instance.
+     *
+     * @param  AiContentStudioService  $service
+     */
     public function __construct(
         private readonly AiContentStudioService $service,
     ) {}
 
     /**
-     * Generate AI content suggestions asynchronously via queue job.
+     * Start async generation for an AI content suggestion.
      *
-     * Returns 202 immediately with pending suggestion record.
-     * Frontend should poll GET /{uuid} until status = completed.
+     * @param  GenerateAiContentSuggestionRequest  $request
+     * @return JsonResponse
      */
     public function generate(GenerateAiContentSuggestionRequest $request): JsonResponse
     {
-        $input      = AiContentStudioInputData::fromRequest($request);
-        $userId     = (int) auth('api')->id();
-        $suggestion = $this->service->initiateAsync($userId, $input);
+        $suggestion = $this->service->initiateAsync(
+            (int) auth_user_id(),
+            AiContentStudioInputData::fromRequest($request),
+        );
 
         return ApiResponse::success(
             data: new AiContentSuggestionResource($suggestion),
@@ -39,14 +44,17 @@ class AiContentStudioController extends Controller
     }
 
     /**
-     * List current user's AI content suggestions (latest first).
+     * List AI content suggestions for the authenticated user.
+      *
+      * @param  ListAiContentSuggestionRequest  $request
+      * @return JsonResponse
      */
     public function index(ListAiContentSuggestionRequest $request): JsonResponse
     {
-        $userId = (int) auth('api')->id();
-        $items  = AiContentSuggestion::where('user_id', $userId)
-            ->orderByDesc('created_at')
-            ->paginate($request->input('per_page', 15));
+        $items = $this->service->listByUser(
+            (int) auth_user_id(),
+            $request->integer('per_page', 15),
+        );
 
         return ApiResponse::success(
             data: AiContentSuggestionResource::collection($items),
@@ -55,16 +63,14 @@ class AiContentStudioController extends Controller
     }
 
     /**
-     * Show a single suggestion by UUID.
-     *
-     * Frontend polls this endpoint every ~2s until status = completed or failed.
+     * Get a single AI content suggestion by UUID.
+      *
+      * @param  string  $uuid
+      * @return JsonResponse
      */
     public function show(string $uuid): JsonResponse
     {
-        $userId     = (int) auth('api')->id();
-        $suggestion = AiContentSuggestion::where('uuid', $uuid)
-            ->where('user_id', $userId)
-            ->firstOrFail();
+        $suggestion = $this->service->findByUuidForUser($uuid, (int) auth_user_id());
 
         return ApiResponse::success(
             data: new AiContentSuggestionResource($suggestion),
@@ -73,16 +79,15 @@ class AiContentStudioController extends Controller
     }
 
     /**
-     * Mark a suggestion as applied to a post.
+     * Mark a suggestion as applied.
+      *
+      * @param  string  $uuid
+      * @return JsonResponse
      */
     public function apply(string $uuid): JsonResponse
     {
-        $userId     = (int) auth('api')->id();
-        $suggestion = AiContentSuggestion::where('uuid', $uuid)
-            ->where('user_id', $userId)
-            ->firstOrFail();
-
-        $updated = $this->service->applySuggestion($suggestion);
+        $suggestion = $this->service->findByUuidForUser($uuid, (int) auth_user_id());
+        $updated    = $this->service->applySuggestion($suggestion);
 
         return ApiResponse::success(
             data: new AiContentSuggestionResource($updated),
