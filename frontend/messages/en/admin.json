@@ -71,6 +71,10 @@
                     "completed": "Completed",
                     "failed": "Failed",
                     "intentBreakdown": "Content intent breakdown"
+                },
+                "empty": {
+                    "noData": "No data available for this period",
+                    "noIntents": "No intent data yet"
                 }
             },
             "settings": {

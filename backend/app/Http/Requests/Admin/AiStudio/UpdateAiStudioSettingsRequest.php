@@ -15,7 +15,7 @@ class UpdateAiStudioSettingsRequest extends BaseRequest
             'rate_limit_per_minute' => [self::NULLABLE, self::INTEGER, self::MIN . ':1', self::MAX . ':60'],
             'is_enabled'            => [self::NULLABLE, self::BOOLEAN],
             'require_min_input'     => [self::NULLABLE, self::BOOLEAN],
-            'gemini_model'          => [self::NULLABLE, self::STRING, Rule::in(config('ai.gemini.available_models', []))],
+            'gemini_model'          => [self::NULLABLE, self::STRING, Rule::in(config('gemini.available_models', []))],
             'max_output_tokens'     => [self::NULLABLE, self::INTEGER, self::MIN . ':256', self::MAX . ':8192'],
             'temperature'           => [self::NULLABLE, self::NUMERIC, self::MIN . ':0', self::MAX . ':1'],
             'timeout_seconds'       => [self::NULLABLE, self::INTEGER, self::MIN . ':10', self::MAX . ':120'],

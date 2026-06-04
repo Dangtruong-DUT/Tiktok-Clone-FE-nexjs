@@ -4,23 +4,6 @@ return [
     'provider'       => env('AI_PROVIDER', 'gemini'),
     'prompt_version' => env('AI_CONTENT_STUDIO_PROMPT_VERSION', 'v1'),
 
-    'gemini' => [
-        'api_key'    => env('GEMINI_API_KEY', ''),
-        'model'      => env('GEMINI_MODEL', 'gemini-2.0-flash'),
-        'base_url'   => env('GEMINI_BASE_URL', 'https://generativelanguage.googleapis.com/v1beta'),
-        'timeout'    => (int) env('GEMINI_TIMEOUT', 30),
-        'temperature' => (float) env('GEMINI_TEMPERATURE', 0.7),
-        'max_tokens' => (int) env('GEMINI_MAX_OUTPUT_TOKENS', 2048),
-        'available_models' => [
-            'gemini-2.0-flash',
-            'gemini-2.0-flash-lite',
-            'gemini-2.5-flash-preview-05-20',
-            'gemini-1.5-flash',
-            'gemini-1.5-flash-8b',
-            'gemini-1.5-pro',
-        ],
-    ],
-
     'content_studio' => [
         'cache_ttl_seconds' => (int) env('AI_CONTENT_STUDIO_CACHE_TTL', 21600),
         'lock_ttl_seconds'  => (int) env('AI_CONTENT_STUDIO_LOCK_TTL', 60),

@@ -1,25 +1,16 @@
-export type AiCopilotRole = 'user' | 'assistant' | 'system'
-export type AiCopilotMessageStatus = 'success' | 'failed' | 'accepted' | 'rejected'
+import {
+    AI_COPILOT_INTENTS,
+    AI_COPILOT_MESSAGE_STATUSES,
+    AI_COPILOT_OUTPUT_TYPES,
+    AI_COPILOT_ROLES,
+    AI_COPILOT_TARGET_FIELDS
+} from '@/constants/ai/copilot'
 
-export type AiCopilotIntent =
-    | 'write_caption'
-    | 'write_title'
-    | 'write_description'
-    | 'generate_hashtags'
-    | 'rewrite_content'
-    | 'analyze_video'
-    | 'analyze_viral'
-    | 'analyze_retention'
-    | 'analyze_hook'
-    | 'analyze_cta'
-    | 'analyze_audience'
-    | 'analyze_frame'
-    | 'suggest_cta'
-    | 'schedule_post'
-    | 'general_advice'
-    | 'clarification'
-
-export type AiCopilotTargetField = 'content' | 'title' | 'description' | 'hashtags'
+export type AiCopilotRole = (typeof AI_COPILOT_ROLES)[keyof typeof AI_COPILOT_ROLES]
+export type AiCopilotMessageStatus =
+    (typeof AI_COPILOT_MESSAGE_STATUSES)[keyof typeof AI_COPILOT_MESSAGE_STATUSES]
+export type AiCopilotIntent = (typeof AI_COPILOT_INTENTS)[keyof typeof AI_COPILOT_INTENTS]
+export type AiCopilotTargetField = (typeof AI_COPILOT_TARGET_FIELDS)[keyof typeof AI_COPILOT_TARGET_FIELDS]
 
 export interface AiCopilotContentVariant {
     label: string
@@ -27,7 +18,7 @@ export interface AiCopilotContentVariant {
 }
 
 export interface AiCopilotStructuredOutput {
-    type: 'content_card'
+    type: typeof AI_COPILOT_OUTPUT_TYPES.CONTENT_CARD
     target_field: AiCopilotTargetField
     variants: AiCopilotContentVariant[]
     hashtags: string[]
@@ -35,9 +26,9 @@ export interface AiCopilotStructuredOutput {
 }
 
 export interface AiCopilotScheduleOutput {
-    type: 'schedule_card'
+    type: typeof AI_COPILOT_OUTPUT_TYPES.SCHEDULE_CARD
     post_uuid: string
-    scheduled_at: string   // ISO-8601 UTC
+    scheduled_at: string
     timezone: string
     human_readable: string
     confidence: number
@@ -55,7 +46,6 @@ export interface AiCopilotMessage {
     status: AiCopilotMessageStatus
     latency_ms?: number
     created_at: string
-    // Client-side only fields
     isStreaming?: boolean
     streamingContent?: string
 }
@@ -81,6 +71,6 @@ export interface AiCopilotSession {
 }
 
 export interface AiCopilotTimelineSelection {
-    start: number // seconds
-    end: number   // seconds
+    start: number
+    end: number
 }

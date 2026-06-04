@@ -36,18 +36,27 @@ class AiCopilotStreamingService
         ]));
     }
 
-    public function validateStreamToken(string $token, string $sessionUuid, string $messageUuid, int $userId): bool
+    /**
+     * Validate the stream token and return the authenticated user_id, or null if invalid/expired.
+     * Does NOT require a pre-known user_id — the user identity is derived from the token itself.
+     */
+    public function validateStreamToken(string $token, string $sessionUuid, string $messageUuid): ?int
     {
         try {
             $payload = json_decode(Crypt::decryptString($token), true);
 
-            return is_array($payload)
-                && $payload['session_uuid'] === $sessionUuid
-                && $payload['message_uuid'] === $messageUuid
-                && $payload['user_id']      === $userId
-                && $payload['exp']          >= now()->timestamp;
+            if (
+                ! is_array($payload)
+                || ($payload['session_uuid'] ?? null) !== $sessionUuid
+                || ($payload['message_uuid'] ?? null) !== $messageUuid
+                || ($payload['exp']          ?? 0)    <  now()->timestamp
+            ) {
+                return null;
+            }
+
+            return (int) $payload['user_id'];
         } catch (\Throwable) {
-            return false;
+            return null;
         }
     }
 
@@ -134,6 +143,7 @@ class AiCopilotStreamingService
                         'uuid'              => $assistantMessage->uuid,
                         'role'              => 'assistant',
                         'content'           => $accumulated,
+                        'status'            => 'success',
                         'intent'            => $intent->value,
                         'structured_output' => null,
                         'follow_up_chips'   => $assistantMessage->follow_up_chips,
@@ -161,6 +171,7 @@ class AiCopilotStreamingService
                 'uuid'              => $errorMessage->uuid,
                 'role'              => 'assistant',
                 'content'           => $errorText,
+                'status'            => 'failed',
                 'intent'            => $intent->value,
                 'structured_output' => null,
                 'follow_up_chips'   => ['Try again', 'Ask something else'],
@@ -219,6 +230,14 @@ class AiCopilotStreamingService
 
         if (str_contains($msg, '503') || str_contains($msg, 'overloaded')) {
             return 'AI hiện đang quá tải — vui lòng thử lại sau.';
+        }
+
+        if (str_contains($msg, '400') || str_contains($msg, 'API key not valid') || str_contains($msg, 'INVALID_ARGUMENT')) {
+            return 'Cấu hình AI không hợp lệ — vui lòng kiểm tra API key trong cài đặt.';
+        }
+
+        if (str_contains($msg, '403') || str_contains($msg, 'PERMISSION_DENIED')) {
+            return 'API key không có quyền truy cập model này.';
         }
 
         return 'Đã xảy ra lỗi khi kết nối với AI. Vui lòng thử lại.';

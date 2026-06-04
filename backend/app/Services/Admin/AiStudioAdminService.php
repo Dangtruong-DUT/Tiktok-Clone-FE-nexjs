@@ -60,7 +60,7 @@ class AiStudioAdminService
      */
     public function getAvailableModels(): array
     {
-        return config('ai.gemini.available_models', []);
+        return config('gemini.available_models', []);
     }
 
     /**

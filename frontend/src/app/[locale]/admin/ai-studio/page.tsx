@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { AdminLayout, AdminContainer } from '@/components/admin'
+import { AI_STUDIO_TABS, type AiStudioTabKey } from '@/constants/admin/ai'
 import { ADMIN_ROUTES } from '@/constants/routes/routes'
 import { AiStudioMetrics } from './_components/AiStudioMetrics'
 import { AiStudioSettings } from './_components/AiStudioSettings'
@@ -10,16 +11,14 @@ import { AiStudioRequests } from './_components/AiStudioRequests'
 import { cn } from '@/lib/utils'
 import { BarChart2, Settings, List } from 'lucide-react'
 
-type TabKey = 'metrics' | 'settings' | 'requests'
-
 export default function AdminAiStudioPage() {
     const t = useTranslations('AdminPage')
-    const [activeTab, setActiveTab] = useState<TabKey>('metrics')
+    const [activeTab, setActiveTab] = useState<AiStudioTabKey>(AI_STUDIO_TABS.METRICS)
 
     const TABS = [
-        { key: 'metrics' as const,  label: t('aiStudio.tabs.metrics'),  icon: BarChart2 },
-        { key: 'settings' as const, label: t('aiStudio.tabs.settings'), icon: Settings },
-        { key: 'requests' as const, label: t('aiStudio.tabs.requests'), icon: List }
+        { key: AI_STUDIO_TABS.METRICS, label: t('aiStudio.tabs.metrics'), icon: BarChart2 },
+        { key: AI_STUDIO_TABS.SETTINGS, label: t('aiStudio.tabs.settings'), icon: Settings },
+        { key: AI_STUDIO_TABS.REQUESTS, label: t('aiStudio.tabs.requests'), icon: List }
     ]
 
     return (
@@ -32,7 +31,6 @@ export default function AdminAiStudioPage() {
             ]}
         >
             <AdminContainer>
-                {/* Tab navigation */}
                 <div className='flex gap-1 border-b border-border mb-6'>
                     {TABS.map(({ key, label, icon: Icon }) => (
                         <button
@@ -51,10 +49,9 @@ export default function AdminAiStudioPage() {
                     ))}
                 </div>
 
-                {/* Tab panels */}
-                {activeTab === 'metrics' && <AiStudioMetrics />}
-                {activeTab === 'settings' && <AiStudioSettings />}
-                {activeTab === 'requests' && <AiStudioRequests />}
+                {activeTab === AI_STUDIO_TABS.METRICS && <AiStudioMetrics />}
+                {activeTab === AI_STUDIO_TABS.SETTINGS && <AiStudioSettings />}
+                {activeTab === AI_STUDIO_TABS.REQUESTS && <AiStudioRequests />}
             </AdminContainer>
         </AdminLayout>
     )

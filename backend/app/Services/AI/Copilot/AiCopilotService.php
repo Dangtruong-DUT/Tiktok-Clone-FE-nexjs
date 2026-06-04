@@ -160,7 +160,7 @@ class AiCopilotService
                 'token_usage'       => $handlerResult->tokenUsage,
                 'latency_ms'        => $handlerResult->latencyMs,
                 'prompt_template_id' => $template?->id,
-                'model'             => $session->context_snapshot['gemini_model'] ?? config('ai.gemini.model'),
+                'model'             => $session->context_snapshot['gemini_model'] ?? config('gemini.model'),
             ],
         );
 
@@ -265,7 +265,7 @@ class AiCopilotService
             messageId: $message->id,
             latencyMs: $result->latencyMs,
             provider:  'gemini',
-            model:     $settings->gemini_model ?? config('ai.gemini.model'),
+            model:     $settings->gemini_model ?? config('gemini.model'),
         );
     }
 }

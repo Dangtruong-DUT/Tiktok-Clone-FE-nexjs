@@ -71,6 +71,10 @@
                     "completed": "Hoàn thành",
                     "failed": "Thất bại",
                     "intentBreakdown": "Phân tích mục đích nội dung"
+                },
+                "empty": {
+                    "noData": "Không có dữ liệu cho khoảng thời gian này",
+                    "noIntents": "Chưa có dữ liệu intent"
                 }
             },
             "settings": {

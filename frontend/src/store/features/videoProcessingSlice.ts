@@ -20,6 +20,8 @@ function isTerminalStatus(status: VideoUploadStatus): boolean {
     return (TERMINAL_UPLOAD_STATUSES as readonly VideoUploadStatus[]).includes(status)
 }
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
 function loadFromStorage(): TrackedEncoding[] {
     if (typeof window === 'undefined') return []
     try {
@@ -27,7 +29,12 @@ function loadFromStorage(): TrackedEncoding[] {
         if (!raw) return []
         const parsed: TrackedEncoding[] = JSON.parse(raw)
         const cutoff = Date.now() - STALE_HOURS * 60 * 60 * 1000
-        return parsed.filter((e) => new Date(e.trackedAt).getTime() > cutoff && !isTerminalStatus(e.status))
+        return parsed.filter(
+            (e) =>
+                UUID_RE.test(e.sessionUuid) &&
+                new Date(e.trackedAt).getTime() > cutoff &&
+                !isTerminalStatus(e.status)
+        )
     } catch {
         return []
     }

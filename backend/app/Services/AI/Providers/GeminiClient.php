@@ -4,455 +4,384 @@ namespace App\Services\AI\Providers;
 
 use App\Exceptions\GeminiQuotaExceededException;
 use App\Models\AiStudioSetting;
-use Illuminate\Support\Facades\Http;
+use Gemini\Data\Content;
+use Gemini\Data\GenerationConfig;
+use Gemini\Data\UsageMetadata;
+use Gemini\Enums\ResponseMimeType;
+use Gemini\Enums\Role;
+use Gemini\Laravel\Facades\Gemini;
+use Gemini\Responses\GenerativeModel\GenerateContentResponse;
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Thin adapter over google-gemini-php/laravel.
+ * Public interface is unchanged — all callers (GeminiAiService, AiCopilotStreamingService) require zero changes.
+ */
 class GeminiClient
 {
-    private string $apiKey;
-    private string $baseUrl;
-
-    public function __construct()
-    {
-        $this->apiKey = trim((string) config('ai.gemini.api_key'));
-        $this->baseUrl = rtrim(
-            (string) config('ai.gemini.base_url', 'https://generativelanguage.googleapis.com/v1beta'),
-            '/'
-        );
-
-        if ($this->apiKey === '') {
-            Log::error('[Gemini] GEMINI_API_KEY is empty.');
-        }
-    }
-
     /**
-     * Generate normal non-stream response.
+     * Single-turn generation (no history).
      *
      * @return array{text: string, token_usage: array<string,int>}
      */
     public function generate(string $systemPrompt, string $userPrompt): array
     {
         $settings = AiStudioSetting::current();
+        $model    = $this->resolveModel($settings);
 
-        $model = $this->resolveModel($settings);
-        $timeout = (int) ($settings->timeout_seconds ?: config('ai.gemini.timeout', 60));
+        Log::debug('[Gemini] generate()', ['model' => $model]);
 
-        $payload = [
-            'systemInstruction' => [
-                'parts' => [
-                    ['text' => $systemPrompt],
-                ],
-            ],
-            'contents' => [
-                [
-                    'role' => 'user',
-                    'parts' => [
-                        ['text' => $userPrompt],
-                    ],
-                ],
-            ],
-            'generationConfig' => [
-                'temperature' => (float) $settings->temperature,
-                'maxOutputTokens' => (int) $settings->max_output_tokens,
-            ],
-        ];
+        try {
+            $response = Gemini::generativeModel(model: $model)
+                ->withSystemInstruction(Content::parse(part: $systemPrompt, role: Role::USER))
+                ->withGenerationConfig($this->buildConfig($settings))
+                ->generateContent($userPrompt);
 
-        return $this->sendGenerateRequest($model, $payload, $timeout, 'generate');
+            $text = $this->responseText($response);
+
+            if ($text === '') {
+                Log::warning('[Gemini] generate() returned empty text');
+                throw new \RuntimeException('Gemini returned an empty response body.');
+            }
+
+            return [
+                'text'        => $text,
+                'token_usage' => $this->extractUsage($response->usageMetadata),
+            ];
+        } catch (\Gemini\Exceptions\ErrorException
+                |\Gemini\Exceptions\TransporterException
+                |\Gemini\Exceptions\UnserializableResponse $e) {
+            $this->fail('generate', $e);
+        }
     }
 
     /**
-     * Generate with conversation history.
+     * Multi-turn generation with conversation history.
      *
-     * @param array<array{role: string, parts: array}> $contents
-     * @param array<string,mixed> $config
+     * @param  array<array{role: string, parts: array}>  $contents  Last element must be the user turn.
+     * @param  array<string,mixed>  $config  Optional overrides: temperature, maxOutputTokens, responseMimeType.
      * @return array{text: string, token_usage: array<string,int>}
      */
     public function generateWithHistory(string $systemPrompt, array $contents, array $config = []): array
     {
         $settings = AiStudioSetting::current();
+        $model    = $this->resolveModel($settings);
 
-        $model = $this->resolveModel($settings);
-        $timeout = (int) ($settings->timeout_seconds ?: config('ai.gemini.timeout', 60));
+        Log::debug('[Gemini] generateWithHistory()', ['model' => $model, 'turns' => count($contents)]);
 
-        $generationConfig = array_merge([
-            'temperature' => (float) $settings->temperature,
-            'maxOutputTokens' => (int) $settings->max_output_tokens,
-        ], $config);
+        [$history, $userText] = $this->splitContents($contents);
 
-        $payload = [
-            'systemInstruction' => [
-                'parts' => [
-                    ['text' => $systemPrompt],
-                ],
-            ],
-            'contents' => $this->normalizeContents($contents),
-            'generationConfig' => $generationConfig,
-        ];
+        try {
+            $response = Gemini::generativeModel(model: $model)
+                ->withSystemInstruction(Content::parse(part: $systemPrompt, role: Role::USER))
+                ->withGenerationConfig($this->buildConfig($settings, $config))
+                ->startChat(history: $history)
+                ->sendMessage($userText);
 
-        return $this->sendGenerateRequest($model, $payload, $timeout, 'generateWithHistory');
+            $text = $this->responseText($response);
+
+            if ($text === '') {
+                throw new \RuntimeException('Gemini returned an empty response body.');
+            }
+
+            return [
+                'text'        => $text,
+                'token_usage' => $this->extractUsage($response->usageMetadata),
+            ];
+        } catch (\Gemini\Exceptions\ErrorException
+                |\Gemini\Exceptions\TransporterException
+                |\Gemini\Exceptions\UnserializableResponse $e) {
+            $this->fail('generateWithHistory', $e);
+        }
     }
 
     /**
-     * Stream with conversation history.
+     * Streaming multi-turn generation via direct SSE HTTP call.
      *
-     * @param array<array{role: string, parts: array}> $contents
-     * @param callable(string $delta, bool $done, array $tokenUsage): void $onChunk
+     * Uses the Gemini REST ?alt=sse endpoint instead of the PHP SDK's stream deserializer,
+     * which breaks on gemini-2.5+ because those models emit thought-only chunks that lack
+     * usageMetadata — causing the SDK to throw UnserializableResponse on every request.
+     *
+     * Calls $onChunk($delta, false, []) for each text chunk,
+     * then $onChunk('', true, $tokenUsage) once when the stream is complete.
+     *
+     * @param  array<array{role: string, parts: array}>  $contents
+     * @param  callable(string $delta, bool $done, array $tokenUsage): void  $onChunk
      * @return array{token_usage: array<string,int>}
      */
     public function streamWithHistory(string $systemPrompt, array $contents, callable $onChunk): array
     {
-        Log::debug('[Gemini] streamWithHistory() start', [
-            'systemPromptLength' => mb_strlen($systemPrompt),
-            'turns'      => count($contents),
-            'key_prefix' => substr($this->apiKey, 0, 6) . '...',
-            'key_ok'     => str_starts_with($this->apiKey, 'AIzaSy'),
-        ]);
         $settings = AiStudioSetting::current();
+        $model    = $this->resolveModel($settings);
 
-        $model = $this->resolveModel($settings);
-        $timeout = (int) ($settings->timeout_seconds ?: config('ai.gemini.timeout', 60)) + 60;
+        Log::debug('[Gemini] streamWithHistory()', ['model' => $model, 'turns' => count($contents)]);
 
-        $url = $this->buildUrl($model, 'streamGenerateContent', [
-            'key' => $this->apiKey,
-            'alt' => 'sse',
-        ]);
+        [$history, $userText] = $this->splitContents($contents);
 
-        $payload = [
-            'systemInstruction' => [
-                'parts' => [
-                    ['text' => $systemPrompt],
-                ],
-            ],
-            'contents' => $this->normalizeContents($contents),
-            'generationConfig' => [
-                'temperature' => (float) $settings->temperature,
-                'maxOutputTokens' => (int) $settings->max_output_tokens,
-            ],
+        $apiKey  = config('gemini.api_key');
+        $baseUrl = rtrim((string) config('gemini.base_url', 'https://generativelanguage.googleapis.com/v1beta'), '/');
+        $modelId = str_starts_with($model, 'models/') ? $model : "models/{$model}";
+        $url     = "{$baseUrl}/{$modelId}:streamGenerateContent";
+
+        $requestBody = [
+            'contents' => array_merge(
+                array_map(fn (Content $c) => $c->toArray(), $history),
+                $userText !== '' ? [['role' => 'user', 'parts' => [['text' => $userText]]]] : [],
+            ),
+            'systemInstruction' => Content::parse(part: $systemPrompt, role: Role::USER)->toArray(),
+            'generationConfig'  => $this->buildConfig($settings)->toArray(),
         ];
 
-        Log::debug('[Gemini] streamWithHistory() request', [
-            'model' => $model,
-            'turns' => count($payload['contents']),
-            'timeout' => $timeout,
-        ]);
+        try {
+            $client   = new GuzzleClient(['timeout' => $settings->timeout_seconds + 5]);
+            $response = $client->post($url, [
+                'query'  => ['alt' => 'sse', 'key' => $apiKey],
+                'json'   => $requestBody,
+                'stream' => true,
+            ]);
 
-        $response = Http::withOptions([
-            'stream' => true,
-        ])
-            ->timeout($timeout)
-            ->connectTimeout(15)
-            ->accept('text/event-stream')
-            ->asJson()
-            ->post($url, $payload);
+            $body       = $response->getBody();
+            $chunkCount = 0;
+            $tokenUsage = ['prompt_tokens' => 0, 'completion_tokens' => 0, 'total_tokens' => 0];
+            $lineBuf    = '';
 
-        Log::debug('[Gemini] streamWithHistory() response', [
-            'status' => $response->status(),
-        ]);
+            while (! $body->eof()) {
+                $byte = $body->read(1);
 
-        if (! $response->successful()) {
-            $this->throwGeminiException(
-                'streamWithHistory',
-                $response->status(),
-                $response->body(),
-                $model
-            );
-        }
+                if ($byte !== "\n") {
+                    $lineBuf .= $byte;
+                    continue;
+                }
 
-        $body = $response->toPsrResponse()->getBody();
+                $line    = rtrim($lineBuf, "\r");
+                $lineBuf = '';
 
-        $buffer = '';
-        $chunkCount = 0;
+                if (! str_starts_with($line, 'data: ')) {
+                    continue;
+                }
 
-        $tokenUsage = [
-            'prompt_tokens' => 0,
-            'completion_tokens' => 0,
-            'total_tokens' => 0,
-        ];
+                $data = json_decode(substr($line, 6), true);
+                if (! is_array($data)) {
+                    continue;
+                }
 
-        while (! $body->eof()) {
-            $buffer .= $body->read(4096);
-
-            while (($eventEnd = strpos($buffer, "\n\n")) !== false) {
-                $rawEvent = substr($buffer, 0, $eventEnd);
-                $buffer = substr($buffer, $eventEnd + 2);
-
-                $dataLines = [];
-
-                foreach (preg_split("/\r\n|\n|\r/", $rawEvent) as $line) {
-                    $line = trim($line);
-
-                    if ($line === '' || ! str_starts_with($line, 'data:')) {
-                        continue;
+                $delta = '';
+                foreach ($data['candidates'][0]['content']['parts'] ?? [] as $part) {
+                    if (($part['thought'] ?? false) !== true) {
+                        $delta .= $part['text'] ?? '';
                     }
-
-                    $dataLines[] = trim(substr($line, 5));
                 }
-
-                if ($dataLines === []) {
-                    continue;
-                }
-
-                $jsonStr = implode("\n", $dataLines);
-
-                if ($jsonStr === '[DONE]') {
-                    $onChunk('', true, $tokenUsage);
-
-                    return [
-                        'token_usage' => $tokenUsage,
-                    ];
-                }
-
-                $chunk = json_decode($jsonStr, true);
-
-                if (! is_array($chunk)) {
-                    Log::warning('[Gemini] Invalid SSE JSON chunk', [
-                        'chunk' => mb_substr($jsonStr, 0, 300),
-                    ]);
-
-                    continue;
-                }
-
-                $delta = (string) data_get($chunk, 'candidates.0.content.parts.0.text', '');
 
                 if ($delta !== '') {
                     $chunkCount++;
                     $onChunk($delta, false, []);
                 }
 
-                if (data_get($chunk, 'usageMetadata') !== null) {
-                    $tokenUsage = $this->extractTokenUsage($chunk);
+                if (isset($data['usageMetadata'])) {
+                    $tokenUsage = [
+                        'prompt_tokens'     => $data['usageMetadata']['promptTokenCount']     ?? 0,
+                        'completion_tokens' => $data['usageMetadata']['candidatesTokenCount'] ?? 0,
+                        'total_tokens'      => $data['usageMetadata']['totalTokenCount']      ?? 0,
+                    ];
                 }
+            }
+
+            if ($chunkCount === 0) {
+                Log::warning('[Gemini] 0 chunks received', ['model' => $model]);
+                throw new \RuntimeException('Gemini returned an empty stream. Check your API key and model name.');
+            }
+
+            Log::debug('[Gemini] streamWithHistory() done', ['chunks' => $chunkCount, 'usage' => $tokenUsage]);
+
+            $onChunk('', true, $tokenUsage);
+
+            return ['token_usage' => $tokenUsage];
+
+        } catch (BadResponseException $e) {
+            $status  = $e->getResponse()->getStatusCode();
+            $rawBody = $e->getResponse()->getBody()->getContents();
+            $decoded = json_decode($rawBody, true);
+            $message = $decoded['error']['message'] ?? $rawBody;
+
+            Log::error('[Gemini] streamWithHistory() HTTP error', ['status' => $status, 'message' => $message]);
+
+            if ($status === 401 || str_contains($message, 'API_KEY_INVALID') || str_contains($message, 'Unauthorized')) {
+                throw new \RuntimeException('Cấu hình AI không hợp lệ — vui lòng kiểm tra API key trong cài đặt.');
+            }
+            if ($status === 429 || str_contains($message, 'RESOURCE_EXHAUSTED')) {
+                throw new GeminiQuotaExceededException('AI đang bận xử lý nhiều yêu cầu — vui lòng thử lại sau vài giây.');
+            }
+            if ($status === 503 || str_contains($message, 'overloaded')) {
+                throw new \RuntimeException('AI hiện đang quá tải — vui lòng thử lại sau.');
+            }
+
+            throw new \RuntimeException("Gemini API error ({$status}): {$message}");
+
+        } catch (ConnectException $e) {
+            Log::error('[Gemini] streamWithHistory() connection error', ['message' => $e->getMessage()]);
+            throw new \RuntimeException('Không thể kết nối đến AI — vui lòng kiểm tra kết nối và thử lại.');
+        }
+    }
+
+
+    /**
+     * Split a contents array into (history: Content[], userText: string).
+     *
+     * The last element must be the current user turn; everything before it is history.
+     * Only text is forwarded — inlineData (frames, video) is dropped intentionally,
+     * matching the previous implementation.
+     *
+     * @param  array<array{role: string, parts: array}>  $contents
+     * @return array{0: Content[], 1: string}
+     */
+    private function splitContents(array $contents): array
+    {
+        if (empty($contents)) {
+            throw new \InvalidArgumentException('[GeminiClient] contents array must not be empty.');
+        }
+
+        $last     = array_pop($contents);
+        $userText = $this->extractText($last['parts'] ?? []);
+
+        $history = array_values(array_filter(
+            array_map(fn (array $item) => $this->toContent($item), $contents)
+        ));
+
+        return [$history, $userText];
+    }
+
+    /**
+     * Find the first non-empty text in a parts array.
+     * Handles multimodal turns where inlineData comes before the text part.
+     *
+     * @param  array<mixed>  $parts
+     */
+    private function extractText(array $parts): string
+    {
+        foreach ($parts as $part) {
+            if (is_array($part) && isset($part['text']) && trim((string) $part['text']) !== '') {
+                return (string) $part['text'];
             }
         }
 
-        if ($buffer !== '') {
-            $this->handleRemainingStreamBuffer($buffer, $onChunk, $tokenUsage, $chunkCount);
-        }
-
-        Log::debug('[Gemini] streamWithHistory() completed', [
-            'chunks' => $chunkCount,
-            'usage'  => $tokenUsage,
-        ]);
-
-        if ($chunkCount === 0) {
-            // Gemini returned HTTP 200 but sent no text — likely invalid API key or model name.
-            Log::warning('[Gemini] Stream completed with 0 chunks — possible invalid key or model name.', [
-                'model'      => $model,
-                'key_prefix' => substr($this->apiKey, 0, 6) . '...',
-            ]);
-            throw new \RuntimeException('Gemini returned an empty stream. Check your API key and model name.');
-        }
-
-        $onChunk('', true, $tokenUsage);
-
-        return [
-            'token_usage' => $tokenUsage,
-        ];
+        return '';
     }
 
-    /**
-     * Send normal generateContent request.
-     *
-     * @param array<string,mixed> $payload
-     * @return array{text: string, token_usage: array<string,int>}
-     */
-    private function sendGenerateRequest(string $model, array $payload, int $timeout, string $action): array
+    private function toContent(array $item): ?Content
     {
-        $url = $this->buildUrl($model, 'generateContent', [
-            'key' => $this->apiKey,
-        ]);
-
-        Log::debug("[Gemini] {$action}() request", [
-            'model' => $model,
-            'timeout' => $timeout,
-        ]);
-
-        $response = Http::timeout($timeout)
-            ->connectTimeout(15)
-            ->asJson()
-            ->post($url, $payload);
-
-        Log::debug("[Gemini] {$action}() response", [
-            'status' => $response->status(),
-        ]);
-
-        if (! $response->successful()) {
-            $this->throwGeminiException($action, $response->status(), $response->body(), $model);
-        }
-
-        $data = $response->json();
-
-        $text = (string) data_get($data, 'candidates.0.content.parts.0.text', '');
+        $text = $this->extractText($item['parts'] ?? []);
 
         if ($text === '') {
-            Log::warning("[Gemini] {$action}() returned empty text", [
-                'response' => $data,
-                'finish_reason' => data_get($data, 'candidates.0.finishReason'),
-                'prompt_feedback' => data_get($data, 'promptFeedback'),
-            ]);
-
-            throw new \RuntimeException('Gemini returned an empty response body.');
+            return null;
         }
 
-        return [
-            'text' => $text,
-            'token_usage' => $this->extractTokenUsage($data),
-        ];
+        $role = ($item['role'] ?? 'user') === 'model' ? Role::MODEL : Role::USER;
+
+        return Content::parse(part: $text, role: $role);
     }
 
     /**
-     * Normalize Laravel message roles to Gemini roles.
+     * Safely extract the text from a GenerateContentResponse without throwing.
+     * Handles partial stream chunks where candidates may be empty.
+     */
+    private function responseText(GenerateContentResponse $response): string
+    {
+        if (empty($response->candidates)) {
+            return '';
+        }
+
+        $text = '';
+
+        foreach (($response->candidates[0]->content?->parts ?? []) as $part) {
+            if ($part->thought !== true) {
+                $text .= $part->text ?? '';
+            }
+        }
+
+        return $text;
+    }
+
+    /**
+     * Build a GenerationConfig, merging DB settings with optional per-call overrides.
      *
-     * @param array<array{role: string, parts: array}> $contents
-     * @return array<int,array{role: string, parts: array}>
+     * Recognized override keys: temperature, maxOutputTokens, responseMimeType.
+     *
+     * @param  array<string,mixed>  $overrides
      */
-    private function normalizeContents(array $contents): array
+    private function buildConfig(AiStudioSetting $settings, array $overrides = []): GenerationConfig
     {
-        return collect($contents)
-            ->filter(fn (array $item): bool => ! empty($item['parts']))
-            ->map(function (array $item): array {
-                $role = $item['role'] ?? 'user';
+        $mimeType = null;
 
-                if ($role === 'assistant') {
-                    $role = 'model';
-                }
+        if (isset($overrides['responseMimeType'])) {
+            $mimeType = ResponseMimeType::from((string) $overrides['responseMimeType']);
+        }
 
-                if (! in_array($role, ['user', 'model'], true)) {
-                    $role = 'user';
-                }
-
-                return [
-                    'role' => $role,
-                    'parts' => $this->normalizeParts($item['parts']),
-                ];
-            })
-            ->values()
-            ->all();
+        return new GenerationConfig(
+            maxOutputTokens:  (int)   ($overrides['maxOutputTokens'] ?? $settings->max_output_tokens),
+            temperature:      (float) ($overrides['temperature']     ?? $settings->temperature),
+            responseMimeType: $mimeType,
+        );
     }
 
-    /**
-     * @param array<int,mixed> $parts
-     * @return array<int,array{text: string}>
-     */
-    private function normalizeParts(array $parts): array
+    private function resolveModel(AiStudioSetting $settings): string
     {
-        return collect($parts)
-            ->map(function (mixed $part): array {
-                if (is_string($part)) {
-                    return ['text' => $part];
-                }
-
-                if (is_array($part) && isset($part['text'])) {
-                    return ['text' => (string) $part['text']];
-                }
-
-                return ['text' => ''];
-            })
-            ->filter(fn (array $part): bool => trim($part['text']) !== '')
-            ->values()
-            ->all();
+        return trim((string) ($settings->gemini_model ?: config('gemini.model', 'gemini-2.0-flash')));
     }
 
     /**
      * @return array{prompt_tokens: int, completion_tokens: int, total_tokens: int}
      */
-    private function extractTokenUsage(array $data): array
+    private function extractUsage(UsageMetadata $meta): array
     {
         return [
-            'prompt_tokens' => (int) data_get($data, 'usageMetadata.promptTokenCount', 0),
-            'completion_tokens' => (int) data_get($data, 'usageMetadata.candidatesTokenCount', 0),
-            'total_tokens' => (int) data_get($data, 'usageMetadata.totalTokenCount', 0),
+            'prompt_tokens'     => $meta->promptTokenCount,
+            'completion_tokens' => $meta->candidatesTokenCount ?? 0,
+            'total_tokens'      => $meta->totalTokenCount,
         ];
     }
 
-    private function resolveModel(AiStudioSetting $settings): string
+    /** @throws \RuntimeException|\App\Exceptions\GeminiQuotaExceededException */
+    private function fail(string $action, \Exception $e): never
     {
-        return trim(
-            (string) ($settings->gemini_model ?: config('ai.gemini.model', 'gemini-2.5-flash'))
-        );
-    }
+        $message = $e->getMessage();
 
-    /**
-     * @param array<string,string> $query
-     */
-    private function buildUrl(string $model, string $method, array $query): string
-    {
-        return sprintf(
-            '%s/models/%s:%s?%s',
-            $this->baseUrl,
-            rawurlencode($model),
-            $method,
-            http_build_query($query)
-        );
-    }
+        // TransporterException wraps a GuzzleHttp ClientException — extract HTTP status
+        $statusCode = 0;
+        if ($e instanceof \Gemini\Exceptions\TransporterException) {
+            $prev = $e->getPrevious();
+            if ($prev instanceof \GuzzleHttp\Exception\ClientException) {
+                $statusCode = $prev->getResponse()?->getStatusCode() ?? 0;
+            }
+        } elseif ($e instanceof \Gemini\Exceptions\ErrorException) {
+            $statusCode = $e->getErrorCode();
+        }
 
-    private function throwGeminiException(string $action, int $status, string $body, string $model): never
-    {
-        $safeBody = mb_substr($body, 0, 1000);
-
-        Log::error("[Gemini] {$action}() failed", [
-            'status' => $status,
-            'body' => $safeBody,
-            'model' => $model,
+        Log::error("[Gemini] {$action}() error", [
+            'type'    => get_class($e),
+            'status'  => $statusCode,
+            'message' => $message,
         ]);
 
-        if ($status === 429) {
-            throw new GeminiQuotaExceededException(
-                'AI quota exceeded. Please wait a moment and try again.'
-            );
+        if ($statusCode === 401 || str_contains($message, '401') || str_contains($message, 'Unauthorized') || str_contains($message, 'API_KEY_INVALID')) {
+            throw new \RuntimeException('Cấu hình AI không hợp lệ — vui lòng kiểm tra API key trong cài đặt.');
         }
 
-        throw new \RuntimeException("Gemini API error {$status}: {$safeBody}");
-    }
-
-    /**
-     * Handle final buffered SSE event if stream ends without trailing blank line.
-     *
-     * @param callable(string $delta, bool $done, array $tokenUsage): void $onChunk
-     */
-    private function handleRemainingStreamBuffer(
-        string $buffer,
-        callable $onChunk,
-        array &$tokenUsage,
-        int &$chunkCount
-    ): void {
-        $dataLines = [];
-
-        foreach (preg_split("/\r\n|\n|\r/", $buffer) as $line) {
-            $line = trim($line);
-
-            if ($line === '' || ! str_starts_with($line, 'data:')) {
-                continue;
-            }
-
-            $dataLines[] = trim(substr($line, 5));
+        if ($statusCode === 429 || str_contains($message, '429') || str_contains($message, 'RESOURCE_EXHAUSTED')) {
+            throw new GeminiQuotaExceededException('AI đang bận xử lý nhiều yêu cầu — vui lòng thử lại sau vài giây.');
         }
 
-        if ($dataLines === []) {
-            return;
+        if ($statusCode === 503 || str_contains($message, '503') || str_contains($message, 'overloaded')) {
+            throw new \RuntimeException('AI hiện đang quá tải — vui lòng thử lại sau.');
         }
 
-        $jsonStr = implode("\n", $dataLines);
-
-        if ($jsonStr === '[DONE]') {
-            return;
+        // UnserializableResponse = empty/malformed body from API (often a silent auth failure)
+        if ($e instanceof \Gemini\Exceptions\UnserializableResponse) {
+            throw new \RuntimeException('Không nhận được phản hồi hợp lệ từ AI — vui lòng kiểm tra API key và thử lại.');
         }
 
-        $chunk = json_decode($jsonStr, true);
-
-        if (! is_array($chunk)) {
-            return;
-        }
-
-        $delta = (string) data_get($chunk, 'candidates.0.content.parts.0.text', '');
-
-        if ($delta !== '') {
-            $chunkCount++;
-            $onChunk($delta, false, []);
-        }
-
-        if (data_get($chunk, 'usageMetadata') !== null) {
-            $tokenUsage = $this->extractTokenUsage($chunk);
-        }
+        throw new \RuntimeException("Gemini API error: {$message}");
     }
 }

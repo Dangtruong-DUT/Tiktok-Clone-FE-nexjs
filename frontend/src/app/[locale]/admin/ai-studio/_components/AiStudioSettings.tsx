@@ -9,23 +9,10 @@ import {
     useGetAvailableModelsQuery,
     useUpdateAiSettingsMutation
 } from '@/store/services/admin/admin-ai-studio.service'
-import { z } from 'zod'
-
-const UpdateAiStudioSettingsReqBody = z.object({
-    daily_limit_per_user: z.number().min(1).max(1000).optional(),
-    global_daily_limit: z.number().min(1).max(100000).optional(),
-    rate_limit_per_minute: z.number().min(1).max(60).optional(),
-    is_enabled: z.boolean().optional(),
-    require_min_input: z.boolean().optional(),
-    gemini_model: z.string().optional(),
-    max_output_tokens: z.number().min(256).max(8192).optional(),
-    temperature: z.number().min(0).max(1).optional(),
-    timeout_seconds: z.number().min(10).max(120).optional(),
-    cache_ttl_hours: z.number().min(1).max(168).optional(),
-    async_mode: z.boolean().optional()
-})
-
-type UpdateAiStudioSettingsReqBodyType = z.infer<typeof UpdateAiStudioSettingsReqBody>
+import {
+    UpdateAiStudioSettingsReqBodySchema,
+    type UpdateAiStudioSettingsReqBodyDto
+} from '@/types/dtos/admin/ai/admin-ai-studio.request.dto'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
@@ -84,28 +71,32 @@ export function AiStudioSettings() {
     const [update, { isLoading: isSaving }] = useUpdateAiSettingsMutation()
     const availableModels = modelsData?.data ?? []
 
-    const settingsValues: UpdateAiStudioSettingsReqBodyType | undefined = data?.data
+    const settingsValues: UpdateAiStudioSettingsReqBodyDto | undefined = data?.data
         ? {
-              daily_limit_per_user: data.data.daily_limit_per_user as number,
-              global_daily_limit: data.data.global_daily_limit as number,
-              rate_limit_per_minute: data.data.rate_limit_per_minute as number,
-              is_enabled: data.data.is_enabled as boolean,
-              require_min_input: data.data.require_min_input as boolean,
-              gemini_model: data.data.gemini_model as UpdateAiStudioSettingsReqBodyType['gemini_model'],
-              max_output_tokens: data.data.max_output_tokens as number,
-              temperature: data.data.temperature as number,
-              timeout_seconds: data.data.timeout_seconds as number,
-              cache_ttl_hours: data.data.cache_ttl_hours as number,
-              async_mode: data.data.async_mode as boolean
+              daily_limit_per_user: data.data.daily_limit_per_user,
+              global_daily_limit: data.data.global_daily_limit,
+              rate_limit_per_minute: data.data.rate_limit_per_minute,
+              is_enabled: data.data.is_enabled,
+              require_min_input: data.data.require_min_input,
+              gemini_model: data.data.gemini_model,
+              max_output_tokens: data.data.max_output_tokens,
+              temperature: data.data.temperature,
+              timeout_seconds: data.data.timeout_seconds,
+              cache_ttl_hours: data.data.cache_ttl_hours,
+              async_mode: data.data.async_mode
           }
         : undefined
 
-    const { control, handleSubmit } = useForm<UpdateAiStudioSettingsReqBodyType>({
-        resolver: zodResolver(UpdateAiStudioSettingsReqBody),
-        values: settingsValues // auto-syncs form when API data changes
+    const currentModel = settingsValues?.gemini_model
+    const modelOptions =
+        currentModel && !availableModels.includes(currentModel) ? [currentModel, ...availableModels] : availableModels
+
+    const { control, handleSubmit } = useForm<UpdateAiStudioSettingsReqBodyDto>({
+        resolver: zodResolver(UpdateAiStudioSettingsReqBodySchema),
+        values: settingsValues
     })
 
-    const onSubmit = async (values: UpdateAiStudioSettingsReqBodyType) => {
+    const onSubmit = async (values: UpdateAiStudioSettingsReqBodyDto) => {
         try {
             await update(values).unwrap()
             toast.success(t('aiStudio.settings.toast.saved'))
@@ -114,9 +105,8 @@ export function AiStudioSettings() {
         }
     }
 
-    const onValidationError = (errors: object) => {
-        console.error('[AiStudioSettings] Validation failed:', errors)
-        toast.error(`Lỗi validation: ${Object.keys(errors).join(', ')}`)
+    const onValidationError = () => {
+        toast.error(t('aiStudio.settings.toast.error'))
     }
 
     if (isLoading) {
@@ -132,14 +122,17 @@ export function AiStudioSettings() {
     return (
         <form onSubmit={handleSubmit(onSubmit, onValidationError)}>
             <Card className='divide-y divide-border'>
-                {/* Kill switch — most prominent */}
                 <div className='p-4'>
                     <Controller
                         control={control}
                         name='is_enabled'
                         render={({ field }) => (
                             <div
-                                className={`flex items-center justify-between rounded-xl p-4 border-2 ${field.value ? 'border-green-300 bg-green-50' : 'border-red-300 bg-red-50'}`}
+                                className={`flex items-center justify-between rounded-xl p-4 border-2 ${
+                                    field.value
+                                        ? 'border-green-300 bg-green-50 dark:border-green-800 dark:bg-green-950/40'
+                                        : 'border-red-300 bg-red-50 dark:border-red-800 dark:bg-red-950/40'
+                                }`}
                             >
                                 <div className='flex items-center gap-3'>
                                     {!field.value && <AlertTriangle size={18} className='text-red-500' />}
@@ -223,12 +216,12 @@ export function AiStudioSettings() {
                                 label={t('aiStudio.settings.fields.model.label')}
                                 description={t('aiStudio.settings.fields.model.description')}
                             >
-                                <Select value={field.value} onValueChange={field.onChange}>
+                                <Select value={field.value ?? currentModel ?? ''} onValueChange={field.onChange}>
                                     <SelectTrigger className='w-56 h-8 text-sm'>
                                         <SelectValue placeholder='Select model…' />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {availableModels.map((model) => (
+                                        {modelOptions.map((model) => (
                                             <SelectItem key={model} value={model}>
                                                 {model}
                                             </SelectItem>

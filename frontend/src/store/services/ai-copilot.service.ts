@@ -1,38 +1,15 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import baseQueryWithReauth from '@/store/services/client'
 import { BACKEND_API_ENDPOINT } from '@/constants/api/endpoints'
-import type { AiCopilotSession, AiCopilotSessionContext } from '@/types/models/ai-copilot.model'
+import type { AiCopilotMessage, AiCopilotSession, AiCopilotSessionContext } from '@/types/models/ai-copilot.model'
 import type { ApiSuccessResponseWithData } from '@/types/common/http-response.type'
-
-export interface StartSessionPayload {
-    upload_session_uuid?: string
-    post_uuid?: string
-    post_id?: number
-    video_size_bytes?: number
-    locale?: string
-    context_snapshot?: AiCopilotSessionContext
-}
-
-export interface SendMessagePayload {
-    sessionUuid: string
-    content: string
-    attachments?: {
-        timeline?:   { start_seconds: number; end_seconds: number }
-        frames?:     string[]
-        video_clip?: string
-    }
-}
-
-export interface SendMessageResponse {
-    success: boolean
-    streaming: boolean
-    // Non-streaming path
-    data?: import('@/types/models/ai-copilot.model').AiCopilotMessage
-    // Streaming path
-    message_uuid?: string
-    stream_token?: string
-    stream_url?: string
-}
+import type {
+    SendAiCopilotMessageDataDto,
+    SendAiCopilotMessageReqBodyDto,
+    SendAiCopilotMessageResDto,
+    StartAiCopilotSessionReqBodyDto,
+    StreamingMessageDataDto
+} from '@/types/dtos/ai/ai-copilot.dto'
 
 export const AiCopilotApi = createApi({
     reducerPath:       'aiCopilotApi',
@@ -40,7 +17,7 @@ export const AiCopilotApi = createApi({
     tagTypes:          ['AiCopilotSession'],
     keepUnusedDataFor: 300,
     endpoints: (builder) => ({
-        startSession: builder.mutation<ApiSuccessResponseWithData<AiCopilotSession>, StartSessionPayload>({
+        startSession: builder.mutation<ApiSuccessResponseWithData<AiCopilotSession>, StartAiCopilotSessionReqBodyDto>({
             query: (body) => ({
                 url:    BACKEND_API_ENDPOINT.AI_COPILOT.SESSIONS,
                 method: 'POST',
@@ -54,7 +31,7 @@ export const AiCopilotApi = createApi({
             providesTags: (_r, _e, uuid) => [{ type: 'AiCopilotSession', id: uuid }],
         }),
 
-        sendMessage: builder.mutation<SendMessageResponse, SendMessagePayload>({
+        sendMessage: builder.mutation<SendAiCopilotMessageResDto, SendAiCopilotMessageReqBodyDto>({
             query: ({ sessionUuid, ...body }) => ({
                 url:    BACKEND_API_ENDPOINT.AI_COPILOT.MESSAGES(sessionUuid),
                 method: 'POST',
@@ -95,3 +72,7 @@ export const {
     useRejectMessageMutation,
     useDeleteSessionMutation,
 } = AiCopilotApi
+
+export type { StreamingMessageDataDto as StreamingMessageData, SendAiCopilotMessageDataDto as SendMessageData }
+export type { StartAiCopilotSessionReqBodyDto as StartSessionPayload, SendAiCopilotMessageReqBodyDto as SendMessagePayload }
+export type { AiCopilotSessionContext }

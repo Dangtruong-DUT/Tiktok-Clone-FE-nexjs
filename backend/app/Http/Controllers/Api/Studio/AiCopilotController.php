@@ -92,13 +92,9 @@ class AiCopilotController extends Controller
     public function stream(Request $request, string $uuid, string $messageUuid): StreamedResponse
     {
         $token  = (string) $request->query('token', '');
-        $userId = $request->user()?->id ?? 0;
+        $userId = $this->streamingService->validateStreamToken($token, $uuid, $messageUuid);
 
-        abort_unless(
-            $this->streamingService->validateStreamToken($token, $uuid, $messageUuid, $userId),
-            403,
-            'Invalid or expired stream token.'
-        );
+        abort_unless($userId !== null, 403, 'Invalid or expired stream token.');
 
         $session     = $this->copilotService->getSessionWithMessages($uuid, $userId);
         $userMessage = $session->messages->firstWhere('uuid', $messageUuid)

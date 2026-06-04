@@ -1,9 +1,11 @@
 'use client'
 
 import { useCallback, useRef, useState } from 'react'
-import { useSendMessageMutation, useAcceptMessageMutation, useRejectMessageMutation } from '@/store/services/ai-copilot.service'
+import { useSendMessageMutation, useAcceptMessageMutation, useRejectMessageMutation, type StreamingMessageData } from '@/store/services/ai-copilot.service'
 import { useAiCopilotContext } from '../AiCopilotContext'
 import type { AiCopilotMessage } from '@/types/models/ai-copilot.model'
+import type { AiCopilotSseEventDto, SendAiCopilotMessageAttachmentsDto } from '@/types/dtos/ai/ai-copilot.dto'
+import { AI_COPILOT_MESSAGE_STATUSES, AI_COPILOT_ROLES, AI_COPILOT_SSE_EVENT_TYPES } from '@/constants/ai/copilot'
 
 interface UseAiCopilotOptions {
     sessionUuid: string | null
@@ -25,13 +27,11 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
         setMessages(sessionMessages)
     }, [])
 
-    // Extracted so it can receive setIsSending and keep the indicator alive during SSE.
     const openEventSource = useCallback(
-        (streamUrl: string, streamToken: string, messageUuid: string, _sessUuid: string) => {
+        (streamUrl: string, streamToken: string, messageUuid: string) => {
             esRef.current?.close()
 
-            // stream_url returned by Laravel's route() is already absolute.
-            // Append the auth token as a query param.
+            // stream_url from Laravel's route() is already absolute
             const fullUrl = `${streamUrl}?token=${encodeURIComponent(streamToken)}`
 
             const es = new EventSource(fullUrl, { withCredentials: true })
@@ -39,13 +39,9 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
 
             es.onmessage = (event) => {
                 try {
-                    const payload = JSON.parse(event.data as string) as {
-                        type:     'chunk' | 'done'
-                        delta?:   string
-                        message?: AiCopilotMessage
-                    }
+                    const payload = JSON.parse(event.data as string) as AiCopilotSseEventDto
 
-                    if (payload.type === 'chunk' && payload.delta) {
+                    if (payload.type === AI_COPILOT_SSE_EVENT_TYPES.CHUNK && payload.delta) {
                         setMessages((prev) =>
                             prev.map((m) =>
                                 m.uuid === messageUuid
@@ -53,7 +49,7 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
                                     : m,
                             ),
                         )
-                    } else if (payload.type === 'done' && payload.message) {
+                    } else if (payload.type === AI_COPILOT_SSE_EVENT_TYPES.DONE && payload.message) {
                         setMessages((prev) =>
                             prev.map((m) =>
                                 m.uuid === messageUuid
@@ -61,21 +57,23 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
                                     : m,
                             ),
                         )
-                        setIsSending(false)  // SSE complete — turn off indicator
+                        setIsSending(false)
                         es.close()
                     }
                 } catch {
-                    // malformed SSE data — ignore
+                    // malformed SSE data
                 }
             }
 
             es.onerror = () => {
                 setMessages((prev) =>
                     prev.map((m) =>
-                        m.uuid === messageUuid ? { ...m, isStreaming: false, status: 'failed' as const } : m,
+                        m.uuid === messageUuid
+                            ? { ...m, isStreaming: false, status: AI_COPILOT_MESSAGE_STATUSES.FAILED }
+                            : m,
                     ),
                 )
-                setIsSending(false)  // SSE error — turn off indicator
+                setIsSending(false)
                 es.close()
             }
         },
@@ -90,14 +88,14 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
 
             const userMsg: AiCopilotMessage = {
                 uuid:       `local-${Date.now()}`,
-                role:       'user',
+                role:       AI_COPILOT_ROLES.USER,
                 content,
-                status:     'success',
+                status:     AI_COPILOT_MESSAGE_STATUSES.SUCCESS,
                 created_at: new Date().toISOString(),
             }
             setMessages((prev) => [...prev, userMsg])
 
-            const attachments: Record<string, unknown> = {}
+            const attachments: SendAiCopilotMessageAttachmentsDto = {}
             if (pendingVideoClip) attachments.video_clip = pendingVideoClip
             if (timelineSelection) {
                 attachments.timeline = {
@@ -115,42 +113,43 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
                 const res = await sendMessage({
                     sessionUuid,
                     content,
-                    attachments: Object.keys(attachments).length > 0
-                        ? (attachments as { frames?: string[]; video_clip?: string; timeline?: { start_seconds: number; end_seconds: number } })
-                        : undefined,
+                    attachments: Object.keys(attachments).length > 0 ? attachments : undefined,
                 }).unwrap()
 
-                if (res.streaming && res.stream_url && res.stream_token && res.message_uuid) {
-                    tookStreamingPath = true   // indicator stays ON — SSE will turn it off
+                const payload = res.data
+                const isStreaming = (payload as StreamingMessageData).streaming === true
+
+                if (isStreaming) {
+                    tookStreamingPath = true
+                    const streamData = payload as StreamingMessageData
 
                     const placeholder: AiCopilotMessage = {
-                        uuid:             res.message_uuid,
-                        role:             'assistant',
+                        uuid:             streamData.message_uuid,
+                        role:             AI_COPILOT_ROLES.ASSISTANT,
                         content:          '',
-                        status:           'success',
+                        status:           AI_COPILOT_MESSAGE_STATUSES.SUCCESS,
                         created_at:       new Date().toISOString(),
                         isStreaming:      true,
                         streamingContent: '',
                     }
                     setMessages((prev) => [...prev, placeholder])
 
-                    openEventSource(res.stream_url, res.stream_token, res.message_uuid, sessionUuid)
-                } else if (!res.streaming && res.data) {
-                    setMessages((prev) => [...prev, res.data!])
+                    openEventSource(streamData.stream_url, streamData.stream_token, streamData.message_uuid)
+                } else {
+                    setMessages((prev) => [...prev, payload as AiCopilotMessage])
                 }
             } catch {
                 setMessages((prev) => [
                     ...prev,
                     {
                         uuid:       `err-${Date.now()}`,
-                        role:       'assistant',
+                        role:       AI_COPILOT_ROLES.ASSISTANT,
                         content:    'Something went wrong. Please try again.',
-                        status:     'failed',
+                        status:     AI_COPILOT_MESSAGE_STATUSES.FAILED,
                         created_at: new Date().toISOString(),
                     },
                 ])
             } finally {
-                // Only reset for non-streaming path; streaming path resets via SSE done/error.
                 if (!tookStreamingPath) setIsSending(false)
             }
         },
@@ -161,7 +160,7 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
         async (messageUuid: string, field: string, value: string) => {
             applyToForm(field, value)
             setMessages((prev) =>
-                prev.map((m) => (m.uuid === messageUuid ? { ...m, status: 'accepted' as const } : m)),
+                prev.map((m) => (m.uuid === messageUuid ? { ...m, status: AI_COPILOT_MESSAGE_STATUSES.ACCEPTED } : m)),
             )
             try {
                 await acceptMessage({ messageUuid, field })
@@ -173,7 +172,7 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
     const reject = useCallback(
         async (messageUuid: string) => {
             setMessages((prev) =>
-                prev.map((m) => (m.uuid === messageUuid ? { ...m, status: 'rejected' as const } : m)),
+                prev.map((m) => (m.uuid === messageUuid ? { ...m, status: AI_COPILOT_MESSAGE_STATUSES.REJECTED } : m)),
             )
             try {
                 await rejectMessage(messageUuid)

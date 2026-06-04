@@ -3,11 +3,30 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { useGetAiMetricsQuery } from '@/store/services/admin/admin-ai-studio.service'
+import { AI_TIME_PERIODS, type AiTimePeriod } from '@/constants/admin/ai'
 import { Card } from '@/components/ui/card'
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Badge } from '@/components/ui/badge'
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts'
-import { TrendingUp, Users, Zap, DollarSign, CheckCircle, XCircle } from 'lucide-react'
+import {
+    BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, Cell
+} from 'recharts'
+import { Users, Zap, DollarSign, CheckCircle, XCircle, BarChart2 } from 'lucide-react'
+
+const dailyChartConfig = {
+    total: {
+        label: 'Requests',
+        color: 'var(--chart-1)'
+    }
+} satisfies ChartConfig
+
+const intentChartConfig = {
+    count: {
+        label: 'Requests',
+        color: 'var(--chart-1)'
+    }
+} satisfies ChartConfig
+
+const INTENT_COLORS = ['var(--chart-1)', 'var(--chart-2)', 'var(--chart-3)', 'var(--chart-4)', 'var(--chart-5)']
 
 function StatCard({
     label,
@@ -36,19 +55,18 @@ function StatCard({
 
 export function AiStudioMetrics() {
     const t = useTranslations('AdminPage')
-    const [period, setPeriod] = useState('today')
+    const [period, setPeriod] = useState<AiTimePeriod>(AI_TIME_PERIODS.TODAY)
     const { data, isLoading } = useGetAiMetricsQuery({ period })
     const metrics = data?.data
 
     const PERIODS = [
-        { value: 'today', label: t('aiStudio.metrics.periods.today') },
-        { value: 'week',  label: t('aiStudio.metrics.periods.week') },
-        { value: 'month', label: t('aiStudio.metrics.periods.month') }
+        { value: AI_TIME_PERIODS.TODAY, label: t('aiStudio.metrics.periods.today') },
+        { value: AI_TIME_PERIODS.WEEK, label: t('aiStudio.metrics.periods.week') },
+        { value: AI_TIME_PERIODS.MONTH, label: t('aiStudio.metrics.periods.month') }
     ]
 
     return (
         <div className='space-y-6'>
-            {/* Period selector */}
             <div className='flex gap-2'>
                 {PERIODS.map((p) => (
                     <button
@@ -65,7 +83,6 @@ export function AiStudioMetrics() {
                 ))}
             </div>
 
-            {/* Stat cards */}
             {isLoading ? (
                 <div className='grid grid-cols-2 lg:grid-cols-4 gap-4'>
                     {Array.from({ length: 6 }).map((_, i) => (
@@ -107,50 +124,72 @@ export function AiStudioMetrics() {
                 </div>
             ) : null}
 
-            {/* Daily bar chart */}
-            {!isLoading && metrics && metrics.daily_series.length > 0 && (
+            {!isLoading && metrics && (
                 <Card className='p-4'>
                     <h3 className='text-sm font-semibold mb-4'>{t('aiStudio.metrics.charts.dailyRequests')}</h3>
-                    <ResponsiveContainer width='100%' height={220}>
-                        <BarChart data={metrics.daily_series} barSize={16}>
-                            <CartesianGrid strokeDasharray='3 3' stroke='hsl(var(--border))' />
-                            <XAxis dataKey='date' tick={{ fontSize: 11 }} />
-                            <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
-                            <Tooltip
-                                contentStyle={{
-                                    background: 'hsl(var(--background))',
-                                    border: '1px solid hsl(var(--border))',
-                                    borderRadius: 8,
-                                    fontSize: 12
-                                }}
-                            />
-                            <Legend wrapperStyle={{ fontSize: 12 }} />
-                            <Bar
-                                dataKey='total'
-                                fill='hsl(var(--primary))'
-                                name='Requests'
-                                radius={[4, 4, 0, 0]}
-                            />
-                        </BarChart>
-                    </ResponsiveContainer>
+                    {metrics.daily_series.length > 0 ? (
+                        <ChartContainer config={dailyChartConfig} className='h-[220px] w-full aspect-auto'>
+                            <BarChart data={metrics.daily_series} barSize={16}>
+                                <CartesianGrid strokeDasharray='3 3' stroke='var(--border)' />
+                                <XAxis dataKey='date' tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} />
+                                <YAxis tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} allowDecimals={false} />
+                                <ChartTooltip content={<ChartTooltipContent />} />
+                                <Legend wrapperStyle={{ fontSize: 12 }} />
+                                <Bar dataKey='total' fill='var(--color-total)' name='Requests' radius={[4, 4, 0, 0]} />
+                            </BarChart>
+                        </ChartContainer>
+                    ) : (
+                        <div className='flex flex-col items-center justify-center h-[220px] gap-2 text-muted-foreground'>
+                            <BarChart2 size={32} className='opacity-30' />
+                            <p className='text-sm'>{t('aiStudio.metrics.empty.noData')}</p>
+                        </div>
+                    )}
                 </Card>
             )}
 
-            {/* Intent breakdown */}
-            {!isLoading && metrics && Object.keys(metrics.intent_breakdown).length > 0 && (
-                <Card className='p-4'>
-                    <h3 className='text-sm font-semibold mb-3'>{t('aiStudio.metrics.charts.intentBreakdown')}</h3>
-                    <div className='flex flex-wrap gap-2'>
-                        {Object.entries(metrics.intent_breakdown)
-                            .sort(([, a], [, b]) => b - a)
-                            .map(([intent, count]) => (
-                                <Badge key={intent} variant='secondary' className='capitalize'>
-                                    {intent}: {count}
-                                </Badge>
-                            ))}
-                    </div>
-                </Card>
-            )}
+            {!isLoading && metrics && (() => {
+                const intentData = Object.entries(metrics.intent_breakdown)
+                    .sort(([, a], [, b]) => b - a)
+                    .map(([intent, count]) => ({ intent: intent.replace(/_/g, ' '), count }))
+                return (
+                    <Card className='p-4'>
+                        <h3 className='text-sm font-semibold mb-4'>{t('aiStudio.metrics.charts.intentBreakdown')}</h3>
+                        {intentData.length > 0 ? (
+                            <ChartContainer
+                                config={intentChartConfig}
+                                className='w-full aspect-auto'
+                                style={{ height: intentData.length * 36 + 20 }}
+                            >
+                                <BarChart data={intentData} layout='vertical' barSize={14} margin={{ left: 8, right: 24 }}>
+                                    <CartesianGrid strokeDasharray='3 3' stroke='var(--border)' horizontal={false} />
+                                    <XAxis
+                                        type='number'
+                                        tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
+                                        allowDecimals={false}
+                                    />
+                                    <YAxis
+                                        type='category'
+                                        dataKey='intent'
+                                        width={120}
+                                        tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
+                                    />
+                                    <ChartTooltip content={<ChartTooltipContent />} cursor={{ fill: 'var(--muted)' }} />
+                                    <Bar dataKey='count' name='Requests' radius={[0, 4, 4, 0]}>
+                                        {intentData.map((_, i) => (
+                                            <Cell key={i} fill={INTENT_COLORS[i % INTENT_COLORS.length]} />
+                                        ))}
+                                    </Bar>
+                                </BarChart>
+                            </ChartContainer>
+                        ) : (
+                            <div className='flex flex-col items-center justify-center h-24 gap-2 text-muted-foreground'>
+                                <BarChart2 size={24} className='opacity-30' />
+                                <p className='text-sm'>{t('aiStudio.metrics.empty.noIntents')}</p>
+                            </div>
+                        )}
+                    </Card>
+                )
+            })()}
         </div>
     )
 }

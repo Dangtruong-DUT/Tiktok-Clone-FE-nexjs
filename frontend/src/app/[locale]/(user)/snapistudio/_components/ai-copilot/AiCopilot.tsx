@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Bot, Minus, X, Sparkles } from 'lucide-react'
+import { Minus, X, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
@@ -10,8 +10,7 @@ import { useCopilotSession } from './hooks/useCopilotSession'
 import { useAiCopilot } from './hooks/useAiCopilot'
 import { CopilotMessages } from './panel/CopilotMessages'
 import { CopilotInput } from './panel/CopilotInput'
-
-const THINKING_DOTS = [0, 1, 2] as const
+import { BOUNCE_DOT_INDEXES } from '@/constants/ai/copilot'
 
 export function AiCopilot() {
     const t = useTranslations('SnapiStudio.aiCopilot')
@@ -36,7 +35,6 @@ export function AiCopilot() {
 
     return (
         <>
-            {/* FAB */}
             {!isPanelOpen && (
                 <button
                     onClick={openPanel}
@@ -50,7 +48,6 @@ export function AiCopilot() {
                 </button>
             )}
 
-            {/* Panel */}
             {isPanelOpen && (
                 <div className={cn(
                     'fixed bottom-6 right-6 z-50 flex flex-col text-foreground',
@@ -58,7 +55,6 @@ export function AiCopilot() {
                     'transition-all duration-200',
                     isMinimised ? 'h-12 overflow-hidden' : 'h-[640px]',
                 )}>
-                    {/* Header */}
                     <div className='flex items-center justify-between px-4 py-3 border-b border-border shrink-0'>
                         <div className='flex items-center gap-2'>
                             <div className='size-6 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center'>
@@ -68,7 +64,7 @@ export function AiCopilot() {
 
                             {isSending && (
                                 <span className='flex items-center gap-0.5 ml-1'>
-                                    {THINKING_DOTS.map(i => (
+                                    {BOUNCE_DOT_INDEXES.map(i => (
                                         <span
                                             key={i}
                                             className='size-1 rounded-full bg-primary animate-bounce'
@@ -93,8 +89,7 @@ export function AiCopilot() {
 
                     {!isMinimised && (
                         <>
-                            {/* Loading */}
-                            {isSessionLoading && messages.length === 0 && (
+                            {(isSessionLoading || (isPanelOpen && !sessionUuid)) && messages.length === 0 && (
                                 <div className='flex-1 flex items-center justify-center'>
                                     <div className='flex flex-col items-center gap-3 text-muted-foreground'>
                                         <div className='size-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center'>
@@ -105,8 +100,7 @@ export function AiCopilot() {
                                 </div>
                             )}
 
-                            {/* Empty / welcome — blocks.so style */}
-                            {!isSessionLoading && displayMessages.length === 0 && (
+                            {!isSessionLoading && sessionUuid && displayMessages.length === 0 && (
                                 <div className='flex-1 flex flex-col items-center justify-center gap-5 px-6 text-center'>
                                     <div className='space-y-2'>
                                         <div className='mx-auto size-12 rounded-2xl bg-primary/10 border border-primary/20
@@ -119,7 +113,6 @@ export function AiCopilot() {
                                         </p>
                                     </div>
 
-                                    {/* Quick prompt chips — blocks.so style */}
                                     <div className='flex flex-wrap gap-2 justify-center w-full'>
                                         {quickPrompts.map(chip => (
                                             <button
@@ -137,10 +130,10 @@ export function AiCopilot() {
                                 </div>
                             )}
 
-                            {/* Messages */}
                             {displayMessages.length > 0 && (
                                 <CopilotMessages
                                     messages={displayMessages}
+                                    isSending={isSending}
                                     onAccept={accept}
                                     onReject={reject}
                                     onScheduleAccept={msgUuid => accept(msgUuid, '', '')}

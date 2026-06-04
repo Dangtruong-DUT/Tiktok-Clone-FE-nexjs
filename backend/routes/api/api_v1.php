@@ -186,9 +186,6 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::post('copilot/sessions/{uuid}/messages', [AiCopilotController::class, 'sendMessage'])
                 ->middleware('throttle:30,1')
                 ->name('copilot.sessions.messages.send');
-            Route::get('copilot/sessions/{uuid}/stream/{message_uuid}', [AiCopilotController::class, 'stream'])
-                ->middleware('throttle:60,1')
-                ->name('copilot.stream');
             Route::post('copilot/messages/{uuid}/accept', [AiCopilotController::class, 'accept'])
                 ->name('copilot.messages.accept');
             Route::post('copilot/messages/{uuid}/reject', [AiCopilotController::class, 'reject'])
@@ -268,6 +265,17 @@ Route::middleware(['auth:api'])
         Route::put('/{appeal_uuid}', [AppealController::class, 'update'])->name('update');
         Route::get('/{appeal_uuid}', [AppealController::class, 'show'])->name('show');
     });
+
+/*|--------------------------------------------------------------------------
+| AI Copilot SSE stream — token-authenticated, no Bearer header needed
+|--------------------------------------------------------------------------
+| EventSource cannot send Authorization headers, so this endpoint lives
+| outside auth:api and authenticates via the encrypted short-lived token.
+*/
+
+Route::get('studio/ai/copilot/sessions/{uuid}/stream/{message_uuid}', [AiCopilotController::class, 'stream'])
+    ->middleware('throttle:60,1')
+    ->name('studio.ai.copilot.stream');
 
 /*|--------------------------------------------------------------------------
 | Public routes
