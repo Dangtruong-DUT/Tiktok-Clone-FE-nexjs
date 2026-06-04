@@ -33,9 +33,7 @@ class WriteCaptionHandler extends AbstractCopilotHandler implements CopilotHandl
 
         $latencyMs = (int) round((hrtime(true) - $startedAt) / 1_000_000);
 
-        $clean = (string) preg_replace('/^```(?:json)?\s*/m', '', $result['text']);
-        $clean = (string) preg_replace('/```\s*$/m', '', $clean);
-        $data  = json_decode(trim($clean), true) ?? [];
+        $data = json_decode(self::cleanJsonResponse($result['text']), true) ?? [];
 
         $variants  = $data['variants'] ?? [['label' => 'Suggested', 'value' => $result['text']]];
         $hashtags  = $data['hashtags'] ?? [];

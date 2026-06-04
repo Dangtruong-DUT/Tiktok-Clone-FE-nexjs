@@ -37,7 +37,7 @@ class GeminiAiService
 
                 if ($attempt <= self::MAX_RETRIES) {
                     usleep(self::RETRY_DELAY_MS * 1000 * $attempt);
-                    Log::channel('ai')->warning('Gemini transient failure, retrying', [
+                    Log::warning('Gemini transient failure, retrying', [
                         'attempt' => $attempt,
                         'error'   => mb_substr($e->getMessage(), 0, 200),
                     ]);
@@ -63,12 +63,14 @@ class GeminiAiService
         for ($attempt = 1; $attempt <= self::MAX_RETRIES + 1; $attempt++) {
             try {
                 return $this->client->generateWithHistory($systemPrompt, $contents, $config);
+            } catch (\App\Exceptions\GeminiQuotaExceededException $e) {
+                throw $e; // quota errors are not transient — do not retry
             } catch (\RuntimeException $e) {
                 $lastException = $e;
 
                 if ($attempt <= self::MAX_RETRIES) {
                     usleep(self::RETRY_DELAY_MS * 1000 * $attempt);
-                    Log::channel('ai')->warning('Gemini (history) transient failure, retrying', [
+                    Log::warning('Gemini (history) transient failure, retrying', [
                         'attempt' => $attempt,
                         'error'   => mb_substr($e->getMessage(), 0, 200),
                     ]);

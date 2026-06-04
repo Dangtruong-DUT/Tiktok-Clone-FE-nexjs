@@ -362,9 +362,7 @@
             "title": "AI Studio",
             "subtitle": "Tạo nội dung, phân tích viral và lên lịch — tất cả trong một nơi",
             "tabs": {
-                "chat": "Tạo nội dung",
-                "viralScore": "Viral Score",
-                "calendar": "Lịch nội dung"
+                "chat": "Tạo nội dung"
             }
         },
         "scheduledPosts": {
@@ -420,69 +418,6 @@
                 "contentCreated": "Nội dung đã được tạo!",
                 "error": "AI gặp lỗi. Vui lòng thử lại.",
                 "errorMessage": "Xin lỗi, tôi gặp sự cố: {message}. Hãy bắt đầu cuộc trò chuyện mới."
-            }
-        },
-        "viralScore": {
-            "title": "AI Viral Score",
-            "subtitle": "Phân tích tiềm năng viral của caption và hashtag",
-            "captionLabel": "Caption *",
-            "captionPlaceholder": "Nhập caption video của bạn...",
-            "hashtagLabel": "Hashtags (phân cách bằng dấu cách hoặc phẩy)",
-            "analyzing": "Đang phân tích...",
-            "analyzeBtn": "Phân tích Viral Score",
-            "detailedBreakdown": "Phân tích chi tiết",
-            "strengths": "Điểm mạnh",
-            "weaknesses": "Điểm yếu",
-            "recommendations": "Đề xuất cải thiện",
-            "improvedCaption": "Caption cải thiện",
-            "toast": {
-                "completed": "Phân tích hoàn thành!",
-                "error": "Phân tích thất bại. Vui lòng thử lại."
-            }
-        },
-        "contentCalendar": {
-            "title": "AI Content Calendar",
-            "subtitle": "Lịch nội dung 7 ngày được tạo bởi AI",
-            "newCalendarBtn": "Tạo lịch mới",
-            "generating": "Đang tạo...",
-            "generateBtn": "Tạo lịch 7 ngày",
-            "defaultCalendarName": "Lịch nội dung",
-            "ideas": "{count} ý tưởng",
-            "pendingMessage": "Đang tạo lịch nội dung... Vui lòng đợi.",
-            "dayLabel": "Ngày {day}",
-            "scheduledAt": "Đã lên lịch: {time}",
-            "dayLabel": "Ngày {day}",
-            "days": {
-                "1": "Thứ 2",
-                "2": "Thứ 3",
-                "3": "Thứ 4",
-                "4": "Thứ 5",
-                "5": "Thứ 6",
-                "6": "Thứ 7",
-                "7": "CN"
-            },
-            "fields": {
-                "niche": "Lĩnh vực / Chủ đề *",
-                "nichePlaceholder": "Ví dụ: Ẩm thực, Fitness, Du lịch...",
-                "style": "Phong cách",
-                "stylePlaceholder": "Comedy, Educational...",
-                "goals": "Mục tiêu (phân cách bằng dấu phẩy)",
-                "goalsPlaceholder": "Tăng follower, Tăng reach...",
-                "audience": "Đối tượng mục tiêu",
-                "audiencePlaceholder": "Gen Z, Bà nội trợ, Sinh viên..."
-            },
-            "actions": {
-                "createDraft": "Tạo bản nháp",
-                "schedule": "Lên lịch",
-                "confirm": "Xác nhận",
-                "cancel": "Hủy"
-            },
-            "toast": {
-                "generating": "Đang tạo lịch nội dung...",
-                "completed": "Lịch nội dung đã được tạo!",
-                "failed": "Tạo lịch thất bại. Vui lòng thử lại.",
-                "draftCreated": "Bản nháp đã được tạo!",
-                "scheduled": "Đã lên lịch đăng!"
             }
         },
         "wellness": {
@@ -613,18 +548,21 @@
             },
             "attachments": {
                 "panelTitle": "AI — Chọn đoạn / khung hình",
-                "timelineLabel": "Chọn đoạn video",
                 "frameLabel": "Chụp khung hình",
                 "frameHint": "Tua video đến vị trí muốn chụp rồi nhấn nút camera. Tối đa 5 khung.",
-                "selectSegment": "Chọn đoạn",
-                "enable": "Bật",
-                "clear": "Xoá",
-                "start": "Bắt đầu",
-                "end": "Kết thúc",
                 "captureFrame": "Chụp khung hình hiện tại",
                 "framesCount": "{count}/{max} khung đã chọn",
                 "extracting": "Đang tải khung hình…",
-                "openFilmstrip": "Chọn khung hình từ video"
+                "openFilmstrip": "Chọn khung hình từ video",
+                "loadingThumbs": "Đang tải timeline…",
+                "segStart": "Bắt đầu",
+                "segEnd": "Kết thúc",
+                "tooShort": "Chọn ít nhất {min} giây",
+                "tooLong": "Tối đa {max} giây mỗi lần phân tích",
+                "analyzeBtn": "Phân tích với AI",
+                "analyzing": "Đang ghi…",
+                "recording": "Đang cắt đoạn video",
+                "analyzePrompt": "Phân tích đoạn video từ {start} đến {end}"
             }
         },
         "appeals": {

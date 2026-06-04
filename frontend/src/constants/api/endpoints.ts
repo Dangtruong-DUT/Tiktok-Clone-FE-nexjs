@@ -119,6 +119,7 @@ export const BACKEND_API_ENDPOINT = {
             METRICS:  '/admin/ai-studio/metrics',
             SETTINGS: '/admin/ai-studio/settings',
             REQUESTS: '/admin/ai-studio/requests',
+            MODELS:   '/admin/ai-studio/models',
             // AI Copilot admin
             COPILOT_METRICS:   '/admin/ai-studio/copilot/metrics',
             COPILOT_SESSIONS:  '/admin/ai-studio/copilot/sessions',

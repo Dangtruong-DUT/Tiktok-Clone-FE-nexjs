@@ -25,7 +25,6 @@ class SchedulePostHandler extends AbstractCopilotHandler implements CopilotHandl
         AiPromptTemplate       $template,
         array                  $conversationHistory,
     ): CopilotHandlerResult {
-        // Cannot schedule if no post UUID in session context
         if (empty($context->postUuid)) {
             return new CopilotHandlerResult(
                 text: 'Bạn cần lưu bài đăng trước khi lên lịch. Hãy nhấn "Lưu nháp" hoặc hoàn tất bài đăng, sau đó tôi có thể giúp lên lịch.',
@@ -39,7 +38,6 @@ class SchedulePostHandler extends AbstractCopilotHandler implements CopilotHandl
         $systemPrompt = $template->system_prompt;
         $userText     = $input->content;
 
-        // Inject current server time so AI can resolve relative expressions correctly
         $nowVn = Carbon::now('Asia/Ho_Chi_Minh');
         $systemPrompt .= "\n\nCurrent time (Vietnam): {$nowVn->format('l, d/m/Y H:i')} (UTC+7).";
 
@@ -55,11 +53,8 @@ class SchedulePostHandler extends AbstractCopilotHandler implements CopilotHandl
 
         $latencyMs = (int) round((hrtime(true) - $startedAt) / 1_000_000);
 
-        $clean = (string) preg_replace('/^```(?:json)?\s*/m', '', $result['text']);
-        $clean = (string) preg_replace('/```\s*$/m', '', $clean);
-        $data  = json_decode(trim($clean), true) ?? [];
+        $data = json_decode(self::cleanJsonResponse($result['text']), true) ?? [];
 
-        // Fallback if Gemini fails to parse
         if (empty($data['scheduled_at'])) {
             return new CopilotHandlerResult(
                 text: 'Tôi không hiểu rõ thời gian bạn muốn. Bạn có thể nói rõ hơn không? Ví dụ: "Lên lịch vào 8 giờ tối thứ 6 tuần này".',
@@ -85,7 +80,6 @@ class SchedulePostHandler extends AbstractCopilotHandler implements CopilotHandl
             );
         }
 
-        // Ensure timezone is a valid PHP identifier (Gemini may return 'UTC+7' or similar)
         $timezone = $this->normalizeTimezone($data['timezone'] ?? null);
 
         $structuredOutput = [
@@ -115,12 +109,10 @@ class SchedulePostHandler extends AbstractCopilotHandler implements CopilotHandl
             return $default;
         }
 
-        // Already a valid PHP timezone identifier?
         if (in_array($tz, \DateTimeZone::listIdentifiers(), true)) {
             return $tz;
         }
 
-        // Map common offset strings to valid identifiers
         $offsetMap = [
             'UTC+7'  => 'Asia/Ho_Chi_Minh',
             'GMT+7'  => 'Asia/Ho_Chi_Minh',

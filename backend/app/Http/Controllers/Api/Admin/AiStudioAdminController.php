@@ -57,4 +57,9 @@ class AiStudioAdminController extends Controller
             message: 'AI Studio requests retrieved.',
         );
     }
+
+    public function availableModels(): JsonResponse
+    {
+        return ApiResponse::success($this->service->getAvailableModels());
+    }
 }

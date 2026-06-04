@@ -17,8 +17,9 @@ export interface SendMessagePayload {
     sessionUuid: string
     content: string
     attachments?: {
-        timeline?: { start_seconds: number; end_seconds: number }
-        frames?: string[]
+        timeline?:   { start_seconds: number; end_seconds: number }
+        frames?:     string[]
+        video_clip?: string
     }
 }
 

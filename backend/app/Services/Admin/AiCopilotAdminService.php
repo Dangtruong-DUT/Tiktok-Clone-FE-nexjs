@@ -5,59 +5,53 @@ namespace App\Services\Admin;
 use App\Models\AiPromptTemplate;
 use App\Models\AiStudioSetting;
 use App\Repositories\AiCopilotSessionRepository;
+use App\Repositories\AiPromptTemplateRepository;
 use App\Repositories\AiUsageLogRepository;
 
 class AiCopilotAdminService
 {
     public function __construct(
-        private readonly AiUsageLogRepository        $usageRepo,
-        private readonly AiCopilotSessionRepository  $sessionRepo,
+        private readonly AiUsageLogRepository       $usageRepo,
+        private readonly AiCopilotSessionRepository $sessionRepo,
+        private readonly AiPromptTemplateRepository $templateRepo,
     ) {}
 
     public function getCopilotMetrics(string $period = 'today'): array
     {
         return [
-            'period'        => $period,
-            'by_intent'     => $this->usageRepo->metricsByPeriod($period),
-            'daily_series'  => $this->usageRepo->dailySeries(30),
-            'top_users'     => $this->usageRepo->topUsersByUsage(10),
+            'period'       => $period,
+            'by_intent'    => $this->usageRepo->metricsByPeriod($period),
+            'daily_series' => $this->usageRepo->dailySeries(30),
+            'top_users'    => $this->usageRepo->topUsersByUsage(10),
         ];
     }
 
     /** @return array<string, mixed> */
     public function getPromptTemplates(): array
     {
-        return AiPromptTemplate::orderBy('intent')->get()->toArray();
+        return $this->templateRepo->allActive()->toArray();
     }
 
     public function updatePromptTemplate(string $intent, array $data, int $adminId): AiPromptTemplate
     {
-        $template = AiPromptTemplate::where('intent', $intent)->firstOrFail();
-
         $allowed = array_intersect_key($data, array_flip([
             'display_name', 'system_prompt', 'user_template', 'few_shot_examples', 'is_active',
         ]));
 
-        $template->fill($allowed);
-        $template->updated_by = $adminId;
-        $template->version++;
-        $template->save();
-
-        return $template;
+        return $this->templateRepo->updateByIntent($intent, $allowed, $adminId);
     }
 
     public function updateFeatureFlags(array $flags, int $adminId): AiStudioSetting
     {
         $setting = AiStudioSetting::current();
+        $merged  = array_merge($setting->feature_flags ?? [], $flags);
 
-        $current = $setting->feature_flags ?? [];
-        $merged  = array_merge($current, $flags);
+        $setting->update([
+            'feature_flags' => $merged,
+            'updated_by'    => $adminId,
+        ]);
 
-        $setting->feature_flags = $merged;
-        $setting->updated_by    = $adminId;
-        $setting->save();
-
-        return $setting;
+        return $setting->fresh();
     }
 
     public function getSessions(int $perPage = 20): \Illuminate\Pagination\LengthAwarePaginator

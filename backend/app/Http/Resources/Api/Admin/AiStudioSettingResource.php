@@ -25,7 +25,7 @@ class AiStudioSettingResource extends BaseJsonResource
             'cache_ttl_hours'       => $this->cache_ttl_hours,
             'async_mode'            => $this->async_mode,
             'updated_by'            => $this->updatedBy?->only(['uuid', 'name']),
-            'updated_at'            => $this->updated_at?->toIso8601String(),
+            'updated_at'            => $this->updated_at?->toISOString(),
         ];
     }
 }

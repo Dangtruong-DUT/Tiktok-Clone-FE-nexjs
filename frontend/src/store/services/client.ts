@@ -52,8 +52,13 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
     const state = api.getState() as RootState
 
     if (result.error?.status === HTTP_STATUS.UNAUTHORIZED && shouldSkipReauth(args, state)) {
-        await BffBaseQuery({ url: NEXT_API_ENDPOINT.AUTH.LOGOUT, method: 'POST' }, api, extraOptions)
-        api.dispatch(setLoggedOutAction())
+        // Only call logout if the user is currently considered authenticated.
+        // When already logged out, successive 401s from stale pollers must not
+        // trigger another logout round-trip (which causes an infinite loop).
+        if (state.auth.isAuthenticated) {
+            await BffBaseQuery({ url: NEXT_API_ENDPOINT.AUTH.LOGOUT, method: 'POST' }, api, extraOptions)
+            api.dispatch(setLoggedOutAction())
+        }
         return result
     }
 
@@ -90,7 +95,7 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
         refreshAttempts++
     }
 
-    if (result.error?.status === HTTP_STATUS.UNAUTHORIZED) {
+    if (result.error?.status === HTTP_STATUS.UNAUTHORIZED && state.auth.isAuthenticated) {
         await BffBaseQuery({ url: NEXT_API_ENDPOINT.AUTH.LOGOUT, method: 'POST' }, api, extraOptions)
         api.dispatch(setLoggedOutAction())
     }

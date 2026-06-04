@@ -14,12 +14,14 @@ class SaveWellnessRuleRequest extends FormRequest
     /** @return array<string,mixed> */
     public function rules(): array
     {
+        $presence = $this->isMethod('PUT') ? 'sometimes' : 'required';
+
         return [
-            'type'                   => ['required', 'string', new Enum(WellnessRuleTypeEnum::class)],
-            'conditions'             => ['required', 'array'],
-            'action'                 => ['required', 'string', new Enum(WellnessActionEnum::class)],
-            'title'                  => ['required', 'string', 'max:200'],
-            'message'                => ['required', 'string', 'max:500'],
+            'type'                   => [$presence, 'string', new Enum(WellnessRuleTypeEnum::class)],
+            'conditions'             => [$presence, 'array'],
+            'action'                 => [$presence, 'string', new Enum(WellnessActionEnum::class)],
+            'title'                  => [$presence, 'string', 'max:200'],
+            'message'                => [$presence, 'string', 'max:500'],
             'is_enabled'             => ['sometimes', 'boolean'],
             'natural_language_input' => ['sometimes', 'nullable', 'string', 'max:500'],
         ];

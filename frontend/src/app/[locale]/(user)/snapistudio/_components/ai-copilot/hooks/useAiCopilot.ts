@@ -4,14 +4,13 @@ import { useCallback, useRef, useState } from 'react'
 import { useSendMessageMutation, useAcceptMessageMutation, useRejectMessageMutation } from '@/store/services/ai-copilot.service'
 import { useAiCopilotContext } from '../AiCopilotContext'
 import type { AiCopilotMessage } from '@/types/models/ai-copilot.model'
-import { BACKEND_API_ENDPOINT } from '@/constants/api/endpoints'
 
 interface UseAiCopilotOptions {
     sessionUuid: string | null
 }
 
 export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
-    const { selectedFrames, timelineSelection, clearFrames, setTimelineSelection, applyToForm } =
+    const { pendingVideoClip, setPendingVideoClip, timelineSelection, setTimelineSelection, applyToForm } =
         useAiCopilotContext()
 
     const [messages, setMessages] = useState<AiCopilotMessage[]>([])
@@ -26,93 +25,14 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
         setMessages(sessionMessages)
     }, [])
 
-    const send = useCallback(
-        async (content: string) => {
-            if (!sessionUuid || isSending) return
-
-            setIsSending(true)
-
-            const userMsg: AiCopilotMessage = {
-                uuid:       `local-${Date.now()}`,
-                role:       'user',
-                content,
-                status:     'success',
-                created_at: new Date().toISOString(),
-            }
-            setMessages((prev) => [...prev, userMsg])
-
-            const attachments: Record<string, unknown> = {}
-            if (selectedFrames.length > 0) {
-                attachments.frames = selectedFrames
-            }
-            if (timelineSelection) {
-                attachments.timeline = {
-                    start_seconds: timelineSelection.start,
-                    end_seconds:   timelineSelection.end,
-                }
-            }
-
-            // Clear attachments immediately after capture
-            clearFrames()
-            setTimelineSelection(null)
-
-            try {
-                const res = await sendMessage({
-                    sessionUuid,
-                    content,
-                    attachments: Object.keys(attachments).length > 0
-                        ? (attachments as { frames?: string[]; timeline?: { start_seconds: number; end_seconds: number } })
-                        : undefined,
-                }).unwrap()
-
-                if (res.streaming && res.stream_url && res.stream_token && res.message_uuid) {
-                    // Streaming path — create a placeholder and open SSE
-                    const placeholder: AiCopilotMessage = {
-                        uuid:            res.message_uuid,
-                        role:            'assistant',
-                        content:         '',
-                        status:          'success',
-                        created_at:      new Date().toISOString(),
-                        isStreaming:     true,
-                        streamingContent: '',
-                    }
-                    setMessages((prev) => [...prev, placeholder])
-
-                    openEventSource(
-                        res.stream_url,
-                        res.stream_token,
-                        res.message_uuid,
-                        sessionUuid,
-                    )
-                } else if (!res.streaming && res.data) {
-                    // Non-streaming path
-                    setMessages((prev) => [...prev, res.data!])
-                }
-            } catch {
-                setMessages((prev) => [
-                    ...prev,
-                    {
-                        uuid:       `err-${Date.now()}`,
-                        role:       'assistant',
-                        content:    'Something went wrong. Please try again.',
-                        status:     'failed',
-                        created_at: new Date().toISOString(),
-                    },
-                ])
-            } finally {
-                setIsSending(false)
-            }
-        },
-        [sessionUuid, isSending, selectedFrames, timelineSelection, clearFrames, setTimelineSelection, sendMessage],
-    )
-
+    // Extracted so it can receive setIsSending and keep the indicator alive during SSE.
     const openEventSource = useCallback(
-        (streamUrl: string, streamToken: string, messageUuid: string, sessUuid: string) => {
+        (streamUrl: string, streamToken: string, messageUuid: string, _sessUuid: string) => {
             esRef.current?.close()
 
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? ''
-            // Build the full SSE URL using the returned stream_url (relative path) + token
-            const fullUrl = `${baseUrl}${streamUrl}?token=${encodeURIComponent(streamToken)}`
+            // stream_url returned by Laravel's route() is already absolute.
+            // Append the auth token as a query param.
+            const fullUrl = `${streamUrl}?token=${encodeURIComponent(streamToken)}`
 
             const es = new EventSource(fullUrl, { withCredentials: true })
             esRef.current = es
@@ -120,8 +40,8 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
             es.onmessage = (event) => {
                 try {
                     const payload = JSON.parse(event.data as string) as {
-                        type: 'chunk' | 'done'
-                        delta?: string
+                        type:     'chunk' | 'done'
+                        delta?:   string
                         message?: AiCopilotMessage
                     }
 
@@ -141,6 +61,7 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
                                     : m,
                             ),
                         )
+                        setIsSending(false)  // SSE complete — turn off indicator
                         es.close()
                     }
                 } catch {
@@ -154,10 +75,86 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
                         m.uuid === messageUuid ? { ...m, isStreaming: false, status: 'failed' as const } : m,
                     ),
                 )
+                setIsSending(false)  // SSE error — turn off indicator
                 es.close()
             }
         },
-        [],
+        [setIsSending],
+    )
+
+    const send = useCallback(
+        async (content: string) => {
+            if (!sessionUuid || isSending) return
+
+            setIsSending(true)
+
+            const userMsg: AiCopilotMessage = {
+                uuid:       `local-${Date.now()}`,
+                role:       'user',
+                content,
+                status:     'success',
+                created_at: new Date().toISOString(),
+            }
+            setMessages((prev) => [...prev, userMsg])
+
+            const attachments: Record<string, unknown> = {}
+            if (pendingVideoClip) attachments.video_clip = pendingVideoClip
+            if (timelineSelection) {
+                attachments.timeline = {
+                    start_seconds: timelineSelection.start,
+                    end_seconds:   timelineSelection.end,
+                }
+            }
+
+            setPendingVideoClip(null)
+            setTimelineSelection(null)
+
+            let tookStreamingPath = false
+
+            try {
+                const res = await sendMessage({
+                    sessionUuid,
+                    content,
+                    attachments: Object.keys(attachments).length > 0
+                        ? (attachments as { frames?: string[]; video_clip?: string; timeline?: { start_seconds: number; end_seconds: number } })
+                        : undefined,
+                }).unwrap()
+
+                if (res.streaming && res.stream_url && res.stream_token && res.message_uuid) {
+                    tookStreamingPath = true   // indicator stays ON — SSE will turn it off
+
+                    const placeholder: AiCopilotMessage = {
+                        uuid:             res.message_uuid,
+                        role:             'assistant',
+                        content:          '',
+                        status:           'success',
+                        created_at:       new Date().toISOString(),
+                        isStreaming:      true,
+                        streamingContent: '',
+                    }
+                    setMessages((prev) => [...prev, placeholder])
+
+                    openEventSource(res.stream_url, res.stream_token, res.message_uuid, sessionUuid)
+                } else if (!res.streaming && res.data) {
+                    setMessages((prev) => [...prev, res.data!])
+                }
+            } catch {
+                setMessages((prev) => [
+                    ...prev,
+                    {
+                        uuid:       `err-${Date.now()}`,
+                        role:       'assistant',
+                        content:    'Something went wrong. Please try again.',
+                        status:     'failed',
+                        created_at: new Date().toISOString(),
+                    },
+                ])
+            } finally {
+                // Only reset for non-streaming path; streaming path resets via SSE done/error.
+                if (!tookStreamingPath) setIsSending(false)
+            }
+        },
+        [sessionUuid, isSending, pendingVideoClip, timelineSelection, setPendingVideoClip, setTimelineSelection, sendMessage, openEventSource],
     )
 
     const accept = useCallback(

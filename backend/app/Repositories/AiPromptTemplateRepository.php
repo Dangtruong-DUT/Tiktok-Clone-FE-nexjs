@@ -29,14 +29,15 @@ class AiPromptTemplateRepository extends BaseRepository
         return $this->query()->where('is_active', true)->orderBy('intent')->get();
     }
 
-    public function updateTemplate(string $intent, array $data, int $updatedBy): AiPromptTemplate
+    public function updateByIntent(string $intent, array $data, int $updatedBy): AiPromptTemplate
     {
+        /** @var AiPromptTemplate */
         $template = $this->query()->where('intent', $intent)->firstOrFail();
-        $template->fill($data);
-        $template->updated_by = $updatedBy;
-        $template->version++;
-        $template->save();
+        $template->update(array_merge($data, [
+            'updated_by' => $updatedBy,
+            'version'    => $template->version + 1,
+        ]));
 
-        return $template;
+        return $template->refresh();
     }
 }

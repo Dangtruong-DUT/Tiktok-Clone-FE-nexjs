@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { CalendarClock, X, Info } from 'lucide-react'
@@ -20,6 +20,11 @@ export default function FormUploadVideo() {
     const t = useTranslations('SnapiStudio.upload')
     const [scheduledAt, setScheduledAtLocal] = useState('')
     const [showSchedule, setShowSchedule] = useState(false)
+    const [previewSeekTo, setPreviewSeekTo] = useState<{ time: number; key: number } | null>(null)
+
+    const handleTimelineSeek = useCallback((time: number) => {
+        setPreviewSeekTo({ time, key: Date.now() })
+    }, [])
     const { setVideoContext, registerFormPatch, unregisterFormPatch } = useAiCopilotContext()
 
     const {
@@ -121,8 +126,8 @@ export default function FormUploadVideo() {
                                     isInitialRender={isInitialRender}
                                 />
 
-                                {/* AI: Timeline segment + frame picker */}
-                                <AiVideoAttachments videoUrl={videoUrl ?? null} />
+                                {/* AI: Video timeline analysis */}
+                                <AiVideoAttachments videoUrl={videoUrl ?? null} onSeek={handleTimelineSeek} />
 
                                 {/* Details card */}
                                 <section className='rounded-xl border border-border bg-card shadow-sm'>
@@ -291,7 +296,7 @@ export default function FormUploadVideo() {
                                     <p className='mb-3 text-sm font-semibold text-muted-foreground uppercase tracking-wide'>
                                         {t('preview')}
                                     </p>
-                                    <VideoPreview content={content ?? ''} videoSrc={videoUrl} />
+                                    <VideoPreview content={content ?? ''} videoSrc={videoUrl} seekTo={previewSeekTo} />
                                 </div>
                             </div>
                         </div>

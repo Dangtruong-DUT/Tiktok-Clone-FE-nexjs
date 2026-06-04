@@ -135,6 +135,7 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
                 Route::get('settings', [AiStudioAdminController::class, 'settings'])->name('settings');
                 Route::put('settings', [AiStudioAdminController::class, 'updateSettings'])->name('settings.update');
                 Route::get('requests', [AiStudioAdminController::class, 'requests'])->name('requests');
+                Route::get('models', [AiStudioAdminController::class, 'availableModels'])->name('models');
 
                 // AI Copilot admin
                 Route::get('copilot/metrics',            [AiCopilotAdminController::class, 'metrics'])->name('copilot.metrics');

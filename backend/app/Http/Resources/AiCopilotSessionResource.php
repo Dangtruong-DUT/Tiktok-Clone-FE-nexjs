@@ -2,12 +2,12 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\BaseJsonResource;
 use App\Models\AiCopilotSession;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 
 /** @mixin AiCopilotSession */
-class AiCopilotSessionResource extends JsonResource
+class AiCopilotSessionResource extends BaseJsonResource
 {
     public function toArray(Request $request): array
     {

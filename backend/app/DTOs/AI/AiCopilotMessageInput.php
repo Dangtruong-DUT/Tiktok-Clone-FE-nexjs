@@ -6,9 +6,10 @@ final readonly class AiCopilotMessageInput
 {
     public function __construct(
         public string  $content,
-        public ?array  $frames       = null,   // base64 PNG strings
+        public ?array  $frames        = null,   // base64 image strings
         public ?float  $timelineStart = null,
         public ?float  $timelineEnd   = null,
+        public ?string $videoClip     = null,   // base64 video/webm data URI
     ) {}
 
     public static function fromRequest(array $data): self
@@ -24,6 +25,7 @@ final readonly class AiCopilotMessageInput
             timelineEnd:   isset($attachments['timeline']['end_seconds'])
                 ? (float) $attachments['timeline']['end_seconds']
                 : null,
+            videoClip:     $attachments['video_clip'] ?? null,
         );
     }
 
@@ -37,12 +39,26 @@ final readonly class AiCopilotMessageInput
         return $this->timelineStart !== null && $this->timelineEnd !== null;
     }
 
+    public function hasVideoClip(): bool
+    {
+        return $this->videoClip !== null && $this->videoClip !== '';
+    }
+
+    public function videoClipBase64(): string
+    {
+        return (string) preg_replace('/^data:video\/\w+;base64,/', '', (string) $this->videoClip);
+    }
+
     public function attachmentsMeta(): array
     {
         $meta = [];
 
         if ($this->hasFrames()) {
             $meta['frame_count'] = count($this->frames);
+        }
+
+        if ($this->hasVideoClip()) {
+            $meta['video_clip'] = true;
         }
 
         if ($this->hasTimeline()) {

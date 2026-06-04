@@ -62,7 +62,7 @@ class AiCopilotIntentDetector
                 'target_field' => $intent->targetFormField(),
             ];
         } catch (\Throwable $e) {
-            Log::channel('ai')->warning('Intent detection failed, falling back to general_advice', [
+            Log::warning('Intent detection failed, falling back to general_advice', [
                 'error' => $e->getMessage(),
             ]);
 
@@ -115,7 +115,8 @@ Rules:
 - "analyze_hook" when user asks about the hook, intro, opening
 - "analyze_cta" when user asks about call-to-action effectiveness
 - "analyze_audience" when user asks about target audience, demographic fit
-- "analyze_frame" when user provides frames/screenshots and asks for visual evaluation
+- "analyze_frame" when user provides frames/screenshots and asks for general visual evaluation
+- "analyze_video_segment" when user asks to analyze a specific selected segment of their video (usually with frames attached and a time range like "analyze segment from 00:15 to 00:45")
 - "suggest_cta" when user asks you to write a call-to-action
 - "general_advice" for general questions, advice, strategy, growth tips
 - "clarification" when the message is unclear and you need more information

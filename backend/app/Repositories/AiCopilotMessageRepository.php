@@ -23,7 +23,7 @@ class AiCopilotMessageRepository extends BaseRepository
             ->orderBy('created_at')
             ->limit($limit * 2)   // fetch extra, return last N via collection
             ->get()
-            ->takeLast($limit);
+            ->take(-$limit);
     }
 
     /** @return Collection<int, AiCopilotMessage> */

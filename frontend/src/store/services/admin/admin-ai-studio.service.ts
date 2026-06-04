@@ -14,7 +14,7 @@ interface AiRequestFilters {
 
 export const AdminAiStudioApi = createApi({
     baseQuery:         baseQueryWithReauth,
-    tagTypes:          ['AiStudioSettings', 'AiStudioMetrics', 'AiStudioRequests'],
+    tagTypes:          ['AiStudioSettings', 'AiStudioMetrics', 'AiStudioRequests', 'AiStudioModels'],
     reducerPath:       'adminAiStudioApi',
     keepUnusedDataFor: 60,
     endpoints: (builder) => ({
@@ -50,6 +50,12 @@ export const AdminAiStudioApi = createApi({
             }),
             providesTags: ['AiStudioRequests'],
         }),
+
+        getAvailableModels: builder.query<ApiSuccessResponseWithData<string[]>, void>({
+            query: () => BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.MODELS,
+            providesTags: ['AiStudioModels'],
+            keepUnusedDataFor: 3600,
+        }),
     }),
 })
 
@@ -58,4 +64,5 @@ export const {
     useGetAiSettingsQuery,
     useUpdateAiSettingsMutation,
     useListAiRequestsQuery,
+    useGetAvailableModelsQuery,
 } = AdminAiStudioApi

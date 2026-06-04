@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { TERMINAL_UPLOAD_STATUSES, VideoUploadStatus } from '@/constants/enum'
 import { useGetVideoUploadStatusQuery } from '@/store/services/upload.service'
+import { useAppSelector } from '@/store/hooks'
 
 const POLL_INTERVAL_MS = 3000
 
@@ -19,14 +20,15 @@ export interface VideoStatusState {
 
 export function useVideoStatus(sessionUuid: string | null | undefined): VideoStatusState {
     const [shouldPoll, setShouldPoll] = useState(true)
+    const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated)
 
     useEffect(() => {
         setShouldPoll(true)
     }, [sessionUuid])
 
     const { data, isError } = useGetVideoUploadStatusQuery(sessionUuid ?? '', {
-        skip: !sessionUuid || !shouldPoll,
-        pollingInterval: POLL_INTERVAL_MS
+        skip: !sessionUuid || !shouldPoll || !isAuthenticated,
+        pollingInterval: POLL_INTERVAL_MS,
     })
 
     const statusData = data?.data

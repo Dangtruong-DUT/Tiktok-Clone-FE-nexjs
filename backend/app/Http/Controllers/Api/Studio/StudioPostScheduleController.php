@@ -72,7 +72,7 @@ class StudioPostScheduleController extends Controller
             ]);
         }
 
-        $paginator = $query->with(['scheduledPost'])->paginate($request->integer('per_page', 20));
+        $paginator = $query->with(['scheduledPost', 'thumbnailFile'])->paginate($request->integer('per_page', 20));
 
         return ApiResponse::success(
             data:    $this->formatPostItems($paginator),

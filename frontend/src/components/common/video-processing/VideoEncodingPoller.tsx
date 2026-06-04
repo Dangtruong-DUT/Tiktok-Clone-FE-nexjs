@@ -14,6 +14,7 @@ import {
     updateEncodingStatus
 } from '@/store/features/videoProcessingSlice'
 import { useGetVideoUploadStatusQuery } from '@/store/services/upload.service'
+import { useAppSelector } from '@/store/hooks'
 
 interface VideoEncodingPollerProps {
     encoding: TrackedEncoding
@@ -24,9 +25,11 @@ export function VideoEncodingPoller({ encoding }: VideoEncodingPollerProps) {
     const router = useRouter()
     const t = useTranslations('SnapiStudio.upload.processing')
 
+    const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated)
+
     const { data } = useGetVideoUploadStatusQuery(encoding.sessionUuid, {
         pollingInterval: 5000,
-        skip: isTerminalStatus(encoding.status)
+        skip: isTerminalStatus(encoding.status) || !isAuthenticated,
     })
 
     useEffect(() => {

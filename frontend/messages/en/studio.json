@@ -362,9 +362,7 @@
             "title": "AI Studio",
             "subtitle": "Content creation, viral analysis, and scheduling — all in one place",
             "tabs": {
-                "chat": "Creator Chat",
-                "viralScore": "Viral Score",
-                "calendar": "Content Calendar"
+                "chat": "Creator Chat"
             }
         },
         "scheduledPosts": {
@@ -420,69 +418,6 @@
                 "contentCreated": "Content generated!",
                 "error": "AI encountered an error. Please try again.",
                 "errorMessage": "Sorry, I encountered an error: {message}. Please start a new conversation."
-            }
-        },
-        "viralScore": {
-            "title": "AI Viral Score",
-            "subtitle": "Analyze the viral potential of your caption and hashtags",
-            "captionLabel": "Caption *",
-            "captionPlaceholder": "Enter your video caption...",
-            "hashtagLabel": "Hashtags (separated by space or comma)",
-            "analyzing": "Analyzing...",
-            "analyzeBtn": "Analyze Viral Score",
-            "detailedBreakdown": "Detailed breakdown",
-            "strengths": "Strengths",
-            "weaknesses": "Weaknesses",
-            "recommendations": "Recommendations",
-            "improvedCaption": "Improved caption",
-            "toast": {
-                "completed": "Analysis complete!",
-                "error": "Analysis failed. Please try again."
-            }
-        },
-        "contentCalendar": {
-            "title": "AI Content Calendar",
-            "subtitle": "AI-generated 7-day content schedule",
-            "newCalendarBtn": "New Calendar",
-            "generating": "Generating...",
-            "generateBtn": "Generate 7-day Calendar",
-            "defaultCalendarName": "Content Calendar",
-            "ideas": "{count} ideas",
-            "pendingMessage": "Generating content calendar... Please wait.",
-            "dayLabel": "Day {day}",
-            "scheduledAt": "Scheduled: {time}",
-            "dayLabel": "Day {day}",
-            "days": {
-                "1": "Mon",
-                "2": "Tue",
-                "3": "Wed",
-                "4": "Thu",
-                "5": "Fri",
-                "6": "Sat",
-                "7": "Sun"
-            },
-            "fields": {
-                "niche": "Niche / Topic *",
-                "nichePlaceholder": "E.g.: Food, Fitness, Travel...",
-                "style": "Style",
-                "stylePlaceholder": "Comedy, Educational...",
-                "goals": "Goals (comma-separated)",
-                "goalsPlaceholder": "Grow followers, Increase reach...",
-                "audience": "Target audience",
-                "audiencePlaceholder": "Gen Z, Students, Housewives..."
-            },
-            "actions": {
-                "createDraft": "Create Draft",
-                "schedule": "Schedule",
-                "confirm": "Confirm",
-                "cancel": "Cancel"
-            },
-            "toast": {
-                "generating": "Generating content calendar...",
-                "completed": "Content calendar created!",
-                "failed": "Calendar generation failed. Please try again.",
-                "draftCreated": "Draft created!",
-                "scheduled": "Scheduled!"
             }
         },
         "wellness": {
@@ -613,18 +548,21 @@
             },
             "attachments": {
                 "panelTitle": "AI — Select segment / frame",
-                "timelineLabel": "Select video segment",
                 "frameLabel": "Capture frame",
                 "frameHint": "Seek to the position you want, then click the camera icon. Max 5 frames.",
-                "selectSegment": "Select segment",
-                "enable": "Enable",
-                "clear": "Clear",
-                "start": "Start",
-                "end": "End",
                 "captureFrame": "Capture current frame",
                 "framesCount": "{count}/{max} frames selected",
                 "extracting": "Loading frames…",
-                "openFilmstrip": "Select frames from video"
+                "openFilmstrip": "Select frames from video",
+                "loadingThumbs": "Loading timeline…",
+                "segStart": "Start",
+                "segEnd": "End",
+                "tooShort": "Select at least {min}s",
+                "tooLong": "Max {max}s per analysis",
+                "analyzeBtn": "Analyze With AI",
+                "analyzing": "Recording…",
+                "recording": "Recording clip",
+                "analyzePrompt": "Analyze this video segment from {start} to {end}"
             }
         },
         "appeals": {

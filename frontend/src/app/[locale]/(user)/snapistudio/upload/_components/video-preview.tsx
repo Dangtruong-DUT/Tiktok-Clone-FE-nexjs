@@ -15,13 +15,19 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { cn } from '@/lib/utils'
 import RichTextContent from '@/components/common/rich-text-content'
 
-interface VideoPreviewProps {
-    videoSrc: string | null
-    content: string
-    className?: string
+interface SeekTarget {
+    time: number
+    key:  number
 }
 
-export default function VideoPreview({ videoSrc, content, className }: VideoPreviewProps) {
+interface VideoPreviewProps {
+    videoSrc:  string | null
+    content:   string
+    className?: string
+    seekTo?:   SeekTarget | null
+}
+
+export default function VideoPreview({ videoSrc, content, className, seekTo }: VideoPreviewProps) {
     const videoRef = useRef<HTMLVideoElement | null>(null)
     const { isPlaying, setIsPlaying, isMuted, setIsMuted, currentTime, duration } = useVideoPlayer(videoRef)
     const t = useTranslations('SnapiStudio.upload')
@@ -71,6 +77,12 @@ export default function VideoPreview({ videoSrc, content, className }: VideoPrev
             videoRef.current.srcObject = null
         }
     }, [videoSrc])
+
+    useEffect(() => {
+        if (seekTo != null && videoRef.current) {
+            videoRef.current.currentTime = seekTo.time
+        }
+    }, [seekTo])
 
     return (
         <div

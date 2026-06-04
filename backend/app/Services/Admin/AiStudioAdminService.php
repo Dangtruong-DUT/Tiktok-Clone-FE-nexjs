@@ -56,6 +56,14 @@ class AiStudioAdminService
     }
 
     /**
+     * @return string[]
+     */
+    public function getAvailableModels(): array
+    {
+        return config('ai.gemini.available_models', []);
+    }
+
+    /**
      * Update the singleton AI Studio settings.
      *
      * @param  array<string,mixed>  $data

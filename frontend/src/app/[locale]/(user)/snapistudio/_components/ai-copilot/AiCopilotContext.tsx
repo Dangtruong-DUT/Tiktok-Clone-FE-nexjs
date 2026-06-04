@@ -22,13 +22,17 @@ interface AiCopilotContextValue {
     unregisterFormPatch: (field: string) => void
     applyToForm: (field: string, value: string) => boolean
 
-    // Attachment state (shared between FramePicker / TimelineSelector and CopilotInput)
-    selectedFrames: string[]                      // base64 PNG strings
-    setSelectedFrames: (frames: string[]) => void
-    clearFrames: () => void
-
+    // Timeline segment selection
     timelineSelection: AiCopilotTimelineSelection | null
     setTimelineSelection: (sel: AiCopilotTimelineSelection | null) => void
+
+    // Video clip (base64 webm) to be sent with the next message
+    pendingVideoClip: string | null
+    setPendingVideoClip: (clip: string | null) => void
+
+    // Auto-send a message when the timeline "Analyze With AI" button is clicked
+    pendingMessage: string | null
+    setPendingMessage: (msg: string | null) => void
 
     // Panel state
     isPanelOpen: boolean
@@ -41,8 +45,9 @@ const AiCopilotContext = createContext<AiCopilotContextValue | null>(null)
 
 export function AiCopilotProvider({ children }: { children: ReactNode }) {
     const [videoContext, setVideoContextState] = useState<Partial<AiCopilotSessionContext>>({})
-    const [selectedFrames, setSelectedFrames] = useState<string[]>([])
     const [timelineSelection, setTimelineSelection] = useState<AiCopilotTimelineSelection | null>(null)
+    const [pendingVideoClip, setPendingVideoClip] = useState<string | null>(null)
+    const [pendingMessage, setPendingMessage] = useState<string | null>(null)
     const [isPanelOpen, setIsPanelOpen] = useState(false)
 
     const patchRegistry = useRef<Record<string, FormPatchFn>>({})
@@ -68,8 +73,6 @@ export function AiCopilotProvider({ children }: { children: ReactNode }) {
         return false
     }, [])
 
-    const clearFrames = useCallback(() => setSelectedFrames([]), [])
-
     const openPanel  = useCallback(() => setIsPanelOpen(true), [])
     const closePanel = useCallback(() => setIsPanelOpen(false), [])
     const togglePanel = useCallback(() => setIsPanelOpen((v) => !v), [])
@@ -82,11 +85,12 @@ export function AiCopilotProvider({ children }: { children: ReactNode }) {
                 registerFormPatch,
                 unregisterFormPatch,
                 applyToForm,
-                selectedFrames,
-                setSelectedFrames,
-                clearFrames,
                 timelineSelection,
                 setTimelineSelection,
+                pendingVideoClip,
+                setPendingVideoClip,
+                pendingMessage,
+                setPendingMessage,
                 isPanelOpen,
                 openPanel,
                 closePanel,

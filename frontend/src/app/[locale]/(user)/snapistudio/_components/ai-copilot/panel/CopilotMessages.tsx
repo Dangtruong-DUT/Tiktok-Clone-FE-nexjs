@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { Bot } from 'lucide-react'
 import { Message, MessageContent } from '@/components/ai-elements/message'
 import { CopilotContentCard } from '../cards/CopilotContentCard'
 import { CopilotAnalysisCard } from '../cards/CopilotAnalysisCard'
@@ -9,19 +10,15 @@ import { CopilotSuggestions } from './CopilotSuggestions'
 import type { AiCopilotMessage, AiCopilotScheduleOutput, AiCopilotStructuredOutput } from '@/types/models/ai-copilot.model'
 
 interface CopilotMessagesProps {
-    messages: AiCopilotMessage[]
-    onAccept: (messageUuid: string, field: string, value: string) => void
-    onReject: (messageUuid: string) => void
+    messages:         AiCopilotMessage[]
+    onAccept:         (messageUuid: string, field: string, value: string) => void
+    onReject:         (messageUuid: string) => void
     onScheduleAccept: (messageUuid: string) => void
-    onChipSelect: (text: string) => void
+    onChipSelect:     (text: string) => void
 }
 
 export function CopilotMessages({
-    messages,
-    onAccept,
-    onReject,
-    onScheduleAccept,
-    onChipSelect,
+    messages, onAccept, onReject, onScheduleAccept, onChipSelect,
 }: CopilotMessagesProps) {
     const bottomRef = useRef<HTMLDivElement>(null)
 
@@ -30,7 +27,7 @@ export function CopilotMessages({
     }, [messages])
 
     return (
-        <div className='flex-1 overflow-y-auto px-3 py-3 space-y-3 scrollbar-hidden'>
+        <div className='flex-1 overflow-y-auto px-3 py-4 space-y-4 scrollbar-hidden'>
             {messages.map((msg, idx) => {
                 if (msg.role === 'system') {
                     return (
@@ -43,19 +40,35 @@ export function CopilotMessages({
                 const isLast = idx === messages.length - 1
                 const chips  = isLast && msg.role === 'assistant' ? (msg.follow_up_chips ?? []) : []
 
+                if (msg.role === 'user') {
+                    return (
+                        <div key={msg.uuid}>
+                            <Message from='user'>
+                                <MessageContent className='rounded-2xl rounded-tr-sm bg-primary text-primary-foreground px-3.5 py-2.5'>
+                                    <p className='text-sm leading-relaxed whitespace-pre-wrap break-words'>
+                                        {msg.content}
+                                    </p>
+                                </MessageContent>
+                            </Message>
+                        </div>
+                    )
+                }
+
+                // ── Assistant message ──────────────────────────────────────
                 return (
-                    <div key={msg.uuid}>
-                        <Message from={msg.role === 'user' ? 'user' : 'assistant'}>
-                            <MessageContent
-                                className={
-                                    msg.role === 'user'
-                                        ? 'rounded-2xl rounded-tr-sm bg-primary text-primary-foreground px-3 py-2'
-                                        : 'rounded-2xl rounded-tl-sm bg-muted px-3 py-2'
-                                }
-                            >
-                                {msg.role === 'assistant' && msg.structured_output?.type === 'schedule_card' ? (
+                    <div key={msg.uuid} className='space-y-2'>
+                        <div className='flex items-start gap-2'>
+                            {/* Bot avatar */}
+                            <div className='mt-0.5 shrink-0 size-6 rounded-full bg-primary/10 border border-primary/20
+                                            flex items-center justify-center'>
+                                <Bot className='size-3.5 text-primary' />
+                            </div>
+
+                            {/* Content */}
+                            <div className='flex-1 min-w-0 space-y-1.5'>
+                                {msg.structured_output?.type === 'schedule_card' ? (
                                     <>
-                                        <p className='text-sm'>{msg.content}</p>
+                                        <p className='text-sm text-foreground'>{msg.content}</p>
                                         <CopilotScheduleCard
                                             messageUuid={msg.uuid}
                                             output={msg.structured_output as AiCopilotScheduleOutput}
@@ -64,9 +77,9 @@ export function CopilotMessages({
                                             onReject={onReject}
                                         />
                                     </>
-                                ) : msg.role === 'assistant' && msg.structured_output?.type === 'content_card' ? (
+                                ) : msg.structured_output?.type === 'content_card' ? (
                                     <>
-                                        <p className='text-sm'>{msg.content}</p>
+                                        <p className='text-sm text-foreground'>{msg.content}</p>
                                         <CopilotContentCard
                                             messageUuid={msg.uuid}
                                             output={msg.structured_output as AiCopilotStructuredOutput}
@@ -82,11 +95,11 @@ export function CopilotMessages({
                                         streamingContent={msg.streamingContent}
                                     />
                                 )}
-                            </MessageContent>
-                        </Message>
+                            </div>
+                        </div>
 
                         {chips.length > 0 && (
-                            <div className='-mx-3'>
+                            <div className='pl-8'>
                                 <CopilotSuggestions chips={chips} onSelect={onChipSelect} />
                             </div>
                         )}

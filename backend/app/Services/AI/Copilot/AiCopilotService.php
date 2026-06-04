@@ -15,7 +15,9 @@ use App\Repositories\AiCopilotMessageRepository;
 use App\Repositories\AiCopilotSessionRepository;
 use App\Repositories\AiPromptTemplateRepository;
 use App\Repositories\AiUsageLogRepository;
+use App\Services\AI\Copilot\Handlers\AbstractCopilotHandler;
 use App\Services\AI\Copilot\Handlers\AnalyzeFrameHandler;
+use App\Services\AI\Copilot\Handlers\AnalyzeVideoSegmentHandler;
 use App\Services\AI\Copilot\Handlers\AnalyzeViralHandler;
 use App\Services\AI\Copilot\Handlers\CopilotHandlerInterface;
 use App\Services\AI\Copilot\Handlers\GeneralAdviceHandler;
@@ -28,30 +30,65 @@ use Illuminate\Support\Str;
 
 class AiCopilotService
 {
-    private const HISTORY_WINDOW = 10;
-
     public function __construct(
         private readonly AiCopilotSessionRepository  $sessionRepo,
         private readonly AiCopilotMessageRepository  $messageRepo,
         private readonly AiPromptTemplateRepository  $templateRepo,
         private readonly AiUsageLogRepository        $usageLogRepo,
         private readonly AiCopilotIntentDetector     $intentDetector,
-        // Handlers
         private readonly WriteCaptionHandler     $writeCaptionHandler,
         private readonly GenerateHashtagsHandler  $hashtagHandler,
         private readonly RewriteContentHandler    $rewriteHandler,
-        private readonly AnalyzeViralHandler      $viralHandler,
-        private readonly AnalyzeFrameHandler      $frameHandler,
+        private readonly AnalyzeViralHandler         $viralHandler,
+        private readonly AnalyzeFrameHandler         $frameHandler,
+        private readonly AnalyzeVideoSegmentHandler  $videoSegmentHandler,
         private readonly GeneralAnalysisHandler   $analysisHandler,
         private readonly GeneralAdviceHandler     $adviceHandler,
         private readonly SchedulePostHandler      $schedulePostHandler,
     ) {}
 
+    public function getSessionWithMessages(string $uuid, int $userId): AiCopilotSession
+    {
+        $session = $this->sessionRepo->findByUuidAndUserOrFail($uuid, $userId);
+
+        $session->setRelation(
+            'messages',
+            $this->messageRepo->latestBySession($session->id, 20)
+        );
+
+        return $session;
+    }
+
+    public function createUserMessage(AiCopilotSession $session, AiCopilotMessageInput $input, string $uuid): AiCopilotMessage
+    {
+        return AiCopilotMessage::create([
+            'uuid'        => $uuid,
+            'session_id'  => $session->id,
+            'role'        => AiCopilotMessageRoleEnum::USER->value,
+            'content'     => $input->content,
+            'attachments' => $input->attachmentsMeta() ?: null,
+            'provider'    => 'gemini',
+        ]);
+    }
+
+    public function getMessageByUuidForUser(string $messageUuid, int $userId): AiCopilotMessage
+    {
+        $message = $this->messageRepo->findByUuidOrFail($messageUuid);
+
+        abort_if($message->session->user_id !== $userId, 403);
+
+        return $message;
+    }
+
+    public function expireSession(AiCopilotSession $session): void
+    {
+        $session->update(['expires_at' => now()]);
+    }
+
     public function startSession(int $userId, array $data): AiCopilotSession
     {
         $settings = AiStudioSetting::current();
 
-        // Try to resume an existing active session for the same video/post
         $existing = $this->findExistingSession($userId, $data);
         if ($existing) {
             return $existing;
@@ -79,7 +116,6 @@ class AiCopilotService
             'expires_at'          => now()->addHours($settings->copilot_session_ttl_hours),
         ]);
 
-        // Inject large-video notice as system message
         if ($session->isLargeVideo()) {
             $this->createSystemMessage($session, 'large_video_notice');
         }
@@ -91,33 +127,27 @@ class AiCopilotService
     {
         $settings = AiStudioSetting::current();
 
-        // Check session message limit
         $messageCount = $session->messages()->count();
         if ($messageCount >= $settings->copilot_max_messages_per_session * 2) {
             throw new \RuntimeException('Session message limit reached. Please start a new session.');
         }
 
-        // Save the user message
         $userMessage = $this->saveMessage($session, AiCopilotMessageRoleEnum::USER, $input->content, [
             'attachments' => $input->attachmentsMeta(),
         ]);
 
-        // Detect intent
-        $history = $this->buildGeminiHistory($session);
+        $history   = AbstractCopilotHandler::buildHistory($session, $this->messageRepo);
         $detection = $this->intentDetector->detect($input->content, $history);
         $intent    = $detection['intent'];
 
-        // Load prompt template
         $template = $this->templateRepo->findByIntent($intent->value)
             ?? $this->templateRepo->findByIntent(AiCopilotIntentEnum::GENERAL_ADVICE->value)
             ?? $this->fallbackTemplate($intent);
 
-        // Resolve handler and run
         $handler      = $this->resolveHandler($intent);
         $context      = AiCopilotSessionContext::fromArray($session->context_snapshot ?? []);
         $handlerResult = $handler->handle($intent, $input, $context, $template, $history);
 
-        // Save assistant message
         $assistantMessage = $this->saveMessage(
             session:  $session,
             role:     AiCopilotMessageRoleEnum::ASSISTANT,
@@ -134,7 +164,7 @@ class AiCopilotService
             ],
         );
 
-        // Log usage (two calls: intent detection + handler)
+        // Log two calls: intent detection + handler
         $this->logUsage($session, $assistantMessage, $intent, $handlerResult, $detection['confidence']);
 
         return $assistantMessage;
@@ -151,20 +181,6 @@ class AiCopilotService
         }
 
         return null;
-    }
-
-    private function buildGeminiHistory(AiCopilotSession $session): array
-    {
-        $messages = $this->messageRepo->recentBySession($session->id, self::HISTORY_WINDOW);
-
-        return $messages->map(function (AiCopilotMessage $msg) {
-            $role = $msg->role === AiCopilotMessageRoleEnum::ASSISTANT ? 'model' : 'user';
-
-            return [
-                'role'  => $role,
-                'parts' => [['text' => $msg->content]],
-            ];
-        })->values()->toArray();
     }
 
     private function saveMessage(
@@ -208,8 +224,9 @@ class AiCopilotService
             AiCopilotIntentEnum::GENERATE_HASHTAGS  => $this->hashtagHandler,
             AiCopilotIntentEnum::REWRITE_CONTENT    => $this->rewriteHandler,
             AiCopilotIntentEnum::ANALYZE_VIRAL      => $this->viralHandler,
-            AiCopilotIntentEnum::ANALYZE_FRAME      => $this->frameHandler,
-            AiCopilotIntentEnum::SCHEDULE_POST      => $this->schedulePostHandler,
+            AiCopilotIntentEnum::ANALYZE_FRAME         => $this->frameHandler,
+            AiCopilotIntentEnum::ANALYZE_VIDEO_SEGMENT => $this->videoSegmentHandler,
+            AiCopilotIntentEnum::SCHEDULE_POST         => $this->schedulePostHandler,
             AiCopilotIntentEnum::ANALYZE_VIDEO,
             AiCopilotIntentEnum::ANALYZE_HOOK,
             AiCopilotIntentEnum::ANALYZE_RETENTION,
