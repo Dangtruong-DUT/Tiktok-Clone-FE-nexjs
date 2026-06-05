@@ -93,7 +93,7 @@ class AiCopilotIntentDetector
         $intents = implode(', ', array_column(AiCopilotIntentEnum::cases(), 'value'));
 
         return <<<PROMPT
-You are an intent classification system for a TikTok-style creator copilot.
+You are an intent classification system for Snapi Studio — an AI creator assistant for short-form video.
 
 Available intents: {$intents}
 

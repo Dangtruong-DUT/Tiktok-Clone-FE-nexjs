@@ -26,6 +26,13 @@ enum AiCopilotIntentEnum: string implements BaseEnumInterface
     case SCHEDULE_POST        = 'schedule_post';
     case GENERAL_ADVICE       = 'general_advice';
     case CLARIFICATION        = 'clarification';
+    // Data-query intents — no Gemini call, pure service/data formatting
+    case QUERY_USER_STATS     = 'query_user_stats';
+    case QUERY_POST_STATS     = 'query_post_stats';
+    case QUERY_SCREEN_TIME    = 'query_screen_time';
+    case NAVIGATE_TO          = 'navigate_to';
+    case QUERY_APP_INFO       = 'query_app_info';
+    case ADMIN_QUERY_STATS    = 'admin_query_stats';
 
     /**
      * Get the label of the enum value.
@@ -50,6 +57,12 @@ enum AiCopilotIntentEnum: string implements BaseEnumInterface
             self::SCHEDULE_POST         => 'Schedule Post',
             self::GENERAL_ADVICE        => 'General Advice',
             self::CLARIFICATION         => 'Clarification',
+            self::QUERY_USER_STATS      => 'Query User Stats',
+            self::QUERY_POST_STATS      => 'Query Post Stats',
+            self::QUERY_SCREEN_TIME     => 'Query Screen Time',
+            self::NAVIGATE_TO           => 'Navigate To',
+            self::QUERY_APP_INFO        => 'Query App Info',
+            self::ADMIN_QUERY_STATS     => 'Admin Query Stats',
         };
     }
 
@@ -76,6 +89,12 @@ enum AiCopilotIntentEnum: string implements BaseEnumInterface
             self::SCHEDULE_POST         => 'Lên lịch đăng',
             self::GENERAL_ADVICE        => 'Tư vấn chung',
             self::CLARIFICATION         => 'Làm rõ',
+            self::QUERY_USER_STATS      => 'Xem thống kê tài khoản',
+            self::QUERY_POST_STATS      => 'Xem thống kê bài đăng',
+            self::QUERY_SCREEN_TIME     => 'Xem thời gian sử dụng',
+            self::NAVIGATE_TO           => 'Điều hướng',
+            self::QUERY_APP_INFO        => 'Thông tin ứng dụng',
+            self::ADMIN_QUERY_STATS     => 'Thống kê hệ thống',
         };
     }
 

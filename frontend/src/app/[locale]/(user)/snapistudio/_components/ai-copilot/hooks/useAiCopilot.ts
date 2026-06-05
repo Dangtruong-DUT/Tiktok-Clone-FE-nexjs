@@ -1,7 +1,12 @@
 'use client'
 
 import { useCallback, useRef, useState } from 'react'
-import { useSendMessageMutation, useAcceptMessageMutation, useRejectMessageMutation, type StreamingMessageData } from '@/store/services/ai-copilot.service'
+import {
+    useSendMessageMutation,
+    useAcceptMessageMutation,
+    useRejectMessageMutation,
+    type StreamingMessageData
+} from '@/store/services/ai-copilot.service'
 import { useAiCopilotContext } from '../AiCopilotContext'
 import type { AiCopilotMessage } from '@/types/models/ai-copilot.model'
 import type { AiCopilotSseEventDto, SendAiCopilotMessageAttachmentsDto } from '@/types/dtos/ai/ai-copilot.dto'
@@ -12,8 +17,14 @@ interface UseAiCopilotOptions {
 }
 
 export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
-    const { pendingVideoClip, setPendingVideoClip, timelineSelection, setTimelineSelection, applyToForm } =
-        useAiCopilotContext()
+    const {
+        pendingVideoClip,
+        setPendingVideoClip,
+        timelineSelection,
+        setTimelineSelection,
+        applyToForm,
+        videoContext
+    } = useAiCopilotContext()
 
     const [messages, setMessages] = useState<AiCopilotMessage[]>([])
     const [isSending, setIsSending] = useState(false)
@@ -46,16 +57,16 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
                             prev.map((m) =>
                                 m.uuid === messageUuid
                                     ? { ...m, streamingContent: (m.streamingContent ?? '') + payload.delta }
-                                    : m,
-                            ),
+                                    : m
+                            )
                         )
                     } else if (payload.type === AI_COPILOT_SSE_EVENT_TYPES.DONE && payload.message) {
                         setMessages((prev) =>
                             prev.map((m) =>
                                 m.uuid === messageUuid
                                     ? { ...payload.message!, isStreaming: false, streamingContent: undefined }
-                                    : m,
-                            ),
+                                    : m
+                            )
                         )
                         setIsSending(false)
                         es.close()
@@ -70,14 +81,14 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
                     prev.map((m) =>
                         m.uuid === messageUuid
                             ? { ...m, isStreaming: false, status: AI_COPILOT_MESSAGE_STATUSES.FAILED }
-                            : m,
-                    ),
+                            : m
+                    )
                 )
                 setIsSending(false)
                 es.close()
             }
         },
-        [setIsSending],
+        [setIsSending]
     )
 
     const send = useCallback(
@@ -87,11 +98,11 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
             setIsSending(true)
 
             const userMsg: AiCopilotMessage = {
-                uuid:       `local-${Date.now()}`,
-                role:       AI_COPILOT_ROLES.USER,
+                uuid: `local-${Date.now()}`,
+                role: AI_COPILOT_ROLES.USER,
                 content,
-                status:     AI_COPILOT_MESSAGE_STATUSES.SUCCESS,
-                created_at: new Date().toISOString(),
+                status: AI_COPILOT_MESSAGE_STATUSES.SUCCESS,
+                created_at: new Date().toISOString()
             }
             setMessages((prev) => [...prev, userMsg])
 
@@ -100,9 +111,15 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
             if (timelineSelection) {
                 attachments.timeline = {
                     start_seconds: timelineSelection.start,
-                    end_seconds:   timelineSelection.end,
+                    end_seconds: timelineSelection.end
                 }
             }
+
+            // Build live form content snapshot — AI uses this to know what the creator is currently writing
+            const currentContent: Record<string, string> = {}
+            if (videoContext.video_description) currentContent.caption = videoContext.video_description
+            if (videoContext.video_title) currentContent.title = videoContext.video_title
+            if (videoContext.video_category) currentContent.hashtags = videoContext.video_category
 
             setPendingVideoClip(null)
             setTimelineSelection(null)
@@ -114,6 +131,7 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
                     sessionUuid,
                     content,
                     attachments: Object.keys(attachments).length > 0 ? attachments : undefined,
+                    current_content: Object.keys(currentContent).length > 0 ? currentContent : undefined
                 }).unwrap()
 
                 const payload = res.data
@@ -124,13 +142,13 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
                     const streamData = payload as StreamingMessageData
 
                     const placeholder: AiCopilotMessage = {
-                        uuid:             streamData.message_uuid,
-                        role:             AI_COPILOT_ROLES.ASSISTANT,
-                        content:          '',
-                        status:           AI_COPILOT_MESSAGE_STATUSES.SUCCESS,
-                        created_at:       new Date().toISOString(),
-                        isStreaming:      true,
-                        streamingContent: '',
+                        uuid: streamData.message_uuid,
+                        role: AI_COPILOT_ROLES.ASSISTANT,
+                        content: '',
+                        status: AI_COPILOT_MESSAGE_STATUSES.SUCCESS,
+                        created_at: new Date().toISOString(),
+                        isStreaming: true,
+                        streamingContent: ''
                     }
                     setMessages((prev) => [...prev, placeholder])
 
@@ -142,44 +160,71 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
                 setMessages((prev) => [
                     ...prev,
                     {
-                        uuid:       `err-${Date.now()}`,
-                        role:       AI_COPILOT_ROLES.ASSISTANT,
-                        content:    'Something went wrong. Please try again.',
-                        status:     AI_COPILOT_MESSAGE_STATUSES.FAILED,
-                        created_at: new Date().toISOString(),
-                    },
+                        uuid: `err-${Date.now()}`,
+                        role: AI_COPILOT_ROLES.ASSISTANT,
+                        content: 'Something went wrong. Please try again.',
+                        status: AI_COPILOT_MESSAGE_STATUSES.FAILED,
+                        created_at: new Date().toISOString()
+                    }
                 ])
             } finally {
                 if (!tookStreamingPath) setIsSending(false)
             }
         },
-        [sessionUuid, isSending, pendingVideoClip, timelineSelection, setPendingVideoClip, setTimelineSelection, sendMessage, openEventSource],
+        [
+            sessionUuid,
+            isSending,
+            pendingVideoClip,
+            timelineSelection,
+            setPendingVideoClip,
+            setTimelineSelection,
+            sendMessage,
+            openEventSource,
+            videoContext
+        ]
     )
 
     const accept = useCallback(
         async (messageUuid: string, field: string, value: string) => {
             applyToForm(field, value)
             setMessages((prev) =>
-                prev.map((m) => (m.uuid === messageUuid ? { ...m, status: AI_COPILOT_MESSAGE_STATUSES.ACCEPTED } : m)),
+                prev.map((m) => (m.uuid === messageUuid ? { ...m, status: AI_COPILOT_MESSAGE_STATUSES.ACCEPTED } : m))
             )
             try {
                 await acceptMessage({ messageUuid, field })
-            } catch { /* fire-and-forget */ }
+            } catch {
+                /* fire-and-forget */
+            }
         },
-        [applyToForm, acceptMessage],
+        [applyToForm, acceptMessage]
     )
 
     const reject = useCallback(
         async (messageUuid: string) => {
             setMessages((prev) =>
-                prev.map((m) => (m.uuid === messageUuid ? { ...m, status: AI_COPILOT_MESSAGE_STATUSES.REJECTED } : m)),
+                prev.map((m) => (m.uuid === messageUuid ? { ...m, status: AI_COPILOT_MESSAGE_STATUSES.REJECTED } : m))
             )
             try {
                 await rejectMessage(messageUuid)
-            } catch { /* fire-and-forget */ }
+            } catch {
+                /* fire-and-forget */
+            }
         },
-        [rejectMessage],
+        [rejectMessage]
     )
 
-    return { messages, isSending, send, accept, reject, initFromSession }
+    const retry = useCallback(() => {
+        // Find the last user message (to re-send it)
+        const lastUser = [...messages].reverse().find((m) => m.role === AI_COPILOT_ROLES.USER)
+        if (!lastUser) return
+        // Remove the failed assistant message before retrying
+        setMessages((prev) =>
+            prev.filter(
+                (m) => !(m.role === AI_COPILOT_ROLES.ASSISTANT && m.status === AI_COPILOT_MESSAGE_STATUSES.FAILED)
+            )
+        )
+        send(lastUser.content)
+    }, [messages, send])
+
+    return { messages, isSending, send, accept, reject, retry, initFromSession }
 }

@@ -1,9 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, X } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { Check, X, Copy, CheckCheck, Hash } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
 import type { AiCopilotStructuredOutput } from '@/types/models/ai-copilot.model'
@@ -28,116 +26,140 @@ export function CopilotContentCard({
     const [selectedHashtags, setSelectedHashtags] = useState<Set<number>>(
         new Set(output.hashtags.map((_, i) => i)),
     )
+    const [copied, setCopied] = useState(false)
 
     const isDone = status === 'accepted' || status === 'rejected'
 
-    const handleAccept = () => {
-        const variantValue = output.variants[selectedVariant]?.value ?? ''
-        const hashtagStr   = output.hashtags
-            .filter((_, i) => selectedHashtags.has(i))
-            .join(' ')
+    const currentText = output.variants[selectedVariant]?.value ?? ''
+    const selectedTagsArr = output.hashtags.filter((_, i) => selectedHashtags.has(i))
 
+    const handleCopy = async () => {
+        const text = selectedTagsArr.length
+            ? `${currentText}\n\n${selectedTagsArr.join(' ')}`
+            : currentText
+        await navigator.clipboard.writeText(text).catch(() => {})
+        setCopied(true)
+        setTimeout(() => setCopied(false), 1800)
+    }
+
+    const handleAccept = () => {
+        const hashtagStr = selectedTagsArr.join(' ')
         if (output.target_field === 'hashtags') {
-            onAccept(messageUuid, 'hashtags', hashtagStr || variantValue)
+            onAccept(messageUuid, 'hashtags', hashtagStr || currentText)
         } else {
-            const combined = hashtagStr ? `${variantValue}\n\n${hashtagStr}` : variantValue
+            const combined = hashtagStr ? `${currentText}\n\n${hashtagStr}` : currentText
             onAccept(messageUuid, output.target_field, combined)
         }
     }
 
     const toggleHashtag = (idx: number) => {
-        setSelectedHashtags((prev) => {
+        setSelectedHashtags(prev => {
             const next = new Set(prev)
             next.has(idx) ? next.delete(idx) : next.add(idx)
             return next
         })
     }
 
+    // ── Done state ──────────────────────────────────────────────────────────
     if (isDone) {
         return (
-            <div className='flex items-center gap-1.5 text-xs text-muted-foreground mt-1'>
-                {status === 'accepted' ? (
-                    <>
-                        <Check className='size-3 text-green-500' />
-                        <span>{t('contentCard.applied')}</span>
-                    </>
-                ) : (
-                    <>
-                        <X className='size-3' />
-                        <span>{t('contentCard.dismissed')}</span>
-                    </>
-                )}
+            <div className={cn(
+                'flex items-center gap-1.5 text-xs rounded-lg px-2.5 py-1.5 mt-1 w-fit',
+                status === 'accepted'
+                    ? 'bg-green-500/10 text-green-600 dark:text-green-400'
+                    : 'bg-muted text-muted-foreground',
+            )}>
+                {status === 'accepted'
+                    ? <><Check className='size-3' />{t('contentCard.applied')}</>
+                    : <><X className='size-3' />{t('contentCard.dismissed')}</>}
             </div>
         )
     }
 
     return (
-        <div className='mt-2 rounded-xl border border-border bg-card p-3 space-y-2.5'>
-            {/* Variant tabs */}
+        <div className='mt-1.5 rounded-2xl border border-border bg-card overflow-hidden shadow-sm'>
+            {/* ── Variant selector ──────────────────────────────────────── */}
             {output.variants.length > 1 && (
-                <div className='flex gap-1 flex-wrap'>
+                <div className='flex gap-0 border-b border-border'>
                     {output.variants.map((v, i) => (
                         <button
                             key={i}
                             onClick={() => setSelectedVariant(i)}
                             className={cn(
-                                'rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors',
+                                'flex-1 py-2 text-[11px] font-medium transition-colors relative',
                                 selectedVariant === i
-                                    ? 'bg-primary text-primary-foreground'
-                                    : 'bg-muted text-muted-foreground hover:bg-muted/80',
+                                    ? 'text-primary bg-primary/5'
+                                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/40',
                             )}
                         >
                             {v.label}
+                            {selectedVariant === i && (
+                                <span className='absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full' />
+                            )}
                         </button>
                     ))}
                 </div>
             )}
 
-            {/* Selected variant text */}
-            <p className='text-sm leading-relaxed whitespace-pre-wrap break-words'>
-                {output.variants[selectedVariant]?.value ?? ''}
-            </p>
+            {/* ── Content text ──────────────────────────────────────────── */}
+            <div className='relative px-3.5 pt-3 pb-2.5 group'>
+                <p className='text-sm leading-relaxed text-foreground whitespace-pre-wrap break-words pr-7'>
+                    {currentText}
+                </p>
+                <button
+                    onClick={handleCopy}
+                    className='absolute top-3 right-3 opacity-0 group-hover:opacity-100
+                               transition-opacity p-1 rounded-md hover:bg-muted text-muted-foreground'
+                    title={t('contentCard.copy')}
+                >
+                    {copied
+                        ? <CheckCheck className='size-3.5 text-green-500' />
+                        : <Copy className='size-3.5' />}
+                </button>
+            </div>
 
-            {/* Hashtag chips */}
+            {/* ── Hashtag chips ─────────────────────────────────────────── */}
             {output.hashtags.length > 0 && (
-                <div className='flex flex-wrap gap-1'>
+                <div className='px-3.5 pb-3 flex flex-wrap gap-1.5'>
                     {output.hashtags.map((tag, i) => (
-                        <Badge
+                        <button
                             key={i}
-                            variant={selectedHashtags.has(i) ? 'default' : 'secondary'}
-                            className='cursor-pointer text-xs'
                             onClick={() => toggleHashtag(i)}
+                            className={cn(
+                                'inline-flex items-center gap-0.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium',
+                                'border transition-all',
+                                selectedHashtags.has(i)
+                                    ? 'bg-primary/10 border-primary/30 text-primary'
+                                    : 'bg-transparent border-border text-muted-foreground hover:border-primary/30 hover:text-primary/70',
+                            )}
                         >
-                            {tag}
-                        </Badge>
+                            <Hash className='size-2.5 opacity-60' />
+                            {tag.replace(/^#/, '')}
+                        </button>
                     ))}
                 </div>
             )}
 
-            {/* Confidence bar */}
-            <div className='flex items-center gap-2'>
-                <div className='h-1 flex-1 rounded-full bg-muted overflow-hidden'>
-                    <div
-                        className='h-full bg-primary rounded-full transition-all'
-                        style={{ width: `${Math.round(output.confidence * 100)}%` }}
-                    />
-                </div>
-                <span className='text-[10px] text-muted-foreground tabular-nums'>
-                    {Math.round(output.confidence * 100)}%
-                </span>
-            </div>
-
-            {/* Accept / Reject */}
-            <div className='flex gap-2'>
-                <Button size='sm' className='flex-1 h-7 text-xs' onClick={handleAccept}>
-                    <Check className='size-3 mr-1' />
-                    {t('contentCard.accept')}
-                </Button>
-                <Button size='sm' variant='outline' className='flex-1 h-7 text-xs'
-                    onClick={() => onReject(messageUuid)}>
-                    <X className='size-3 mr-1' />
+            {/* ── Actions ──────────────────────────────────────────────── */}
+            <div className='flex border-t border-border'>
+                <button
+                    onClick={() => onReject(messageUuid)}
+                    className='flex-none flex items-center justify-center gap-1.5 px-4 py-2.5
+                               text-xs font-medium text-muted-foreground
+                               hover:bg-muted hover:text-foreground transition-colors border-r border-border'
+                >
+                    <X className='size-3.5' />
                     {t('contentCard.reject')}
-                </Button>
+                </button>
+                <button
+                    onClick={handleAccept}
+                    className='flex-1 flex items-center justify-center gap-1.5 py-2.5
+                               text-xs font-semibold text-primary
+                               hover:bg-primary/5 transition-colors'
+                >
+                    <Check className='size-3.5' />
+                    {t('contentCard.accept')}
+                </button>
             </div>
         </div>
     )

@@ -1,63 +1,59 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import type { WellnessAction } from '@/types/models/screen-time.model'
 
-
 const WELLNESS_SLICE_NAME = 'wellness' as const
 
-
 interface WellnessAlert {
-    title:    string
-    message:  string
+    title: string
+    message: string
     ruleUuid: string
-    action:   WellnessAction
+    action: WellnessAction
 }
 
 interface WellnessState {
-    sessionUuid:       string | null
-    sessionStartedAt:  number | null
+    sessionUuid: string | null
+    sessionStartedAt: number | null
     videoWatchSeconds: number
-    isAlertVisible:    boolean
-    activeAlert:       WellnessAlert | null
+    isAlertVisible: boolean
+    activeAlert: WellnessAlert | null
     todayTotalSeconds: number
     todayVideoSeconds: number
 }
 
-
 const initialState: WellnessState = {
-    sessionUuid:       null,
-    sessionStartedAt:  null,
+    sessionUuid: null,
+    sessionStartedAt: null,
     videoWatchSeconds: 0,
-    isAlertVisible:    false,
-    activeAlert:       null,
+    isAlertVisible: false,
+    activeAlert: null,
     todayTotalSeconds: 0,
-    todayVideoSeconds: 0,
+    todayVideoSeconds: 0
 }
-
 
 const wellnessSlice = createSlice({
     name: WELLNESS_SLICE_NAME,
     initialState,
     reducers: {
         setSession(state, action: PayloadAction<{ uuid: string; startedAt: number }>) {
-            state.sessionUuid      = action.payload.uuid
+            state.sessionUuid = action.payload.uuid
             state.sessionStartedAt = action.payload.startedAt
             state.videoWatchSeconds = 0
         },
 
         clearSession(state) {
-            state.sessionUuid      = null
+            state.sessionUuid = null
             state.sessionStartedAt = null
             state.videoWatchSeconds = 0
         },
 
         showAlert(state, action: PayloadAction<WellnessAlert>) {
             state.isAlertVisible = true
-            state.activeAlert    = action.payload
+            state.activeAlert = action.payload
         },
 
         dismissAlert(state, action: PayloadAction<{ resetContinuous?: boolean }>) {
             state.isAlertVisible = false
-            state.activeAlert    = null
+            state.activeAlert = null
             if (action.payload.resetContinuous) {
                 // Reset session start time so continuous timer restarts from zero
                 state.sessionStartedAt = Date.now()
@@ -71,17 +67,11 @@ const wellnessSlice = createSlice({
         setTodayStats(state, action: PayloadAction<{ totalSeconds: number; videoSeconds: number }>) {
             state.todayTotalSeconds = action.payload.totalSeconds
             state.todayVideoSeconds = action.payload.videoSeconds
-        },
-    },
+        }
+    }
 })
 
-export const {
-    setSession,
-    clearSession,
-    showAlert,
-    dismissAlert,
-    addVideoSeconds,
-    setTodayStats,
-} = wellnessSlice.actions
+export const { setSession, clearSession, showAlert, dismissAlert, addVideoSeconds, setTodayStats } =
+    wellnessSlice.actions
 
 export default wellnessSlice.reducer

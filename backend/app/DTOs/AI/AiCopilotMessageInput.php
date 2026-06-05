@@ -6,26 +6,34 @@ final readonly class AiCopilotMessageInput
 {
     public function __construct(
         public string  $content,
-        public ?array  $frames        = null,   // base64 image strings
-        public ?float  $timelineStart = null,
-        public ?float  $timelineEnd   = null,
-        public ?string $videoClip     = null,   // base64 video/webm data URI
+        public ?array  $frames          = null,
+        public ?float  $timelineStart   = null,
+        public ?float  $timelineEnd     = null,
+        public ?string $videoClip       = null,
+        // Live form content sent with every message
+        public ?string $currentCaption  = null,
+        public ?string $currentTitle    = null,
+        public ?string $currentHashtags = null,
     ) {}
 
     public static function fromRequest(array $data): self
     {
-        $attachments = $data['attachments'] ?? [];
+        $attachments    = $data['attachments']     ?? [];
+        $currentContent = $data['current_content'] ?? [];
 
         return new self(
-            content:       $data['content'],
-            frames:        $attachments['frames'] ?? null,
-            timelineStart: isset($attachments['timeline']['start_seconds'])
+            content:         $data['content'],
+            frames:          $attachments['frames'] ?? null,
+            timelineStart:   isset($attachments['timeline']['start_seconds'])
                 ? (float) $attachments['timeline']['start_seconds']
                 : null,
-            timelineEnd:   isset($attachments['timeline']['end_seconds'])
+            timelineEnd:     isset($attachments['timeline']['end_seconds'])
                 ? (float) $attachments['timeline']['end_seconds']
                 : null,
-            videoClip:     $attachments['video_clip'] ?? null,
+            videoClip:       $attachments['video_clip'] ?? null,
+            currentCaption:  $currentContent['caption']  ?? null,
+            currentTitle:    $currentContent['title']    ?? null,
+            currentHashtags: $currentContent['hashtags'] ?? null,
         );
     }
 

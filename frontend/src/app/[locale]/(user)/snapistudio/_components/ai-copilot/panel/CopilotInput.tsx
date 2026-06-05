@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { X } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import {
@@ -30,12 +30,19 @@ export function CopilotInput({ onSend, disabled = false }: CopilotInputProps) {
         pendingMessage, setPendingMessage,
     } = useAiCopilotContext()
 
-    // Auto-send when the timeline "Analyze With AI" triggers a pending message
+    // Stabilise onSend in a ref so the auto-send effect never re-fires
+    // because the parent recreated the send callback (e.g. videoContext changed).
+    const onSendRef = useRef(onSend)
+    useEffect(() => { onSendRef.current = onSend }, [onSend])
+
+    // Auto-send when the timeline "Analyze With AI" triggers a pending message.
+    // Clear pendingMessage BEFORE calling send to prevent double-trigger.
     useEffect(() => {
         if (!pendingMessage || disabled) return
-        onSend(pendingMessage)
+        const msg = pendingMessage
         setPendingMessage(null)
-    }, [pendingMessage, disabled, onSend, setPendingMessage])
+        onSendRef.current(msg)
+    }, [pendingMessage, disabled, setPendingMessage])
 
     const handleSubmit = ({ text }: { text: string }) => {
         if (!text.trim() || disabled) return

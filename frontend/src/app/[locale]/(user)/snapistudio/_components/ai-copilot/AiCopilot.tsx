@@ -18,7 +18,7 @@ export function AiCopilot() {
     const [isMinimised, setIsMinimised] = useState(false)
 
     const { session, sessionUuid, isLoading: isSessionLoading, start } = useCopilotSession()
-    const { messages, isSending, send, accept, reject, initFromSession } = useAiCopilot({ sessionUuid })
+    const { messages, isSending, send, accept, reject, retry, initFromSession } = useAiCopilot({ sessionUuid })
 
     useEffect(() => {
         if (isPanelOpen && !sessionUuid) {
@@ -138,6 +138,7 @@ export function AiCopilot() {
                                     onReject={reject}
                                     onScheduleAccept={msgUuid => accept(msgUuid, '', '')}
                                     onChipSelect={send}
+                                    onRetry={retry}
                                 />
                             )}
 

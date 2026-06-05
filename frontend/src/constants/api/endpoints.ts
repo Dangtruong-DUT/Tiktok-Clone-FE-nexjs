@@ -2,12 +2,15 @@
 export const NEXT_API_ENDPOINT = {
     AUTH: {
         REFRESH_TOKEN: '/api/auth/refresh-token',
-        LOGIN: '/api/auth/login',
-        GOOGLE_LOGIN: '/api/auth/login/google',
-        LOGOUT: '/api/auth/logout',
-        REGISTER: '/api/auth/register',
-        VERIFY_EMAIL: '/api/auth/verify-email'
-    }
+        LOGIN:         '/api/auth/login',
+        GOOGLE_LOGIN:  '/api/auth/login/google',
+        LOGOUT:        '/api/auth/logout',
+        REGISTER:      '/api/auth/register',
+        VERIFY_EMAIL:  '/api/auth/verify-email'
+    },
+    WELLNESS: {
+        SESSION_END: (uuid: string) => `/api/proxy/wellness/session-end/${uuid}`,
+    },
 } as const
 
 /** Backend API routes — consumed via httpClient or RTK Query baseQueryWithReauth. */

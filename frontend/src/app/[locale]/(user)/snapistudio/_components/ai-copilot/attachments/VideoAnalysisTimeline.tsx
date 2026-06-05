@@ -1,20 +1,19 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Loader2, Sparkles } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
 import { useAiCopilotContext } from '../AiCopilotContext'
 
 const TIMELINE = {
-    THUMB_COUNT:       16,
-    MIN_DURATION:       5,
-    MAX_DURATION:      30,
-    CLIP_WIDTH_PX:    640,   // max width when recording
-    CLIP_FPS:          15,
-    CLIP_KBPS:        600,   // videoBitsPerSecond
-    PLAYBACK_RATE:      4,   // how fast to play during recording
+    THUMB_COUNT:   16,
+    MIN_DURATION:   5,
+    MAX_DURATION:  30,
+    CLIP_WIDTH_PX: 640,
+    CLIP_FPS:       15,
+    CLIP_KBPS:     600,
+    PLAYBACK_RATE:   4,
 } as const
 
 type DragZone = 'start' | 'end' | 'middle'
@@ -41,7 +40,7 @@ interface VideoAnalysisTimelineProps {
 function fmt(s: number): string {
     const m   = Math.floor(s / 60)
     const sec = Math.floor(s % 60)
-    return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`
+    return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '00')}`
 }
 
 async function captureThumb(video: HTMLVideoElement, time: number): Promise<string | null> {
@@ -64,7 +63,7 @@ async function captureThumb(video: HTMLVideoElement, time: number): Promise<stri
     })
 }
 
-function clipVideoSegment(
+export function clipVideoSegment(
     video: HTMLVideoElement,
     start: number,
     end: number,
@@ -131,23 +130,18 @@ function clipVideoSegment(
 }
 
 export function VideoAnalysisTimeline({ videoRef, duration, onSeek }: VideoAnalysisTimelineProps) {
-    const t = useTranslations('SnapiStudio.aiCopilot')
-    const {
-        timelineSelection, setTimelineSelection,
-        setPendingVideoClip, setPendingMessage, openPanel,
-    } = useAiCopilotContext()
+    const t            = useTranslations('SnapiStudio.aiCopilot')
+    const { timelineSelection, setTimelineSelection } = useAiCopilotContext()
 
     const [thumbnails,      setThumbnails]      = useState<Thumbnail[]>([])
     const [isLoadingThumbs, setIsLoadingThumbs] = useState(false)
-    const [isAnalyzing,     setIsAnalyzing]     = useState(false)
-    const [clipProgress,    setClipProgress]    = useState(0)   // 0-100
     const [currentTime,     setCurrentTime]     = useState(0)
 
-    const containerRef = useRef<HTMLDivElement>(null)
-    const extractedRef = useRef(false)
+    const containerRef  = useRef<HTMLDivElement>(null)
+    const extractedRef  = useRef(false)
 
-    const start      = timelineSelection?.start ?? 0
-    const end        = timelineSelection?.end   ?? Math.min(TIMELINE.MAX_DURATION, duration)
+    const start       = timelineSelection?.start ?? 0
+    const end         = timelineSelection?.end   ?? Math.min(TIMELINE.MAX_DURATION, duration)
     const selDuration = end - start
 
     const warning: 'too_short' | 'too_long' | null =
@@ -206,8 +200,8 @@ export function VideoAnalysisTimeline({ videoRef, duration, onSeek }: VideoAnaly
 
         const state: DragState = {
             zone,
-            startX:        e.clientX,
-            startSel:      { start, end },
+            startX:         e.clientX,
+            startSel:       { start, end },
             containerWidth: rect.width,
             totalDuration:  duration,
         }
@@ -241,43 +235,19 @@ export function VideoAnalysisTimeline({ videoRef, duration, onSeek }: VideoAnaly
         document.addEventListener('pointerup',   onUp)
     }, [start, end, duration, setTimelineSelection])
 
-    // ── Analyze: record clip + send to AI ────────────────────────────────────
-    const handleAnalyze = useCallback(async () => {
-        const video = videoRef.current
-        if (!timelineSelection || !video || isAnalyzing) return
-        setIsAnalyzing(true)
-        setClipProgress(0)
-
-        const { start: s, end: e } = timelineSelection
-
-        const clip = await clipVideoSegment(video, s, e, (elapsed, total) => {
-            setClipProgress(Math.min(99, Math.round((elapsed / total) * 100)))
-        })
-
-        if (clip) {
-            setPendingVideoClip(clip)
-            setTimelineSelection({ start: s, end: e })
-            setPendingMessage(t('attachments.analyzePrompt', { start: fmt(s), end: fmt(e) }))
-            openPanel()
-        }
-
-        setClipProgress(0)
-        setIsAnalyzing(false)
-    }, [videoRef, timelineSelection, isAnalyzing, setPendingVideoClip, setTimelineSelection, setPendingMessage, openPanel, t])
-
     if (duration <= 0) return null
 
     return (
-        <div className='space-y-2'>
-            {/* Thumbnail strip */}
+        <div className='space-y-1.5'>
+            {/* Thumbnail filmstrip with drag handles */}
             <div
                 ref={containerRef}
-                className='relative w-full h-14 rounded-md overflow-hidden bg-muted cursor-crosshair select-none'
+                className='relative w-full h-12 rounded-md overflow-hidden bg-muted cursor-crosshair select-none'
                 onClick={handleStripClick}
             >
                 {isLoadingThumbs ? (
                     <div className='absolute inset-0 flex items-center justify-center gap-1.5'>
-                        <Loader2 className='size-4 animate-spin text-muted-foreground' />
+                        <Loader2 className='size-3.5 animate-spin text-muted-foreground' />
                         <span className='text-[10px] text-muted-foreground'>{t('attachments.loadingThumbs')}</span>
                     </div>
                 ) : (
@@ -293,14 +263,8 @@ export function VideoAnalysisTimeline({ videoRef, duration, onSeek }: VideoAnaly
                 {/* Dimmed areas outside selection */}
                 {timelineSelection && (
                     <>
-                        <div
-                            className='absolute inset-y-0 left-0 bg-background/60 pointer-events-none'
-                            style={{ width: `${pct(start)}%` }}
-                        />
-                        <div
-                            className='absolute inset-y-0 right-0 bg-background/60 pointer-events-none'
-                            style={{ width: `${100 - pct(end)}%` }}
-                        />
+                        <div className='absolute inset-y-0 left-0 bg-background/60 pointer-events-none' style={{ width: `${pct(start)}%` }} />
+                        <div className='absolute inset-y-0 right-0 bg-background/60 pointer-events-none' style={{ width: `${100 - pct(end)}%` }} />
                     </>
                 )}
 
@@ -311,97 +275,37 @@ export function VideoAnalysisTimeline({ videoRef, duration, onSeek }: VideoAnaly
                         style={{ left: `${pct(start)}%`, width: `${pct(end) - pct(start)}%` }}
                         onPointerDown={startDrag('middle')}
                     >
-                        <div
-                            className='absolute inset-y-0 left-0 w-3 flex items-center justify-center cursor-ew-resize bg-primary z-10'
-                            onPointerDown={startDrag('start')}
-                        >
-                            <div className='w-0.5 h-4 rounded-full bg-primary-foreground' />
+                        <div className='absolute inset-y-0 left-0 w-3 flex items-center justify-center cursor-ew-resize bg-primary z-10' onPointerDown={startDrag('start')}>
+                            <div className='w-0.5 h-3 rounded-full bg-primary-foreground' />
                         </div>
-                        <div
-                            className='absolute inset-y-0 right-0 w-3 flex items-center justify-center cursor-ew-resize bg-primary z-10'
-                            onPointerDown={startDrag('end')}
-                        >
-                            <div className='w-0.5 h-4 rounded-full bg-primary-foreground' />
+                        <div className='absolute inset-y-0 right-0 w-3 flex items-center justify-center cursor-ew-resize bg-primary z-10' onPointerDown={startDrag('end')}>
+                            <div className='w-0.5 h-3 rounded-full bg-primary-foreground' />
                         </div>
                     </div>
                 )}
 
                 {/* Playhead */}
-                <div
-                    className='absolute inset-y-0 w-px bg-white/90 shadow-md pointer-events-none z-20'
-                    style={{ left: `${pct(currentTime)}%` }}
-                />
+                <div className='absolute inset-y-0 w-px bg-white/90 shadow pointer-events-none z-20' style={{ left: `${pct(currentTime)}%` }} />
             </div>
 
-            {/* Time info row */}
+            {/* Time info + warning */}
             {timelineSelection && (
                 <div className='flex items-center justify-between text-[10px] tabular-nums'>
-                    <span className='text-muted-foreground'>
-                        {t('attachments.segStart')}{' '}
-                        <span className='font-medium text-foreground'>{fmt(start)}</span>
-                    </span>
+                    <span className='text-muted-foreground font-medium'>{fmt(start)}</span>
                     <span className={cn(
-                        'font-semibold',
-                        warning === 'too_long'  && 'text-destructive',
-                        warning === 'too_short' && 'text-amber-500',
-                        !warning               && 'text-primary',
+                        'font-semibold px-2 py-0.5 rounded-full text-[9px]',
+                        warning === 'too_long'  && 'bg-destructive/10 text-destructive',
+                        warning === 'too_short' && 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
+                        !warning               && 'bg-primary/10 text-primary',
                     )}>
                         {fmt(selDuration)}
+                        {warning === 'too_long'  && ` · max ${TIMELINE.MAX_DURATION}s`}
+                        {warning === 'too_short' && ` · min ${TIMELINE.MIN_DURATION}s`}
                     </span>
-                    <span className='text-muted-foreground'>
-                        {t('attachments.segEnd')}{' '}
-                        <span className='font-medium text-foreground'>{fmt(end)}</span>
-                    </span>
+                    <span className='text-muted-foreground font-medium'>{fmt(end)}</span>
                 </div>
             )}
 
-            {/* Constraint warning */}
-            {warning && (
-                <p className={cn(
-                    'text-[10px] text-center',
-                    warning === 'too_long' ? 'text-destructive' : 'text-amber-500',
-                )}>
-                    {warning === 'too_long'
-                        ? t('attachments.tooLong',  { max: TIMELINE.MAX_DURATION })
-                        : t('attachments.tooShort', { min: TIMELINE.MIN_DURATION })}
-                </p>
-            )}
-
-            {/* Recording progress bar */}
-            {isAnalyzing && (
-                <div className='space-y-1'>
-                    <div className='h-1 w-full rounded-full bg-muted overflow-hidden'>
-                        <div
-                            className='h-full bg-primary rounded-full transition-all duration-200'
-                            style={{ width: `${clipProgress}%` }}
-                        />
-                    </div>
-                    <p className='text-[10px] text-center text-muted-foreground'>
-                        {t('attachments.recording')} {clipProgress}%
-                    </p>
-                </div>
-            )}
-
-            {/* Analyze button */}
-            <Button
-                type='button'
-                size='sm'
-                className='w-full gap-2 text-xs h-8'
-                disabled={!timelineSelection || warning !== null || isAnalyzing}
-                onClick={handleAnalyze}
-            >
-                {isAnalyzing ? (
-                    <>
-                        <Loader2 className='size-3.5 animate-spin' />
-                        {t('attachments.analyzing')}
-                    </>
-                ) : (
-                    <>
-                        <Sparkles className='size-3.5' />
-                        {t('attachments.analyzeBtn')}
-                    </>
-                )}
-            </Button>
         </div>
     )
 }
