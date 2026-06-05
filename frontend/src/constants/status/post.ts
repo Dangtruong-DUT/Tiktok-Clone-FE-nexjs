@@ -1,3 +1,17 @@
+import type { LucideIcon } from 'lucide-react'
+import { Globe, Lock, Users } from 'lucide-react'
+
+export interface AudienceConfig {
+    labelKey: string
+    icon: LucideIcon
+}
+
+export const AUDIENCE_CONFIGS: Record<string, AudienceConfig> = {
+    everyone: { labelKey: 'posts.audience.public', icon: Globe },
+    friends: { labelKey: 'posts.audience.friends', icon: Users },
+    only_me: { labelKey: 'posts.audience.private', icon: Lock },
+}
+
 export const PostStatus = {
     VISIBLE: 'visible',
     DELETED: 'deleted'

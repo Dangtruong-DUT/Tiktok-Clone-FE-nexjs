@@ -4,6 +4,7 @@ namespace App\Services\Admin;
 
 use App\Http\Resources\Api\Admin\System\ActivityLogResource;
 use App\Http\Resources\Api\Admin\System\AdminLogResource;
+use App\Models\Appeal;
 use App\Models\Post;
 use App\Models\User;
 use App\Repositories\ActivityLogRepository;
@@ -44,6 +45,7 @@ class SystemAdminService
             'total_admin_actions' => $this->adminLogRepository->countSince($dateFrom),
             'new_users_this_period' => User::where('created_at', '>=', $dateFrom)->count(),
             'new_posts_this_period' => Post::where('created_at', '>=', $dateFrom)->count(),
+            'pending_appeals' => Appeal::where('status', 'pending')->count(),
         ];
     }
 

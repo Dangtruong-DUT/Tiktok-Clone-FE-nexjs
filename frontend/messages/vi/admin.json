@@ -20,6 +20,11 @@
             "panelLabel": "Bảng quản trị",
             "consoleSubtitle": "Hệ thống quản lý",
             "navigation": "Điều hướng",
+            "navGroups": {
+                "manage": "Quản lý",
+                "moderate": "Kiểm duyệt",
+                "system": "Hệ thống"
+            },
             "backToSite": "Về trang chính",
             "accountMenu": "Menu tài khoản",
             "settings": "Cài đặt",
@@ -241,17 +246,17 @@
             "description": "Tổng quan hệ thống và hoạt động kiểm duyệt",
             "statistics": "Thống kê",
             "recentActivity": "Hoạt động gần đây",
+            "recentAdminActivity": "Hoạt động quản trị gần đây",
+            "viewAll": "Xem tất cả",
             "totalUsers": "Tổng người dùng",
-            "totalPosts": "Tổng bài viết",
+            "totalPosts": "Tổng video",
             "bannedUsers": "Người dùng bị khóa",
             "adminActions": "Hành động quản trị",
-            "quickActions": {
-                "title": "Thao tác nhanh",
-                "reviewAppeals": "Xem kháng cáo",
-                "manageUsers": "Quản lý người dùng",
-                "moderatePosts": "Kiểm duyệt bài viết",
-                "moderateComments": "Kiểm duyệt bình luận"
-            }
+            "thisPeriod": "+{count} trong kỳ",
+            "today": "hôm nay",
+            "needsReview": "Cần xem xét",
+            "needsReviewSub": "Hàng đợi kiểm duyệt",
+            "pendingAppeals": "Kháng cáo chờ duyệt"
         },
         "moderation": {
             "title": "Kiểm duyệt bài viết"
@@ -373,11 +378,26 @@
             "emptyState": "Không có bài viết",
             "columns": {
                 "id": "ID",
+                "video": "Video",
                 "title": "Nội dung",
+                "creator": "Tác giả",
                 "author": "Tác giả",
+                "views": "Lượt xem",
+                "likes": "Lượt thích",
+                "comments": "Bình luận",
+                "visibility": "Hiển thị",
                 "status": "Trạng thái",
                 "uploadDate": "Ngày tạo",
                 "actions": "Thao tác"
+            },
+            "audience": {
+                "public": "Công khai",
+                "friends": "Bạn bè",
+                "private": "Riêng tư"
+            },
+            "liveStatus": {
+                "live": "Đang phát",
+                "removed": "Đã xóa"
             },
             "filters": {
                 "allStatuses": "Tất cả trạng thái",
@@ -634,6 +654,22 @@
             "password_changed": "Thay đổi mật khẩu",
             "login": "Đăng nhập",
             "logout": "Đăng xuất"
+        },
+        "activitySentence": {
+            "ban": "đã khóa người dùng",
+            "unban": "đã mở khóa người dùng",
+            "delete_user": "đã xóa người dùng",
+            "restore_user": "đã khôi phục người dùng",
+            "delete_post": "đã xóa video",
+            "restore_post": "đã khôi phục video",
+            "delete_comment": "đã xóa bình luận",
+            "restore_comment": "đã khôi phục bình luận",
+            "reset_user_password": "đã đặt lại mật khẩu cho",
+            "send_email_to_user": "đã gửi email đến",
+            "approve_appeal": "đã duyệt kháng cáo",
+            "reject_appeal": "đã từ chối kháng cáo",
+            "update": "đã cập nhật",
+            "you": "Bạn"
         },
         "violationReasons": {
             "spam": "Spam",

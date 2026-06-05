@@ -48,6 +48,7 @@ export interface DashboardStats {
     readonly total_admin_actions: number
     readonly new_users_this_period: number
     readonly new_posts_this_period: number
+    readonly pending_appeals: number
 }
 
 export type GetActivityLogsRes = ApiSuccessResponseWithMeta<AdminActivityListItem[]>

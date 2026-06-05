@@ -14,6 +14,13 @@ export interface AdminPost {
     readonly user_uuid?: string | null
     readonly author?: AdminPostAuthor
     readonly content: string
+    readonly status: string | null
+    readonly audience: string | null
+    readonly thumbnail_url: string | null
+    readonly likes_count: number
+    readonly comments_count: number
+    readonly views_count: number
+    readonly published_at: string | null
     readonly created_at: string
     readonly deleted_at: string | null
 }

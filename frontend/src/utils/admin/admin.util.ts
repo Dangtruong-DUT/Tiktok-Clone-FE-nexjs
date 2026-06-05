@@ -1,5 +1,8 @@
 import { UserStatus, UserStatusType } from '@/constants/status/user'
 import { PostStatus, PostStatusType } from '@/constants/status/post'
+import { ADMIN_ACTION_ICONS, type ActionIconConfig } from '@/constants/admin/actions'
+import type { AdminActivityListItem, ActivityLog } from '@/types/dtos/admin/admin-response.dto'
+import { ShieldCheck } from 'lucide-react'
 
 export function getUserStatus(user: { deleted_at?: string | null; banned_at?: string | null }): UserStatusType {
     if (user.deleted_at) return UserStatus.DELETED
@@ -39,4 +42,26 @@ export function isRecentAction(dateString: string | null, hoursThreshold = 24): 
     if (!dateString) return false
     const diffInHours = (Date.now() - new Date(dateString).getTime()) / (1000 * 60 * 60)
     return diffInHours < hoursThreshold
+}
+
+const DEFAULT_ICON_CONFIG: ActionIconConfig = {
+    icon: ShieldCheck,
+    className: 'bg-zinc-500/15 text-zinc-400',
+}
+
+export function getActionIconConfig(actionKey: string): ActionIconConfig {
+    return ADMIN_ACTION_ICONS[actionKey] ?? DEFAULT_ICON_CONFIG
+}
+
+export function getActivityActorName(log: AdminActivityListItem): string | undefined {
+    if ('action' in log) return log.admin?.username
+    if ('action_type' in log) return (log as ActivityLog).user?.username
+    return undefined
+}
+
+export function formatActivityResourceRef(log: AdminActivityListItem): string {
+    const resourceId = log.resource_id
+    if (!resourceId) return ''
+    const prefix = log.resource_type ? log.resource_type.charAt(0).toUpperCase() : 'R'
+    return `${prefix}-${resourceId}`
 }

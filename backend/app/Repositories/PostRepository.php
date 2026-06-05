@@ -162,10 +162,15 @@ class PostRepository extends BaseRepository
             ->with([
                 'user:id,uuid,username,avatar_file_id',
                 'user.avatarFile:id,file_path,disk',
+                'thumbnailFile:id,file_path,disk',
                 'media:id,post_id,type,upload_file_id',
                 'media.file:id',
             ])
-            ->select(['id', 'uuid', 'user_id', 'content', 'status', 'published_at', 'created_at', 'deleted_at', 'thumbnail_file_id'])
+            ->select([
+                'id', 'uuid', 'user_id', 'content', 'status', 'audience',
+                'published_at', 'created_at', 'deleted_at', 'thumbnail_file_id',
+                'likes_count', 'comments_count', 'guest_views', 'user_views',
+            ])
             ->paginate($perPage);
     }
 

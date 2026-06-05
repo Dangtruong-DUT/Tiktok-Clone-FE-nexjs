@@ -21,17 +21,22 @@ class AdminPostResource extends BaseJsonResource
         }
 
         return [
-            'id'           => $this->id,
-            'uuid'         => $this->uuid,
-            'user_id'      => $this->user_id,
-            'user_uuid'    => $this->whenLoaded('user', fn () => $this->user?->uuid),
-            'content'      => $this->content,
-            'status'       => $this->status?->value ?? $this->status,
-            'status_label' => $this->status?->translate() ?? null,
-            'published_at' => $this->published_at?->toDateTimeString(),
-            'deleted_at'   => $this->deleted_at?->toDateTimeString(),
-            'created_at'   => $this->created_at?->toDateTimeString(),
-            'author'       => $this->whenLoaded('user', function () use ($avatar) {
+            'id'            => $this->id,
+            'uuid'          => $this->uuid,
+            'user_id'       => $this->user_id,
+            'user_uuid'     => $this->whenLoaded('user', fn () => $this->user?->uuid),
+            'content'       => $this->content,
+            'status'        => $this->status?->value ?? $this->status,
+            'status_label'  => $this->status?->translate() ?? null,
+            'published_at'  => $this->published_at?->toDateTimeString(),
+            'deleted_at'    => $this->deleted_at?->toDateTimeString(),
+            'created_at'    => $this->created_at?->toDateTimeString(),
+            'thumbnail_url' => $this->whenLoaded('thumbnailFile', fn () => $this->thumbnail_url),
+            'likes_count'   => $this->likes_count ?? 0,
+            'comments_count'=> $this->comments_count ?? 0,
+            'views_count'   => ($this->guest_views ?? 0) + ($this->user_views ?? 0),
+            'audience'      => $this->audience?->value,
+            'author'        => $this->whenLoaded('user', function () use ($avatar) {
                 return [
                     'id'       => $this->user?->id,
                     'uuid'     => $this->user?->uuid,

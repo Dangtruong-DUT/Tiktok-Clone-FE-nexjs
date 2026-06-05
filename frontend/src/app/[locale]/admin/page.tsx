@@ -4,10 +4,10 @@ import { LocalesType } from '@/i18n/config'
 import envConfig from '@/config/app.config'
 import { AdminLayout, AdminContainer } from '@/components/admin'
 import { DashboardStats } from './_components/dashboard-stats'
-import { DashboardQuickActions } from './_components/dashboard-quick-actions'
+import { DashboardNeedsReview } from './_components/dashboard-needs-review'
+import { DashboardRecentActivity } from './_components/dashboard-recent-activity'
 import { Suspense } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
-import { ActivityLog } from './activity/_components/activity-log'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: LocalesType }> }): Promise<Metadata> {
     const { locale } = await params
@@ -32,7 +32,7 @@ export default async function AdminDashboardPage() {
     return (
         <AdminLayout title={t('dashboard.title')} description={t('dashboard.description')}>
             <AdminContainer>
-                <div className='space-y-8'>
+                <div className='space-y-6'>
                     <section>
                         <p className='mb-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground'>
                             {t('dashboard.statistics')}
@@ -41,7 +41,7 @@ export default async function AdminDashboardPage() {
                             fallback={
                                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
                                     {Array.from({ length: 4 }).map((_, i) => (
-                                        <Skeleton key={i} className='h-24' />
+                                        <Skeleton key={i} className='h-28' />
                                     ))}
                                 </div>
                             }
@@ -50,25 +50,26 @@ export default async function AdminDashboardPage() {
                         </Suspense>
                     </section>
 
-                    <section>
-                        <DashboardQuickActions />
-                    </section>
+                    <section className='grid grid-cols-1 lg:grid-cols-5 gap-6'>
+                        <div className='lg:col-span-3 flex flex-col gap-4'>
+                            <Suspense
+                                fallback={
+                                    <div className='space-y-2'>
+                                        {Array.from({ length: 5 }).map((_, i) => (
+                                            <Skeleton key={i} className='h-14' />
+                                        ))}
+                                    </div>
+                                }
+                            >
+                                <DashboardRecentActivity />
+                            </Suspense>
+                        </div>
 
-                    <section>
-                        <p className='mb-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground'>
-                            {t('dashboard.recentActivity')}
-                        </p>
-                        <Suspense
-                            fallback={
-                                <div className='space-y-3'>
-                                    {Array.from({ length: 8 }).map((_, i) => (
-                                        <Skeleton key={i} className='h-24' />
-                                    ))}
-                                </div>
-                            }
-                        >
-                            <ActivityLog type='all' />
-                        </Suspense>
+                        <div className='lg:col-span-2'>
+                            <Suspense fallback={<Skeleton className='h-40' />}>
+                                <DashboardNeedsReview />
+                            </Suspense>
+                        </div>
                     </section>
                 </div>
             </AdminContainer>

@@ -20,6 +20,11 @@
             "panelLabel": "Admin Panel",
             "consoleSubtitle": "Management Console",
             "navigation": "Navigation",
+            "navGroups": {
+                "manage": "Manage",
+                "moderate": "Moderate",
+                "system": "System"
+            },
             "backToSite": "Back to site",
             "accountMenu": "Account menu",
             "settings": "Settings",
@@ -238,17 +243,17 @@
             "description": "Overview of system state and moderation activity",
             "statistics": "Statistics",
             "recentActivity": "Recent Activity",
+            "recentAdminActivity": "Recent admin activity",
+            "viewAll": "View all",
             "totalUsers": "Total Users",
-            "totalPosts": "Total Posts",
+            "totalPosts": "Total Videos",
             "bannedUsers": "Banned Users",
             "adminActions": "Admin Actions",
-            "quickActions": {
-                "title": "Quick Actions",
-                "reviewAppeals": "Review Appeals",
-                "manageUsers": "Manage Users",
-                "moderatePosts": "Moderate Posts",
-                "moderateComments": "Moderate Comments"
-            }
+            "thisPeriod": "+{count} this period",
+            "today": "today",
+            "needsReview": "Needs review",
+            "needsReviewSub": "Open moderation queue",
+            "pendingAppeals": "Pending appeals"
         },
         "moderation": {
             "title": "Post Moderation"
@@ -365,11 +370,26 @@
             "emptyState": "No posts found",
             "columns": {
                 "id": "ID",
+                "video": "Video",
                 "title": "Content",
+                "creator": "Creator",
                 "author": "Author",
+                "views": "Views",
+                "likes": "Likes",
+                "comments": "Comments",
+                "visibility": "Visibility",
                 "status": "Status",
                 "uploadDate": "Created At",
                 "actions": "Actions"
+            },
+            "audience": {
+                "public": "Public",
+                "friends": "Friends",
+                "private": "Private"
+            },
+            "liveStatus": {
+                "live": "Live",
+                "removed": "Removed"
             },
             "filters": {
                 "allStatuses": "All statuses",
@@ -626,6 +646,22 @@
             "password_changed": "Password Changed",
             "login": "Login",
             "logout": "Logout"
+        },
+        "activitySentence": {
+            "ban": "banned user",
+            "unban": "unbanned user",
+            "delete_user": "deleted user",
+            "restore_user": "restored user",
+            "delete_post": "removed video",
+            "restore_post": "restored video",
+            "delete_comment": "removed comment",
+            "restore_comment": "restored comment",
+            "reset_user_password": "reset password for",
+            "send_email_to_user": "sent email to",
+            "approve_appeal": "approved appeal",
+            "reject_appeal": "rejected appeal",
+            "update": "updated",
+            "you": "You"
         },
         "violationReasons": {
             "spam": "Spam",

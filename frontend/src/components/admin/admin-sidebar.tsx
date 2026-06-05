@@ -5,6 +5,7 @@ import { useTranslations, useLocale } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
 import { ADMIN_ROUTES } from '@/constants/routes/routes'
+import { ADMIN_NAV_GROUPS } from '@/constants/admin/navigation'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
@@ -12,35 +13,16 @@ import SmallLogo from '@/components/common/small-logo'
 import { LANGUAGES } from '@/i18n/config'
 import useLanguage from '@/hooks/shared/useLanguage'
 import { useTheme } from 'next-themes'
-import {
-    Activity,
-    ArrowLeft,
-    Clock,
-    Flag,
-    LayoutDashboard,
-    MessageCircle,
-    Monitor,
-    Moon,
-    PanelLeftClose,
-    Settings,
-    Sparkles,
-    Sun,
-    UserRound,
-    Video
-} from 'lucide-react'
-
-interface NavItem {
-    title: string
-    href: string
-    icon: React.ComponentType<{ className?: string }>
-}
+import { ArrowLeft, Monitor, Moon, PanelLeftClose, Sun } from 'lucide-react'
+import type { DashboardStats } from '@/types/dtos/admin/admin-response.dto'
 
 interface AdminSidebarProps {
     collapsed: boolean
     onToggle: () => void
+    stats?: DashboardStats
 }
 
-export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
+export function AdminSidebar({ collapsed, onToggle, stats }: AdminSidebarProps) {
     const pathname = usePathname()
     const t = useTranslations('AdminPage')
     const locale = useLocale()
@@ -50,18 +32,6 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
     const localizedPath = (route: string) => `/${locale}${route}`
     const isActive = (route: string) =>
         route === ADMIN_ROUTES.DASHBOARD ? pathname === localizedPath(route) : pathname?.includes(localizedPath(route))
-
-    const navItems: NavItem[] = [
-        { title: t('dashboard.title'), href: ADMIN_ROUTES.DASHBOARD, icon: LayoutDashboard },
-        { title: t('users.title'), href: ADMIN_ROUTES.USERS, icon: UserRound },
-        { title: t('moderation.title'), href: ADMIN_ROUTES.POSTS, icon: Video },
-        { title: t('comments.title'), href: ADMIN_ROUTES.COMMENTS, icon: MessageCircle },
-        { title: t('appeals.title'), href: ADMIN_ROUTES.APPEALS, icon: Flag },
-        { title: t('activity.title'), href: ADMIN_ROUTES.ACTIVITY, icon: Activity },
-        { title: t('settings.title'), href: ADMIN_ROUTES.SETTINGS, icon: Settings },
-        { title: t('aiStudio.title'), href: ADMIN_ROUTES.AI_STUDIO, icon: Sparkles },
-        { title: t('scheduledPosts.title'), href: ADMIN_ROUTES.SCHEDULED_POSTS, icon: Clock }
-    ]
 
     const ThemeIcon = theme === 'dark' ? Moon : theme === 'light' ? Sun : Monitor
 
@@ -84,7 +54,7 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
                             <button
                                 onClick={onToggle}
                                 className='flex h-8 w-8 items-center justify-center rounded-lg text-white hover:bg-white/10 transition-colors'
-                                aria-label='Expand sidebar'
+                                aria-label={t('shell.expandSidebar')}
                             >
                                 <SmallLogo className='h-6 w-6' />
                             </button>
@@ -102,7 +72,7 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
                                 <button
                                     onClick={onToggle}
                                     className='ml-2 flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-zinc-500 hover:bg-white/10 hover:text-zinc-200 transition-colors'
-                                    aria-label='Collapse sidebar'
+                                    aria-label={t('shell.collapseSidebar')}
                                 >
                                     <PanelLeftClose className='h-4 w-4' />
                                 </button>
@@ -110,61 +80,79 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
                         )}
                     </div>
 
-                    <nav className='flex-1 overflow-y-auto py-3 px-2'>
-                        {!collapsed && (
-                            <p className='mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500'>
-                                {t('shell.navigation')}
-                            </p>
-                        )}
-                        <div className='space-y-0.5'>
-                            {navItems.map((item) => {
-                                const active = isActive(item.href)
-                                return collapsed ? (
-                                    <Tooltip key={item.href}>
-                                        <TooltipTrigger asChild>
+                    <nav className='flex-1 overflow-y-auto py-3 px-2 space-y-4'>
+                        {ADMIN_NAV_GROUPS.map((group) => (
+                            <div key={group.labelKey}>
+                                {!collapsed && (
+                                    <p className='mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500'>
+                                        {t(group.labelKey as Parameters<typeof t>[0])}
+                                    </p>
+                                )}
+                                <div className='space-y-0.5'>
+                                    {group.items.map((item) => {
+                                        const active = isActive(item.href)
+                                        const badge = item.badgeKey ? stats?.[item.badgeKey] : undefined
+                                        const showBadge = typeof badge === 'number' && badge > 0
+
+                                        return collapsed ? (
+                                            <Tooltip key={item.href}>
+                                                <TooltipTrigger asChild>
+                                                    <Link
+                                                        href={item.href}
+                                                        aria-current={active ? 'page' : undefined}
+                                                        className={cn(
+                                                            'relative flex h-9 w-full items-center justify-center rounded-md transition-colors',
+                                                            active
+                                                                ? 'bg-white/15 text-white'
+                                                                : 'text-zinc-400 hover:bg-white/8 hover:text-zinc-200'
+                                                        )}
+                                                    >
+                                                        <item.icon className='h-4 w-4 shrink-0' />
+                                                        {showBadge && (
+                                                            <span className='absolute top-1 right-1 h-1.5 w-1.5 rounded-full bg-orange-400' />
+                                                        )}
+                                                    </Link>
+                                                </TooltipTrigger>
+                                                <TooltipContent side='right' className='text-xs'>
+                                                    {t(item.titleKey as Parameters<typeof t>[0])}
+                                                    {showBadge && ` (${badge})`}
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        ) : (
                                             <Link
+                                                key={item.href}
                                                 href={item.href}
                                                 aria-current={active ? 'page' : undefined}
                                                 className={cn(
-                                                    'flex h-9 w-full items-center justify-center rounded-md transition-colors',
+                                                    'group flex items-center rounded-md px-2.5 py-2 text-sm font-medium transition-colors',
                                                     active
                                                         ? 'bg-white/15 text-white'
                                                         : 'text-zinc-400 hover:bg-white/8 hover:text-zinc-200'
                                                 )}
                                             >
-                                                <item.icon className='h-4 w-4 shrink-0' />
+                                                <item.icon
+                                                    className={cn(
+                                                        'mr-2.5 h-4 w-4 shrink-0',
+                                                        active ? 'text-white' : 'text-zinc-500 group-hover:text-zinc-200'
+                                                    )}
+                                                />
+                                                <span className='truncate flex-1'>
+                                                    {t(item.titleKey as Parameters<typeof t>[0])}
+                                                </span>
+                                                {showBadge && (
+                                                    <span className='ml-1.5 rounded-full bg-white/10 px-1.5 py-0.5 text-[10px] font-medium leading-none text-zinc-300'>
+                                                        {badge}
+                                                    </span>
+                                                )}
+                                                {active && !showBadge && (
+                                                    <span className='ml-auto h-1.5 w-1.5 shrink-0 rounded-full bg-white/50' />
+                                                )}
                                             </Link>
-                                        </TooltipTrigger>
-                                        <TooltipContent side='right' className='text-xs'>
-                                            {item.title}
-                                        </TooltipContent>
-                                    </Tooltip>
-                                ) : (
-                                    <Link
-                                        key={item.href}
-                                        href={item.href}
-                                        aria-current={active ? 'page' : undefined}
-                                        className={cn(
-                                            'group flex items-center rounded-md px-2.5 py-2 text-sm font-medium transition-colors',
-                                            active
-                                                ? 'bg-white/15 text-white'
-                                                : 'text-zinc-400 hover:bg-white/8 hover:text-zinc-200'
-                                        )}
-                                    >
-                                        <item.icon
-                                            className={cn(
-                                                'mr-2.5 h-4 w-4 shrink-0',
-                                                active ? 'text-white' : 'text-zinc-500 group-hover:text-zinc-200'
-                                            )}
-                                        />
-                                        <span className='truncate'>{item.title}</span>
-                                        {active && (
-                                            <span className='ml-auto h-1.5 w-1.5 shrink-0 rounded-full bg-white/50' />
-                                        )}
-                                    </Link>
-                                )
-                            })}
-                        </div>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        ))}
                     </nav>
 
                     <div className='shrink-0 border-t border-white/8 px-2 py-3 space-y-0.5'>
