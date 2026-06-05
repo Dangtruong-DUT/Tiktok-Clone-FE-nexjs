@@ -27,10 +27,15 @@ export function VideoEncodingPoller({ encoding }: VideoEncodingPollerProps) {
 
     const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated)
 
-    const { data } = useGetVideoUploadStatusQuery(encoding.sessionUuid, {
+    const { data, isError } = useGetVideoUploadStatusQuery(encoding.sessionUuid, {
         pollingInterval: 5000,
         skip: isTerminalStatus(encoding.status) || !isAuthenticated,
     })
+
+    useEffect(() => {
+        if (!isError) return
+        dispatch(untrackEncoding(encoding.sessionUuid))
+    }, [isError, dispatch, encoding.sessionUuid])
 
     useEffect(() => {
         if (!data) return

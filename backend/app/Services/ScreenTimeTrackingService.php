@@ -18,12 +18,18 @@ class ScreenTimeTrackingService
 
     public function startSession(int $userId): ScreenTimeSession
     {
-        // Close any lingering active sessions from previous context
-        $stale = $this->repository->findActiveForUser($userId);
-        if ($stale) {
-            // Use Unix timestamps to avoid Carbon direction ambiguity
-            $elapsed = max(0, now()->timestamp - $stale->started_at->timestamp);
-            $this->repository->update($stale->id, [
+        $active = $this->repository->findActiveForUser($userId);
+
+        // Return the existing session if it was created very recently.
+        // This makes the endpoint idempotent against React StrictMode double-invoke
+        // and rapid re-mounts that would otherwise create back-to-back sessions.
+        if ($active && $active->started_at->diffInSeconds(now()) < 120) {
+            return $active;
+        }
+
+        if ($active) {
+            $elapsed = max(0, now()->timestamp - $active->started_at->timestamp);
+            $this->repository->update($active->id, [
                 'ended_at'         => now(),
                 'duration_seconds' => $elapsed,
             ]);

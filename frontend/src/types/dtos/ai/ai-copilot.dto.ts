@@ -22,10 +22,17 @@ export interface SendAiCopilotMessageAttachmentsDto {
     video_clip?: string
 }
 
+export interface AiCopilotCurrentContentDto {
+    caption?: string
+    title?: string
+    hashtags?: string
+}
+
 export interface SendAiCopilotMessageReqBodyDto {
-    sessionUuid: string
-    content: string
-    attachments?: SendAiCopilotMessageAttachmentsDto
+    sessionUuid:     string
+    content:         string
+    attachments?:    SendAiCopilotMessageAttachmentsDto
+    current_content?: AiCopilotCurrentContentDto
 }
 
 export interface StreamingMessageDataDto {

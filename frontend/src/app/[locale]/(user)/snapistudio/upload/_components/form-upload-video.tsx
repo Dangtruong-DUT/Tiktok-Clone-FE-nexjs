@@ -55,15 +55,18 @@ export default function FormUploadVideo() {
     const isUploading = uploadStatus === 'uploading'
     const isSubmitDisabled = isSubmitLoading || isUploading || !sessionUuid
 
-    const content = form.watch('content')
+    const content  = form.watch('content')
+    const hashtags = form.watch('hashtags')
 
-    // Sync form content to AI Copilot context
+    // Sync live form content to AI Copilot context — AI reads this to help improve/rewrite
     useEffect(() => {
         setVideoContext({
-            video_description:    content ?? '',
-            upload_session_uuid:  sessionUuid ?? undefined,
+            video_description:   content   ?? '',
+            upload_session_uuid: sessionUuid ?? undefined,
+            // Map hashtags array to space-separated string for the AI context
+            video_category:      hashtags?.join(' ') ?? '',
         })
-    }, [content, sessionUuid, setVideoContext])
+    }, [content, hashtags, sessionUuid, setVideoContext])
 
     // Register form field patch callbacks for Accept flow
     useEffect(() => {

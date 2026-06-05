@@ -531,11 +531,20 @@
             "input": {
                 "placeholder": "Ask the AI Copilot anything…"
             },
+            "navCard": {
+                "title": "Relevant pages"
+            },
+            "error": {
+                "title": "Something went wrong",
+                "generic": "An error occurred connecting to AI. Please try again.",
+                "retry": "Try again"
+            },
             "contentCard": {
                 "applied": "Applied to form",
                 "dismissed": "Dismissed",
-                "accept": "Accept",
-                "reject": "Reject"
+                "accept": "Apply to post",
+                "reject": "Dismiss",
+                "copy": "Copy text"
             },
             "scheduleCard": {
                 "panelTitle": "Proposed publish time",
@@ -560,6 +569,9 @@
                 "tooShort": "Select at least {min}s",
                 "tooLong": "Max {max}s per analysis",
                 "analyzeBtn": "Analyze With AI",
+                "reAnalyzeBtn": "Re-analyze",
+                "clipSent": "Sent",
+                "reselect": "Re-select",
                 "analyzing": "Recording…",
                 "recording": "Recording clip",
                 "analyzePrompt": "Analyze this video segment from {start} to {end}"

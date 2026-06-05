@@ -14,8 +14,9 @@ use App\Models\AiStudioSetting;
 use App\Repositories\AiCopilotMessageRepository;
 use App\Repositories\AiCopilotSessionRepository;
 use App\Repositories\AiPromptTemplateRepository;
-use App\Repositories\AiUsageLogRepository;
+
 use App\Services\AI\Copilot\Handlers\AbstractCopilotHandler;
+use App\Services\AI\Copilot\Handlers\AdminQueryStatsHandler;
 use App\Services\AI\Copilot\Handlers\AnalyzeFrameHandler;
 use App\Services\AI\Copilot\Handlers\AnalyzeVideoSegmentHandler;
 use App\Services\AI\Copilot\Handlers\AnalyzeViralHandler;
@@ -23,6 +24,11 @@ use App\Services\AI\Copilot\Handlers\CopilotHandlerInterface;
 use App\Services\AI\Copilot\Handlers\GeneralAdviceHandler;
 use App\Services\AI\Copilot\Handlers\GeneralAnalysisHandler;
 use App\Services\AI\Copilot\Handlers\GenerateHashtagsHandler;
+use App\Services\AI\Copilot\Handlers\NavigateToHandler;
+use App\Services\AI\Copilot\Handlers\QueryAppInfoHandler;
+use App\Services\AI\Copilot\Handlers\QueryPostStatsHandler;
+use App\Services\AI\Copilot\Handlers\QueryScreenTimeHandler;
+use App\Services\AI\Copilot\Handlers\QueryUserStatsHandler;
 use App\Services\AI\Copilot\Handlers\RewriteContentHandler;
 use App\Services\AI\Copilot\Handlers\SchedulePostHandler;
 use App\Services\AI\Copilot\Handlers\WriteCaptionHandler;
@@ -34,7 +40,6 @@ class AiCopilotService
         private readonly AiCopilotSessionRepository  $sessionRepo,
         private readonly AiCopilotMessageRepository  $messageRepo,
         private readonly AiPromptTemplateRepository  $templateRepo,
-        private readonly AiUsageLogRepository        $usageLogRepo,
         private readonly AiCopilotIntentDetector     $intentDetector,
         private readonly WriteCaptionHandler     $writeCaptionHandler,
         private readonly GenerateHashtagsHandler  $hashtagHandler,
@@ -45,6 +50,12 @@ class AiCopilotService
         private readonly GeneralAnalysisHandler   $analysisHandler,
         private readonly GeneralAdviceHandler     $adviceHandler,
         private readonly SchedulePostHandler      $schedulePostHandler,
+        private readonly QueryUserStatsHandler    $queryUserStatsHandler,
+        private readonly QueryPostStatsHandler    $queryPostStatsHandler,
+        private readonly QueryScreenTimeHandler   $queryScreenTimeHandler,
+        private readonly NavigateToHandler        $navigateToHandler,
+        private readonly QueryAppInfoHandler      $queryAppInfoHandler,
+        private readonly AdminQueryStatsHandler   $adminQueryStatsHandler,
     ) {}
 
     public function getSessionWithMessages(string $uuid, int $userId): AiCopilotSession
@@ -132,7 +143,7 @@ class AiCopilotService
             throw new \RuntimeException('Session message limit reached. Please start a new session.');
         }
 
-        $userMessage = $this->saveMessage($session, AiCopilotMessageRoleEnum::USER, $input->content, [
+        $this->saveMessage($session, AiCopilotMessageRoleEnum::USER, $input->content, [
             'attachments' => $input->attachmentsMeta(),
         ]);
 
@@ -144,8 +155,23 @@ class AiCopilotService
             ?? $this->templateRepo->findByIntent(AiCopilotIntentEnum::GENERAL_ADVICE->value)
             ?? $this->fallbackTemplate($intent);
 
-        $handler      = $this->resolveHandler($intent);
-        $context      = AiCopilotSessionContext::fromArray($session->context_snapshot ?? []);
+        $handler = $this->resolveHandler($intent);
+        $context = AiCopilotSessionContext::fromArray($session->context_snapshot ?? []);
+        // Inject runtime-only fields (never stored in context_snapshot)
+        $context = new AiCopilotSessionContext(
+            videoTitle:        $context->videoTitle,
+            videoDescription:  $context->videoDescription,
+            videoCategory:     $context->videoCategory,
+            videoTranscript:   $context->videoTranscript,
+            ocrText:           $context->ocrText,
+            creatorLanguage:   $context->creatorLanguage,
+            uploadSessionUuid: $context->uploadSessionUuid,
+            postUuid:          $context->postUuid,
+            currentCaption:    $input->currentCaption ?? $context->currentCaption,
+            currentHashtags:   $input->currentHashtags ?? $context->currentHashtags,
+            currentTitle:      $input->currentTitle    ?? $context->currentTitle,
+            userId:            $session->user_id,
+        );
         $handlerResult = $handler->handle($intent, $input, $context, $template, $history);
 
         $assistantMessage = $this->saveMessage(
@@ -165,7 +191,7 @@ class AiCopilotService
         );
 
         // Log two calls: intent detection + handler
-        $this->logUsage($session, $assistantMessage, $intent, $handlerResult, $detection['confidence']);
+        $this->logUsage($session, $assistantMessage, $intent, $handlerResult);
 
         return $assistantMessage;
     }
@@ -232,6 +258,12 @@ class AiCopilotService
             AiCopilotIntentEnum::ANALYZE_RETENTION,
             AiCopilotIntentEnum::ANALYZE_CTA,
             AiCopilotIntentEnum::ANALYZE_AUDIENCE   => $this->analysisHandler,
+            AiCopilotIntentEnum::QUERY_USER_STATS   => $this->queryUserStatsHandler,
+            AiCopilotIntentEnum::QUERY_POST_STATS   => $this->queryPostStatsHandler,
+            AiCopilotIntentEnum::QUERY_SCREEN_TIME  => $this->queryScreenTimeHandler,
+            AiCopilotIntentEnum::NAVIGATE_TO        => $this->navigateToHandler,
+            AiCopilotIntentEnum::QUERY_APP_INFO     => $this->queryAppInfoHandler,
+            AiCopilotIntentEnum::ADMIN_QUERY_STATS  => $this->adminQueryStatsHandler,
             default                                  => $this->adviceHandler,
         };
     }
@@ -241,18 +273,17 @@ class AiCopilotService
         $t = new AiPromptTemplate();
         $t->intent       = $intent->value;
         $t->display_name = 'Fallback';
-        $t->system_prompt = 'You are a helpful creator copilot for TikTok-style short videos. Be concise and actionable.';
+        $t->system_prompt = 'You are Snapi AI — a helpful creator assistant for short-form video on Snapi Studio. Be concise and actionable. Respond in the creator\'s language (Vietnamese or English).';
         $t->user_template = '{{user_message}}';
 
         return $t;
     }
 
     private function logUsage(
-        AiCopilotSession    $session,
-        AiCopilotMessage    $message,
-        AiCopilotIntentEnum $intent,
+        AiCopilotSession     $session,
+        AiCopilotMessage     $message,
+        AiCopilotIntentEnum  $intent,
         CopilotHandlerResult $result,
-        float               $confidence,
     ): void {
         $settings = AiStudioSetting::current();
 

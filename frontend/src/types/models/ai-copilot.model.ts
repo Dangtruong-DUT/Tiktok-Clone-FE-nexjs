@@ -34,7 +34,18 @@ export interface AiCopilotScheduleOutput {
     confidence: number
 }
 
-export type AiCopilotAnyOutput = AiCopilotStructuredOutput | AiCopilotScheduleOutput
+export interface AiCopilotNavRoute {
+    label:       string
+    path:        string
+    description: string
+}
+
+export interface AiCopilotNavOutput {
+    type:   typeof AI_COPILOT_OUTPUT_TYPES.NAV_CARD
+    routes: AiCopilotNavRoute[]
+}
+
+export type AiCopilotAnyOutput = AiCopilotStructuredOutput | AiCopilotScheduleOutput | AiCopilotNavOutput
 
 export interface AiCopilotMessage {
     uuid: string

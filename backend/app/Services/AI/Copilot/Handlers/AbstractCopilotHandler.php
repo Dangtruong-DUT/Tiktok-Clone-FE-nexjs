@@ -109,7 +109,7 @@ abstract class AbstractCopilotHandler
      * Strip markdown code fences from a Gemini JSON response.
      * Gemini occasionally wraps JSON in ```json ... ``` even when asked not to.
      */
-    protected static function cleanJsonResponse(string $raw): string
+    public static function cleanJsonResponse(string $raw): string
     {
         $clean = (string) preg_replace('/^```(?:json)?\s*/m', '', $raw);
         $clean = (string) preg_replace('/```\s*$/m', '', $clean);

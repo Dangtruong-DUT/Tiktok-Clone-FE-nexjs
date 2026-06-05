@@ -4,8 +4,10 @@ namespace App\Services\AI\Providers;
 
 use App\Exceptions\GeminiQuotaExceededException;
 use App\Models\AiStudioSetting;
+use Gemini\Data\Blob;
 use Gemini\Data\Content;
 use Gemini\Data\GenerationConfig;
+use Gemini\Data\Part;
 use Gemini\Data\UsageMetadata;
 use Gemini\Enums\ResponseMimeType;
 use Gemini\Enums\Role;
@@ -72,14 +74,15 @@ class GeminiClient
 
         Log::debug('[Gemini] generateWithHistory()', ['model' => $model, 'turns' => count($contents)]);
 
-        [$history, $userText] = $this->splitContents($contents);
+        [$history, $lastRawParts] = $this->splitContents($contents);
+        $userContent = $this->buildContent($lastRawParts, Role::USER);
 
         try {
             $response = Gemini::generativeModel(model: $model)
                 ->withSystemInstruction(Content::parse(part: $systemPrompt, role: Role::USER))
                 ->withGenerationConfig($this->buildConfig($settings, $config))
                 ->startChat(history: $history)
-                ->sendMessage($userText);
+                ->sendMessage($userContent);
 
             $text = $this->responseText($response);
 
@@ -119,17 +122,29 @@ class GeminiClient
 
         Log::debug('[Gemini] streamWithHistory()', ['model' => $model, 'turns' => count($contents)]);
 
-        [$history, $userText] = $this->splitContents($contents);
+        [$history, $lastRawParts] = $this->splitContents($contents);
 
         $apiKey  = config('gemini.api_key');
         $baseUrl = rtrim((string) config('gemini.base_url', 'https://generativelanguage.googleapis.com/v1beta'), '/');
         $modelId = str_starts_with($model, 'models/') ? $model : "models/{$model}";
         $url     = "{$baseUrl}/{$modelId}:streamGenerateContent";
 
+        $normalizedParts = [];
+        foreach ($lastRawParts as $part) {
+            if (! is_array($part)) {
+                continue;
+            }
+            if (isset($part['inlineData']) && is_array($part['inlineData'])) {
+                $normalizedParts[] = ['inlineData' => $part['inlineData']];
+            } elseif (isset($part['text']) && trim((string) $part['text']) !== '') {
+                $normalizedParts[] = ['text' => (string) $part['text']];
+            }
+        }
+
         $requestBody = [
             'contents' => array_merge(
                 array_map(fn (Content $c) => $c->toArray(), $history),
-                $userText !== '' ? [['role' => 'user', 'parts' => [['text' => $userText]]]] : [],
+                !empty($normalizedParts) ? [['role' => 'user', 'parts' => $normalizedParts]] : [],
             ),
             'systemInstruction' => Content::parse(part: $systemPrompt, role: Role::USER)->toArray(),
             'generationConfig'  => $this->buildConfig($settings)->toArray(),
@@ -228,14 +243,14 @@ class GeminiClient
 
 
     /**
-     * Split a contents array into (history: Content[], userText: string).
+     * Split a contents array into (history: Content[], lastRawParts: array).
      *
-     * The last element must be the current user turn; everything before it is history.
-     * Only text is forwarded — inlineData (frames, video) is dropped intentionally,
-     * matching the previous implementation.
+     * The last element is the current user turn — returned as raw parts so callers
+     * can preserve inlineData (video clip, image frames) rather than stripping them.
+     * History turns are text-only Content objects (multimodal history not supported by SDK).
      *
      * @param  array<array{role: string, parts: array}>  $contents
-     * @return array{0: Content[], 1: string}
+     * @return array{0: Content[], 1: array}
      */
     private function splitContents(array $contents): array
     {
@@ -243,14 +258,40 @@ class GeminiClient
             throw new \InvalidArgumentException('[GeminiClient] contents array must not be empty.');
         }
 
-        $last     = array_pop($contents);
-        $userText = $this->extractText($last['parts'] ?? []);
-
+        $last    = array_pop($contents);
         $history = array_values(array_filter(
             array_map(fn (array $item) => $this->toContent($item), $contents)
         ));
 
-        return [$history, $userText];
+        return [$history, $last['parts'] ?? []];
+    }
+
+    /**
+     * Build a SDK Content object from a raw parts array, preserving inlineData blobs.
+     *
+     * @param  array<mixed>  $rawParts
+     */
+    private function buildContent(array $rawParts, Role $role): Content
+    {
+        $parts = [];
+
+        foreach ($rawParts as $part) {
+            if (! is_array($part)) {
+                continue;
+            }
+
+            if (isset($part['inlineData']) && is_array($part['inlineData'])) {
+                $parts[] = new Part(inlineData: Blob::from($part['inlineData']));
+            } elseif (isset($part['text']) && trim((string) $part['text']) !== '') {
+                $parts[] = new Part(text: (string) $part['text']);
+            }
+        }
+
+        if (empty($parts)) {
+            $parts = [new Part(text: '')];
+        }
+
+        return new Content(parts: $parts, role: $role);
     }
 
     /**

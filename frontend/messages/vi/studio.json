@@ -531,11 +531,20 @@
             "input": {
                 "placeholder": "Hỏi AI Copilot bất cứ điều gì…"
             },
+            "navCard": {
+                "title": "Trang liên quan"
+            },
+            "error": {
+                "title": "Có lỗi xảy ra",
+                "generic": "Không thể kết nối với AI. Vui lòng thử lại.",
+                "retry": "Thử lại"
+            },
             "contentCard": {
-                "applied": "Đã áp dụng vào form",
+                "applied": "Đã áp dụng vào bài đăng",
                 "dismissed": "Đã bỏ qua",
-                "accept": "Chấp nhận",
-                "reject": "Bỏ qua"
+                "accept": "Áp dụng vào bài đăng",
+                "reject": "Bỏ qua",
+                "copy": "Sao chép"
             },
             "scheduleCard": {
                 "panelTitle": "Đề xuất lịch đăng bài",
@@ -560,6 +569,9 @@
                 "tooShort": "Chọn ít nhất {min} giây",
                 "tooLong": "Tối đa {max} giây mỗi lần phân tích",
                 "analyzeBtn": "Phân tích với AI",
+                "reAnalyzeBtn": "Phân tích lại",
+                "clipSent": "Đã gửi",
+                "reselect": "Chọn lại",
                 "analyzing": "Đang ghi…",
                 "recording": "Đang cắt đoạn video",
                 "analyzePrompt": "Phân tích đoạn video từ {start} đến {end}"
