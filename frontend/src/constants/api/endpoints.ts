@@ -126,9 +126,16 @@ export const BACKEND_API_ENDPOINT = {
             // AI Copilot admin
             COPILOT_METRICS:   '/admin/ai-studio/copilot/metrics',
             COPILOT_SESSIONS:  '/admin/ai-studio/copilot/sessions',
-            PROMPT_TEMPLATES:  '/admin/ai-studio/prompt-templates',
-            PROMPT_TEMPLATE:   (intent: string) => `/admin/ai-studio/prompt-templates/${intent}`,
-            FEATURE_FLAGS:     '/admin/ai-studio/feature-flags',
+            PROMPT_TEMPLATES:     '/admin/ai-studio/prompt-templates',
+            PROMPT_TEMPLATE:      (intent: string) => `/admin/ai-studio/prompt-templates/${intent}`,
+            LOCK_TEMPLATE:        (intent: string) => `/admin/ai-studio/prompt-templates/${intent}/lock`,
+            UNLOCK_TEMPLATE:      (intent: string) => `/admin/ai-studio/prompt-templates/${intent}/unlock`,
+            FEATURE_FLAGS:        '/admin/ai-studio/feature-flags',
+        },
+        AI_KNOWLEDGE: {
+            DOCUMENTS: '/admin/ai-studio/knowledge/documents',
+            DOCUMENT:  (id: number) => `/admin/ai-studio/knowledge/documents/${id}`,
+            UPLOAD:    '/admin/ai-studio/knowledge/documents/upload',
         },
         SCHEDULED_POSTS: {
             METRICS:      '/admin/scheduled-posts/metrics',

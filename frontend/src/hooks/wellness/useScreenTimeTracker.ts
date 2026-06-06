@@ -13,7 +13,8 @@ import {
 import { useListRulesQuery } from '@/store/services/wellness-rule.service'
 import type { WellnessRuleItem } from '@/types/models/screen-time.model'
 import { WELLNESS_RULE_TYPES } from '@/constants/wellness'
-import { NEXT_API_ENDPOINT } from '@/constants/api/endpoints'
+import { BACKEND_API_ENDPOINT } from '@/constants/api/endpoints'
+import envConfig from '@/config/app.config'
 
 const HEARTBEAT_INTERVAL_MS = 60_000 // 1 minute
 const VIDEO_FLUSH_INTERVAL_MS = 30_000 // 30 seconds
@@ -28,6 +29,8 @@ export function useScreenTimeTracker(isAuthenticated: boolean) {
     const todayVideoSeconds = useAppSelector((s) => s.wellness.todayVideoSeconds)
     const videoWatchSeconds = useAppSelector((s) => s.wellness.videoWatchSeconds)
     const isAlertVisible = useAppSelector((s) => s.wellness.isAlertVisible)
+    const dismissedRules = useAppSelector((s) => s.wellness.dismissedRules)
+    const snoozedRules   = useAppSelector((s) => s.wellness.snoozedRules)
 
     const [startSession] = useStartSessionMutation()
     const [sendHeartbeat] = useSendHeartbeatMutation()
@@ -123,10 +126,14 @@ export function useScreenTimeTracker(isAuthenticated: boolean) {
             const startedAt = sessionStartedAtRef.current
             if (!uuid) return
             const duration = startedAt ? Math.round((Date.now() - startedAt) / 1000) : 0
-            navigator.sendBeacon?.(
-                NEXT_API_ENDPOINT.WELLNESS.SESSION_END(uuid),
-                JSON.stringify({ duration_seconds: duration })
-            )
+            const endUrl = `${envConfig.NEXT_PUBLIC_API_ENDPOINT}${BACKEND_API_ENDPOINT.WELLNESS.SESSION_END(uuid)}`
+            fetch(endUrl, {
+                method: 'POST',
+                credentials: 'include',
+                keepalive: true,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ duration_seconds: duration }),
+            }).catch(() => {})
         }
 
         window.addEventListener('beforeunload', beforeUnload)
@@ -178,18 +185,19 @@ export function useScreenTimeTracker(isAuthenticated: boolean) {
 
             for (const rule of rules) {
                 if (!rule.is_enabled) continue
+                if (dismissedRules.includes(rule.uuid)) continue
+                if (snoozedRules[rule.uuid] && now < snoozedRules[rule.uuid]) continue
 
                 let triggered = false
                 const cycleKey = rule.uuid
 
                 if (rule.type === WELLNESS_RULE_TYPES.CONTINUOUS_USAGE) {
-                    // Count from when the rule was CREATED, fire every threshold interval
                     const threshold = Number(rule.conditions['minutes'] ?? 120)
-                    const ruleCreatedAt = new Date(rule.created_at).getTime()
-                    const minutesSinceCreated = (now - ruleCreatedAt) / 60_000
-                    const currentCycle = Math.floor(minutesSinceCreated / threshold)
+                    const sessionStart = sessionStartedAt ?? now
+                    const minutesSinceSessionStart = (now - sessionStart) / 60_000
+                    const currentCycle = Math.floor(minutesSinceSessionStart / threshold)
                     const lastCycle = lastAlertCycleRef.current.get(cycleKey) ?? -1
-                    if (currentCycle > lastCycle && minutesSinceCreated >= threshold) {
+                    if (currentCycle > lastCycle && minutesSinceSessionStart >= threshold) {
                         triggered = true
                         lastAlertCycleRef.current.set(cycleKey, currentCycle)
                     }
@@ -216,9 +224,9 @@ export function useScreenTimeTracker(isAuthenticated: boolean) {
                         fromHour > toHour
                             ? currentHour >= fromHour || currentHour < toHour
                             : currentHour >= fromHour && currentHour < toHour
-                    const lastCycle = lastAlertCycleRef.current.get(cycleKey) ?? -1
-                    const currentCycle = inLateNight ? currentHour : -1
-                    if (inLateNight && currentCycle !== lastCycle) {
+                    const lastCycle = lastAlertCycleRef.current.get(cycleKey) ?? 0
+                    const currentCycle = inLateNight ? 1 : 0
+                    if (currentCycle === 1 && lastCycle !== 1) {
                         triggered = true
                         lastAlertCycleRef.current.set(cycleKey, currentCycle)
                     }
@@ -237,7 +245,7 @@ export function useScreenTimeTracker(isAuthenticated: boolean) {
                 }
             }
         },
-        [isAlertVisible, todayTotalSeconds, todayVideoSeconds, videoWatchSeconds, dispatch]
+        [isAlertVisible, todayTotalSeconds, todayVideoSeconds, videoWatchSeconds, sessionStartedAt, dismissedRules, snoozedRules, dispatch]
     )
 
     useEffect(() => {

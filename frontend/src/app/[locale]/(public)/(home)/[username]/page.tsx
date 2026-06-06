@@ -81,7 +81,7 @@ export default async function Profile({ params }: { params: Promise<{ username: 
     }
 
     return (
-        <div className='w-full px-6 py-8'>
+        <div className='w-full px-6 py-8 animate-in slide-in-from-bottom-4 duration-500 ease-out fill-mode-forwards'>
             <ProfileUser userData={userData} className='mb-5' />
             <VideosProvider userId={userData.uuid}>
                 <TabBar tabs={TAB_ITEMS} />

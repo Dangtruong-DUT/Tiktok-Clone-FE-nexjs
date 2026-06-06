@@ -28,7 +28,7 @@ export default function ActionButton({
                 onClick={isAuth || !requiredAuth ? onClick : undefined}
                 className={cn(
                     'text-5xl size-[1em] rounded-full flex items-center justify-center cursor-pointer',
-                    'transition-all duration-200',
+                    'transition-all duration-300 hover:-translate-y-1 active:scale-90',
                     className
                 )}
                 size='icon'

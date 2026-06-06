@@ -23,9 +23,7 @@ import { TablePagination } from '@/components/data-display/table-pagination'
 import type { OffsetPaginationMeta } from '@/types/common/pagination-meta.type'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import {
-    Select, SelectContent, SelectItem, SelectTrigger, SelectValue
-} from '@/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import AlertDialogDeleteDish from '@/app/[locale]/(user)/snapistudio/content/_components/alert-confirm-delete-post'
 import { usePostTableContext } from '@/app/[locale]/(user)/snapistudio/content/_context/content-table.context'
 import { useStudioColumns } from '@/app/[locale]/(user)/snapistudio/content/_components/columns'
@@ -63,11 +61,11 @@ export default function TableContent() {
         isFetching: isFetchingPosts
     } = useListStudioPostsQuery(
         {
-            page:         pagination.pageIndex + 1,
-            per_page:     pagination.pageSize,
-            status:       appliedStatus === 'all' ? undefined : appliedStatus,
+            page: pagination.pageIndex + 1,
+            per_page: pagination.pageSize,
+            status: appliedStatus === 'all' ? undefined : appliedStatus,
             has_schedule: appliedSchedule === 'all' ? undefined : (Number(appliedSchedule) as 0 | 1),
-            q:            appliedSearchQuery || undefined,
+            q: appliedSearchQuery || undefined
         },
         { refetchOnMountOrArgChange: true }
     )
@@ -93,7 +91,7 @@ export default function TableContent() {
     })
 
     useEffect(() => {
-        setPagination(prev => ({ ...prev, pageIndex: page - 1 }))
+        setPagination((prev) => ({ ...prev, pageIndex: page - 1 }))
     }, [page])
 
     useEffect(() => {
@@ -136,8 +134,8 @@ export default function TableContent() {
                             <Input
                                 placeholder={t('search.placeholder')}
                                 value={searchKeyword}
-                                onChange={e => setSearchKeyword(e.target.value)}
-                                onKeyDown={e => e.key === 'Enter' && handleSearch()}
+                                onChange={(e) => setSearchKeyword(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                                 className='rounded-none pl-9 pr-9'
                             />
                             <button
@@ -152,7 +150,10 @@ export default function TableContent() {
                         </div>
 
                         {/* Status select */}
-                        <Select value={statusFilter} onValueChange={v => setStatusFilter(v as StudioPostStatus | 'all')}>
+                        <Select
+                            value={statusFilter}
+                            onValueChange={(v) => setStatusFilter(v as StudioPostStatus | 'all')}
+                        >
                             <SelectTrigger className='w-[150px] rounded-none'>
                                 <SelectValue placeholder='Trạng thái' />
                             </SelectTrigger>
@@ -166,7 +167,7 @@ export default function TableContent() {
                         </Select>
 
                         {/* Schedule status select */}
-                        <Select value={scheduleFilter} onValueChange={v => setScheduleFilter(v as ScheduleFilter)}>
+                        <Select value={scheduleFilter} onValueChange={(v) => setScheduleFilter(v as ScheduleFilter)}>
                             <SelectTrigger className='w-[170px] rounded-none'>
                                 <SelectValue placeholder='Lịch đăng' />
                             </SelectTrigger>
@@ -211,11 +212,11 @@ export default function TableContent() {
                             pagination={queryData.meta as OffsetPaginationMeta}
                             page={table.getState().pagination.pageIndex + 1}
                             perPage={table.getState().pagination.pageSize}
-                            onPerPageChange={n => {
+                            onPerPageChange={(n) => {
                                 table.setPageSize(n)
                                 table.setPageIndex(0)
                             }}
-                            onPageChange={p => table.setPageIndex(p - 1)}
+                            onPageChange={(p) => table.setPageIndex(p - 1)}
                             perPageOptions={[10, 20, 50]}
                             perPageLabel={t('perPage')}
                             showingResultsFormatter={(from, to, total) => t('showingResults', { from, to, total })}

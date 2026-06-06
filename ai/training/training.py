@@ -217,7 +217,12 @@ def train_pipeline(args: argparse.Namespace) -> None:
     set_seed(args.seed)
 
     tokenizer = AutoTokenizer.from_pretrained(args.model_name, use_fast=False)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+    elif torch.backends.mps.is_available():
+        device = torch.device("mps")
+    else:
+        device = torch.device("cpu")
 
     train_df = read_dataset(Path(args.train_path))
     valid_df = read_dataset(Path(args.valid_path))

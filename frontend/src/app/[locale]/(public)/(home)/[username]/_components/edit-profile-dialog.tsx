@@ -143,7 +143,7 @@ export default function EditProfileDialog() {
             <DialogTrigger asChild>
                 <Button
                     variant='outline'
-                    className='primary-button h-10! rounded-md! text-base! font-medium! cursor-pointer'
+                    className='primary-button h-10! rounded-xl! text-base! font-medium! cursor-pointer'
                 >
                     <span className='flex justify-center items-center mr-1'>
                         <Edit3 size={19} />

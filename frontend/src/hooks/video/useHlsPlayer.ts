@@ -95,6 +95,7 @@ export function useHlsPlayer(
 
             const onLevelSwitched = (_evt: string, data: LevelSwitchedData) => {
                 setCurrentLevel(data.level)
+                setIsBuffering(false)
             }
 
             const onHlsError = (_evt: string, data: ErrorData) => {

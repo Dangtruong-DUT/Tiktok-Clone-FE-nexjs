@@ -15,7 +15,8 @@ export interface AdminPost {
     readonly author?: AdminPostAuthor
     readonly content: string
     readonly status: string | null
-    readonly audience: string | null
+    readonly status_label: string | null
+    readonly audience: number | null
     readonly thumbnail_url: string | null
     readonly likes_count: number
     readonly comments_count: number

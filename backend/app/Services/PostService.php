@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\Post\PostPublishStatusEnum;
 use App\Enums\Post\PostTypeEnum;
 use App\Enums\Settings\PrivacyVisibilityEnum;
 use App\Events\Social\PostCommentedEvent;
@@ -74,14 +75,16 @@ class PostService
                 $this->updateParentCounter($parentPost, $postType, 'increment');
             }
 
+            $isDraft = ! empty($payload['save_as_draft']);
             $post = $this->postRepository->create([
-                'type' => $postType,
-                'audience' => $payload['audience'],
-                'content' => $payload['content'],
-
+                'type'              => $postType,
+                'audience'          => $payload['audience'],
+                'content'           => $payload['content'],
                 'thumbnail_file_id' => $payload['thumbnail'] ?? null,
-                'user_id' => $user->id,
-                'parent_id' => $payload['parent_id'] ?? null,
+                'user_id'           => $user->id,
+                'parent_id'         => $payload['parent_id'] ?? null,
+                'status'            => $isDraft ? PostPublishStatusEnum::DRAFT->value : PostPublishStatusEnum::PUBLISHED->value,
+                'published_at'      => $isDraft ? null : now(),
             ]);
             if (! empty($mentionSyncData)) {
                 $post->mentions()->sync($mentionSyncData);
@@ -106,7 +109,9 @@ class PostService
             return $post;
         });
 
-        $this->aiModerationService->enqueue($post);
+        if (empty($payload['save_as_draft'])) {
+            $this->aiModerationService->enqueue($post);
+        }
 
         return $this->postRepository->getByIdWithDetail($post->id, $user->id);
     }

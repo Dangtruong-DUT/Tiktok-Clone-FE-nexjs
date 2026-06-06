@@ -163,7 +163,7 @@ export default function VideoDescription({ post, className }: VideoDescriptionPr
                             variant='secondary'
                             className={cn(
                                 'text-5xl size-8 rounded-full flex items-center justify-center cursor-pointer ',
-                                'transition-all duration-200',
+                                'transition-all duration-300',
                                 ' [&>svg]:size-5! '
                             )}
                             size='icon'

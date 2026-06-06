@@ -32,7 +32,7 @@ export async function generateMetadata({
 
 export default function SearchPage() {
     return (
-        <div className='pr-60'>
+        <div className='pr-60 animate-in slide-in-from-bottom-4 duration-500 ease-out fill-mode-forwards'>
             <SearchResults />
         </div>
     )

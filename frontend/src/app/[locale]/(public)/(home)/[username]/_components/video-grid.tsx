@@ -89,7 +89,7 @@ function VideoGrid() {
                     {Array.from({ length: 12 }, (_, index) => (
                         <Skeleton
                             key={index}
-                            className=' inline-block w-full pt-[133.333%] overflow-hidden rounded-md'
+                            className=' inline-block w-full pt-[133.333%] overflow-hidden rounded-xl'
                         />
                     ))}
                 </div>

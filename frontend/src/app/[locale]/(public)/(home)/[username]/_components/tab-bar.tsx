@@ -51,7 +51,7 @@ function TabBar({ tabs }: TabBarProps) {
                         key={tab.id}
                         data-key={tab.id}
                         className={cn(
-                            'font-semibold text-lg  flex items-center justify-center h-11 px-8 cursor-pointer text-center gap-1 text-muted-foreground   transition-colors duration-200 hover:text-gray-500',
+                            'font-semibold text-lg  flex items-center justify-center h-11 px-8 cursor-pointer text-center gap-1 text-muted-foreground   transition-colors duration-300 hover:text-gray-500',
                             'max-md:px-4 max-md:flex-grow',
                             {
                                 'text-foreground': tab.id === activeTabId

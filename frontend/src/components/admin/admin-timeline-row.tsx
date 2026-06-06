@@ -19,26 +19,31 @@ export function AdminTimelineRow({
     children,
     timeAgo,
     timestamp,
-    onClick,
+    onClick
 }: AdminTimelineRowProps) {
     return (
-        <div
-            className={cn(
-                'flex items-start gap-4 rounded-lg border border-border bg-card px-4 py-3 transition-colors',
-                onClick && 'cursor-pointer hover:bg-muted/40'
-            )}
-            onClick={onClick}
-            title={timestamp}
-        >
-            <div className={cn('flex h-8 w-8 shrink-0 items-center justify-center rounded-full', iconClassName)}>
-                <Icon className='h-3.5 w-3.5' />
+        <div className='flex items-stretch gap-3'>
+            {/* Timeline column */}
+            <div className='flex flex-col items-center shrink-0'>
+                <div className={cn('flex h-8 w-8 shrink-0 items-center justify-center rounded-lg', iconClassName)}>
+                    <Icon className='h-3.5 w-3.5' />
+                </div>
+                {!isLast && <div className='mt-1 w-px flex-1 bg-border' />}
             </div>
 
-            <div className='min-w-0 flex-1'>
-                <div className='text-sm text-foreground leading-snug'>{children}</div>
+            {/* Content */}
+            <div
+                className={cn(
+                    'flex-1 flex items-start justify-between gap-4 rounded-lg border border-border bg-card px-3.5 py-2.5 transition-colors',
+                    !isLast && 'mb-2',
+                    onClick && 'cursor-pointer hover:bg-muted/40'
+                )}
+                onClick={onClick}
+                title={timestamp}
+            >
+                <div className='min-w-0 flex-1 text-sm text-foreground leading-snug'>{children}</div>
+                <span className='shrink-0 text-xs text-muted-foreground whitespace-nowrap pt-0.5'>{timeAgo}</span>
             </div>
-
-            <span className='shrink-0 text-xs text-muted-foreground whitespace-nowrap'>{timeAgo}</span>
         </div>
     )
 }

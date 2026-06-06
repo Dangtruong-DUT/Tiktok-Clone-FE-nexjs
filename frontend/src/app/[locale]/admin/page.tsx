@@ -6,6 +6,8 @@ import { AdminLayout, AdminContainer } from '@/components/admin'
 import { DashboardStats } from './_components/dashboard-stats'
 import { DashboardNeedsReview } from './_components/dashboard-needs-review'
 import { DashboardRecentActivity } from './_components/dashboard-recent-activity'
+import { UserGrowthChart } from './_components/user-growth-chart'
+import { ContentStatusChart } from './_components/content-status-chart'
 import { Suspense } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -32,7 +34,7 @@ export default async function AdminDashboardPage() {
     return (
         <AdminLayout title={t('dashboard.title')} description={t('dashboard.description')}>
             <AdminContainer>
-                <div className='space-y-6'>
+                <div className='space-y-6 animate-in slide-in-from-bottom-4 duration-500 ease-out fill-mode-forwards'>
                     <section>
                         <p className='mb-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground'>
                             {t('dashboard.statistics')}
@@ -48,6 +50,20 @@ export default async function AdminDashboardPage() {
                         >
                             <DashboardStats />
                         </Suspense>
+                    </section>
+
+                    <section>
+                        <p className='mb-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground'>
+                            {t('dashboard.charts')}
+                        </p>
+                        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                            <Suspense fallback={<Skeleton className='h-[220px]' />}>
+                                <UserGrowthChart />
+                            </Suspense>
+                            <Suspense fallback={<Skeleton className='h-[220px]' />}>
+                                <ContentStatusChart />
+                            </Suspense>
+                        </div>
                     </section>
 
                     <section className='grid grid-cols-1 lg:grid-cols-5 gap-6'>

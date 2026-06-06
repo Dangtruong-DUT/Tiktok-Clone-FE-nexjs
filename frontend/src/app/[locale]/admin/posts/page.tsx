@@ -6,6 +6,7 @@ import { AdminLayout, AdminContainer } from '@/components/admin'
 import { Suspense } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { PostModerationTable } from './_components/post-moderation-table'
+import { ScheduledPostsSection } from './_components/scheduled-posts-section'
 import { ADMIN_ROUTES } from '@/constants/routes/routes'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: LocalesType }> }): Promise<Metadata> {
@@ -35,25 +36,29 @@ export default async function AdminPostsPage() {
             breadcrumbs={[{ label: t('breadcrumbs.admin'), href: ADMIN_ROUTES.DASHBOARD }, { label: t('posts.title') }]}
         >
             <AdminContainer>
-                <Suspense
-                    fallback={
-                        <div className='space-y-4'>
-                            <div className='flex gap-2'>
-                                <Skeleton className='h-10 flex-1' />
-                                <Skeleton className='h-10 w-32' />
-                            </div>
-                            <div className='border bg-background overflow-hidden'>
-                                <div className='p-4 space-y-3'>
-                                    {Array.from({ length: 5 }).map((_, i) => (
-                                        <Skeleton key={i} className='h-16' />
-                                    ))}
+                <div className='space-y-6'>
+                    <Suspense
+                        fallback={
+                            <div className='space-y-4'>
+                                <div className='flex gap-2'>
+                                    <Skeleton className='h-10 flex-1' />
+                                    <Skeleton className='h-10 w-32' />
+                                </div>
+                                <div className='border bg-background overflow-hidden'>
+                                    <div className='p-4 space-y-3'>
+                                        {Array.from({ length: 5 }).map((_, i) => (
+                                            <Skeleton key={i} className='h-16' />
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    }
-                >
-                    <PostModerationTable />
-                </Suspense>
+                        }
+                    >
+                        <PostModerationTable />
+                    </Suspense>
+
+                    <ScheduledPostsSection />
+                </div>
             </AdminContainer>
         </AdminLayout>
     )

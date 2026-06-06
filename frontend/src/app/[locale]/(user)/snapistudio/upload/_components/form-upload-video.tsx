@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
-import { CalendarClock, X, Info } from 'lucide-react'
+import { CalendarClock, X, Info, BookmarkCheck } from 'lucide-react'
 import UploadVideo from '@/app/[locale]/(user)/snapistudio/upload/_components/upload-video'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
@@ -13,8 +13,8 @@ import AudienceSelect from '@/components/forms/audience-select'
 import AlertDialogExitPage from '@/app/[locale]/(user)/snapistudio/upload/_components/alert-confirm-leave-page'
 import MentionHashtagTextField from '@/components/forms/mention-hashtag-text-field'
 import { useUploadFormManager } from '@/app/[locale]/(user)/snapistudio/upload/_hooks/useUploadFormManager'
-import { useAiCopilotContext } from '@/app/[locale]/(user)/snapistudio/_components/ai-copilot/AiCopilotContext'
-import { AiVideoAttachments } from '@/app/[locale]/(user)/snapistudio/_components/ai-copilot/attachments/AiVideoAttachments'
+import { useAiCopilotContext } from '@/components/ai-copilot/AiCopilotContext'
+import { AiVideoAttachments } from '@/components/ai-copilot/attachments/AiVideoAttachments'
 
 export default function FormUploadVideo() {
     const t = useTranslations('SnapiStudio.upload')
@@ -49,6 +49,7 @@ export default function FormUploadVideo() {
         leavePage,
         onReset,
         onSubmit,
+        onSaveAsDraft,
         setScheduledAt
     } = useUploadFormManager()
 
@@ -280,6 +281,17 @@ export default function FormUploadVideo() {
                                             Hẹn giờ
                                         </Button>
                                     )}
+                                    <Button
+                                        size='lg'
+                                        variant='outline'
+                                        type='button'
+                                        className='gap-2'
+                                        onClick={onSaveAsDraft}
+                                        disabled={isSubmitDisabled}
+                                    >
+                                        <BookmarkCheck size={15} />
+                                        Lưu nháp
+                                    </Button>
                                     <Button
                                         size='lg'
                                         variant='outline'

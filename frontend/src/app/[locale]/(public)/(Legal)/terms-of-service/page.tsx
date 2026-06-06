@@ -230,7 +230,7 @@ export default async function TermsOfServicePage() {
                             {t('termsOfService.sections.contact.description')}{' '}
                             <a
                                 href={`mailto:${BRAND_CONFIG.CONTACT_EMAIL}`}
-                                className='text-brand hover:underline font-medium transition-colors duration-200'
+                                className='text-brand hover:underline font-medium transition-colors duration-300'
                             >
                                 {t('termsOfService.sections.contact.email', { email: BRAND_CONFIG.CONTACT_EMAIL })}
                             </a>

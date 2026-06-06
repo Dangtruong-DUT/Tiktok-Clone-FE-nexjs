@@ -12,7 +12,7 @@ export default function UserInfo() {
     const userData = useCurrentUserData()
     const t = useTranslations('SnapiStudio.dashboard.userInfo')
     return (
-        <div className='flex items-center gap-4  border rounded-lg p-5 bg-card '>
+        <div className='flex items-center gap-4 border border-border/50 rounded-xl p-6 bg-card shadow-sm hover:shadow-md transition-all duration-300 ease-out'>
             <Link href={USER_ROUTES.PROFILE(userData?.username ?? '')} className=' relative'>
                 <Avatar className='size-12 shrink-0'>
                     <AvatarImage src={userData?.avatar} alt={userData?.username} className='shrink-0 object-cover' />

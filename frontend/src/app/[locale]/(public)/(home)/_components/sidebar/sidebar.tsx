@@ -143,7 +143,7 @@ export default function Sidebar({ className }: SidebarProps) {
                                 <button
                                     key={item.key}
                                     className={cn(
-                                        'flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent cursor-pointer',
+                                        'flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-300 ease-out hover:bg-accent hover:scale-[0.98] active:scale-95 cursor-pointer',
                                         isActive && 'bg-accent'
                                     )}
                                     onClick={toggleActionMap[item.key]}
@@ -151,14 +151,14 @@ export default function Sidebar({ className }: SidebarProps) {
                                     <Icon
                                         size={24}
                                         className={cn(
-                                            'transition-colors duration-200',
+                                            'transition-colors duration-300',
                                             isActive ? 'text-brand' : 'text-foreground'
                                         )}
                                     />
                                     {!isOpenDrawer && (
                                         <h2
                                             className={cn(
-                                                'text-base font-medium transition-colors duration-200',
+                                                'text-base font-medium transition-colors duration-300',
                                                 isActive ? 'text-brand' : 'text-foreground'
                                             )}
                                         >
@@ -186,7 +186,7 @@ export default function Sidebar({ className }: SidebarProps) {
                                 <button
                                     key={item.key}
                                     className={cn(
-                                        'flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent cursor-pointer',
+                                        'flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-300 ease-out hover:bg-accent hover:scale-[0.98] active:scale-95 cursor-pointer',
                                         isActive && 'bg-accent'
                                     )}
                                     onClick={toggleActionMap[item.key]}
@@ -194,14 +194,14 @@ export default function Sidebar({ className }: SidebarProps) {
                                     <Icon
                                         size={24}
                                         className={cn(
-                                            'transition-colors duration-200',
+                                            'transition-colors duration-300',
                                             isActive ? 'text-brand' : 'text-foreground'
                                         )}
                                     />
                                     {!isOpenDrawer && (
                                         <h2
                                             className={cn(
-                                                'text-base font-medium transition-colors duration-200',
+                                                'text-base font-medium transition-colors duration-300',
                                                 isActive ? 'text-brand' : 'text-foreground'
                                             )}
                                         >

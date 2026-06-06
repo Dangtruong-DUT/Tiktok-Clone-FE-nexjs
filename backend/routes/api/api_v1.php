@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\ScreenTimeController;
 use App\Http\Controllers\Api\WellnessRuleController;
+use App\Http\Controllers\Api\Admin\AiKnowledgeAdminController;
 use App\Http\Controllers\Api\Studio\AiCopilotController;
 use App\Http\Controllers\Api\Studio\StudioPostScheduleController;
 use App\Http\Controllers\Api\UploadController;
@@ -140,9 +141,18 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
                 // AI Copilot admin
                 Route::get('copilot/metrics',            [AiCopilotAdminController::class, 'metrics'])->name('copilot.metrics');
                 Route::get('copilot/sessions',           [AiCopilotAdminController::class, 'sessions'])->name('copilot.sessions');
-                Route::get('prompt-templates',           [AiCopilotAdminController::class, 'listPromptTemplates'])->name('prompt-templates.index');
-                Route::put('prompt-templates/{intent}',  [AiCopilotAdminController::class, 'updatePromptTemplate'])->name('prompt-templates.update');
+                Route::get('prompt-templates',              [AiCopilotAdminController::class, 'listPromptTemplates'])->name('prompt-templates.index');
+                Route::put('prompt-templates/{intent}',     [AiCopilotAdminController::class, 'updatePromptTemplate'])->name('prompt-templates.update');
+                Route::patch('prompt-templates/{intent}/lock',   [AiCopilotAdminController::class, 'lockTemplate'])->name('prompt-templates.lock');
+                Route::patch('prompt-templates/{intent}/unlock', [AiCopilotAdminController::class, 'unlockTemplate'])->name('prompt-templates.unlock');
                 Route::post('feature-flags',             [AiCopilotAdminController::class, 'updateFeatureFlags'])->name('feature-flags.update');
+
+                // RAG knowledge base document management
+                Route::prefix('knowledge')->name('knowledge.')->group(function () {
+                    Route::get('documents',         [AiKnowledgeAdminController::class, 'indexDocuments'])->name('documents.index');
+                    Route::post('documents/upload', [AiKnowledgeAdminController::class, 'uploadDocument'])->name('documents.upload');
+                    Route::delete('documents/{id}', [AiKnowledgeAdminController::class, 'destroyDocument'])->name('documents.destroy');
+                });
             });
 
             // Scheduled posts admin

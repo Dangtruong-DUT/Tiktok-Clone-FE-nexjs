@@ -45,6 +45,22 @@ export const AdminAiCopilotApi = createApi({
             invalidatesTags: ['AiPromptTemplate'],
         }),
 
+        lockPromptTemplate: builder.mutation<UpdatePromptTemplateResDto, string>({
+            query: (intent) => ({
+                url:    BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.LOCK_TEMPLATE(intent),
+                method: 'PATCH',
+            }),
+            invalidatesTags: ['AiPromptTemplate'],
+        }),
+
+        unlockPromptTemplate: builder.mutation<UpdatePromptTemplateResDto, string>({
+            query: (intent) => ({
+                url:    BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.UNLOCK_TEMPLATE(intent),
+                method: 'PATCH',
+            }),
+            invalidatesTags: ['AiPromptTemplate'],
+        }),
+
         updateFeatureFlags: builder.mutation<UpdateFeatureFlagsResDto, UpdateFeatureFlagsReqBodyDto>({
             query: ({ flags }) => ({
                 url:    BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.FEATURE_FLAGS,
@@ -61,5 +77,7 @@ export const {
     useGetCopilotSessionsQuery,
     useListPromptTemplatesQuery,
     useUpdatePromptTemplateMutation,
+    useLockPromptTemplateMutation,
+    useUnlockPromptTemplateMutation,
     useUpdateFeatureFlagsMutation,
 } = AdminAiCopilotApi

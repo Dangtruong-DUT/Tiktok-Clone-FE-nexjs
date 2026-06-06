@@ -46,6 +46,11 @@
             "title": "AI Content Studio",
             "description": "Monitor usage, tune Gemini settings, and review all AI generation requests.",
             "breadcrumb": "AI Studio",
+            "nav": {
+                "overview": "Overview",
+                "promptTemplates": "Prompt Templates",
+                "knowledge": "Knowledge Base"
+            },
             "tabs": {
                 "metrics": "Metrics",
                 "settings": "Settings",
@@ -80,7 +85,8 @@
                 "empty": {
                     "noData": "No data available for this period",
                     "noIntents": "No intent data yet"
-                }
+                },
+                "error": "Failed to load metrics. Please try again."
             },
             "settings": {
                 "status": {
@@ -150,12 +156,16 @@
                 },
                 "columns": {
                     "uuid": "UUID",
+                    "user": "User",
                     "status": "Status",
                     "intent": "Intent",
                     "model": "Model",
                     "tokens": "Tokens",
+                    "cost": "Cost",
+                    "latency": "Latency",
                     "applied": "Applied",
-                    "created": "Created"
+                    "created": "Created",
+                    "time": "Time"
                 },
                 "detail": {
                     "shortCaption": "Short caption",
@@ -169,6 +179,80 @@
                 "pagination": {
                     "page": "Page {current} of {total}"
                 }
+            },
+            "knowledge": {
+                "title": "Knowledge Base",
+                "description": "Upload documents to build the AI Copilot knowledge base (RAG)",
+                "breadcrumb": "Knowledge Base",
+                "count": "{count, plural, one {# document indexed} other {# documents indexed}}",
+                "addDocument": "Add Document",
+                "newDocument": "New Document",
+                "uploadFile": "Upload File",
+                "pasteText": "Paste Text",
+                "titleLabel": "Title",
+                "titlePlaceholder": "e.g. Snapi Community Guidelines",
+                "sourceTypeLabel": "Source Type",
+                "languageLabel": "Language",
+                "fileLabel": "File",
+                "fileHint": "(PDF, TXT, DOCX — max 10 MB)",
+                "contentLabel": "Content",
+                "contentPlaceholder": "Paste your document content here (Markdown supported)…",
+                "cancel": "Cancel",
+                "upload": "Upload",
+                "uploading": "Uploading…",
+                "indexed": "Indexed",
+                "indexing": "Indexing…",
+                "empty": "No documents yet. Upload a PDF, TXT, or DOCX to get started.",
+                "deleteTitle": "Delete document",
+                "deleteDescription": "This will also remove all indexed chunks. This action cannot be undone.",
+                "deleteConfirm": "Delete",
+                "toast": {
+                    "uploaded": "Document uploaded and queued for indexing",
+                    "uploadFailed": "Failed to upload document",
+                    "deleted": "Document deleted",
+                    "deleteFailed": "Failed to delete document",
+                    "titleRequired": "Title is required",
+                    "fileRequired": "Please select a file",
+                    "contentRequired": "Content is required"
+                },
+                "sourceTypes": {
+                    "faq": "FAQ",
+                    "guide": "Guide",
+                    "policy": "Policy",
+                    "feature": "Feature Docs",
+                    "other": "Other"
+                },
+                "languages": {
+                    "vi": "Vietnamese",
+                    "en": "English"
+                }
+            },
+            "promptTemplates": {
+                "title": "Prompt Templates",
+                "description": "Edit system prompts used by the AI Copilot for each intent",
+                "breadcrumb": "Prompt Templates",
+                "lock": "Lock",
+                "unlock": "Unlock",
+                "confirmUnlockTitle": "Unlock template",
+                "confirmUnlockDescription": "Are you sure you want to unlock and edit this template? Changes will affect all AI responses for this intent.",
+                "cancel": "Cancel",
+                "save": "Save",
+                "saving": "Saving…",
+                "active": "Active",
+                "inactive": "Inactive",
+                "toast": {
+                    "saved": "Template saved.",
+                    "saveFailed": "Failed to save template.",
+                    "locked": "Template locked.",
+                    "unlocked": "Template unlocked."
+                },
+                "categories": {
+                    "platform": "Platform Context",
+                    "routing": "Intent Routing",
+                    "style": "Style & Tone",
+                    "moderation": "Content Moderation",
+                    "other": "Other"
+                }
             }
         },
         "scheduledPosts": {
@@ -180,7 +264,7 @@
                 "requests": "Requests"
             },
             "metrics": {
-                "periods": { "today": "Today", "week": "This week", "month": "This month" },
+                "periods": { "today": "Today", "week": "This week", "month": "This month", "year": "This year" },
                 "stats": {
                     "totalScheduled": "Total Scheduled",
                     "pending": "Pending",
@@ -212,6 +296,7 @@
                 "filters": {
                     "allStatuses": "All statuses",
                     "pending": "Pending",
+                    "processing": "Processing",
                     "published": "Published",
                     "failed": "Failed",
                     "cancelled": "Cancelled",
@@ -231,7 +316,9 @@
                 },
                 "toast": {
                     "cancelled": "Schedule cancelled by admin.",
-                    "retried": "Schedule re-queued."
+                    "cancelError": "Failed to cancel schedule.",
+                    "retried": "Schedule re-queued.",
+                    "retryError": "Failed to retry schedule."
                 },
                 "pagination": {
                     "page": "{current} / {total}"
@@ -253,7 +340,20 @@
             "today": "today",
             "needsReview": "Needs review",
             "needsReviewSub": "Open moderation queue",
-            "pendingAppeals": "Pending appeals"
+            "pendingAppeals": "Pending appeals",
+            "charts": "Charts",
+            "userGrowthChart": {
+                "title": "New Users",
+                "description": "Daily new registrations over the last 7 days",
+                "users": "Users"
+            },
+            "contentStatusChart": {
+                "title": "Content Status",
+                "description": "Posts by publish status",
+                "published": "Published",
+                "scheduled": "Scheduled",
+                "draft": "Draft"
+            }
         },
         "moderation": {
             "title": "Post Moderation"
@@ -385,7 +485,8 @@
             "audience": {
                 "public": "Public",
                 "friends": "Friends",
-                "private": "Private"
+                "private": "Private",
+                "following": "Following"
             },
             "liveStatus": {
                 "live": "Live",
@@ -396,6 +497,21 @@
                 "visible": "Visible",
                 "recent": "Recent",
                 "oldest": "Oldest"
+            },
+            "status": {
+                "published": "Published",
+                "scheduled": "Scheduled",
+                "draft": "Draft",
+                "failed": "Failed",
+                "archived": "Archived",
+                "hidden": "Hidden",
+                "deleted": "Removed",
+                "live": "Live",
+                "all": "All"
+            },
+            "scheduledSection": {
+                "title": "Scheduled Posts",
+                "description": "Scheduled post metrics and requests"
             },
             "actions": {
                 "delete": "Delete",
@@ -529,7 +645,13 @@
         "settings": {
             "title": "Admin Settings",
             "description": "Update your profile and account security settings",
-            "adminNote": "Changes apply to your admin account only."
+            "adminNote": "Changes apply to your admin account only.",
+            "tabs": {
+                "profile": "Profile",
+                "security": "Security",
+                "privacy": "Privacy",
+                "email": "Email"
+            }
         },
         "appeals": {
             "title": "Appeal Moderation",

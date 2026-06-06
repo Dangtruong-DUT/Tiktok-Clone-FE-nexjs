@@ -325,7 +325,7 @@ export default function ProfileRelationsModal({
                                                 <Skeleton className='h-3 w-28' />
                                             </div>
                                         </div>
-                                        <Skeleton className='h-9 w-24 rounded-md' />
+                                        <Skeleton className='h-9 w-24 rounded-xl' />
                                     </div>
                                 ))}
                             </div>

@@ -4,6 +4,7 @@ import { AdminAiStudioApi } from '@/store/services/admin/admin-ai-studio.service
 import { AdminScheduledPostsApi } from '@/store/services/admin/admin-scheduled-posts.service'
 import { AiCopilotApi } from '@/store/services/ai-copilot.service'
 import { AdminAiCopilotApi } from '@/store/services/admin/admin-ai-copilot.service'
+import { AdminAiKnowledgeApi } from '@/store/services/admin/admin-ai-knowledge.service'
 import { AuthApi } from '@/store/services/auth.service'
 import { NotificationApi } from '@/store/services/notification.service'
 import { PostApi } from '@/store/services/posts.service'
@@ -42,6 +43,7 @@ export const makeStore = () => {
             [WellnessRuleApi.reducerPath]:       WellnessRuleApi.reducer,
             [AiCopilotApi.reducerPath]:          AiCopilotApi.reducer,
             [AdminAiCopilotApi.reducerPath]:     AdminAiCopilotApi.reducer,
+            [AdminAiKnowledgeApi.reducerPath]:   AdminAiKnowledgeApi.reducer,
             auth:            authReducer,
             app:             appReducer,
             modal:           modalReducer,
@@ -66,6 +68,7 @@ export const makeStore = () => {
                 WellnessRuleApi.middleware,
                 AiCopilotApi.middleware,
                 AdminAiCopilotApi.middleware,
+                AdminAiKnowledgeApi.middleware,
                 authMiddleware,
                 errorHandleMiddleware,
             ),

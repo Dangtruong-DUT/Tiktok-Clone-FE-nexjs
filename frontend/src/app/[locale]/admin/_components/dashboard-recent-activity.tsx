@@ -6,7 +6,12 @@ import { useGetActivityLogsQuery } from '@/store/services/admin'
 import { AdminTimelineRow } from '@/components/admin'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ADMIN_ROUTES } from '@/constants/routes/routes'
-import { getActivityKey, getActionIconConfig, getActivityActorName, formatActivityResourceRef } from '@/utils/admin/admin.util'
+import {
+    getActivityKey,
+    getActionIconConfig,
+    getActivityActorName,
+    formatActivityResourceRefStyled
+} from '@/utils/admin/admin.util'
 import { timeAgo, formatDateTime } from '@/utils/formatting/format-time.util'
 import type { LocalesType } from '@/i18n/config'
 import type { AdminActivityListItem } from '@/types/dtos/admin/admin-response.dto'
@@ -22,19 +27,29 @@ export function DashboardRecentActivity() {
         page: 1,
         per_page: RECENT_LIMIT,
         log_type: 'admin',
-        order_by: ['-created_at'],
+        order_by: ['-created_at']
     })
 
     const logs: AdminActivityListItem[] = data?.data ?? []
 
-    function buildSentence(log: AdminActivityListItem): string {
+    function buildSentenceJSX(log: AdminActivityListItem) {
         const actionKey = getActivityKey(log)
         const actor = getActivityActorName(log)
-        const ref = formatActivityResourceRef(log)
+        const ref = formatActivityResourceRefStyled(log)
         const verbKey = `activitySentence.${actionKey}` as Parameters<typeof t>[0]
         const verb = t(verbKey)
         const actorLabel = actor ?? '—'
-        return ref ? `${actorLabel} ${verb} ${ref}` : `${actorLabel} ${verb}`
+        return (
+            <>
+                <strong className='font-semibold text-foreground'>{actorLabel}</strong> {verb}
+                {ref.text && (
+                    <>
+                        {' '}
+                        <span className='text-orange-400 font-mono text-xs'>{ref.text}</span>
+                    </>
+                )}
+            </>
+        )
     }
 
     if (isLoading) {
@@ -75,7 +90,7 @@ export function DashboardRecentActivity() {
                                 timeAgo={timeAgo({ locale: normalizedLocale, date: log.created_at })}
                                 timestamp={formatDateTime(log.created_at)}
                             >
-                                <span className='text-foreground'>{buildSentence(log)}</span>
+                                {buildSentenceJSX(log)}
                             </AdminTimelineRow>
                         )
                     })}

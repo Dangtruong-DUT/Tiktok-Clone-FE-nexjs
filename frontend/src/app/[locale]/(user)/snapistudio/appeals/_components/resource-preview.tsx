@@ -10,7 +10,7 @@ export function ResourcePreviewBlock({ preview }: { preview: ResourcePreview }) 
         return (
             <div className='space-y-3'>
                 {preview.is_deleted && (
-                    <div className='flex items-center gap-1.5 rounded-md bg-red-50 dark:bg-red-950/40 px-3 py-2 text-xs text-red-600 dark:text-red-400'>
+                    <div className='flex items-center gap-1.5 rounded-xl bg-red-50 dark:bg-red-950/40 px-3 py-2 text-xs text-red-600 dark:text-red-400'>
                         <AlertCircle className='h-3.5 w-3.5 shrink-0' />
                         Post was deleted — showing cached info
                     </div>
@@ -54,7 +54,7 @@ export function ResourcePreviewBlock({ preview }: { preview: ResourcePreview }) 
         return (
             <div className='space-y-3'>
                 {preview.is_deleted && (
-                    <div className='flex items-center gap-1.5 rounded-md bg-red-50 dark:bg-red-950/40 px-3 py-2 text-xs text-red-600 dark:text-red-400'>
+                    <div className='flex items-center gap-1.5 rounded-xl bg-red-50 dark:bg-red-950/40 px-3 py-2 text-xs text-red-600 dark:text-red-400'>
                         <AlertCircle className='h-3.5 w-3.5 shrink-0' />
                         Comment was deleted — showing cached info
                     </div>

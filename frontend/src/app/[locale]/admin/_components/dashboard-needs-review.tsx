@@ -30,7 +30,7 @@ export function DashboardNeedsReview() {
     const stats = data?.data
 
     return (
-        <div className='flex flex-col h-full rounded-xl border border-border bg-card'>
+        <div className='flex flex-col h-full rounded-xl border border-border/50 bg-card shadow-sm'>
             <div className='px-5 pt-5 pb-4 border-b border-border'>
                 <div className='flex items-center gap-2'>
                     <Flag className='h-4 w-4 text-muted-foreground' />

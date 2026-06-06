@@ -36,7 +36,7 @@ export function VideoQualitySelector({
                 <button
                     onClick={(e) => e.stopPropagation()}
                     className={cn(
-                        'flex items-center gap-1.5 text-white text-xs font-semibold bg-black/50 hover:bg-black/70 px-2 py-1 rounded-md transition-colors select-none outline-none',
+                        'flex items-center gap-1.5 text-white text-xs font-semibold bg-black/50 hover:bg-black/70 px-2 py-1 rounded-xl transition-colors select-none outline-none',
                         className
                     )}
                     aria-label='Video quality'

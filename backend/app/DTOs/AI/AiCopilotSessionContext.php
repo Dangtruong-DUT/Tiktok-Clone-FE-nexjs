@@ -19,6 +19,7 @@ final readonly class AiCopilotSessionContext
         public ?string $currentTitle      = null,
         // Runtime-only: populated at request time, never persisted to context_snapshot
         public ?int    $userId            = null,
+        public ?string $userRole          = null,
     ) {}
 
     public static function fromArray(array $data): self

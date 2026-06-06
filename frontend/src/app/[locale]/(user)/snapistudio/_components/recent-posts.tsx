@@ -44,7 +44,7 @@ export default function RecentPosts({ classNames }: RecentPostProps) {
                     {t('title')} <FaChevronRight />
                 </span>
             </div>
-            <div className='bg-card border rounded-lg border-border  mt-4'>
+            <div className='bg-card border rounded-xl border-border/50 mt-4 shadow-sm overflow-hidden'>
                 <ul className='divide-y '>
                     {posts.slice(0, 4).map((post) => (
                         <li key={post.uuid}>
@@ -64,7 +64,7 @@ function VideoItem({ post }: { post: TikTokPostType }) {
     return (
         <>
             <div
-                className='flex justify-between items-center cursor-pointer hover:bg-muted/50 p-4'
+                className='flex justify-between items-center cursor-pointer hover:bg-muted/50 p-4 transition-colors duration-300'
                 onClick={() => setIsModalDetailOpen(true)}
             >
                 <div className='flex gap-4 items-center'>
@@ -74,10 +74,10 @@ function VideoItem({ post }: { post: TikTokPostType }) {
                             width={60}
                             height={80}
                             alt=''
-                            className='object-cover w-[60px] h-[80px] rounded-md'
+                            className='object-cover w-[60px] h-[80px] rounded-lg'
                         />
                     ) : (
-                        <div className='w-[60px] h-[80px] flex items-center justify-center bg-card rounded-md border'>
+                        <div className='w-[60px] h-[80px] flex items-center justify-center bg-card rounded-lg border'>
                             <BsFillImageFill />
                         </div>
                     )}

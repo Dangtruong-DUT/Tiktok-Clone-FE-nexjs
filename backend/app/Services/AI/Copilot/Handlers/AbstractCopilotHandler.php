@@ -10,6 +10,8 @@ use App\Models\AiCopilotSession;
 use App\Models\AiPromptTemplate;
 use App\Repositories\AiCopilotMessageRepository;
 use App\Services\AI\GeminiAiService;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 abstract class AbstractCopilotHandler
 {
@@ -21,11 +23,41 @@ abstract class AbstractCopilotHandler
 
     public static function buildSystemPrompt(AiPromptTemplate $template, AiCopilotSessionContext $context): string
     {
-        $contextBlock = $context->toPromptContext();
-        $prompt       = $template->system_prompt;
+        // Load the role-appropriate platform context template from DB (cached for 10 minutes).
+        // This injects: platform identity (Snapi Studio only), role context, and response style rules.
+        $contextIntent = $context->userRole === 'super_admin'
+            ? 'platform_context_admin'
+            : 'platform_context_creator';
 
+        $contextTpl = Cache::remember(
+            "prompt_tpl:{$contextIntent}",
+            600,
+            fn () => AiPromptTemplate::forIntent($contextIntent)
+        );
+
+        $prefix = $contextTpl?->system_prompt ?? '';
+        $prompt = $prefix
+            ? $prefix . "\n\n---\n\n" . $template->system_prompt
+            : $template->system_prompt;
+
+        $contextBlock = $context->toPromptContext();
         if ($contextBlock) {
             $prompt .= "\n\n## Video Context\n{$contextBlock}";
+        }
+
+        // Inject live system state for admin users so Gemini can give data-driven advice.
+        if ($context->userRole === 'super_admin') {
+            $liveState = Cache::remember('admin_live_context', 60, function () {
+                $pendingAppeals = DB::table('appeals')->where('status', 'pending')->count();
+                $failedEncoding = DB::table('video_encodings')->where('status', 3)->count();
+                $activeEncoding = DB::table('video_encodings')->whereIn('status', [0, 1])->count();
+
+                return "## Tình trạng hệ thống (live)\n"
+                    . "- Kháng cáo chờ xử lý: {$pendingAppeals}\n"
+                    . "- Video lỗi mã hoá: {$failedEncoding}\n"
+                    . "- Video đang trong hàng đợi: {$activeEncoding}";
+            });
+            $prompt .= "\n\n{$liveState}";
         }
 
         return $prompt;

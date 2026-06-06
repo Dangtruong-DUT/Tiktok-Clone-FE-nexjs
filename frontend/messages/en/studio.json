@@ -146,6 +146,20 @@
                     "comments": "Comments"
                 }
             },
+            "postStatusChart": {
+                "title": "Post Status",
+                "description": "Your posts by publish status",
+                "published": "Published",
+                "scheduled": "Scheduled",
+                "draft": "Draft",
+                "posts": "posts"
+            },
+            "engagementChart": {
+                "title": "Engagement by Post",
+                "description": "Engagement rate (likes + comments / views) for recent posts",
+                "engagement": "Engagement %",
+                "noData": "No published posts yet"
+            },
             "directorChart": {
                 "keyMetrics": "Key Metrics",
                 "selectTimeRange": "Select Time Range",
@@ -167,7 +181,10 @@
         },
         "header": {
             "profile": "Profile",
-            "logout": "Logout"
+            "logout": "Log out",
+            "settings": "Settings",
+            "accountMenu": "Account menu",
+            "unknownUser": "User"
         },
         "settings": {
             "page": {
@@ -444,10 +461,23 @@
                 "comments": "Comments",
                 "posts": "Posts",
                 "chartTitle": "By day",
+                "distributionTitle": "Time breakdown",
+                "otherOnline": "Browsing & other",
                 "periods": {
                     "today": "Today",
                     "week": "This week",
                     "month": "This month"
+                },
+                "timeLabel": "Screen time",
+                "radarChart": {
+                    "title": "Activity breakdown",
+                    "description": "Relative activity scores across usage categories",
+                    "score": "Score",
+                    "video": "Video",
+                    "comments": "Comments",
+                    "posts": "Posts",
+                    "likes": "Likes",
+                    "other": "Other"
                 }
             },
             "rules": {
@@ -464,6 +494,10 @@
                 "toast": {
                     "saved": "Rule saved!",
                     "deleted": "Rule deleted."
+                },
+                "progress": {
+                    "activating": "Triggering…",
+                    "remaining": "~{minutes}m left (cycle {cycle})"
                 }
             },
             "ruleChat": {
@@ -479,6 +513,9 @@
                 "dismiss": "Dismiss",
                 "ruleType": "Rule type",
                 "duration": "Duration (minutes)",
+                "timeRange": "Active time range",
+                "fromHour": "From",
+                "toHour": "To",
                 "action": "Action",
                 "titleLabel": "Title",
                 "titleRequired": "Title *",
@@ -505,7 +542,26 @@
                     "Limit 3 hours per day",
                     "Warn after 2 hours of video",
                     "Block after 90 minutes"
-                ]
+                ],
+                "optional": "optional",
+                "defaults": {
+                    "continuous_usage": {
+                        "title": "Continuous use {duration}",
+                        "message": "You have been using for {duration} continuously. Take a break!"
+                    },
+                    "daily_limit": {
+                        "title": "Daily limit {duration}",
+                        "message": "You have reached {duration} today. Balance your time!"
+                    },
+                    "video_watch_time": {
+                        "title": "Video watch {duration}",
+                        "message": "You have watched video for {duration}. Rest your eyes!"
+                    },
+                    "late_night": {
+                        "title": "Late night use ({fromHour}:00 – {toHour}:00)",
+                        "message": "You are using the app in the late-night window. Rest to protect your health."
+                    }
+                }
             },
             "analysis": {
                 "analyzeBtn": "Analyze last 7 days",
@@ -528,6 +584,14 @@
             "largeVideo": "Your video is large — describe it to me and I'll help!",
             "emptyHint": "Ask me to write a caption, generate hashtags, analyze your hook, and more.",
             "quickPrompts": ["Write a caption", "Generate hashtags", "Analyze viral potential", "Evaluate the hook"],
+            "quickPromptsGeneral": [
+                "My account stats",
+                "What can Snapi do?",
+                "Analyze my screen time",
+                "Content creation ideas"
+            ],
+            "quickPromptsAdmin": ["System user stats", "Pending appeals", "AI costs today", "Video encoding errors"],
+            "newSession": "New conversation",
             "input": {
                 "placeholder": "Ask the AI Copilot anything…"
             },
@@ -544,7 +608,8 @@
                 "dismissed": "Dismissed",
                 "accept": "Apply to post",
                 "reject": "Dismiss",
-                "copy": "Copy text"
+                "copy": "Copy text",
+                "copied": "Copied!"
             },
             "scheduleCard": {
                 "panelTitle": "Proposed publish time",
@@ -575,6 +640,14 @@
                 "analyzing": "Recording…",
                 "recording": "Recording clip",
                 "analyzePrompt": "Analyze this video segment from {start} to {end}"
+            },
+            "timeline": {
+                "analyze": "Analyze",
+                "analyzeQuestion": "Analyze this video segment",
+                "analyzeHook": "Check hook",
+                "analyzeHookQuestion": "Analyze the hook of this video",
+                "analyzeContent": "Analyze content",
+                "analyzeContentQuestion": "Analyze the content and suggest improvements"
             }
         },
         "appeals": {

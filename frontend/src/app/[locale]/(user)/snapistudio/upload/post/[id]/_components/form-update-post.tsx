@@ -30,8 +30,8 @@ import { extractHashtags } from '@/utils/social-token.util'
 import MentionHashtagTextField from '@/components/forms/mention-hashtag-text-field'
 import { logger } from '@/utils/logger.util'
 import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
-import { useAiCopilotContext } from '@/app/[locale]/(user)/snapistudio/_components/ai-copilot/AiCopilotContext'
-import { AiVideoAttachments } from '@/app/[locale]/(user)/snapistudio/_components/ai-copilot/attachments/AiVideoAttachments'
+import { useAiCopilotContext } from '@/components/ai-copilot/AiCopilotContext'
+import { AiVideoAttachments } from '@/components/ai-copilot/attachments/AiVideoAttachments'
 
 export default function FormUpdatePost() {
     const t = useTranslations('SnapiStudio.upload')

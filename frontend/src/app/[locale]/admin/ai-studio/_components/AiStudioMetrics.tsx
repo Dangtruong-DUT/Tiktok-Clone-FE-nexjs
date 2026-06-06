@@ -7,10 +7,14 @@ import { AI_TIME_PERIODS, type AiTimePeriod } from '@/constants/admin/ai'
 import { Card } from '@/components/ui/card'
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart'
 import { Skeleton } from '@/components/ui/skeleton'
-import {
-    BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, Cell
+import { 
+    AreaChart, Area, 
+    BarChart, Bar, 
+    PieChart, Pie, 
+    RadarChart, Radar, PolarGrid, PolarAngleAxis,
+    XAxis, YAxis, CartesianGrid, Legend, Cell 
 } from 'recharts'
-import { Users, Zap, DollarSign, CheckCircle, XCircle, BarChart2 } from 'lucide-react'
+import { Users, Zap, DollarSign, CheckCircle, XCircle, BarChart2, Activity, PieChart as PieChartIcon, Target } from 'lucide-react'
 
 const dailyChartConfig = {
     total: {
@@ -19,14 +23,34 @@ const dailyChartConfig = {
     }
 } satisfies ChartConfig
 
-const intentChartConfig = {
-    count: {
-        label: 'Requests',
-        color: 'var(--chart-1)'
+const tokenChartConfig = {
+    tokens: {
+        label: 'Tokens',
+        color: 'var(--chart-2)'
     }
 } satisfies ChartConfig
 
-const INTENT_COLORS = ['var(--chart-1)', 'var(--chart-2)', 'var(--chart-3)', 'var(--chart-4)', 'var(--chart-5)']
+const intentChartConfig = {
+    count: {
+        label: 'Requests',
+        color: 'var(--chart-3)'
+    }
+} satisfies ChartConfig
+
+const INTENT_COLORS = [
+    '#f97316', // orange-500
+    '#0ea5e9', // sky-500
+    '#10b981', // emerald-500
+    '#8b5cf6', // violet-500
+    '#f43f5e', // rose-500
+    '#eab308', // yellow-500
+    '#14b8a6', // teal-500
+    '#6366f1', // indigo-500
+    '#f59e0b', // amber-500
+    '#84cc16', // lime-500
+    '#3b82f6', // blue-500
+    '#ec4899', // pink-500
+]
 
 function StatCard({
     label,
@@ -42,7 +66,7 @@ function StatCard({
     color?: string
 }) {
     return (
-        <Card className='p-4 space-y-2'>
+        <Card className='p-4 space-y-2 border-border/50 shadow-sm'>
             <div className='flex items-center justify-between'>
                 <span className='text-xs text-muted-foreground font-medium uppercase tracking-wide'>{label}</span>
                 <Icon size={16} className='text-muted-foreground' />
@@ -53,10 +77,19 @@ function StatCard({
     )
 }
 
+function EmptyChart({ text }: { text: string }) {
+    return (
+        <div className='flex flex-col items-center justify-center h-[250px] gap-2 text-muted-foreground'>
+            <BarChart2 size={32} className='opacity-30' />
+            <p className='text-sm'>{text}</p>
+        </div>
+    )
+}
+
 export function AiStudioMetrics() {
     const t = useTranslations('AdminPage')
     const [period, setPeriod] = useState<AiTimePeriod>(AI_TIME_PERIODS.TODAY)
-    const { data, isLoading } = useGetAiMetricsQuery({ period })
+    const { data, isLoading, isError } = useGetAiMetricsQuery({ period })
     const metrics = data?.data
 
     const PERIODS = [
@@ -65,6 +98,33 @@ export function AiStudioMetrics() {
         { value: AI_TIME_PERIODS.MONTH, label: t('aiStudio.metrics.periods.month') }
     ]
 
+    const intentData = metrics
+        ? (() => {
+              const totalIntents = Object.values(metrics.intent_breakdown).reduce((a, b) => a + b, 0)
+              const threshold = totalIntents * 0.03; // 3%
+              
+              const result: { intent: string; count: number }[] = [];
+              let otherCount = 0;
+              
+              Object.entries(metrics.intent_breakdown)
+                  .sort(([, a], [, b]) => b - a)
+                  .forEach(([intent, count]) => {
+                      // Group into 'other' if < 3% AND we already have at least 5 slices
+                      if (count < threshold && result.length >= 5) {
+                          otherCount += count;
+                      } else {
+                          result.push({ intent: intent.replace(/_/g, ' '), count });
+                      }
+                  });
+                  
+              if (otherCount > 0) {
+                  result.push({ intent: 'other', count: otherCount });
+              }
+              
+              return result;
+          })()
+        : []
+
     return (
         <div className='space-y-6'>
             <div className='flex gap-2'>
@@ -72,10 +132,10 @@ export function AiStudioMetrics() {
                     <button
                         key={p.value}
                         onClick={() => setPeriod(p.value)}
-                        className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                        className={`px-3 py-1.5 rounded-xl text-sm font-medium transition-all duration-300 ${
                             period === p.value
-                                ? 'bg-primary text-primary-foreground'
-                                : 'bg-muted text-muted-foreground hover:text-foreground'
+                                ? 'bg-primary text-primary-foreground shadow-sm'
+                                : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
                         }`}
                     >
                         {p.label}
@@ -88,6 +148,10 @@ export function AiStudioMetrics() {
                     {Array.from({ length: 6 }).map((_, i) => (
                         <Skeleton key={i} className='h-24 rounded-xl' />
                     ))}
+                </div>
+            ) : isError ? (
+                <div className='rounded-xl border border-destructive/30 bg-destructive/5 p-6 text-center text-sm text-destructive'>
+                    {t('aiStudio.metrics.error')}
                 </div>
             ) : metrics ? (
                 <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4'>
@@ -125,71 +189,126 @@ export function AiStudioMetrics() {
             ) : null}
 
             {!isLoading && metrics && (
-                <Card className='p-4'>
-                    <h3 className='text-sm font-semibold mb-4'>{t('aiStudio.metrics.charts.dailyRequests')}</h3>
-                    {metrics.daily_series.length > 0 ? (
-                        <ChartContainer config={dailyChartConfig} className='h-[220px] w-full aspect-auto'>
-                            <BarChart data={metrics.daily_series} barSize={16}>
-                                <CartesianGrid strokeDasharray='3 3' stroke='var(--border)' />
-                                <XAxis dataKey='date' tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} />
-                                <YAxis tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} allowDecimals={false} />
-                                <ChartTooltip content={<ChartTooltipContent />} />
-                                <Legend wrapperStyle={{ fontSize: 12 }} />
-                                <Bar dataKey='total' fill='var(--color-total)' name='Requests' radius={[4, 4, 0, 0]} />
-                            </BarChart>
-                        </ChartContainer>
-                    ) : (
-                        <div className='flex flex-col items-center justify-center h-[220px] gap-2 text-muted-foreground'>
-                            <BarChart2 size={32} className='opacity-30' />
-                            <p className='text-sm'>{t('aiStudio.metrics.empty.noData')}</p>
+                <div className='grid grid-cols-1 xl:grid-cols-2 gap-6'>
+                    {/* Area Chart: Daily Requests */}
+                    <Card className='p-6 border-border/50 shadow-sm'>
+                        <div className='flex items-center gap-2 mb-6'>
+                            <Activity size={18} className='text-muted-foreground' />
+                            <h3 className='text-sm font-semibold'>{t('aiStudio.metrics.charts.dailyRequests')}</h3>
                         </div>
-                    )}
-                </Card>
-            )}
+                        {metrics.daily_series.length > 0 ? (
+                            <ChartContainer config={dailyChartConfig} className='h-[250px] w-full aspect-auto'>
+                                <AreaChart data={metrics.daily_series} margin={{ left: -20, right: 10, top: 10, bottom: 0 }}>
+                                    <defs>
+                                        <linearGradient id="fillRequests" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="var(--color-total)" stopOpacity={0.8}/>
+                                            <stop offset="95%" stopColor="var(--color-total)" stopOpacity={0.1}/>
+                                        </linearGradient>
+                                    </defs>
+                                    <CartesianGrid strokeDasharray='3 3' stroke='var(--border)' vertical={false} />
+                                    <XAxis dataKey='date' tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} tickMargin={10} />
+                                    <YAxis tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} allowDecimals={false} axisLine={false} tickLine={false} />
+                                    <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+                                    <Area type="monotone" dataKey="total" stroke="var(--color-total)" strokeWidth={3} fillOpacity={1} fill="url(#fillRequests)" name="Requests" />
+                                </AreaChart>
+                            </ChartContainer>
+                        ) : (
+                            <EmptyChart text={t('aiStudio.metrics.empty.noData')} />
+                        )}
+                    </Card>
 
-            {!isLoading && metrics && (() => {
-                const intentData = Object.entries(metrics.intent_breakdown)
-                    .sort(([, a], [, b]) => b - a)
-                    .map(([intent, count]) => ({ intent: intent.replace(/_/g, ' '), count }))
-                return (
-                    <Card className='p-4'>
-                        <h3 className='text-sm font-semibold mb-4'>{t('aiStudio.metrics.charts.intentBreakdown')}</h3>
-                        {intentData.length > 0 ? (
-                            <ChartContainer
-                                config={intentChartConfig}
-                                className='w-full aspect-auto'
-                                style={{ height: intentData.length * 36 + 20 }}
-                            >
-                                <BarChart data={intentData} layout='vertical' barSize={14} margin={{ left: 8, right: 24 }}>
-                                    <CartesianGrid strokeDasharray='3 3' stroke='var(--border)' horizontal={false} />
-                                    <XAxis
-                                        type='number'
-                                        tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
-                                        allowDecimals={false}
-                                    />
-                                    <YAxis
-                                        type='category'
-                                        dataKey='intent'
-                                        width={120}
-                                        tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
-                                    />
-                                    <ChartTooltip content={<ChartTooltipContent />} cursor={{ fill: 'var(--muted)' }} />
-                                    <Bar dataKey='count' name='Requests' radius={[0, 4, 4, 0]}>
-                                        {intentData.map((_, i) => (
-                                            <Cell key={i} fill={INTENT_COLORS[i % INTENT_COLORS.length]} />
-                                        ))}
-                                    </Bar>
+                    {/* Bar Chart: Daily Tokens */}
+                    <Card className='p-6 border-border/50 shadow-sm'>
+                        <div className='flex items-center gap-2 mb-6'>
+                            <BarChart2 size={18} className='text-muted-foreground' />
+                            <h3 className='text-sm font-semibold'>Daily Token Usage</h3>
+                        </div>
+                        {metrics.daily_series.length > 0 ? (
+                            <ChartContainer config={tokenChartConfig} className='h-[250px] w-full aspect-auto'>
+                                <BarChart data={metrics.daily_series} barSize={24} margin={{ left: -20, right: 10, top: 10, bottom: 0 }}>
+                                    <CartesianGrid strokeDasharray='3 3' stroke='var(--border)' vertical={false} />
+                                    <XAxis dataKey='date' tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} tickMargin={10} />
+                                    <YAxis tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} allowDecimals={false} axisLine={false} tickLine={false} />
+                                    <ChartTooltip cursor={{ fill: 'var(--muted)', opacity: 0.5 }} content={<ChartTooltipContent />} />
+                                    <Bar dataKey='tokens' fill='var(--color-tokens)' name='Tokens' radius={[4, 4, 0, 0]} />
                                 </BarChart>
                             </ChartContainer>
                         ) : (
-                            <div className='flex flex-col items-center justify-center h-24 gap-2 text-muted-foreground'>
-                                <BarChart2 size={24} className='opacity-30' />
-                                <p className='text-sm'>{t('aiStudio.metrics.empty.noIntents')}</p>
-                            </div>
+                            <EmptyChart text={t('aiStudio.metrics.empty.noData')} />
                         )}
                     </Card>
-                )
-            })()}
+
+                    {/* Donut Chart: Intent Breakdown */}
+                    <Card className='p-6 border-border/50 shadow-sm'>
+                        <div className='flex items-center gap-2 mb-6'>
+                            <PieChartIcon size={18} className='text-muted-foreground' />
+                            <h3 className='text-sm font-semibold'>{t('aiStudio.metrics.charts.intentBreakdown')}</h3>
+                        </div>
+                        {intentData.length > 0 ? (
+                            <ChartContainer config={intentChartConfig} className='h-[250px] w-full aspect-auto'>
+                                <PieChart>
+                                    <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+                                    <Pie
+                                        data={intentData}
+                                        dataKey="count"
+                                        nameKey="intent"
+                                        cx="50%"
+                                        cy="50%"
+                                        outerRadius={75}
+                                        stroke="var(--background)"
+                                        strokeWidth={2}
+                                        labelLine={{ stroke: 'var(--muted-foreground)', strokeWidth: 1 }}
+                                        label={({ x, y, cx, cy, percent }) => {
+                                            return (
+                                                <text
+                                                    x={x}
+                                                    y={y}
+                                                    fill="var(--foreground)"
+                                                    textAnchor={x > cx ? 'start' : 'end'}
+                                                    dominantBaseline="central"
+                                                    fontSize={12}
+                                                >
+                                                    {`${(percent * 100).toFixed(1)}%`}
+                                                </text>
+                                            );
+                                        }}
+                                    >
+                                        {intentData.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={INTENT_COLORS[index % INTENT_COLORS.length]} />
+                                        ))}
+                                    </Pie>
+                                    <Legend 
+                                        wrapperStyle={{ fontSize: 12, marginTop: '20px' }} 
+                                        formatter={(value) => <span style={{ color: 'var(--foreground)' }}>{value}</span>}
+                                    />
+                                </PieChart>
+                            </ChartContainer>
+                        ) : (
+                            <EmptyChart text={t('aiStudio.metrics.empty.noIntents')} />
+                        )}
+                    </Card>
+
+                    {/* Radar Chart: Intent Profile */}
+                    <Card className='p-6 border-border/50 shadow-sm'>
+                        <div className='flex items-center gap-2 mb-6'>
+                            <Target size={18} className='text-muted-foreground' />
+                            <h3 className='text-sm font-semibold'>Intent Radar Profile</h3>
+                        </div>
+                        {intentData.length > 0 ? (
+                            <ChartContainer config={intentChartConfig} className='h-[250px] w-full aspect-auto'>
+                                <RadarChart cx="50%" cy="50%" outerRadius={75} data={intentData}>
+                                    <PolarGrid stroke="var(--border)" />
+                                    <PolarAngleAxis dataKey="intent" tick={{ fill: 'var(--muted-foreground)', fontSize: 11 }} />
+                                    <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+                                    <Radar name="Requests" dataKey="count" stroke="var(--color-count)" fill="var(--color-count)" fillOpacity={0.5} />
+                                </RadarChart>
+                            </ChartContainer>
+                        ) : (
+                            <EmptyChart text={t('aiStudio.metrics.empty.noIntents')} />
+                        )}
+                    </Card>
+                </div>
+            )}
         </div>
     )
 }

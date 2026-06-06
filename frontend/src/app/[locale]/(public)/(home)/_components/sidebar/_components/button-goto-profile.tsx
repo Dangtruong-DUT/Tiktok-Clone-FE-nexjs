@@ -28,10 +28,10 @@ export default function ButtonGotoProfile({ isOpenDrawer, activeState, setActive
     if (role == null) {
         return (
             <AuthModal>
-                <button className='flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent'>
+                <button className='flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-300 ease-out hover:bg-accent hover:scale-[0.98] active:scale-95'>
                     <FaRegUser size={22} className='transition-colors  text-foreground' />
                     {!isOpenDrawer && (
-                        <h2 className={cn('text-base font-medium transition-colors duration-200', 'text-foreground')}>
+                        <h2 className={cn('text-base font-medium transition-colors duration-300', 'text-foreground')}>
                             {t('profile')}
                         </h2>
                     )}
@@ -45,7 +45,7 @@ export default function ButtonGotoProfile({ isOpenDrawer, activeState, setActive
             <Link
                 href={USER_ROUTES.PROFILE(user?.username ?? '')}
                 className={cn(
-                    'flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent',
+                    'flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-300 ease-out hover:bg-accent hover:scale-[0.98] active:scale-95',
                     activeState.type === SidebarActiveType.PROFILE && 'bg-accent'
                 )}
                 onClick={() =>
@@ -65,7 +65,7 @@ export default function ButtonGotoProfile({ isOpenDrawer, activeState, setActive
                 {!isOpenDrawer && (
                     <h2
                         className={cn(
-                            'text-base font-medium transition-colors duration-200',
+                            'text-base font-medium transition-colors duration-300',
                             activeState.type === SidebarActiveType.PROFILE ? 'text-brand' : 'text-foreground'
                         )}
                     >

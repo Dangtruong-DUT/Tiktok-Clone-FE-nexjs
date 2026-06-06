@@ -47,7 +47,7 @@ export default function SuggestedAccounts({ title }: SuggestedAccountsProps) {
                     <li key={account.id}>
                         <AccountItem
                             className='
-                            transition-colors duration-200 ease-in-out p-2 rounded-[4px] hover:bg-accent
+                            transition-all duration-300 ease-in-out p-2 rounded-xl hover:bg-accent hover:scale-[1.02] active:scale-[0.98]
                             md:block
                             max-md:w-[55px] max-md:pl-[13px]
                             max-md:[&_h4]:hidden max-md:[&_p]:hidden'

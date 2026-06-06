@@ -41,7 +41,7 @@ export default function NavItems({ roleUser }: NavItemsProps) {
                     <Link
                         key={item.titleKey + index}
                         className={cn(
-                            'flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-200 hover:bg-accent'
+                            'flex items-center h-10 px-2 gap-3 rounded-lg transition-all duration-300 ease-out hover:bg-accent hover:scale-[0.98] active:scale-95'
                         )}
                         href={item.to}
                         onClick={() => handleClickNavItem(item)}
@@ -49,14 +49,14 @@ export default function NavItems({ roleUser }: NavItemsProps) {
                         <IconComponent
                             size={24}
                             className={cn(
-                                'transition-colors duration-200',
+                                'transition-colors duration-300',
                                 isActive ? 'text-brand' : 'text-foreground'
                             )}
                         />
                         {!isOpenDrawer && (
                             <h2
                                 className={cn(
-                                    'text-base font-medium transition-colors duration-200',
+                                    'text-base font-medium transition-colors duration-300',
                                     isActive ? 'text-brand' : 'text-foreground'
                                 )}
                             >

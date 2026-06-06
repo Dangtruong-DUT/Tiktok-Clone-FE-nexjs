@@ -46,6 +46,11 @@
             "title": "AI Content Studio",
             "description": "Giám sát lượng dùng, điều chỉnh cài đặt Gemini và xem toàn bộ yêu cầu tạo AI.",
             "breadcrumb": "AI Studio",
+            "nav": {
+                "overview": "Tổng quan",
+                "promptTemplates": "Mẫu Prompt",
+                "knowledge": "Cơ sở tri thức"
+            },
             "tabs": {
                 "metrics": "Thống kê",
                 "settings": "Cài đặt",
@@ -80,7 +85,8 @@
                 "empty": {
                     "noData": "Không có dữ liệu cho khoảng thời gian này",
                     "noIntents": "Chưa có dữ liệu intent"
-                }
+                },
+                "error": "Tải thống kê thất bại. Vui lòng thử lại."
             },
             "settings": {
                 "status": {
@@ -153,12 +159,16 @@
                 },
                 "columns": {
                     "uuid": "UUID",
+                    "user": "Người dùng",
                     "status": "Trạng thái",
                     "intent": "Mục đích",
                     "model": "Mô hình",
                     "tokens": "Tokens",
+                    "cost": "Chi phí",
+                    "latency": "Độ trễ",
                     "applied": "Đã dùng",
-                    "created": "Ngày tạo"
+                    "created": "Ngày tạo",
+                    "time": "Thời gian"
                 },
                 "detail": {
                     "shortCaption": "Caption ngắn",
@@ -172,6 +182,80 @@
                 "pagination": {
                     "page": "Trang {current} / {total}"
                 }
+            },
+            "knowledge": {
+                "title": "Kho kiến thức",
+                "description": "Tải tài liệu để xây dựng kho kiến thức cho AI Copilot (RAG)",
+                "breadcrumb": "Kho kiến thức",
+                "count": "{count, plural, one {# tài liệu đã lập chỉ mục} other {# tài liệu đã lập chỉ mục}}",
+                "addDocument": "Thêm tài liệu",
+                "newDocument": "Tài liệu mới",
+                "uploadFile": "Tải file",
+                "pasteText": "Dán văn bản",
+                "titleLabel": "Tiêu đề",
+                "titlePlaceholder": "VD: Quy tắc cộng đồng Snapi",
+                "sourceTypeLabel": "Loại nguồn",
+                "languageLabel": "Ngôn ngữ",
+                "fileLabel": "File",
+                "fileHint": "(PDF, TXT, DOCX — tối đa 10 MB)",
+                "contentLabel": "Nội dung",
+                "contentPlaceholder": "Dán nội dung tài liệu vào đây (hỗ trợ Markdown)…",
+                "cancel": "Huỷ",
+                "upload": "Tải lên",
+                "uploading": "Đang tải…",
+                "indexed": "Đã lập chỉ mục",
+                "indexing": "Đang lập chỉ mục…",
+                "empty": "Chưa có tài liệu. Tải PDF, TXT hoặc DOCX để bắt đầu.",
+                "deleteTitle": "Xoá tài liệu",
+                "deleteDescription": "Thao tác này sẽ xoá toàn bộ chunk đã lập chỉ mục. Không thể hoàn tác.",
+                "deleteConfirm": "Xoá",
+                "toast": {
+                    "uploaded": "Tài liệu đã được tải lên và đang lập chỉ mục",
+                    "uploadFailed": "Tải tài liệu thất bại",
+                    "deleted": "Đã xoá tài liệu",
+                    "deleteFailed": "Xoá tài liệu thất bại",
+                    "titleRequired": "Tiêu đề là bắt buộc",
+                    "fileRequired": "Vui lòng chọn file",
+                    "contentRequired": "Nội dung là bắt buộc"
+                },
+                "sourceTypes": {
+                    "faq": "FAQ",
+                    "guide": "Hướng dẫn",
+                    "policy": "Chính sách",
+                    "feature": "Tài liệu tính năng",
+                    "other": "Khác"
+                },
+                "languages": {
+                    "vi": "Tiếng Việt",
+                    "en": "Tiếng Anh"
+                }
+            },
+            "promptTemplates": {
+                "title": "Mẫu prompt",
+                "description": "Chỉnh sửa system prompt cho từng intent AI Copilot",
+                "breadcrumb": "Mẫu prompt",
+                "lock": "Khoá",
+                "unlock": "Mở khoá",
+                "confirmUnlockTitle": "Mở khoá mẫu",
+                "confirmUnlockDescription": "Bạn có chắc muốn mở khoá và chỉnh sửa mẫu này? Thay đổi sẽ ảnh hưởng đến toàn bộ phản hồi AI cho intent này.",
+                "cancel": "Huỷ",
+                "save": "Lưu",
+                "saving": "Đang lưu…",
+                "active": "Đang hoạt động",
+                "inactive": "Không hoạt động",
+                "toast": {
+                    "saved": "Đã lưu mẫu.",
+                    "saveFailed": "Lưu mẫu thất bại.",
+                    "locked": "Đã khoá mẫu.",
+                    "unlocked": "Đã mở khoá mẫu."
+                },
+                "categories": {
+                    "platform": "Ngữ cảnh nền tảng",
+                    "routing": "Định tuyến intent",
+                    "style": "Phong cách & giọng điệu",
+                    "moderation": "Kiểm duyệt nội dung",
+                    "other": "Khác"
+                }
             }
         },
         "scheduledPosts": {
@@ -183,7 +267,7 @@
                 "requests": "Yêu cầu"
             },
             "metrics": {
-                "periods": { "today": "Hôm nay", "week": "Tuần này", "month": "Tháng này" },
+                "periods": { "today": "Hôm nay", "week": "Tuần này", "month": "Tháng này", "year": "Năm này" },
                 "stats": {
                     "totalScheduled": "Tổng đã lên lịch",
                     "pending": "Đang chờ",
@@ -215,6 +299,7 @@
                 "filters": {
                     "allStatuses": "Tất cả trạng thái",
                     "pending": "Đang chờ",
+                    "processing": "Đang xử lý",
                     "published": "Đã đăng",
                     "failed": "Thất bại",
                     "cancelled": "Đã hủy",
@@ -234,7 +319,9 @@
                 },
                 "toast": {
                     "cancelled": "Schedule đã bị hủy bởi admin.",
-                    "retried": "Schedule đã được đưa vào hàng chờ lại."
+                    "cancelError": "Không thể hủy schedule.",
+                    "retried": "Schedule đã được đưa vào hàng chờ lại.",
+                    "retryError": "Không thể thử lại schedule."
                 },
                 "pagination": {
                     "page": "{current} / {total}"
@@ -256,7 +343,20 @@
             "today": "hôm nay",
             "needsReview": "Cần xem xét",
             "needsReviewSub": "Hàng đợi kiểm duyệt",
-            "pendingAppeals": "Kháng cáo chờ duyệt"
+            "pendingAppeals": "Kháng cáo chờ duyệt",
+            "charts": "Biểu đồ",
+            "userGrowthChart": {
+                "title": "Người dùng mới",
+                "description": "Đăng ký mới mỗi ngày trong 7 ngày qua",
+                "users": "Người dùng"
+            },
+            "contentStatusChart": {
+                "title": "Trạng thái nội dung",
+                "description": "Bài đăng theo trạng thái xuất bản",
+                "published": "Đã đăng",
+                "scheduled": "Đã lên lịch",
+                "draft": "Bản nháp"
+            }
         },
         "moderation": {
             "title": "Kiểm duyệt bài viết"
@@ -393,7 +493,8 @@
             "audience": {
                 "public": "Công khai",
                 "friends": "Bạn bè",
-                "private": "Riêng tư"
+                "private": "Riêng tư",
+                "following": "Đang theo dõi"
             },
             "liveStatus": {
                 "live": "Đang phát",
@@ -404,6 +505,21 @@
                 "visible": "Hiển thị",
                 "recent": "Mới nhất",
                 "oldest": "Cũ nhất"
+            },
+            "status": {
+                "published": "Đã đăng",
+                "scheduled": "Đã lên lịch",
+                "draft": "Bản nháp",
+                "failed": "Thất bại",
+                "archived": "Đã lưu trữ",
+                "hidden": "Đã ẩn",
+                "deleted": "Đã xóa",
+                "live": "Đang hiển thị",
+                "all": "Tất cả"
+            },
+            "scheduledSection": {
+                "title": "Bài viết lên lịch",
+                "description": "Thống kê và danh sách bài viết đã lên lịch"
             },
             "actions": {
                 "delete": "Xóa",
@@ -537,7 +653,13 @@
         "settings": {
             "title": "Cài đặt quản trị",
             "description": "Cập nhật hồ sơ và bảo mật tài khoản quản trị",
-            "adminNote": "Thay đổi chỉ áp dụng cho tài khoản admin của bạn."
+            "adminNote": "Thay đổi chỉ áp dụng cho tài khoản admin của bạn.",
+            "tabs": {
+                "profile": "Hồ sơ",
+                "security": "Bảo mật",
+                "privacy": "Quyền riêng tư",
+                "email": "Email"
+            }
         },
         "appeals": {
             "title": "Kiểm duyệt kháng cáo",

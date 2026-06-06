@@ -23,6 +23,12 @@ class AiPromptTemplateRepository extends BaseRepository
             ->first();
     }
 
+    public function findByIntentAny(string $intent): ?AiPromptTemplate
+    {
+        /** @var AiPromptTemplate|null */
+        return $this->query()->where('intent', $intent)->first();
+    }
+
     /** @return \Illuminate\Database\Eloquent\Collection<int, AiPromptTemplate> */
     public function allActive()
     {

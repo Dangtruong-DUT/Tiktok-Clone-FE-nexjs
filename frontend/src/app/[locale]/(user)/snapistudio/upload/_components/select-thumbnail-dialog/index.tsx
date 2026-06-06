@@ -32,7 +32,7 @@ export default function SelectThumbnailDialog({
     return (
         <Dialog>
             <DialogTrigger asChild disabled={!videoSrc}>
-                <div className='w-[132px] h-[176px] rounded-md overflow-hidden relative cursor-pointer border border-border'>
+                <div className='w-[132px] h-[176px] rounded-xl overflow-hidden relative cursor-pointer border border-border'>
                     {imageSrc && (
                         <Image
                             src={imageSrc || '/images/desktop-wallpaper-tiktok.jpg'}
@@ -62,7 +62,7 @@ export default function SelectThumbnailDialog({
                     <li
                         onClick={() => setMode(SelectThumbnailMode.SELECT_FROM_VIDEO)}
                         className={cn(
-                            'relative px-6 py-3 cursor-pointer transition-colors duration-200 hover:text-brand',
+                            'relative px-6 py-3 cursor-pointer transition-colors duration-300 hover:text-brand',
                             {
                                 'text-brand border-b-2 border-brand': mode === SelectThumbnailMode.SELECT_FROM_VIDEO,
                                 'text-muted-foreground': mode !== SelectThumbnailMode.SELECT_FROM_VIDEO
@@ -74,7 +74,7 @@ export default function SelectThumbnailDialog({
                     <li
                         onClick={() => setMode(SelectThumbnailMode.UPLOAD)}
                         className={cn(
-                            'relative px-6 py-3 cursor-pointer transition-colors duration-200 hover:text-brand',
+                            'relative px-6 py-3 cursor-pointer transition-colors duration-300 hover:text-brand',
                             {
                                 'text-brand border-b-2 border-brand': mode === SelectThumbnailMode.UPLOAD,
                                 'text-muted-foreground': mode !== SelectThumbnailMode.UPLOAD

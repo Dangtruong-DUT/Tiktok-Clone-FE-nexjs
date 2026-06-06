@@ -509,113 +509,154 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
     }
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
-            className='w-full rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-10'
-        >
-            <div className='mb-6 flex items-center gap-3'>
-                <div className='rounded-full bg-slate-100 p-3'>
-                    <Scale className='h-6 w-6 text-slate-900' />
-                </div>
-                <div>
-                    <h1 className='text-xl font-bold text-slate-900 md:text-2xl'>{t('title')}</h1>
-                    <p className='text-sm text-slate-500'>{t('description')}</p>
-                </div>
-            </div>
+        <div className='w-full max-w-[1200px] mx-auto py-8 md:py-16 px-4 sm:px-6'>
+            <div className='grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24'>
+                
+                {/* Left Column: Context & Guidelines */}
+                <div className='lg:col-span-5 order-2 lg:order-1'>
+                    <div className='sticky top-24'>
+                        <div className='inline-flex self-start rounded-2xl bg-primary/10 p-4 mb-6 text-primary'>
+                            <Scale className='h-8 w-8' />
+                        </div>
+                        <h1 className='text-3xl font-bold tracking-tight text-foreground md:text-4xl lg:text-5xl mb-4'>
+                            {t('title')}
+                        </h1>
+                        <p className='text-base text-muted-foreground leading-relaxed mb-10'>
+                            {t('description')}
+                        </p>
 
-            <div className='space-y-5'>
-                {appealInfo && (
-                    <div className='rounded-2xl bg-slate-50 p-4 space-y-3'>
-                        <div className='grid grid-cols-2 gap-3 text-sm'>
-                            <div>
-                                <span className='text-slate-500'>{t('form.appealType')}</span>
-                                <p className='font-medium text-slate-900 mt-0.5'>
-                                    {appealInfo.appeal_type ? tTypes(appealInfo.appeal_type as never) : '—'}
-                                </p>
+                        <div className='flex flex-col gap-8'>
+                            <div className='flex gap-4'>
+                                <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-foreground font-semibold ring-4 ring-background'>1</div>
+                                <div className='pt-2'>
+                                    <h3 className='font-semibold text-foreground'>Submit Request</h3>
+                                    <p className='text-sm text-muted-foreground mt-1 leading-relaxed'>Provide a clear, detailed explanation and attach any relevant evidence.</p>
+                                </div>
                             </div>
-                            <div>
-                                <span className='text-slate-500'>{t('form.resourceType')}</span>
-                                <p className='font-medium text-slate-900 mt-0.5'>{appealInfo.resource_type}</p>
+                            <div className='flex gap-4'>
+                                <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-foreground font-semibold ring-4 ring-background'>2</div>
+                                <div className='pt-2'>
+                                    <h3 className='font-semibold text-foreground'>Under Review</h3>
+                                    <p className='text-sm text-muted-foreground mt-1 leading-relaxed'>Our moderation team will carefully evaluate your case against our guidelines.</p>
+                                </div>
                             </div>
-                            {isEditFlow && (
-                                <div className='col-span-2 flex items-center justify-between'>
-                                    <span className='text-slate-500'>{t('form.status')}</span>
-                                    <Badge
-                                        variant='outline'
-                                        className={
-                                            appealInfo.status === APPEAL_STATUSES.APPROVED
-                                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                                                : appealInfo.status === APPEAL_STATUSES.REJECTED
-                                                  ? 'bg-red-50 text-red-700 border-red-200'
-                                                  : 'bg-amber-50 text-amber-700 border-amber-200'
-                                        }
-                                    >
-                                        {appealInfo.status ? tStatuses(appealInfo.status as never) : '—'}
-                                    </Badge>
+                            <div className='flex gap-4'>
+                                <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-foreground font-semibold ring-4 ring-background'>3</div>
+                                <div className='pt-2'>
+                                    <h3 className='font-semibold text-foreground'>Final Decision</h3>
+                                    <p className='text-sm text-muted-foreground mt-1 leading-relaxed'>You will receive a notification with the outcome. Decisions are final.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right Column: The Form */}
+                <div className='lg:col-span-7 order-1 lg:order-2'>
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 }}
+                        className='w-full rounded-3xl bg-card p-6 shadow-sm ring-1 ring-black/5 dark:ring-white/5 sm:p-10'
+                    >
+                        <div className='space-y-10'>
+                            {appealInfo && (
+                                <div className='grid gap-6'>
+                                    <div className='grid grid-cols-2 gap-6 text-sm pb-5 border-b border-border/40'>
+                                        <div className='space-y-1.5'>
+                                            <span className='text-[11px] font-semibold text-muted-foreground uppercase tracking-wider'>{t('form.appealType')}</span>
+                                            <p className='font-medium text-foreground text-base'>
+                                                {appealInfo.appeal_type ? tTypes(appealInfo.appeal_type as never) : '—'}
+                                            </p>
+                                        </div>
+                                        <div className='space-y-1.5'>
+                                            <span className='text-[11px] font-semibold text-muted-foreground uppercase tracking-wider'>{t('form.resourceType')}</span>
+                                            <p className='font-medium text-foreground text-base capitalize'>{appealInfo.resource_type}</p>
+                                        </div>
+                                        {isEditFlow && (
+                                            <div className='col-span-2 flex flex-col gap-1.5 pt-2'>
+                                                <span className='text-[11px] font-semibold text-muted-foreground uppercase tracking-wider'>{t('form.status')}</span>
+                                                <div>
+                                                    <Badge
+                                                        variant='outline'
+                                                        className={
+                                                            appealInfo.status === APPEAL_STATUSES.APPROVED
+                                                                ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'
+                                                                : appealInfo.status === APPEAL_STATUSES.REJECTED
+                                                                  ? 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20'
+                                                                  : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20'
+                                                        }
+                                                    >
+                                                        {appealInfo.status ? tStatuses(appealInfo.status as never) : '—'}
+                                                    </Badge>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {isEditFlow && existingAppealInfo?.resource_preview && (
+                                        <ResourcePreviewInline preview={existingAppealInfo.resource_preview} />
+                                    )}
+
+                                    {isNewFlow &&
+                                        (isLoadingPreview ? (
+                                            <div className='h-24 animate-pulse rounded-2xl bg-muted/50' />
+                                        ) : newFlowPreview ? (
+                                            <ResourcePreviewInline preview={newFlowPreview} />
+                                        ) : null)}
                                 </div>
                             )}
+
+                            <div className='space-y-3'>
+                                <label htmlFor='appeal-reason' className='text-sm font-semibold text-foreground flex items-center justify-between'>
+                                    <span>{t('form.reasonLabel')} <span className='text-red-500'>*</span></span>
+                                    <span className={`text-[11px] font-medium tracking-wide uppercase ${reason.trim().length < 20 ? 'text-red-500' : 'text-emerald-500'}`}>
+                                        {reason.trim().length} / 1000
+                                    </span>
+                                </label>
+                                <Textarea
+                                    id='appeal-reason'
+                                    value={reason}
+                                    onChange={(e) => setReason(e.target.value)}
+                                    placeholder={t('form.reasonPlaceholder')}
+                                    className='min-h-[160px] resize-none rounded-2xl border-0 bg-muted/40 p-5 text-[15px] leading-relaxed transition-all focus-visible:bg-transparent focus-visible:ring-2 focus-visible:ring-primary shadow-inner placeholder:text-muted-foreground/60'
+                                />
+                                <div className='flex justify-end text-xs'>
+                                    <span className='text-muted-foreground font-medium'>{t('form.reasonHint')}</span>
+                                </div>
+                            </div>
+
+                            <div className='space-y-3'>
+                                <div>
+                                    <h3 className='text-sm font-semibold text-foreground'>{t('form.evidenceLabel')}</h3>
+                                    <p className='text-xs text-muted-foreground mt-1'>{t('form.evidenceHint')}</p>
+                                </div>
+                                <EvidenceDropzone files={evidenceFiles} onFilesChange={setEvidenceFiles} />
+                            </div>
+
+                            <div className='pt-6 border-t border-border/40'>
+                                <Button
+                                    onClick={handleSubmit}
+                                    disabled={!canSubmit || isSubmitting}
+                                    className='w-full rounded-full px-8 py-6 text-base font-semibold shadow-sm transition-all hover:scale-[0.98] active:scale-95'
+                                >
+                                    {isSubmitting ? (
+                                        <>
+                                            <Loader2 className='mr-2 h-5 w-5 animate-spin' />
+                                            {t('form.submitting')}
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Send className='mr-2 h-5 w-5' />
+                                            {t('form.submit')}
+                                        </>
+                                    )}
+                                </Button>
+                            </div>
                         </div>
-
-                        {isEditFlow && existingAppealInfo?.resource_preview && (
-                            <ResourcePreviewInline preview={existingAppealInfo.resource_preview} />
-                        )}
-
-                        {isNewFlow &&
-                            (isLoadingPreview ? (
-                                <div className='h-16 animate-pulse rounded-xl bg-slate-100' />
-                            ) : newFlowPreview ? (
-                                <ResourcePreviewInline preview={newFlowPreview} />
-                            ) : null)}
-                    </div>
-                )}
-
-                <div className='space-y-2'>
-                    <label htmlFor='appeal-reason' className='text-sm font-medium text-slate-900'>
-                        {t('form.reasonLabel')} <span className='text-red-500'>*</span>
-                    </label>
-                    <Textarea
-                        id='appeal-reason'
-                        value={reason}
-                        onChange={(e) => setReason(e.target.value)}
-                        placeholder={t('form.reasonPlaceholder')}
-                        className='min-h-[140px] resize-none rounded-xl border-slate-300 focus:border-slate-900 focus:ring-slate-900'
-                    />
-                    <div className='flex justify-between text-xs'>
-                        <span className={reason.trim().length < 20 ? 'text-red-500' : 'text-green-600'}>
-                            {reason.trim().length}/1000
-                        </span>
-                        <span className='text-slate-400'>{t('form.reasonHint')}</span>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 className='text-sm font-medium text-slate-900'>{t('form.evidenceLabel')}</h3>
-                    <p className='text-xs text-slate-500 mt-0.5 mb-2'>{t('form.evidenceHint')}</p>
-                    <EvidenceDropzone files={evidenceFiles} onFilesChange={setEvidenceFiles} />
-                </div>
-
-                <div className='pt-2'>
-                    <Button
-                        onClick={handleSubmit}
-                        disabled={!canSubmit || isSubmitting}
-                        className='w-full rounded-full bg-slate-900 px-6 py-3 text-white hover:bg-slate-800 transition-colors'
-                    >
-                        {isSubmitting ? (
-                            <>
-                                <Loader2 className='mr-1.5 h-4 w-4 animate-spin' />
-                                {t('form.submitting')}
-                            </>
-                        ) : (
-                            <>
-                                <Send className='mr-1.5 h-4 w-4' />
-                                {t('form.submit')}
-                            </>
-                        )}
-                    </Button>
+                    </motion.div>
                 </div>
             </div>
-        </motion.div>
+        </div>
     )
 }

@@ -57,10 +57,29 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
 
     return (
         <section
-            className={cn('block relative top-0 left-0 w-full h-full group cursor-pointer', className)}
+            className={cn('block relative z-0 top-0 left-0 w-full h-full group cursor-pointer overflow-hidden rounded-2xl bg-black', className)}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
+            {post.thumbnail_url && (
+                <div 
+                    className="absolute inset-0 bg-cover bg-center blur-2xl opacity-40 scale-125 z-0 pointer-events-none" 
+                    style={{ backgroundImage: `url(${post.thumbnail_url})` }} 
+                />
+            )}
+
+            <video
+                onClick={handlePlayPause}
+                className='relative z-[1] w-full h-full object-contain'
+                ref={videoRef}
+                playsInline
+                loop
+                preload='metadata'
+                muted={isMuted}
+                poster={post.thumbnail_url || undefined}
+            >
+                {!isHls && <source src={media?.url} type='video/mp4' />}
+            </video>
             <VideoControlsTop
                 volume={volume}
                 onVolumeChange={handleVolumeChange}
@@ -92,18 +111,7 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
                 </div>
             )}
 
-            <video
-                onClick={handlePlayPause}
-                className='w-full h-full rounded-2xl object-contain bg-accent transition-all duration-400'
-                ref={videoRef}
-                playsInline
-                loop
-                preload='metadata'
-                muted={isMuted}
-                poster={post.thumbnail_url || undefined}
-            >
-                {!isHls && <source src={media?.url} type='video/mp4' />}
-            </video>
+
 
             <VideoControlsBottom
                 post={post}

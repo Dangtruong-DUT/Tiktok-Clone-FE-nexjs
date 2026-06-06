@@ -229,7 +229,7 @@ export default function MentionHashtagTextField({
             {isOpen && (
                 <div
                     className={cn(
-                        'absolute z-[1200] w-full max-w-[320px] overflow-hidden rounded-xl border bg-popover p-1 shadow-md',
+                        'absolute z-[1200] w-full max-w-[320px] overflow-hidden rounded-xl border border-border/50 bg-popover/95 backdrop-blur-md p-1 shadow-xl duration-300 [animation-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] animate-in fade-in zoom-in-95',
                         suggestionPlacement === 'top' ? 'bottom-[calc(100%+6px)]' : 'top-[calc(100%+4px)]'
                     )}
                 >
@@ -239,7 +239,7 @@ export default function MentionHashtagTextField({
                                 <button
                                     type='button'
                                     className={cn(
-                                        'flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-accent cursor-pointer',
+                                        'flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm hover:bg-accent cursor-pointer transition-colors',
                                         index === activeIndex && 'bg-accent'
                                     )}
                                     onMouseDown={(event) => {

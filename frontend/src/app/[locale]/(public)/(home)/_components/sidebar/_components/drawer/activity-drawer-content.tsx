@@ -249,7 +249,7 @@ function AdminEntityPreview({ notification }: { notification: NotificationType }
 
     if (action === 'delete_post' && entity.thumbnail_url) {
         return (
-            <div className='relative h-16 aspect-[9/16] overflow-hidden rounded-md bg-muted shrink-0'>
+            <div className='relative h-16 aspect-[9/16] overflow-hidden rounded-lg bg-muted shrink-0'>
                 <img src={entity.thumbnail_url} alt='post' className='size-full object-cover' />
                 <span className='absolute bottom-1 right-1 flex size-5 items-center justify-center rounded-full bg-black/65 text-white'>
                     <Video size={12} />
@@ -263,7 +263,7 @@ function AdminEntityPreview({ notification }: { notification: NotificationType }
             entity.content ||
             (typeof notification.data?.comment_excerpt === 'string' ? notification.data.comment_excerpt : '')
         return (
-            <div className='shrink-0 max-w-[100px] rounded-md border bg-muted/60 px-2 py-1.5'>
+            <div className='shrink-0 max-w-[100px] rounded-lg border border-border/50 bg-muted/60 px-2 py-1.5'>
                 <div className='flex items-center gap-1 mb-0.5'>
                     <MessageCircle size={10} className='text-muted-foreground' />
                 </div>
@@ -356,14 +356,14 @@ function NotificationItem({
                             isAuth={isAuth}
                             followLabel={t('actions.followBack')}
                             followedLabel={t('actions.friends')}
-                            className='h-8 min-w-24 rounded-md px-3 text-xs font-semibold'
+                            className='h-8 min-w-24 rounded-xl px-3 text-xs font-semibold'
                             followClassName='bg-[#FF2D55] text-white hover:bg-[#ff2d55]/90'
                         />
                     </div>
                 ) : isAdminNotification ? (
                     <AdminEntityPreview notification={notification} />
                 ) : showThumbnail ? (
-                    <div className='relative h-16 aspect-[9/16] overflow-hidden rounded-md bg-muted'>
+                    <div className='relative h-16 aspect-[9/16] overflow-hidden rounded-lg bg-muted'>
                         <img
                             src={notification.entity?.thumbnail_url ?? ''}
                             alt='notification-thumbnail'

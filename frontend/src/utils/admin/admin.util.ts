@@ -59,9 +59,37 @@ export function getActivityActorName(log: AdminActivityListItem): string | undef
     return undefined
 }
 
+export interface ActivityResourceRef {
+    text: string
+    isUserRef: boolean
+}
+
+function extractTargetUsername(log: AdminActivityListItem): string | null {
+    if (!('action' in log)) return null
+    const oldUsername = (log.old_data as Record<string, unknown> | null)?.username
+    const newUsername = (log.new_data as Record<string, unknown> | null)?.target_username
+    return (typeof oldUsername === 'string' ? oldUsername : null) ??
+           (typeof newUsername === 'string' ? newUsername : null)
+}
+
 export function formatActivityResourceRef(log: AdminActivityListItem): string {
     const resourceId = log.resource_id
     if (!resourceId) return ''
+    if (log.resource_type === 'user') {
+        const username = extractTargetUsername(log)
+        return username ? `@${username}` : `@${resourceId}`
+    }
     const prefix = log.resource_type ? log.resource_type.charAt(0).toUpperCase() : 'R'
     return `${prefix}-${resourceId}`
+}
+
+export function formatActivityResourceRefStyled(log: AdminActivityListItem): ActivityResourceRef {
+    const resourceId = log.resource_id
+    if (!resourceId) return { text: '', isUserRef: false }
+    if (log.resource_type === 'user') {
+        const username = extractTargetUsername(log)
+        return { text: username ? `@${username}` : `@${resourceId}`, isUserRef: true }
+    }
+    const prefix = log.resource_type ? log.resource_type.charAt(0).toUpperCase() : 'R'
+    return { text: `${prefix}-${resourceId}`, isUserRef: false }
 }

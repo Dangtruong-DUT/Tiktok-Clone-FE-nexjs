@@ -23,7 +23,7 @@ export default function UploadGuideLine({ className }: UploadGuideLineProps) {
                     key={key}
                     className='flex items-start gap-2.5 rounded-lg border border-border bg-card px-3 py-3 shadow-xs'
                 >
-                    <div className='mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-md bg-muted'>
+                    <div className='mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-xl bg-muted'>
                         <Icon className='size-3.5 text-muted-foreground' />
                     </div>
                     <div>

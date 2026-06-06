@@ -32,7 +32,7 @@ export function VideoControlsBottom({
         <div className='absolute bottom-0 left-0 flex justify-end flex-col z-[5] rounded-b-2xl w-full bg-gradient-to-b from-transparent to-black/50'>
             <div
                 className={cn(
-                    'flex-grow justify-start text-white px-3 pb-1 w-full relative transition-all duration-200 ease-out',
+                    'flex-grow justify-start text-white px-3 pb-1 w-full relative transition-all duration-300 ease-out',
                     isProgressBarActive ? 'opacity-0 invisible' : 'opacity-100 visible'
                 )}
             >

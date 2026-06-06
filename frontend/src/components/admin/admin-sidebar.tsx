@@ -13,8 +13,9 @@ import SmallLogo from '@/components/common/small-logo'
 import { LANGUAGES } from '@/i18n/config'
 import useLanguage from '@/hooks/shared/useLanguage'
 import { useTheme } from 'next-themes'
-import { ArrowLeft, Monitor, Moon, PanelLeftClose, Sun } from 'lucide-react'
+import { ArrowLeft, ChevronDown, Monitor, Moon, PanelLeftClose, Sun } from 'lucide-react'
 import type { DashboardStats } from '@/types/dtos/admin/admin-response.dto'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 
 interface AdminSidebarProps {
     collapsed: boolean
@@ -32,6 +33,8 @@ export function AdminSidebar({ collapsed, onToggle, stats }: AdminSidebarProps) 
     const localizedPath = (route: string) => `/${locale}${route}`
     const isActive = (route: string) =>
         route === ADMIN_ROUTES.DASHBOARD ? pathname === localizedPath(route) : pathname?.includes(localizedPath(route))
+    const isChildActive = (item: (typeof ADMIN_NAV_GROUPS)[0]['items'][0]) =>
+        item.children?.some((c) => pathname === localizedPath(c.href) || pathname?.startsWith(localizedPath(c.href) + '/')) ?? false
 
     const ThemeIcon = theme === 'dark' ? Moon : theme === 'light' ? Sun : Monitor
 
@@ -71,7 +74,7 @@ export function AdminSidebar({ collapsed, onToggle, stats }: AdminSidebarProps) 
                                 </Link>
                                 <button
                                     onClick={onToggle}
-                                    className='ml-2 flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-zinc-500 hover:bg-white/10 hover:text-zinc-200 transition-colors'
+                                    className='ml-2 flex h-7 w-7 shrink-0 items-center justify-center rounded-xl text-zinc-500 hover:bg-white/10 hover:text-zinc-200 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]'
                                     aria-label={t('shell.collapseSidebar')}
                                 >
                                     <PanelLeftClose className='h-4 w-4' />
@@ -93,38 +96,103 @@ export function AdminSidebar({ collapsed, onToggle, stats }: AdminSidebarProps) 
                                         const active = isActive(item.href)
                                         const badge = item.badgeKey ? stats?.[item.badgeKey] : undefined
                                         const showBadge = typeof badge === 'number' && badge > 0
+                                        const hasChildren = !!item.children?.length
 
-                                        return collapsed ? (
-                                            <Tooltip key={item.href}>
-                                                <TooltipTrigger asChild>
-                                                    <Link
-                                                        href={item.href}
-                                                        aria-current={active ? 'page' : undefined}
+                                        if (collapsed) {
+                                            return (
+                                                <Tooltip key={item.href}>
+                                                    <TooltipTrigger asChild>
+                                                        <Link
+                                                            href={item.href}
+                                                            aria-current={active ? 'page' : undefined}
+                                                            className={cn(
+                                                                'relative flex h-9 w-full items-center justify-center rounded-xl transition-all duration-300 hover:scale-[1.02] active:scale-95',
+                                                                active || isChildActive(item)
+                                                                    ? 'bg-white/15 text-white'
+                                                                    : 'text-zinc-400 hover:bg-white/8 hover:text-zinc-200'
+                                                            )}
+                                                        >
+                                                            <item.icon className='h-4 w-4 shrink-0' />
+                                                            {showBadge && (
+                                                                <span className='absolute top-1 right-1 h-1.5 w-1.5 rounded-full bg-orange-400' />
+                                                            )}
+                                                        </Link>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent side='right' className='text-xs'>
+                                                        {t(item.titleKey as Parameters<typeof t>[0])}
+                                                        {showBadge && ` (${badge})`}
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            )
+                                        }
+
+                                        if (hasChildren) {
+                                            const groupActive = isChildActive(item)
+                                            return (
+                                                <Collapsible key={item.href} defaultOpen={groupActive}>
+                                                    <CollapsibleTrigger
                                                         className={cn(
-                                                            'relative flex h-9 w-full items-center justify-center rounded-md transition-colors',
-                                                            active
-                                                                ? 'bg-white/15 text-white'
+                                                            'group flex w-full items-center rounded-xl px-2.5 py-2 text-sm font-medium transition-all duration-300 hover:scale-[1.02] active:scale-95',
+                                                            groupActive
+                                                                ? 'text-white'
                                                                 : 'text-zinc-400 hover:bg-white/8 hover:text-zinc-200'
                                                         )}
                                                     >
-                                                        <item.icon className='h-4 w-4 shrink-0' />
-                                                        {showBadge && (
-                                                            <span className='absolute top-1 right-1 h-1.5 w-1.5 rounded-full bg-orange-400' />
-                                                        )}
-                                                    </Link>
-                                                </TooltipTrigger>
-                                                <TooltipContent side='right' className='text-xs'>
-                                                    {t(item.titleKey as Parameters<typeof t>[0])}
-                                                    {showBadge && ` (${badge})`}
-                                                </TooltipContent>
-                                            </Tooltip>
-                                        ) : (
+                                                        <item.icon
+                                                            className={cn(
+                                                                'mr-2.5 h-4 w-4 shrink-0',
+                                                                groupActive ? 'text-white' : 'text-zinc-500 group-hover:text-zinc-200'
+                                                            )}
+                                                        />
+                                                        <span className='truncate flex-1'>
+                                                            {t(item.titleKey as Parameters<typeof t>[0])}
+                                                        </span>
+                                                        <ChevronDown className='h-3.5 w-3.5 shrink-0 transition-transform duration-300 group-data-[state=open]:rotate-180' />
+                                                    </CollapsibleTrigger>
+                                                    <CollapsibleContent>
+                                                        <div className='mt-0.5 space-y-0.5'>
+                                                            {item.children!.map((child) => {
+                                                                const childActive = pathname === localizedPath(child.href)
+                                                                return (
+                                                                    <Link
+                                                                        key={child.href}
+                                                                        href={child.href}
+                                                                        aria-current={childActive ? 'page' : undefined}
+                                                                        className={cn(
+                                                                            'group flex items-center rounded-xl pl-9 pr-2.5 py-1.5 text-xs font-medium transition-all duration-300',
+                                                                            childActive
+                                                                                ? 'bg-white/15 text-white'
+                                                                                : 'text-zinc-400 hover:bg-white/8 hover:text-zinc-200'
+                                                                        )}
+                                                                    >
+                                                                        <child.icon
+                                                                            className={cn(
+                                                                                'mr-2 h-3.5 w-3.5 shrink-0',
+                                                                                childActive ? 'text-white' : 'text-zinc-500 group-hover:text-zinc-200'
+                                                                            )}
+                                                                        />
+                                                                        <span className='truncate'>
+                                                                            {t(child.titleKey as Parameters<typeof t>[0])}
+                                                                        </span>
+                                                                        {childActive && (
+                                                                            <span className='ml-auto h-1.5 w-1.5 shrink-0 rounded-full bg-white/50' />
+                                                                        )}
+                                                                    </Link>
+                                                                )
+                                                            })}
+                                                        </div>
+                                                    </CollapsibleContent>
+                                                </Collapsible>
+                                            )
+                                        }
+
+                                        return (
                                             <Link
                                                 key={item.href}
                                                 href={item.href}
                                                 aria-current={active ? 'page' : undefined}
                                                 className={cn(
-                                                    'group flex items-center rounded-md px-2.5 py-2 text-sm font-medium transition-colors',
+                                                    'group flex items-center rounded-xl px-2.5 py-2 text-sm font-medium transition-all duration-300 hover:scale-[1.02] active:scale-95',
                                                     active
                                                         ? 'bg-white/15 text-white'
                                                         : 'text-zinc-400 hover:bg-white/8 hover:text-zinc-200'
@@ -162,7 +230,7 @@ export function AdminSidebar({ collapsed, onToggle, stats }: AdminSidebarProps) 
                                     <TooltipTrigger asChild>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
-                                                <button className='flex h-9 w-full items-center justify-center rounded-md text-zinc-400 hover:bg-white/8 hover:text-zinc-200 transition-colors'>
+                                                <button className='flex h-9 w-full items-center justify-center rounded-xl text-zinc-400 hover:bg-white/8 hover:text-zinc-200 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]'>
                                                     <ThemeIcon className='h-4 w-4' />
                                                 </button>
                                             </DropdownMenuTrigger>
@@ -188,7 +256,7 @@ export function AdminSidebar({ collapsed, onToggle, stats }: AdminSidebarProps) 
                                     <TooltipTrigger asChild>
                                         <Link
                                             href='/'
-                                            className='flex h-9 w-full items-center justify-center rounded-md text-zinc-500 hover:bg-white/8 hover:text-zinc-300 transition-colors'
+                                            className='flex h-9 w-full items-center justify-center rounded-xl text-zinc-500 hover:bg-white/8 hover:text-zinc-300 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]'
                                         >
                                             <ArrowLeft className='h-3.5 w-3.5' />
                                         </Link>
@@ -218,7 +286,7 @@ export function AdminSidebar({ collapsed, onToggle, stats }: AdminSidebarProps) 
 
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
-                                            <button className='flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-zinc-200 transition-colors'>
+                                            <button className='flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-zinc-200 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]'>
                                                 <ThemeIcon className='h-3.5 w-3.5' />
                                             </button>
                                         </DropdownMenuTrigger>

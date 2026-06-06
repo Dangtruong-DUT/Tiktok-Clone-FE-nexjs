@@ -82,7 +82,7 @@ const UploadFile = forwardRef<UploadFileRef, UploadFileProps>(
             <div className={cn('rounded-xl overflow-hidden', className)}>
                 <div
                     className={cn(
-                        'relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed transition-all duration-200 cursor-pointer',
+                        'relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed transition-all duration-300 cursor-pointer',
                         'bg-muted/40 hover:bg-muted/60',
                         isDragActive ? 'border-brand bg-brand/5 scale-[1.01]' : 'border-border hover:border-brand/50',
                         isInitialRender ? 'min-h-[360px] py-12 gap-3' : 'min-h-[140px] flex-row gap-6 px-8'
@@ -107,7 +107,7 @@ const UploadFile = forwardRef<UploadFileRef, UploadFileProps>(
                         <>
                             <div
                                 className={cn(
-                                    'flex size-20 items-center justify-center rounded-full transition-colors duration-200',
+                                    'flex size-20 items-center justify-center rounded-full transition-colors duration-300',
                                     isDragActive ? 'bg-brand/15' : 'bg-muted'
                                 )}
                             >

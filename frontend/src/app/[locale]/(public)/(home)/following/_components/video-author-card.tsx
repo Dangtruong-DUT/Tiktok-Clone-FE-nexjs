@@ -33,7 +33,7 @@ function FollowButton({
     const content = (
         <Button
             variant={isFollowedState ? 'outline' : 'default'}
-            className={cn(' h-9!  rounded-xs! font-semibold! cursor-pointer text-lg!', {
+            className={cn(' h-9!  rounded-xl! font-semibold! cursor-pointer text-lg! transition-all duration-300 hover:scale-105 active:scale-95', {
                 'primary-button px-2! min-w-[164px] min-h-[36px] ': !isFollowedState
             })}
             onClick={handleClick}
@@ -66,7 +66,7 @@ export default function CardVideoItem({ post, className }: { post: TikTokPostTyp
     return (
         <article
             className={cn(
-                'relative inline-block w-full pt-[133.333%] aspect-[3/4] overflow-hidden rounded-md group',
+                'relative inline-block w-full pt-[133.333%] aspect-[3/4] overflow-hidden rounded-xl group transition-all duration-300 hover:shadow-xl hover:-translate-y-1',
                 className
             )}
         >

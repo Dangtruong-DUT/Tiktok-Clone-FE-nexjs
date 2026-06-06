@@ -19,7 +19,7 @@ export function TableSkeleton({
         <div className='rounded-xl border bg-card shadow-xs overflow-hidden'>
             {showToolbar && (
                 <div className='border-b border-border/50 px-4 py-2.5'>
-                    <Skeleton className='h-8 w-full rounded-md' />
+                    <Skeleton className='h-8 w-full rounded-xl' />
                 </div>
             )}
             <div className='divide-y divide-border/40'>

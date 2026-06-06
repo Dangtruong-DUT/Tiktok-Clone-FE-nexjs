@@ -70,7 +70,21 @@ export function MarkdownText({ content, className }: MarkdownTextProps) {
                         >
                             {children}
                         </a>
-                    )
+                    ),
+                    table: ({ children }) => (
+                        <div className='overflow-x-auto my-2'>
+                            <table className='w-full text-xs border-collapse'>{children}</table>
+                        </div>
+                    ),
+                    thead: ({ children }) => <thead>{children}</thead>,
+                    tbody: ({ children }) => <tbody>{children}</tbody>,
+                    tr: ({ children }) => <tr className='border-b border-border last:border-0'>{children}</tr>,
+                    th: ({ children }) => (
+                        <th className='text-left px-2 py-1 font-semibold text-muted-foreground whitespace-nowrap bg-muted/40'>
+                            {children}
+                        </th>
+                    ),
+                    td: ({ children }) => <td className='px-2 py-1 text-foreground'>{children}</td>,
                 }}
             >
                 {content}

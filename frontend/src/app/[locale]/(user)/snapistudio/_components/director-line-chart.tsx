@@ -90,7 +90,7 @@ export default function DirectorLineChart() {
                     </SelectContent>
                 </Select>
             </div>
-            <Card className='py-4 sm:py-0 rounded-lg! overflow-hidden mt-4'>
+            <Card className='py-4 sm:py-0 rounded-xl overflow-hidden mt-4 border-border/50 shadow-sm hover:shadow-md transition-shadow duration-300 ease-out'>
                 <div className='flex w-full'>
                     {['users_view', 'guests_view', 'likes_count', 'comments_count'].map((key) => {
                         const chart = key as keyof typeof chartConfig

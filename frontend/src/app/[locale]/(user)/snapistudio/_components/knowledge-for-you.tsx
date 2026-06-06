@@ -13,13 +13,13 @@ export default function KnowledgeForYou() {
                     <FaChevronRight />
                 </span>
             </div>
-            <div className='bg-card border rounded-lg border-border mt-4'>
+            <div className='bg-card border rounded-xl border-border/50 mt-4 shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 ease-out'>
                 <Image
                     src={'/images/Knowledge for you.png'}
                     alt='Knowledge for you'
                     width={336}
                     height={64}
-                    className='rounded-md object-cover w-full'
+                    className='rounded-xl object-cover w-full'
                 />
             </div>
         </div>

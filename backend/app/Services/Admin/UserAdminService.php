@@ -74,7 +74,7 @@ class UserAdminService
                 action: AdminActionEnum::BAN,
                 reason: $payload['reason'],
                 oldData: $oldData,
-                newData: $user->only(['banned_at', 'ban_reason', 'ban_duration_days']),
+                newData: array_merge($user->only(['banned_at', 'ban_reason', 'ban_duration_days']), ['target_username' => $user->username]),
             ));
 
             $this->adminModerationNoticeService->send(
@@ -128,7 +128,7 @@ class UserAdminService
                 action: AdminActionEnum::UNBAN,
                 reason: null,
                 oldData: $oldData,
-                newData: $user->only(['banned_at', 'ban_reason', 'ban_duration_days']),
+                newData: array_merge($user->only(['banned_at', 'ban_reason', 'ban_duration_days']), ['target_username' => $user->username]),
             ));
 
             $this->adminModerationNoticeService->send(

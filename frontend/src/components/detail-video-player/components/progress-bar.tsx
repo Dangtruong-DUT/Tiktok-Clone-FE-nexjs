@@ -88,7 +88,7 @@ function ProgressBar({ currentTime, duration, className, onActive, onSeek }: Pro
                     ref={progressBarRef}
                     className={cn(
                         'flex-shrink-0 block relative w-full left-0 bg-white/10 cursor-pointer select-none',
-                        'transition-all duration-200 group-hover/progress:h-1.5 group-hover:bg-white/20 ease-in-out',
+                        'transition-all duration-300 group-hover/progress:h-1.5 group-hover:bg-white/20 ease-in-out',
                         isDragging ? 'h-1.3' : 'h-1'
                     )}
                     onMouseDown={handleTrackClick}

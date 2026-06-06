@@ -220,6 +220,42 @@ export function useUploadFormManager() {
         }
     }
 
+    const onSaveAsDraft = async () => {
+        const data = form.getValues()
+        if (isSubmitLoading || !videoFile || !sessionUuid) return
+
+        try {
+            const mediaType = videoStatus.status === VideoUploadStatus.READY ? MediaType.HLS_VIDEO : MediaType.VIDEO
+
+            let thumbnailId: number | undefined
+            if (thumbnailFile) {
+                const formDataThumbnail = new FormData()
+                formDataThumbnail.append('file', thumbnailFile)
+                const imageResponse = await uploadImage(formDataThumbnail).unwrap()
+                thumbnailId = imageResponse.data.id
+            }
+
+            const body = {
+                ...data,
+                hashtags: extractHashtags(data.content),
+                mentions: undefined,
+                medias: [{ type: mediaType, session_uuid: sessionUuid }],
+                thumbnail: thumbnailId,
+                save_as_draft: true as const,
+            }
+
+            await createPost(body).unwrap()
+            postCreatedRef.current = true
+            toast.success('Bài đăng đã được lưu nháp!', { position: 'top-center' })
+            scheduledAtRef.current = null
+            onReset()
+            router.push(SNAPISTUDIO_ROUTES.CONTENT)
+        } catch (error) {
+            logger.error(error)
+            handleFormError<CreatePostReqBodyType>({ error, setFormError: form.setError })
+        }
+    }
+
     return {
         form,
         isInitialRender,
@@ -243,6 +279,7 @@ export function useUploadFormManager() {
         leavePage,
         onReset,
         onSubmit,
+        onSaveAsDraft,
         setScheduledAt
     }
 }

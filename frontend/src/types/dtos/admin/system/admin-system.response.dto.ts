@@ -38,6 +38,17 @@ export interface ActivityLog {
 
 export type AdminActivityListItem = AdminLog | ActivityLog
 
+export interface UserDailyPoint {
+    readonly date: string
+    readonly count: number
+}
+
+export interface PostStatusCounts {
+    readonly published: number
+    readonly scheduled: number
+    readonly draft: number
+}
+
 export interface DashboardStats {
     readonly total_users: number
     readonly active_users: number
@@ -49,6 +60,8 @@ export interface DashboardStats {
     readonly new_users_this_period: number
     readonly new_posts_this_period: number
     readonly pending_appeals: number
+    readonly user_daily_series?: UserDailyPoint[]
+    readonly post_status_counts?: PostStatusCounts
 }
 
 export type GetActivityLogsRes = ApiSuccessResponseWithMeta<AdminActivityListItem[]>

@@ -12,6 +12,7 @@ use App\Repositories\AdminLogRepository;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Handles: activity logs, statistics, audit trail
@@ -46,6 +47,8 @@ class SystemAdminService
             'new_users_this_period' => User::where('created_at', '>=', $dateFrom)->count(),
             'new_posts_this_period' => Post::where('created_at', '>=', $dateFrom)->count(),
             'pending_appeals' => Appeal::where('status', 'pending')->count(),
+            'user_daily_series' => $this->getUserDailySeries(7),
+            'post_status_counts' => $this->getPostStatusCounts(),
         ];
     }
 
@@ -80,6 +83,47 @@ class SystemAdminService
         }
 
         return AdminLogResource::collection($this->getAdminLogs($filters));
+    }
+
+    /**
+     * Returns daily new-user counts for the last N days (oldest-first).
+     * @return array<int, array{date: string, count: int}>
+     */
+    private function getUserDailySeries(int $days = 7): array
+    {
+        $rows = DB::table('users')
+            ->selectRaw("DATE(created_at) as date, COUNT(*) as count")
+            ->where('created_at', '>=', now()->subDays($days - 1)->startOfDay())
+            ->groupByRaw("DATE(created_at)")
+            ->orderBy('date')
+            ->pluck('count', 'date');
+
+        $series = [];
+        for ($i = $days - 1; $i >= 0; $i--) {
+            $date = now()->subDays($i)->format('Y-m-d');
+            $series[] = ['date' => $date, 'count' => (int) ($rows[$date] ?? 0)];
+        }
+
+        return $series;
+    }
+
+    /**
+     * Returns post counts grouped by publish status.
+     * @return array<string, int>
+     */
+    private function getPostStatusCounts(): array
+    {
+        $rows = DB::table('posts')
+            ->whereNull('deleted_at')
+            ->selectRaw("status, COUNT(*) as count")
+            ->groupBy('status')
+            ->pluck('count', 'status');
+
+        return [
+            'published' => (int) ($rows['published'] ?? 0),
+            'scheduled' => (int) ($rows['scheduled'] ?? 0),
+            'draft'     => (int) ($rows['draft'] ?? 0),
+        ];
     }
 
     /**

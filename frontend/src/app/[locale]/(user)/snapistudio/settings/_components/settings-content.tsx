@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
-import { UserCircle, Lock, ShieldCheck, MailCheck } from 'lucide-react'
 import UpdateProfileForm from './update-profile-form'
 import ChangePasswordForm from './change-password-form'
 import PrivacySettingsForm from './privacy-settings-form'
@@ -14,43 +13,42 @@ export function SettingsContent() {
     const t = useTranslations('SnapiStudio.settings')
     const [active, setActive] = useState<UserSettingsTabType>(UserSettingsTab.PROFILE)
 
-    const tabs: { id: UserSettingsTabType; icon: React.ElementType; label: string }[] = [
-        { id: UserSettingsTab.PROFILE, icon: UserCircle, label: t('nav.profile') },
-        { id: UserSettingsTab.SECURITY, icon: Lock, label: t('nav.security') },
-        { id: UserSettingsTab.PRIVACY, icon: ShieldCheck, label: t('nav.privacy') },
-        { id: UserSettingsTab.EMAIL, icon: MailCheck, label: t('nav.email') }
+    const tabs: { id: UserSettingsTabType; label: string }[] = [
+        { id: UserSettingsTab.PROFILE, label: t('nav.profile') },
+        { id: UserSettingsTab.SECURITY, label: t('nav.security') },
+        { id: UserSettingsTab.PRIVACY, label: t('nav.privacy') },
+        { id: UserSettingsTab.EMAIL, label: t('nav.email') }
     ]
 
     return (
-        <div className='flex flex-col gap-6 lg:flex-row lg:gap-8'>
-            <aside className='w-full lg:w-56 shrink-0'>
-                <nav className='flex flex-row gap-1 overflow-x-auto lg:flex-col lg:overflow-visible rounded-xl border bg-card p-2 shadow-xs'>
-                    {tabs.map(({ id, icon: Icon, label }) => (
+        <div className='space-y-6'>
+            {/* Horizontal tab bar */}
+            <div className='border-b'>
+                <div className='flex -mb-px overflow-x-auto scrollbar-hidden'>
+                    {tabs.map(({ id, label }) => (
                         <button
                             key={id}
                             type='button'
                             onClick={() => setActive(id)}
                             className={cn(
-                                'flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors text-left whitespace-nowrap',
+                                'px-5 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors shrink-0',
                                 active === id
-                                    ? 'bg-primary text-primary-foreground'
-                                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                                    ? 'border-brand text-brand'
+                                    : 'border-transparent text-muted-foreground hover:text-foreground'
                             )}
                         >
-                            <Icon className='h-4 w-4 shrink-0' />
                             {label}
                         </button>
                     ))}
-                </nav>
-            </aside>
-
-            <div className='min-w-0 flex-1'>
-                <div className='rounded-xl border bg-card p-6 shadow-xs'>
-                    {active === UserSettingsTab.PROFILE && <UpdateProfileForm />}
-                    {active === UserSettingsTab.SECURITY && <ChangePasswordForm />}
-                    {active === UserSettingsTab.PRIVACY && <PrivacySettingsForm />}
-                    {active === UserSettingsTab.EMAIL && <VerifyEmailForm />}
                 </div>
+            </div>
+
+            {/* Tab content */}
+            <div className='rounded-xl border bg-card p-6 shadow-xs'>
+                {active === UserSettingsTab.PROFILE && <UpdateProfileForm />}
+                {active === UserSettingsTab.SECURITY && <ChangePasswordForm />}
+                {active === UserSettingsTab.PRIVACY && <PrivacySettingsForm />}
+                {active === UserSettingsTab.EMAIL && <VerifyEmailForm />}
             </div>
         </div>
     )

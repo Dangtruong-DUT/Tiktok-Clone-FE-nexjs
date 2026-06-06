@@ -10,12 +10,14 @@ class AiPromptTemplate extends Model
 {
     protected $fillable = [
         'intent',
+        'category',
         'display_name',
         'system_prompt',
         'user_template',
         'few_shot_examples',
         'output_schema',
         'is_active',
+        'is_locked',
         'version',
         'created_by',
         'updated_by',
@@ -27,6 +29,7 @@ class AiPromptTemplate extends Model
             'few_shot_examples' => 'array',
             'output_schema'     => 'array',
             'is_active'         => 'boolean',
+            'is_locked'         => 'boolean',
         ];
     }
 

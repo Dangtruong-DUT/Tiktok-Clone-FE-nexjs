@@ -24,10 +24,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 export default async function LoginPage() {
     const t = await getTranslations('LoginPage')
     return (
-        <div>
-            <h1 className='text-2xl font-bold text-center mb-4 mt-16'>{t('title')}</h1>
-            <p className='text-center text-base text-neutral-500 mb-5'>{t('description')}</p>
-            <MenuItemsList type='login' />
+        <div className='max-w-md mx-auto w-full px-4 sm:px-0 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out fill-mode-forwards'>
+            <h1 className='text-3xl tracking-tight font-bold text-center mb-4 mt-16'>{t('title')}</h1>
+            <p className='text-center text-base text-muted-foreground mb-8'>{t('description')}</p>
+            <div className='glass rounded-xl p-6'>
+                <MenuItemsList type='login' />
+            </div>
         </div>
     )
 }

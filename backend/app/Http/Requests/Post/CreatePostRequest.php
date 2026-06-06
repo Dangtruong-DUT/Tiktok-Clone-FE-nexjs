@@ -97,6 +97,10 @@ class CreatePostRequest extends BaseRequest
                 self::REQUIRED,
                 new Enum(MediaTypeEnum::class),
             ],
+            'save_as_draft' => [
+                self::SOMETIMES,
+                self::BOOLEAN,
+            ],
         ]);
     }
 }

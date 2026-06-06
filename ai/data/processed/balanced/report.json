@@ -1,0 +1,86 @@
+{
+  "before": {
+    "total": 40167,
+    "class_counts": {
+      "1": 6505,
+      "0": 33662
+    },
+    "length": {
+      "mean": 70.48776358702418,
+      "median": 43.0,
+      "p25": 24.0,
+      "p75": 80.0,
+      "min": 1,
+      "max": 7488
+    }
+  },
+  "after": {
+    "total": 13000,
+    "class_counts": {
+      "0": 6500,
+      "1": 6500
+    },
+    "length": {
+      "mean": 68.80392307692307,
+      "median": 59.0,
+      "p25": 49.0,
+      "p75": 74.0,
+      "min": 1,
+      "max": 257
+    }
+  },
+  "split": {
+    "train": {
+      "total": 10400,
+      "class_counts": {
+        "0": 5200,
+        "1": 5200
+      },
+      "length": {
+        "mean": 68.80817307692308,
+        "median": 59.0,
+        "p25": 49.0,
+        "p75": 74.0,
+        "min": 1,
+        "max": 257
+      }
+    },
+    "test": {
+      "total": 1300,
+      "class_counts": {
+        "1": 650,
+        "0": 650
+      },
+      "length": {
+        "mean": 68.99384615384615,
+        "median": 59.5,
+        "p25": 50.0,
+        "p75": 75.0,
+        "min": 2,
+        "max": 256
+      }
+    },
+    "valid": {
+      "total": 1300,
+      "class_counts": {
+        "1": 650,
+        "0": 650
+      },
+      "length": {
+        "mean": 68.58,
+        "median": 60.0,
+        "p25": 50.0,
+        "p75": 73.0,
+        "min": 3,
+        "max": 257
+      }
+    }
+  },
+  "params": {
+    "target_per_class": 6500,
+    "target_length": 64,
+    "length_tolerance": 8,
+    "gemini_model": "models/gemini-2.0-flash",
+    "dry_run": true
+  }
+}

@@ -28,6 +28,7 @@ class ModerationWorker:
         self.service = service
         self.config = build_kafka_config()
         self.violation_threshold = float(os.getenv("AI_VIOLATION_THRESHOLD", "0.8"))
+        self.review_threshold = float(os.getenv("AI_REVIEW_THRESHOLD", "0.5"))
 
     def run(self) -> None:
         logger = logging.getLogger("ai.serve.worker")
@@ -72,6 +73,10 @@ class ModerationWorker:
         label = int(prediction["label"])
         confidence = float(prediction["confidence"])
         is_violation = label == 1 and confidence >= self.violation_threshold
+        needs_review = (
+            label == 1
+            and self.review_threshold <= confidence < self.violation_threshold
+        )
 
         result = {
             "request_id": payload.get("request_id"),
@@ -84,7 +89,12 @@ class ModerationWorker:
             "label": label,
             "confidence": confidence,
             "is_violation": is_violation,
-            "reason": "Potential toxic content detected by AI moderation." if label == 1 else None,
+            "needs_review": needs_review,
+            "reason": (
+                "Potential toxic content detected by AI moderation." if is_violation
+                else "Borderline content flagged for manual review." if needs_review
+                else None
+            ),
             "moderated_at": datetime.now(timezone.utc).isoformat(),
             "raw_payload": payload,
         }

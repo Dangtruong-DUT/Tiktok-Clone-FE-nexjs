@@ -300,7 +300,7 @@ export const PostApi = createApi({
                 }
             }
         }),
-        createPost: builder.mutation<ApiSuccessResponseWithData<TikTokPostType>, CreatePostReqBodyType>({
+        createPost: builder.mutation<ApiSuccessResponseWithData<TikTokPostType>, CreatePostReqBodyType & { save_as_draft?: boolean }>({
             query: (body) => ({
                 url: BACKEND_API_ENDPOINT.POST.LIST,
                 method: 'POST',

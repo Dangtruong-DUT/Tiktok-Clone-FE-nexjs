@@ -46,6 +46,22 @@ class AiCopilotAdminController extends Controller
         return ApiResponse::success($template);
     }
 
+    public function lockTemplate(string $intent): JsonResponse
+    {
+        $template = \App\Models\AiPromptTemplate::where('intent', $intent)->firstOrFail();
+        $template->update(['is_locked' => true]);
+
+        return ApiResponse::success($template);
+    }
+
+    public function unlockTemplate(string $intent): JsonResponse
+    {
+        $template = \App\Models\AiPromptTemplate::where('intent', $intent)->firstOrFail();
+        $template->update(['is_locked' => false]);
+
+        return ApiResponse::success($template);
+    }
+
     public function updateFeatureFlags(UpdateFeatureFlagsRequest $request): JsonResponse
     {
         $setting = $this->adminService->updateFeatureFlags(

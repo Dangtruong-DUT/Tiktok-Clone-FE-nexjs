@@ -33,7 +33,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
             "Visualize cleaned data, augment with Gemini, balance labels and text length, "
-            "then split by ratio train/test/valid = 1/1/8."
+            "then split by ratio train/valid/test = 8/1/1."
         )
     )
     parser.add_argument(
@@ -100,6 +100,13 @@ def parse_args() -> argparse.Namespace:
         "--dry-run",
         action="store_true",
         help="Do not call Gemini API; only visualize and split existing sampled data",
+    )
+    parser.add_argument(
+        "--max-chars",
+        type=int,
+        default=256,
+        help="Hard trim cap for sentence length in characters (default 256). "
+             "Previously hardcoded to target_length + 2*tolerance (~80 chars).",
     )
     return parser.parse_args()
 
@@ -288,10 +295,11 @@ def augment_to_target(
     max_api_calls: int,
     api_sleep_seconds: float,
     max_source_per_label: int,
+    max_chars: int = 256,
 ) -> pd.DataFrame:
     min_len = max(8, target_length - tolerance)
     max_len = target_length + tolerance
-    soft_max = target_length + (2 * tolerance)
+    soft_max = max_chars
 
     out_parts = []
     api_calls = 0
@@ -506,6 +514,7 @@ def main() -> None:
         max_api_calls=args.max_api_calls,
         api_sleep_seconds=args.api_sleep_seconds,
         max_source_per_label=args.max_source_per_label,
+        max_chars=args.max_chars,
     )
 
     balanced_df = add_length_column(balanced_df)

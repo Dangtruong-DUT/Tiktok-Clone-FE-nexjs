@@ -1,5 +1,17 @@
 import type { LucideIcon } from 'lucide-react'
-import { CalendarClock, Clock, Flag, MessageCircle, Settings, Sparkles, UserRound, Video } from 'lucide-react'
+import {
+    BarChart2,
+    BookOpen,
+    Clock,
+    FileText,
+    Flag,
+    MessageCircle,
+    Settings,
+    Sparkles,
+    UserRound,
+    Video,
+    LayoutDashboard
+} from 'lucide-react'
 import { ADMIN_ROUTES } from '@/constants/routes/routes'
 import type { DashboardStats } from '@/types/dtos/admin/admin-response.dto'
 
@@ -8,6 +20,7 @@ export interface NavItem {
     href: string
     icon: LucideIcon
     badgeKey?: keyof DashboardStats
+    children?: Omit<NavItem, 'children'>[]
 }
 
 export interface NavGroup {
@@ -17,26 +30,36 @@ export interface NavGroup {
 
 export const ADMIN_NAV_GROUPS: NavGroup[] = [
     {
+        labelKey: 'dashboard.title',
+        items: [
+            { titleKey: 'dashboard.title', href: ADMIN_ROUTES.DASHBOARD, icon: LayoutDashboard }
+        ]
+    },
+    {
         labelKey: 'shell.navGroups.manage',
         items: [
             { titleKey: 'users.title', href: ADMIN_ROUTES.USERS, icon: UserRound },
             { titleKey: 'moderation.title', href: ADMIN_ROUTES.POSTS, icon: Video },
-            { titleKey: 'comments.title', href: ADMIN_ROUTES.COMMENTS, icon: MessageCircle },
-        ],
+            { titleKey: 'comments.title', href: ADMIN_ROUTES.COMMENTS, icon: MessageCircle }
+        ]
     },
     {
         labelKey: 'shell.navGroups.moderate',
-        items: [
-            { titleKey: 'appeals.title', href: ADMIN_ROUTES.APPEALS, icon: Flag, badgeKey: 'pending_appeals' },
-        ],
+        items: [{ titleKey: 'appeals.title', href: ADMIN_ROUTES.APPEALS, icon: Flag, badgeKey: 'pending_appeals' }]
     },
     {
         labelKey: 'shell.navGroups.system',
         items: [
             { titleKey: 'activity.title', href: ADMIN_ROUTES.ACTIVITY, icon: Clock },
-            { titleKey: 'aiStudio.title', href: ADMIN_ROUTES.AI_STUDIO, icon: Sparkles },
-            { titleKey: 'scheduledPosts.title', href: ADMIN_ROUTES.SCHEDULED_POSTS, icon: CalendarClock },
-            { titleKey: 'settings.title', href: ADMIN_ROUTES.SETTINGS, icon: Settings },
-        ],
+            { titleKey: 'settings.title', href: ADMIN_ROUTES.SETTINGS, icon: Settings }
+        ]
     },
-] as const
+    {
+        labelKey: 'aiStudio.title',
+        items: [
+            { titleKey: 'aiStudio.nav.overview', href: ADMIN_ROUTES.AI_STUDIO, icon: BarChart2 },
+            { titleKey: 'aiStudio.nav.promptTemplates', href: ADMIN_ROUTES.AI_STUDIO_PROMPT_TEMPLATES, icon: FileText },
+            { titleKey: 'aiStudio.nav.knowledge', href: ADMIN_ROUTES.AI_STUDIO_KNOWLEDGE, icon: BookOpen }
+        ]
+    }
+]

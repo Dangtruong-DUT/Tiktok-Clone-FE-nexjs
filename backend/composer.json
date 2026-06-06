@@ -17,7 +17,9 @@
         "laravel/tinker": "^2.10.1",
         "league/flysystem-aws-s3-v3": "*",
         "mateusjunges/laravel-kafka": "*",
+        "phpoffice/phpword": "^1.0",
         "predis/predis": "*",
+        "smalot/pdfparser": "^2.0",
         "tymon/jwt-auth": "*"
     },
     "require-dev": {

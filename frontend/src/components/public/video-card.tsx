@@ -36,7 +36,7 @@ export default function CardVideoItem({
         <article className='w-full'>
             <div
                 className={cn(
-                    'relative block w-full pt-[133.333%] aspect-[3/4] overflow-hidden rounded-md group bg-black'
+                    'relative block w-full pt-[133.333%] aspect-[3/4] overflow-hidden rounded-xl group bg-black shadow-sm transition-shadow duration-300 hover:shadow-xl'
                 )}
             >
                 {isCurrentlyPlaying && (

@@ -2,9 +2,16 @@
 
 import { useState } from 'react'
 import {
-    Clock, CheckCircle2, XCircle,
-    RefreshCw, Pencil, CalendarClock, FileText,
-    Send, ChevronLeft, ChevronRight
+    Clock,
+    CheckCircle2,
+    XCircle,
+    RefreshCw,
+    Pencil,
+    CalendarClock,
+    FileText,
+    Send,
+    ChevronLeft,
+    ChevronRight
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -19,16 +26,17 @@ import {
     useCancelScheduleMutation
 } from '@/store/services/studio-post-schedule.service'
 import { STUDIO_POST_STATUSES } from '@/constants/studio-post'
+import { POST_STATUS_BADGE } from '@/constants/status/post'
 import type { StudioPostStatus, StudioPostItem } from '@/types/models/studio-post.model'
 
 type FilterKey = 'all' | 'draft' | 'scheduled' | 'published' | 'failed'
 
 const STATUS_FILTER_MAP: Record<FilterKey, StudioPostStatus | undefined> = {
-    all:       undefined,
-    draft:     STUDIO_POST_STATUSES.DRAFT,
+    all: undefined,
+    draft: STUDIO_POST_STATUSES.DRAFT,
     scheduled: STUDIO_POST_STATUSES.SCHEDULED,
     published: STUDIO_POST_STATUSES.PUBLISHED,
-    failed:    STUDIO_POST_STATUSES.FAILED,
+    failed: STUDIO_POST_STATUSES.FAILED
 }
 
 function formatDateTime(iso: string): string {
@@ -39,15 +47,22 @@ function formatDateTime(iso: string): string {
     }
 }
 
-const toDatetimeLocal  = (iso: string) => iso.slice(0, 16)
+const toDatetimeLocal = (iso: string) => iso.slice(0, 16)
 const fromDatetimeLocal = (v: string) => new Date(v).toISOString()
 
 // ── Inline reschedule form ────────────────────────────────────────────────────
 function RescheduleInline({
-    schedUuid, currentTime, timezone, onSaved, onCancel
+    schedUuid,
+    currentTime,
+    timezone,
+    onSaved,
+    onCancel
 }: {
-    schedUuid: string; currentTime: string; timezone: string
-    onSaved: () => void; onCancel: () => void
+    schedUuid: string
+    currentTime: string
+    timezone: string
+    onSaved: () => void
+    onCancel: () => void
 }) {
     const t = useTranslations('SnapiStudio.scheduledPosts')
     const [value, setValue] = useState(toDatetimeLocal(currentTime))
@@ -66,8 +81,9 @@ function RescheduleInline({
     return (
         <div className='flex items-center gap-2 mt-2 flex-wrap'>
             <input
-                type='datetime-local' value={value}
-                onChange={e => setValue(e.target.value)}
+                type='datetime-local'
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
                 min={toDatetimeLocal(new Date(Date.now() + 60_000).toISOString())}
                 className='rounded-lg border border-border bg-background text-foreground
                            px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-primary/50'
@@ -84,8 +100,14 @@ function RescheduleInline({
 }
 
 // ── Inline schedule form for drafts ──────────────────────────────────────────
-function ScheduleInline({ postUuid, onSaved, onCancel }: {
-    postUuid: string; onSaved: () => void; onCancel: () => void
+function ScheduleInline({
+    postUuid,
+    onSaved,
+    onCancel
+}: {
+    postUuid: string
+    onSaved: () => void
+    onCancel: () => void
 }) {
     const t = useTranslations('SnapiStudio.scheduledPosts')
     const minDate = toDatetimeLocal(new Date(Date.now() + 60_000).toISOString())
@@ -109,8 +131,10 @@ function ScheduleInline({ postUuid, onSaved, onCancel }: {
     return (
         <div className='flex items-center gap-2 mt-2 flex-wrap'>
             <input
-                type='datetime-local' value={value} min={minDate}
-                onChange={e => setValue(e.target.value)}
+                type='datetime-local'
+                value={value}
+                min={minDate}
+                onChange={(e) => setValue(e.target.value)}
                 className='rounded-lg border border-border bg-background text-foreground
                            px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-primary/50'
             />
@@ -129,37 +153,33 @@ function ScheduleInline({ postUuid, onSaved, onCancel }: {
 function PostCard({ post }: { post: StudioPostItem }) {
     const t = useTranslations('SnapiStudio.scheduledPosts')
     const [rescheduleOpen, setRescheduleOpen] = useState(false)
-    const [scheduleOpen,   setScheduleOpen]   = useState(false)
+    const [scheduleOpen, setScheduleOpen] = useState(false)
 
     const [publishNow, { isLoading: isPublishing }] = usePublishNowMutation()
     const [cancelSched, { isLoading: isCancelling }] = useCancelScheduleMutation()
 
-    const schedPost   = post.scheduled_post
-    const isPending   = schedPost?.status === 'pending'
-    const isFailed    = post.status === 'failed'
-    const isDraft     = post.status === 'draft'
+    const schedPost = post.scheduled_post
+    const isPending = schedPost?.status === 'pending'
+    const isFailed = post.status === 'failed'
+    const isDraft = post.status === 'draft'
     const isPublished = post.status === 'published'
-
-    const STATUS_CLASSES: Record<string, string> = {
-        draft:     'bg-muted text-muted-foreground',
-        scheduled: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-950/40 dark:text-yellow-400',
-        published: 'bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400',
-        failed:    'bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-400',
-    }
 
     return (
         <div className='rounded-xl border border-border bg-card p-4 space-y-2.5'>
             {/* Status row */}
             <div className='flex items-center justify-between gap-2 flex-wrap'>
-                <span className={cn(
-                    'text-xs px-2 py-0.5 rounded-full font-medium',
-                    STATUS_CLASSES[post.status] ?? 'bg-muted text-muted-foreground'
-                )}>
+                <span
+                    className={cn(
+                        'text-xs px-2 py-0.5 rounded-full font-medium',
+                        POST_STATUS_BADGE[post.status] ?? 'bg-muted text-muted-foreground'
+                    )}
+                >
                     {post.status_label}
                 </span>
                 {schedPost?.scheduled_at && !isPublished && (
                     <span className='text-xs text-muted-foreground flex items-center gap-1'>
-                        <Clock size={11} />{formatDateTime(schedPost.scheduled_at)}
+                        <Clock size={11} />
+                        {formatDateTime(schedPost.scheduled_at)}
                     </span>
                 )}
                 {isPublished && post.published_at && (
@@ -171,25 +191,33 @@ function PostCard({ post }: { post: StudioPostItem }) {
             </div>
 
             {/* Content preview */}
-            {post.content
-                ? <p className='text-sm leading-relaxed line-clamp-2 text-foreground'>{post.content}</p>
-                : <p className='text-sm italic text-muted-foreground'>{t('noContentPreview')}</p>
-            }
-
-            {schedPost?.error_message && (
-                <p className='text-xs text-destructive'>{schedPost.error_message}</p>
+            {post.content ? (
+                <p className='text-sm leading-relaxed line-clamp-2 text-foreground'>{post.content}</p>
+            ) : (
+                <p className='text-sm italic text-muted-foreground'>{t('noContentPreview')}</p>
             )}
+
+            {schedPost?.error_message && <p className='text-xs text-destructive'>{schedPost.error_message}</p>}
 
             {/* Action buttons */}
             <div className='flex flex-wrap gap-1.5 pt-0.5'>
                 {isDraft && !scheduleOpen && (
                     <>
-                        <Button size='sm' variant='outline' className='h-7 text-xs gap-1'
-                            onClick={() => setScheduleOpen(true)}>
-                            <CalendarClock size={11} />{t('actions.schedule')}
+                        <Button
+                            size='sm'
+                            variant='outline'
+                            className='h-7 text-xs gap-1'
+                            onClick={() => setScheduleOpen(true)}
+                        >
+                            <CalendarClock size={11} />
+                            {t('actions.schedule')}
                         </Button>
-                        <Button size='sm' className='h-7 text-xs gap-1'
-                            onClick={() => publishNow(post.uuid)} disabled={isPublishing}>
+                        <Button
+                            size='sm'
+                            className='h-7 text-xs gap-1'
+                            onClick={() => publishNow(post.uuid)}
+                            disabled={isPublishing}
+                        >
                             {isPublishing ? <RefreshCw size={11} className='animate-spin' /> : <Send size={11} />}
                             {t('actions.publishNow')}
                         </Button>
@@ -197,25 +225,43 @@ function PostCard({ post }: { post: StudioPostItem }) {
                 )}
                 {isPending && !rescheduleOpen && (
                     <>
-                        <Button size='sm' className='h-7 text-xs gap-1'
-                            onClick={() => publishNow(post.uuid)} disabled={isPublishing}>
+                        <Button
+                            size='sm'
+                            className='h-7 text-xs gap-1'
+                            onClick={() => publishNow(post.uuid)}
+                            disabled={isPublishing}
+                        >
                             {isPublishing ? <RefreshCw size={11} className='animate-spin' /> : <Send size={11} />}
                             {t('actions.publishNow')}
                         </Button>
-                        <Button size='sm' variant='outline' className='h-7 text-xs gap-1'
-                            onClick={() => setRescheduleOpen(true)}>
-                            <Pencil size={11} />{t('actions.reschedule')}
+                        <Button
+                            size='sm'
+                            variant='outline'
+                            className='h-7 text-xs gap-1'
+                            onClick={() => setRescheduleOpen(true)}
+                        >
+                            <Pencil size={11} />
+                            {t('actions.reschedule')}
                         </Button>
-                        <Button size='sm' variant='ghost' className='h-7 text-xs text-destructive gap-1'
+                        <Button
+                            size='sm'
+                            variant='ghost'
+                            className='h-7 text-xs text-destructive gap-1'
                             onClick={() => schedPost && cancelSched(schedPost.uuid)}
-                            disabled={isCancelling}>
-                            <XCircle size={11} />{t('actions.cancelSchedule')}
+                            disabled={isCancelling}
+                        >
+                            <XCircle size={11} />
+                            {t('actions.cancelSchedule')}
                         </Button>
                     </>
                 )}
                 {isFailed && (
-                    <Button size='sm' className='h-7 text-xs gap-1'
-                        onClick={() => publishNow(post.uuid)} disabled={isPublishing}>
+                    <Button
+                        size='sm'
+                        className='h-7 text-xs gap-1'
+                        onClick={() => publishNow(post.uuid)}
+                        disabled={isPublishing}
+                    >
                         {isPublishing ? <RefreshCw size={11} className='animate-spin' /> : <RefreshCw size={11} />}
                         {t('actions.retry')}
                     </Button>
@@ -246,14 +292,14 @@ function PostCard({ post }: { post: StudioPostItem }) {
 export default function ScheduledPostsContent() {
     const t = useTranslations('SnapiStudio.scheduledPosts')
     const [filter, setFilter] = useState<FilterKey>('all')
-    const [page,   setPage]   = useState(1)
+    const [page, setPage] = useState(1)
 
     const FILTERS: { key: FilterKey; label: string; icon: React.ElementType }[] = [
-        { key: 'all',       label: t('filters.all'),       icon: FileText      },
-        { key: 'draft',     label: t('filters.draft'),     icon: FileText      },
+        { key: 'all', label: t('filters.all'), icon: FileText },
+        { key: 'draft', label: t('filters.draft'), icon: FileText },
         { key: 'scheduled', label: t('filters.scheduled'), icon: CalendarClock },
-        { key: 'published', label: t('filters.published'), icon: CheckCircle2  },
-        { key: 'failed',    label: t('filters.failed'),    icon: XCircle       },
+        { key: 'published', label: t('filters.published'), icon: CheckCircle2 },
+        { key: 'failed', label: t('filters.failed'), icon: XCircle }
     ]
 
     const activeStatus = STATUS_FILTER_MAP[filter]
@@ -263,7 +309,7 @@ export default function ScheduledPostsContent() {
         { refetchOnMountOrArgChange: true }
     )
 
-    const posts    = (data?.data ?? []) as StudioPostItem[]
+    const posts = (data?.data ?? []) as StudioPostItem[]
     const lastPage = (data as any)?.meta?.last_page ?? 1
 
     const handleFilterChange = (key: FilterKey) => {
@@ -296,7 +342,9 @@ export default function ScheduledPostsContent() {
             <div className='px-4 sm:px-6'>
                 {isLoading ? (
                     <div className='space-y-3'>
-                        {[1, 2, 3].map(i => <Skeleton key={i} className='h-28 rounded-xl' />)}
+                        {[1, 2, 3].map((i) => (
+                            <Skeleton key={i} className='h-28 rounded-xl' />
+                        ))}
                     </div>
                 ) : posts.length === 0 ? (
                     <div className='flex flex-col items-center gap-2 py-16 text-center'>
@@ -305,18 +353,32 @@ export default function ScheduledPostsContent() {
                     </div>
                 ) : (
                     <div className={cn('space-y-3', isFetching && 'opacity-60 pointer-events-none')}>
-                        {posts.map(post => <PostCard key={post.uuid} post={post} />)}
+                        {posts.map((post) => (
+                            <PostCard key={post.uuid} post={post} />
+                        ))}
                     </div>
                 )}
 
                 {/* Pagination */}
                 {lastPage > 1 && (
                     <div className='flex items-center justify-center gap-2 mt-4'>
-                        <Button size='sm' variant='outline' onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1 || isFetching}>
+                        <Button
+                            size='sm'
+                            variant='outline'
+                            onClick={() => setPage((p) => Math.max(1, p - 1))}
+                            disabled={page === 1 || isFetching}
+                        >
                             <ChevronLeft size={13} />
                         </Button>
-                        <span className='text-xs text-muted-foreground tabular-nums'>{page} / {lastPage}</span>
-                        <Button size='sm' variant='outline' onClick={() => setPage(p => Math.min(lastPage, p + 1))} disabled={page === lastPage || isFetching}>
+                        <span className='text-xs text-muted-foreground tabular-nums'>
+                            {page} / {lastPage}
+                        </span>
+                        <Button
+                            size='sm'
+                            variant='outline'
+                            onClick={() => setPage((p) => Math.min(lastPage, p + 1))}
+                            disabled={page === lastPage || isFetching}
+                        >
                             <ChevronRight size={13} />
                         </Button>
                     </div>

@@ -34,6 +34,12 @@ class AiCopilotAdminService
 
     public function updatePromptTemplate(string $intent, array $data, int $adminId): AiPromptTemplate
     {
+        $template = $this->templateRepo->findByIntentAny($intent);
+
+        if ($template?->is_locked) {
+            abort(422, 'This prompt template is locked and cannot be edited. Unlock it first.');
+        }
+
         $allowed = array_intersect_key($data, array_flip([
             'display_name', 'system_prompt', 'user_template', 'few_shot_examples', 'is_active',
         ]));

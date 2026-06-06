@@ -83,7 +83,7 @@ function ProgressBar({ currentTime, duration, className, onActive, onSeek }: Pro
                 className={cn(
                     'absolute z-[1] top-0 left-1/2 -translate-x-1/2 -translate-y-[200%] bg-transparent text-white',
                     '  h-[30px] text-shadow-[0_0_1px_rgba(0,0,0,0.3)] text-center text-[32px] font-bold',
-                    'tracking-normal whitespace-nowrap origin-bottom-left transition-all duration-200 ease-in-out',
+                    'tracking-normal whitespace-nowrap origin-bottom-left transition-all duration-300 ease-in-out',
                     isDragging ? 'visible opacity-100 scale-100' : 'invisible opacity-0 scale-80'
                 )}
             >
@@ -95,7 +95,7 @@ function ProgressBar({ currentTime, duration, className, onActive, onSeek }: Pro
                     ref={progressBarRef}
                     className={cn(
                         'flex-shrink-0 block relative w-full left-0 bg-white/20 cursor-pointer select-none',
-                        'transition-all duration-200 group-hover/progress:h-1.5 ease-in-out',
+                        'transition-all duration-300 group-hover/progress:h-1.5 ease-in-out',
                         isDragging ? 'h-1.3' : 'h-1'
                     )}
                     onMouseDown={handleTrackClick}

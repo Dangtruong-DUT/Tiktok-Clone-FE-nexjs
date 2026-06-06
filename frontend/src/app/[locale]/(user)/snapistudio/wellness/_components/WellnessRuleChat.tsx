@@ -90,7 +90,10 @@ export function WellnessRuleChat() {
     }
 
     const handleSaveManual = async () => {
-        if (!manual.title.trim()) { toast.error(t('errorTitle')); return }
+        if (!manual.title.trim()) {
+            toast.error(t('errorTitle'))
+            return
+        }
         try {
             await createRule({
                 type: manual.type,
@@ -106,8 +109,7 @@ export function WellnessRuleChat() {
         }
     }
 
-    const fmt = (m: number) =>
-        m >= 60 ? `${Math.floor(m / 60)}h${m % 60 ? `${m % 60}m` : ''}` : `${m}m`
+    const fmt = (m: number) => (m >= 60 ? `${Math.floor(m / 60)}h${m % 60 ? `${m % 60}m` : ''}` : `${m}m`)
 
     if (!isOpen) {
         return (
@@ -124,11 +126,13 @@ export function WellnessRuleChat() {
     }
 
     return (
-        <div className={cn(
-            'fixed bottom-6 left-6 z-40 flex flex-col rounded-2xl',
-            'border border-border bg-background shadow-2xl w-[360px] transition-all',
-            isMinimised ? 'h-12 overflow-hidden' : 'max-h-[580px]'
-        )}>
+        <div
+            className={cn(
+                'fixed bottom-6 left-6 z-40 flex flex-col rounded-2xl',
+                'border border-border bg-background shadow-2xl w-[360px] transition-all',
+                isMinimised ? 'h-12 overflow-hidden' : 'max-h-[580px]'
+            )}
+        >
             {/* Header */}
             <div className='flex items-center justify-between px-4 py-3 border-b border-border shrink-0'>
                 <div className='flex items-center gap-2'>
@@ -136,7 +140,7 @@ export function WellnessRuleChat() {
                     <span className='text-sm font-semibold'>{t('title')}</span>
                 </div>
                 <div className='flex items-center gap-0.5'>
-                    <Button variant='ghost' size='icon' className='size-7' onClick={() => setIsMinimised(v => !v)}>
+                    <Button variant='ghost' size='icon' className='size-7' onClick={() => setIsMinimised((v) => !v)}>
                         <Minus className='size-3.5' />
                     </Button>
                     <Button variant='ghost' size='icon' className='size-7' onClick={() => setIsOpen(false)}>
@@ -149,11 +153,15 @@ export function WellnessRuleChat() {
                 <div className='flex-1 overflow-y-auto scrollbar-hidden'>
                     {/* Mode tabs */}
                     <div className='flex border-b border-border shrink-0'>
-                        {([
-                            ['chat',   <Sparkles key='s' className='size-3.5' />,          t('modeAI')],
-                            ['manual', <SlidersHorizontal key='m' className='size-3.5' />, t('modeManual')]
-                        ] as [Mode, React.ReactNode, string][]).map(([key, icon, label]) => (
-                            <button key={key} onClick={() => setMode(key)}
+                        {(
+                            [
+                                ['chat', <Sparkles key='s' className='size-3.5' />, t('modeAI')],
+                                ['manual', <SlidersHorizontal key='m' className='size-3.5' />, t('modeManual')]
+                            ] as [Mode, React.ReactNode, string][]
+                        ).map(([key, icon, label]) => (
+                            <button
+                                key={key}
+                                onClick={() => setMode(key)}
                                 className={cn(
                                     'flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium transition-colors',
                                     mode === key
@@ -161,7 +169,8 @@ export function WellnessRuleChat() {
                                         : 'text-muted-foreground hover:text-foreground hover:bg-muted/40'
                                 )}
                             >
-                                {icon}{label}
+                                {icon}
+                                {label}
                             </button>
                         ))}
                     </div>
@@ -172,10 +181,14 @@ export function WellnessRuleChat() {
                             <p className='text-xs text-muted-foreground'>{t('aiHint')}</p>
 
                             <div className='flex flex-wrap gap-1.5'>
-                                {QUICK_PROMPTS.map(p => (
-                                    <button key={p} onClick={() => handleParse(p)} disabled={isParsing}
+                                {QUICK_PROMPTS.map((p) => (
+                                    <button
+                                        key={p}
+                                        onClick={() => handleParse(p)}
+                                        disabled={isParsing}
                                         className='rounded-full border border-border px-2.5 py-0.5 text-[11px]
-                                                   text-foreground hover:bg-muted transition-colors disabled:opacity-50'>
+                                                   text-foreground hover:bg-muted transition-colors disabled:opacity-50'
+                                    >
                                         {p}
                                     </button>
                                 ))}
@@ -183,8 +196,13 @@ export function WellnessRuleChat() {
 
                             <textarea
                                 value={nlText}
-                                onChange={e => setNlText(e.target.value)}
-                                onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleParse(nlText) }}}
+                                onChange={(e) => setNlText(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' && !e.shiftKey) {
+                                        e.preventDefault()
+                                        handleParse(nlText)
+                                    }
+                                }}
                                 placeholder={t('aiPlaceholder')}
                                 rows={3}
                                 className='w-full rounded-lg border border-border bg-muted/40 px-3 py-2 text-sm
@@ -192,15 +210,25 @@ export function WellnessRuleChat() {
                                            resize-none outline-none focus:ring-1 focus:ring-primary/50'
                             />
 
-                            <Button onClick={() => handleParse(nlText)} disabled={!nlText.trim() || isParsing}
-                                size='sm' className='w-full gap-2'>
-                                {isParsing ? <RefreshCw className='size-3.5 animate-spin' /> : <Sparkles className='size-3.5' />}
+                            <Button
+                                onClick={() => handleParse(nlText)}
+                                disabled={!nlText.trim() || isParsing}
+                                size='sm'
+                                className='w-full gap-2'
+                            >
+                                {isParsing ? (
+                                    <RefreshCw className='size-3.5 animate-spin' />
+                                ) : (
+                                    <Sparkles className='size-3.5' />
+                                )}
                                 {isParsing ? t('analyzing') : t('analyzeBtn')}
                             </Button>
 
                             {preview && (
-                                <div className='rounded-xl border border-emerald-500/30
-                                                bg-emerald-50 dark:bg-emerald-950/25 p-3 space-y-2'>
+                                <div
+                                    className='rounded-xl border border-emerald-500/30
+                                                bg-emerald-50 dark:bg-emerald-950/25 p-3 space-y-2'
+                                >
                                     <div className='flex items-center gap-2 flex-wrap'>
                                         <Badge variant='secondary' className='text-[10px]'>
                                             {WELLNESS_RULE_TYPE_LABELS[preview.type]}
@@ -215,15 +243,23 @@ export function WellnessRuleChat() {
                                     <p className='text-sm font-semibold text-foreground'>{preview.title}</p>
                                     <p className='text-xs text-muted-foreground'>{preview.message}</p>
                                     <div className='flex gap-2 pt-0.5'>
-                                        <Button size='sm'
+                                        <Button
+                                            size='sm'
                                             className='flex-1 h-7 text-xs bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600'
-                                            onClick={handleSavePreview} disabled={isCreating}>
+                                            onClick={handleSavePreview}
+                                            disabled={isCreating}
+                                        >
                                             <CheckCircle2 className='size-3 mr-1' />
                                             {isCreating ? t('saving') : t('saveRule')}
                                         </Button>
-                                        <Button size='sm' variant='outline' className='h-7 text-xs'
-                                            onClick={() => setPreview(null)}>
-                                            <X className='size-3 mr-1' />{t('dismiss')}
+                                        <Button
+                                            size='sm'
+                                            variant='outline'
+                                            className='h-7 text-xs'
+                                            onClick={() => setPreview(null)}
+                                        >
+                                            <X className='size-3 mr-1' />
+                                            {t('dismiss')}
                                         </Button>
                                     </div>
                                 </div>
@@ -235,16 +271,21 @@ export function WellnessRuleChat() {
                     {mode === 'manual' && (
                         <div className='p-4 space-y-3'>
                             <div>
-                                <label className='text-xs font-medium text-muted-foreground mb-1.5 block'>{t('ruleType')}</label>
+                                <label className='text-xs font-medium text-muted-foreground mb-1.5 block'>
+                                    {t('ruleType')}
+                                </label>
                                 <div className='grid grid-cols-2 gap-1.5'>
-                                    {RULE_TYPES.map(rt => (
-                                        <button key={rt.value} onClick={() => setManual(m => ({ ...m, type: rt.value }))}
+                                    {RULE_TYPES.map((rt) => (
+                                        <button
+                                            key={rt.value}
+                                            onClick={() => setManual((m) => ({ ...m, type: rt.value }))}
                                             className={cn(
                                                 'rounded-lg border px-2 py-1.5 text-[11px] font-medium transition-colors text-left',
                                                 manual.type === rt.value
                                                     ? 'border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-600'
                                                     : 'border-border text-muted-foreground hover:bg-muted'
-                                            )}>
+                                            )}
+                                        >
                                             {rt.label}
                                         </button>
                                     ))}
@@ -252,11 +293,19 @@ export function WellnessRuleChat() {
                             </div>
 
                             <div>
-                                <label className='text-xs font-medium text-muted-foreground mb-1 block'>{t('duration')}</label>
+                                <label className='text-xs font-medium text-muted-foreground mb-1 block'>
+                                    {t('duration')}
+                                </label>
                                 <div className='flex items-center gap-3'>
-                                    <input type='range' min={10} max={240} step={5} value={manual.minutes}
-                                        onChange={e => setManual(m => ({ ...m, minutes: +e.target.value }))}
-                                        className='flex-1 accent-emerald-600' />
+                                    <input
+                                        type='range'
+                                        min={10}
+                                        max={240}
+                                        step={5}
+                                        value={manual.minutes}
+                                        onChange={(e) => setManual((m) => ({ ...m, minutes: +e.target.value }))}
+                                        className='flex-1 accent-emerald-600'
+                                    />
                                     <span className='text-sm font-semibold tabular-nums w-12 text-right text-foreground'>
                                         {fmt(manual.minutes)}
                                     </span>
@@ -264,16 +313,21 @@ export function WellnessRuleChat() {
                             </div>
 
                             <div>
-                                <label className='text-xs font-medium text-muted-foreground mb-1.5 block'>{t('action')}</label>
+                                <label className='text-xs font-medium text-muted-foreground mb-1.5 block'>
+                                    {t('action')}
+                                </label>
                                 <div className='grid grid-cols-2 gap-1.5'>
-                                    {ACTIONS.map(a => (
-                                        <button key={a.value} onClick={() => setManual(m => ({ ...m, action: a.value }))}
+                                    {ACTIONS.map((a) => (
+                                        <button
+                                            key={a.value}
+                                            onClick={() => setManual((m) => ({ ...m, action: a.value }))}
                                             className={cn(
                                                 'rounded-lg border px-2 py-1.5 text-[11px] font-medium transition-colors',
                                                 manual.action === a.value
                                                     ? 'border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-600'
                                                     : 'border-border text-muted-foreground hover:bg-muted'
-                                            )}>
+                                            )}
+                                        >
                                             {a.label}
                                         </button>
                                     ))}
@@ -281,27 +335,41 @@ export function WellnessRuleChat() {
                             </div>
 
                             <div>
-                                <label className='text-xs font-medium text-muted-foreground mb-1 block'>{t('titleRequired')}</label>
-                                <input type='text' value={manual.title}
-                                    onChange={e => setManual(m => ({ ...m, title: e.target.value }))}
+                                <label className='text-xs font-medium text-muted-foreground mb-1 block'>
+                                    {t('titleRequired')}
+                                </label>
+                                <input
+                                    type='text'
+                                    value={manual.title}
+                                    onChange={(e) => setManual((m) => ({ ...m, title: e.target.value }))}
                                     placeholder={t('titlePlaceholder')}
                                     className='w-full rounded-lg border border-border bg-muted/40 px-3 py-2 text-sm
                                                text-foreground placeholder:text-muted-foreground
-                                               outline-none focus:ring-1 focus:ring-primary/50' />
+                                               outline-none focus:ring-1 focus:ring-primary/50'
+                                />
                             </div>
 
                             <div>
-                                <label className='text-xs font-medium text-muted-foreground mb-1 block'>{t('messageLabel')}</label>
-                                <input type='text' value={manual.message}
-                                    onChange={e => setManual(m => ({ ...m, message: e.target.value }))}
+                                <label className='text-xs font-medium text-muted-foreground mb-1 block'>
+                                    {t('messageLabel')}
+                                </label>
+                                <input
+                                    type='text'
+                                    value={manual.message}
+                                    onChange={(e) => setManual((m) => ({ ...m, message: e.target.value }))}
                                     placeholder={t('messagePlaceholder')}
                                     className='w-full rounded-lg border border-border bg-muted/40 px-3 py-2 text-sm
                                                text-foreground placeholder:text-muted-foreground
-                                               outline-none focus:ring-1 focus:ring-primary/50' />
+                                               outline-none focus:ring-1 focus:ring-primary/50'
+                                />
                             </div>
 
-                            <Button onClick={handleSaveManual} disabled={isCreating || !manual.title.trim()}
-                                size='sm' className='w-full gap-2 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600'>
+                            <Button
+                                onClick={handleSaveManual}
+                                disabled={isCreating || !manual.title.trim()}
+                                size='sm'
+                                className='w-full gap-2 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600'
+                            >
                                 <CheckCircle2 className='size-3.5' />
                                 {isCreating ? t('saving') : t('saveRule')}
                             </Button>

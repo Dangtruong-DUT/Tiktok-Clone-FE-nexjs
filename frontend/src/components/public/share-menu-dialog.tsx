@@ -46,7 +46,7 @@ export function ShareMenuDialog({ url, children }: ShareMenuDialogProps) {
                             <CarouselItem key={index} className='md:basis-1/2 lg:basis-1/3'>
                                 <div className='p-1'>
                                     <CardContent
-                                        className='flex flex-col aspect-[3/4] items-center justify-center p-2 gap-2 cursor-pointer  transition-colors text-[64px] h-fit hover:bg-accent/90 rounded-md'
+                                        className='flex flex-col aspect-[3/4] items-center justify-center p-2 gap-2 cursor-pointer transition-all duration-300 hover:scale-[1.03] active:scale-95 text-[64px] h-fit hover:bg-accent/90 rounded-xl'
                                         onClick={item.onClick}
                                     >
                                         {item.icon}

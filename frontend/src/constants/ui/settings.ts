@@ -1,6 +1,8 @@
 export const AdminSettingsTab = {
     PROFILE: 'profile',
-    SECURITY: 'security'
+    SECURITY: 'security',
+    PRIVACY: 'privacy',
+    EMAIL: 'email'
 } as const
 
 export type AdminSettingsTabType = (typeof AdminSettingsTab)[keyof typeof AdminSettingsTab]

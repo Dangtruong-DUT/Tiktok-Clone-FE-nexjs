@@ -59,7 +59,7 @@ function NumberInput({
             min={min}
             max={max}
             onChange={(e) => onChange(Number(e.target.value))}
-            className='w-24 h-8 rounded-md border border-input bg-background px-2 text-sm text-right focus:outline-none focus:ring-2 focus:ring-ring'
+            className='w-24 h-8 rounded-xl border border-input bg-background px-2 text-sm text-right focus:outline-none focus:ring-2 focus:ring-ring'
         />
     )
 }
@@ -265,7 +265,7 @@ export function AiStudioSettings() {
                                     max={1}
                                     value={field.value ?? 0.7}
                                     onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                                    className='w-20 h-8 rounded-md border border-input bg-background px-2 text-sm text-right focus:outline-none focus:ring-2 focus:ring-ring'
+                                    className='w-20 h-8 rounded-xl border border-input bg-background px-2 text-sm text-right focus:outline-none focus:ring-2 focus:ring-ring'
                                 />
                             </SettingRow>
                         )}

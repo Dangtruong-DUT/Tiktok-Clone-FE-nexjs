@@ -215,7 +215,7 @@ export default async function PrivacyPolicyPage() {
                             {t('privacyPolicy.sections.contact.description')}{' '}
                             <a
                                 href={`mailto:${BRAND_CONFIG.CONTACT_EMAIL}`}
-                                className='text-brand hover:underline font-medium transition-colors duration-200'
+                                className='text-brand hover:underline font-medium transition-colors duration-300'
                             >
                                 {BRAND_CONFIG.CONTACT_EMAIL}
                             </a>

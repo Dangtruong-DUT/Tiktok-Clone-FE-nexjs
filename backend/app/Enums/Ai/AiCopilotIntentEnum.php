@@ -33,6 +33,10 @@ enum AiCopilotIntentEnum: string implements BaseEnumInterface
     case NAVIGATE_TO          = 'navigate_to';
     case QUERY_APP_INFO       = 'query_app_info';
     case ADMIN_QUERY_STATS    = 'admin_query_stats';
+    case ADMIN_QUERY_APPEALS    = 'admin_query_appeals';
+    case ADMIN_QUERY_AI_METRICS = 'admin_query_ai_metrics';
+    case ADMIN_QUERY_ENCODING   = 'admin_query_encoding';
+    case QUERY_NOTIFICATIONS    = 'query_notifications';
 
     /**
      * Get the label of the enum value.
@@ -62,7 +66,11 @@ enum AiCopilotIntentEnum: string implements BaseEnumInterface
             self::QUERY_SCREEN_TIME     => 'Query Screen Time',
             self::NAVIGATE_TO           => 'Navigate To',
             self::QUERY_APP_INFO        => 'Query App Info',
-            self::ADMIN_QUERY_STATS     => 'Admin Query Stats',
+            self::ADMIN_QUERY_STATS       => 'Admin Query Stats',
+            self::ADMIN_QUERY_APPEALS     => 'Admin Query Appeals',
+            self::ADMIN_QUERY_AI_METRICS  => 'Admin Query AI Metrics',
+            self::ADMIN_QUERY_ENCODING    => 'Admin Query Encoding',
+            self::QUERY_NOTIFICATIONS     => 'Query Notifications',
         };
     }
 
@@ -94,7 +102,11 @@ enum AiCopilotIntentEnum: string implements BaseEnumInterface
             self::QUERY_SCREEN_TIME     => 'Xem thời gian sử dụng',
             self::NAVIGATE_TO           => 'Điều hướng',
             self::QUERY_APP_INFO        => 'Thông tin ứng dụng',
-            self::ADMIN_QUERY_STATS     => 'Thống kê hệ thống',
+            self::ADMIN_QUERY_STATS       => 'Thống kê hệ thống',
+            self::ADMIN_QUERY_APPEALS     => 'Kháng cáo hệ thống',
+            self::ADMIN_QUERY_AI_METRICS  => 'Thống kê AI',
+            self::ADMIN_QUERY_ENCODING    => 'Hàng đợi mã hoá',
+            self::QUERY_NOTIFICATIONS     => 'Xem thông báo',
         };
     }
 

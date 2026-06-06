@@ -10,7 +10,13 @@ import AutoPagination from '@/components/data-display/auto-pagination'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
 import { AdminTimelineRow } from '@/components/admin'
-import { getActivityKey, getActionIconConfig, getActivityActorName, formatActivityResourceRef, truncateText } from '@/utils/admin/admin.util'
+import {
+    getActivityKey,
+    getActionIconConfig,
+    getActivityActorName,
+    formatActivityResourceRefStyled,
+    truncateText
+} from '@/utils/admin/admin.util'
 import { formatDateTime, timeAgo } from '@/utils/formatting/format-time.util'
 import type { LocalesType } from '@/i18n/config'
 import { ACTIVITY_TYPES } from '@/constants/admin/ui'
@@ -26,14 +32,30 @@ type TimePeriod = '24h' | '7d' | '30d' | 'all'
 
 const DATE_FORMATTER = new Intl.DateTimeFormat('en-CA')
 
-function buildSentence(log: AdminActivityListItem, t: ReturnType<typeof useTranslations<'AdminPage'>>): string {
+function buildSentenceJSX(log: AdminActivityListItem, t: ReturnType<typeof useTranslations<'AdminPage'>>) {
     const actionKey = getActivityKey(log)
     const actor = getActivityActorName(log)
-    const ref = formatActivityResourceRef(log)
+    const ref = formatActivityResourceRefStyled(log)
     const verbKey = `activitySentence.${actionKey}` as Parameters<typeof t>[0]
     const verb = t(verbKey)
     const actorLabel = actor ?? '—'
-    return ref ? `${actorLabel} ${verb} ${ref}` : `${actorLabel} ${verb}`
+    return (
+        <>
+            <strong className='font-semibold text-foreground'>{actorLabel}</strong> {verb}
+            {ref.text && (
+                <>
+                    {' '}
+                    <span
+                        className={
+                            ref.isUserRef ? 'text-orange-400 font-mono text-xs' : 'text-orange-400 font-mono text-xs'
+                        }
+                    >
+                        {ref.text}
+                    </span>
+                </>
+            )}
+        </>
+    )
 }
 
 export function ActivityLog({ type = 'all' }: ActivityLogProps) {
@@ -67,7 +89,7 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
         log_type: type === 'system' ? 'activity' : 'admin',
         action_type: activityType !== 'all' ? activityType : undefined,
         date_from: dateFrom,
-        order_by: ['-created_at'],
+        order_by: ['-created_at']
     })
 
     const logs: AdminActivityListItem[] = data?.data ?? []
@@ -82,7 +104,7 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
                 log.resource_type ?? '',
                 String(log.resource_id ?? ''),
                 'action' in log ? log.action : log.action_type,
-                'reason' in log ? (log.reason ?? '') : '',
+                'reason' in log ? (log.reason ?? '') : ''
             ]
                 .join(' ')
                 .toLowerCase()
@@ -149,9 +171,16 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
                         <div className='flex flex-wrap items-center gap-2 text-xs text-muted-foreground'>
                             <span>
                                 {t('common.showingResults', {
-                                    from: totalItems === 0 ? 0 : pagination?.current_page ? (pagination.current_page - 1) * perPage + 1 : 1,
-                                    to: pagination?.current_page ? Math.min(pagination.current_page * perPage, totalItems) : totalItems,
-                                    total: totalItems,
+                                    from:
+                                        totalItems === 0
+                                            ? 0
+                                            : pagination?.current_page
+                                              ? (pagination.current_page - 1) * perPage + 1
+                                              : 1,
+                                    to: pagination?.current_page
+                                        ? Math.min(pagination.current_page * perPage, totalItems)
+                                        : totalItems,
+                                    total: totalItems
                                 })}
                             </span>
                             {searchTerm.trim() && (
@@ -237,7 +266,7 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
                                             timestamp={formatDateTime(log.created_at)}
                                             onClick={() => setDetailLog(log)}
                                         >
-                                            <span className='text-foreground'>{buildSentence(log, t)}</span>
+                                            {buildSentenceJSX(log, t)}
                                         </AdminTimelineRow>
                                     )
                                 })}
@@ -274,7 +303,7 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
                         {t('common.showingResults', {
                             from: (pagination.current_page - 1) * perPage + 1,
                             to: Math.min(pagination.current_page * perPage, totalItems),
-                            total: totalItems,
+                            total: totalItems
                         })}
                     </div>
 

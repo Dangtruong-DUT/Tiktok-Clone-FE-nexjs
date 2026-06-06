@@ -146,6 +146,20 @@
                     "comments": "Bình luận"
                 }
             },
+            "postStatusChart": {
+                "title": "Trạng thái bài đăng",
+                "description": "Bài đăng của bạn theo trạng thái xuất bản",
+                "published": "Đã đăng",
+                "scheduled": "Đã lên lịch",
+                "draft": "Bản nháp",
+                "posts": "bài"
+            },
+            "engagementChart": {
+                "title": "Tương tác theo bài",
+                "description": "Tỉ lệ tương tác (thích + bình luận / lượt xem) của các bài gần đây",
+                "engagement": "Tương tác %",
+                "noData": "Chưa có bài đăng nào"
+            },
             "directorChart": {
                 "keyMetrics": "Chỉ số quan trọng",
                 "selectTimeRange": "Chọn khoảng thời gian",
@@ -166,8 +180,11 @@
             }
         },
         "header": {
-            "profile": "Hồ sơ",
-            "logout": "Đăng xuất"
+            "profile": "Trang cá nhân",
+            "logout": "Đăng xuất",
+            "settings": "Cài đặt",
+            "accountMenu": "Tài khoản",
+            "unknownUser": "Người dùng"
         },
         "settings": {
             "page": {
@@ -444,10 +461,23 @@
                 "comments": "Bình luận",
                 "posts": "Bài đăng",
                 "chartTitle": "Theo ngày",
+                "distributionTitle": "Phân bổ thời gian",
+                "otherOnline": "Duyệt web & khác",
                 "periods": {
                     "today": "Hôm nay",
                     "week": "Tuần này",
                     "month": "Tháng này"
+                },
+                "timeLabel": "Thời gian màn hình",
+                "radarChart": {
+                    "title": "Phân tích hoạt động",
+                    "description": "Điểm hoạt động tương đối theo từng mục sử dụng",
+                    "score": "Điểm",
+                    "video": "Xem video",
+                    "comments": "Bình luận",
+                    "posts": "Đăng bài",
+                    "likes": "Thích",
+                    "other": "Khác"
                 }
             },
             "rules": {
@@ -464,6 +494,10 @@
                 "toast": {
                     "saved": "Quy tắc đã được lưu!",
                     "deleted": "Đã xóa quy tắc."
+                },
+                "progress": {
+                    "activating": "Đang kích hoạt…",
+                    "remaining": "~{minutes}p còn lại (chu kỳ {cycle})"
                 }
             },
             "ruleChat": {
@@ -479,6 +513,9 @@
                 "dismiss": "Bỏ",
                 "ruleType": "Loại rule",
                 "duration": "Thời gian (phút)",
+                "timeRange": "Khung giờ hoạt động",
+                "fromHour": "Từ",
+                "toHour": "Đến",
                 "action": "Hành động",
                 "titleLabel": "Tiêu đề",
                 "titleRequired": "Tiêu đề *",
@@ -505,7 +542,26 @@
                     "Giới hạn 3 tiếng mỗi ngày",
                     "Cảnh báo sau 2 tiếng xem video",
                     "Khoá màn hình sau 90 phút"
-                ]
+                ],
+                "optional": "tùy chọn",
+                "defaults": {
+                    "continuous_usage": {
+                        "title": "Dùng liên tục {duration}",
+                        "message": "Bạn đã dùng liên tục {duration}. Hãy nghỉ ngơi!"
+                    },
+                    "daily_limit": {
+                        "title": "Giới hạn {duration}/ngày",
+                        "message": "Bạn đã đạt {duration} hôm nay. Hãy cân bằng thời gian!"
+                    },
+                    "video_watch_time": {
+                        "title": "Xem video {duration}",
+                        "message": "Bạn đã xem video {duration}. Hãy nghỉ mắt!"
+                    },
+                    "late_night": {
+                        "title": "Sử dụng khuya ({fromHour}:00 – {toHour}:00)",
+                        "message": "Bạn đang dùng ứng dụng trong khung giờ đêm khuya. Hãy nghỉ ngơi để bảo vệ sức khỏe."
+                    }
+                }
             },
             "analysis": {
                 "analyzeBtn": "Phân tích 7 ngày gần đây",
@@ -528,6 +584,19 @@
             "largeVideo": "Video của bạn khá lớn — hãy mô tả nội dung và tôi sẽ hỗ trợ!",
             "emptyHint": "Hãy hỏi tôi để viết caption, tạo hashtag, phân tích hook và nhiều hơn nữa.",
             "quickPrompts": ["Viết caption", "Tạo hashtag", "Phân tích viral", "Đánh giá hook"],
+            "quickPromptsGeneral": [
+                "Thống kê tài khoản của tôi",
+                "Hỏi về tính năng Snapi",
+                "Phân tích screen time",
+                "Gợi ý nội dung sáng tạo"
+            ],
+            "quickPromptsAdmin": [
+                "Thống kê người dùng hệ thống",
+                "Kháng cáo chờ xử lý",
+                "Chi phí AI hôm nay",
+                "Video lỗi encoding"
+            ],
+            "newSession": "Cuộc hội thoại mới",
             "input": {
                 "placeholder": "Hỏi AI Copilot bất cứ điều gì…"
             },
@@ -544,7 +613,8 @@
                 "dismissed": "Đã bỏ qua",
                 "accept": "Áp dụng vào bài đăng",
                 "reject": "Bỏ qua",
-                "copy": "Sao chép"
+                "copy": "Sao chép",
+                "copied": "Đã sao chép!"
             },
             "scheduleCard": {
                 "panelTitle": "Đề xuất lịch đăng bài",
@@ -575,6 +645,14 @@
                 "analyzing": "Đang ghi…",
                 "recording": "Đang cắt đoạn video",
                 "analyzePrompt": "Phân tích đoạn video từ {start} đến {end}"
+            },
+            "timeline": {
+                "analyze": "Phân tích",
+                "analyzeQuestion": "Phân tích đoạn video này",
+                "analyzeHook": "Kiểm tra hook",
+                "analyzeHookQuestion": "Phân tích hook của video",
+                "analyzeContent": "Phân tích nội dung",
+                "analyzeContentQuestion": "Phân tích nội dung và gợi ý cải thiện"
             }
         },
         "appeals": {

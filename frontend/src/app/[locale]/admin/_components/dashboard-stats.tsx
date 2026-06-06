@@ -89,7 +89,7 @@ export function DashboardStats({ stats, period = 'today' }: DashboardStatsProps)
                 const subValue = card.getSubValue(resolvedStats)
 
                 return (
-                    <Card key={card.titleKey} className='bg-card border-border'>
+                    <Card key={card.titleKey} className='bg-card border-border/50 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 ease-out'>
                         <CardContent className='p-5'>
                             <div className='flex items-start justify-between'>
                                 <div className='min-w-0'>

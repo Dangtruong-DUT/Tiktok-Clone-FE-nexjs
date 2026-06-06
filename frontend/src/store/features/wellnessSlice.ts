@@ -18,6 +18,8 @@ interface WellnessState {
     activeAlert: WellnessAlert | null
     todayTotalSeconds: number
     todayVideoSeconds: number
+    dismissedRules: string[]
+    snoozedRules: Record<string, number>
 }
 
 const initialState: WellnessState = {
@@ -27,7 +29,9 @@ const initialState: WellnessState = {
     isAlertVisible: false,
     activeAlert: null,
     todayTotalSeconds: 0,
-    todayVideoSeconds: 0
+    todayVideoSeconds: 0,
+    dismissedRules: [],
+    snoozedRules: {}
 }
 
 const wellnessSlice = createSlice({
@@ -67,11 +71,33 @@ const wellnessSlice = createSlice({
         setTodayStats(state, action: PayloadAction<{ totalSeconds: number; videoSeconds: number }>) {
             state.todayTotalSeconds = action.payload.totalSeconds
             state.todayVideoSeconds = action.payload.videoSeconds
+        },
+
+        suppressRule(state, action: PayloadAction<string>) {
+            if (!state.dismissedRules.includes(action.payload)) {
+                state.dismissedRules.push(action.payload)
+            }
+            state.isAlertVisible = false
+            state.activeAlert = null
+        },
+
+        snoozeRule(state, action: PayloadAction<string>) {
+            state.snoozedRules[action.payload] = Date.now() + 10 * 60 * 1000
+            state.isAlertVisible = false
+            state.activeAlert = null
+        },
+
+        clearSessionDismissals(state) {
+            state.dismissedRules = []
+            state.snoozedRules = {}
         }
     }
 })
 
-export const { setSession, clearSession, showAlert, dismissAlert, addVideoSeconds, setTodayStats } =
-    wellnessSlice.actions
+export const {
+    setSession, clearSession, showAlert, dismissAlert,
+    addVideoSeconds, setTodayStats,
+    suppressRule, snoozeRule, clearSessionDismissals,
+} = wellnessSlice.actions
 
 export default wellnessSlice.reducer
