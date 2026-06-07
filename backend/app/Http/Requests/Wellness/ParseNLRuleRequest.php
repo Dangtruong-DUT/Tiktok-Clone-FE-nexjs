@@ -17,10 +17,4 @@ class ParseNLRuleRequest extends BaseRequest
             'text' => [self::REQUIRED, self::STRING, self::MAX . ':500'],
         ]);
     }
-
-    /** Return the raw natural language input text. */
-    public function text(): string
-    {
-        return (string) $this->input('text');
-    }
 }

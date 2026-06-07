@@ -15,7 +15,7 @@ interface UploadStorageInterface
     /**
      * Initiate a multipart upload and return the provider-specific upload ID.
      */
-    public function initiateMultipartUpload(string $key): string;
+    public function initiateMultipartUpload(string $key, string $mimeType = 'application/octet-stream'): string;
 
     /**
      * Generate a presigned URL for uploading a single part in a multipart upload.

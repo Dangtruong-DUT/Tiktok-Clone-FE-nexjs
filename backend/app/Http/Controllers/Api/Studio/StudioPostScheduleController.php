@@ -2,30 +2,39 @@
 
 namespace App\Http\Controllers\Api\Studio;
 
-use App\Enums\Post\PostPublishStatusEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Studio\ListScheduledPostsRequest;
+use App\Http\Requests\Studio\ListStudioPostsRequest;
 use App\Http\Requests\Studio\ReschedulePostRequest;
 use App\Http\Requests\Studio\SchedulePostRequest;
 use App\Http\Resources\Api\Studio\ScheduledPostResource;
+use App\Http\Resources\Api\Studio\StudioPostResource;
 use App\Http\Response\ApiResponse;
-use App\Models\Post;
 use App\Services\AI\Schedule\PostScheduleService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class StudioPostScheduleController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @param  PostScheduleService  $service
+     */
     public function __construct(
         private readonly PostScheduleService $service,
     ) {}
 
-    /** List scheduled posts (ScheduledPost records) */
-    public function index(Request $request): JsonResponse
+    /**
+     * List scheduled post records for the authenticated user.
+     *
+     * @param  ListScheduledPostsRequest  $request
+     * @return JsonResponse
+     */
+    public function index(ListScheduledPostsRequest $request): JsonResponse
     {
         $items = $this->service->paginateForUser(
             (int) auth_user_id(),
-            $request->integer('per_page', 15),
+            $request->validated(),
         );
 
         return ApiResponse::success(
@@ -34,48 +43,21 @@ class StudioPostScheduleController extends Controller
         );
     }
 
-    /** List creator's own posts by status (for draft/published/failed management) */
-    public function posts(Request $request): JsonResponse
+    /**
+     * List the authenticated creator's posts with optional Studio filters.
+     *
+     * @param  ListStudioPostsRequest  $request
+     * @return JsonResponse
+     */
+    public function posts(ListStudioPostsRequest $request): JsonResponse
     {
-        $userId = (int) auth_user_id();
-
-        $allowedStatuses = array_column(PostPublishStatusEnum::cases(), 'value');
-        $status = $request->input('status');
-
-        $query = Post::where('user_id', $userId)
-            ->orderByDesc('updated_at');
-
-        // Full-text search on content
-        if ($q = trim((string) $request->input('q', ''))) {
-            $query->where('content', 'ilike', "%{$q}%");
-        }
-
-        // Schedule status: has_schedule=1 (scheduled posts only), has_schedule=0 (no schedule)
-        if ($request->has('has_schedule')) {
-            $hasSchedule = (bool) $request->input('has_schedule');
-            if ($hasSchedule) {
-                $query->whereHas('scheduledPost');
-            } else {
-                $query->whereDoesntHave('scheduledPost');
-            }
-        }
-
-        if ($status && in_array($status, $allowedStatuses, true)) {
-            $query->where('status', $status);
-        } else {
-            // Default: all creator-visible statuses
-            $query->whereIn('status', [
-                PostPublishStatusEnum::DRAFT->value,
-                PostPublishStatusEnum::SCHEDULED->value,
-                PostPublishStatusEnum::PUBLISHED->value,
-                PostPublishStatusEnum::FAILED->value,
-            ]);
-        }
-
-        $paginator = $query->with(['scheduledPost', 'thumbnailFile'])->paginate($request->integer('per_page', 20));
+        $paginator = $this->service->paginateStudioPostsForUser(
+            userId: (int) auth_user_id(),
+            filters: $request->validated(),
+        );
 
         return ApiResponse::success(
-            data:    $this->formatPostItems($paginator),
+            data:    StudioPostResource::collection($paginator->getCollection()),
             message: 'Studio posts retrieved.',
             meta:    [
                 'current_page' => $paginator->currentPage(),
@@ -86,16 +68,19 @@ class StudioPostScheduleController extends Controller
         );
     }
 
+    /**
+     * Schedule a post for future publication.
+     *
+     * @param  SchedulePostRequest  $request
+     * @param  string  $postUuid
+     * @return JsonResponse
+     */
     public function schedule(SchedulePostRequest $request, string $postUuid): JsonResponse
     {
-        $userId = (int) auth_user_id();
-        $post   = Post::where('uuid', $postUuid)->where('user_id', $userId)->firstOrFail();
-
-        $scheduledPost = $this->service->schedulePost(
-            $post,
-            $userId,
-            $request->scheduledAt(),
-            $request->timezone(),
+        $scheduledPost = $this->service->schedulePostByUuid(
+            $postUuid,
+            (int) auth_user_id(),
+            $request->validated(),
         );
 
         return ApiResponse::success(
@@ -105,14 +90,20 @@ class StudioPostScheduleController extends Controller
         );
     }
 
+    /**
+     * Reschedule an existing scheduled post.
+     *
+     * @param  ReschedulePostRequest  $request
+     * @param  string  $uuid
+     * @return JsonResponse
+     */
     public function reschedule(ReschedulePostRequest $request, string $uuid): JsonResponse
     {
         $scheduledPost = $this->service->findByUuidForUser($uuid, (int) auth_user_id());
         $updated       = $this->service->reschedule(
             $scheduledPost,
             (int) auth_user_id(),
-            $request->scheduledAt(),
-            $request->timezone(),
+            $request->validated(),
         );
 
         return ApiResponse::success(
@@ -121,11 +112,15 @@ class StudioPostScheduleController extends Controller
         );
     }
 
+    /**
+     * Publish a post immediately.
+     *
+     * @param  string  $postUuid
+     * @return JsonResponse
+     */
     public function publishNow(string $postUuid): JsonResponse
     {
-        $userId = (int) auth_user_id();
-        $post   = Post::where('uuid', $postUuid)->where('user_id', $userId)->firstOrFail();
-        $post   = $this->service->publishNow($post, $userId);
+        $post = $this->service->publishNowByUuid($postUuid, (int) auth_user_id());
 
         return ApiResponse::success(
             data:    ['uuid' => $post->uuid, 'status' => $post->status?->value],
@@ -133,6 +128,12 @@ class StudioPostScheduleController extends Controller
         );
     }
 
+    /**
+     * Cancel a scheduled post.
+     *
+     * @param  string  $uuid
+     * @return JsonResponse
+     */
     public function cancel(string $uuid): JsonResponse
     {
         $scheduledPost = $this->service->findByUuidForUser($uuid, (int) auth_user_id());
@@ -144,27 +145,4 @@ class StudioPostScheduleController extends Controller
         );
     }
 
-    // ── Private helpers ──────────────────────────────────────────────────────
-
-    private function formatPostItems(\Illuminate\Pagination\LengthAwarePaginator $paginator): array
-    {
-        return $paginator->getCollection()->map(fn (Post $post) => [
-            'uuid'          => $post->uuid,
-            'content'       => $post->content,
-            'thumbnail_url' => $post->thumbnail_url,
-            'audience'      => $post->audience,
-            'status'        => $post->status?->value,
-            'status_label'  => $post->status?->translate(),
-            'published_at'  => $post->published_at?->toIso8601String(),
-            'updated_at'    => $post->updated_at?->toIso8601String(),
-            'created_at'    => $post->created_at->toIso8601String(),
-            'scheduled_post' => $post->scheduledPost ? [
-                'uuid'          => $post->scheduledPost->uuid,
-                'status'        => $post->scheduledPost->status?->value,
-                'scheduled_at'  => $post->scheduledPost->scheduled_at?->toIso8601String(),
-                'user_timezone' => $post->scheduledPost->user_timezone,
-                'error_message' => $post->scheduledPost->error_message,
-            ] : null,
-        ])->values()->toArray();
-    }
 }

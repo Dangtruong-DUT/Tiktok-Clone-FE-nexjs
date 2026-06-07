@@ -17,6 +17,12 @@ class CommentAdminService
 {
     use HasAuthUser;
 
+    /**
+     * Create a new service instance.
+     *
+     * @param  PostRepository  $postRepository
+     * @param  AdminModerationNoticeService  $adminModerationNoticeService
+     */
     public function __construct(
         private readonly PostRepository $postRepository,
         private readonly AdminModerationNoticeService $adminModerationNoticeService,

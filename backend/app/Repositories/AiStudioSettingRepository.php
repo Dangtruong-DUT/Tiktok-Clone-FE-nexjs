@@ -1,18 +1,25 @@
 <?php
+
 namespace App\Repositories;
 
 use App\Models\AiStudioSetting;
-use App\Repositories\BaseRepository;
 
+/**
+ * @extends BaseRepository<AiStudioSetting>
+ */
 class AiStudioSettingRepository extends BaseRepository
 {
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct(app()->make(AiStudioSetting::class));
     }
 
+
     /**
      * Get the current AI Studio settings.
-     * Since there's only one settings record, we can just fetch the first one.
+     *
+     * Since there is only one settings record, the first row is treated as current.
+     *
      * @return AiStudioSetting
      */
     public function current(): AiStudioSetting

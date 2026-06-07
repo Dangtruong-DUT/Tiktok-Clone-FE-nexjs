@@ -14,6 +14,8 @@ class VerifyEmailTokenRepository extends BaseRepository
 
     /**
      * Delete verify email tokens by user ID.
+     *
+     * @param  int  $userId
      * @return int Number of deleted rows
      */
     public function deleteByUserId(int $userId): int
@@ -23,6 +25,9 @@ class VerifyEmailTokenRepository extends BaseRepository
 
     /**
      * Find a verify email token by token hash
+     *
+     * @param  string  $tokenHash
+     * @return EmailVerifyToken|null
      */
     public function findByTokenHash(string $tokenHash): ?EmailVerifyToken
     {

@@ -21,6 +21,16 @@ class AuthService
 {
     use HasAuthUser;
 
+    /**
+     * Create a new service instance.
+     *
+     * @param  UserRepository  $userRepository
+     * @param  RefreshTokenRepository  $refreshTokenRepository
+     * @param  ForgotPasswordTokenRepository  $forgotPasswordTokenRepository
+     * @param  VerifyEmailTokenRepository  $verifyEmailTokenRepository
+     * @param  AuthTokenService  $tokenService
+     * @param  NotificationService  $notificationService
+     */
     public function __construct(
         private readonly UserRepository $userRepository,
         private readonly RefreshTokenRepository $refreshTokenRepository,

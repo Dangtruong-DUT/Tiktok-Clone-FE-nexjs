@@ -22,7 +22,6 @@ services:
       php-fpm:
         condition: service_healthy
 
-
   php-fpm:
     container_name: ${CONTAINER_PREFIX:-snapi}_php-fpm
     build:
@@ -163,26 +162,6 @@ services:
       timeout: 5s
       retries: 3
 
-  frontend:
-    container_name: ${CONTAINER_PREFIX:-snapi}_frontend
-    build:
-      context: .
-      dockerfile: ./.docker/development/frontend/Dockerfile
-    restart: unless-stopped
-    env_file:
-      - ${FRONTEND_ENV_FILE:-./frontend/.env}
-    environment:
-      NEXT_APP_ENV: ${NEXT_APP_ENV:-development}
-      CHOKIDAR_USEPOLLING: "true"
-      WATCHPACK_POLLING: "true"
-    volumes:
-      - ./frontend:/app
-      - frontend_node_modules:/app/node_modules
-    expose:
-      - "3000"
-    networks:
-      - app-development
-
   mailcatcher:
     image: dockage/mailcatcher:0.7.1
     container_name: ${CONTAINER_PREFIX:-snapi}_mailcatcher
@@ -316,6 +295,5 @@ networks:
 
 volumes:
   postgres-data-development:
-  frontend_node_modules:
   minio-data-development:
   kafka-data-development:

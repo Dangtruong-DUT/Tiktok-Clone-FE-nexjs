@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\Ai\AiCopilotIntentEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -33,11 +32,9 @@ class AiPromptTemplate extends Model
         ];
     }
 
-    public static function forIntent(string|AiCopilotIntentEnum $intent): ?self
+    public static function forIntent(string $intent): ?self
     {
-        $value = $intent instanceof AiCopilotIntentEnum ? $intent->value : $intent;
-
-        return self::where('intent', $value)->where('is_active', true)->first();
+        return self::where('intent', $intent)->where('is_active', true)->first();
     }
 
     public function createdBy(): BelongsTo

@@ -33,6 +33,9 @@ class HashtagRepository extends BaseRepository
 
     /**
      * Create multiple hashtags.
+     *
+     * @param  array<int, array<string, mixed>>  $data
+     * @return array<int, Hashtag>
      */
     public function createMany(array $data): array
     {

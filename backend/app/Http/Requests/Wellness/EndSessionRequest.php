@@ -2,22 +2,15 @@
 
 namespace App\Http\Requests\Wellness;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class EndSessionRequest extends FormRequest
+class EndSessionRequest extends BaseRequest
 {
-    public function authorize(): bool { return true; }
-
     /** @return array<string,mixed> */
     public function rules(): array
     {
-        return [
-            'duration_seconds' => ['required', 'integer', 'min:0'],
-        ];
-    }
-
-    public function durationSeconds(): int
-    {
-        return (int) $this->input('duration_seconds');
+        return $this->applyBaseRules([
+            'duration_seconds' => [self::REQUIRED, self::INTEGER, self::MIN . ':0'],
+        ]);
     }
 }

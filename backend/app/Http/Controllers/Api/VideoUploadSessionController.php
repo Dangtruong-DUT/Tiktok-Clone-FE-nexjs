@@ -11,19 +11,26 @@ use App\Http\Requests\Upload\InitUploadSessionRequest;
 use App\Http\Resources\Api\Upload\VideoUploadSessionResource;
 use App\Http\Resources\Api\Upload\VideoUploadStatusResource;
 use App\Http\Response\ApiResponse;
-use App\Models\VideoUploadSession;
 use App\Services\Upload\VideoUploadService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
 class VideoUploadSessionController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @param  VideoUploadService  $uploadService
+     */
     public function __construct(
         private readonly VideoUploadService $uploadService,
     ) {}
 
     /**
      * Initialize a new upload session and return presigned upload credentials.
+     *
+     * @param  InitUploadSessionRequest  $request
+     * @return JsonResponse
      */
     public function init(InitUploadSessionRequest $request): JsonResponse
     {
@@ -43,18 +50,15 @@ class VideoUploadSessionController extends Controller
     /**
      * Generate a presigned URL for uploading a single part of a multipart upload.
      *
+     * @param  string  $session
+     * @param  int  $partNumber
+     * @return JsonResponse
      * @throws ForbiddenException
      * @throws BusinessException
      */
-    public function getPartUrl(VideoUploadSession $session, int $partNumber): JsonResponse
+    public function getPartUrl(string $session, int $partNumber): JsonResponse
     {
-        $this->authorizeSession($session);
-
-        if ($session->upload_type !== UploadTypeEnum::MULTIPART) {
-            throw new BusinessException('This session is not a multipart upload.');
-        }
-
-        $part = $this->uploadService->getPartUrl($session, $partNumber);
+        $part = $this->uploadService->getPartUrlByUuid($session, (int) auth_user_id(), $partNumber);
 
         return ApiResponse::success([
             'presigned_url' => $part->url,
@@ -65,13 +69,18 @@ class VideoUploadSessionController extends Controller
     /**
      * Complete an upload session, verify the object on storage, and queue processing.
      *
+     * @param  CompleteUploadSessionRequest  $request
+     * @param  string  $session
+     * @return JsonResponse
      * @throws ForbiddenException
      */
-    public function complete(CompleteUploadSessionRequest $request, VideoUploadSession $session): JsonResponse
+    public function complete(CompleteUploadSessionRequest $request, string $session): JsonResponse
     {
-        $this->authorizeSession($session);
-
-        $session = $this->uploadService->completeSession($session, $request->resolvedParts());
+        $session = $this->uploadService->completeSessionByUuid(
+            $session,
+            (int) auth_user_id(),
+            $request->validated(),
+        );
 
         return ApiResponse::success(
             new VideoUploadStatusResource($session),
@@ -82,36 +91,30 @@ class VideoUploadSessionController extends Controller
     /**
      * Return the current status and encoding progress of an upload session.
      *
+     * @param  string  $session
+     * @return JsonResponse
      * @throws ForbiddenException
      */
-    public function status(VideoUploadSession $session): JsonResponse
+    public function status(string $session): JsonResponse
     {
-        $this->authorizeSession($session);
-
-        return ApiResponse::success(new VideoUploadStatusResource($session));
+        return ApiResponse::success(
+            new VideoUploadStatusResource(
+                $this->uploadService->getOwnedSessionByUuid($session, (int) auth_user_id())
+            )
+        );
     }
 
     /**
      * Abort an upload session, cleaning up any stored objects and encoding jobs.
      *
+     * @param  string  $session
+     * @return Response
      * @throws ForbiddenException
      */
-    public function abort(VideoUploadSession $session): Response
+    public function abort(string $session): Response
     {
-        $this->authorizeSession($session);
-
-        $this->uploadService->abortSession($session);
+        $this->uploadService->abortSessionByUuid($session, (int) auth_user_id());
 
         return ApiResponse::noContent();
-    }
-
-    /**
-     * @throws ForbiddenException
-     */
-    private function authorizeSession(VideoUploadSession $session): void
-    {
-        if (! $session->isOwnedBy(auth_user_id())) {
-            throw new ForbiddenException('You do not have permission to access this upload session.');
-        }
     }
 }

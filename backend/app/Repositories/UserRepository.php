@@ -4,12 +4,12 @@ namespace App\Repositories;
 
 use App\Enums\Post\PostTypeEnum;
 use App\Enums\User\RoleTypeEnum;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class UserRepository extends BaseRepository
 {
@@ -193,7 +193,7 @@ class UserRepository extends BaseRepository
      */
     public function getIndicatorsByUserIdAndDateRange(int $userId, string $fromDate, string $toDate): Collection
     {
-        return DB::table('posts')
+        return Post::query()
             ->where('user_id', $userId)
             ->selectRaw('DATE(created_at) as date')
             ->selectRaw('COALESCE(SUM(likes_count), 0) as likes_count')

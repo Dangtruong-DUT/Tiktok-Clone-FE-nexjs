@@ -2,132 +2,63 @@
 
 return [
 
-    /*
-    |--------------------------------------------------------------------------
-    | Intent keyword rules (English)
-    |--------------------------------------------------------------------------
-    | Used by AiCopilotIntentDetector::detectByKeyword() to match user messages.
-    | Add new keywords here — no code changes required.
-    */
-    'intent_keywords' => [
-        'query_user_stats' => [
-            'my account', 'my stats', 'my profile', 'account info', 'account stats',
-            'how many followers', 'my followers', 'my following',
-            'my total views', 'my total likes', 'show my profile',
-            'my appeal', 'appeal status', 'my appeals',
-            'who am i', 'my username', 'my email', 'my avatar',
-            'my post count', 'total posts', 'scheduled posts count',
+    'large_video_notice' => 'Your video is quite large. For a better analysis, describe what the video is about or choose the segment you want to focus on.',
+
+    'routes' => [
+        'upload' => [
+            'label'       => 'Upload new video',
+            'description' => 'Upload and edit your next video',
         ],
-        'admin_query_appeals' => [
-            'pending appeals', 'appeal list', 'show appeals', 'review appeals',
+        'scheduled_posts' => [
+            'label'       => 'Scheduled posts',
+            'description' => 'View and manage scheduled posts',
         ],
-        'admin_query_ai_metrics' => [
-            'ai costs today', 'ai costs', 'ai spending', 'ai usage',
-            'how many tokens', 'token usage', 'tokens used', 'ai bill',
-            'ai metrics detail', 'ai usage detail', 'copilot usage',
-            'top intent', 'top user ai',
+        'content' => [
+            'label'       => 'Content manager',
+            'description' => 'View all of your posts',
         ],
-        'admin_query_encoding' => [
-            'encoding errors', 'encoding queue', 'encoding failures',
-            'encoding status', 'video encoding errors',
+        'wellness' => [
+            'label'       => 'Wellness & Screen Time',
+            'description' => 'Track usage time and set healthy limits',
         ],
-        'admin_query_stats' => [
-            'system stats', 'admin stats', 'platform stats',
-            'total users', 'how many users', 'new users today',
-            'total posts on platform', 'platform metrics',
-            'system report', 'platform report', 'dashboard stats',
-            'active users', 'sign ups today', 'overall stats',
-            'system user stats',
+        'settings' => [
+            'label'       => 'Account settings',
+            'description' => 'Edit profile, password, and security preferences',
         ],
-        'query_post_stats' => [
-            'my posts', 'my videos', 'how many posts', 'post count',
-            'my recent posts', 'post stats', 'post performance',
-            'best performing post', 'most viewed post', 'failed posts',
-            'draft posts', 'pending posts', 'post status',
-            'today posts', 'scheduled posts', 'my content',
-            'show my posts', 'list my videos',
+        'appeals' => [
+            'label'       => 'Moderation appeals',
+            'description' => 'Submit and track moderation appeals',
         ],
-        'query_notifications' => [
-            'notification', 'notifications today', 'unread notifications',
-            'notifications', 'unread',
+        'admin' => [
+            'label'       => 'Admin Dashboard',
+            'description' => 'Open the system administration dashboard',
         ],
-        'query_screen_time' => [
-            'screen time', 'watch history', 'time spent', 'usage time',
-            'my screen time', 'my usage stats', 'how long have i been',
-            'wellness stats',
+        'home' => [
+            'label'       => 'Snapi Studio overview',
+            'description' => 'Open your Snapi Studio dashboard',
         ],
-        'schedule_post' => [
-            'schedule post', 'when to post', 'best time to post',
-            'post tomorrow', 'post next week', 'set schedule',
-            'post at what time', 'optimal posting time',
-            'schedule for later', 'plan my post',
-        ],
-        'write_caption' => [
-            'write caption', 'create caption', 'caption ideas',
-            'write post content', 'write post', 'help me write',
-            'content for my video', 'suggest a caption',
-            'write my post', 'post text',
-        ],
-        'write_title' => [
-            'write title', 'video title', 'title ideas',
-        ],
-        'write_description' => [
-            'describe', 'write description', 'write a description',
-        ],
-        'generate_hashtags' => [
-            'hashtags', 'tags', 'create hashtags',
-            'suggest hashtags', 'which hashtags to use',
-            'trending tags', 'relevant hashtags',
-            'popular hashtags', 'add hashtags',
-        ],
-        'rewrite_content' => [
-            'rewrite', 'make it better', 'improve',
-            'enhance this', 'optimize content', 'revise',
-            'edit my post', 'rework this', 'fix my content', 'upgrade',
-        ],
-        'analyze_video' => [
-            'analyze this video', 'review my video', 'evaluate video',
-            'is this video good', 'should i post this',
-            'video quality', 'check my video', 'rate my video',
-            'give feedback on video', 'critique my video',
-        ],
-        'analyze_viral' => [
-            'can this go viral', 'trending potential', 'viral potential',
-            'will this trend', 'virality score', 'viral assessment',
-            'is this trending', 'will people share this',
-        ],
-        'analyze_hook' => [
-            'hook quality', 'opening seconds', 'first 3 seconds',
-            'intro analysis', 'opening hook', 'is hook good',
-            'analyze intro', 'video start',
-        ],
-        'analyze_retention' => [
-            'retention rate', 'do viewers watch to the end',
-            'drop off point', 'audience retention', 'viewer engagement',
-        ],
-        'suggest_cta' => [
-            'write cta', 'suggest cta', 'create cta', 'generate cta',
-            'call to action ideas', 'write a call to action', 'cta suggestions',
-        ],
-        'analyze_cta' => [
-            'analyze cta', 'evaluate cta', 'cta effectiveness',
-            'call to action analysis', 'is my cta good', 'review my cta',
-        ],
-        'analyze_audience' => [
-            'audience', 'target', 'demographics',
-        ],
-        'navigate_to' => [
-            'navigate to', 'go to', 'take me to', 'open page',
-            'where is', 'how to get to', 'link to',
-            'find the page', 'go to settings', 'open dashboard',
-        ],
-        'query_app_info' => [
-            'how to use snapi', 'what is snapi', 'snapi features',
-            'how does snapi work', 'what can snapi do', 'snapi app features',
-            'community guidelines', 'terms of service', 'policy',
-            'what is ai copilot', 'what is wellness', 'studio features',
-            'getting started with snapi', 'learn about snapi',
-        ],
+    ],
+
+    'messages' => [
+        'clarification' => 'I am not fully sure what you need. Do you want to create content, view statistics, ask for guidance, or analyze a video?',
+        'navigation_all' => 'Here are all available Snapi Studio pages:',
+        'navigation_matched' => 'I found a page that matches your request:',
+        'analytics_clarification' => 'Which statistics would you like to see? For example: posts, users, AI, appeals, or system health.',
+        'analytics_empty' => 'I could not find matching data for that request. Could you ask a bit more specifically?',
+        'app_knowledge_fallback' => <<<'MD'
+## Snapi Studio — Feature Guide
+
+Snapi Studio is a short-form video creation platform.
+
+### Key Features
+- **Upload video**: Upload, edit thumbnail, captions, hashtags, schedule, or publish immediately
+- **AI Copilot**: Write captions and hashtags, analyze viral potential, hooks, and retention
+- **Analytics**: View views, likes, followers, and screen time
+- **Wellness**: Track and limit usage time
+- **Appeals**: Submit moderation decision appeals
+
+Ask me about any feature for more details!
+MD,
     ],
 
     /*
@@ -137,24 +68,33 @@ return [
     */
     'chips' => [
         'write_caption'    => ['Make it shorter', 'Generate hashtags', 'Analyze viral potential', 'Suggest CTA'],
+        'write_title'      => ['Write a caption', 'Generate hashtags', 'Write description'],
+        'write_description' => ['Write a caption', 'Generate hashtags', 'Shorten description'],
+        'rewrite_content'  => ['Make it shorter', 'Make it more engaging', 'Add CTA'],
+        'suggest_cta'      => ['Write a caption', 'Generate hashtags', 'Analyze CTA'],
+        'content_generation' => ['Write a caption', 'Generate hashtags', 'Analyze viral potential'],
         'generate_hashtags' => ['Write a caption', 'Analyze viral potential', 'Suggest CTA'],
         'analyze_viral'    => ['How to improve?', 'Write a better caption', 'Suggest CTA', 'Analyze hook'],
         'analyze_video'    => ['Analyze the hook', 'Write a caption', 'Generate hashtags', 'Analyze viral potential'],
+        'analyze_hook'     => ['Rewrite hook', 'Analyze retention', 'Write caption'],
+        'analyze_retention' => ['Improve hook', 'Analyze viral potential', 'Suggest CTA'],
+        'analyze_cta'      => ['Write new CTA', 'Write caption', 'Analyze viral potential'],
+        'analyze_audience' => ['Suggest caption', 'Analyze viral potential', 'Generate hashtags'],
+        'analyze_frame'    => ['Analyze full video', 'Write caption', 'Suggest thumbnail'],
+        'analyze_video_segment' => ['Analyze full video', 'Write caption for segment', 'Analyze viral potential'],
+        'video_review'     => ['Analyze hook', 'Analyze viral potential', 'Write caption'],
+        'analytics'        => ['View other statistics', 'Compare previous period', 'More detailed analysis'],
+        'analytics_post'   => ['Compare previous period', 'View engagement details', 'User statistics'],
+        'analytics_user_growth' => ['Post statistics', 'Compare last month', 'Top creators'],
+        'analytics_clarification' => ['Post statistics', 'User statistics', 'AI cost', 'System statistics'],
+        'analytics_empty'  => ['Post statistics', 'User statistics', 'System statistics'],
+        'navigation'       => ['Upload new video', 'View my posts', 'Account settings'],
+        'app_knowledge'    => ['How to upload video', 'What can AI Copilot do?', 'Go to settings'],
+        'large_video_notice' => ['Describe my video', 'Select a segment', 'Analyze the hook'],
+        'clarification'    => ['Write caption', 'View statistics', 'Ask guide', 'Analyze video'],
         'schedule_post'    => ['Write a caption', 'Generate hashtags', 'Analyze viral potential'],
         'error'            => ['Try again', 'Ask something else'],
         'default'          => ['Write a caption', 'Generate hashtags', 'Analyze viral potential', 'Analyze hook'],
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Admin-only intents
-    |--------------------------------------------------------------------------
-    */
-    'admin_only_intents' => [
-        'admin_query_stats',
-        'admin_query_appeals',
-        'admin_query_ai_metrics',
-        'admin_query_encoding',
     ],
 
 ];

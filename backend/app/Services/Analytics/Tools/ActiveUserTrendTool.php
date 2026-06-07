@@ -1,0 +1,82 @@
+<?php
+
+namespace App\Services\Analytics\Tools;
+
+use Illuminate\Support\Facades\DB;
+
+/**
+ * Daily and weekly active users trend for the platform.
+ */
+class ActiveUserTrendTool extends AbstractAnalyticsTool
+{
+    /**
+     * @return string
+     */
+    public function name(): string
+    {
+        return 'get_active_user_trend';
+    }
+
+    /**
+     * @return bool
+     */
+    public function adminOnly(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @param  array<string,mixed>  $params
+     * @param  int|null  $userId
+     * @param  bool      $isAdmin
+     * @return array{tool: string, period: string, data: array<string,mixed>, compare: array<string,mixed>|null, change_pct: float|null}
+     */
+    public function run(array $params, ?int $userId, bool $isAdmin): array
+    {
+        $range = $this->resolveDateRange($params['period']);
+
+        $dauSeries = $this->buildDailySeries($range['from'], $range['to']);
+
+        $rows = DB::table('sessions')
+            ->whereBetween('last_activity', [$range['from']->timestamp, $range['to']->timestamp])
+            ->selectRaw('DATE(FROM_UNIXTIME(last_activity)) as date, COUNT(DISTINCT user_id) as cnt')
+            ->whereNotNull('user_id')
+            ->groupByRaw('DATE(FROM_UNIXTIME(last_activity))')
+            ->pluck('cnt', 'date')
+            ->toArray();
+
+        foreach ($rows as $date => $cnt) {
+            if (isset($dauSeries[$date])) {
+                $dauSeries[$date] = (int) $cnt;
+            }
+        }
+
+        $data = ['dau_series' => $dauSeries];
+
+        $compare   = null;
+        $changePct = null;
+
+        if (isset($params['compare_with'])) {
+            $cr       = $this->resolveDateRange($params['compare_with']);
+            $prevAvg  = DB::table('sessions')
+                ->whereBetween('last_activity', [$cr['from']->timestamp, $cr['to']->timestamp])
+                ->whereNotNull('user_id')
+                ->selectRaw('DATE(FROM_UNIXTIME(last_activity)) as date, COUNT(DISTINCT user_id) as cnt')
+                ->groupByRaw('DATE(FROM_UNIXTIME(last_activity))')
+                ->pluck('cnt')
+                ->avg();
+
+            $currAvg = count($dauSeries) > 0 ? array_sum($dauSeries) / count($dauSeries) : 0;
+            $compare  = ['avg_dau' => round((float) $prevAvg, 1)];
+            $changePct = $this->changePercent($currAvg, (float) $prevAvg);
+        }
+
+        return [
+            'tool'       => $this->name(),
+            'period'     => $params['period'],
+            'data'       => $data,
+            'compare'    => $compare,
+            'change_pct' => $changePct,
+        ];
+    }
+}

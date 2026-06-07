@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\Admin\ActivityTypeEnum;
+use App\Exceptions\http\BusinessException;
 use App\Models\ActivityLog;
 use App\Models\ScreenTimeSession;
 use App\Repositories\ScreenTimeSessionRepository;
@@ -12,69 +13,184 @@ use Illuminate\Support\Str;
 
 class ScreenTimeTrackingService
 {
+    /**
+     * Create a new service instance.
+     *
+     * @param  ScreenTimeSessionRepository  $repository
+     */
     public function __construct(
         private readonly ScreenTimeSessionRepository $repository,
     ) {}
 
+    /**
+     * Start a new screen-time session for the user.
+     *
+     * @param  int  $userId
+     * @return ScreenTimeSession
+     */
     public function startSession(int $userId): ScreenTimeSession
     {
-        $active = $this->repository->findActiveForUser($userId);
+        return DB::transaction(function () use ($userId): ScreenTimeSession {
+            // Lock all of this user's open sessions to prevent concurrent race conditions.
+            ScreenTimeSession::where('user_id', $userId)
+                ->whereNull('ended_at')
+                ->lockForUpdate()
+                ->get();
 
-        // Return the existing session if it was created very recently.
-        // This makes the endpoint idempotent against React StrictMode double-invoke
-        // and rapid re-mounts that would otherwise create back-to-back sessions.
-        if ($active && $active->started_at->diffInSeconds(now()) < 120) {
-            return $active;
-        }
+            $active = $this->repository->findActiveForUser($userId);
 
-        if ($active) {
-            $elapsed = max(0, now()->timestamp - $active->started_at->timestamp);
-            $this->repository->update($active->id, [
-                'ended_at'         => now(),
-                'duration_seconds' => $elapsed,
+            // Return the existing session if it was created very recently.
+            // This makes the endpoint idempotent against React StrictMode double-invoke
+            // and rapid re-mounts that would otherwise create back-to-back sessions.
+            if ($active && $active->started_at->diffInSeconds(now()) < 120) {
+                return $active;
+            }
+
+            if ($active) {
+                $elapsed = max(0, now()->timestamp - $active->started_at->timestamp);
+                $this->repository->update($active->id, [
+                    'ended_at'         => now(),
+                    'duration_seconds' => $elapsed,
+                ]);
+            }
+
+            /** @var ScreenTimeSession */
+            return $this->repository->create([
+                'uuid'              => (string) Str::uuid(),
+                'user_id'           => $userId,
+                'started_at'        => now(),
+                'last_heartbeat_at' => now(),
             ]);
-        }
-
-        /** @var ScreenTimeSession */
-        return $this->repository->create([
-            'uuid'              => (string) Str::uuid(),
-            'user_id'           => $userId,
-            'started_at'        => now(),
-            'last_heartbeat_at' => now(),
-        ]);
+        });
     }
 
+    /**
+     * Refresh the heartbeat timestamp for an active session.
+     *
+     * @param  ScreenTimeSession  $session
+     * @return ScreenTimeSession
+     */
     public function heartbeat(ScreenTimeSession $session): ScreenTimeSession
     {
+        if ($session->ended_at !== null) {
+            throw new BusinessException('Session has already ended.');
+        }
+
         /** @var ScreenTimeSession */
         return $this->repository->update($session->id, [
             'last_heartbeat_at' => now(),
-        ]);
-    }
-
-    public function updateVideoTime(ScreenTimeSession $session, int $seconds): ScreenTimeSession
-    {
-        /** @var ScreenTimeSession */
-        return $this->repository->update($session->id, [
-            'video_seconds' => max($session->video_seconds, $seconds),
-        ]);
-    }
-
-    public function endSession(ScreenTimeSession $session, int $durationSeconds): ScreenTimeSession
-    {
-        /** @var ScreenTimeSession */
-        return $this->repository->update($session->id, [
-            'ended_at'         => now(),
-            'duration_seconds' => $durationSeconds,
         ]);
     }
 
     /**
-     * @param  'today'|'week'|'month'  $period
+     * Retrieve a screen-time session by UUID for the given user.
+     *
+     * @param  string  $uuid
+     * @param  int  $userId
+     * @return ScreenTimeSession
+     */
+    public function getSessionByUuidForUser(string $uuid, int $userId): ScreenTimeSession
+    {
+        return $this->repository->findByUuidAndUserOrFail($uuid, $userId);
+    }
+
+    /**
+     * Refresh the heartbeat timestamp for a session identified by UUID.
+     *
+     * @param  string  $uuid
+     * @param  int  $userId
+     * @return ScreenTimeSession
+     */
+    public function heartbeatByUuid(string $uuid, int $userId): ScreenTimeSession
+    {
+        return $this->heartbeat($this->getSessionByUuidForUser($uuid, $userId));
+    }
+
+    /**
+     * Update the watched video seconds for a session.
+     *
+     * @param  ScreenTimeSession  $session
+     * @param  int  $seconds
+     * @return ScreenTimeSession
+     */
+    public function updateVideoTime(ScreenTimeSession $session, int $seconds): ScreenTimeSession
+    {
+        if ($session->ended_at !== null) {
+            throw new BusinessException('Session has already ended.');
+        }
+
+        // Cap video_seconds at the session's elapsed wall-clock time to prevent
+        // clients from inflating watch-time stats.
+        $maxSeconds = max(0, now()->diffInSeconds($session->started_at));
+
+        /** @var ScreenTimeSession */
+        return $this->repository->update($session->id, [
+            'video_seconds' => min(max($session->video_seconds, $seconds), $maxSeconds),
+        ]);
+    }
+
+    /**
+     * Update the watched video seconds for a session identified by UUID.
+     *
+     * @param  string  $uuid
+     * @param  int  $userId
+     * @param  int  $seconds
+     * @return ScreenTimeSession
+     */
+    public function updateVideoTimeByUuid(string $uuid, int $userId, int $seconds): ScreenTimeSession
+    {
+        return $this->updateVideoTime($this->getSessionByUuidForUser($uuid, $userId), $seconds);
+    }
+
+    /**
+     * End a screen-time session.
+     *
+     * @param  ScreenTimeSession  $session
+     * @param  int  $durationSeconds
+     * @return ScreenTimeSession
+     */
+    public function endSession(ScreenTimeSession $session, int $durationSeconds): ScreenTimeSession
+    {
+        if ($session->ended_at !== null) {
+            return $session;
+        }
+
+        // Cap client-provided duration at actual server-side elapsed time to prevent
+        // clients from submitting inflated durations.
+        $serverElapsed = max(0, now()->diffInSeconds($session->started_at));
+        $safeDuration  = min($durationSeconds, $serverElapsed);
+
+        /** @var ScreenTimeSession */
+        return $this->repository->update($session->id, [
+            'ended_at'         => now(),
+            'duration_seconds' => $safeDuration,
+        ]);
+    }
+
+    /**
+     * End a screen-time session identified by UUID.
+     *
+     * @param  string  $uuid
+     * @param  int  $userId
+     * @param  int  $durationSeconds
+     * @return ScreenTimeSession
+     */
+    public function endSessionByUuid(string $uuid, int $userId, int $durationSeconds): ScreenTimeSession
+    {
+        return $this->endSession($this->getSessionByUuidForUser($uuid, $userId), $durationSeconds);
+    }
+
+    /**
+     * Get aggregated screen-time statistics for a user.
+     *
+     * @param  int  $userId
+     * @param  string|null  $period
      * @return array<string,mixed>
      */
-    public function getStats(int $userId, string $period = 'today'): array
+    public function getStats(int $userId, ?string $period = null): array
     {
+        $period ??= 'today';
+
         [$from, $days] = match ($period) {
             'week'  => [now()->subWeek(),  7],
             'month' => [now()->subMonth(), 30],
@@ -87,21 +203,23 @@ class ScreenTimeTrackingService
         $videoSeconds = $this->repository->sumVideoSecondsInRange($userId, $from, $to);
         $sessions     = $this->repository->countInRange($userId, $from, $to);
 
-        // Interaction counts from activity_logs (existing data)
-        $comments = ActivityLog::where('user_id', $userId)
-            ->where('activity_type', ActivityTypeEnum::COMMENT_CREATED->value)
-            ->where('created_at', '>=', $from)
-            ->count();
+        // Interaction counts from activity_logs — single query grouped by type.
+        $activityTypes = [
+            ActivityTypeEnum::COMMENT_CREATED->value,
+            ActivityTypeEnum::POST_UPLOADED->value,
+            ActivityTypeEnum::POST_LIKED->value,
+        ];
 
-        $posts = ActivityLog::where('user_id', $userId)
-            ->where('activity_type', ActivityTypeEnum::POST_UPLOADED->value)
+        $activityCounts = ActivityLog::where('user_id', $userId)
+            ->whereIn('activity_type', $activityTypes)
             ->where('created_at', '>=', $from)
-            ->count();
+            ->selectRaw('activity_type, COUNT(*) as cnt')
+            ->groupBy('activity_type')
+            ->pluck('cnt', 'activity_type');
 
-        $likes = ActivityLog::where('user_id', $userId)
-            ->where('activity_type', ActivityTypeEnum::POST_LIKED->value)
-            ->where('created_at', '>=', $from)
-            ->count();
+        $comments = (int) ($activityCounts[ActivityTypeEnum::COMMENT_CREATED->value] ?? 0);
+        $posts    = (int) ($activityCounts[ActivityTypeEnum::POST_UPLOADED->value]   ?? 0);
+        $likes    = (int) ($activityCounts[ActivityTypeEnum::POST_LIKED->value]      ?? 0);
 
         return [
             'period'            => $period,
@@ -117,9 +235,23 @@ class ScreenTimeTrackingService
         ];
     }
 
-    /** @return array<int,array<string,mixed>> */
-    public function getHistory(int $userId, Carbon $from, Carbon $to): array
+    /**
+     * Get daily screen-time history for a user.
+     *
+     * @param  int  $userId
+     * @param  string|null  $dateFrom
+     * @param  string|null  $dateTo
+     * @return array<int,array<string,mixed>>
+     */
+    public function getHistory(int $userId, ?string $dateFrom = null, ?string $dateTo = null): array
     {
+        $from = $dateFrom
+            ? Carbon::parse($dateFrom)->startOfDay()
+            : now()->subDays(30)->startOfDay();
+        $to = $dateTo
+            ? Carbon::parse($dateTo)->endOfDay()
+            : now()->endOfDay();
+
         return $this->getDailySeries($userId, $from, $to);
     }
 

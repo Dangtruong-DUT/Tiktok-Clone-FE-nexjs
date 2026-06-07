@@ -7,6 +7,9 @@ class DocumentChunkingService
     private int $targetChars;
     private int $overlapChars;
 
+    /**
+     * Create a new service instance.
+     */
     public function __construct()
     {
         $this->targetChars  = (int) config('ai.rag.chunk_target_chars', 3000);

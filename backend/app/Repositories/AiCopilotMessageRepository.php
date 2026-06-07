@@ -15,7 +15,13 @@ class AiCopilotMessageRepository extends BaseRepository
         parent::__construct(new AiCopilotMessage());
     }
 
-    /** @return Collection<int, AiCopilotMessage> */
+    /**
+     * Get recent messages for a session, preserving chronological order.
+     *
+     * @param  int  $sessionId
+     * @param  int  $limit
+     * @return Collection<int, AiCopilotMessage>
+     */
     public function recentBySession(int $sessionId, int $limit = 10): Collection
     {
         return $this->query()
@@ -26,7 +32,13 @@ class AiCopilotMessageRepository extends BaseRepository
             ->take(-$limit);
     }
 
-    /** @return Collection<int, AiCopilotMessage> */
+    /**
+     * Get the latest messages for a session in chronological order.
+     *
+     * @param  int  $sessionId
+     * @param  int  $limit
+     * @return Collection<int, AiCopilotMessage>
+     */
     public function latestBySession(int $sessionId, int $limit = 20): Collection
     {
         return $this->query()
@@ -38,19 +50,53 @@ class AiCopilotMessageRepository extends BaseRepository
             ->values();
     }
 
+    /**
+     * Find a copilot message by UUID or fail.
+     *
+     * @param  string  $uuid
+     * @return AiCopilotMessage
+     */
     public function findByUuidOrFail(string $uuid): AiCopilotMessage
     {
         /** @var AiCopilotMessage */
         return $this->query()->where('uuid', $uuid)->firstOrFail();
     }
 
-    public function markAccepted(AiCopilotMessage $message): void
+    /**
+     * Find a message by UUID scoped to a specific session, or return null.
+     *
+     * @param  string  $uuid
+     * @param  int  $sessionId
+     * @return AiCopilotMessage|null
+     */
+    public function findByUuidAndSession(string $uuid, int $sessionId): ?AiCopilotMessage
     {
-        $message->update(['status' => 'accepted']);
+        /** @var AiCopilotMessage|null */
+        return $this->query()
+            ->where('uuid', $uuid)
+            ->where('session_id', $sessionId)
+            ->first();
     }
 
+    /**
+     * Mark a copilot message as accepted.
+     *
+     * @param  AiCopilotMessage  $message
+     * @return void
+     */
+    public function markAccepted(AiCopilotMessage $message): void
+    {
+        $this->query()->whereKey($message->id)->update(['status' => 'accepted']);
+    }
+
+    /**
+     * Mark a copilot message as rejected.
+     *
+     * @param  AiCopilotMessage  $message
+     * @return void
+     */
     public function markRejected(AiCopilotMessage $message): void
     {
-        $message->update(['status' => 'rejected']);
+        $this->query()->whereKey($message->id)->update(['status' => 'rejected']);
     }
 }

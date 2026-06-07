@@ -12,11 +12,20 @@ use Illuminate\Http\JsonResponse;
 
 class WellnessRuleController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @param  WellnessRuleService  $service
+     */
     public function __construct(
         private readonly WellnessRuleService $service,
     ) {}
 
-    /** List all wellness rules for the authenticated user. */
+    /**
+     * List all wellness rules for the authenticated user.
+     *
+     * @return JsonResponse
+     */
     public function index(): JsonResponse
     {
         $rules = $this->service->listForUser((int) auth_user_id());
@@ -27,7 +36,12 @@ class WellnessRuleController extends Controller
         );
     }
 
-    /** Create a new wellness rule. */
+    /**
+     * Create a new wellness rule.
+     *
+     * @param  SaveWellnessRuleRequest  $request
+     * @return JsonResponse
+     */
     public function store(SaveWellnessRuleRequest $request): JsonResponse
     {
         $rule = $this->service->create((int) auth_user_id(), $request->validated());
@@ -39,7 +53,13 @@ class WellnessRuleController extends Controller
         );
     }
 
-    /** Update an existing wellness rule by UUID. */
+    /**
+     * Update an existing wellness rule by UUID.
+     *
+     * @param  SaveWellnessRuleRequest  $request
+     * @param  string  $uuid
+     * @return JsonResponse
+     */
     public function update(SaveWellnessRuleRequest $request, string $uuid): JsonResponse
     {
         $rule    = $this->service->findByUuidForUser($uuid, (int) auth_user_id());
@@ -51,7 +71,12 @@ class WellnessRuleController extends Controller
         );
     }
 
-    /** Delete a wellness rule by UUID. */
+    /**
+     * Delete a wellness rule by UUID.
+     *
+     * @param  string  $uuid
+     * @return JsonResponse
+     */
     public function destroy(string $uuid): JsonResponse
     {
         $rule = $this->service->findByUuidForUser($uuid, (int) auth_user_id());
@@ -60,10 +85,15 @@ class WellnessRuleController extends Controller
         return ApiResponse::success(data: null, message: 'Wellness rule deleted.');
     }
 
-    /** Parse a natural-language rule description into a structured preview (does not save). */
+    /**
+     * Parse a natural-language rule description into a structured preview.
+     *
+     * @param  ParseNLRuleRequest  $request
+     * @return JsonResponse
+     */
     public function parseNaturalLanguage(ParseNLRuleRequest $request): JsonResponse
     {
-        $preview = $this->service->parseNaturalLanguage($request->text());
+        $preview = $this->service->parseNaturalLanguage((string) $request->validated('text'));
 
         return ApiResponse::success(
             data:    $preview,
@@ -71,7 +101,11 @@ class WellnessRuleController extends Controller
         );
     }
 
-    /** Analyze the authenticated user's screen-time and return AI-generated wellness insights. */
+    /**
+     * Analyze the authenticated user's screen-time and return AI-generated wellness insights.
+     *
+     * @return JsonResponse
+     */
     public function analyze(): JsonResponse
     {
         $result = $this->service->analyzeUsage((int) auth_user_id());

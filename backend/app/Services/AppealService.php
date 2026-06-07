@@ -21,6 +21,13 @@ class AppealService
 {
     use HasAuthUser;
 
+    /**
+     * Create a new service instance.
+     *
+     * @param  AppealRepository  $appealRepository
+     * @param  PostRepository  $postRepository
+     * @param  UploadService  $uploadService
+     */
     public function __construct(
         private readonly AppealRepository $appealRepository,
         private readonly PostRepository $postRepository,

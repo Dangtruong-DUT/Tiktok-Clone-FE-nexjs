@@ -14,6 +14,11 @@ class NotificationService
 {
     private const EXCERPT_LIMIT = 120;
 
+    /**
+     * Create a new service instance.
+     *
+     * @param  NotificationRepository  $notificationRepository
+     */
     public function __construct(
         private readonly NotificationRepository $notificationRepository
     ) {}

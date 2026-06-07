@@ -14,7 +14,10 @@ class MediaRepository extends BaseRepository
 
     /**
      * Create or update multiple media records for a post.
+     *
      * @param  array<int, array{file_id: int, type: string}>  $mediaItems
+     * @param  int  $postId
+     * @return void
      */
     public function createMany(array $mediaItems, int $postId): void
     {

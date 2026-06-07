@@ -15,6 +15,13 @@ class WellnessRuleRepository extends BaseRepository
         parent::__construct(new WellnessRule());
     }
 
+    /**
+     * Find a wellness rule by UUID for a user or fail.
+     *
+     * @param  string  $uuid
+     * @param  int  $userId
+     * @return WellnessRule
+     */
     public function findByUuidAndUserOrFail(string $uuid, int $userId): WellnessRule
     {
         /** @var WellnessRule */
@@ -24,6 +31,12 @@ class WellnessRuleRepository extends BaseRepository
             ->firstOrFail();
     }
 
+    /**
+     * Get all wellness rules for a user.
+     *
+     * @param  int  $userId
+     * @return Collection<int, WellnessRule>
+     */
     public function getForUser(int $userId): Collection
     {
         return $this->query()
@@ -32,6 +45,12 @@ class WellnessRuleRepository extends BaseRepository
             ->get();
     }
 
+    /**
+     * Get enabled wellness rules for a user.
+     *
+     * @param  int  $userId
+     * @return Collection<int, WellnessRule>
+     */
     public function getEnabledForUser(int $userId): Collection
     {
         return $this->query()
@@ -40,6 +59,12 @@ class WellnessRuleRepository extends BaseRepository
             ->get();
     }
 
+    /**
+     * Count wellness rules for a user.
+     *
+     * @param  int  $userId
+     * @return int
+     */
     public function countForUser(int $userId): int
     {
         return $this->query()->where('user_id', $userId)->count();

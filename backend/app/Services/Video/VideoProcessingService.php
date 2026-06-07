@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Storage;
 
 class VideoProcessingService
 {
+    /**
+     * Create a new service instance.
+     *
+     * @param  FfmpegService  $ffmpegService
+     */
     public function __construct(
         private readonly FfmpegService $ffmpegService,
     ) {}

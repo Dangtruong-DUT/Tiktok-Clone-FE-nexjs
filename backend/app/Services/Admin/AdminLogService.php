@@ -10,6 +10,11 @@ use App\Repositories\AdminLogRepository;
 
 class AdminLogService
 {
+    /**
+     * Create a new service instance.
+     *
+     * @param  AdminLogRepository  $adminLogRepository
+     */
     public function __construct(
         private readonly AdminLogRepository $adminLogRepository,
     ) {}

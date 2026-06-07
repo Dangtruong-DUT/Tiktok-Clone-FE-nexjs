@@ -19,6 +19,12 @@ use Illuminate\Support\Facades\DB;
  */
 class SystemAdminService
 {
+    /**
+     * Create a new service instance.
+     *
+     * @param  AdminLogRepository  $adminLogRepository
+     * @param  ActivityLogRepository  $activityLogRepository
+     */
     public function __construct(
         private readonly AdminLogRepository $adminLogRepository,
         private readonly ActivityLogRepository $activityLogRepository,

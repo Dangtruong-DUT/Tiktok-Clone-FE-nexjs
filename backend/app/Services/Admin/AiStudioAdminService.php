@@ -11,13 +11,20 @@ use Illuminate\Support\Facades\Cache;
 class AiStudioAdminService
 {
     /**
+     * Create a new service instance.
+     */
+    public function __construct() {}
+
+    /**
      * Get aggregated copilot usage metrics for the admin dashboard.
      *
-     * @param  'today'|'week'|'month'  $period
+     * @param  string|null  $period
      * @return array<string,mixed>
      */
-    public function getMetrics(string $period = 'today'): array
+    public function getMetrics(?string $period = null): array
     {
+        $period ??= 'today';
+
         $from = match ($period) {
             'week'  => now()->subWeek(),
             'month' => now()->subMonth(),
@@ -49,6 +56,8 @@ class AiStudioAdminService
 
     /**
      * Get the current singleton AI Studio settings.
+     *
+     * @return AiStudioSetting
      */
     public function getSettings(): AiStudioSetting
     {
@@ -56,6 +65,8 @@ class AiStudioAdminService
     }
 
     /**
+     * Get the list of configurable Gemini models.
+     *
      * @return string[]
      */
     public function getAvailableModels(): array
@@ -67,6 +78,8 @@ class AiStudioAdminService
      * Update the singleton AI Studio settings.
      *
      * @param  array<string,mixed>  $data
+     * @param  int  $adminId
+     * @return AiStudioSetting
      */
     public function updateSettings(array $data, int $adminId): AiStudioSetting
     {
@@ -81,9 +94,15 @@ class AiStudioAdminService
      * Get paginated list of copilot usage logs (admin view).
      *
      * @param  array<string,mixed>  $filters
+     * @return LengthAwarePaginator<int,AiUsageLog>
      */
     public function listRequests(array $filters): LengthAwarePaginator
     {
+        $filters = array_filter(
+            $filters,
+            static fn ($value) => $value !== null && $value !== ''
+        );
+
         return AiUsageLog::with(['user:id,uuid,username,avatar_file_id', 'user.avatarFile'])
             ->when(
                 isset($filters['intent']),

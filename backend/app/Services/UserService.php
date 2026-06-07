@@ -19,6 +19,12 @@ class UserService
 {
     use HasAuthUser;
 
+    /**
+     * Create a new service instance.
+     *
+     * @param  RelationshipRepository  $relationshipRepository
+     * @param  UserRepository  $userRepository
+     */
     public function __construct(
         private readonly RelationshipRepository $relationshipRepository,
         private readonly UserRepository $userRepository

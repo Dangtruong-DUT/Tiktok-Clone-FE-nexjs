@@ -12,16 +12,25 @@ use Illuminate\Support\Facades\DB;
 
 class ScheduledPostAdminService
 {
+    /**
+     * Create a new service instance.
+     *
+     * @param  ScheduledPostRepository  $repository
+     */
     public function __construct(
         private readonly ScheduledPostRepository $repository,
     ) {}
 
     /**
-     * @param  'today'|'week'|'month'  $period
+     * Get aggregated scheduled-post metrics for the requested period.
+     *
+     * @param  string|null  $period
      * @return array<string,mixed>
      */
-    public function getMetrics(string $period = 'today'): array
+    public function getMetrics(?string $period = null): array
     {
+        $period ??= 'today';
+
         $from = match ($period) {
             'week'  => now()->subWeek(),
             'month' => now()->subMonth(),
@@ -65,7 +74,12 @@ class ScheduledPostAdminService
         ];
     }
 
-    /** @return array<string,mixed> */
+    /**
+     * Get paginated scheduled-post requests for the admin area.
+     *
+     * @param  array<string,mixed>  $filters
+     * @return LengthAwarePaginator<int,ScheduledPost>
+     */
     public function listRequests(array $filters): LengthAwarePaginator
     {
         $query = ScheduledPost::with(['user', 'post'])
@@ -94,6 +108,12 @@ class ScheduledPostAdminService
         return $query->paginate((int) ($filters['per_page'] ?? 20));
     }
 
+    /**
+     * Force-cancel a scheduled post from the admin area.
+     *
+     * @param  ScheduledPost  $scheduledPost
+     * @return ScheduledPost
+     */
     public function forceCancel(ScheduledPost $scheduledPost): ScheduledPost
     {
         if ($scheduledPost->status->isTerminal()) {
@@ -111,6 +131,12 @@ class ScheduledPostAdminService
         return $updated;
     }
 
+    /**
+     * Force-retry a failed scheduled post from the admin area.
+     *
+     * @param  ScheduledPost  $scheduledPost
+     * @return ScheduledPost
+     */
     public function forceRetry(ScheduledPost $scheduledPost): ScheduledPost
     {
         if ($scheduledPost->status !== ScheduledPostStatusEnum::FAILED) {
@@ -128,12 +154,16 @@ class ScheduledPostAdminService
         return $updated;
     }
 
+    /**
+     * Find a scheduled post by UUID for the admin area.
+     *
+     * @param  string  $uuid
+     * @return ScheduledPost
+     */
     public function findByUuid(string $uuid): ScheduledPost
     {
         return ScheduledPost::where('uuid', $uuid)->with(['user', 'post'])->firstOrFail();
     }
-
-    // ── Private helpers ──────────────────────────────────────────────────────
 
     /** @return array<int,array<string,mixed>> */
     private function dailySeries(Carbon $from): array

@@ -7,6 +7,9 @@ use RuntimeException;
 
 class GeminiEmbeddingService
 {
+    /**
+     * Create a new service instance.
+     */
     public function __construct() {}
 
     /**

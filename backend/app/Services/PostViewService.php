@@ -18,6 +18,11 @@ class PostViewService
 
     private const ANTISPAM_TTL_SECONDS = 60;
 
+    /**
+     * Create a new service instance.
+     *
+     * @param  PostRepository  $postRepository
+     */
     public function __construct(
         private readonly PostRepository $postRepository
     ) {}

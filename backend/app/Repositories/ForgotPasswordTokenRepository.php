@@ -14,6 +14,8 @@ class ForgotPasswordTokenRepository extends BaseRepository
 
     /**
      * Delete forgot password tokens by user ID.
+     *
+     * @param  int  $userId
      * @return int Number of deleted rows
      */
     public function deleteByUserId(int $userId): int
@@ -23,6 +25,9 @@ class ForgotPasswordTokenRepository extends BaseRepository
 
     /**
      * Find a forgot password token by token hash.
+     *
+     * @param  string  $tokenHash
+     * @return ForgotPasswordToken|null
      */
     public function findByTokenHash(string $tokenHash): ?ForgotPasswordToken
     {

@@ -2,65 +2,45 @@
 
 namespace App\Services\AI\Copilot;
 
-use App\Contracts\AI\GeminiClientInterface;
 use App\DTOs\AI\AiCopilotMessageInput;
 use App\DTOs\AI\AiCopilotSessionContext;
-use App\DTOs\AI\Gemini\GeminiConfig;
-use App\DTOs\AI\Gemini\GeminiRequest;
-use App\Enums\Ai\AiCopilotIntentEnum;
 use App\Enums\Ai\AiCopilotMessageRoleEnum;
 use App\Enums\User\RoleTypeEnum;
 use App\Models\AiCopilotMessage;
 use App\Models\AiCopilotSession;
-use App\Models\AiPromptTemplate;
 use App\Models\AiStudioSetting;
 use App\Models\User;
 use App\Repositories\AiCopilotMessageRepository;
 use App\Repositories\AiCopilotSessionRepository;
-use App\Repositories\AiPromptTemplateRepository;
-use App\Services\AI\Copilot\Handlers\AbstractCopilotHandler;
-use App\Services\AI\Copilot\Handlers\AdminQueryAiMetricsHandler;
-use App\Services\AI\Copilot\Handlers\AdminQueryAppealsHandler;
-use App\Services\AI\Copilot\Handlers\AdminQueryEncodingHandler;
-use App\Services\AI\Copilot\Handlers\AdminQueryStatsHandler;
-use App\Services\AI\Copilot\Handlers\CopilotHandlerInterface;
-use App\Services\AI\Copilot\Handlers\NavigateToHandler;
-use App\Services\AI\Copilot\Handlers\QueryAppInfoHandler;
-use App\Services\AI\Copilot\Handlers\QueryNotificationsHandler;
-use App\Services\AI\Copilot\Handlers\QueryPostStatsHandler;
-use App\Services\AI\Copilot\Handlers\QueryScreenTimeHandler;
-use App\Services\AI\Copilot\Handlers\QueryUserStatsHandler;
+use App\Services\AI\Copilot\Gateway\AiGateway;
+use App\Services\AI\Copilot\Orchestrator\CopilotOrchestrator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 
 class AiCopilotService
 {
+    /**
+     * Create a new service instance.
+     *
+     * @param  AiCopilotSessionRepository  $sessionRepo
+     * @param  AiCopilotMessageRepository  $messageRepo
+     * @param  AiGateway  $aiGateway
+     * @param  CopilotOrchestrator  $orchestrator
+     */
     public function __construct(
-        private readonly GeminiClientInterface      $geminiClient,
         private readonly AiCopilotSessionRepository $sessionRepo,
         private readonly AiCopilotMessageRepository $messageRepo,
-        private readonly AiPromptTemplateRepository $templateRepo,
-        private readonly AiCopilotIntentDetector    $intentDetector,
-        // Pure-handler intents — resolved directly without a Gemini call
-        private readonly QueryPostStatsHandler      $queryPostStatsHandler,
-        private readonly QueryUserStatsHandler      $queryUserStatsHandler,
-        private readonly QueryScreenTimeHandler     $queryScreenTimeHandler,
-        private readonly NavigateToHandler          $navigateToHandler,
-        private readonly QueryAppInfoHandler        $queryAppInfoHandler,
-        private readonly AdminQueryStatsHandler     $adminQueryStatsHandler,
-        private readonly AdminQueryAppealsHandler   $adminQueryAppealsHandler,
-        private readonly AdminQueryAiMetricsHandler $adminQueryAiMetricsHandler,
-        private readonly AdminQueryEncodingHandler  $adminQueryEncodingHandler,
-        private readonly QueryNotificationsHandler  $queryNotificationsHandler,
+        private readonly AiGateway                  $aiGateway,
+        private readonly CopilotOrchestrator        $orchestrator,
     ) {}
-
-    // -------------------------------------------------------------------------
-    // Session management
-    // -------------------------------------------------------------------------
 
     /**
      * Start a new copilot session or return an existing active one for the same context.
+     *
+     * @param  int  $userId
+     * @param  array<string,mixed>  $data
+     * @return AiCopilotSession
      */
     public function startSession(int $userId, array $data): AiCopilotSession
     {
@@ -97,11 +77,27 @@ class AiCopilotService
             $this->createSystemMessage($session, 'large_video_notice');
         }
 
+        $session->load(['messages' => fn ($q) => $q->orderBy('created_at')->limit(20)]);
+
         return $session;
     }
 
     /**
+     * Determine whether the copilot feature is enabled.
+     *
+     * @return bool
+     */
+    public function isEnabled(): bool
+    {
+        return (bool) AiStudioSetting::current()->copilot_enabled;
+    }
+
+    /**
      * Load a session with its most recent messages for the given user.
+     *
+     * @param  string  $uuid
+     * @param  int  $userId
+     * @return AiCopilotSession
      */
     public function getSessionWithMessages(string $uuid, int $userId): AiCopilotSession
     {
@@ -116,7 +112,24 @@ class AiCopilotService
     }
 
     /**
+     * Retrieve a copilot session by UUID and validate ownership.
+     *
+     * @param  string  $uuid
+     * @param  int  $userId
+     * @return AiCopilotSession
+     */
+    public function getOwnedSession(string $uuid, int $userId): AiCopilotSession
+    {
+        return $this->sessionRepo->findByUuidAndUserOrFail($uuid, $userId);
+    }
+
+    /**
      * Persist a user-authored message to the session.
+     *
+     * @param  AiCopilotSession  $session
+     * @param  AiCopilotMessageInput  $input
+     * @param  string  $uuid
+     * @return AiCopilotMessage
      */
     public function createUserMessage(AiCopilotSession $session, AiCopilotMessageInput $input, string $uuid): AiCopilotMessage
     {
@@ -131,7 +144,24 @@ class AiCopilotService
     }
 
     /**
+     * Find a message by UUID scoped to a session — returns null if not found.
+     * Avoids the 20-message collection limit when used from the stream endpoint.
+     *
+     * @param  string  $messageUuid
+     * @param  int  $sessionId
+     * @return AiCopilotMessage|null
+     */
+    public function getMessageInSession(string $messageUuid, int $sessionId): ?AiCopilotMessage
+    {
+        return $this->messageRepo->findByUuidAndSession($messageUuid, $sessionId);
+    }
+
+    /**
      * Load a message by UUID, aborting 403 if it does not belong to the user.
+     *
+     * @param  string  $messageUuid
+     * @param  int  $userId
+     * @return AiCopilotMessage
      */
     public function getMessageByUuidForUser(string $messageUuid, int $userId): AiCopilotMessage
     {
@@ -144,19 +174,35 @@ class AiCopilotService
 
     /**
      * Immediately expire a session (user-initiated close).
+     *
+     * @param  AiCopilotSession  $session
+     * @return void
      */
     public function expireSession(AiCopilotSession $session): void
     {
         $session->update(['expires_at' => now()]);
     }
 
-    // -------------------------------------------------------------------------
-    // Streaming
-    // -------------------------------------------------------------------------
+    /**
+     * Expire a session identified by UUID for the given user.
+     *
+     * @param  string  $uuid
+     * @param  int  $userId
+     * @return void
+     */
+    public function expireSessionByUuid(string $uuid, int $userId): void
+    {
+        $this->expireSession($this->getOwnedSession($uuid, $userId));
+    }
 
     /**
      * Generate a short-lived encrypted token authorising a specific SSE stream.
      * The token embeds session UUID, message UUID, user ID and a 2-minute expiry.
+     *
+     * @param  string  $sessionUuid
+     * @param  string  $messageUuid
+     * @param  int  $userId
+     * @return string
      */
     public function generateStreamToken(string $sessionUuid, string $messageUuid, int $userId): string
     {
@@ -171,6 +217,11 @@ class AiCopilotService
     /**
      * Validate a stream token and return the authenticated user ID, or null if invalid/expired.
      * Does NOT require a pre-known user ID — identity is derived from the token itself.
+     *
+     * @param  string  $token
+     * @param  string  $sessionUuid
+     * @param  string  $messageUuid
+     * @return int|null
      */
     public function validateStreamToken(string $token, string $sessionUuid, string $messageUuid): ?int
     {
@@ -196,7 +247,9 @@ class AiCopilotService
      * Cache large binary attachments (video clip, frames) keyed by message UUID.
      * Cached for 5 minutes — consumed once by stream() before the SSE response begins.
      *
+     * @param  string  $messageUuid
      * @param  array<string,mixed>  $attachments
+     * @return void
      */
     public function cacheAttachments(string $messageUuid, array $attachments): void
     {
@@ -206,13 +259,15 @@ class AiCopilotService
     /**
      * Stream an AI response for the given session + user message via SSE callback.
      *
-     * Uses hybrid intent detection: keyword (instant, 0-cost) vs Gemini (higher accuracy).
-     * Pure-handler intents (query_*, navigate_to, etc.) short-circuit before any Gemini call.
+     * Uses the gateway/orchestrator pipeline to route each message to the matching engine.
      *
      * @param  callable(string $chunk, bool $done, ?array $finalPayload): void  $emit
      */
     public function stream(AiCopilotSession $session, AiCopilotMessage $userMessage, callable $emit): void
     {
+        // Load setting once — reused throughout this method to avoid repeated DB queries.
+        $setting = AiStudioSetting::current();
+
         // Recover large binary attachments cached by the controller before the SSE handshake
         $cached = Cache::pull("stream_attach:{$userMessage->uuid}", []);
 
@@ -230,7 +285,8 @@ class AiCopilotService
         $contextData['current_title']    = $input->currentTitle    ?? ($contextData['current_title']    ?? null);
         $contextData['current_hashtags'] = $input->currentHashtags ?? ($contextData['current_hashtags'] ?? null);
 
-        $sessionUser = $session->user_id ? User::find($session->user_id) : null;
+        // Use the already-loaded relation if available to avoid an extra query.
+        $sessionUser = $session->relationLoaded('user') ? $session->user : ($session->user_id ? User::find($session->user_id) : null);
         $context     = new AiCopilotSessionContext(
             videoTitle:        $contextData['video_title']         ?? null,
             videoDescription:  $contextData['video_description']   ?? null,
@@ -247,223 +303,104 @@ class AiCopilotService
             userRole:          $sessionUser?->role instanceof RoleTypeEnum ? strtolower($sessionUser->role->name) : null,
         );
         $locale  = (string) ($session->session_meta['locale'] ?? $context->creatorLanguage ?? 'vi');
-        $history = AbstractCopilotHandler::buildHistory($session, $this->messageRepo, excludeMessageId: $userMessage->id);
+        $history = $this->buildHistory($session, excludeMessageId: $userMessage->id);
 
-        // Hybrid scoring: keyword detection is instant (0 cost) and returns 0.80 for matches.
-        // Gemini returns 0.0–1.0. Higher confidence wins; keyword breaks ties for reliability.
-        $keywordDetection = $this->intentDetector->detectByKeyword($input, $context->userRole);
-        try {
-            $geminiDetection = $this->intentDetector->detect(
-                userMessage:         $input->content,
-                conversationHistory: $history,
-                userRole:            $context->userRole,
-            );
-        } catch (\Throwable) {
-            $geminiDetection = null;
-        }
-
-        $detection = ($geminiDetection !== null && $geminiDetection['confidence'] > $keywordDetection['confidence'])
-            ? $geminiDetection
-            : $keywordDetection;
-        $intent    = $detection['intent'];
-
-        $template  = $this->templateRepo->findByIntent($intent->value) ?? $this->makeFallbackTemplate($intent);
         $startedAt = microtime(true);
-
-        // Short-circuit: pure-handler intents need no Gemini call — resolve directly and emit DONE
-        if ($this->isPureHandlerIntent($intent)) {
-            $handlerResult = $this->resolvePureHandler($intent)
-                ->handle($intent, $input, $context, $template, $history);
-
-            $assistantMessage = AiCopilotMessage::create([
-                'uuid'               => Str::uuid()->toString(),
-                'session_id'         => $session->id,
-                'role'               => AiCopilotMessageRoleEnum::ASSISTANT->value,
-                'content'            => $handlerResult->text,
-                'intent'             => $intent->value,
-                'intent_confidence'  => $detection['confidence'],
-                'structured_output'  => $handlerResult->structuredOutput,
-                'follow_up_chips'    => $handlerResult->followUpChips ?? $this->defaultChips($intent, $locale),
-                'token_usage'        => [],
-                'prompt_template_id' => $template?->id,
-                'provider'           => 'gemini',
-                'model'              => AiStudioSetting::current()->gemini_model,
-            ]);
-
-            \App\Models\AiUsageLog::record(
-                userId:     $session->user_id,
-                tokenUsage: [],
-                intent:     $intent->value,
-                status:     'success',
-                sessionId:  $session->id,
-                messageId:  $assistantMessage->id,
-                latencyMs:  (int) round((microtime(true) - $startedAt) * 1000),
-                provider:   'gemini',
-                model:      AiStudioSetting::current()->gemini_model ?? '',
+        $task      = $this->aiGateway->understand(
+                question:            $input->content,
+                locale:              $locale,
+                isAdmin:             $context->userRole === 'super_admin',
+                conversationHistory: $history,
             );
 
-            $emit('', true, [
-                'uuid'              => $assistantMessage->uuid,
-                'role'              => 'assistant',
-                'content'           => $handlerResult->text,
-                'status'            => 'success',
-                'intent'            => $intent->value,
-                'structured_output' => $handlerResult->structuredOutput,
-                'follow_up_chips'   => $assistantMessage->follow_up_chips,
-                'token_usage'       => [],
-            ]);
-            return;
-        }
+            // Forward mid-stream text chunks to the SSE response; ignore the engine-internal done signal.
+            $chunkEmit = static function (string $chunk, bool $done) use ($emit): void {
+                if (! $done) {
+                    $emit($chunk, false, null);
+                }
+            };
 
-        $systemPrompt = AbstractCopilotHandler::buildSystemPrompt($template, $context);
-        $userTurn     = AbstractCopilotHandler::buildUserTurn($input, $template);
-        $contents     = array_merge($history, [$userTurn]);
+            try {
+                $result = $this->orchestrator->dispatch($task, $input, $context, $history, $chunkEmit);
 
-        $accumulated = '';
-        $tokenUsage  = [];
+                $structuredOutput = $result->structuredOutput ?? [];
+                $structuredOutput['task_type'] = $task->taskType;
 
-        // Generative intents return JSON — buffer silently so the client never
-        // sees raw JSON chunks; only the finished content_card is emitted.
-        $silentStream = $intent->isGenerative();
+                $assistantMessage = AiCopilotMessage::create([
+                    'uuid'               => Str::uuid()->toString(),
+                    'session_id'         => $session->id,
+                    'role'               => AiCopilotMessageRoleEnum::ASSISTANT->value,
+                    'content'            => $result->text,
+                    'intent'             => $task->intent,
+                    'intent_confidence'  => $task->confidence,
+                    'structured_output'  => $structuredOutput,
+                    'follow_up_chips'    => $result->followUpChips ?: $this->gatewayDefaultChips($task->taskType, $locale),
+                    'token_usage'        => $result->tokenUsage,
+                    'provider'           => 'gemini',
+                    'model'              => $setting->gemini_model,
+                ]);
 
-        try {
-            $this->geminiClient->stream(
-                $this->buildGeminiRequest($systemPrompt, $contents),
-                function (string $delta, bool $done, array $usage) use (
-                    &$accumulated, &$tokenUsage, $emit, $session, $intent, $detection, $template,
-                    $silentStream, $locale, $startedAt
-                ) {
-                    if (! $done) {
-                        $accumulated .= $delta;
-                        if (! $silentStream) {
-                            $emit($delta, false, null);
-                        }
-                        return;
-                    }
+                \App\Models\AiUsageLog::record(
+                    userId:     $session->user_id,
+                    tokenUsage: $result->tokenUsage,
+                    intent:     $task->intent,
+                    status:     'success',
+                    sessionId:  $session->id,
+                    messageId:  $assistantMessage->id,
+                    latencyMs:  (int) round((microtime(true) - $startedAt) * 1000),
+                    provider:   'gemini',
+                    model:      $setting->gemini_model ?? '',
+                );
 
-                    $tokenUsage       = $usage;
-                    $structuredOutput = null;
-                    $displayContent   = $accumulated;
+                $emit('', true, [
+                    'uuid'              => $assistantMessage->uuid,
+                    'role'              => 'assistant',
+                    'content'           => $result->text,
+                    'status'            => 'success',
+                    'intent'            => $task->intent,
+                    'task_type'         => $task->taskType,
+                    'structured_output' => $structuredOutput,
+                    'follow_up_chips'   => $assistantMessage->follow_up_chips,
+                    'token_usage'       => $result->tokenUsage,
+                ]);
+            } catch (\Throwable $e) {
+                $errorText    = $this->friendlyError($e);
+                $errorMessage = AiCopilotMessage::create([
+                    'uuid'          => Str::uuid()->toString(),
+                    'session_id'    => $session->id,
+                    'role'          => AiCopilotMessageRoleEnum::ASSISTANT->value,
+                    'content'       => $errorText,
+                    'intent'        => $task->intent,
+                    'provider'      => 'gemini',
+                    'status'        => 'failed',
+                    'error_message' => $e->getMessage(),
+                ]);
 
-                    // Parse JSON for generative intents and build a content_card
-                    if ($silentStream) {
-                        $clean = AbstractCopilotHandler::cleanJsonResponse($accumulated);
-                        $data  = json_decode($clean, true) ?? [];
+                \App\Models\AiUsageLog::record(
+                    userId:     $session->user_id,
+                    tokenUsage: [],
+                    intent:     $task->intent,
+                    status:     'failed',
+                    sessionId:  $session->id,
+                    messageId:  $errorMessage->id,
+                    latencyMs:  (int) round((microtime(true) - $startedAt) * 1000),
+                    provider:   'gemini',
+                    model:      $setting->gemini_model ?? '',
+                );
 
-                        if (! empty($data['variants'])) {
-                            $structuredOutput = [
-                                'type'         => 'content_card',
-                                'target_field' => $intent->targetFormField() ?? 'content',
-                                'variants'     => $data['variants'],
-                                'hashtags'     => $data['hashtags'] ?? [],
-                                'confidence'   => (float) ($data['confidence'] ?? 0.85),
-                            ];
-                            $displayContent = $data['variants'][0]['value'] ?? $accumulated;
-                        } elseif (! empty($data['caption']) || ! empty($data['text']) || ! empty($data['content'])) {
-                            $text = $data['caption'] ?? $data['text'] ?? $data['content'] ?? '';
-                            $structuredOutput = [
-                                'type'         => 'content_card',
-                                'target_field' => $intent->targetFormField() ?? 'content',
-                                'variants'     => [['label' => 'Gợi ý', 'value' => $text]],
-                                'hashtags'     => $data['hashtags'] ?? [],
-                                'confidence'   => (float) ($data['confidence'] ?? 0.85),
-                            ];
-                            $displayContent = $text;
-                        } elseif (! empty($data['hashtags'])) {
-                            $structuredOutput = [
-                                'type'         => 'content_card',
-                                'target_field' => 'hashtags',
-                                'variants'     => [['label' => 'Hashtags', 'value' => implode(' ', $data['hashtags'])]],
-                                'hashtags'     => $data['hashtags'],
-                                'confidence'   => (float) ($data['confidence'] ?? 0.85),
-                            ];
-                            $displayContent = implode(' ', $data['hashtags']);
-                        }
-                    }
-
-                    $assistantMessage = AiCopilotMessage::create([
-                        'uuid'               => Str::uuid()->toString(),
-                        'session_id'         => $session->id,
-                        'role'               => AiCopilotMessageRoleEnum::ASSISTANT->value,
-                        'content'            => $displayContent,
-                        'intent'             => $intent->value,
-                        'intent_confidence'  => $detection['confidence'],
-                        'structured_output'  => $structuredOutput,
-                        'token_usage'        => $tokenUsage,
-                        'prompt_template_id' => $template?->id,
-                        'provider'           => 'gemini',
-                        'model'              => AiStudioSetting::current()->gemini_model,
-                        'follow_up_chips'    => $this->defaultChips($intent, $locale),
-                    ]);
-
-                    \App\Models\AiUsageLog::record(
-                        userId:     $session->user_id,
-                        tokenUsage: $tokenUsage,
-                        intent:     $intent->value,
-                        status:     'success',
-                        sessionId:  $session->id,
-                        messageId:  $assistantMessage->id,
-                        latencyMs:  (int) round((microtime(true) - $startedAt) * 1000),
-                        provider:   'gemini',
-                        model:      AiStudioSetting::current()->gemini_model ?? '',
-                    );
-
-                    $emit('', true, [
-                        'uuid'              => $assistantMessage->uuid,
-                        'role'              => 'assistant',
-                        'content'           => $displayContent,
-                        'status'            => 'success',
-                        'intent'            => $intent->value,
-                        'structured_output' => $structuredOutput,
-                        'follow_up_chips'   => $assistantMessage->follow_up_chips,
-                        'token_usage'       => $tokenUsage,
-                    ]);
-                },
-            );
-        } catch (\Throwable $e) {
-            $errorText = $this->friendlyError($e);
-
-            $emit($errorText, false, null);
-
-            $errorMessage = AiCopilotMessage::create([
-                'uuid'          => Str::uuid()->toString(),
-                'session_id'    => $session->id,
-                'role'          => AiCopilotMessageRoleEnum::ASSISTANT->value,
-                'content'       => $errorText,
-                'intent'        => $intent->value,
-                'provider'      => 'gemini',
-                'status'        => 'failed',
-                'error_message' => $e->getMessage(),
-            ]);
-
-            \App\Models\AiUsageLog::record(
-                userId:     $session->user_id,
-                tokenUsage: $tokenUsage,
-                intent:     $intent->value,
-                status:     'failed',
-                sessionId:  $session->id,
-                messageId:  $errorMessage->id,
-                latencyMs:  (int) round((microtime(true) - $startedAt) * 1000),
-                provider:   'gemini',
-                model:      AiStudioSetting::current()->gemini_model ?? '',
-            );
-
-            $emit('', true, [
-                'uuid'              => $errorMessage->uuid,
-                'role'              => 'assistant',
-                'content'           => $errorText,
-                'status'            => 'failed',
-                'intent'            => $intent->value,
-                'structured_output' => null,
-                'follow_up_chips'   => (array) trans('copilot.chips.error', [], $locale),
-                'token_usage'       => [],
-            ]);
-        }
+                $emit('', true, [
+                    'uuid'              => $errorMessage->uuid,
+                    'role'              => 'assistant',
+                    'content'           => $errorText,
+                    'status'            => 'failed',
+                    'intent'            => $task->intent,
+                    'task_type'         => $task->taskType,
+                    'structured_output' => null,
+                    'follow_up_chips'   => (array) trans('copilot.chips.error', [], $locale),
+                    'token_usage'       => [],
+                ]);
+            }
     }
-
-    // -------------------------------------------------------------------------
-    // Private helpers
-    // -------------------------------------------------------------------------
 
     /**
      * Find an active session for the same upload session or post (avoids duplicate sessions).
@@ -506,8 +443,9 @@ class AiCopilotService
      */
     private function createSystemMessage(AiCopilotSession $session, string $type): void
     {
+        $locale  = (string) ($session->session_meta['locale'] ?? 'vi');
         $content = match ($type) {
-            'large_video_notice' => 'Your video is quite large. To give you the best analysis, could you describe what the video is about? Or let me know which part you\'d like to focus on.',
+            'large_video_notice' => (string) trans('copilot.large_video_notice', [], $locale),
             default              => '',
         };
 
@@ -516,120 +454,39 @@ class AiCopilotService
         }
 
         $this->saveMessage($session, AiCopilotMessageRoleEnum::ASSISTANT, $content, [
-            'follow_up_chips' => ['Describe my video', 'Select a segment', 'Analyze the hook'],
+            'follow_up_chips' => (array) trans('copilot.chips.large_video_notice', [], $locale),
         ]);
     }
 
     /**
-     * Return a minimal fallback AiPromptTemplate for intents with no DB template.
-     */
-    private function makeFallbackTemplate(?AiCopilotIntentEnum $intent = null): AiPromptTemplate
-    {
-        $isGenerative = $intent?->isGenerative() ?? false;
-
-        $base = 'You are Snapi Studio AI — a multi-capability AI assistant for the Snapi short-form video platform. '
-            . 'You help both creators and admins with: (1) content creation — captions, titles, hashtags, descriptions; '
-            . '(2) video analysis — hooks, retention, viral potential, audience fit; '
-            . '(3) account insights — post performance, engagement stats, appeal status; '
-            . '(4) platform knowledge — how Snapi works, features, policies, wellness tools; '
-            . '(5) scheduling — best posting times and schedule suggestions; '
-            . '(6) admin analytics — system-wide user and content metrics. '
-            . 'Always respond in the SAME language the user writes in (Vietnamese → trả lời tiếng Việt, English → reply in English). '
-            . 'Be concise, helpful, and friendly. Use markdown formatting when appropriate. '
-            . 'Use the Video Context and Knowledge Base sections (when provided) to tailor your answer.';
-
-        if ($isGenerative) {
-            $base .= "\n\nFor caption/hashtag requests you MUST return ONLY valid JSON (no markdown, no code fences) "
-                . "in this exact shape:\n"
-                . "{\n"
-                . "  \"variants\": [{\"label\": \"Short\", \"value\": \"...\"}, {\"label\": \"Engaging\", \"value\": \"...\"}, {\"label\": \"Viral\", \"value\": \"...\"}],\n"
-                . "  \"hashtags\": [\"#tag1\", \"#tag2\"],\n"
-                . "  \"confidence\": 0.9\n"
-                . "}\n"
-                . "Provide 3 variants (Short / Engaging / Viral). Hashtags: 6–10 relevant tags mix of Vietnamese + English.";
-        }
-
-        $template                = new AiPromptTemplate();
-        $template->system_prompt = $base;
-        $template->user_template = '{{user_message}}';
-
-        return $template;
-    }
-
-    /**
-     * Determine whether an intent is handled entirely by a pure handler (no Gemini call).
-     */
-    private function isPureHandlerIntent(AiCopilotIntentEnum $intent): bool
-    {
-        return in_array($intent, [
-            AiCopilotIntentEnum::QUERY_POST_STATS,
-            AiCopilotIntentEnum::QUERY_USER_STATS,
-            AiCopilotIntentEnum::QUERY_SCREEN_TIME,
-            AiCopilotIntentEnum::NAVIGATE_TO,
-            AiCopilotIntentEnum::QUERY_APP_INFO,
-            AiCopilotIntentEnum::ADMIN_QUERY_STATS,
-            AiCopilotIntentEnum::ADMIN_QUERY_APPEALS,
-            AiCopilotIntentEnum::ADMIN_QUERY_AI_METRICS,
-            AiCopilotIntentEnum::ADMIN_QUERY_ENCODING,
-            AiCopilotIntentEnum::QUERY_NOTIFICATIONS,
-        ]);
-    }
-
-    /**
-     * Resolve the pure handler for a given intent.
+     * Return locale-aware follow-up chips for a gateway task_type when the engine returns none.
      *
-     * @throws \LogicException if the intent is not a pure-handler intent
-     */
-    private function resolvePureHandler(AiCopilotIntentEnum $intent): CopilotHandlerInterface
-    {
-        return match ($intent) {
-            AiCopilotIntentEnum::QUERY_POST_STATS        => $this->queryPostStatsHandler,
-            AiCopilotIntentEnum::QUERY_USER_STATS        => $this->queryUserStatsHandler,
-            AiCopilotIntentEnum::QUERY_SCREEN_TIME       => $this->queryScreenTimeHandler,
-            AiCopilotIntentEnum::NAVIGATE_TO             => $this->navigateToHandler,
-            AiCopilotIntentEnum::QUERY_APP_INFO          => $this->queryAppInfoHandler,
-            AiCopilotIntentEnum::ADMIN_QUERY_STATS       => $this->adminQueryStatsHandler,
-            AiCopilotIntentEnum::ADMIN_QUERY_APPEALS     => $this->adminQueryAppealsHandler,
-            AiCopilotIntentEnum::ADMIN_QUERY_AI_METRICS  => $this->adminQueryAiMetricsHandler,
-            AiCopilotIntentEnum::ADMIN_QUERY_ENCODING    => $this->adminQueryEncodingHandler,
-            AiCopilotIntentEnum::QUERY_NOTIFICATIONS     => $this->queryNotificationsHandler,
-            default                                       => throw new \LogicException("Intent {$intent->value} is not a pure handler"),
-        };
-    }
-
-    /**
-     * Return locale-aware follow-up chips for a given intent.
-     * Chips are loaded from lang/{locale}/copilot.php so new languages require no code changes.
-     *
+     * @param  string  $taskType
+     * @param  string  $locale
      * @return string[]
      */
-    private function defaultChips(AiCopilotIntentEnum $intent, string $locale = 'vi'): array
+    private function gatewayDefaultChips(string $taskType, string $locale = 'vi'): array
     {
-        // Group intents that share the same chip set
-        $key = match ($intent) {
-            AiCopilotIntentEnum::REWRITE_CONTENT,
-            AiCopilotIntentEnum::WRITE_TITLE,
-            AiCopilotIntentEnum::WRITE_DESCRIPTION => 'write_caption',
-            AiCopilotIntentEnum::ANALYZE_VIDEO_SEGMENT,
-            AiCopilotIntentEnum::ANALYZE_FRAME     => 'analyze_video',
-            default                                => $intent->value,
-        };
-
-        $chips = trans("copilot.chips.{$key}", [], $locale);
+        $chips = trans("copilot.chips.{$taskType}", [], $locale);
 
         return is_array($chips) ? $chips : (array) trans('copilot.chips.default', [], $locale);
     }
 
     /**
-     * @param  array<array{role: string, parts: array}>  $contents
+     * Build Gemini conversation history from recent session messages.
+     *
+     * @return array<array{role: string, parts: array}>
      */
-    private function buildGeminiRequest(string $systemPrompt, array $contents, array $overrides = []): GeminiRequest
+    private function buildHistory(AiCopilotSession $session, int $window = 10, ?int $excludeMessageId = null): array
     {
-        return new GeminiRequest(
-            systemPrompt: $systemPrompt,
-            contents:     $contents,
-            config:       GeminiConfig::fromSetting(AiStudioSetting::current(), $overrides),
-        );
+        return $this->messageRepo->recentBySession($session->id, $window)
+            ->filter(fn (AiCopilotMessage $message) => $excludeMessageId === null || $message->id !== $excludeMessageId)
+            ->map(fn (AiCopilotMessage $message) => [
+                'role'  => $message->role === AiCopilotMessageRoleEnum::ASSISTANT ? 'model' : 'user',
+                'parts' => [['text' => $message->content]],
+            ])
+            ->values()
+            ->toArray();
     }
 
     /**

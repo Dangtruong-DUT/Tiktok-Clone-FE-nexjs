@@ -17,6 +17,13 @@ class ScheduledPostRepository extends BaseRepository
         parent::__construct(new ScheduledPost());
     }
 
+    /**
+     * Find a scheduled post by UUID for a user or fail.
+     *
+     * @param  string  $uuid
+     * @param  int  $userId
+     * @return ScheduledPost
+     */
     public function findByUuidAndUserOrFail(string $uuid, int $userId): ScheduledPost
     {
         /** @var ScheduledPost */
@@ -26,6 +33,13 @@ class ScheduledPostRepository extends BaseRepository
             ->firstOrFail();
     }
 
+    /**
+     * Paginate scheduled posts for a user.
+     *
+     * @param  int  $userId
+     * @param  int  $perPage
+     * @return LengthAwarePaginator
+     */
     public function paginateByUser(int $userId, int $perPage): LengthAwarePaginator
     {
         return $this->query()
@@ -35,7 +49,11 @@ class ScheduledPostRepository extends BaseRepository
             ->paginate($perPage);
     }
 
-    /** Returns all pending scheduled posts due for publishing */
+    /**
+     * Returns all pending scheduled posts due for publishing.
+     *
+     * @return Collection<int, ScheduledPost>
+     */
     public function getDueForPublishing(): Collection
     {
         return $this->query()
@@ -44,6 +62,13 @@ class ScheduledPostRepository extends BaseRepository
             ->get();
     }
 
+    /**
+     * Find a pending scheduled post for a user's post.
+     *
+     * @param  int  $postId
+     * @param  int  $userId
+     * @return ScheduledPost|null
+     */
     public function findByPostForUser(int $postId, int $userId): ?ScheduledPost
     {
         /** @var ScheduledPost|null */

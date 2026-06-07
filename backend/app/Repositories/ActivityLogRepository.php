@@ -7,6 +7,9 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
+/**
+ * @extends BaseRepository<ActivityLog>
+ */
 class ActivityLogRepository extends BaseRepository
 {
     public function __construct()
@@ -16,7 +19,9 @@ class ActivityLogRepository extends BaseRepository
 
     /**
      * Get paginated activity logs for admin panel.
+     *
      * @param  array<string,mixed>  $filters
+     * @return LengthAwarePaginator
      */
     public function searchForAdmin(array $filters = []): LengthAwarePaginator
     {
@@ -38,6 +43,9 @@ class ActivityLogRepository extends BaseRepository
 
     /**
      * Build search query with filters.
+     *
+     * @param  Collection<int|string, mixed>  $filterCollection
+     * @return Builder
      */
     private function buildSearchQuery(Collection $filterCollection): Builder
     {

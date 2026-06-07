@@ -4,49 +4,65 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Wellness\EndSessionRequest;
+use App\Http\Requests\Wellness\GetScreenTimeHistoryRequest;
+use App\Http\Requests\Wellness\GetScreenTimeStatsRequest;
 use App\Http\Requests\Wellness\UpdateVideoTimeRequest;
 use App\Http\Response\ApiResponse;
-use App\Repositories\ScreenTimeSessionRepository;
 use App\Services\ScreenTimeTrackingService;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class ScreenTimeController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @param  ScreenTimeTrackingService  $service
+     */
     public function __construct(
-        private readonly ScreenTimeTrackingService   $service,
-        private readonly ScreenTimeSessionRepository $repository,
+        private readonly ScreenTimeTrackingService $service,
     ) {}
 
-    public function stats(Request $request): JsonResponse
+    /**
+     * Retrieve aggregated screen time stats for the authenticated user.
+     *
+     * @param  GetScreenTimeStatsRequest  $request
+     * @return JsonResponse
+     */
+    public function stats(GetScreenTimeStatsRequest $request): JsonResponse
     {
-        $period = in_array($request->input('period'), ['today', 'week', 'month'], true)
-            ? $request->input('period')
-            : 'today';
+        $payload = $request->validated();
 
         return ApiResponse::success(
-            data:    $this->service->getStats((int) auth_user_id(), $period),
+            data:    $this->service->getStats((int) auth_user_id(), $payload['period'] ?? null),
             message: 'Screen time stats retrieved.',
         );
     }
 
-    public function history(Request $request): JsonResponse
+    /**
+     * Retrieve screen time history for the authenticated user.
+     *
+     * @param  GetScreenTimeHistoryRequest  $request
+     * @return JsonResponse
+     */
+    public function history(GetScreenTimeHistoryRequest $request): JsonResponse
     {
-        $from = $request->input('date_from')
-            ? Carbon::parse($request->input('date_from'))->startOfDay()
-            : now()->subDays(30)->startOfDay();
-
-        $to = $request->input('date_to')
-            ? Carbon::parse($request->input('date_to'))->endOfDay()
-            : now()->endOfDay();
+        $payload = $request->validated();
 
         return ApiResponse::success(
-            data:    $this->service->getHistory((int) auth_user_id(), $from, $to),
+            data:    $this->service->getHistory(
+                (int) auth_user_id(),
+                $payload['date_from'] ?? null,
+                $payload['date_to'] ?? null,
+            ),
             message: 'Screen time history retrieved.',
         );
     }
 
+    /**
+     * Start a new screen time session for the authenticated user.
+     *
+     * @return JsonResponse
+     */
     public function startSession(): JsonResponse
     {
         $session = $this->service->startSession((int) auth_user_id());
@@ -58,18 +74,33 @@ class ScreenTimeController extends Controller
         );
     }
 
+    /**
+     * Record a heartbeat for a screen time session.
+     *
+     * @param  string  $uuid
+     * @return JsonResponse
+     */
     public function heartbeat(string $uuid): JsonResponse
     {
-        $session = $this->repository->findByUuidAndUserOrFail($uuid, (int) auth_user_id());
-        $this->service->heartbeat($session);
+        $this->service->heartbeatByUuid($uuid, (int) auth_user_id());
 
         return ApiResponse::success(data: null, message: 'Heartbeat recorded.');
     }
 
+    /**
+     * Update tracked video watch time for a session.
+     *
+     * @param  UpdateVideoTimeRequest  $request
+     * @param  string  $uuid
+     * @return JsonResponse
+     */
     public function updateVideoTime(UpdateVideoTimeRequest $request, string $uuid): JsonResponse
     {
-        $session = $this->repository->findByUuidAndUserOrFail($uuid, (int) auth_user_id());
-        $updated = $this->service->updateVideoTime($session, $request->integer('video_seconds'));
+        $updated = $this->service->updateVideoTimeByUuid(
+            $uuid,
+            (int) auth_user_id(),
+            $request->integer('video_seconds'),
+        );
 
         return ApiResponse::success(
             data:    ['video_seconds' => $updated->video_seconds],
@@ -77,10 +108,20 @@ class ScreenTimeController extends Controller
         );
     }
 
+    /**
+     * End a screen time session.
+     *
+     * @param  EndSessionRequest  $request
+     * @param  string  $uuid
+     * @return JsonResponse
+     */
     public function endSession(EndSessionRequest $request, string $uuid): JsonResponse
     {
-        $session = $this->repository->findByUuidAndUserOrFail($uuid, (int) auth_user_id());
-        $this->service->endSession($session, $request->durationSeconds());
+        $this->service->endSessionByUuid(
+            $uuid,
+            (int) auth_user_id(),
+            (int) $request->validated('duration_seconds'),
+        );
 
         return ApiResponse::success(data: null, message: 'Session ended.');
     }

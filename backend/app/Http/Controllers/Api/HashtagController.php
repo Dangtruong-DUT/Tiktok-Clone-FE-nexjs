@@ -11,6 +11,11 @@ use Illuminate\Http\JsonResponse;
 
 class HashtagController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @param  HashtagService  $hashtagService
+     */
     public function __construct(
         private readonly HashtagService $hashtagService
     ) {}

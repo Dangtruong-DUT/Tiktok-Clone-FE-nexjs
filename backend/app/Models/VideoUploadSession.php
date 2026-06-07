@@ -8,6 +8,7 @@ use App\Traits\HasUuidObservable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class VideoUploadSession extends Model
 {
     use HasUuidObservable, SoftDeletes;

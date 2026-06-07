@@ -16,6 +16,11 @@ use Illuminate\Http\JsonResponse;
  */
 class AppealAdminController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @param  AdminAppealService  $appealService
+     */
     public function __construct(
         private readonly AdminAppealService $appealService,
     ) {}

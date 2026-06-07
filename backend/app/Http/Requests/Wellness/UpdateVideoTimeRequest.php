@@ -2,17 +2,15 @@
 
 namespace App\Http\Requests\Wellness;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class UpdateVideoTimeRequest extends FormRequest
+class UpdateVideoTimeRequest extends BaseRequest
 {
-    public function authorize(): bool { return true; }
-
     /** @return array<string,mixed> */
     public function rules(): array
     {
-        return [
-            'video_seconds' => ['required', 'integer', 'min:0', 'max:86400'],
-        ];
+        return $this->applyBaseRules([
+            'video_seconds' => [self::REQUIRED, self::INTEGER, self::MIN . ':0', self::MAX . ':86400'],
+        ]);
     }
 }

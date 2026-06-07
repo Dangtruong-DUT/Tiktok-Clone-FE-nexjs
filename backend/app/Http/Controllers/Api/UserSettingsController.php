@@ -11,6 +11,11 @@ use Illuminate\Http\JsonResponse;
 
 class UserSettingsController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @param  UserSettingsService  $userSettingsService
+     */
     public function __construct(
         private readonly UserSettingsService $userSettingsService
     ) {}

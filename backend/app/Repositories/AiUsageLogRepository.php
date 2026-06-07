@@ -15,6 +15,12 @@ class AiUsageLogRepository extends BaseRepository
         parent::__construct(new AiUsageLog());
     }
 
+    /**
+     * Aggregate AI usage metrics grouped by intent for a period.
+     *
+     * @param  string  $period
+     * @return array<int, array<string, mixed>>
+     */
     public function metricsByPeriod(string $period = 'today'): array
     {
         $from = match ($period) {
@@ -38,6 +44,12 @@ class AiUsageLogRepository extends BaseRepository
             ->toArray();
     }
 
+    /**
+     * Build a daily AI-usage time series.
+     *
+     * @param  int  $days
+     * @return array<int, array<string, mixed>>
+     */
     public function dailySeries(int $days = 30): array
     {
         return $this->query()
@@ -49,6 +61,12 @@ class AiUsageLogRepository extends BaseRepository
             ->toArray();
     }
 
+    /**
+     * Get the top users ranked by token usage.
+     *
+     * @param  int  $limit
+     * @return array<int, array<string, mixed>>
+     */
     public function topUsersByUsage(int $limit = 10): array
     {
         return $this->query()

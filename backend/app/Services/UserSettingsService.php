@@ -10,10 +10,15 @@ class UserSettingsService
 {
     use HasAuthUser;
 
+    /**
+     * Create a new service instance.
+     */
     public function __construct() {}
 
     /**
      * Show the user settings.
+     *
+     * @return UserSettings
      */
     public function show(): UserSettings
     {
@@ -22,7 +27,9 @@ class UserSettingsService
 
     /**
      * Update the user settings.
+     *
      * @param  array{liked_videos_visibility?: string, bookmarked_videos_visibility?: string, followers_visibility?: string, following_visibility?: string}  $data
+     * @return UserSettings
      */
     public function update(array $data): UserSettings
     {

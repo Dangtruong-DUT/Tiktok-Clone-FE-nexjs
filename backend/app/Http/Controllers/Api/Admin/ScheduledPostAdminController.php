@@ -12,18 +12,35 @@ use Illuminate\Http\JsonResponse;
 
 class ScheduledPostAdminController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @param  ScheduledPostAdminService  $service
+     */
     public function __construct(
         private readonly ScheduledPostAdminService $service,
     ) {}
 
+    /**
+     * Retrieve scheduled-post metrics for the requested period.
+     *
+     * @param  GetAiStudioMetricsRequest  $request
+     * @return JsonResponse
+     */
     public function metrics(GetAiStudioMetricsRequest $request): JsonResponse
     {
         return ApiResponse::success(
-            data: $this->service->getMetrics($request->period()),
+            data: $this->service->getMetrics($request->validated('period')),
             message: 'Scheduled post metrics retrieved.',
         );
     }
 
+    /**
+     * Retrieve paginated scheduled-post records for admin review.
+     *
+     * @param  ListScheduledPostsAdminRequest  $request
+     * @return JsonResponse
+     */
     public function requests(ListScheduledPostsAdminRequest $request): JsonResponse
     {
         $items = $this->service->listRequests($request->validated());
@@ -34,6 +51,12 @@ class ScheduledPostAdminController extends Controller
         );
     }
 
+    /**
+     * Cancel a scheduled post as an administrator.
+     *
+     * @param  string  $uuid
+     * @return JsonResponse
+     */
     public function forceCancel(string $uuid): JsonResponse
     {
         $scheduledPost = $this->service->findByUuid($uuid);
@@ -45,6 +68,12 @@ class ScheduledPostAdminController extends Controller
         );
     }
 
+    /**
+     * Re-queue a failed scheduled post as an administrator.
+     *
+     * @param  string  $uuid
+     * @return JsonResponse
+     */
     public function forceRetry(string $uuid): JsonResponse
     {
         $scheduledPost = $this->service->findByUuid($uuid);

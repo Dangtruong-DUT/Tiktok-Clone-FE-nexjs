@@ -27,6 +27,16 @@ class PostService
 {
     use HasAuthUser;
 
+    /**
+     * Create a new service instance.
+     *
+     * @param  UserRepository  $userRepository
+     * @param  PostRepository  $postRepository
+     * @param  MediaRepository  $mediaRepository
+     * @param  HashtagRepository  $hashtagRepository
+     * @param  VideoUploadSessionRepository  $uploadSessionRepository
+     * @param  AiModerationService  $aiModerationService
+     */
     public function __construct(
         private readonly UserRepository $userRepository,
         private readonly PostRepository $postRepository,

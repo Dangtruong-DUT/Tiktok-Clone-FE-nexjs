@@ -14,6 +14,9 @@ class RefreshTokenRepository extends BaseRepository
 
     /**
      * Find a refresh token by JTI
+     *
+     * @param  string  $jti
+     * @return RefreshToken|null
      */
     public function findByJti(string $jti): ?RefreshToken
     {
@@ -22,6 +25,8 @@ class RefreshTokenRepository extends BaseRepository
 
     /**
      * Delete refresh tokens by user ID.
+     *
+     * @param  int  $userId
      * @return int Number of deleted rows
      */
     public function deleteByUserId(int $userId): int

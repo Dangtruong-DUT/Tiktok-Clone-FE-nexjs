@@ -12,6 +12,9 @@ class FfmpegService
     private readonly string $ffmpegBin;
     private readonly string $ffprobeBin;
 
+    /**
+     * Create a new service instance.
+     */
     public function __construct()
     {
         $this->ffmpegBin = config('video.ffmpeg_binary', 'ffmpeg');

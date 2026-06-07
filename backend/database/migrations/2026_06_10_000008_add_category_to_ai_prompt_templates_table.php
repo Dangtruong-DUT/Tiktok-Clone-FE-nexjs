@@ -16,8 +16,8 @@ return new class extends Migration
         // Back-fill existing templates with correct categories
         $categories = [
             'context'   => ['platform_context_creator', 'platform_context_admin'],
-            'routing'   => ['intent_detection'],
-            'data'      => ['query_user_stats', 'query_post_stats', 'query_screen_time', 'query_app_info', 'navigate_to', 'admin_query_stats'],
+            'routing'   => ['gateway_planner'],
+            'data'      => ['analytics_planner', 'analytics_answer_builder'],
             'analysis'  => ['analyze_video', 'analyze_viral', 'analyze_retention', 'analyze_hook', 'analyze_cta', 'analyze_audience', 'analyze_frame', 'analyze_video_segment'],
             'fallback'  => ['general_advice', 'clarification'],
         ];

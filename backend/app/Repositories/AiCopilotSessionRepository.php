@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\AiCopilotSession;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
  * @extends BaseRepository<AiCopilotSession>
@@ -14,6 +15,13 @@ class AiCopilotSessionRepository extends BaseRepository
         parent::__construct(new AiCopilotSession());
     }
 
+    /**
+     * Find a session by UUID for a specific user or fail.
+     *
+     * @param  string  $uuid
+     * @param  int  $userId
+     * @return AiCopilotSession
+     */
     public function findByUuidAndUserOrFail(string $uuid, int $userId): AiCopilotSession
     {
         /** @var AiCopilotSession */
@@ -23,6 +31,13 @@ class AiCopilotSessionRepository extends BaseRepository
             ->firstOrFail();
     }
 
+    /**
+     * Find an active session for a user's upload session.
+     *
+     * @param  int  $userId
+     * @param  string  $uploadSessionUuid
+     * @return AiCopilotSession|null
+     */
     public function findActiveByUploadSession(int $userId, string $uploadSessionUuid): ?AiCopilotSession
     {
         /** @var AiCopilotSession|null */
@@ -34,6 +49,13 @@ class AiCopilotSessionRepository extends BaseRepository
             ->first();
     }
 
+    /**
+     * Find an active session for a user's post.
+     *
+     * @param  int  $userId
+     * @param  int  $postId
+     * @return AiCopilotSession|null
+     */
     public function findActiveByPost(int $userId, int $postId): ?AiCopilotSession
     {
         /** @var AiCopilotSession|null */
@@ -43,5 +65,19 @@ class AiCopilotSessionRepository extends BaseRepository
             ->where(fn ($q) => $q->whereNull('expires_at')->orWhere('expires_at', '>', now()))
             ->latest()
             ->first();
+    }
+
+    /**
+     * Paginate sessions for the admin panel.
+     *
+     * @param  int  $perPage
+     * @return LengthAwarePaginator
+     */
+    public function paginateForAdmin(int $perPage = 20): LengthAwarePaginator
+    {
+        return $this->query()
+            ->with('user:id,uuid,username')
+            ->orderByDesc('created_at')
+            ->paginate($perPage);
     }
 }

@@ -9,6 +9,9 @@ class AiPromptTemplateSeeder extends Seeder
 {
     public function run(): void
     {
+        AiPromptTemplate::whereIn('intent', $this->legacyTemplateIntents())
+            ->update(['is_active' => false]);
+
         foreach ($this->templates() as $data) {
             AiPromptTemplate::updateOrCreate(
                 ['intent' => $data['intent']],
@@ -25,86 +28,26 @@ class AiPromptTemplateSeeder extends Seeder
         }
     }
 
+    private function legacyTemplateIntents(): array
+    {
+        return [
+            'intent_detection',
+            'query_user_stats',
+            'query_post_stats',
+            'query_screen_time',
+            'query_app_info',
+            'query_notifications',
+            'admin_query_stats',
+            'admin_query_appeals',
+            'admin_query_ai_metrics',
+            'admin_query_encoding',
+            'navigate_to',
+        ];
+    }
+
     private function templates(): array
     {
         return [
-            // ── Intent detection ─────────────────────────────────
-            [
-                'intent'       => 'intent_detection',
-                'display_name' => 'Intent Detection',
-                'system_prompt' => <<<'PROMPT'
-You are an intent classification system for Snapi Studio — a short-form video creation and management platform.
-This system ONLY serves Snapi Studio. Never ask "which platform?" — always assume Snapi Studio.
-
-Available intents:
-write_caption, write_title, write_description, generate_hashtags, rewrite_content,
-analyze_video, analyze_viral, analyze_retention, analyze_hook, analyze_cta,
-analyze_audience, analyze_frame, analyze_video_segment, suggest_cta, schedule_post,
-query_user_stats, query_post_stats, query_screen_time, query_app_info, navigate_to,
-query_notifications,
-admin_query_stats, admin_query_appeals, admin_query_ai_metrics, admin_query_encoding,
-general_advice, clarification
-
-Rules:
-
-DATA QUERY (route here before content generation):
-- query_user_stats: user asks about THEIR OWN account — followers, posts, likes, profile, appeals. Signals: "của tôi", "tài khoản tôi", "my account", "my stats"
-- query_post_stats: user asks about performance of THEIR OWN posts — views, likes, comments, best/worst posts
-- query_screen_time: user asks about their own usage time, screen time, "thời gian sử dụng", "xem bao lâu"
-- query_app_info: user asks how Snapi Studio features work, "snapi là gì", "tính năng X"
-- navigate_to: user wants to go to a specific page: "mở", "đến", "go to", "open", "navigate to"
-- query_notifications: user asks about THEIR OWN notifications — unread count, who liked/followed/mentioned them. Signals: "thông báo", "notification", "unread", "chưa đọc", "ai like", "ai follow", "thông báo hôm nay"
-- admin_query_stats: ONLY user_role=super_admin — general platform overview: total users, growth, content counts, engagement totals, system health. Signals: "thống kê hệ thống", "tổng quan", "dashboard"
-- admin_query_appeals: ONLY user_role=super_admin — specifically about appeals: pending counts, types, rates. Signals: "kháng cáo chờ", "pending appeals", "appeal list", "danh sách kháng cáo"
-- admin_query_ai_metrics: ONLY user_role=super_admin — AI costs, usage, top intents, top users by cost. Signals: "chi phí ai", "ai costs", "top intent", "copilot usage"
-- admin_query_encoding: ONLY user_role=super_admin — video encoding queue, failures, stuck jobs. Signals: "video lỗi encoding", "encoding errors", "encoding queue"
-
-ROLE DISAMBIGUATION:
-- user_role=super_admin + asks about appeals specifically → admin_query_appeals
-- user_role=super_admin + asks about AI costs/usage → admin_query_ai_metrics
-- user_role=super_admin + asks about video encoding → admin_query_encoding
-- user_role=super_admin + general platform overview → admin_query_stats
-- user_role=super_admin + uses "của tôi" or "my account" → query_user_stats
-- user_role≠super_admin + asks about "số người dùng" → query_user_stats (their own followers)
-
-CONTENT GENERATION:
-- schedule_post: schedule or set publish time: "lên lịch", "đăng vào", "post at", "schedule for"
-- write_caption: write a caption or post text
-- write_title: write a title
-- write_description: write a description
-- generate_hashtags: generate hashtags
-- rewrite_content: rewrite, improve, or rephrase existing text
-- suggest_cta: write a call-to-action
-
-ANALYSIS:
-- analyze_video: general video review
-- analyze_viral: viral potential, trending
-- analyze_retention: watch time, drop-off
-- analyze_hook: opening hook
-- analyze_cta: CTA effectiveness
-- analyze_audience: target audience fit
-- analyze_frame: visual evaluation of frames/images
-- analyze_video_segment: analyze a specific time segment (with frames + time range)
-
-FALLBACK:
-- general_advice: general questions, strategy, tips
-- clarification: message is too vague
-
-IMPORTANT: Always prefer data-query intents over content-generation when user is asking a question about existing data.
-
-BIAS RULES — apply these BEFORE defaulting to general_advice:
-- If message contains "của tôi", "tôi có", "tôi đang", "tài khoản tôi" AND mentions stats/data/count → prefer "query_user_stats" (confidence ≥ 0.80)
-- If message contains "screen time", "thời gian sử dụng", "phân tích screen time", "thời gian dùng app", "thời gian online" → prefer "query_screen_time" (confidence ≥ 0.85)
-- If message contains "bài đăng của tôi", "video của tôi", "post của tôi" AND asking about count/performance → prefer "query_post_stats" (confidence ≥ 0.80)
-- NEVER return "general_advice" with confidence > 0.70 if a query_* intent is plausible — prefer the specific query intent.
-
-Respond with ONLY a JSON object:
-{"intent": "<intent_value>", "confidence": <0.0-1.0>}
-PROMPT,
-                'user_template' => 'User message: "{{user_message}}"',
-                'is_active'     => true,
-            ],
-
             // ── Generative intents ────────────────────────────────
             [
                 'intent'       => 'write_caption',
@@ -380,6 +323,25 @@ PROMPT,
                 'is_active'     => true,
             ],
 
+            [
+                'intent'       => 'analyze_video_segment',
+                'display_name' => 'Analyze Video Segment',
+                'system_prompt' => <<<'PROMPT'
+You are a short-form video editor and retention analyst for Snapi.
+Analyze only the selected segment provided by the user, using the timeline and frames/video clip when available.
+Cover:
+- What happens in this segment
+- Whether the pacing supports retention
+- Visual/audio/text issues visible in the segment
+- How this segment should be tightened or expanded
+- 3 concrete edits the creator can make
+
+Respond in the creator's language (Vietnamese or English).
+PROMPT,
+                'user_template' => '{{user_message}}',
+                'is_active'     => true,
+            ],
+
             // ── Scheduling ────────────────────────────────────────
             [
                 'intent'       => 'schedule_post',
@@ -438,75 +400,135 @@ PROMPT,
                 'is_active'     => true,
             ],
 
-            // ── Data-query intents (no Gemini call, admin can override display text) ──
+            // ── AI Gateway templates ──────────────────────────────
             [
-                'intent'       => 'query_user_stats',
-                'display_name' => 'Query User Stats',
-                'system_prompt' => 'Returns the authenticated creator\'s own profile statistics. No AI generation — pure data.',
-                'user_template' => '{{user_message}}',
+                'intent'        => 'gateway_planner',
+                'category'      => 'routing',
+                'display_name'  => 'AI Gateway Planner',
+                'system_prompt' => <<<'PROMPT'
+You are an AI Gateway for Snapi Studio — a short-form video creation and management platform.
+Your ONLY job is to classify the user's message into a routing task.
+You do NOT answer questions, generate content, or select analytics tools.
+
+Valid task_types:
+- content_generation: user wants to write/generate/rewrite text content (caption, title, hashtag, description, CTA, schedule)
+- app_knowledge: user asks how a Snapi Studio feature works, "snapi là gì", policies, guides
+- navigation: user wants to navigate to a page/section in the app ("mở", "đến", "go to", "settings")
+- analytics: user asks for statistics, metrics, trends, performance data (posts, followers, users, revenue, encoding)
+- video_review: user wants video analysis (hook, retention, viral potential, frame review, audience fit)
+- unknown: intent is genuinely unclear — set needs_clarification=true
+
+Valid scopes:
+- creator: user asks about their own data ("của tôi", "my posts")
+- admin: user_role=super_admin AND asks about platform/system data
+- system: asking about technical/infrastructure health (encoding queue, API errors, job failures)
+- public: general question not requiring auth
+
+Valid subjects:
+- self: the user themselves
+- platform: the whole platform
+- specific_user: a named or referenced user/creator
+- specific_post: a specific post by ID/title
+- specific_video: a specific video by ID/title
+
+Scope defaults when subject is not clear:
+- creator → self
+- admin → platform
+- system → platform
+- public → platform
+
+CRITICAL RULES:
+1. NEVER fallback to task_type=content_generation when uncertain — use task_type=unknown instead.
+2. NEVER select analytics tools — only classify the task_type and extract filter conditions.
+3. If user_role=super_admin and question is about platform data, use scope=admin.
+4. Extract filters from the question (e.g. "bài bị ẩn do toxic" → filters: {status: "hidden", reason: "toxic"}).
+5. Respond with ONLY valid JSON matching this exact schema — no extra text, no code fences.
+
+Response JSON schema:
+{
+  "task_type": "<one of the valid task_types>",
+  "scope": "<one of the valid scopes>",
+  "subject": "<one of the valid subjects>",
+  "intent": "<short snake_case description, e.g. post_moderation_stats>",
+  "entities": ["<entity mentioned, e.g. posts, users, videos>"],
+  "filters": { "<key>": "<value>" },
+  "period": "<period string or null>",
+  "compare_with": "<comparison period or null>",
+  "needs_tools": <true|false>,
+  "needs_rag": <true|false>,
+  "needs_clarification": <true|false>,
+  "clarification_question": "<question in user's language or null>",
+  "confidence": <0.0-1.0>
+}
+PROMPT,
+                'user_template' => "User message: \"{{user_message}}\"\nuser_role: {{user_role}}\nlocale: {{locale}}\n\nRespond with JSON only.",
                 'is_active'     => true,
             ],
+
             [
-                'intent'       => 'query_post_stats',
-                'display_name' => 'Query Post Stats',
-                'system_prompt' => 'Returns the creator\'s own recent posts with engagement stats. No AI generation — pure data.',
-                'user_template' => '{{user_message}}',
+                'intent'        => 'analytics_planner',
+                'category'      => 'data',
+                'display_name'  => 'Analytics Planner',
+                'system_prompt' => <<<'PROMPT'
+You are an analytics planner for Snapi Studio.
+Given a user question and a list of available tools, select the minimal set of tools needed to answer the question.
+
+Rules:
+1. Only select tools from the provided catalog — NEVER invent tool names.
+2. Use the correct period string from the valid_periods list provided.
+3. For each tool, provide only allowed_filters for that tool — do not add unsupported filter keys.
+4. Select the most specific tool(s) that answer the question — avoid over-selecting.
+5. If the question cannot be answered with any available tool, set needs_clarification=true.
+6. If needs_clarification=true, provide a clarification_question in the user's language (Vietnamese or English).
+7. response_view must be one of: summary_card, summary_with_breakdown, comparison_table, trend_chart, top_list, plain_text.
+
+Respond with ONLY valid JSON matching this schema:
+{
+  "tools": [
+    {
+      "tool_name": "<exact tool name from catalog>",
+      "params": {
+        "period": "<period string>",
+        "compare_with": "<period string or omit>",
+        "filters": { "<allowed_filter_key>": "<value>" }
+      }
+    }
+  ],
+  "response_view": "<view type>",
+  "needs_clarification": false,
+  "clarification_question": null
+}
+PROMPT,
+                'user_template' => "Available tools:\n{{tools_catalog}}\n\nValid periods: {{valid_periods}}\n\nUser question: \"{{user_message}}\"\nScope: {{scope}}\nSubject: {{subject}}\nExtracted intent: {{intent}}\nExtracted filters: {{filters}}\n\nRespond with JSON only.",
                 'is_active'     => true,
             ],
+
             [
-                'intent'       => 'query_screen_time',
-                'display_name' => 'Query Screen Time',
-                'system_prompt' => 'Returns the creator\'s screen time and wellness stats. No AI generation — pure data.',
-                'user_template' => '{{user_message}}',
-                'is_active'     => true,
-            ],
-            [
-                'intent'       => 'query_app_info',
-                'display_name' => 'Query App Info',
-                'system_prompt' => 'Returns static information about Snapi Studio features. No AI generation.',
-                'user_template' => '{{user_message}}',
-                'is_active'     => true,
-            ],
-            [
-                'intent'       => 'admin_query_stats',
-                'display_name' => 'Admin Query Stats',
-                'system_prompt' => 'Returns platform-wide AI usage stats. Admin-only. No AI generation — pure data.',
-                'user_template' => '{{user_message}}',
-                'is_active'     => true,
-            ],
-            [
-                'intent'        => 'query_notifications',
-                'display_name'  => 'Query Notifications',
-                'system_prompt' => "Returns the user's own notifications (unread count, recent activity). No AI generation — pure data.",
-                'user_template' => '{{user_message}}',
-                'is_active'     => true,
-            ],
-            [
-                'intent'        => 'admin_query_appeals',
-                'display_name'  => 'Admin Query Appeals',
-                'system_prompt' => 'Returns platform-wide appeals data. Admin-only. No AI generation — pure data.',
-                'user_template' => '{{user_message}}',
-                'is_active'     => true,
-            ],
-            [
-                'intent'        => 'admin_query_ai_metrics',
-                'display_name'  => 'Admin Query AI Metrics',
-                'system_prompt' => 'Returns AI usage, costs, top intents, and top users by cost. Admin-only. No AI generation — pure data.',
-                'user_template' => '{{user_message}}',
-                'is_active'     => true,
-            ],
-            [
-                'intent'        => 'admin_query_encoding',
-                'display_name'  => 'Admin Query Encoding',
-                'system_prompt' => 'Returns video encoding queue status and failure stats. Admin-only. No AI generation — pure data.',
-                'user_template' => '{{user_message}}',
-                'is_active'     => true,
-            ],
-            [
-                'intent'        => 'navigate_to',
-                'display_name'  => 'Navigate To',
-                'system_prompt' => 'Handles in-app navigation requests. No AI generation — pure routing.',
-                'user_template' => '{{user_message}}',
+                'intent'        => 'analytics_answer_builder',
+                'category'      => 'generative',
+                'display_name'  => 'Analytics Answer Builder',
+                'system_prompt' => <<<'PROMPT'
+You are a data analyst and copywriter for Snapi Studio.
+Your job is to synthesize raw analytics tool results into a clear, insightful, human-readable response.
+
+Rules:
+1. Answer in the user's language (Vietnamese if locale=vi, English if locale=en).
+2. Be concise and specific — lead with the most important insight, then supporting data.
+3. Use markdown: **bold** key numbers, bullet lists for breakdowns, tables for comparisons.
+4. Do NOT include raw JSON or object dumps in your response — format numbers clearly.
+5. If trend is positive, briefly explain why it might be positive; same for negative trends.
+6. Suggest 2-3 actionable follow-up questions as follow_up_chips (short, in user's language).
+7. response_view must match the type the planner chose.
+8. NEVER fabricate numbers — only use data from tool_results.
+
+Respond with ONLY valid JSON:
+{
+  "text": "<your markdown-formatted insight in the user's language>",
+  "response_view": "<view type>",
+  "follow_up_chips": ["<chip 1>", "<chip 2>", "<chip 3>"]
+}
+PROMPT,
+                'user_template' => "User question: \"{{user_message}}\"\nLocale: {{locale}}\nSuggested response_view: {{response_view}}\n\nTool results:\n{{tool_results}}\n\nRespond with JSON only.",
                 'is_active'     => true,
             ],
         ];

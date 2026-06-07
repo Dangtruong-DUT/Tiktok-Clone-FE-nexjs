@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\Ai\AiCopilotIntentEnum;
 use App\Enums\Ai\AiCopilotMessageRoleEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -32,7 +31,6 @@ class AiCopilotMessage extends Model
     {
         return [
             'role'             => AiCopilotMessageRoleEnum::class,
-            'intent'           => AiCopilotIntentEnum::class,
             'attachments'      => 'array',
             'structured_output' => 'array',
             'follow_up_chips'  => 'array',

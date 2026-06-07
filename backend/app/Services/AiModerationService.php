@@ -18,6 +18,13 @@ use Junges\Kafka\Facades\Kafka;
 
 class AiModerationService
 {
+    /**
+     * Create a new service instance.
+     *
+     * @param  AdminModerationNoticeService  $adminModerationNoticeService
+     * @param  PostRepository  $postRepository
+     * @param  UserRepository  $userRepository
+     */
     public function __construct(
         private readonly AdminModerationNoticeService $adminModerationNoticeService,
         private readonly PostRepository $postRepository,

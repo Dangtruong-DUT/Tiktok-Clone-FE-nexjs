@@ -19,6 +19,13 @@ class UserAdminService
 {
     use HasAuthUser;
 
+    /**
+     * Create a new service instance.
+     *
+     * @param  UserRepository  $userRepository
+     * @param  RefreshTokenRepository  $refreshTokenRepository
+     * @param  AdminModerationNoticeService  $adminModerationNoticeService
+     */
     public function __construct(
         private readonly UserRepository $userRepository,
         private readonly RefreshTokenRepository $refreshTokenRepository,

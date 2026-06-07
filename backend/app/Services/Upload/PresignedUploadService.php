@@ -21,6 +21,9 @@ class PresignedUploadService implements UploadStorageInterface
 
     private string $bucket;
 
+    /**
+     * Create a new service instance.
+     */
     public function __construct()
     {
         $config = config('filesystems.disks.s3');
@@ -50,7 +53,7 @@ class PresignedUploadService implements UploadStorageInterface
         // baked into presigned URL signatures matches what the browser actually sends.
         // Without this the signature is computed for "minio:9000" but the browser sends
         // "Host: localhost:9000", causing a 403 SignatureDoesNotMatch.
-        $publicEndpoint   = rtrim(env('AWS_URL', $config['endpoint'] ?? ''), '/');
+        $publicEndpoint   = rtrim((string) ($config['url'] ?? $config['endpoint'] ?? ''), '/');
         $signingConfig    = $baseConfig;
         if ($publicEndpoint !== '') {
             $signingConfig['endpoint'] = $publicEndpoint;
@@ -70,12 +73,12 @@ class PresignedUploadService implements UploadStorageInterface
         return (string) $this->signingS3->createPresignedRequest($command, "+{$ttlSeconds} seconds")->getUri();
     }
 
-    public function initiateMultipartUpload(string $key): string
+    public function initiateMultipartUpload(string $key, string $mimeType = 'application/octet-stream'): string
     {
         $result = $this->s3->createMultipartUpload([
             'Bucket'      => $this->bucket,
             'Key'         => $key,
-            'ContentType' => 'application/octet-stream',
+            'ContentType' => $mimeType,
         ]);
 
         return $result['UploadId'];
@@ -133,8 +136,11 @@ class PresignedUploadService implements UploadStorageInterface
             $this->s3->headObject(['Bucket' => $this->bucket, 'Key' => $key]);
 
             return true;
-        } catch (S3Exception) {
-            return false;
+        } catch (S3Exception $e) {
+            if ($e->getStatusCode() === 404) {
+                return false;
+            }
+            throw $e;
         }
     }
 
@@ -150,24 +156,34 @@ class PresignedUploadService implements UploadStorageInterface
     public function deleteObjectsByPrefix(string $prefix): void
     {
         try {
-            $objects = $this->s3->listObjectsV2([
-                'Bucket' => $this->bucket,
-                'Prefix' => rtrim($prefix, '/') . '/',
-            ]);
+            $normalizedPrefix = rtrim($prefix, '/') . '/';
+            $continuationToken = null;
 
-            if (empty($objects['Contents'])) {
-                return;
-            }
+            do {
+                $params = [
+                    'Bucket' => $this->bucket,
+                    'Prefix' => $normalizedPrefix,
+                ];
+                if ($continuationToken !== null) {
+                    $params['ContinuationToken'] = $continuationToken;
+                }
 
-            $this->s3->deleteObjects([
-                'Bucket' => $this->bucket,
-                'Delete' => [
-                    'Objects' => array_map(
-                        fn ($obj) => ['Key' => $obj['Key']],
-                        $objects['Contents']
-                    ),
-                ],
-            ]);
+                $objects = $this->s3->listObjectsV2($params);
+
+                if (! empty($objects['Contents'])) {
+                    $this->s3->deleteObjects([
+                        'Bucket' => $this->bucket,
+                        'Delete' => [
+                            'Objects' => array_map(
+                                fn ($obj) => ['Key' => $obj['Key']],
+                                $objects['Contents']
+                            ),
+                        ],
+                    ]);
+                }
+
+                $continuationToken = $objects['IsTruncated'] ? $objects['NextContinuationToken'] : null;
+            } while ($continuationToken !== null);
         } catch (Throwable $e) {
             Log::warning('deleteObjectsByPrefix failed', ['prefix' => $prefix, 'error' => $e->getMessage()]);
         }

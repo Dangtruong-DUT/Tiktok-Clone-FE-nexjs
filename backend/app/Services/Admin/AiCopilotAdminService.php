@@ -4,18 +4,35 @@ namespace App\Services\Admin;
 
 use App\Models\AiPromptTemplate;
 use App\Models\AiStudioSetting;
+use App\Repositories\AiCopilotSessionRepository;
 use App\Repositories\AiPromptTemplateRepository;
 use App\Repositories\AiUsageLogRepository;
 
 class AiCopilotAdminService
 {
+    /**
+     * Create a new service instance.
+     *
+     * @param  AiUsageLogRepository  $usageRepo
+     * @param  AiCopilotSessionRepository  $sessionRepo
+     * @param  AiPromptTemplateRepository  $templateRepo
+     */
     public function __construct(
         private readonly AiUsageLogRepository       $usageRepo,
+        private readonly AiCopilotSessionRepository $sessionRepo,
         private readonly AiPromptTemplateRepository $templateRepo,
     ) {}
 
-    public function getCopilotMetrics(string $period = 'today'): array
+    /**
+     * Get aggregated copilot metrics for the requested period.
+     *
+     * @param  string|null  $period
+     * @return array<string,mixed>
+     */
+    public function getCopilotMetrics(?string $period = null): array
     {
+        $period ??= 'today';
+
         return [
             'period'       => $period,
             'by_intent'    => $this->usageRepo->metricsByPeriod($period),
@@ -24,11 +41,24 @@ class AiCopilotAdminService
         ];
     }
 
+    /**
+     * Retrieve all active copilot prompt templates.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int,AiPromptTemplate>
+     */
     public function getPromptTemplates(): \Illuminate\Database\Eloquent\Collection
     {
         return $this->templateRepo->allActive();
     }
 
+    /**
+     * Update a prompt template by intent.
+     *
+     * @param  string  $intent
+     * @param  array<string,mixed>  $data
+     * @param  int  $adminId
+     * @return AiPromptTemplate
+     */
     public function updatePromptTemplate(string $intent, array $data, int $adminId): AiPromptTemplate
     {
         $template = $this->templateRepo->findByIntentAny($intent);
@@ -44,6 +74,13 @@ class AiCopilotAdminService
         return $this->templateRepo->updateByIntent($intent, $allowed, $adminId);
     }
 
+    /**
+     * Update AI Studio feature flags.
+     *
+     * @param  array<string,mixed>  $flags
+     * @param  int  $adminId
+     * @return AiStudioSetting
+     */
     public function updateFeatureFlags(array $flags, int $adminId): AiStudioSetting
     {
         $setting = AiStudioSetting::current();
@@ -57,10 +94,36 @@ class AiCopilotAdminService
         return $setting->fresh();
     }
 
-    public function getSessions(int $perPage = 20): \Illuminate\Pagination\LengthAwarePaginator
+    /**
+     * Get paginated copilot sessions for the admin area.
+     *
+     * @param  array<string,mixed>  $filters
+     * @return \Illuminate\Pagination\LengthAwarePaginator<int,\App\Models\AiCopilotSession>
+     */
+    public function getSessions(array $filters = []): \Illuminate\Pagination\LengthAwarePaginator
     {
-        return \App\Models\AiCopilotSession::with('user:id,uuid,username')
-            ->orderByDesc('created_at')
-            ->paginate($perPage);
+        return $this->sessionRepo->paginateForAdmin((int) ($filters['per_page'] ?? 20));
+    }
+
+    /**
+     * Lock a prompt template to prevent edits.
+     *
+     * @param  string  $intent
+     * @return AiPromptTemplate
+     */
+    public function lockTemplate(string $intent): AiPromptTemplate
+    {
+        return $this->templateRepo->setLockedByIntent($intent, true);
+    }
+
+    /**
+     * Unlock a prompt template to allow edits.
+     *
+     * @param  string  $intent
+     * @return AiPromptTemplate
+     */
+    public function unlockTemplate(string $intent): AiPromptTemplate
+    {
+        return $this->templateRepo->setLockedByIntent($intent, false);
     }
 }

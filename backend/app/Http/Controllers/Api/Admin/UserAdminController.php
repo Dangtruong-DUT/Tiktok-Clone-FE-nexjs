@@ -20,6 +20,11 @@ use Illuminate\Http\JsonResponse;
  */
 class UserAdminController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @param  UserAdminService  $userAdminService
+     */
     public function __construct(
         private readonly UserAdminService $userAdminService,
     ) {}

@@ -15,6 +15,11 @@ use Illuminate\Http\JsonResponse;
  */
 class PostAdminController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @param  PostAdminService  $postAdminService
+     */
     public function __construct(
         private readonly PostAdminService $postAdminService,
     ) {}

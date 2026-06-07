@@ -9,6 +9,11 @@ use Illuminate\Support\Str;
 
 class DocumentIndexingService
 {
+    /**
+     * Create a new service instance.
+     *
+     * @param  DocumentChunkingService  $chunkingService
+     */
     public function __construct(
         private readonly DocumentChunkingService $chunkingService,
     ) {}

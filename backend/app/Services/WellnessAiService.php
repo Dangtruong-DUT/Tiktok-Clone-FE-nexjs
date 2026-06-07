@@ -9,6 +9,11 @@ use App\Models\AiStudioSetting;
 
 class WellnessAiService
 {
+    /**
+     * Create a new service instance.
+     *
+     * @param  GeminiClientInterface  $gemini
+     */
     public function __construct(
         private readonly GeminiClientInterface $gemini,
     ) {}
@@ -73,13 +78,23 @@ You are a wellness rule parser for a screen-time management application. Convert
 
 Respond with JSON:
 {
-  "type": "continuous_usage | daily_limit | session_count",
-  "conditions": { "minutes": <int> } | { "daily_minutes": <int> } | { "sessions": <int> },
-  "action": "warning | lock | reminder",
+  "type": "continuous_usage | daily_limit | video_watch_time | late_night",
+  "conditions": { "minutes": <int> } | { "from_hour": <int>, "to_hour": <int> },
+  "action": "warning | soft_block",
   "title": "<short rule title>",
   "message": "<friendly notification message>",
   "confidence": <0.0-1.0>
 }
+
+Type guide:
+- continuous_usage: user has been using the app non-stop for too many minutes → conditions: { "minutes": <int> }
+- daily_limit: total daily usage exceeds a threshold → conditions: { "minutes": <int> }
+- video_watch_time: video watch time exceeds a threshold → conditions: { "minutes": <int> }
+- late_night: usage during late-night hours → conditions: { "from_hour": 22, "to_hour": 6 }
+
+Action guide:
+- warning: show a warning notification
+- soft_block: require user confirmation to continue
 PROMPT;
     }
 

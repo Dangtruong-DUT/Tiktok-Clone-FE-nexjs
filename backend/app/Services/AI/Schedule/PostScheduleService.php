@@ -8,6 +8,7 @@ use App\Enums\Post\PostPublishStatusEnum;
 use App\Exceptions\http\BadRequestException;
 use App\Models\Post;
 use App\Models\ScheduledPost;
+use App\Repositories\PostRepository;
 use App\Repositories\ScheduledPostRepository;
 use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -15,11 +16,31 @@ use Illuminate\Support\Str;
 
 class PostScheduleService
 {
+    /**
+     * Create a new service instance.
+     *
+     * @param  PostRepository  $postRepository
+     * @param  ScheduledPostRepository  $scheduledPostRepository
+     */
     public function __construct(
+        private readonly PostRepository $postRepository,
         private readonly ScheduledPostRepository $scheduledPostRepository,
     ) {}
 
-    public function schedulePost(Post $post, int $userId, string $scheduledAtInput, string $timezone): ScheduledPost
+    /**
+     * @param  array<string,mixed>  $payload
+     */
+    public function schedulePostByUuid(string $postUuid, int $userId, array $payload): ScheduledPost
+    {
+        $post = $this->postRepository->findByUuidAndUserOrFail($postUuid, $userId);
+
+        return $this->schedulePost($post, $userId, $payload);
+    }
+
+    /**
+     * @param  array<string,mixed>  $payload
+     */
+    public function schedulePost(Post $post, int $userId, array $payload): ScheduledPost
     {
         if ($post->user_id !== $userId) {
             throw new BadRequestException('You do not own this post.');
@@ -32,6 +53,9 @@ class PostScheduleService
         if ($this->scheduledPostRepository->findByPostForUser($post->id, $userId)) {
             throw new BadRequestException('This post is already scheduled. Cancel the existing schedule first.');
         }
+
+        $scheduledAtInput = (string) $payload['scheduled_at'];
+        $timezone = (string) ($payload['timezone'] ?? 'UTC');
 
         // scheduled_at is sent as UTC ISO from frontend — parse without timezone interpretation
         $scheduledAt = Carbon::parse($scheduledAtInput)->utc();
@@ -103,6 +127,13 @@ class PostScheduleService
         return $post->fresh();
     }
 
+    public function publishNowByUuid(string $postUuid, int $userId): Post
+    {
+        $post = $this->postRepository->findByUuidAndUserOrFail($postUuid, $userId);
+
+        return $this->publishNow($post, $userId);
+    }
+
     /** Called by PublishScheduledPostJob — transitions to published. */
     public function executePublish(ScheduledPost $scheduledPost): void
     {
@@ -138,7 +169,10 @@ class PostScheduleService
         ]);
     }
 
-    public function reschedule(ScheduledPost $scheduledPost, int $userId, string $scheduledAtInput, string $timezone): ScheduledPost
+    /**
+     * @param  array<string,mixed>  $payload
+     */
+    public function reschedule(ScheduledPost $scheduledPost, int $userId, array $payload): ScheduledPost
     {
         if ($scheduledPost->user_id !== $userId) {
             throw new BadRequestException('You do not own this scheduled post.');
@@ -147,6 +181,9 @@ class PostScheduleService
         if ($scheduledPost->status !== ScheduledPostStatusEnum::PENDING) {
             throw new BadRequestException('Only pending schedules can be rescheduled.');
         }
+
+        $scheduledAtInput = (string) $payload['scheduled_at'];
+        $timezone = (string) ($payload['timezone'] ?? 'UTC');
 
         // scheduled_at is sent as UTC ISO from frontend — parse without timezone interpretation
         $scheduledAt = Carbon::parse($scheduledAtInput)->utc();
@@ -167,8 +204,24 @@ class PostScheduleService
         return $this->scheduledPostRepository->findByUuidAndUserOrFail($uuid, $userId);
     }
 
-    public function paginateForUser(int $userId, int $perPage): LengthAwarePaginator
+    /** @param  array<string,mixed>  $filters */
+    public function paginateForUser(int $userId, array $filters = []): LengthAwarePaginator
     {
-        return $this->scheduledPostRepository->paginateByUser($userId, $perPage);
+        return $this->scheduledPostRepository->paginateByUser($userId, (int) ($filters['per_page'] ?? 15));
+    }
+
+    /**
+     * @param  array<string,mixed>  $filters
+     */
+    public function paginateStudioPostsForUser(int $userId, array $filters = []): LengthAwarePaginator
+    {
+        return $this->postRepository->paginateForStudioUser(
+            userId: $userId,
+            perPage: (int) ($filters['per_page'] ?? 20),
+            status: isset($filters['status']) && $filters['status'] !== '' ? (string) $filters['status'] : null,
+            search: trim((string) ($filters['q'] ?? '')),
+            hasScheduleFilter: array_key_exists('has_schedule', $filters),
+            hasSchedule: (bool) ($filters['has_schedule'] ?? false),
+        );
     }
 }

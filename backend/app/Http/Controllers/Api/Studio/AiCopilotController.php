@@ -4,48 +4,56 @@ namespace App\Http\Controllers\Api\Studio;
 
 use App\DTOs\AI\AiCopilotMessageInput;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Studio\DestroyCopilotSessionRequest;
 use App\Http\Requests\Studio\SendCopilotMessageRequest;
+use App\Http\Requests\Studio\ShowCopilotSessionRequest;
 use App\Http\Requests\Studio\StartCopilotSessionRequest;
+use App\Http\Requests\Studio\StreamCopilotMessageRequest;
+use App\Http\Requests\Studio\UpdateCopilotMessageStatusRequest;
 use App\Http\Resources\Api\Studio\Copilot\AiCopilotMessageResource;
 use App\Http\Resources\Api\Studio\Copilot\AiCopilotSessionResource;
 use App\Http\Response\ApiResponse;
-use App\Models\AiStudioSetting;
-use App\Repositories\AiCopilotSessionRepository;
 use App\Services\AI\Copilot\AiCopilotService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AiCopilotController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @param  AiCopilotService  $copilotService
+     */
     public function __construct(
-        private readonly AiCopilotService           $copilotService,
-        private readonly AiCopilotSessionRepository $sessionRepo,
+        private readonly AiCopilotService $copilotService,
     ) {}
 
     /**
      * Start a new AI Copilot session or return an existing active one.
+     *
+     * @param  StartCopilotSessionRequest  $request
+     * @return JsonResponse
      */
     public function startSession(StartCopilotSessionRequest $request): JsonResponse
     {
-        $settings = AiStudioSetting::current();
-
-        if (! $settings->copilot_enabled) {
+        if (! $this->copilotService->isEnabled()) {
             return ApiResponse::error('AI Copilot is currently disabled.', 503);
         }
 
         $session = $this->copilotService->startSession($request->user()->id, $request->validated());
-
-        $session->load(['messages' => fn ($q) => $q->orderBy('created_at')->limit(20)]);
 
         return ApiResponse::created(new AiCopilotSessionResource($session));
     }
 
     /**
      * Load a session with its recent messages.
+     *
+     * @param  ShowCopilotSessionRequest  $request
+     * @return JsonResponse
      */
-    public function showSession(Request $request, string $uuid): JsonResponse
+    public function showSession(ShowCopilotSessionRequest $request, string $uuid): JsonResponse
     {
         $session = $this->copilotService->getSessionWithMessages($uuid, $request->user()->id);
 
@@ -55,10 +63,14 @@ class AiCopilotController extends Controller
     /**
      * Accept a user message and return a stream token + SSE URL.
      * All messages go through the streaming path; non-streaming is removed.
+     *
+     * @param  SendCopilotMessageRequest  $request
+     * @param  string  $uuid
+     * @return JsonResponse
      */
     public function sendMessage(SendCopilotMessageRequest $request, string $uuid): JsonResponse
     {
-        $session  = $this->sessionRepo->findByUuidAndUserOrFail($uuid, $request->user()->id);
+        $session  = $this->copilotService->getOwnedSession($uuid, $request->user()->id);
         $input    = AiCopilotMessageInput::fromRequest($request->validated());
         $msgUuid  = Str::uuid()->toString();
 
@@ -92,16 +104,20 @@ class AiCopilotController extends Controller
 
     /**
      * Open the SSE stream for a previously accepted message.
+     *
+     * @param  StreamCopilotMessageRequest  $request
+     * @return StreamedResponse
      */
-    public function stream(Request $request, string $uuid, string $messageUuid): StreamedResponse
+    public function stream(StreamCopilotMessageRequest $request, string $uuid, string $messageUuid): StreamedResponse
     {
-        $token  = (string) $request->query('token', '');
+        $token = (string) $request->validated('token');
+
         $userId = $this->copilotService->validateStreamToken($token, $uuid, $messageUuid);
 
         abort_unless($userId !== null, 403, 'Invalid or expired stream token.');
 
-        $session     = $this->copilotService->getSessionWithMessages($uuid, $userId);
-        $userMessage = $session->messages->firstWhere('uuid', $messageUuid)
+        $session     = $this->copilotService->getOwnedSession($uuid, $userId);
+        $userMessage = $this->copilotService->getMessageInSession($messageUuid, $session->id)
             ?? abort(404, 'Message not found in session.');
 
         return response()->stream(function () use ($session, $userMessage) {
@@ -128,8 +144,11 @@ class AiCopilotController extends Controller
 
     /**
      * Mark an assistant message as accepted by the user.
+     *
+     * @param  UpdateCopilotMessageStatusRequest  $request
+     * @return JsonResponse
      */
-    public function accept(Request $request, string $messageUuid): JsonResponse
+    public function accept(UpdateCopilotMessageStatusRequest $request, string $messageUuid): JsonResponse
     {
         $message = $this->copilotService->getMessageByUuidForUser($messageUuid, $request->user()->id);
         $message->update(['status' => 'accepted']);
@@ -139,8 +158,11 @@ class AiCopilotController extends Controller
 
     /**
      * Mark an assistant message as rejected by the user.
+     *
+     * @param  UpdateCopilotMessageStatusRequest  $request
+     * @return JsonResponse
      */
-    public function reject(Request $request, string $messageUuid): JsonResponse
+    public function reject(UpdateCopilotMessageStatusRequest $request, string $messageUuid): JsonResponse
     {
         $message = $this->copilotService->getMessageByUuidForUser($messageUuid, $request->user()->id);
         $message->update(['status' => 'rejected']);
@@ -150,11 +172,13 @@ class AiCopilotController extends Controller
 
     /**
      * Expire a session immediately (user-initiated close).
+     *
+     * @param  DestroyCopilotSessionRequest  $request
+     * @return Response
      */
-    public function destroySession(Request $request, string $uuid):\Illuminate\Http\Response
+    public function destroySession(DestroyCopilotSessionRequest $request, string $uuid): Response
     {
-        $session = $this->sessionRepo->findByUuidAndUserOrFail($uuid, $request->user()->id);
-        $this->copilotService->expireSession($session);
+        $this->copilotService->expireSessionByUuid($uuid, $request->user()->id);
 
         return ApiResponse::noContent();
     }

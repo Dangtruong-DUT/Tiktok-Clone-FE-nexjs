@@ -17,6 +17,13 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthTokenService
 {
+    /**
+     * Create a new service instance.
+     *
+     * @param  RefreshTokenRepository  $refreshTokenRepository
+     * @param  ForgotPasswordTokenRepository  $forgotPasswordTokenRepository
+     * @param  VerifyEmailTokenRepository  $verifyEmailTokenRepository
+     */
     public function __construct(
         private readonly RefreshTokenRepository $refreshTokenRepository,
         private readonly ForgotPasswordTokenRepository $forgotPasswordTokenRepository,

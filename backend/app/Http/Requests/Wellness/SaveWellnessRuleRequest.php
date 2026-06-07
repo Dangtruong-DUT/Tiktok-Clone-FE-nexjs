@@ -28,22 +28,4 @@ class SaveWellnessRuleRequest extends BaseRequest
             'natural_language_input' => [self::SOMETIMES, self::NULLABLE, self::STRING, self::MAX . ':500'],
         ]);
     }
-
-    /** Return the typed rule type enum value. */
-    public function ruleType(): WellnessRuleTypeEnum
-    {
-        return WellnessRuleTypeEnum::from((string) $this->input('type'));
-    }
-
-    /** Return the typed action enum value. */
-    public function action(): WellnessActionEnum
-    {
-        return WellnessActionEnum::from((string) $this->input('action'));
-    }
-
-    /** Return the conditions array. */
-    public function conditions(): array
-    {
-        return (array) $this->input('conditions', []);
-    }
 }

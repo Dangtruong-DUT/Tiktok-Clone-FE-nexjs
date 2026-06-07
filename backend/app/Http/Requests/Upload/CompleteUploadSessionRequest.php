@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Upload;
 
-use App\DTOs\Upload\MultipartCompleteDto;
 use App\Http\Requests\BaseRequest;
 
 class CompleteUploadSessionRequest extends BaseRequest
@@ -34,27 +33,5 @@ class CompleteUploadSessionRequest extends BaseRequest
                 self::MAX . ':255',
             ],
         ]);
-    }
-
-    /**
-     * Normalise raw part data into typed DTOs.
-     *
-     * @return MultipartCompleteDto[]|null
-     */
-    public function resolvedParts(): ?array
-    {
-        $parts = $this->input('parts');
-
-        if (empty($parts)) {
-            return null;
-        }
-
-        return array_map(
-            fn ($part) => new MultipartCompleteDto(
-                partNumber: (int) $part['part_number'],
-                etag: '"' . trim($part['etag'], '"') . '"',
-            ),
-            $parts
-        );
     }
 }

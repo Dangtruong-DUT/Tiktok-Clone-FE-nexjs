@@ -2,181 +2,63 @@
 
 return [
 
-    /*
-    |--------------------------------------------------------------------------
-    | Intent keyword rules (Vietnamese)
-    |--------------------------------------------------------------------------
-    | Used by AiCopilotIntentDetector::detectByKeyword() to match user messages.
-    | Add new keywords here — no code changes required.
-    */
-    'intent_keywords' => [
-        'query_user_stats' => [
-            'thống kê của tôi', 'thông tin tài khoản', 'bao nhiêu follow',
-            'profile của tôi', 'followers của tôi', 'thông tin cá nhân',
-            'số follow', 'số người theo dõi', 'số lượng follow',
-            'tài khoản của tôi', 'thống kê tài khoản',
-            'tôi là ai', 'tên của tôi', 'email của tôi', 'avatar của tôi',
-            'tổng view của tôi', 'tổng like của tôi', 'hồ sơ của tôi',
-            'xem profile của tôi', 'thông tin về tôi', 'cá nhân tôi',
-            'số bài đăng của tôi', 'tổng số bài', 'số bài lên lịch',
-            'tổng like tôi có', 'tổng view tôi có',
-            'tình trạng appeal của tôi', 'khiếu nại của tôi', 'appeal của tôi',
-            'bao nhiêu appeal', 'kháng cáo của tôi', 'hồ sơ cá nhân',
-            'tôi đang có bao nhiêu', 'tài khoản trông như thế nào',
+    'large_video_notice' => 'Video của bạn khá lớn. Để phân tích chính xác hơn, bạn có thể mô tả nội dung video hoặc chọn đoạn muốn tập trung.',
+
+    'routes' => [
+        'upload' => [
+            'label'       => 'Đăng video mới',
+            'description' => 'Tải lên và chỉnh sửa video mới của bạn',
         ],
-        'admin_query_appeals' => [
-            'kháng cáo chờ', 'kháng cáo đang chờ', 'danh sách kháng cáo',
-            'xem kháng cáo', 'kháng cáo chi tiết', 'thống kê kháng cáo',
+        'scheduled_posts' => [
+            'label'       => 'Bài đăng đã lên lịch',
+            'description' => 'Xem và quản lý các bài đăng đã lên lịch',
         ],
-        'admin_query_ai_metrics' => [
-            'chi phí ai hôm nay', 'chi phí ai', 'thống kê ai chi tiết',
-            'top intent', 'top user ai', 'doanh thu ai',
-            'copilot usage', 'ai metrics', 'thống kê ai', 'chi phí copilot',
-            'ai hệ thống', 'token', 'số token', 'tổng token',
-            'token hệ thống', 'chi phí token', 'ai token', 'bao nhiêu token',
-            'token đã dùng', 'tiêu tốn token',
+        'content' => [
+            'label'       => 'Quản lý bài đăng',
+            'description' => 'Xem toàn bộ bài đăng của bạn',
         ],
-        'admin_query_encoding' => [
-            'video lỗi encoding', 'video encoding errors', 'hàng đợi encoding',
-            'encoding queue', 'video lỗi mã hoá', 'video đang mã hoá',
-            'encoding failures', 'encoding status', 'job encoding',
+        'wellness' => [
+            'label'       => 'Wellness & Screen Time',
+            'description' => 'Theo dõi thời gian sử dụng và thiết lập giới hạn lành mạnh',
         ],
-        'admin_query_stats' => [
-            'thống kê hệ thống', 'tổng số người dùng',
-            'bao nhiêu bài đăng trên hệ thống', 'tổng số video hệ thống',
-            'người dùng mới hôm nay', 'đăng ký mới', 'lượng truy cập',
-            'hệ thống hôm nay', 'báo cáo hệ thống', 'thống kê nền tảng',
-            'bao nhiêu user', 'bao nhiêu người dùng hoạt động',
-            'tổng số tài khoản', 'thống kê toàn hệ thống', 'tổng số bài trên app',
-            'hệ thống có bao nhiêu', 'số người dùng hệ thống',
-            'người dùng hệ thống', 'số lượng người dùng',
-            'số người dùng hiện tại', 'người dùng hiện tại',
-            'người dùng trong hệ thống',
+        'settings' => [
+            'label'       => 'Cài đặt tài khoản',
+            'description' => 'Chỉnh sửa hồ sơ, mật khẩu và tuỳ chọn bảo mật',
         ],
-        'query_post_stats' => [
-            'bài đăng của tôi', 'post gần nhất', 'video của tôi',
-            'bài đăng gần đây', 'bao nhiêu bài', 'thống kê bài đăng',
-            'số bài đăng', 'số video', 'số lượng bài', 'số lượng video',
-            'bài đăng hiện tại', 'tổng bài đăng', 'tổng bài của tôi',
-            'đăng được bao nhiêu', 'bài nào nhiều view nhất', 'bài đăng thất bại',
-            'bài nháp', 'bài đang chờ', 'trạng thái bài đăng',
-            'bài có bao nhiêu view', 'hiệu suất bài', 'bài hôm nay',
-            'đã đăng bao nhiêu', 'video nào hot nhất', 'thống kê chi tiết bài',
-            'bài đăng hiệu quả nhất', 'bài đang lên lịch',
-            'video của tôi đang như thế nào', 'xem danh sách bài', 'bài mới đăng',
+        'appeals' => [
+            'label'       => 'Khiếu nại kiểm duyệt',
+            'description' => 'Gửi và theo dõi khiếu nại về các quyết định kiểm duyệt',
         ],
-        'query_notifications' => [
-            'thông báo', 'thông báo hôm nay', 'thông báo chưa đọc',
-            'tôi có bao nhiêu thông báo', 'xem thông báo', 'danh sách thông báo',
-            'ai like bài của tôi', 'ai follow tôi', 'ai mention tôi',
-            'chưa đọc', 'thông báo mới',
+        'admin' => [
+            'label'       => 'Admin Dashboard',
+            'description' => 'Bảng điều khiển quản trị hệ thống',
         ],
-        'query_screen_time' => [
-            'thời gian sử dụng', 'xem bao lâu', 'lịch sử xem',
-            'thói quen xem', 'thống kê thời gian', 'phân tích screen time',
-            'screen time của tôi', 'screen time hôm nay', 'thời gian dùng app',
-            'thời gian online', 'thời gian trên app', 'bao lâu tôi dùng',
-            'dùng app bao lâu', 'tôi đã dùng bao lâu',
-            'thời gian sử dụng ứng dụng', 'tôi online bao lâu', 'tôi đã xem bao lâu',
+        'home' => [
+            'label'       => 'Tổng quan Snapi Studio',
+            'description' => 'Trang tổng quan Snapi Studio của bạn',
         ],
-        'schedule_post' => [
-            'lên lịch', 'đăng lúc', 'đăng vào', 'đăng lúc nào',
-            'thời gian đăng', 'đặt lịch', 'lên lịch đăng', 'đăng vào ngày',
-            'đăng vào giờ', 'hẹn giờ', 'khi nào nên đăng',
-            'thời điểm đăng tốt nhất', 'đăng ngày mai', 'đăng tuần sau',
-            'gợi ý giờ đăng', 'đăng lúc mấy giờ thì tốt',
-            'đăng vào khung giờ nào', 'tôi muốn lên lịch',
-        ],
-        'write_caption' => [
-            'caption', 'viết caption', 'tạo caption',
-            'viết nội dung', 'viết content', 'tạo content',
-            'tạo nội dung', 'nội dung bài đăng', 'đưa vào bài', 'áp dụng vào bài',
-            'đặt caption', 'thêm caption', 'chữ bài đăng',
-            'gợi ý caption', 'viết cho video này', 'caption hay',
-            'nội dung hấp dẫn', 'viết bài đăng', 'giúp tôi viết',
-            'content cho video', 'đề xuất caption', 'tạo nội dung hay',
-            'viết nội dung cho video', 'tạo mô tả video',
-        ],
-        'write_title' => [
-            'tiêu đề', 'tạo tiêu đề', 'đặt tiêu đề',
-            'tên video', 'gợi ý tiêu đề',
-        ],
-        'write_description' => [
-            'mô tả', 'viết mô tả', 'tạo mô tả', 'mô tả video',
-            'giới thiệu video', 'tạo mô tả video', 'viết mô tả video',
-        ],
-        'generate_hashtags' => [
-            'hashtag', 'tag', 'thẻ', 'tạo hashtag', 'viết hashtag',
-            'gợi ý hashtag', 'hashtags cho', 'thêm hashtag',
-            '#', 'tag phù hợp', 'gợi ý tag', 'tag nào dùng',
-            'thẻ hashtag', 'hashtag phổ biến', 'tag cho video',
-            'cần hashtag gì', 'tag liên quan', 'hashtag hay', 'các hashtag',
-        ],
-        'rewrite_content' => [
-            'viết lại', 'cải thiện', 'sửa', 'làm lại', 'nâng cấp',
-            'tối ưu', 'chỉnh sửa', 'hay hơn', 'tốt hơn',
-            'chỉnh lại', 'sửa lại cho tốt hơn', 'cải tiến',
-            'làm hay hơn', 'nâng cao chất lượng',
-        ],
-        'analyze_video' => [
-            'phân tích video', 'analyze video', 'đánh giá video',
-            'review video', 'nhận xét video', 'feedback video', 'góp ý video',
-            'video này thế nào', 'đánh giá video này', 'nhận xét về video',
-            'video tốt không', 'có nên đăng không', 'video hay không',
-            'chất lượng video', 'xem video của tôi',
-            'video này ok không', 'phân tích nội dung video',
-        ],
-        'analyze_viral' => [
-            'viral', 'xu hướng', 'trend', 'lan truyền',
-            'tiềm năng viral', 'có viral không', 'có xu hướng không',
-            'viral được không', 'có thể trending không', 'khả năng viral',
-            'đánh giá viral', 'có thể nổi không',
-            'có thể lên trend không', 'video có hot không',
-        ],
-        'analyze_hook' => [
-            'hook', 'mở đầu', 'intro', 'giây đầu', 'opening',
-            '3 giây đầu', 'phần mở', 'bắt đầu video',
-            'hook có hay không', 'mở đầu có cuốn không',
-            'giây đầu tiên', 'phần intro',
-        ],
-        'analyze_retention' => [
-            'retention', 'giữ chân', 'xem hết', 'watch time',
-            'người xem bỏ', 'tỉ lệ xem', 'completion rate',
-            'người xem có xem hết không', 'tỉ lệ hoàn thành',
-            'drop off', 'thời lượng xem',
-        ],
-        'suggest_cta' => [
-            'viết cta', 'gợi ý cta', 'tạo cta', 'thêm cta', 'cta cho video',
-            'lời kêu gọi', 'viết lời kêu gọi', 'gợi ý lời kêu gọi',
-        ],
-        'analyze_cta' => [
-            'phân tích cta', 'đánh giá cta', 'cta có hiệu quả không',
-            'cta tốt không', 'cta của tôi thế nào',
-            'kêu gọi hành động có tốt không', 'cta có ổn không',
-            'đánh giá lời kêu gọi',
-        ],
-        'analyze_audience' => [
-            'audience', 'đối tượng', 'target', 'khán giả',
-            'phù hợp ai', 'xem nhiều',
-        ],
-        'navigate_to' => [
-            'đường đến', 'tới trang', 'chuyển đến', 'link tới',
-            'tìm ở đâu', 'ở đâu trong app', 'dẫn đến trang',
-            'trang nào', 'mở trang', 'đến trang', 'truy cập trang',
-        ],
-        'query_app_info' => [
-            'snapi là gì', 'tính năng nào', 'web làm được gì',
-            'hướng dẫn sử dụng snapi', 'app có gì', 'giới thiệu snapi',
-            'snapi có thể', 'làm thế nào để dùng', 'cách để dùng snapi',
-            'cách dùng snapi', 'hướng dẫn snapi', 'chức năng snapi',
-            'tính năng của snapi', 'snapi hỗ trợ gì', 'có thể làm gì trên snapi',
-            'giải thích tính năng', 'snapi studio có', 'tôi cần làm gì để dùng',
-            'chính sách', 'điều khoản', 'quy định',
-            'chức năng này là gì', 'trang này là gì',
-            'snapi hoạt động như thế nào', 'ai copilot là gì',
-            'wellness là gì', 'screen time là gì', 'studio có tính năng gì',
-            'tôi muốn biết về snapi', 'giới thiệu tính năng snapi',
-        ],
+    ],
+
+    'messages' => [
+        'clarification' => 'Mình chưa hiểu rõ yêu cầu. Bạn muốn tạo nội dung, xem thống kê, hỏi hướng dẫn, hay phân tích video?',
+        'navigation_all' => 'Dưới đây là tất cả các trang trong Snapi Studio:',
+        'navigation_matched' => 'Tìm thấy trang phù hợp với yêu cầu của bạn:',
+        'analytics_clarification' => 'Bạn muốn xem thống kê gì cụ thể? Ví dụ: bài đăng, người dùng, AI, kháng cáo, hoặc hệ thống.',
+        'analytics_empty' => 'Không tìm thấy dữ liệu phù hợp với yêu cầu. Bạn có thể hỏi cụ thể hơn không?',
+        'app_knowledge_fallback' => <<<'MD'
+## Snapi Studio — Hướng dẫn sử dụng
+
+Snapi Studio là nền tảng sáng tạo nội dung short-form video.
+
+### Tính năng chính
+- **Đăng video**: Tải lên, chỉnh sửa thumbnail, caption, hashtag, lên lịch hoặc đăng ngay
+- **AI Copilot**: Viết caption/hashtag, phân tích viral, hook, retention; hỗ trợ tiếng Việt và tiếng Anh
+- **Thống kê**: Xem lượt xem, likes, followers, screen time
+- **Wellness**: Theo dõi và giới hạn thời gian sử dụng
+- **Khiếu nại**: Gửi kháng cáo quyết định kiểm duyệt
+
+Hỏi tôi về bất kỳ tính năng nào để biết thêm chi tiết!
+MD,
     ],
 
     /*
@@ -188,25 +70,33 @@ return [
     */
     'chips' => [
         'write_caption'    => ['Ngắn hơn', 'Tạo hashtag', 'Phân tích viral', 'Đề xuất CTA'],
+        'write_title'      => ['Viết caption', 'Tạo hashtag', 'Viết mô tả'],
+        'write_description' => ['Viết caption', 'Tạo hashtag', 'Rút gọn mô tả'],
+        'rewrite_content'  => ['Ngắn hơn', 'Thu hút hơn', 'Thêm CTA'],
+        'suggest_cta'      => ['Viết caption', 'Tạo hashtag', 'Phân tích CTA'],
+        'content_generation' => ['Viết caption', 'Tạo hashtag', 'Phân tích viral'],
         'generate_hashtags' => ['Viết caption', 'Phân tích viral', 'Đề xuất CTA'],
         'analyze_viral'    => ['Cải thiện như thế nào?', 'Viết caption hay hơn', 'Đề xuất CTA', 'Phân tích hook'],
         'analyze_video'    => ['Phân tích hook', 'Viết caption', 'Tạo hashtag', 'Phân tích viral'],
+        'analyze_hook'     => ['Viết lại hook', 'Phân tích retention', 'Viết caption'],
+        'analyze_retention' => ['Cải thiện hook', 'Phân tích viral', 'Đề xuất CTA'],
+        'analyze_cta'      => ['Viết CTA mới', 'Viết caption', 'Phân tích viral'],
+        'analyze_audience' => ['Gợi ý caption', 'Phân tích viral', 'Tạo hashtag'],
+        'analyze_frame'    => ['Phân tích toàn video', 'Viết caption', 'Gợi ý thumbnail'],
+        'analyze_video_segment' => ['Phân tích toàn video', 'Viết caption đoạn này', 'Phân tích viral'],
+        'video_review'     => ['Phân tích hook', 'Phân tích viral', 'Viết caption'],
+        'analytics'        => ['Xem thống kê khác', 'So sánh kỳ trước', 'Phân tích chi tiết hơn'],
+        'analytics_post'   => ['So sánh kỳ trước', 'Xem chi tiết tương tác', 'Thống kê người dùng'],
+        'analytics_user_growth' => ['Thống kê bài đăng', 'So sánh tháng trước', 'Top creators'],
+        'analytics_clarification' => ['Thống kê bài đăng', 'Thống kê người dùng', 'Chi phí AI', 'Thống kê hệ thống'],
+        'analytics_empty'  => ['Thống kê bài đăng', 'Thống kê người dùng', 'Thống kê hệ thống'],
+        'navigation'       => ['Đăng video mới', 'Xem bài đăng của tôi', 'Cài đặt tài khoản'],
+        'app_knowledge'    => ['Hướng dẫn đăng video', 'AI Copilot làm được gì?', 'Đường đến trang cài đặt'],
+        'large_video_notice' => ['Mô tả video của tôi', 'Chọn một đoạn video', 'Phân tích hook'],
+        'clarification'    => ['Viết caption', 'Xem thống kê', 'Hỏi hướng dẫn', 'Phân tích video'],
         'schedule_post'    => ['Viết caption', 'Tạo hashtag', 'Phân tích viral'],
         'error'            => ['Thử lại', 'Hỏi câu khác'],
         'default'          => ['Viết caption', 'Tạo hashtag', 'Phân tích viral', 'Phân tích hook'],
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Admin-only intents
-    |--------------------------------------------------------------------------
-    | Intents that must only fire for users with role = super_admin.
-    */
-    'admin_only_intents' => [
-        'admin_query_stats',
-        'admin_query_appeals',
-        'admin_query_ai_metrics',
-        'admin_query_encoding',
     ],
 
 ];

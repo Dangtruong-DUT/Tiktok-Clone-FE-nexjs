@@ -52,7 +52,13 @@
       "Bash(npm install *)",
       "Bash(php artisan *)",
       "Bash(php -r ' *)",
-      "Bash(composer dump-autoload *)"
+      "Bash(composer dump-autoload *)",
+      "Bash(php -l app/Services/AI/Copilot/AiCopilotService.php)",
+      "Bash(php -l app/Providers/AppServiceProvider.php)",
+      "Bash(php -l database/seeders/AiPromptTemplateSeeder.php)",
+      "Bash(xargs php -l)",
+      "Bash(php -l config/analytics.php)",
+      "Bash(grep -v \"Handler.php$\")"
     ],
     "additionalDirectories": [
       "/private/tmp"

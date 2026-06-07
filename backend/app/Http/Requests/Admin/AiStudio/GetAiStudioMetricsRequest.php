@@ -14,9 +14,4 @@ class GetAiStudioMetricsRequest extends BaseRequest
             'period' => [self::SOMETIMES, self::STRING, Rule::in(['today', 'week', 'month'])],
         ]);
     }
-
-    public function period(): string
-    {
-        return $this->input('period', 'today');
-    }
 }

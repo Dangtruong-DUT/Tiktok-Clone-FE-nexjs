@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Enums\Post\PostPublishStatusEnum;
 use App\Enums\Post\PostTypeEnum;
 use App\Models\Post;
 use Illuminate\Contracts\Pagination\CursorPaginator;
@@ -96,6 +97,15 @@ class PostRepository extends BaseRepository
         return $this->query()->where('uuid', $uuid)->firstOrFail();
     }
 
+    public function findByUuidAndUserOrFail(string $uuid, int $userId): Post
+    {
+        /** @var Post */
+        return $this->query()
+            ->where('uuid', $uuid)
+            ->where('user_id', $userId)
+            ->firstOrFail();
+    }
+
     /**
      * Find a post by ID, including soft-deleted posts.
      */
@@ -110,6 +120,49 @@ class PostRepository extends BaseRepository
     public function findWithTrashedByUuid(string $uuid): ?Post
     {
         return $this->query()->withTrashed()->where('uuid', $uuid)->first();
+    }
+
+    /**
+     * @return LengthAwarePaginator
+     */
+    public function paginateForStudioUser(
+        int $userId,
+        int $perPage,
+        ?string $status = null,
+        string $search = '',
+        bool $hasScheduleFilter = false,
+        bool $hasSchedule = false,
+    ): LengthAwarePaginator {
+        $allowedStatuses = array_column(PostPublishStatusEnum::cases(), 'value');
+
+        $query = $this->query()
+            ->where('user_id', $userId)
+            ->orderByDesc('updated_at');
+
+        if ($search !== '') {
+            $query->where('content', 'ilike', "%{$search}%");
+        }
+
+        if ($hasScheduleFilter) {
+            if ($hasSchedule) {
+                $query->whereHas('scheduledPost');
+            } else {
+                $query->whereDoesntHave('scheduledPost');
+            }
+        }
+
+        if ($status !== null && in_array($status, $allowedStatuses, true)) {
+            $query->where('status', $status);
+        } else {
+            $query->whereIn('status', [
+                PostPublishStatusEnum::DRAFT->value,
+                PostPublishStatusEnum::SCHEDULED->value,
+                PostPublishStatusEnum::PUBLISHED->value,
+                PostPublishStatusEnum::FAILED->value,
+            ]);
+        }
+
+        return $query->with(['scheduledPost', 'thumbnailFile'])->paginate($perPage);
     }
 
     /**

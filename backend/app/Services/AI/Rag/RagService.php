@@ -10,6 +10,13 @@ use Illuminate\Support\Collection;
 
 class RagService
 {
+    /**
+     * Create a new service instance.
+     *
+     * @param  GeminiEmbeddingService  $embeddingService
+     * @param  PgVectorSearchService  $searchService
+     * @param  GeminiClientInterface  $geminiClient
+     */
     public function __construct(
         private readonly GeminiEmbeddingService $embeddingService,
         private readonly PgVectorSearchService  $searchService,
@@ -19,7 +26,10 @@ class RagService
     /**
      * Answer a question using RAG: embed → search → augment → generate.
      *
+     * @param  string  $question
      * @param  array<array{role: string, content: string}>  $conversationHistory
+     * @param  string  $locale
+     * @return array{answer: string, citations: array<int,array<string,mixed>>, has_docs: bool}
      */
     public function answer(
         string $question,

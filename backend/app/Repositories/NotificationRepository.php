@@ -20,6 +20,9 @@ class NotificationRepository extends BaseRepository
 
     /**
      * Check if a notification exists by UUID
+     *
+     * @param  string  $uuid
+     * @return bool
      */
     public function isExistByUuid(string $uuid): bool
     {
@@ -28,7 +31,11 @@ class NotificationRepository extends BaseRepository
 
     /**
      * Get notifications for one user with tab filtering.
+     *
+     * @param  int  $notifiableId
      * @param  array<string, mixed>  $filters
+     * @param  int|null  $authUserId
+     * @return LengthAwarePaginator
      */
     public function getByNotifiableId(int $notifiableId, array $filters, ?int $authUserId): LengthAwarePaginator
     {
@@ -62,6 +69,10 @@ class NotificationRepository extends BaseRepository
 
     /**
      * Count unread notifications for one user by tab.
+     *
+     * @param  int  $notifiableId
+     * @param  string  $tab
+     * @return int
      */
     public function countUnreadByNotifiableId(int $notifiableId, string $tab = NotificationTabEnum::ALL->value): int
     {
@@ -75,6 +86,10 @@ class NotificationRepository extends BaseRepository
 
     /**
      * Mark all unread notifications as read for one user by tab.
+     *
+     * @param  int  $notifiableId
+     * @param  string  $tab
+     * @return int
      */
     public function markAllAsReadByNotifiableId(int $notifiableId, string $tab = NotificationTabEnum::ALL->value): int
     {
@@ -88,6 +103,10 @@ class NotificationRepository extends BaseRepository
 
     /**
      * Find one notification by UUID, scoped to one user.
+     *
+     * @param  string  $uuid
+     * @param  int  $notifiableId
+     * @return Notification|null
      */
     public function findByUuidAndNotifiableId(string $uuid, int $notifiableId): ?Notification
     {

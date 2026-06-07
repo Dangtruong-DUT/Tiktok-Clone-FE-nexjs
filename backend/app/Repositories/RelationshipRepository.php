@@ -15,6 +15,10 @@ class RelationshipRepository extends BaseRepository
 
     /**
      * Delete a follow relationship between two users.
+     *
+     * @param  int  $userId
+     * @param  int  $targetUserId
+     * @param  RelationshipTypeEnum  $type
      * @return int Number of deleted rows
      */
     public function deleteRelationship(int $userId, int $targetUserId, RelationshipTypeEnum $type): int
@@ -27,6 +31,10 @@ class RelationshipRepository extends BaseRepository
 
     /**
      * Check if the user is following the target user.
+     *
+     * @param  int  $userId
+     * @param  int  $targetUserId
+     * @return bool
      */
     public function isFollowing(int $userId, int $targetUserId): bool
     {

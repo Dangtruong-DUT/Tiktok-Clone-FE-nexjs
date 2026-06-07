@@ -16,6 +16,13 @@ class ScreenTimeSessionRepository extends BaseRepository
         parent::__construct(new ScreenTimeSession());
     }
 
+    /**
+     * Find a screen-time session by UUID for a user or fail.
+     *
+     * @param  string  $uuid
+     * @param  int  $userId
+     * @return ScreenTimeSession
+     */
     public function findByUuidAndUserOrFail(string $uuid, int $userId): ScreenTimeSession
     {
         /** @var ScreenTimeSession */
@@ -25,6 +32,12 @@ class ScreenTimeSessionRepository extends BaseRepository
             ->firstOrFail();
     }
 
+    /**
+     * Find the active screen-time session for a user.
+     *
+     * @param  int  $userId
+     * @return ScreenTimeSession|null
+     */
     public function findActiveForUser(int $userId): ?ScreenTimeSession
     {
         /** @var ScreenTimeSession|null */
@@ -35,7 +48,14 @@ class ScreenTimeSessionRepository extends BaseRepository
             ->first();
     }
 
-    /** Returns sessions grouped by date for aggregation. */
+    /**
+     * Get ended sessions in a date range for aggregation.
+     *
+     * @param  int  $userId
+     * @param  Carbon  $from
+     * @param  Carbon  $to
+     * @return Collection<int, ScreenTimeSession>
+     */
     public function getInRange(int $userId, Carbon $from, Carbon $to): Collection
     {
         return $this->query()
@@ -47,6 +67,14 @@ class ScreenTimeSessionRepository extends BaseRepository
             ->get();
     }
 
+    /**
+     * Sum duration seconds in a date range.
+     *
+     * @param  int  $userId
+     * @param  Carbon  $from
+     * @param  Carbon  $to
+     * @return int
+     */
     public function sumSecondsInRange(int $userId, Carbon $from, Carbon $to): int
     {
         return (int) $this->query()
@@ -57,6 +85,14 @@ class ScreenTimeSessionRepository extends BaseRepository
             ->sum('duration_seconds');
     }
 
+    /**
+     * Sum video seconds in a date range.
+     *
+     * @param  int  $userId
+     * @param  Carbon  $from
+     * @param  Carbon  $to
+     * @return int
+     */
     public function sumVideoSecondsInRange(int $userId, Carbon $from, Carbon $to): int
     {
         return (int) $this->query()
@@ -66,6 +102,14 @@ class ScreenTimeSessionRepository extends BaseRepository
             ->sum('video_seconds');
     }
 
+    /**
+     * Count ended sessions in a date range.
+     *
+     * @param  int  $userId
+     * @param  Carbon  $from
+     * @param  Carbon  $to
+     * @return int
+     */
     public function countInRange(int $userId, Carbon $from, Carbon $to): int
     {
         return $this->query()
