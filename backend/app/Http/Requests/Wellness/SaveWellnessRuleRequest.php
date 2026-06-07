@@ -4,26 +4,46 @@ namespace App\Http\Requests\Wellness;
 
 use App\Enums\Wellness\WellnessActionEnum;
 use App\Enums\Wellness\WellnessRuleTypeEnum;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rules\Enum;
 
-class SaveWellnessRuleRequest extends FormRequest
+class SaveWellnessRuleRequest extends BaseRequest
 {
-    public function authorize(): bool { return true; }
-
-    /** @return array<string,mixed> */
+    /**
+     * Build validation rules; presence is 'sometimes' on PUT (partial update) and 'required' otherwise.
+     *
+     * @return array<string, mixed[]>
+     */
     public function rules(): array
     {
-        $presence = $this->isMethod('PUT') ? 'sometimes' : 'required';
+        $presence = $this->isMethod('PUT') ? self::SOMETIMES : self::REQUIRED;
 
-        return [
-            'type'                   => [$presence, 'string', new Enum(WellnessRuleTypeEnum::class)],
-            'conditions'             => [$presence, 'array'],
-            'action'                 => [$presence, 'string', new Enum(WellnessActionEnum::class)],
-            'title'                  => [$presence, 'string', 'max:200'],
-            'message'                => [$presence, 'string', 'max:500'],
-            'is_enabled'             => ['sometimes', 'boolean'],
-            'natural_language_input' => ['sometimes', 'nullable', 'string', 'max:500'],
-        ];
+        return $this->applyBaseRules([
+            'type'                   => [$presence, self::STRING, new Enum(WellnessRuleTypeEnum::class)],
+            'conditions'             => [$presence, self::ARRAY],
+            'action'                 => [$presence, self::STRING, new Enum(WellnessActionEnum::class)],
+            'title'                  => [$presence, self::STRING, self::MAX . ':200'],
+            'message'                => [$presence, self::STRING, self::MAX . ':500'],
+            'is_enabled'             => [self::SOMETIMES, self::BOOLEAN],
+            'natural_language_input' => [self::SOMETIMES, self::NULLABLE, self::STRING, self::MAX . ':500'],
+        ]);
+    }
+
+    /** Return the typed rule type enum value. */
+    public function ruleType(): WellnessRuleTypeEnum
+    {
+        return WellnessRuleTypeEnum::from((string) $this->input('type'));
+    }
+
+    /** Return the typed action enum value. */
+    public function action(): WellnessActionEnum
+    {
+        return WellnessActionEnum::from((string) $this->input('action'));
+    }
+
+    /** Return the conditions array. */
+    public function conditions(): array
+    {
+        return (array) $this->input('conditions', []);
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AiStudio\GetAiStudioMetricsRequest;
 use App\Http\Requests\Admin\AiStudio\UpdateAiStudioSettingsRequest;
 use App\Http\Resources\Api\Admin\AiStudioSettingResource;
+use App\Http\Resources\Api\Admin\AiUsageLogResource;
 use App\Http\Response\ApiResponse;
 use App\Models\AiStudioSetting;
 use App\Services\Admin\AiStudioAdminService;
@@ -53,7 +54,7 @@ class AiStudioAdminController extends Controller
         $items   = $this->service->listRequests($filters);
 
         return ApiResponse::success(
-            data: $items,
+            data: AiUsageLogResource::collection($items),
             message: 'AI Studio requests retrieved.',
         );
     }

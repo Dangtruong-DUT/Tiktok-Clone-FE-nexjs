@@ -2,18 +2,21 @@
 
 namespace App\Services\AI\Copilot;
 
+use App\Contracts\AI\GeminiClientInterface;
+use App\DTOs\AI\AiCopilotMessageInput;
+use App\DTOs\AI\Gemini\GeminiConfig;
+use App\DTOs\AI\Gemini\GeminiRequest;
 use App\Enums\Ai\AiCopilotIntentEnum;
 use App\Models\AiPromptTemplate;
-use App\Services\AI\GeminiAiService;
+use App\Models\AiStudioSetting;
 use Illuminate\Support\Facades\Log;
 
 class AiCopilotIntentDetector
 {
     private const DETECTION_INTENT = 'intent_detection';
-    private const MIN_CONFIDENCE   = 0.40;
 
     public function __construct(
-        private readonly GeminiAiService $gemini,
+        private readonly GeminiClientInterface $gemini,
     ) {}
 
     /**
@@ -34,15 +37,15 @@ class AiCopilotIntentDetector
         $contents      = array_merge($recentHistory, [['role' => 'user', 'parts' => [['text' => $userPrompt]]]]);
 
         try {
-            $result = $this->gemini->generateWithHistory(
+            $result = $this->gemini->send(new GeminiRequest(
                 systemPrompt: $systemPrompt,
                 contents:     $contents,
-                config:       [
-                    'temperature'      => 0.1,
-                    'maxOutputTokens'  => 150,
+                config:       GeminiConfig::fromSetting(AiStudioSetting::current(), [
+                    'temperature'      => config('ai.copilot.intent.temperature', 0.1),
+                    'maxOutputTokens'  => config('ai.copilot.intent.max_output_tokens', 150),
                     'responseMimeType' => 'application/json',
-                ],
-            );
+                ]),
+            ))->toArray();
 
             $clean = (string) preg_replace('/^```(?:json)?\s*/m', '', $result['text']);
             $clean = (string) preg_replace('/```\s*$/m', '', $clean);
@@ -52,12 +55,13 @@ class AiCopilotIntentDetector
                 return $this->fallback();
             }
 
-            $intentValue = (string) $data['intent'];
-            $confidence  = (float) ($data['confidence'] ?? 0.5);
+            $intentValue  = (string) $data['intent'];
+            $confidence   = (float) ($data['confidence'] ?? 0.5);
+            $minConfidence = (float) config('ai.copilot.intent.min_confidence', 0.40);
 
             $intent = AiCopilotIntentEnum::tryFrom($intentValue);
 
-            if ($intent === null || $confidence < self::MIN_CONFIDENCE) {
+            if ($intent === null || $confidence < $minConfidence) {
                 return $this->fallback();
             }
 
@@ -67,12 +71,61 @@ class AiCopilotIntentDetector
                 'target_field' => $intent->targetFormField(),
             ];
         } catch (\Throwable $e) {
-            Log::warning('Intent detection failed, falling back to general_advice', [
+            Log::channel(config('ai.logging.channel', 'stack'))->warning('Intent detection failed, falling back to general_advice', [
                 'error' => $e->getMessage(),
             ]);
 
             return $this->fallback();
         }
+    }
+
+    /**
+     * Keyword-based fallback intent detection — zero Gemini calls.
+     *
+     * Merges keyword rules from all supported locales (config('app.supported_locales'))
+     * so users writing in any language are matched correctly.
+     * Returns confidence 0.95 for video-clip/segment inputs, 0.80 for keyword hits, 0.50 fallback.
+     *
+     * @return array{intent: AiCopilotIntentEnum, confidence: float}
+     */
+    public function detectByKeyword(AiCopilotMessageInput $input, ?string $userRole = null): array
+    {
+        if ($input->hasVideoClip() || ($input->hasFrames() && $input->hasTimeline())) {
+            return ['intent' => AiCopilotIntentEnum::ANALYZE_VIDEO_SEGMENT, 'confidence' => 0.95];
+        }
+
+        $msg       = mb_strtolower($input->content);
+        $locales   = config('app.supported_locales', ['vi', 'en']);
+        $adminOnly = (array) trans('copilot.admin_only_intents', [], 'vi');
+
+        // Merge keyword arrays across all supported locales for language-agnostic matching
+        $allRules = [];
+        foreach ($locales as $locale) {
+            $localeRules = trans('copilot.intent_keywords', [], $locale);
+            if (! is_array($localeRules)) {
+                continue;
+            }
+            foreach ($localeRules as $intentValue => $keywords) {
+                $allRules[$intentValue] = array_merge($allRules[$intentValue] ?? [], (array) $keywords);
+            }
+        }
+
+        foreach ($allRules as $intentValue => $keywords) {
+            $intent = AiCopilotIntentEnum::tryFrom((string) $intentValue);
+            if ($intent === null) {
+                continue;
+            }
+            if (in_array($intentValue, $adminOnly, true) && $userRole !== 'super_admin') {
+                continue;
+            }
+            foreach ($keywords as $kw) {
+                if (str_contains($msg, (string) $kw)) {
+                    return ['intent' => $intent, 'confidence' => 0.80];
+                }
+            }
+        }
+
+        return ['intent' => AiCopilotIntentEnum::GENERAL_ADVICE, 'confidence' => 0.50];
     }
 
     private function fallback(): array

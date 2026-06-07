@@ -22,7 +22,7 @@ class RewriteContentHandler extends AbstractCopilotHandler implements CopilotHan
         $userTurn     = $this->buildUserTurn($input, $template);
         $contents     = $this->buildContents($conversationHistory, $userTurn);
 
-        $result = $this->gemini->generateWithHistory(
+        $result = $this->sendWithHistory(
             systemPrompt: $systemPrompt,
             contents:     $contents,
             config:       ['responseMimeType' => 'application/json'],

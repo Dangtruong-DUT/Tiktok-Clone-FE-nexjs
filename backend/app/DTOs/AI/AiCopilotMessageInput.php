@@ -10,7 +10,6 @@ final readonly class AiCopilotMessageInput
         public ?float  $timelineStart   = null,
         public ?float  $timelineEnd     = null,
         public ?string $videoClip       = null,
-        // Live form content sent with every message
         public ?string $currentCaption  = null,
         public ?string $currentTitle    = null,
         public ?string $currentHashtags = null,

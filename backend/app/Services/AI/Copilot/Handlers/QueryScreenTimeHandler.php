@@ -2,6 +2,7 @@
 
 namespace App\Services\AI\Copilot\Handlers;
 
+use App\Contracts\AI\GeminiClientInterface;
 use App\DTOs\AI\AiCopilotMessageInput;
 use App\DTOs\AI\AiCopilotSessionContext;
 use App\DTOs\AI\CopilotHandlerResult;
@@ -9,7 +10,6 @@ use App\DTOs\AI\ScreenTimeData;
 use App\Enums\Ai\AiCopilotIntentEnum;
 use App\Models\AiPromptTemplate;
 use App\Repositories\ScreenTimeSessionRepository;
-use App\Services\AI\GeminiAiService;
 use Carbon\Carbon;
 
 /**
@@ -19,9 +19,11 @@ use Carbon\Carbon;
 class QueryScreenTimeHandler extends AbstractCopilotHandler implements CopilotHandlerInterface
 {
     public function __construct(
-        protected readonly GeminiAiService           $gemini,
+        GeminiClientInterface                        $gemini,
         private readonly ScreenTimeSessionRepository $screenTimeRepo,
-    ) {}
+    ) {
+        parent::__construct($gemini);
+    }
 
     public function handle(
         AiCopilotIntentEnum     $intent,

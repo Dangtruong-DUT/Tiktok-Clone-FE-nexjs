@@ -2,7 +2,10 @@
 
 namespace App\Services\AI\Rag;
 
-use App\Services\AI\Providers\GeminiClient;
+use App\Contracts\AI\GeminiClientInterface;
+use App\DTOs\AI\Gemini\GeminiConfig;
+use App\DTOs\AI\Gemini\GeminiRequest;
+use App\Models\AiStudioSetting;
 use Illuminate\Support\Collection;
 
 class RagService
@@ -10,7 +13,7 @@ class RagService
     public function __construct(
         private readonly GeminiEmbeddingService $embeddingService,
         private readonly PgVectorSearchService  $searchService,
-        private readonly GeminiClient           $geminiClient,
+        private readonly GeminiClientInterface           $geminiClient,
     ) {}
 
     /**
@@ -85,10 +88,13 @@ class RagService
 
         $answer = '';
 
-        $this->geminiClient->streamWithHistory(
-            systemPrompt: $systemPrompt,
-            contents:     $contents,
-            onChunk:      function (string $delta, bool $done) use (&$answer) {
+        $this->geminiClient->stream(
+            new GeminiRequest(
+                systemPrompt: $systemPrompt,
+                contents:     $contents,
+                config:       GeminiConfig::fromSetting(AiStudioSetting::current()),
+            ),
+            function (string $delta, bool $done, array $tokenUsage) use (&$answer) {
                 if (! $done) {
                     $answer .= $delta;
                 }

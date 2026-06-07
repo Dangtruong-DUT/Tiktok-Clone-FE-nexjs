@@ -22,7 +22,7 @@ class AnalyzeFrameHandler extends AbstractCopilotHandler implements CopilotHandl
         $userTurn     = $this->buildUserTurn($input, $template);
         $contents     = $this->buildContents($conversationHistory, $userTurn);
 
-        $result = $this->gemini->generateWithHistory(
+        $result = $this->sendWithHistory(
             systemPrompt: $systemPrompt,
             contents:     $contents,
         );

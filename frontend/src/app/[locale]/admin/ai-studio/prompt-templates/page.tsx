@@ -10,6 +10,7 @@ import {
     useLockPromptTemplateMutation,
     useUnlockPromptTemplateMutation
 } from '@/store/services/admin/admin-ai-copilot.service'
+import type { AiPromptTemplateDto } from '@/types/dtos/admin/ai/admin-ai-copilot.response.dto'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Textarea } from '@/components/ui/textarea'
@@ -29,17 +30,6 @@ import { Lock, Unlock, Save, ChevronDown, ChevronUp, Info } from 'lucide-react'
 import LoadingIcon from '@/components/lottie-icons/loading'
 import { toast } from 'sonner'
 
-interface PromptTemplate {
-    id: number
-    intent: string
-    category: string
-    display_name: string
-    system_prompt: string
-    user_template: string
-    is_active: boolean
-    is_locked: boolean
-    version: number
-}
 
 const CATEGORY_BADGE_CLASS: Record<string, string> = {
     context: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400',
@@ -69,12 +59,12 @@ export default function PromptTemplatesPage() {
     const [unlockTemplate, { isLoading: isUnlocking }] = useUnlockPromptTemplateMutation()
 
     const [expanded, setExpanded] = useState<string | null>(null)
-    const [edits, setEdits] = useState<Record<string, Partial<PromptTemplate>>>({})
-    const [unlockTarget, setUnlockTarget] = useState<PromptTemplate | null>(null)
+    const [edits, setEdits] = useState<Record<string, Partial<AiPromptTemplateDto>>>({})
+    const [unlockTarget, setUnlockTarget] = useState<AiPromptTemplateDto | null>(null)
 
-    const templates = (data as { data?: PromptTemplate[] })?.data ?? []
+    const templates = data?.data ?? []
 
-    const grouped = templates.reduce<Record<string, PromptTemplate[]>>((acc, tpl) => {
+    const grouped = templates.reduce<Record<string, AiPromptTemplateDto[]>>((acc, tpl) => {
         const cat = tpl.category ?? 'generative'
         if (!acc[cat]) acc[cat] = []
         acc[cat].push(tpl)
@@ -108,7 +98,7 @@ export default function PromptTemplatesPage() {
         }
     }
 
-    const handleLock = async (tpl: PromptTemplate) => {
+    const handleLock = async (tpl: AiPromptTemplateDto) => {
         await lockTemplate(tpl.intent).unwrap()
         toast.success(t('toast.locked'))
     }
@@ -125,7 +115,7 @@ export default function PromptTemplatesPage() {
         }
     }
 
-    const update = (intent: string, field: keyof PromptTemplate, value: string | boolean) => {
+    const update = (intent: string, field: keyof AiPromptTemplateDto, value: string | boolean) => {
         setEdits((prev) => ({
             ...prev,
             [intent]: { ...(prev[intent] ?? {}), [field]: value }

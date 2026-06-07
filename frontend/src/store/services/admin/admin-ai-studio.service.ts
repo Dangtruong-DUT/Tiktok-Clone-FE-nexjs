@@ -9,7 +9,8 @@ import type {
 import type {
     GetAiMetricsResDto,
     GetAiSettingsResDto,
-    ListAiRequestsResDto
+    ListAiRequestsResDto,
+    GetAiAvailableModelsResDto
 } from '@/types/dtos/admin/ai/admin-ai-studio.response.dto'
 
 export const AdminAiStudioApi = createApi({
@@ -48,7 +49,7 @@ export const AdminAiStudioApi = createApi({
             providesTags: ['AiStudioRequests'],
         }),
 
-        getAvailableModels: builder.query<ApiSuccessResponseWithData<string[]>, void>({
+        getAvailableModels: builder.query<GetAiAvailableModelsResDto, void>({
             query: () => BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.MODELS,
             providesTags: ['AiStudioModels'],
             keepUnusedDataFor: 3600,

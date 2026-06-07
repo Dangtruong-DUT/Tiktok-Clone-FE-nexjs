@@ -12,6 +12,8 @@ class AiDocument extends Model
         'title',
         'source_type',
         'source_url',
+        'file_path',
+        'file_disk',
         'raw_content',
         'content_type',
         'chunk_count',
@@ -26,11 +28,17 @@ class AiDocument extends Model
         'chunk_count' => 'integer',
     ];
 
+    /**
+     * Get the chunks associated with the document.
+     */
     public function chunks(): HasMany
     {
         return $this->hasMany(AiDocumentChunk::class)->orderBy('chunk_index');
     }
 
+    /**
+     * Scope a query to only include indexed documents.
+     */
     public function scopeIndexed($query)
     {
         return $query->where('is_indexed', true);

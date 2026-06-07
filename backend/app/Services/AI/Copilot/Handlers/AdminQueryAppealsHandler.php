@@ -2,6 +2,7 @@
 
 namespace App\Services\AI\Copilot\Handlers;
 
+use App\Contracts\AI\GeminiClientInterface;
 use App\DTOs\AI\AiCopilotMessageInput;
 use App\DTOs\AI\AiCopilotSessionContext;
 use App\DTOs\AI\CopilotHandlerResult;
@@ -9,7 +10,6 @@ use App\Enums\Ai\AiCopilotIntentEnum;
 use App\Enums\User\RoleTypeEnum;
 use App\Models\AiPromptTemplate;
 use App\Models\User;
-use App\Services\AI\GeminiAiService;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -18,9 +18,10 @@ use Illuminate\Support\Facades\DB;
  */
 class AdminQueryAppealsHandler extends AbstractCopilotHandler implements CopilotHandlerInterface
 {
-    public function __construct(
-        protected readonly GeminiAiService $gemini,
-    ) {}
+    public function __construct(GeminiClientInterface $gemini)
+    {
+        parent::__construct($gemini);
+    }
 
     public function handle(
         AiCopilotIntentEnum     $intent,

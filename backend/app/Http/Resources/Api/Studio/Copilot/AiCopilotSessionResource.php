@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Api\Studio\Copilot;
 
 use App\Http\Resources\BaseJsonResource;
 use App\Models\AiCopilotSession;

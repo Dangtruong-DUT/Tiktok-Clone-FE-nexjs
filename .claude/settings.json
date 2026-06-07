@@ -32,7 +32,30 @@
       "Bash(.venv/bin/python scripts/remove_conflicting_samples.py)",
       "Bash(.venv/bin/python scripts/build_balanced_dataset_with_gemini.py --dry-run --max-chars 256 --target-per-class 6500 --output-dir data/processed/balanced)",
       "Bash(.venv/bin/python -c ' *)",
-      "Bash(.venv/bin/python -c \"import torch; print\\('CUDA:', torch.cuda.is_available\\(\\)\\); print\\('MPS:', torch.backends.mps.is_available\\(\\)\\); print\\('Device will be:', 'mps' if torch.backends.mps.is_available\\(\\) else 'cuda' if torch.cuda.is_available\\(\\) else 'cpu'\\)\")"
+      "Bash(.venv/bin/python -c \"import torch; print\\('CUDA:', torch.cuda.is_available\\(\\)\\); print\\('MPS:', torch.backends.mps.is_available\\(\\)\\); print\\('Device will be:', 'mps' if torch.backends.mps.is_available\\(\\) else 'cuda' if torch.cuda.is_available\\(\\) else 'cpu'\\)\")",
+      "Bash(PYTHONPATH=. .venv/bin/python -c ' *)",
+      "Bash(PYTHONPATH=/Users/nguyendangtruong/Documents/DUT/Orther/project/Tiktok-v2/ai .venv/bin/python -)",
+      "Bash(.venv/bin/python -)",
+      "Bash(.venv/bin/python scripts/rebuild_dataset_realistic.py)",
+      "Bash(nohup .venv/bin/python -m training.training --model-name vinai/phobert-base --train-path data/processed/balanced/train.csv --valid-path data/processed/balanced/valid.csv --test-path data/processed/balanced/test.csv --output-model-path models/best_phobert_model.pt --batch-size 16 --epochs 4 --learning-rate 2e-5 --max-length 256 --seed 42)",
+      "Bash(echo \"PID: $!\")",
+      "Bash(cat /tmp/phobert_training_v2.log)",
+      "Read(//private/tmp/**)",
+      "Bash(kill 48595)",
+      "Bash(awk '{print $2}')",
+      "Bash(xargs kill)",
+      "Bash(PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0 nohup .venv/bin/python -u -m training.training \\\\ *)",
+      "Bash(.venv/bin/python training/evaluate.py)",
+      "Bash(xargs cat)",
+      "Bash(php artisan tinker '--execute= *)",
+      "Bash(python3)",
+      "Bash(npm install *)",
+      "Bash(php artisan *)",
+      "Bash(php -r ' *)",
+      "Bash(composer dump-autoload *)"
+    ],
+    "additionalDirectories": [
+      "/private/tmp"
     ]
   }
 }

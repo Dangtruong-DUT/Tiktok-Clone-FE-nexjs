@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AiStudioSetting extends Model
 {
+
+    /**
+     *  The attributes that are mass assignable.
+     * @var array<int, string>
+    */
     protected $fillable = [
         'daily_limit_per_user',
         'global_daily_limit',
@@ -26,6 +31,11 @@ class AiStudioSetting extends Model
         'updated_by',
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @return array<string, string>
+     */
     protected function casts(): array
     {
         return [
@@ -38,6 +48,11 @@ class AiStudioSetting extends Model
         ];
     }
 
+    /**
+    * is_feature_enabled checks if a specific feature flag is enabled in the settings.
+    * @param string $flag The name of the feature flag to check.
+    * @return bool Returns
+    */
     public function isFeatureEnabled(string $flag): bool
     {
         $flags = $this->feature_flags ?? [];
@@ -46,44 +61,9 @@ class AiStudioSetting extends Model
     }
 
     /**
-     * Get or create the singleton settings record (id = 1).
-     *
-     * Uses find + manual save to avoid mass-assignment on the primary key.
+     * Get the user that last updated the settings.
+     * @return BelongsTo
      */
-    public static function current(): self
-    {
-        $setting = self::find(1);
-
-        if ($setting) {
-            return $setting;
-        }
-
-        $setting = new self();
-        $setting->daily_limit_per_user  = 20;
-        $setting->global_daily_limit    = 5000;
-        $setting->rate_limit_per_minute = 10;
-        $setting->is_enabled            = true;
-        $setting->require_min_input     = true;
-        $setting->gemini_model          = 'gemini-2.0-flash';
-        $setting->max_output_tokens     = 2048;
-        $setting->temperature           = 0.70;
-        $setting->timeout_seconds       = 30;
-        $setting->cache_ttl_hours       = 6;
-        $setting->async_mode            = true;
-        $setting->copilot_enabled       = true;
-        $setting->copilot_session_ttl_hours = 24;
-        $setting->copilot_max_messages_per_session = 50;
-        $setting->feature_flags         = [
-            'streaming'        => true,
-            'frame_analysis'   => true,
-            'timeline_context' => true,
-            'viral_analysis'   => true,
-        ];
-        $setting->save();
-
-        return $setting;
-    }
-
     public function updatedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');

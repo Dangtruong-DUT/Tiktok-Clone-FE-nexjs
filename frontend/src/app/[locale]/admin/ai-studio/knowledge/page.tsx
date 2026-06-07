@@ -1,6 +1,8 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useRef, useState, useMemo, useEffect } from 'react'
+import DocViewer, { DocViewerRenderers } from '@cyntler/react-doc-viewer'
+import '@cyntler/react-doc-viewer/dist/index.css'
 import { useTranslations } from 'next-intl'
 import { AdminLayout, AdminContainer } from '@/components/admin'
 import { ADMIN_ROUTES } from '@/constants/routes/routes'
@@ -8,7 +10,9 @@ import {
     useGetDocumentsQuery,
     useUploadDocumentMutation,
     useDeleteDocumentMutation,
-    type AiDocument
+    useLazyGetDocumentQuery,
+    type AiDocumentAdminDto,
+    type AiDocumentDetailAdminDto
 } from '@/store/services/admin/admin-ai-knowledge.service'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -25,10 +29,11 @@ import {
     AlertDialogHeader,
     AlertDialogTitle
 } from '@/components/ui/alert-dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { toast } from 'sonner'
-import { Trash2, Upload, FileText, Plus, X } from 'lucide-react'
+import { Trash2, Upload, FileText, Plus, X, Eye } from 'lucide-react'
 import LoadingIcon from '@/components/lottie-icons/loading'
 
 type UploadMode = 'file' | 'text'
@@ -45,6 +50,7 @@ export default function KnowledgePage() {
     const { data, isLoading, refetch } = useGetDocumentsQuery({})
     const [uploadDocument, { isLoading: isUploading }] = useUploadDocumentMutation()
     const [deleteDocument, { isLoading: isDeleting }] = useDeleteDocumentMutation()
+    const [fetchDocument, { isFetching: isLoadingDoc }] = useLazyGetDocumentQuery()
 
     const [showForm, setShowForm] = useState(false)
     const [uploadMode, setUploadMode] = useState<UploadMode>('file')
@@ -54,9 +60,31 @@ export default function KnowledgePage() {
     const [rawContent, setRawContent] = useState('')
     const [file, setFile] = useState<File | null>(null)
     const [deleteTarget, setDeleteTarget] = useState<DeleteTarget | null>(null)
+    const [viewDoc, setViewDoc] = useState<AiDocumentDetailAdminDto | null>(null)
     const fileRef = useRef<HTMLInputElement>(null)
 
-    const documents: AiDocument[] = (data as { data?: { data: AiDocument[] } })?.data?.data ?? []
+    const handleViewDocument = async (id: number) => {
+        try {
+            const result = await fetchDocument(id).unwrap()
+            setViewDoc(result.data)
+        } catch {
+            toast.error(t('toast.loadFailed'))
+        }
+    }
+
+    const docBlobUrl = useMemo(() => {
+        if (!viewDoc || viewDoc.file_url) return null
+        const mimeType = viewDoc.content_type === 'html' ? 'text/html' : 'text/plain'
+        return URL.createObjectURL(new Blob([viewDoc.raw_content], { type: mimeType }))
+    }, [viewDoc])
+
+    useEffect(() => {
+        return () => {
+            if (docBlobUrl) URL.revokeObjectURL(docBlobUrl)
+        }
+    }, [docBlobUrl])
+
+    const documents: AiDocumentAdminDto[] = data?.data ?? []
 
     const SOURCE_TYPE_OPTIONS = [
         { value: 'faq', label: t('sourceTypes.faq') },
@@ -315,6 +343,15 @@ export default function KnowledgePage() {
                                     <Button
                                         variant='ghost'
                                         size='sm'
+                                        disabled={isLoadingDoc}
+                                        className='h-7 w-7 p-0 text-muted-foreground hover:text-foreground'
+                                        onClick={() => handleViewDocument(doc.id)}
+                                    >
+                                        <Eye className='size-3.5' />
+                                    </Button>
+                                    <Button
+                                        variant='ghost'
+                                        size='sm'
                                         disabled={isDeleting}
                                         className='h-7 w-7 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10'
                                         onClick={() => setDeleteTarget({ id: doc.id, title: doc.title })}
@@ -327,6 +364,62 @@ export default function KnowledgePage() {
                     </div>
                 )}
             </AdminContainer>
+
+            {/* Document viewer dialog */}
+            <Dialog open={!!viewDoc} onOpenChange={(open) => !open && setViewDoc(null)}>
+                <DialogContent className='sm:max-w-2xl max-h-[85vh] flex flex-col'>
+                    <DialogHeader>
+                        <DialogTitle className='truncate pr-6'>{viewDoc?.title}</DialogTitle>
+                    </DialogHeader>
+                    {viewDoc && (
+                        <div className='flex flex-col gap-4 overflow-hidden'>
+                            <div className='flex flex-wrap gap-2 text-xs'>
+                                <span className='rounded-md border bg-muted px-2 py-0.5 font-mono'>
+                                    {viewDoc.source_type}
+                                </span>
+                                <span className='rounded-md border bg-muted px-2 py-0.5 font-mono'>
+                                    {viewDoc.language.toUpperCase()}
+                                </span>
+                                <span className='rounded-md border bg-muted px-2 py-0.5 font-mono'>
+                                    {viewDoc.content_type}
+                                </span>
+                                <span className='rounded-md border bg-muted px-2 py-0.5 text-muted-foreground'>
+                                    {viewDoc.chunk_count} chunks
+                                </span>
+                                {viewDoc.is_indexed ? (
+                                    <Badge
+                                        variant='default'
+                                        className='text-[10px] bg-green-500/15 text-green-600 border-green-500/20'
+                                    >
+                                        {t('indexed')}
+                                    </Badge>
+                                ) : (
+                                    <Badge variant='secondary' className='text-[10px]'>
+                                        {t('indexing')}
+                                    </Badge>
+                                )}
+                            </div>
+                            <div className='overflow-hidden rounded-lg border' style={{ height: '55vh' }}>
+                                <DocViewer
+                                    documents={[{
+                                        uri: viewDoc.file_url ?? docBlobUrl ?? '',
+                                        fileType: viewDoc.file_url
+                                            ? viewDoc.file_url.split('.').pop()
+                                            : viewDoc.content_type === 'html' ? 'html' : 'txt',
+                                    }]}
+                                    pluginRenderers={DocViewerRenderers}
+                                    config={{
+                                        header: { disableHeader: true },
+                                        pdfZoom: { defaultZoom: 1 },
+                                        pdfVerticalScrollByDefault: true,
+                                    }}
+                                    style={{ height: '100%', background: 'transparent' }}
+                                />
+                            </div>
+                        </div>
+                    )}
+                </DialogContent>
+            </Dialog>
 
             {/* Delete confirmation dialog */}
             <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>

@@ -149,9 +149,10 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
 
                 // RAG knowledge base document management
                 Route::prefix('knowledge')->name('knowledge.')->group(function () {
-                    Route::get('documents',         [AiKnowledgeAdminController::class, 'indexDocuments'])->name('documents.index');
-                    Route::post('documents/upload', [AiKnowledgeAdminController::class, 'uploadDocument'])->name('documents.upload');
-                    Route::delete('documents/{id}', [AiKnowledgeAdminController::class, 'destroyDocument'])->name('documents.destroy');
+                    Route::get('documents',          [AiKnowledgeAdminController::class, 'indexDocuments'])->name('documents.index');
+                    Route::post('documents/upload',  [AiKnowledgeAdminController::class, 'uploadDocument'])->name('documents.upload');
+                    Route::get('documents/{id}',     [AiKnowledgeAdminController::class, 'showDocument'])->name('documents.show');
+                    Route::delete('documents/{id}',  [AiKnowledgeAdminController::class, 'destroyDocument'])->name('documents.destroy');
                 });
             });
 

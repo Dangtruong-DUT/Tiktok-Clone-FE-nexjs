@@ -2,14 +2,17 @@
 
 namespace App\Services\AI\Copilot\Handlers;
 
+use App\Contracts\AI\GeminiClientInterface;
 use App\DTOs\AI\AiCopilotMessageInput;
 use App\DTOs\AI\AiCopilotSessionContext;
+use App\DTOs\AI\Gemini\GeminiConfig;
+use App\DTOs\AI\Gemini\GeminiRequest;
 use App\Enums\Ai\AiCopilotMessageRoleEnum;
 use App\Models\AiCopilotMessage;
 use App\Models\AiCopilotSession;
 use App\Models\AiPromptTemplate;
+use App\Models\AiStudioSetting;
 use App\Repositories\AiCopilotMessageRepository;
-use App\Services\AI\GeminiAiService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -18,7 +21,7 @@ abstract class AbstractCopilotHandler
     protected const HISTORY_WINDOW = 10;
 
     public function __construct(
-        protected readonly GeminiAiService $gemini,
+        protected readonly GeminiClientInterface $gemini,
     ) {}
 
     public static function buildSystemPrompt(AiPromptTemplate $template, AiCopilotSessionContext $context): string
@@ -160,6 +163,31 @@ abstract class AbstractCopilotHandler
             'analyze_frame'    => ['Evaluate the lighting', 'Check composition', 'Write a caption for this frame'],
             default            => ['Write a caption', 'Generate hashtags', 'Analyze viral potential', 'Get general advice'],
         };
+    }
+
+    /**
+     * @param  array<array{role: string, parts: array}>  $contents
+     * @param  array<string,mixed>  $config
+     * @return array{text: string, token_usage: array<string,int>}
+     */
+    protected function sendWithHistory(string $systemPrompt, array $contents, array $config = []): array
+    {
+        return $this->gemini->send(
+            $this->buildRequest($systemPrompt, $contents, $config)
+        )->toArray();
+    }
+
+    /**
+     * @param  array<array{role: string, parts: array}>  $contents
+     * @param  array<string,mixed>  $config
+     */
+    protected function buildRequest(string $systemPrompt, array $contents, array $config = []): GeminiRequest
+    {
+        return new GeminiRequest(
+            systemPrompt: $systemPrompt,
+            contents:     $contents,
+            config:       GeminiConfig::fromSetting(AiStudioSetting::current(), $config),
+        );
     }
 
     private static function formatTime(?float $seconds): string

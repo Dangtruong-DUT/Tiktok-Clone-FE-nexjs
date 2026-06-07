@@ -13,8 +13,9 @@ class WellnessRuleService
     private const MAX_RULES_PER_USER = 10;
 
     public function __construct(
-        private readonly WellnessRuleRepository $repository,
-        private readonly WellnessAiService      $aiService,
+        private readonly WellnessRuleRepository    $repository,
+        private readonly WellnessAiService         $aiService,
+        private readonly ScreenTimeTrackingService $screenTimeService,
     ) {}
 
     public function listForUser(int $userId): Collection
@@ -58,6 +59,18 @@ class WellnessRuleService
     public function delete(WellnessRule $rule): void
     {
         $this->repository->delete($rule->id);
+    }
+
+    /**
+     * Fetch the user's screen-time stats and return AI-generated wellness insights.
+     *
+     * @return array{summary: string, patterns: string[], concerns: string[], recommendations: string[], suggested_rules: array[]}
+     */
+    public function analyzeUsage(int $userId, string $period = 'week'): array
+    {
+        $stats = $this->screenTimeService->getStats($userId, $period);
+
+        return $this->aiService->analyzeUsage($stats);
     }
 
     /** Parse natural language rule text — does NOT save, returns preview. */

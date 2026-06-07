@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             UserSeeder::class,
+            AiStudioSettingSeeder::class,
             AiPromptTemplateSeeder::class,
         ]);
 

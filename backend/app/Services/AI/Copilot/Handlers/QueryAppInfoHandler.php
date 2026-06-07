@@ -2,12 +2,12 @@
 
 namespace App\Services\AI\Copilot\Handlers;
 
+use App\Contracts\AI\GeminiClientInterface;
 use App\DTOs\AI\AiCopilotMessageInput;
 use App\DTOs\AI\AiCopilotSessionContext;
 use App\DTOs\AI\CopilotHandlerResult;
 use App\Enums\Ai\AiCopilotIntentEnum;
 use App\Models\AiPromptTemplate;
-use App\Services\AI\GeminiAiService;
 use App\Services\AI\Rag\GeminiEmbeddingService;
 use App\Services\AI\Rag\PgVectorSearchService;
 
@@ -18,10 +18,12 @@ use App\Services\AI\Rag\PgVectorSearchService;
 class QueryAppInfoHandler extends AbstractCopilotHandler implements CopilotHandlerInterface
 {
     public function __construct(
-        protected readonly GeminiAiService       $gemini,
+        GeminiClientInterface                    $gemini,
         private readonly GeminiEmbeddingService  $embeddingService,
         private readonly PgVectorSearchService   $searchService,
-    ) {}
+    ) {
+        parent::__construct($gemini);
+    }
 
     public function handle(
         AiCopilotIntentEnum     $intent,

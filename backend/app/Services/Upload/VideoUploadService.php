@@ -8,10 +8,9 @@ use App\DTOs\Upload\MultipartCompleteDto;
 use App\DTOs\Upload\PresignedPartDto;
 use App\Enums\Video\UploadTypeEnum;
 use App\Enums\Video\VideoUploadStatusEnum;
-use App\Exceptions\Video\InvalidUploadStateException;
-use App\Exceptions\Video\UploadVerificationException;
 use App\Models\User;
 use App\Enums\Video\VideoEncodingStatusEnum;
+use App\Exceptions\http\BusinessException;
 use App\Models\VideoEncoding;
 use App\Models\VideoUploadSession;
 use App\Repositories\UploadFileRepository;
@@ -77,8 +76,6 @@ class VideoUploadService
 
     /**
      * @param  MultipartCompleteDto[]|null  $parts
-     * @throws InvalidUploadStateException
-     * @throws UploadVerificationException
      */
     public function completeSession(VideoUploadSession $session, ?array $parts): VideoUploadSession
     {
@@ -90,7 +87,7 @@ class VideoUploadService
 
             if ($session->upload_type === UploadTypeEnum::MULTIPART) {
                 if (empty($parts)) {
-                    throw new InvalidUploadStateException('Parts are required to complete a multipart upload.');
+                    throw new BusinessException('Parts are required to complete a multipart upload.');
                 }
 
                 $this->storage->completeMultipartUpload(
@@ -101,7 +98,7 @@ class VideoUploadService
             }
 
             if (! $this->storage->objectExists($session->storage_key)) {
-                throw new UploadVerificationException(
+                throw new BusinessException(
                     "Object [{$session->storage_key}] not found on storage after upload."
                 );
             }
@@ -159,7 +156,7 @@ class VideoUploadService
         $completable = [VideoUploadStatusEnum::PENDING, VideoUploadStatusEnum::UPLOADING];
 
         if (! in_array($session->status, $completable, strict: true)) {
-            throw new InvalidUploadStateException(
+            throw new BusinessException(
                 "Session [{$session->uuid}] cannot be completed from status [{$session->status->label()}]."
             );
         }

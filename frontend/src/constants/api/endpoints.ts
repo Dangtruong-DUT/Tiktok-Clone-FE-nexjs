@@ -95,6 +95,11 @@ export const BACKEND_API_ENDPOINT = {
         REJECT:         (msgUuid: string) => `/studio/ai/copilot/messages/${msgUuid}/reject`,
         DELETE_SESSION: (uuid: string) => `/studio/ai/copilot/sessions/${uuid}`,
     },
+    AI_KNOWLEDGE: {
+        CHAT:      '/studio/ai/knowledge/chat',
+        DOCUMENTS: '/studio/ai/knowledge/documents',
+        DOCUMENT:  (id: number) => `/studio/ai/knowledge/documents/${id}`,
+    },
 
     WELLNESS: {
         STATS:         '/users/me/wellness/stats',

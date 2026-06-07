@@ -2,6 +2,7 @@
 
 namespace App\Services\AI\Copilot\Handlers;
 
+use App\Contracts\AI\GeminiClientInterface;
 use App\DTOs\AI\AiCopilotMessageInput;
 use App\DTOs\AI\AiCopilotSessionContext;
 use App\DTOs\AI\CopilotHandlerResult;
@@ -9,7 +10,6 @@ use App\DTOs\AI\PostStatsData;
 use App\Enums\Ai\AiCopilotIntentEnum;
 use App\Models\AiPromptTemplate;
 use App\Models\Post;
-use App\Services\AI\GeminiAiService;
 
 /**
  * Returns the creator's own recent posts with basic engagement stats.
@@ -19,9 +19,10 @@ class QueryPostStatsHandler extends AbstractCopilotHandler implements CopilotHan
 {
     private const MAX_POSTS = 10;
 
-    public function __construct(
-        protected readonly GeminiAiService $gemini,
-    ) {}
+    public function __construct(GeminiClientInterface $gemini)
+    {
+        parent::__construct($gemini);
+    }
 
     public function handle(
         AiCopilotIntentEnum     $intent,

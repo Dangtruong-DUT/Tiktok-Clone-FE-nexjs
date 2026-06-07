@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Contracts\AI\GeminiClientInterface;
 use App\Enums\Common\ModelEntityTypeEnum;
+use App\Libraries\Gemini\GeminiClient as AppGeminiClient;
 use App\Models\Hashtag;
 use App\Models\Post;
 use App\Models\User;
@@ -21,9 +23,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Override the Gemini client binding to send the API key both as header
-        // (x-goog-api-key) AND as query param (?key=) for compatibility with
-        // non-standard key formats (e.g. AQ.Ab8... keys from Google Cloud console).
         $this->app->singleton(GeminiClientContract::class, static function (): GeminiClient {
             $apiKey  = (string) config('gemini.api_key', '');
             $baseUrl = (string) config('gemini.base_url', 'https://generativelanguage.googleapis.com/v1beta');
@@ -37,8 +36,7 @@ class AppServiceProvider extends ServiceProvider
                 ->make();
         });
 
-        $this->app->alias(GeminiClientContract::class, GeminiClient::class);
-        $this->app->alias(GeminiClientContract::class, 'gemini');
+        $this->app->singleton(GeminiClientInterface::class, AppGeminiClient::class);
     }
 
     /**

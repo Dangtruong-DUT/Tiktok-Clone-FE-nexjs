@@ -17,6 +17,7 @@
         "build-storybook": "storybook build"
     },
     "dependencies": {
+        "@cyntler/react-doc-viewer": "^1.17.1",
         "@hookform/resolvers": "^5.2.1",
         "@mantine/hooks": "^8.2.2",
         "@radix-ui/react-alert-dialog": "^1.1.14",

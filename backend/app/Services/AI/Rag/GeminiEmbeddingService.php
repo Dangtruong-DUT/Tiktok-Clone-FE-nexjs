@@ -7,8 +7,6 @@ use RuntimeException;
 
 class GeminiEmbeddingService
 {
-    private const MODEL = 'text-embedding-004';
-
     public function __construct() {}
 
     /**
@@ -20,10 +18,12 @@ class GeminiEmbeddingService
     {
         $apiKey  = config('gemini.api_key');
         $baseUrl = rtrim(config('gemini.base_url', 'https://generativelanguage.googleapis.com/v1beta'), '/');
+        $model   = config('gemini.embedding.model', 'text-embedding-004');
+        $timeout = (int) config('gemini.embedding.timeout', 30);
 
-        $response = Http::withOptions(['timeout' => 30])
-            ->post("{$baseUrl}/models/" . self::MODEL . ":embedContent?key={$apiKey}", [
-                'model'   => 'models/' . self::MODEL,
+        $response = Http::withOptions(['timeout' => $timeout])
+            ->post("{$baseUrl}/models/{$model}:embedContent?key={$apiKey}", [
+                'model'   => "models/{$model}",
                 'content' => [
                     'parts' => [['text' => $text]],
                 ],

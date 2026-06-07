@@ -4,10 +4,14 @@ namespace App\Services\AI\Rag;
 
 class DocumentChunkingService
 {
-    // ~750 tokens × 4 chars/token = 3000 chars per chunk
-    private const TARGET_CHARS = 3000;
-    // ~100 tokens overlap
-    private const OVERLAP_CHARS = 400;
+    private int $targetChars;
+    private int $overlapChars;
+
+    public function __construct()
+    {
+        $this->targetChars  = (int) config('ai.rag.chunk_target_chars', 3000);
+        $this->overlapChars = (int) config('ai.rag.chunk_overlap_chars', 400);
+    }
 
     /**
      * Split document content into overlapping text chunks.
@@ -75,7 +79,7 @@ class DocumentChunkingService
         $start  = 0;
 
         while ($start < $len) {
-            $end = $start + self::TARGET_CHARS;
+            $end = $start + $this->targetChars;
 
             if ($end >= $len) {
                 $chunks[] = trim(mb_substr($text, $start));
@@ -83,7 +87,7 @@ class DocumentChunkingService
             }
 
             // Try to break at a sentence boundary (. ! ?) or paragraph break near the target
-            $slice    = mb_substr($text, $start, self::TARGET_CHARS);
+            $slice    = mb_substr($text, $start, $this->targetChars);
             $breakPos = $this->findBreakPoint($slice);
 
             $chunk    = trim(mb_substr($text, $start, $breakPos));
@@ -91,7 +95,7 @@ class DocumentChunkingService
                 $chunks[] = $chunk;
             }
 
-            $start += max($breakPos - self::OVERLAP_CHARS, self::OVERLAP_CHARS);
+            $start += max($breakPos - $this->overlapChars, $this->overlapChars);
         }
 
         return array_values(array_filter($chunks));

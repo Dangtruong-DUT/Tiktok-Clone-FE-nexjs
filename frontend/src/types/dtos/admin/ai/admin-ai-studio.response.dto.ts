@@ -1,4 +1,4 @@
-import type { ApiSuccessResponseWithData } from '@/types/common/http-response.type'
+import type { ApiSuccessResponseWithData, ApiSuccessResponseWithMeta } from '@/types/common/http-response.type'
 import type { AiUsageLogStatus } from '@/constants/admin/ai'
 
 export interface AiMetricsDailySeriesItemDto {
@@ -46,6 +46,7 @@ export interface AiStudioSettingsDto {
 export interface AiUsageLogUserDto {
     readonly uuid: string
     readonly username: string
+    readonly avatar_url: string | null
 }
 
 export interface AiUsageLogItemDto {
@@ -61,14 +62,7 @@ export interface AiUsageLogItemDto {
     readonly user?: AiUsageLogUserDto
 }
 
-export interface AiStudioRequestsPaginationDto {
-    readonly current_page: number
-    readonly data: AiUsageLogItemDto[]
-    readonly last_page: number
-    readonly per_page: number
-    readonly total: number
-}
-
 export type GetAiMetricsResDto = ApiSuccessResponseWithData<AiMetricsResponseDto>
 export type GetAiSettingsResDto = ApiSuccessResponseWithData<AiStudioSettingsDto>
-export type ListAiRequestsResDto = ApiSuccessResponseWithData<AiStudioRequestsPaginationDto>
+export type ListAiRequestsResDto = ApiSuccessResponseWithMeta<AiUsageLogItemDto[]>
+export type GetAiAvailableModelsResDto = ApiSuccessResponseWithData<string[]>

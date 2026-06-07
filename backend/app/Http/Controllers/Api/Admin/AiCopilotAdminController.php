@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AiStudio\UpdateFeatureFlagsRequest;
 use App\Http\Requests\Admin\AiStudio\UpdatePromptTemplateRequest;
+use App\Http\Resources\Api\Admin\AiCopilotSessionAdminResource;
+use App\Http\Resources\Api\Admin\AiPromptTemplateAdminResource;
 use App\Http\Response\ApiResponse;
 use App\Services\Admin\AiCopilotAdminService;
 use Illuminate\Http\JsonResponse;
@@ -27,12 +29,12 @@ class AiCopilotAdminController extends Controller
     {
         $perPage = (int) $request->query('per_page', 20);
 
-        return ApiResponse::success($this->adminService->getSessions($perPage));
+        return ApiResponse::success(AiCopilotSessionAdminResource::collection($this->adminService->getSessions($perPage)));
     }
 
     public function listPromptTemplates(): JsonResponse
     {
-        return ApiResponse::success($this->adminService->getPromptTemplates());
+        return ApiResponse::success(AiPromptTemplateAdminResource::collection($this->adminService->getPromptTemplates()));
     }
 
     public function updatePromptTemplate(UpdatePromptTemplateRequest $request, string $intent): JsonResponse
@@ -43,7 +45,7 @@ class AiCopilotAdminController extends Controller
             $request->user()->id,
         );
 
-        return ApiResponse::success($template);
+        return ApiResponse::success(new AiPromptTemplateAdminResource($template));
     }
 
     public function lockTemplate(string $intent): JsonResponse
@@ -51,7 +53,7 @@ class AiCopilotAdminController extends Controller
         $template = \App\Models\AiPromptTemplate::where('intent', $intent)->firstOrFail();
         $template->update(['is_locked' => true]);
 
-        return ApiResponse::success($template);
+        return ApiResponse::success(new AiPromptTemplateAdminResource($template));
     }
 
     public function unlockTemplate(string $intent): JsonResponse
@@ -59,7 +61,7 @@ class AiCopilotAdminController extends Controller
         $template = \App\Models\AiPromptTemplate::where('intent', $intent)->firstOrFail();
         $template->update(['is_locked' => false]);
 
-        return ApiResponse::success($template);
+        return ApiResponse::success(new AiPromptTemplateAdminResource($template));
     }
 
     public function updateFeatureFlags(UpdateFeatureFlagsRequest $request): JsonResponse

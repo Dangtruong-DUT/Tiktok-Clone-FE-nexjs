@@ -6,13 +6,12 @@ use App\DTOs\AI\AiCopilotMessageInput;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Studio\SendCopilotMessageRequest;
 use App\Http\Requests\Studio\StartCopilotSessionRequest;
-use App\Http\Resources\AiCopilotMessageResource;
-use App\Http\Resources\AiCopilotSessionResource;
+use App\Http\Resources\Api\Studio\Copilot\AiCopilotMessageResource;
+use App\Http\Resources\Api\Studio\Copilot\AiCopilotSessionResource;
 use App\Http\Response\ApiResponse;
 use App\Models\AiStudioSetting;
 use App\Repositories\AiCopilotSessionRepository;
 use App\Services\AI\Copilot\AiCopilotService;
-use App\Services\AI\Copilot\AiCopilotStreamingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -21,11 +20,13 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class AiCopilotController extends Controller
 {
     public function __construct(
-        private readonly AiCopilotService          $copilotService,
-        private readonly AiCopilotStreamingService $streamingService,
+        private readonly AiCopilotService           $copilotService,
         private readonly AiCopilotSessionRepository $sessionRepo,
     ) {}
 
+    /**
+     * Start a new AI Copilot session or return an existing active one.
+     */
     public function startSession(StartCopilotSessionRequest $request): JsonResponse
     {
         $settings = AiStudioSetting::current();
@@ -41,6 +42,9 @@ class AiCopilotController extends Controller
         return ApiResponse::created(new AiCopilotSessionResource($session));
     }
 
+    /**
+     * Load a session with its recent messages.
+     */
     public function showSession(Request $request, string $uuid): JsonResponse
     {
         $session = $this->copilotService->getSessionWithMessages($uuid, $request->user()->id);
@@ -48,51 +52,51 @@ class AiCopilotController extends Controller
         return ApiResponse::success(new AiCopilotSessionResource($session));
     }
 
-    public function sendMessage(SendCopilotMessageRequest $request, string $uuid): JsonResponse|StreamedResponse
+    /**
+     * Accept a user message and return a stream token + SSE URL.
+     * All messages go through the streaming path; non-streaming is removed.
+     */
+    public function sendMessage(SendCopilotMessageRequest $request, string $uuid): JsonResponse
     {
         $session  = $this->sessionRepo->findByUuidAndUserOrFail($uuid, $request->user()->id);
-        $settings = AiStudioSetting::current();
         $input    = AiCopilotMessageInput::fromRequest($request->validated());
+        $msgUuid  = Str::uuid()->toString();
 
-        if ($settings->isFeatureEnabled('streaming')) {
-            $msgUuid     = Str::uuid()->toString();
-            $userMessage = $this->copilotService->createUserMessage($session, $input, $msgUuid);
+        $userMessage = $this->copilotService->createUserMessage($session, $input, $msgUuid);
 
-            if ($input->hasVideoClip() || $input->hasFrames() || $input->hasTimeline()) {
-                $this->streamingService->cacheAttachments($msgUuid, [
-                    'video_clip'     => $input->videoClip,
-                    'frames'         => $input->frames,
-                    'timeline_start' => $input->timelineStart,
-                    'timeline_end'   => $input->timelineEnd,
-                ]);
-            }
-
-            $token = $this->streamingService->generateStreamToken(
-                $session->uuid,
-                $userMessage->uuid,
-                $request->user()->id,
-            );
-
-            return ApiResponse::success([
-                'streaming'    => true,
-                'message_uuid' => $userMessage->uuid,
-                'stream_token' => $token,
-                'stream_url'   => route('api.v1.studio.ai.copilot.stream', [
-                    'uuid'         => $session->uuid,
-                    'message_uuid' => $userMessage->uuid,
-                ]),
-            ], 'Streaming', 202);
+        if ($input->hasVideoClip() || $input->hasFrames() || $input->hasTimeline()) {
+            $this->copilotService->cacheAttachments($msgUuid, [
+                'video_clip'     => $input->videoClip,
+                'frames'         => $input->frames,
+                'timeline_start' => $input->timelineStart,
+                'timeline_end'   => $input->timelineEnd,
+            ]);
         }
 
-        $assistantMessage = $this->copilotService->processMessage($session, $input);
+        $token = $this->copilotService->generateStreamToken(
+            $session->uuid,
+            $userMessage->uuid,
+            $request->user()->id,
+        );
 
-        return ApiResponse::created(new AiCopilotMessageResource($assistantMessage));
+        return ApiResponse::success([
+            'streaming'    => true,
+            'message_uuid' => $userMessage->uuid,
+            'stream_token' => $token,
+            'stream_url'   => route('api.v1.studio.ai.copilot.stream', [
+                'uuid'         => $session->uuid,
+                'message_uuid' => $userMessage->uuid,
+            ]),
+        ], 'Streaming', 202);
     }
 
+    /**
+     * Open the SSE stream for a previously accepted message.
+     */
     public function stream(Request $request, string $uuid, string $messageUuid): StreamedResponse
     {
         $token  = (string) $request->query('token', '');
-        $userId = $this->streamingService->validateStreamToken($token, $uuid, $messageUuid);
+        $userId = $this->copilotService->validateStreamToken($token, $uuid, $messageUuid);
 
         abort_unless($userId !== null, 403, 'Invalid or expired stream token.');
 
@@ -101,7 +105,7 @@ class AiCopilotController extends Controller
             ?? abort(404, 'Message not found in session.');
 
         return response()->stream(function () use ($session, $userMessage) {
-            $this->streamingService->stream(
+            $this->copilotService->stream(
                 session:     $session,
                 userMessage: $userMessage,
                 emit:        function (string $chunk, bool $done, ?array $finalPayload) {
@@ -122,6 +126,9 @@ class AiCopilotController extends Controller
         ]);
     }
 
+    /**
+     * Mark an assistant message as accepted by the user.
+     */
     public function accept(Request $request, string $messageUuid): JsonResponse
     {
         $message = $this->copilotService->getMessageByUuidForUser($messageUuid, $request->user()->id);
@@ -130,6 +137,9 @@ class AiCopilotController extends Controller
         return ApiResponse::success(new AiCopilotMessageResource($message));
     }
 
+    /**
+     * Mark an assistant message as rejected by the user.
+     */
     public function reject(Request $request, string $messageUuid): JsonResponse
     {
         $message = $this->copilotService->getMessageByUuidForUser($messageUuid, $request->user()->id);
@@ -138,7 +148,10 @@ class AiCopilotController extends Controller
         return ApiResponse::success(new AiCopilotMessageResource($message));
     }
 
-    public function destroySession(Request $request, string $uuid): JsonResponse
+    /**
+     * Expire a session immediately (user-initiated close).
+     */
+    public function destroySession(Request $request, string $uuid):\Illuminate\Http\Response
     {
         $session = $this->sessionRepo->findByUuidAndUserOrFail($uuid, $request->user()->id);
         $this->copilotService->expireSession($session);

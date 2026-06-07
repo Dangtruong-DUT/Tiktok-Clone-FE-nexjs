@@ -2,13 +2,13 @@
 
 namespace App\Services\AI\Copilot\Handlers;
 
+use App\Contracts\AI\GeminiClientInterface;
 use App\DTOs\AI\AiCopilotMessageInput;
 use App\DTOs\AI\AiCopilotSessionContext;
 use App\DTOs\AI\AppRouteInfo;
 use App\DTOs\AI\CopilotHandlerResult;
 use App\Enums\Ai\AiCopilotIntentEnum;
 use App\Models\AiPromptTemplate;
-use App\Services\AI\GeminiAiService;
 
 /**
  * Returns a nav_card with relevant app routes based on the user's query.
@@ -66,9 +66,10 @@ class NavigateToHandler extends AbstractCopilotHandler implements CopilotHandler
         ],
     ];
 
-    public function __construct(
-        protected readonly GeminiAiService $gemini,
-    ) {}
+    public function __construct(GeminiClientInterface $gemini)
+    {
+        parent::__construct($gemini);
+    }
 
     public function handle(
         AiCopilotIntentEnum     $intent,

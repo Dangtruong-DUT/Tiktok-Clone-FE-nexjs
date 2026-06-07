@@ -84,7 +84,7 @@ class AiStudioAdminService
      */
     public function listRequests(array $filters): LengthAwarePaginator
     {
-        return AiUsageLog::with('user:id,uuid,username')
+        return AiUsageLog::with(['user:id,uuid,username,avatar_file_id', 'user.avatarFile'])
             ->when(
                 isset($filters['intent']),
                 fn ($q) => $q->where('intent', $filters['intent'])

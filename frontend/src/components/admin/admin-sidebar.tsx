@@ -16,6 +16,7 @@ import { useTheme } from 'next-themes'
 import { ArrowLeft, ChevronDown, Monitor, Moon, PanelLeftClose, Sun } from 'lucide-react'
 import type { DashboardStats } from '@/types/dtos/admin/admin-response.dto'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import { useEffect, useState } from 'react'
 
 interface AdminSidebarProps {
     collapsed: boolean
@@ -28,15 +29,23 @@ export function AdminSidebar({ collapsed, onToggle, stats }: AdminSidebarProps) 
     const t = useTranslations('AdminPage')
     const locale = useLocale()
     const { onChange: onLocaleChange, isPending: isLocalePending } = useLanguage()
-    const { setTheme, theme } = useTheme()
+    const { setTheme, resolvedTheme } = useTheme()
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
+
+    // Always render Monitor on server to match SSR output, swap after mount
+    const ThemeIcon = mounted ? (resolvedTheme === 'dark' ? Moon : resolvedTheme === 'light' ? Sun : Monitor) : Monitor
 
     const localizedPath = (route: string) => `/${locale}${route}`
     const isActive = (route: string) =>
         route === ADMIN_ROUTES.DASHBOARD ? pathname === localizedPath(route) : pathname?.includes(localizedPath(route))
     const isChildActive = (item: (typeof ADMIN_NAV_GROUPS)[0]['items'][0]) =>
-        item.children?.some((c) => pathname === localizedPath(c.href) || pathname?.startsWith(localizedPath(c.href) + '/')) ?? false
-
-    const ThemeIcon = theme === 'dark' ? Moon : theme === 'light' ? Sun : Monitor
+        item.children?.some(
+            (c) => pathname === localizedPath(c.href) || pathname?.startsWith(localizedPath(c.href) + '/')
+        ) ?? false
 
     return (
         <TooltipProvider delayDuration={0}>
@@ -141,7 +150,9 @@ export function AdminSidebar({ collapsed, onToggle, stats }: AdminSidebarProps) 
                                                         <item.icon
                                                             className={cn(
                                                                 'mr-2.5 h-4 w-4 shrink-0',
-                                                                groupActive ? 'text-white' : 'text-zinc-500 group-hover:text-zinc-200'
+                                                                groupActive
+                                                                    ? 'text-white'
+                                                                    : 'text-zinc-500 group-hover:text-zinc-200'
                                                             )}
                                                         />
                                                         <span className='truncate flex-1'>
@@ -152,7 +163,8 @@ export function AdminSidebar({ collapsed, onToggle, stats }: AdminSidebarProps) 
                                                     <CollapsibleContent>
                                                         <div className='mt-0.5 space-y-0.5'>
                                                             {item.children!.map((child) => {
-                                                                const childActive = pathname === localizedPath(child.href)
+                                                                const childActive =
+                                                                    pathname === localizedPath(child.href)
                                                                 return (
                                                                     <Link
                                                                         key={child.href}
@@ -168,11 +180,17 @@ export function AdminSidebar({ collapsed, onToggle, stats }: AdminSidebarProps) 
                                                                         <child.icon
                                                                             className={cn(
                                                                                 'mr-2 h-3.5 w-3.5 shrink-0',
-                                                                                childActive ? 'text-white' : 'text-zinc-500 group-hover:text-zinc-200'
+                                                                                childActive
+                                                                                    ? 'text-white'
+                                                                                    : 'text-zinc-500 group-hover:text-zinc-200'
                                                                             )}
                                                                         />
                                                                         <span className='truncate'>
-                                                                            {t(child.titleKey as Parameters<typeof t>[0])}
+                                                                            {t(
+                                                                                child.titleKey as Parameters<
+                                                                                    typeof t
+                                                                                >[0]
+                                                                            )}
                                                                         </span>
                                                                         {childActive && (
                                                                             <span className='ml-auto h-1.5 w-1.5 shrink-0 rounded-full bg-white/50' />
@@ -201,7 +219,9 @@ export function AdminSidebar({ collapsed, onToggle, stats }: AdminSidebarProps) 
                                                 <item.icon
                                                     className={cn(
                                                         'mr-2.5 h-4 w-4 shrink-0',
-                                                        active ? 'text-white' : 'text-zinc-500 group-hover:text-zinc-200'
+                                                        active
+                                                            ? 'text-white'
+                                                            : 'text-zinc-500 group-hover:text-zinc-200'
                                                     )}
                                                 />
                                                 <span className='truncate flex-1'>

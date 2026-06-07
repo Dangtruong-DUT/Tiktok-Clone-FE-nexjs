@@ -4,7 +4,6 @@ namespace App\Services\Admin;
 
 use App\Models\AiPromptTemplate;
 use App\Models\AiStudioSetting;
-use App\Repositories\AiCopilotSessionRepository;
 use App\Repositories\AiPromptTemplateRepository;
 use App\Repositories\AiUsageLogRepository;
 
@@ -12,7 +11,6 @@ class AiCopilotAdminService
 {
     public function __construct(
         private readonly AiUsageLogRepository       $usageRepo,
-        private readonly AiCopilotSessionRepository $sessionRepo,
         private readonly AiPromptTemplateRepository $templateRepo,
     ) {}
 
@@ -26,10 +24,9 @@ class AiCopilotAdminService
         ];
     }
 
-    /** @return array<string, mixed> */
-    public function getPromptTemplates(): array
+    public function getPromptTemplates(): \Illuminate\Database\Eloquent\Collection
     {
-        return $this->templateRepo->allActive()->toArray();
+        return $this->templateRepo->allActive();
     }
 
     public function updatePromptTemplate(string $intent, array $data, int $adminId): AiPromptTemplate

@@ -7,7 +7,7 @@ use App\DTOs\AI\AiCopilotSessionContext;
 use App\DTOs\AI\CopilotHandlerResult;
 use App\Enums\Ai\AiCopilotIntentEnum;
 use App\Models\AiPromptTemplate;
-use App\Services\AI\GeminiAiService;
+use App\Contracts\AI\GeminiClientInterface;
 use App\Services\AI\Rag\GeminiEmbeddingService;
 use App\Services\AI\Rag\PgVectorSearchService;
 
@@ -18,7 +18,7 @@ use App\Services\AI\Rag\PgVectorSearchService;
 class GeneralAdviceHandler extends AbstractCopilotHandler implements CopilotHandlerInterface
 {
     public function __construct(
-        GeminiAiService                          $gemini,
+        GeminiClientInterface                    $gemini,
         private readonly GeminiEmbeddingService  $embeddingService,
         private readonly PgVectorSearchService   $searchService,
     ) {
@@ -38,7 +38,7 @@ class GeneralAdviceHandler extends AbstractCopilotHandler implements CopilotHand
         $userTurn     = $this->buildUserTurn($input, $template);
         $contents     = $this->buildContents($conversationHistory, $userTurn);
 
-        $result = $this->gemini->generateWithHistory(
+        $result = $this->sendWithHistory(
             systemPrompt: $systemPrompt,
             contents:     $contents,
         );

@@ -62,17 +62,9 @@ export function AiStudioRequests() {
     const [perPage, setPerPage] = useState(20)
     const { data, isLoading } = useListAiRequestsQuery({ page, per_page: perPage })
 
-    const pagination = data?.data
-    const items = pagination?.data ?? []
-    const meta: OffsetPaginationMeta | undefined = pagination
-        ? {
-              type: 'offset',
-              current_page: pagination.current_page,
-              last_page: pagination.last_page,
-              per_page: pagination.per_page,
-              total: pagination.total
-          }
-        : undefined
+    const items = data?.data ?? []
+    const meta: OffsetPaginationMeta | undefined =
+        data?.meta?.type === 'offset' ? (data.meta as OffsetPaginationMeta) : undefined
 
     const columns = [
         t('aiStudio.requests.columns.user'),

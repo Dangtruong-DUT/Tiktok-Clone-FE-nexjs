@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Api\Studio;
 
+use App\Http\Resources\BaseJsonResource;
 use Illuminate\Http\Request;
 
 class ScheduledPostResource extends BaseJsonResource

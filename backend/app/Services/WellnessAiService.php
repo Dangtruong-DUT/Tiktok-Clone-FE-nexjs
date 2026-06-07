@@ -2,12 +2,15 @@
 
 namespace App\Services;
 
-use App\Services\AI\GeminiAiService;
+use App\Contracts\AI\GeminiClientInterface;
+use App\DTOs\AI\Gemini\GeminiConfig;
+use App\DTOs\AI\Gemini\GeminiRequest;
+use App\Models\AiStudioSetting;
 
 class WellnessAiService
 {
     public function __construct(
-        private readonly GeminiAiService $gemini,
+        private readonly GeminiClientInterface $gemini,
     ) {}
 
     /**
@@ -18,7 +21,7 @@ class WellnessAiService
      */
     public function parseRule(string $nlText): array
     {
-        $result = $this->gemini->generateJson(
+        $result = $this->generateJson(
             $this->wellnessRuleParserSystem(),
             "Parse this wellness rule request: \"{$nlText}\"",
             ['type', 'conditions', 'action', 'title', 'message'],
@@ -46,7 +49,7 @@ class WellnessAiService
     {
         $statsJson = json_encode($stats, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
-        $result = $this->gemini->generateJson(
+        $result = $this->generateJson(
             $this->wellnessAnalysisSystem(),
             "Analyze these usage statistics and provide wellness insights:\n\n{$statsJson}",
             ['summary', 'patterns', 'recommendations'],
@@ -96,5 +99,38 @@ Respond with JSON:
   ]
 }
 PROMPT;
+    }
+
+    /**
+     * @param  array<string>  $requiredKeys
+     * @return array{data: array<string,mixed>, token_usage: array<string,int>}
+     */
+    private function generateJson(string $systemPrompt, string $userPrompt, array $requiredKeys = []): array
+    {
+        $result = $this->gemini->send(new GeminiRequest(
+            systemPrompt: $systemPrompt,
+            contents:     [['role' => 'user', 'parts' => [['text' => $userPrompt]]]],
+            config:       GeminiConfig::fromSetting(AiStudioSetting::current(), [
+                'responseMimeType' => 'application/json',
+            ]),
+        ))->toArray();
+
+        $clean = (string) preg_replace('/^```(?:json)?\s*/m', '', $result['text']);
+        $clean = (string) preg_replace('/```\s*$/m', '', $clean);
+        $clean = trim($clean);
+
+        $data = json_decode($clean, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \RuntimeException('Gemini returned invalid JSON: ' . json_last_error_msg());
+        }
+
+        foreach ($requiredKeys as $key) {
+            if (! array_key_exists($key, $data)) {
+                throw new \RuntimeException("Missing required field in AI response: {$key}");
+            }
+        }
+
+        return ['data' => $data, 'token_usage' => $result['token_usage']];
     }
 }

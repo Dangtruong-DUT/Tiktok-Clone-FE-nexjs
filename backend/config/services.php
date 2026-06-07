@@ -43,7 +43,6 @@ return [
             'request_topic' => env('AI_MODERATION_KAFKA_REQUEST_TOPIC', 'moderation.request.v1'),
             'result_topic' => env('AI_MODERATION_KAFKA_RESULT_TOPIC', 'moderation.result.v1'),
             'result_group_id' => env('AI_MODERATION_KAFKA_RESULT_GROUP_ID', 'snapi-ai-moderation-result-consumer'),
-            'broker_version' => env('AI_MODERATION_KAFKA_BROKER_VERSION', '3.6.0'),
         ],
     ],
 

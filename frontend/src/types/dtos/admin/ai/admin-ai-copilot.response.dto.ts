@@ -1,4 +1,4 @@
-import type { ApiSuccessResponseWithData } from '@/types/common/http-response.type'
+import type { ApiSuccessResponseWithData, ApiSuccessResponseWithMeta } from '@/types/common/http-response.type'
 
 export interface AiCopilotMetricsByIntentItemDto {
     readonly total_requests: number
@@ -32,11 +32,13 @@ export interface AiCopilotMetricsDto {
 export interface AiPromptTemplateDto {
     readonly id: number
     readonly intent: string
+    readonly category: string
     readonly display_name: string
     readonly system_prompt: string
     readonly user_template: string
     readonly few_shot_examples?: unknown[] | null
     readonly is_active: boolean
+    readonly is_locked: boolean
     readonly version: number
 }
 
@@ -61,16 +63,8 @@ export interface AiCopilotSessionListItemDto {
     readonly user?: AiCopilotSessionUserDto
 }
 
-export interface AiCopilotSessionsPaginationDto {
-    readonly current_page: number
-    readonly data: AiCopilotSessionListItemDto[]
-    readonly last_page: number
-    readonly per_page: number
-    readonly total: number
-}
-
 export type GetCopilotMetricsResDto = ApiSuccessResponseWithData<AiCopilotMetricsDto>
-export type GetCopilotSessionsResDto = ApiSuccessResponseWithData<AiCopilotSessionsPaginationDto>
+export type GetCopilotSessionsResDto = ApiSuccessResponseWithMeta<AiCopilotSessionListItemDto[]>
 export type ListPromptTemplatesResDto = ApiSuccessResponseWithData<AiPromptTemplateDto[]>
 export type UpdatePromptTemplateResDto = ApiSuccessResponseWithData<AiPromptTemplateDto>
 export type UpdateFeatureFlagsResDto = ApiSuccessResponseWithData<AiCopilotFeatureFlagsDto>

@@ -2,20 +2,23 @@
 
 namespace App\Http\Requests\Wellness;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class ParseNLRuleRequest extends FormRequest
+class ParseNLRuleRequest extends BaseRequest
 {
-    public function authorize(): bool { return true; }
-
-    /** @return array<string,mixed> */
+    /**
+     * Validate the natural language rule text to parse.
+     *
+     * @return array<string, mixed[]>
+     */
     public function rules(): array
     {
-        return [
-            'text' => ['required', 'string', 'max:500'],
-        ];
+        return $this->applyBaseRules([
+            'text' => [self::REQUIRED, self::STRING, self::MAX . ':500'],
+        ]);
     }
 
+    /** Return the raw natural language input text. */
     public function text(): string
     {
         return (string) $this->input('text');

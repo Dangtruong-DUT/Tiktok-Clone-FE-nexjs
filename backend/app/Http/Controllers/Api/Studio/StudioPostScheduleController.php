@@ -6,7 +6,7 @@ use App\Enums\Post\PostPublishStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Studio\ReschedulePostRequest;
 use App\Http\Requests\Studio\SchedulePostRequest;
-use App\Http\Resources\ScheduledPostResource;
+use App\Http\Resources\Api\Studio\ScheduledPostResource;
 use App\Http\Response\ApiResponse;
 use App\Models\Post;
 use App\Services\AI\Schedule\PostScheduleService;
