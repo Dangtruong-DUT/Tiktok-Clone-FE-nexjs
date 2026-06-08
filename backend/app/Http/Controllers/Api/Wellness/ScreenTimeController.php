@@ -16,10 +16,10 @@ class ScreenTimeController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param  ScreenTimeTrackingService  $service
+     * @param  ScreenTimeTrackingService  $screenTimeTrackingService
      */
     public function __construct(
-        private readonly ScreenTimeTrackingService $service,
+        private readonly ScreenTimeTrackingService $screenTimeTrackingService,
     ) {}
 
     /**
@@ -33,7 +33,7 @@ class ScreenTimeController extends Controller
         $payload = $request->validated();
 
         return ApiResponse::success(
-            data:    $this->service->getStats((int) auth_user_id(), $payload['period'] ?? null),
+            data:    $this->screenTimeTrackingService->getStats((int) auth_user_id(), $payload['period'] ?? null),
             message: 'Screen time stats retrieved.',
         );
     }
@@ -49,7 +49,7 @@ class ScreenTimeController extends Controller
         $payload = $request->validated();
 
         return ApiResponse::success(
-            data:    $this->service->getHistory(
+            data:    $this->screenTimeTrackingService->getHistory(
                 (int) auth_user_id(),
                 $payload['date_from'] ?? null,
                 $payload['date_to'] ?? null,
@@ -65,7 +65,7 @@ class ScreenTimeController extends Controller
      */
     public function startSession(): JsonResponse
     {
-        $session = $this->service->startSession((int) auth_user_id());
+        $session = $this->screenTimeTrackingService->startSession((int) auth_user_id());
 
         return ApiResponse::success(
             data:    ['uuid' => $session->uuid, 'started_at' => $session->started_at->toIso8601String()],
@@ -82,7 +82,7 @@ class ScreenTimeController extends Controller
      */
     public function heartbeat(string $uuid): JsonResponse
     {
-        $this->service->heartbeatByUuid($uuid, (int) auth_user_id());
+        $this->screenTimeTrackingService->heartbeatByUuid($uuid, (int) auth_user_id());
 
         return ApiResponse::success(data: null, message: 'Heartbeat recorded.');
     }
@@ -96,7 +96,7 @@ class ScreenTimeController extends Controller
      */
     public function updateVideoTime(UpdateVideoTimeRequest $request, string $uuid): JsonResponse
     {
-        $updated = $this->service->updateVideoTimeByUuid(
+        $updated = $this->screenTimeTrackingService->updateVideoTimeByUuid(
             $uuid,
             (int) auth_user_id(),
             $request->integer('video_seconds'),
@@ -117,7 +117,7 @@ class ScreenTimeController extends Controller
      */
     public function endSession(EndSessionRequest $request, string $uuid): JsonResponse
     {
-        $this->service->endSessionByUuid(
+        $this->screenTimeTrackingService->endSessionByUuid(
             $uuid,
             (int) auth_user_id(),
             (int) $request->validated('duration_seconds'),

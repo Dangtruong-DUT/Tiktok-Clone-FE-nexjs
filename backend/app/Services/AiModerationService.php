@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\Admin\AdminActionEnum;
 use App\Enums\Ai\AiModerationLabelEnum;
+use App\Enums\Ai\AiModerationStatusEnum;
 use App\Enums\Common\ModelEntityTypeEnum;
 use App\Enums\Common\ResourceTypeEnum;
 use App\Models\AiModerationReport;
@@ -125,7 +126,7 @@ class AiModerationService
                     'raw_payload' => $payload['raw_payload'] ?? $payload,
                     'moderated_at' => $payload['moderated_at'] ?? now(),
                     'appeal_deadline_at' => $isViolation ? now()->addDays($appealDays) : null,
-                    'status' => $isViolation ? 'open' : 'resolved',
+                    'status' => $isViolation ? AiModerationStatusEnum::OPEN->value : AiModerationStatusEnum::RESOLVED->value,
                 ]
             );
 

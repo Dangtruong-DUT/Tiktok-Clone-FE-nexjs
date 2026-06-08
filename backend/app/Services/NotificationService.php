@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\Common\ModelEntityTypeEnum;
+use App\Enums\Notification\NotificationAuthEventEnum;
 use App\Enums\Notification\NotificationTypeEnum;
 use App\Enums\Post\PostTypeEnum;
 use App\Exceptions\http\NotFoundException;
@@ -38,6 +39,9 @@ class NotificationService
 
     /**
      * Get unread notification count for current user.
+     *
+     * @param  string  $tab
+     * @return int
      */
     public function getUnreadCount(string $tab): int
     {
@@ -62,6 +66,9 @@ class NotificationService
 
     /**
      * Mark all unread notifications as read for current user.
+     *
+     * @param  string  $tab
+     * @return int  Number of records updated.
      */
     public function markAllAsRead(string $tab): int
     {
@@ -70,8 +77,10 @@ class NotificationService
 
     /**
      * Notify target user that someone followed them.
+     *
      * @param  int  $actorId  The ID of the user who performed the follow action.
      * @param  int  $notifiableId  The ID of the user to be notified.
+     * @return void
      */
     public function notifyFollow(int $actorId, int $notifiableId): void
     {
@@ -91,8 +100,10 @@ class NotificationService
 
     /**
      * Notify post owner that their post was liked.
+     *
      * @param  int  $actorId  The ID of the user who performed the like action.
      * @param  Post  $post  The post that was liked.
+     * @return void
      */
     public function notifyLike(int $actorId, Post $post): void
     {
@@ -105,7 +116,7 @@ class NotificationService
 
         $data = [
             'post_uuid' => $videoPost->uuid,
-            'liked_target_type' => $isLikeOnComment ? 'comment' : 'post',
+            'liked_target_type' => $isLikeOnComment ? PostTypeEnum::COMMENT->value : PostTypeEnum::POST->value,
             'liked_target_uuid' => $post->uuid,
         ];
 
@@ -126,9 +137,11 @@ class NotificationService
 
     /**
      * Notify post owner that someone commented on their post.
+     *
      * @param  int  $actorId  The ID of the user who posted the comment.
      * @param  Post  $targetPost  The post being commented on.
      * @param  Post  $commentPost  The newly created comment post.
+     * @return void
      */
     public function notifyComment(int $actorId, Post $targetPost, Post $commentPost): void
     {
@@ -154,7 +167,11 @@ class NotificationService
 
     /**
      * Notify mentioned users in post/comment content.
+     *
+     * @param  int  $actorId
+     * @param  Post  $post
      * @param  array<int, int>  $mentionedUserIds
+     * @return void
      */
     public function notifyMention(int $actorId, Post $post, array $mentionedUserIds): void
     {
@@ -181,27 +198,33 @@ class NotificationService
     }
 
     /**
-     * Notify current user for authentication-related events.
+     * Notify a user about an authentication-related security event.
+     *
      * @param  int  $userId  The ID of the user to be notified.
-     * @param  string  $eventName  The name of the authentication event (e.g., 'login', 'logout', 'password_change').
+     * @param  NotificationAuthEventEnum  $event
+     * @return void
      */
-    public function notifyAuthEvent(int $userId, string $eventName): void
+    public function notifyAuthEvent(int $userId, NotificationAuthEventEnum $event): void
     {
         $this->notificationRepository->create([
-            'actor_id' => null,
+            'actor_id'      => null,
             'notifiable_id' => $userId,
-            'type' => NotificationTypeEnum::SECURITY->value,
-            'entity_type' => ModelEntityTypeEnum::USER->value,
-            'entity_id' => $userId,
-            'data' => [
-                'event' => $eventName,
-            ],
+            'type'          => NotificationTypeEnum::SECURITY->value,
+            'entity_type'   => ModelEntityTypeEnum::USER->value,
+            'entity_id'     => $userId,
+            'data'          => ['event' => $event->value],
         ]);
     }
 
     /**
      * Notify user about admin moderation actions.
+     *
+     * @param  int  $adminId
+     * @param  int  $notifiableUserId
+     * @param  ModelEntityTypeEnum  $entityType
+     * @param  int  $entityId
      * @param  array<string,mixed>|null  $data
+     * @return void
      */
     public function notifyAdminModerationAction(
         int $adminId,

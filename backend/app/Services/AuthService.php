@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\Notification\NotificationAuthEventEnum;
 use App\Enums\User\UserVerifyStatusEnum;
 use App\Exceptions\http\BusinessException;
 use App\Exceptions\http\UnauthorizedException;
@@ -55,7 +56,7 @@ class AuthService
         $accessToken = $this->tokenService->createAccessToken($user);
         $refreshToken = $this->tokenService->createRefreshToken($user);
 
-        $this->notificationService->notifyAuthEvent($user->id, 'login');
+        $this->notificationService->notifyAuthEvent($user->id, NotificationAuthEventEnum::LOGIN);
 
         return [
             'access_token' => $accessToken,
@@ -66,6 +67,8 @@ class AuthService
 
     /**
      * Log the user out by invalidating the refresh token.
+     *
+     * @param  string  $refreshToken
      * @throws UnauthorizedException
      */
     public function logout(string $refreshToken): bool
@@ -79,6 +82,8 @@ class AuthService
 
     /**
      * Log the user out from all devices by invalidating all refresh tokens.
+     *
+     * @param  string  $refreshToken
      * @throws UnauthorizedException
      */
     public function logoutAll(string $refreshToken): bool
@@ -93,6 +98,8 @@ class AuthService
 
     /**
      * Refresh the access token using the refresh token.
+     *
+     * @param  string  $refreshToken
      * @return array{access_token: string, refresh_token: string, user: User}
      * @throws UnauthorizedException
      */
@@ -139,7 +146,7 @@ class AuthService
             $verifyToken = $this->tokenService->createVerifyEmailToken($user);
             Mail::to($data['email'])->send(new VerifyUserMail($user, $verifyToken));
 
-            $this->notificationService->notifyAuthEvent($user->id, 'register');
+            $this->notificationService->notifyAuthEvent($user->id, NotificationAuthEventEnum::REGISTER);
         });
 
         return [
@@ -195,10 +202,14 @@ class AuthService
 
     /**
      * Get the authenticated user's profile.
+     * Requires auth middleware to have run — guard always resolves to a User.
      */
-    public function me(): ?User
+    public function me(): User
     {
-        return $this->guard()->user();
+        /** @var User $user */
+        $user = $this->guard()->user();
+
+        return $user;
     }
 
     /**

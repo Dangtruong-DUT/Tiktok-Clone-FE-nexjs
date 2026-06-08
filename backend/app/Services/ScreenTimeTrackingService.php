@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\Admin\ActivityTypeEnum;
+use App\Enums\Wellness\ScreenTimePeriodEnum;
 use App\Exceptions\http\BusinessException;
 use App\Models\ActivityLog;
 use App\Models\ScreenTimeSession;
@@ -189,12 +190,12 @@ class ScreenTimeTrackingService
      */
     public function getStats(int $userId, ?string $period = null): array
     {
-        $period ??= 'today';
+        $period ??= ScreenTimePeriodEnum::TODAY->value;
 
         [$from, $days] = match ($period) {
-            'week'  => [now()->subWeek(),  7],
-            'month' => [now()->subMonth(), 30],
-            default => [now()->startOfDay(), 1],
+            ScreenTimePeriodEnum::WEEK->value  => [now()->subWeek(),    7],
+            ScreenTimePeriodEnum::MONTH->value => [now()->subMonth(), 30],
+            default                            => [now()->startOfDay(),  1],
         };
 
         $to = now();

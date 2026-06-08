@@ -190,18 +190,19 @@ class AuthController extends Controller
     }
 
     /**
-     * Get the token array structure.
+     * Build the authentication response payload.
+     *
      * @param  string  $accessToken
      * @param  string|null  $refreshToken
      * @param  string  $message
-     * @param  Authenticatable|null  $user
+     * @param  Authenticatable  $user
      * @return JsonResponse
      */
     protected function respondWithToken(
         string $accessToken,
-        ?string $refreshToken = null,
-        string $message = 'Login successful',
-        ?Authenticatable $user = null
+        ?string $refreshToken,
+        string $message,
+        Authenticatable $user,
     ): JsonResponse {
         return ApiResponse::success(
             data: [
