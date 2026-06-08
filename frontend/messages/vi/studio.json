@@ -1,0 +1,741 @@
+{
+    "SnapiStudio": {
+        "aiChat": {
+            "title": "AI Studio",
+            "status": {
+                "generating": "Đang tạo...",
+                "done": "Xong",
+                "completed": "Xong",
+                "fallback": "Dự phòng"
+            },
+            "actions": {
+                "applyToPost": "Áp dụng vào bài đăng",
+                "applied": "Đã áp dụng",
+                "addHashtags": "+ {count} hashtag",
+                "clearHistory": "Xóa lịch sử"
+            },
+            "meta": {
+                "category": "Danh mục",
+                "intent": "Mục đích",
+                "audience": "Đối tượng",
+                "confidence": "Độ tin cậy"
+            },
+            "input": {
+                "placeholder": "Mô tả video của bạn...",
+                "regenerateHint": "Nhập để tạo lại",
+                "hintRegenerate": "Nhập để tạo lại",
+                "sendHint": "Enter để gửi · Shift+Enter xuống dòng",
+                "hintNew": "Enter để gửi · Shift+Enter xuống dòng",
+                "submit": "Gửi"
+            },
+            "caption": {
+                "empty": "Chưa có caption được tạo",
+                "chars": "{count} ký tự"
+            },
+            "tabs": {
+                "short": "Ngắn",
+                "professional": "Chuyên nghiệp",
+                "viral": "Viral"
+            },
+            "hashtags": {
+                "title": "Hashtags",
+                "count": "({selected}/{total})",
+                "selectAll": "Chọn tất cả",
+                "deselect": "Bỏ chọn",
+                "copied": "Đã sao chép",
+                "copyAll": "Sao chép tất cả"
+            },
+            "toast": {
+                "applied": "Caption và hashtag đã được áp dụng!",
+                "captionCopied": "Đã sao chép caption!",
+                "hashtagsCopied": "Đã sao chép hashtags!",
+                "tagCopied": "Đã sao chép {tag}!",
+                "ready": "Gợi ý AI đã sẵn sàng!",
+                "fallback": "AI gặp lỗi — đang hiển thị gợi ý dự phòng.",
+                "startError": "Không thể khởi động AI. Vui lòng thử lại."
+            },
+            "emptyCaption": "Chưa có caption được tạo",
+            "charCount": "{count} ký tự",
+            "welcome": {
+                "intro": "Xin chào! Tôi là <strong>AI Studio</strong> — trợ lý tạo nội dung cho video của bạn.",
+                "subtitle": "Nhập mô tả video bên dưới và nhấn <strong>Gửi</strong> để nhận:",
+                "items": {
+                    "shortCaption": "Caption ngắn gọn, chuyên nghiệp hoặc viral",
+                    "hashtags": "Hashtag phù hợp với nội dung",
+                    "meta": "Thông tin danh mục và đối tượng mục tiêu"
+                }
+            }
+        },
+        "footer": {
+            "copyright": "Bản quyền © 2025 Snapi",
+            "privacyPolicy": "Chính sách quyền riêng tư",
+            "termsOfService": "Điều khoản dịch vụ"
+        },
+        "navigation": {
+            "home": "Trang chủ",
+            "posts": "Nội dung",
+            "ai": "AI Studio",
+            "ai_chat": "AI Creator Chat",
+            "calendar": "Lịch nội dung",
+            "scheduled": "Bài đăng đã lên lịch",
+            "wellness": "Digital Wellness",
+            "appeals": "Kháng cáo",
+            "settings": "Cài đặt",
+            "back": "Quay lại Snapi"
+        },
+        "common": {
+            "audience": {
+                "selectPlaceholder": "Chọn đối tượng xem",
+                "all": "Tất cả đối tượng",
+                "public": "Công khai",
+                "friends": "Bạn bè",
+                "private": "Riêng tư",
+                "unknown": "Không xác định"
+            }
+        },
+        "content": {
+            "table": {
+                "columns": {
+                    "content": "Nội dung",
+                    "privacy": "Quyền riêng tư",
+                    "views": "Lượt xem",
+                    "comments": "Bình luận",
+                    "actions": "Thao tác"
+                },
+                "actions": {
+                    "edit": "Chỉnh sửa",
+                    "delete": "Xóa"
+                }
+            },
+            "search": {
+                "placeholder": "Tìm kiếm...",
+                "clearButton": "Xóa",
+                "clearingButton": "Đang xóa...",
+                "searchButton": "Tìm kiếm",
+                "searchingButton": "Đang tìm..."
+            },
+            "filter": {
+                "audiencePlaceholder": "Lọc theo đối tượng xem",
+                "allAudience": "Tất cả đối tượng",
+                "audience": {
+                    "public": "Công khai",
+                    "friends": "Bạn bè",
+                    "private": "Riêng tư",
+                    "unknown": "Không xác định"
+                }
+            },
+            "emptyState": "Không tìm thấy bài viết nào.",
+            "showingResults": "Hiển thị {from}-{to} trong {total} bài viết",
+            "perPage": "Mỗi trang"
+        },
+        "dashboard": {
+            "knowledgeForYou": {
+                "title": "Kiến thức dành cho bạn"
+            },
+            "userInfo": {
+                "likes": "{count} Lượt thích",
+                "followers": "{count} Người theo dõi",
+                "following": "{count} Đang theo dõi"
+            },
+            "recentPosts": {
+                "title": "Bài đăng gần đây",
+                "createdAt": "Đăng vào {date}",
+                "metrics": {
+                    "views": "Lượt xem",
+                    "likes": "Lượt thích",
+                    "comments": "Bình luận"
+                }
+            },
+            "postStatusChart": {
+                "title": "Trạng thái bài đăng",
+                "description": "Bài đăng của bạn theo trạng thái xuất bản",
+                "published": "Đã đăng",
+                "scheduled": "Đã lên lịch",
+                "draft": "Bản nháp",
+                "posts": "bài"
+            },
+            "engagementChart": {
+                "title": "Tương tác theo bài",
+                "description": "Tỉ lệ tương tác (thích + bình luận / lượt xem) của các bài gần đây",
+                "engagement": "Tương tác %",
+                "noData": "Chưa có bài đăng nào"
+            },
+            "directorChart": {
+                "keyMetrics": "Chỉ số quan trọng",
+                "selectTimeRange": "Chọn khoảng thời gian",
+                "interactStats": "Thống kê tương tác",
+                "metrics": {
+                    "userViews": "Lượt xem từ người dùng",
+                    "guestViews": "Lượt xem từ khách",
+                    "likes": "Lượt thích",
+                    "comments": "Bình luận",
+                    "views": "Lượt xem"
+                },
+                "timeRanges": {
+                    "last7Days": "7 ngày qua",
+                    "last28Days": "28 ngày qua",
+                    "last60Days": "60 ngày qua",
+                    "last365Days": "365 ngày qua"
+                }
+            }
+        },
+        "header": {
+            "profile": "Trang cá nhân",
+            "logout": "Đăng xuất",
+            "settings": "Cài đặt",
+            "accountMenu": "Tài khoản",
+            "unknownUser": "Người dùng"
+        },
+        "settings": {
+            "page": {
+                "title": "Cài đặt",
+                "description": "Quản lý cài đặt tài khoản và tùy chọn bảo mật",
+                "userBadge": "Người dùng"
+            },
+            "updateProfile": {
+                "title": "Cập nhật hồ sơ",
+                "description": "Cập nhật thông tin cá nhân và ảnh đại diện của bạn",
+                "upload": "Tải lên",
+                "defaultUser": "USER",
+                "fullNameLabel": "Họ và tên",
+                "cancel": "Hủy",
+                "save": "Lưu",
+                "validation": {
+                    "invalidType": "Định dạng ảnh không hợp lệ. Chỉ hỗ trợ {accepted}.",
+                    "tooLarge": "Ảnh quá lớn. Kích thước tối đa cho phép là {maxSizeMb} MB."
+                }
+            },
+            "changePassword": {
+                "title": "Đổi mật khẩu",
+                "description": "Giữ tài khoản của bạn an toàn bằng cách cập nhật mật khẩu thường xuyên",
+                "oldPassword": "Mật khẩu cũ",
+                "newPassword": "Mật khẩu mới",
+                "confirmPassword": "Xác nhận mật khẩu",
+                "forgotPassword": "Quên mật khẩu?",
+                "cancel": "Hủy",
+                "save": "Lưu"
+            },
+            "verifyEmail": {
+                "title": "Xác minh email",
+                "description": "Xác minh email để bảo mật tài khoản và mở khóa đầy đủ tính năng",
+                "notice": "Tài khoản của bạn chưa được xác minh. Chúng tôi sẽ gửi email xác minh tới {email}.",
+                "verifiedTitle": "Email đã xác minh",
+                "verifiedDescription": "Email của bạn đã được xác minh",
+                "verifiedNotice": "Tài khoản này đã xác minh với email: {email}.",
+                "emailLabel": "Email",
+                "resendButton": "Gửi lại email",
+                "resendError": "Không thể gửi lại email xác minh. Vui lòng thử lại."
+            },
+            "privacy": {
+                "title": "Quyền riêng tư",
+                "description": "Kiểm soát ai có thể xem hoạt động xã hội của bạn.",
+                "public": "Công khai",
+                "private": "Riêng tư",
+                "cancel": "Hủy",
+                "save": "Lưu",
+                "updateError": "Không thể cập nhật cài đặt quyền riêng tư. Vui lòng thử lại.",
+                "fields": {
+                    "likedVideos": {
+                        "label": "Video đã thích",
+                        "description": "Cho phép người khác xem video bạn đã thích."
+                    },
+                    "bookmarkedVideos": {
+                        "label": "Video đã lưu",
+                        "description": "Cho phép người khác xem video bạn đã lưu."
+                    },
+                    "followers": {
+                        "label": "Danh sách người theo dõi",
+                        "description": "Cho phép người khác xem danh sách người theo dõi bạn."
+                    },
+                    "following": {
+                        "label": "Danh sách đang theo dõi",
+                        "description": "Cho phép người khác xem bạn đang theo dõi ai."
+                    }
+                }
+            },
+            "nav": {
+                "profile": "Hồ sơ",
+                "security": "Bảo mật",
+                "privacy": "Quyền riêng tư",
+                "email": "Email"
+            }
+        },
+        "upload": {
+            "selectVideo": "Chọn video để tải lên",
+            "dragAndDrop": "Hoặc kéo và thả tệp",
+            "dropHere": "Thả video vào đây",
+            "preview": "Xem trước",
+            "mp4OrWebmOnly": "Chỉ hỗ trợ MP4 hoặc WebM",
+            "fileInfo": {
+                "size": "{size} MB",
+                "replace": "Thay thế",
+                "retry": "Thử lại"
+            },
+            "validation": {
+                "invalidType": "Định dạng tệp không hợp lệ. Chỉ hỗ trợ {accepted}.",
+                "tooLarge": "Tệp quá lớn. Kích thước tối đa cho phép là {maxSizeMb} MB."
+            },
+            "exitDialog": {
+                "title": "Bạn có chắc chắn muốn thoát?",
+                "description": "Các chỉnh sửa của bạn sẽ không được lưu.",
+                "exit": "Thoát",
+                "backToEdits": "Quay lại chỉnh sửa"
+            },
+            "selectThumbnail": {
+                "title": "Chọn ảnh thumbnail",
+                "edit": "Chỉnh sửa",
+                "selectCover": "Chọn ảnh bìa",
+                "uploadCover": "Tải lên ảnh bìa"
+            },
+            "guidelines": {
+                "sizeAndDuration": {
+                    "title": "Kích thước và thời lượng",
+                    "description": "Kích thước tối đa: 30 GB, thời lượng video: 60 phút."
+                },
+                "fileFormats": {
+                    "title": "Định dạng tệp",
+                    "description": "Khuyến nghị: '.mp4'. Các định dạng chính khác được hỗ trợ."
+                },
+                "videoResolutions": {
+                    "title": "Độ phân giải video",
+                    "description": "Khuyến nghị độ phân giải cao: 1080p, 1440p, 4K."
+                },
+                "aspectRatios": {
+                    "title": "Tỷ lệ khung hình",
+                    "description": "Khuyến nghị: 16:9 cho ngang, 9:16 cho dọc."
+                }
+            },
+            "tooltips": {
+                "play": "Phát",
+                "pause": "Tạm dừng",
+                "mute": "Tắt tiếng",
+                "unmute": "Bật tiếng"
+            },
+            "resolutionReq": "Độ phân giải 720x1280 hoặc cao hơn",
+            "maxFileSize": "Dung lượng tối đa 30 GB",
+            "maxDuration": "Thời lượng tối đa 60 phút",
+            "selectFile": "Chọn tệp",
+            "selectedFile": "Tệp đã chọn",
+            "thumbnailUpload": {
+                "dragAndDrop": "Kéo và thả tệp vào đây",
+                "or": "hoặc",
+                "selectFile": "chọn tệp",
+                "supportedFormats": "Định dạng hỗ trợ: JPG, JPEG và PNG.",
+                "uploadNew": "Tải ảnh mới",
+                "confirm": "Xác nhận",
+                "validation": {
+                    "invalidType": "Định dạng ảnh không hợp lệ. Chỉ hỗ trợ {accepted}.",
+                    "tooLarge": "Ảnh quá lớn. Kích thước tối đa cho phép là {maxSizeMb} MB."
+                }
+            },
+            "detail": {
+                "title": "Chi tiết",
+                "description": {
+                    "label": "Mô tả",
+                    "placeholder": "Chia sẻ thêm về video của bạn tại đây..."
+                },
+                "cover": {
+                    "label": "Ảnh bìa",
+                    "tooltip": "Chọn một ảnh bìa hoặc tải lên từ thiết bị của bạn. Một ảnh bìa thu hút có thể gây ấn tượng với người xem hiệu quả."
+                }
+            },
+            "settings": {
+                "title": "Cài đặt",
+                "audience": {
+                    "label": "Ai có thể xem video này",
+                    "placeholder": "Chọn đối tượng xem"
+                }
+            },
+            "encoding": {
+                "uploading": "Đang tải lên {progress}%",
+                "pending": "Đang chờ trong hàng đợi xử lý...",
+                "analyzing": "Đang phân tích video...",
+                "processing": "Đang mã hóa {progress}%",
+                "ready": "Video sẵn sàng — HLS streaming đã bật",
+                "failed": "Mã hóa thất bại",
+                "retry": "Thử lại"
+            },
+            "errors": {
+                "invalidResponse": "Phản hồi từ server không hợp lệ",
+                "unauthorized": "Vui lòng đăng nhập để tải video",
+                "serverError": "Tải lên thất bại (HTTP {status})",
+                "networkError": "Lỗi mạng — kiểm tra kết nối và thử lại"
+            },
+            "processing": {
+                "title": "Đang xử lý video",
+                "ready": "Video \"{title}\" của bạn đã sẵn sàng!",
+                "readyNoTitle": "Video của bạn đã sẵn sàng!",
+                "failed": "Mã hóa video thất bại",
+                "pending": "{count} video đang xử lý",
+                "viewDetails": "Xem chi tiết"
+            },
+            "buttons": {
+                "post": "Đăng",
+                "discard": "Hủy",
+                "waitEncoding": "Đang chờ mã hóa..."
+            }
+        },
+        "aiStudio": {
+            "title": "AI Studio",
+            "subtitle": "Tạo nội dung, phân tích viral và lên lịch — tất cả trong một nơi",
+            "tabs": {
+                "chat": "Tạo nội dung"
+            }
+        },
+        "scheduledPosts": {
+            "title": "Quản lý bài đăng",
+            "subtitle": "Bản nháp, lên lịch, và theo dõi bài đã đăng",
+            "tabs": {
+                "draft": "Bản nháp",
+                "scheduled": "Lên lịch",
+                "published": "Đã đăng",
+                "failed": "Thất bại"
+            },
+            "filters": {
+                "all": "Tất cả",
+                "draft": "Bản nháp",
+                "scheduled": "Lên lịch",
+                "published": "Đã đăng",
+                "failed": "Thất bại"
+            },
+            "noContent": "Không có bài đăng nào.",
+            "noContentPreview": "Chưa có nội dung",
+            "actions": {
+                "schedule": "Lên lịch",
+                "publishNow": "Đăng ngay",
+                "reschedule": "Đổi giờ",
+                "cancelSchedule": "Hủy lịch",
+                "retry": "Thử lại",
+                "confirm": "Xác nhận",
+                "cancel": "Hủy"
+            },
+            "toast": {
+                "updated": "Đã cập nhật thời gian đăng!",
+                "updateError": "Không thể cập nhật. Vui lòng thử lại.",
+                "scheduled": "Bài đăng đã được lên lịch!",
+                "scheduleError": "Không thể lên lịch. Vui lòng thử lại.",
+                "published": "Bài đăng đã được đăng ngay!",
+                "cancelled": "Đã hủy lịch đăng."
+            }
+        },
+        "aiCreatorChat": {
+            "title": "AI Creator Chat",
+            "subtitle": "Tạo nội dung video theo từng bước",
+            "startBtn": "Bắt đầu",
+            "restartBtn": "Bắt đầu lại",
+            "emptyTitle": "AI Studio Creator Chat",
+            "emptySubtitle": "Nhấn <strong>Bắt đầu</strong> để AI hỏi từng bước và tạo caption, hashtag phù hợp cho video của bạn.",
+            "generatedContent": "Nội dung đã tạo",
+            "generateBtn": "Tạo nội dung với AI",
+            "inputPlaceholder": "Nhập câu trả lời...",
+            "skipTitle": "Bỏ qua",
+            "allQuestionsComplete": "Tất cả câu hỏi hoàn thành! Nhấn \"Tạo nội dung\" để AI tạo gợi ý.",
+            "generatingContent": "Đang tạo nội dung cho bạn...",
+            "toast": {
+                "contentCreated": "Nội dung đã được tạo!",
+                "error": "AI gặp lỗi. Vui lòng thử lại.",
+                "errorMessage": "Xin lỗi, tôi gặp sự cố: {message}. Hãy bắt đầu cuộc trò chuyện mới."
+            }
+        },
+        "wellness": {
+            "title": "Digital Wellness",
+            "subtitle": "Theo dõi và cân bằng thời gian sử dụng",
+            "tabs": {
+                "today": "Hôm nay",
+                "stats": "Thống kê",
+                "rules": "Quy tắc",
+                "analysis": "AI Phân tích"
+            },
+            "today": {
+                "online": "Online",
+                "watchingVideo": "Xem video",
+                "comments": "Bình luận",
+                "posts": "Bài đăng",
+                "peakHour": "Thời điểm sử dụng nhiều nhất: {hour}:00 – {hourEnd}:00"
+            },
+            "stats": {
+                "totalTime": "Tổng thời gian",
+                "watchingVideo": "Xem video",
+                "dailyAvg": "Trung bình/ngày",
+                "sessions": "Số phiên",
+                "comments": "Bình luận",
+                "posts": "Bài đăng",
+                "chartTitle": "Theo ngày",
+                "distributionTitle": "Phân bổ thời gian",
+                "otherOnline": "Duyệt web & khác",
+                "periods": {
+                    "today": "Hôm nay",
+                    "week": "Tuần này",
+                    "month": "Tháng này"
+                },
+                "timeLabel": "Thời gian màn hình",
+                "radarChart": {
+                    "title": "Phân tích hoạt động",
+                    "description": "Điểm hoạt động tương đối theo từng mục sử dụng",
+                    "score": "Điểm",
+                    "video": "Xem video",
+                    "comments": "Bình luận",
+                    "posts": "Đăng bài",
+                    "likes": "Thích",
+                    "other": "Khác"
+                }
+            },
+            "rules": {
+                "createTitle": "Tạo rule bằng ngôn ngữ tự nhiên",
+                "inputPlaceholder": "Ví dụ: Nhắc tôi nghỉ ngơi nếu lướt video quá 2 tiếng",
+                "analyzeBtn": "Phân tích bằng AI",
+                "analyzing": "Đang phân tích",
+                "confidence": "Độ chắc chắn: {pct}%",
+                "saveBtn": "Lưu rule này",
+                "noRules": "Chưa có quy tắc nào. Tạo bằng AI hoặc thêm thủ công.",
+                "disabled": "Đã tắt",
+                "toggleOn": "Bật",
+                "toggleOff": "Tắt",
+                "toast": {
+                    "saved": "Quy tắc đã được lưu!",
+                    "deleted": "Đã xóa quy tắc."
+                },
+                "progress": {
+                    "activating": "Đang kích hoạt…",
+                    "remaining": "~{minutes}p còn lại (chu kỳ {cycle})"
+                }
+            },
+            "ruleChat": {
+                "title": "Wellness Rule",
+                "modeAI": "AI Prompt",
+                "modeManual": "Thủ công",
+                "aiHint": "Mô tả rule của bạn — AI sẽ parse thành cấu trúc tự động.",
+                "aiPlaceholder": "Ví dụ: Nhắc tôi nghỉ sau 1 tiếng dùng liên tục...",
+                "analyzeBtn": "Phân tích",
+                "analyzing": "Đang phân tích…",
+                "saveRule": "Lưu rule",
+                "saving": "Đang lưu…",
+                "dismiss": "Bỏ",
+                "ruleType": "Loại rule",
+                "duration": "Thời gian (phút)",
+                "timeRange": "Khung giờ hoạt động",
+                "fromHour": "Từ",
+                "toHour": "Đến",
+                "action": "Hành động",
+                "titleLabel": "Tiêu đề",
+                "titleRequired": "Tiêu đề *",
+                "titlePlaceholder": "Ví dụ: Nghỉ ngơi mắt",
+                "messageLabel": "Nội dung thông báo",
+                "messagePlaceholder": "Bỏ trống = tự động",
+                "confidencePct": "{pct}% confidence",
+                "errorParse": "Không thể phân tích. Hãy thử diễn đạt khác.",
+                "errorSave": "Không thể lưu rule.",
+                "errorTitle": "Vui lòng nhập tiêu đề rule.",
+                "toastSaved": "Đã lưu rule!",
+                "types": {
+                    "continuous_usage": "Dùng liên tục",
+                    "daily_limit": "Giới hạn ngày",
+                    "video_watch_time": "Xem video",
+                    "late_night": "Sử dụng khuya"
+                },
+                "actions": {
+                    "warning": "Cảnh báo",
+                    "soft_block": "Yêu cầu xác nhận"
+                },
+                "quickPrompts": [
+                    "Nhắc tôi nghỉ sau 1 tiếng",
+                    "Giới hạn 3 tiếng mỗi ngày",
+                    "Cảnh báo sau 2 tiếng xem video",
+                    "Khoá màn hình sau 90 phút"
+                ],
+                "optional": "tùy chọn",
+                "defaults": {
+                    "continuous_usage": {
+                        "title": "Dùng liên tục {duration}",
+                        "message": "Bạn đã dùng liên tục {duration}. Hãy nghỉ ngơi!"
+                    },
+                    "daily_limit": {
+                        "title": "Giới hạn {duration}/ngày",
+                        "message": "Bạn đã đạt {duration} hôm nay. Hãy cân bằng thời gian!"
+                    },
+                    "video_watch_time": {
+                        "title": "Xem video {duration}",
+                        "message": "Bạn đã xem video {duration}. Hãy nghỉ mắt!"
+                    },
+                    "late_night": {
+                        "title": "Sử dụng khuya ({fromHour}:00 – {toHour}:00)",
+                        "message": "Bạn đang dùng ứng dụng trong khung giờ đêm khuya. Hãy nghỉ ngơi để bảo vệ sức khỏe."
+                    }
+                }
+            },
+            "analysis": {
+                "analyzeBtn": "Phân tích 7 ngày gần đây",
+                "analyzing": "Đang phân tích...",
+                "trends": "Xu hướng",
+                "concerns": "Đáng chú ý",
+                "recommendations": "Khuyến nghị",
+                "suggestedRules": "Quy tắc gợi ý",
+                "addRule": "Thêm rule này",
+                "toast": {
+                    "ruleAdded": "Quy tắc đã được thêm!"
+                }
+            }
+        },
+        "aiCopilot": {
+            "title": "AI Copilot",
+            "thinking": "Đang suy nghĩ…",
+            "startingSession": "Đang khởi động…",
+            "ready": "AI Copilot sẵn sàng",
+            "largeVideo": "Video của bạn khá lớn — hãy mô tả nội dung và tôi sẽ hỗ trợ!",
+            "emptyHint": "Hãy hỏi tôi để viết caption, tạo hashtag, phân tích hook và nhiều hơn nữa.",
+            "quickPrompts": ["Viết caption", "Tạo hashtag", "Phân tích viral", "Đánh giá hook"],
+            "quickPromptsGeneral": [
+                "Thống kê tài khoản của tôi",
+                "Hỏi về tính năng Snapi",
+                "Phân tích screen time",
+                "Gợi ý nội dung sáng tạo"
+            ],
+            "quickPromptsAdmin": [
+                "Thống kê người dùng hệ thống",
+                "Kháng cáo chờ xử lý",
+                "Chi phí AI hôm nay",
+                "Video lỗi encoding"
+            ],
+            "newSession": "Cuộc hội thoại mới",
+            "input": {
+                "placeholder": "Hỏi AI Copilot bất cứ điều gì…"
+            },
+            "navCard": {
+                "title": "Trang liên quan"
+            },
+            "error": {
+                "title": "Có lỗi xảy ra",
+                "generic": "Không thể kết nối với AI. Vui lòng thử lại.",
+                "retry": "Thử lại"
+            },
+            "contentCard": {
+                "applied": "Đã áp dụng vào bài đăng",
+                "dismissed": "Đã bỏ qua",
+                "accept": "Áp dụng vào bài đăng",
+                "reject": "Bỏ qua",
+                "copy": "Sao chép",
+                "copied": "Đã sao chép!"
+            },
+            "scheduleCard": {
+                "panelTitle": "Đề xuất lịch đăng bài",
+                "scheduledAs": "Đã lên lịch: {time}",
+                "cancelled": "Đã huỷ",
+                "schedule": "Lên lịch ngay",
+                "changeTime": "Đổi thời gian",
+                "toastSuccess": "Đã lên lịch đăng vào {time}",
+                "toastError": "Không thể lên lịch. Vui lòng thử lại."
+            },
+            "attachments": {
+                "panelTitle": "AI — Chọn đoạn / khung hình",
+                "frameLabel": "Chụp khung hình",
+                "frameHint": "Tua video đến vị trí muốn chụp rồi nhấn nút camera. Tối đa 5 khung.",
+                "captureFrame": "Chụp khung hình hiện tại",
+                "framesCount": "{count}/{max} khung đã chọn",
+                "extracting": "Đang tải khung hình…",
+                "openFilmstrip": "Chọn khung hình từ video",
+                "loadingThumbs": "Đang tải timeline…",
+                "segStart": "Bắt đầu",
+                "segEnd": "Kết thúc",
+                "tooShort": "Chọn ít nhất {min} giây",
+                "tooLong": "Tối đa {max} giây mỗi lần phân tích",
+                "analyzeBtn": "Phân tích với AI",
+                "reAnalyzeBtn": "Phân tích lại",
+                "clipSent": "Đã gửi",
+                "reselect": "Chọn lại",
+                "analyzing": "Đang ghi…",
+                "recording": "Đang cắt đoạn video",
+                "analyzePrompt": "Phân tích đoạn video từ {start} đến {end}"
+            },
+            "timeline": {
+                "analyze": "Phân tích",
+                "analyzeQuestion": "Phân tích đoạn video này",
+                "analyzeHook": "Kiểm tra hook",
+                "analyzeHookQuestion": "Phân tích hook của video",
+                "analyzeContent": "Phân tích nội dung",
+                "analyzeContentQuestion": "Phân tích nội dung và gợi ý cải thiện"
+            }
+        },
+        "appeals": {
+            "create": {
+                "title": "Tạo kháng cáo mới",
+                "description": "Gửi kháng cáo cho các quyết định kiểm duyệt áp dụng với tài khoản hoặc nội dung của bạn.",
+                "appealType": "Loại kháng cáo",
+                "resourceType": "Loại tài nguyên",
+                "resourceId": "Mã tài nguyên",
+                "resourceIdPlaceholder": "ID số (không bắt buộc)",
+                "reason": "Lý do",
+                "reasonPlaceholder": "Mô tả vì sao quyết định kiểm duyệt này cần được xem xét lại.",
+                "submit": "Gửi kháng cáo",
+                "submitting": "Đang gửi..."
+            },
+            "list": {
+                "title": "Kháng cáo của tôi",
+                "description": "Theo dõi trạng thái các kháng cáo đã gửi.",
+                "searchPlaceholder": "Tìm kháng cáo",
+                "emptyState": "Không có kháng cáo",
+                "perPage": "Mỗi trang",
+                "showingResults": "Hiển thị {from}-{to} trên {total}",
+                "filters": {
+                    "allStatuses": "Tất cả trạng thái"
+                },
+                "columns": {
+                    "id": "ID",
+                    "type": "Loại",
+                    "reason": "Lý do",
+                    "status": "Trạng thái",
+                    "createdAt": "Ngày tạo",
+                    "response": "Phản hồi Admin",
+                    "resource": "Tài nguyên",
+                    "evidence": "Bằng chứng",
+                    "actions": "Thao tác"
+                },
+                "viewDetail": "Xem chi tiết",
+                "resourcePreview": "Xem tài nguyên",
+                "search": "Tìm kiếm",
+                "reset": "Đặt lại"
+            },
+            "types": {
+                "user_ban": "Khóa tài khoản",
+                "user_unban": "Mở khóa tài khoản",
+                "user_deleted": "Xóa tài khoản",
+                "post_deleted": "Xóa bài viết",
+                "comment_deleted": "Xóa bình luận"
+            },
+            "resourceTypes": {
+                "user": "Người dùng",
+                "post": "Bài viết",
+                "comment": "Bình luận"
+            },
+            "statuses": {
+                "pending": "Đang chờ",
+                "approved": "Đã duyệt",
+                "rejected": "Đã từ chối"
+            },
+            "messages": {
+                "createSuccess": "Gửi kháng cáo thành công",
+                "createError": "Gửi kháng cáo thất bại"
+            },
+            "errors": {
+                "reasonMinLength": "Lý do phải có ít nhất 20 ký tự",
+                "resourceIdInvalid": "Mã tài nguyên phải là số hợp lệ"
+            },
+            "detail": {
+                "title": "Chi tiết kháng cáo",
+                "fields": {
+                    "type": "Loại",
+                    "status": "Trạng thái",
+                    "reason": "Lý do của bạn",
+                    "response": "Phản hồi Admin",
+                    "createdAt": "Đã gửi",
+                    "reviewedAt": "Đã xét duyệt",
+                    "resource": "Tài nguyên",
+                    "evidence": "Tệp bằng chứng"
+                },
+                "noResponse": "Đang chờ xét duyệt...",
+                "noEvidence": "Không có bằng chứng đính kèm",
+                "resourceUnavailable": "Tài nguyên không còn khả dụng",
+                "resourceTitle": "Tài nguyên liên quan"
+            }
+        }
+    }
+}

@@ -1,0 +1,27 @@
+import Image from 'next/image'
+import { FaChevronRight } from 'react-icons/fa6'
+import { useTranslations } from 'next-intl'
+
+export default function KnowledgeForYou() {
+    const t = useTranslations('SnapiStudio.dashboard.knowledgeForYou')
+
+    return (
+        <div className='min-w-[336px]'>
+            <div className='text-base font-bold flex justify-between items-center'>
+                <span className='flex items-center gap-2 cursor-pointer'>
+                    {t('title')}
+                    <FaChevronRight />
+                </span>
+            </div>
+            <div className='bg-card border rounded-xl border-border/50 mt-4 shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 ease-out'>
+                <Image
+                    src={'/images/Knowledge for you.png'}
+                    alt='Knowledge for you'
+                    width={336}
+                    height={64}
+                    className='rounded-xl object-cover w-full'
+                />
+            </div>
+        </div>
+    )
+}

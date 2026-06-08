@@ -1,0 +1,22 @@
+.git
+.gitignore
+.vscode
+.storybook
+node_modules
+.next
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Local env files (inject via compose/env instead)
+.env
+.env.*
+
+# Tests & coverage artifacts
+coverage
+playwright-report
+
+# OS files
+.DS_Store
+Thumbs.db

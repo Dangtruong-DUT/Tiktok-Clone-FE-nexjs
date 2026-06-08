@@ -1,0 +1,26 @@
+.git
+.github
+.idea
+.vscode
+
+node_modules
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+vendor
+
+.env
+.env.*
+
+storage/logs
+storage/framework/cache
+storage/framework/sessions
+storage/framework/views
+storage/framework/testing
+
+bootstrap/cache/*.php
+
+# Laravel public storage symlink (often a Windows junction/symlink)
+# can break BuildKit context packaging on Windows.
+public/storage

@@ -1,0 +1,74 @@
+'use client'
+
+import { CommentBody } from '@/components/comment-section/comment-body'
+import { useGetCommentsInfiniteQuery } from '@/store/services/posts.service'
+import { GetListCommentRes } from '@/types/dtos/post/post-response.dto'
+import { CommentType } from '@/types/models/comment.model'
+import {
+    BaseQueryFn,
+    FetchArgs,
+    FetchBaseQueryError,
+    InfiniteQueryActionCreatorResult,
+    InfiniteQueryDefinition
+} from '@reduxjs/toolkit/query'
+import { createContext } from 'react'
+import LoadingIcon from '@/components/lottie-icons/loading'
+
+interface ReplyCommentsContextProps {
+    parent_uuid: string
+    hashNextPage: boolean
+    fetchNextPage: () => InfiniteQueryActionCreatorResult<
+        InfiniteQueryDefinition<
+            string,
+            number,
+            BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>,
+            'Posts',
+            GetListCommentRes,
+            'postApi',
+            unknown
+        >
+    >
+}
+const ReplyCommentsContext = createContext<ReplyCommentsContextProps | undefined>(undefined)
+
+interface ReplyItemProps {
+    parentUuid: string
+}
+
+export default function ReplyList({ parentUuid }: ReplyItemProps) {
+    const { data, fetchNextPage, hasNextPage, isFetching } = useGetCommentsInfiniteQuery(parentUuid)
+    const comments: CommentType[] = data?.pages.flatMap((page) => page.data) || []
+    return (
+        <ReplyCommentsContext
+            value={{
+                parent_uuid: parentUuid,
+                hashNextPage: hasNextPage,
+                fetchNextPage
+            }}
+        >
+            <div>
+                {comments.map((reply) => (
+                    <CommentBody
+                        key={reply.uuid}
+                        comment={reply}
+                        parent_id={reply.parent_id ?? reply.id}
+                        parent_uuid={parentUuid}
+                    />
+                ))}
+                {isFetching && (
+                    <div>
+                        <LoadingIcon className='size-10 mx-auto' loop />
+                    </div>
+                )}
+                {hasNextPage && (
+                    <button
+                        onClick={fetchNextPage}
+                        className='text-muted-foreground font-semibold text-sm mt-1 flex cursor-pointer'
+                    >
+                        View more
+                    </button>
+                )}
+            </div>
+        </ReplyCommentsContext>
+    )
+}

@@ -1,0 +1,96 @@
+import { TikTokPostType } from '@/types/models/post.model'
+import { UserType } from '@/types/models/user.model'
+import { Metadata, ResolvingMetadata } from 'next'
+import { LocalesType } from '@/i18n/config'
+import { WrapperServerCallApi } from '@/utils/errors/handle-server-error.util'
+import PostRequestApi from '@/apis/posts.request'
+import { notFound } from 'next/navigation'
+import { VideoPlaylistProvider } from '@/app/[locale]/(public)/(home)/[username]/video/[id]/_context/video-playlist-context'
+import VideoDetailContent from '@/app/[locale]/(public)/(home)/[username]/video/[id]/_components/video-detail-content'
+import envConfig from '@/config/app.config'
+import { USER_ROUTES } from '@/constants/routes/routes'
+
+interface VideoDetailPageProps {
+    params: Promise<{
+        id: string
+        username: string
+        locale: LocalesType
+    }>
+}
+
+export async function generateMetadata({ params }: VideoDetailPageProps, parent: ResolvingMetadata): Promise<Metadata> {
+    const { username, id, locale } = await params
+
+    if (!username?.startsWith('%40')) {
+        return {
+            title: 'Video not found',
+            description: 'The requested video could not be found.'
+        }
+    }
+
+    const cleanUsername = username.replace(/^%40/, '')
+
+    const res = await WrapperServerCallApi({
+        apiCallFn: () => PostRequestApi.getPostDetailById(id)
+    })
+
+    const post: TikTokPostType | undefined = res?.data
+    const user: UserType | undefined = post?.author
+
+    const parentMeta = await parent
+    const previousImages = parentMeta.openGraph?.images || []
+
+    const videoThumb = post?.thumbnail_url
+
+    const displayName = user?.name || user?.username || cleanUsername
+    const postContent = post?.content?.trim().slice(0, 20) || ''
+
+    const pageTitle = postContent ? `${displayName} on Snapi: "${postContent}"` : `${displayName} on Snapi`
+
+    const pageDescription = postContent || `Watch ${displayName}'s video on Snapi.`
+
+    const canonicalUrl = `${envConfig.NEXT_PUBLIC_URL}/${locale}${USER_ROUTES.VIDEO(cleanUsername, id)}`
+
+    return {
+        title: pageTitle,
+        description: pageDescription,
+        openGraph: {
+            title: pageTitle,
+            description: pageDescription,
+            type: 'video.other',
+            url: canonicalUrl,
+            siteName: 'Snapi',
+            locale,
+            images: [(videoThumb || user?.avatar) ?? '', ...previousImages]
+        },
+        alternates: {
+            canonical: canonicalUrl,
+            languages: {
+                'en-US': `${envConfig.NEXT_PUBLIC_URL}/en${USER_ROUTES.VIDEO(cleanUsername, id)}`,
+                'vi-VN': `${envConfig.NEXT_PUBLIC_URL}/vi${USER_ROUTES.VIDEO(cleanUsername, id)}`
+            }
+        },
+        twitter: {
+            card: 'player',
+            title: pageTitle,
+            description: pageDescription,
+            images: [(videoThumb || user?.avatar) ?? '', ...previousImages]
+        }
+    }
+}
+export default async function VideoDetailPage({ params }: VideoDetailPageProps) {
+    const { id } = await params
+
+    const res = await WrapperServerCallApi({
+        apiCallFn: () => PostRequestApi.getPostDetailById(id)
+    })
+    if (res?.data == null) {
+        return notFound()
+    }
+
+    return (
+        <VideoPlaylistProvider video={res.data}>
+            <VideoDetailContent />
+        </VideoPlaylistProvider>
+    )
+}

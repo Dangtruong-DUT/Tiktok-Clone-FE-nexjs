@@ -1,0 +1,68 @@
+<?php
+
+use App\Enums\User\RoleTypeEnum;
+use App\Enums\User\UserVerifyStatusEnum;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->uuid('uuid')->unique();
+            $table->string('name')->index();
+            $table->string('username')->unique();
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->text('bio')->nullable();
+            $table->string('location')->nullable();
+            $table->string('website')->nullable();
+            $table->date('date_of_birth')->nullable();
+            $table->tinyInteger('verify')
+                ->default(UserVerifyStatusEnum::UNVERIFIED->value)
+                ->index();
+            $table->tinyInteger('role')->default(RoleTypeEnum::USER->value)->index();
+            $table->softDeletes();
+            $table->timestamps();
+        });
+
+        Schema::create('refresh_tokens', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->uuid('jti')->after('id')->unique();;
+            $table->timestamp('expires_at');
+        });
+
+        Schema::create('email_verifications', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('token_hash')->unique();
+            $table->timestamp('expires_at');
+        });
+
+        Schema::create('password_resets', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('token_hash')->unique();
+            $table->timestamp('expires_at');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('refresh_tokens');
+        Schema::dropIfExists('email_verifications');
+        Schema::dropIfExists('password_resets');
+        Schema::dropIfExists('users');
+    }
+};

@@ -1,0 +1,1486 @@
+openapi: 3.0.3
+info:
+  title: Snapi V1 Backend API
+  version: 1.0.0
+  description: |
+    Swagger/OpenAPI documentation for the current Laravel backend API.
+
+    - Base path: `/api/v1`
+    - Success envelope: `success`, `message`, `data`, `meta` (when pagination is available)
+    - Error envelope: `success=false`, `message`, `errors`
+
+    Notes:
+    - Some list endpoints require the `type` query parameter (mapped to `post_type`) based on current request validation.
+    - Protected endpoints use `auth:api` + `check_user_status` middleware.
+servers:
+  - url: /api/v1
+    description: API v1
+
+tags:
+  - name: Auth
+  - name: Users
+  - name: Posts
+  - name: Media
+  - name: Search
+
+paths:
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Register account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "201":
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthTokenSuccessResponse"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthTokenSuccessResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /auth/refresh-token:
+    post:
+      tags: [Auth]
+      summary: Refresh access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshTokenRequest"
+      responses:
+        "200":
+          description: Refresh token successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthTokenSuccessResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /auth/forgot-password:
+    post:
+      tags: [Auth]
+      summary: Send forgot-password email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ForgotPasswordRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/MessageSuccess"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /auth/verify-forgot-password:
+    post:
+      tags: [Auth]
+      summary: Verify forgot-password token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerifyForgotPasswordTokenRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/MessageSuccess"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /auth/reset-password:
+    post:
+      tags: [Auth]
+      summary: Reset password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResetPasswordRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/MessageSuccess"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /auth/verify-email:
+    post:
+      tags: [Auth]
+      summary: Verify email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerifyEmailRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/MessageSuccess"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Get current user information
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Current user retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUserSuccessResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Logout current device
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshTokenRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/MessageSuccess"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /auth/logout/all:
+    post:
+      tags: [Auth]
+      summary: Logout all devices
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshTokenRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/MessageSuccess"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /users/{username}:
+    get:
+      tags: [Users]
+      summary: Get user profile by username
+      parameters:
+        - $ref: "#/components/parameters/UsernamePathParam"
+      responses:
+        "200":
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserSuccessResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /users/me:
+    get:
+      tags: [Users]
+      summary: Get current user profile
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Current user profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserSuccessResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+    patch:
+      tags: [Users]
+      summary: Update current user profile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateMeRequest"
+      responses:
+        "200":
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserSuccessResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /users/me/indicators:
+    get:
+      tags: [Users]
+      summary: Get user indicators by date range
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/FromDateQueryParam"
+        - $ref: "#/components/parameters/ToDateQueryParam"
+      responses:
+        "200":
+          description: User indicators retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserIndicatorsSuccessResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /users/change-password:
+    put:
+      tags: [Users]
+      summary: Change password
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/MessageSuccess"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /users/{user_uuid}/follow:
+    post:
+      tags: [Users]
+      summary: Follow user
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/UserUuidPathParam"
+      responses:
+        "200":
+          $ref: "#/components/responses/MessageSuccess"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+    delete:
+      tags: [Users]
+      summary: Unfollow user
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/UserUuidPathParam"
+      responses:
+        "200":
+          $ref: "#/components/responses/MessageSuccess"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /search/users:
+    get:
+      tags: [Search]
+      summary: Search users
+      parameters:
+        - $ref: "#/components/parameters/SearchQQueryParam"
+        - $ref: "#/components/parameters/PageQueryParam"
+        - $ref: "#/components/parameters/PerPageQueryParam"
+        - in: query
+          name: verify_status
+          schema:
+            type: integer
+            enum: [0, 1, 2]
+          description: 0=UNVERIFIED, 1=VERIFIED, 2=BANNED
+        - in: query
+          name: role
+          schema:
+            type: integer
+            enum: [0, 1]
+          description: 0=USER, 1=SUPER_ADMIN
+      responses:
+        "200":
+          description: Users retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserListSuccessResponse"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /posts:
+    get:
+      tags: [Posts]
+      summary: List posts
+      description: "`type` is required in query based on current validation (mapped to `post_type`)."
+      parameters:
+        - $ref: "#/components/parameters/SearchQQueryParam"
+        - $ref: "#/components/parameters/PageQueryParam"
+        - $ref: "#/components/parameters/PerPageQueryParam"
+        - in: query
+          name: audience
+          schema:
+            type: integer
+            enum: [0, 1, 2]
+          description: 0=PUBLIC, 1=PRIVATE, 2=FRIENDS
+        - in: query
+          name: type
+          required: true
+          schema:
+            type: integer
+            enum: [0, 1, 2, 3]
+          description: 0=POST, 1=RE_POST, 2=COMMENT, 3=QUOTE_POST
+      responses:
+        "200":
+          description: Posts retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostListSuccessResponse"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+    post:
+      tags: [Posts]
+      summary: Create post
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePostRequest"
+      responses:
+        "201":
+          description: Post created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostSuccessResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /posts/{post_uuid}:
+    get:
+      tags: [Posts]
+      summary: Post details
+      parameters:
+        - $ref: "#/components/parameters/PostUuidPathParam"
+      responses:
+        "200":
+          description: Post details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostSuccessResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      tags: [Posts]
+      summary: Update post
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PostUuidPathParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdatePostRequest"
+      responses:
+        "200":
+          description: Post updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostSuccessResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+    delete:
+      tags: [Posts]
+      summary: Delete post
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PostUuidPathParam"
+      responses:
+        "200":
+          $ref: "#/components/responses/MessageSuccess"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /posts/{post_uuid}/children:
+    get:
+      tags: [Posts]
+      summary: List child posts (reply/comment)
+      parameters:
+        - $ref: "#/components/parameters/PostUuidPathParam"
+        - $ref: "#/components/parameters/SearchQQueryParam"
+        - $ref: "#/components/parameters/PageQueryParam"
+        - $ref: "#/components/parameters/PerPageQueryParam"
+        - in: query
+          name: audience
+          schema:
+            type: integer
+            enum: [0, 1, 2]
+        - in: query
+          name: type
+          required: true
+          schema:
+            type: integer
+            enum: [0, 1, 2, 3]
+      responses:
+        "200":
+          description: Child posts retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostListSuccessResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /posts/{post_uuid}/like:
+    post:
+      tags: [Posts]
+      summary: Like post
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PostUuidPathParam"
+      responses:
+        "200":
+          $ref: "#/components/responses/MessageSuccess"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+    delete:
+      tags: [Posts]
+      summary: Unlike post
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PostUuidPathParam"
+      responses:
+        "200":
+          $ref: "#/components/responses/MessageSuccess"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /posts/{post_uuid}/bookmark:
+    post:
+      tags: [Posts]
+      summary: Bookmark post
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PostUuidPathParam"
+      responses:
+        "200":
+          $ref: "#/components/responses/MessageSuccess"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+    delete:
+      tags: [Posts]
+      summary: Remove post bookmark
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PostUuidPathParam"
+      responses:
+        "200":
+          $ref: "#/components/responses/MessageSuccess"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /users/{user_uuid}/posts:
+    get:
+      tags: [Posts]
+      summary: List posts of a user
+      parameters:
+        - $ref: "#/components/parameters/UserUuidPathParam"
+        - in: query
+          name: type
+          schema:
+            type: integer
+            enum: [0, 1, 2, 3]
+        - $ref: "#/components/parameters/PageQueryParam"
+        - $ref: "#/components/parameters/PerPageQueryParam"
+      responses:
+        "200":
+          description: User posts retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostListSuccessResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /users/{user_uuid}/like:
+    get:
+      tags: [Posts]
+      summary: List liked posts of a user
+      parameters:
+        - $ref: "#/components/parameters/UserUuidPathParam"
+        - in: query
+          name: type
+          schema:
+            type: integer
+            enum: [0, 1, 2, 3]
+        - $ref: "#/components/parameters/PageQueryParam"
+        - $ref: "#/components/parameters/PerPageQueryParam"
+      responses:
+        "200":
+          description: Liked posts retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostListSuccessResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /users/{user_uuid}/bookmark:
+    get:
+      tags: [Posts]
+      summary: List bookmarked posts of a user
+      parameters:
+        - $ref: "#/components/parameters/UserUuidPathParam"
+        - in: query
+          name: type
+          schema:
+            type: integer
+            enum: [0, 1, 2, 3]
+        - $ref: "#/components/parameters/PageQueryParam"
+        - $ref: "#/components/parameters/PerPageQueryParam"
+      responses:
+        "200":
+          description: Bookmarked posts retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostListSuccessResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /search/posts:
+    get:
+      tags: [Search]
+      summary: Search posts
+      description: "`type` is required in query based on current validation (mapped to `post_type`)."
+      parameters:
+        - $ref: "#/components/parameters/SearchQQueryParam"
+        - $ref: "#/components/parameters/PageQueryParam"
+        - $ref: "#/components/parameters/PerPageQueryParam"
+        - in: query
+          name: audience
+          schema:
+            type: integer
+            enum: [0, 1, 2]
+        - in: query
+          name: type
+          required: true
+          schema:
+            type: integer
+            enum: [0, 1, 2, 3]
+      responses:
+        "200":
+          description: Posts search successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostListSuccessResponse"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /medias/upload-image:
+    post:
+      tags: [Media]
+      summary: Upload image
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: "Image (jpg,jpeg,png), max 10MB"
+      responses:
+        "200":
+          description: Image uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadMediaSuccessResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+  /medias/upload-video:
+    post:
+      tags: [Media]
+      summary: Upload video
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: "Video (mp4,mov), max 50MB"
+      responses:
+        "200":
+          description: Video uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadMediaSuccessResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    PostUuidPathParam:
+      in: path
+      name: post_uuid
+      required: true
+      schema:
+        type: string
+        format: uuid
+    UserUuidPathParam:
+      in: path
+      name: user_uuid
+      required: true
+      schema:
+        type: string
+        format: uuid
+    UsernamePathParam:
+      in: path
+      name: username
+      required: true
+      schema:
+        type: string
+        minLength: 2
+        maxLength: 100
+    SearchQQueryParam:
+      in: query
+      name: q
+      required: false
+      schema:
+        type: string
+        maxLength: 100
+    PageQueryParam:
+      in: query
+      name: page
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    PerPageQueryParam:
+      in: query
+      name: per_page
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    FromDateQueryParam:
+      in: query
+      name: fromDate
+      required: true
+      schema:
+        type: string
+        format: date
+    ToDateQueryParam:
+      in: query
+      name: toDate
+      required: true
+      schema:
+        type: string
+        format: date
+
+  responses:
+    MessageSuccess:
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/MessageSuccessResponse"
+    Unauthorized:
+      description: Unauthenticated or invalid token
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            success: false
+            message: Unauthorized
+    Forbidden:
+      description: Forbidden (e.g. banned user / unverified user when middleware requires verification)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ValidationErrorResponse"
+    BadRequest:
+      description: Request violates business rules
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+  schemas:
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 100
+        password:
+          type: string
+          minLength: 8
+          maxLength: 100
+
+    RegisterRequest:
+      type: object
+      required: [name, email, password, confirm_password, date_of_birth]
+      properties:
+        name:
+          type: string
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          maxLength: 100
+        password:
+          type: string
+          minLength: 8
+          maxLength: 100
+        confirm_password:
+          type: string
+          minLength: 8
+          maxLength: 100
+        date_of_birth:
+          type: string
+          format: date
+
+    RefreshTokenRequest:
+      type: object
+      required: [refresh_token]
+      properties:
+        refresh_token:
+          type: string
+
+    ForgotPasswordRequest:
+      type: object
+      required: [email]
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 100
+
+    VerifyForgotPasswordTokenRequest:
+      type: object
+      required: [forgot_password_token]
+      properties:
+        forgot_password_token:
+          type: string
+
+    ResetPasswordRequest:
+      type: object
+      required: [forgot_password_token, password, confirm_password]
+      properties:
+        forgot_password_token:
+          type: string
+        password:
+          type: string
+          minLength: 8
+          maxLength: 100
+        confirm_password:
+          type: string
+          minLength: 8
+          maxLength: 100
+
+    VerifyEmailRequest:
+      type: object
+      required: [email_verify_token]
+      properties:
+        email_verify_token:
+          type: string
+
+    ChangePasswordRequest:
+      type: object
+      required: [current_password, password, confirm_password]
+      properties:
+        current_password:
+          type: string
+        password:
+          type: string
+          minLength: 8
+          maxLength: 100
+          description: Must be different from current_password
+        confirm_password:
+          type: string
+          minLength: 8
+          maxLength: 100
+
+    UpdateMeRequest:
+      type: object
+      description: All fields are optional, but if provided they must satisfy type/rules.
+      properties:
+        name:
+          type: string
+          maxLength: 100
+        date_of_birth:
+          type: string
+          format: date
+        bio:
+          type: string
+          maxLength: 255
+        location:
+          type: string
+          maxLength: 100
+        website:
+          type: string
+          format: uri
+        username:
+          type: string
+          minLength: 2
+          maxLength: 100
+        avatar_file_id:
+          type: integer
+
+    CreatePostRequest:
+      type: object
+      required: [type, audience, content, medias]
+      properties:
+        parent_id:
+          type: integer
+          description: Required when type != POST by business rules
+        type:
+          type: integer
+          enum: [0, 1, 2, 3]
+          description: 0=POST, 1=RE_POST, 2=COMMENT, 3=QUOTE_POST
+        audience:
+          type: integer
+          enum: [0, 1, 2]
+          description: 0=PUBLIC, 1=PRIVATE, 2=FRIENDS
+        content:
+          type: string
+          maxLength: 4000
+        mentions:
+          type: array
+          maxItems: 50
+          items:
+            type: integer
+        hashtags:
+          type: array
+          items:
+            type: string
+            maxLength: 255
+        thumbnail:
+          type: integer
+          description: upload_file_id used for thumbnail
+        medias:
+          type: array
+          minItems: 1
+          maxItems: 10
+          items:
+            type: object
+            required: [file_id, type]
+            properties:
+              file_id:
+                type: integer
+              type:
+                type: integer
+                enum: [0, 1, 2]
+                description: 0=IMAGE, 1=VIDEO, 2=HLS_VIDEO
+
+    UpdatePostRequest:
+      type: object
+      description: Partial post update.
+      properties:
+        audience:
+          type: integer
+          enum: [0, 1, 2]
+        content:
+          type: string
+          maxLength: 4000
+        mentions:
+          type: array
+          maxItems: 50
+          items:
+            type: integer
+        hashtags:
+          type: array
+          items:
+            type: string
+            maxLength: 255
+        thumbnail:
+          type: integer
+          nullable: true
+
+    AuthUser:
+      type: object
+      properties:
+        id:
+          type: integer
+        uuid:
+          type: string
+          format: uuid
+        avatar:
+          type: string
+          nullable: true
+        name:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        verify:
+          type: integer
+          enum: [0, 1, 2]
+        updated_at:
+          type: string
+          format: date-time
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        uuid:
+          type: string
+          format: uuid
+        name:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        date_of_birth:
+          type: string
+          format: date
+        bio:
+          type: string
+          nullable: true
+        location:
+          type: string
+          nullable: true
+        website:
+          type: string
+          nullable: true
+        avatar:
+          type: string
+          nullable: true
+        verify:
+          type: integer
+          enum: [0, 1, 2]
+        following_count:
+          type: integer
+        followers_count:
+          type: integer
+        likes_count:
+          type: integer
+        is_followed:
+          type: boolean
+          nullable: true
+        is_owner:
+          type: boolean
+          nullable: true
+        role:
+          type: integer
+          enum: [0, 1]
+        created_at:
+          type: string
+          format: date-time
+
+    Media:
+      type: object
+      properties:
+        id:
+          type: integer
+        url:
+          type: string
+        type:
+          type: integer
+          enum: [0, 1, 2]
+
+    Mention:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+
+    Hashtag:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+        uuid:
+          type: string
+          format: uuid
+        user_id:
+          type: integer
+        type:
+          type: integer
+          enum: [0, 1, 2, 3]
+        audience:
+          type: integer
+          enum: [0, 1, 2]
+        content:
+          type: string
+          nullable: true
+        parent_id:
+          type: integer
+          nullable: true
+        hashtags:
+          type: array
+          items:
+            $ref: "#/components/schemas/Hashtag"
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        medias:
+          type: array
+          items:
+            $ref: "#/components/schemas/Media"
+        mentions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Mention"
+        likes_count:
+          type: integer
+        bookmarks_count:
+          type: integer
+        repost_count:
+          type: integer
+        comments_count:
+          type: integer
+        quote_post_count:
+          type: integer
+        is_liked:
+          type: boolean
+          nullable: true
+        is_bookmarked:
+          type: boolean
+          nullable: true
+        guest_views:
+          type: integer
+        user_views:
+          type: integer
+        author:
+          $ref: "#/components/schemas/User"
+        thumbnail_url:
+          type: string
+          nullable: true
+
+    PaginationMeta:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [offset, simple, cursor]
+        current_page:
+          type: integer
+        last_page:
+          type: integer
+        per_page:
+          type: integer
+        total:
+          type: integer
+        next_page_url:
+          type: string
+          nullable: true
+        prev_page_url:
+          type: string
+          nullable: true
+        next_cursor:
+          type: string
+          nullable: true
+        prev_cursor:
+          type: string
+          nullable: true
+
+    UserIndicatorItem:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        likes_count:
+          type: integer
+        guests_view:
+          type: integer
+        users_view:
+          type: integer
+        comments_count:
+          type: integer
+
+    UserIndicators:
+      type: object
+      properties:
+        likes_count:
+          type: integer
+        guests_view:
+          type: integer
+        users_view:
+          type: integer
+        comments_count:
+          type: integer
+        Indicator:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserIndicatorItem"
+
+    UploadMediaData:
+      type: object
+      properties:
+        id:
+          type: integer
+        url:
+          type: string
+        type:
+          type: integer
+          enum: [0, 1]
+
+    MessageSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Success
+
+    AuthTokenSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Login successful
+        data:
+          type: object
+          properties:
+            access_token:
+              type: string
+            refresh_token:
+              type: string
+              nullable: true
+            user:
+              $ref: "#/components/schemas/AuthUser"
+
+    AuthUserSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          $ref: "#/components/schemas/AuthUser"
+
+    UserSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          $ref: "#/components/schemas/User"
+
+    UserListSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/User"
+        meta:
+          $ref: "#/components/schemas/PaginationMeta"
+
+    PostSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          $ref: "#/components/schemas/Post"
+
+    PostListSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Post"
+        meta:
+          $ref: "#/components/schemas/PaginationMeta"
+
+    UserIndicatorsSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          $ref: "#/components/schemas/UserIndicators"
+
+    UploadMediaSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          $ref: "#/components/schemas/UploadMediaData"
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+        errors:
+          nullable: true
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+              items:
+                type: string
+
+    ValidationErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: Validation failed
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string

@@ -1,0 +1,75 @@
+'use client'
+
+import Header from '@/app/[locale]/(public)/(home)/search/_components/tabbar-header'
+import { SearchParamsLoader, useSearchParamsLoader } from '@/components/common/search-params-loader'
+import { useSearchPostsInfiniteQuery, useSearchUsersInfiniteQuery } from '@/store/services/search.service'
+import { useTranslations } from 'next-intl'
+import { useState } from 'react'
+import UsersContainer from '@/app/[locale]/(public)/(home)/search/_components/users-container'
+import PostsContainer from '@/app/[locale]/(public)/(home)/search/_components/posts-container'
+import { MdSearchOff } from 'react-icons/md'
+import { SearchTabId, SearchTabIdType } from '@/constants/ui/search'
+
+export default function SearchResults() {
+    const t = useTranslations('HomePage.search')
+    const [tabActive, setTabActive] = useState<SearchTabIdType>(SearchTabId.USERS)
+    const { setSearchParams, searchParams } = useSearchParamsLoader()
+    const query = searchParams?.get('q') || ''
+    const {
+        fetchNextPage: handleFetchNextPageUsers,
+        hasNextPage: hasNextPageUsers,
+        data: dataUsers,
+        isFetching: isFetchingUsers,
+        isLoading: isLoadingUsers
+    } = useSearchUsersInfiniteQuery({ q: query ?? '' }, { skip: tabActive !== SearchTabId.USERS })
+
+    const {
+        fetchNextPage: handleFetchNextPagePosts,
+        hasNextPage: hasNextPagePosts,
+        data: dataPosts,
+        isFetching: isFetchingPosts,
+        isLoading: isLoadingPosts
+    } = useSearchPostsInfiniteQuery({ q: query ?? '' }, { skip: tabActive !== SearchTabId.VIDEOS })
+
+    const userDataResults = dataUsers?.pages.flatMap((page) => page.data) || []
+    const postDataResults = dataPosts?.pages.flatMap((page) => page.data) || []
+
+    const activeResultUserTab = tabActive === SearchTabId.USERS && (userDataResults.length > 0 || isLoadingUsers)
+    const activeResultVideoTab = tabActive === SearchTabId.VIDEOS && (postDataResults.length > 0 || isLoadingPosts)
+
+    return (
+        <div className='p-4 mx-auto max-w-[800px] w-[73%] min-w-[420px]'>
+            <SearchParamsLoader onParamsReceived={setSearchParams} />
+            <Header tabActive={tabActive} setTabActive={setTabActive} />
+            <div>
+                {activeResultUserTab && (
+                    <UsersContainer
+                        fetchNextPage={handleFetchNextPageUsers}
+                        hasNextPage={hasNextPageUsers}
+                        data={userDataResults}
+                        isFetching={isFetchingUsers}
+                        isLoading={isLoadingUsers}
+                    />
+                )}
+                {activeResultVideoTab && (
+                    <PostsContainer
+                        fetchNextPage={handleFetchNextPagePosts}
+                        hasNextPage={hasNextPagePosts}
+                        data={postDataResults}
+                        isFetching={isFetchingPosts}
+                        isLoading={isLoadingPosts}
+                    />
+                )}
+                {!activeResultUserTab && !activeResultVideoTab && (
+                    <div className='mx-auto flex flex-col justify-center items-center min-h-[490px]'>
+                        <div className='flex justify-center items-center size-[92px] rounded-full bg-muted'>
+                            <MdSearchOff size={44} />
+                        </div>
+                        <p className='text-2xl font-bold mt-6'>{t('noResults.title')}</p>
+                        <p className='text-base mt-2 text-muted-foreground'>{t('noResults.description')}</p>
+                    </div>
+                )}
+            </div>
+        </div>
+    )
+}

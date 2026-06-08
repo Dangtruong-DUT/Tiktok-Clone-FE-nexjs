@@ -1,0 +1,116 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import envConfig from '@/config/app.config'
+import { AUTH_COOKIE } from '@/constants/auth'
+import { HTTP_STATUS } from '@/constants/api/http-status'
+import { AUTH_ROUTES } from '@/constants/routes/routes'
+import { BusinessException } from '@/exceptions/BussinessException.exception'
+import { HttpException } from '@/exceptions/HttpException.exception'
+import { redirect } from '@/i18n/navigation'
+import { getLocale } from 'next-intl/server'
+
+const isClient = typeof window !== 'undefined'
+
+export type CustomOptionsType = RequestInit & { baseUrl?: string }
+
+type RequestPropsType = {
+    method: 'GET' | 'POST' | 'PUT' | 'DELETE'
+    url: string
+    options?: CustomOptionsType
+}
+
+export async function clientRequest<response>({ method, url, options = {} }: RequestPropsType): Promise<response> {
+    try {
+        let baseUrl = options.baseUrl ?? envConfig.NEXT_PUBLIC_API_ENDPOINT
+        if (url.startsWith('/')) url = url.slice(1)
+        if (!baseUrl.endsWith('/')) baseUrl += '/'
+        const fullUrl = url.startsWith('http') ? url : `${baseUrl}${url}`
+
+        const isFormData = options.body instanceof FormData
+        const headers: Record<string, string> = isFormData ? {} : { 'Content-Type': 'application/json' }
+        Object.assign(headers, options.headers)
+
+        const response = await fetch(fullUrl, {
+            ...options,
+            method,
+            headers,
+            body: isFormData ? options.body : JSON.stringify(options.body)
+        })
+
+        if (!response.ok) {
+            const errorPayload = await response.json()
+            if (response.status === HTTP_STATUS.UNPROCESSABLE_ENTITY) {
+                throw new BusinessException(errorPayload)
+            }
+            throw new HttpException(errorPayload, response.status, errorPayload.message || 'Request failed')
+        }
+
+        return await response.json()
+    } catch (error) {
+        if (isClient) throw error
+
+        if (error instanceof HttpException && error.status === HTTP_STATUS.UNAUTHORIZED) {
+            const [cookieStore, locale] = await Promise.all([
+                import('next/headers').then((mod) => mod.cookies()),
+                getLocale()
+            ])
+            cookieStore.delete(AUTH_COOKIE.ACCESS_TOKEN)
+            cookieStore.delete(AUTH_COOKIE.REFRESH_TOKEN)
+            redirect({ href: AUTH_ROUTES.LOGIN, locale })
+        }
+        throw error
+    }
+}
+
+class HttpClient {
+    private static instance: HttpClient | null = null
+
+    private constructor() {}
+
+    public static getInstance(): HttpClient {
+        if (!HttpClient.instance) {
+            HttpClient.instance = new HttpClient()
+        }
+        return HttpClient.instance
+    }
+
+    get<response>(url: string, options?: Omit<CustomOptionsType, 'body'>) {
+        return clientRequest<response>({
+            method: 'GET',
+            url,
+            options
+        })
+    }
+
+    post<response>(url: string, body: any, options?: Omit<CustomOptionsType, 'body'>): Promise<response> {
+        return clientRequest<response>({
+            method: 'POST',
+            url,
+            options: {
+                ...options,
+                body
+            }
+        })
+    }
+
+    put<response>(url: string, body: any, options?: Omit<CustomOptionsType, 'body'>): Promise<response> {
+        return clientRequest<response>({
+            method: 'PUT',
+            url,
+            options: {
+                ...options,
+                body
+            }
+        })
+    }
+
+    delete<response>(url: string, options?: Omit<CustomOptionsType, 'body'>): Promise<response> {
+        return clientRequest<response>({
+            method: 'DELETE',
+            url,
+            options
+        })
+    }
+}
+const httpClient = HttpClient.getInstance()
+
+export default httpClient

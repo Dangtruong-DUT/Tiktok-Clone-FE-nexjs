@@ -1,0 +1,736 @@
+{
+    "SnapiStudio": {
+        "aiChat": {
+            "title": "AI Studio",
+            "status": {
+                "generating": "Generating...",
+                "done": "Done",
+                "completed": "Done",
+                "fallback": "Fallback"
+            },
+            "actions": {
+                "applyToPost": "Apply to post",
+                "applied": "Applied",
+                "addHashtags": "+ {count} hashtag",
+                "clearHistory": "Clear history"
+            },
+            "meta": {
+                "category": "Category",
+                "intent": "Intent",
+                "audience": "Audience",
+                "confidence": "Confidence"
+            },
+            "input": {
+                "placeholder": "Describe your video...",
+                "regenerateHint": "Type to regenerate",
+                "hintRegenerate": "Type to regenerate",
+                "sendHint": "Press Enter to send · Shift+Enter for new line",
+                "hintNew": "Press Enter to send · Shift+Enter for new line",
+                "submit": "Send"
+            },
+            "caption": {
+                "empty": "No caption generated",
+                "chars": "{count} chars"
+            },
+            "tabs": {
+                "short": "Short",
+                "professional": "Professional",
+                "viral": "Viral"
+            },
+            "hashtags": {
+                "title": "Hashtags",
+                "count": "({selected}/{total})",
+                "selectAll": "Select all",
+                "deselect": "Deselect",
+                "copied": "Copied",
+                "copyAll": "Copy all"
+            },
+            "toast": {
+                "applied": "Caption and hashtags applied!",
+                "captionCopied": "Caption copied!",
+                "hashtagsCopied": "Hashtags copied!",
+                "tagCopied": "{tag} copied!",
+                "ready": "AI suggestion ready!",
+                "fallback": "AI error — showing fallback suggestions.",
+                "startError": "Unable to start AI. Please try again."
+            },
+            "emptyCaption": "No caption generated",
+            "charCount": "{count} chars",
+            "welcome": {
+                "intro": "Hi! I am <strong>AI Studio</strong> — your video content assistant.",
+                "subtitle": "Enter a video description below and press <strong>Send</strong> to get:",
+                "items": {
+                    "shortCaption": "Short, professional, or viral captions",
+                    "hashtags": "Hashtags tailored to your content",
+                    "meta": "Category and target audience info"
+                }
+            }
+        },
+        "footer": {
+            "copyright": "Copyright © 2025 Snapi",
+            "privacyPolicy": "Privacy Policy",
+            "termsOfService": "Terms of Service"
+        },
+        "navigation": {
+            "home": "Home",
+            "posts": "Posts",
+            "ai": "AI Studio",
+            "ai_chat": "AI Creator Chat",
+            "calendar": "Content Calendar",
+            "scheduled": "Scheduled Posts",
+            "wellness": "Digital Wellness",
+            "appeals": "Appeals",
+            "settings": "Settings",
+            "back": "Back to Snapi"
+        },
+        "common": {
+            "audience": {
+                "selectPlaceholder": "Select audience",
+                "all": "All audiences",
+                "public": "Public",
+                "friends": "Friends",
+                "private": "Private",
+                "unknown": "Unknown"
+            }
+        },
+        "content": {
+            "table": {
+                "columns": {
+                    "content": "Content",
+                    "privacy": "Privacy",
+                    "views": "Views",
+                    "comments": "Comments",
+                    "actions": "Actions"
+                },
+                "actions": {
+                    "edit": "Edit",
+                    "delete": "Delete"
+                }
+            },
+            "search": {
+                "placeholder": "Search...",
+                "clearButton": "Clear",
+                "clearingButton": "Clearing...",
+                "searchButton": "Search",
+                "searchingButton": "Searching..."
+            },
+            "filter": {
+                "audiencePlaceholder": "Filter by audience",
+                "allAudience": "All audiences",
+                "audience": {
+                    "public": "Public",
+                    "friends": "Friends",
+                    "private": "Private",
+                    "unknown": "Unknown"
+                }
+            },
+            "emptyState": "No posts found.",
+            "showingResults": "Showing {from}-{to} of {total} posts",
+            "perPage": "Per page"
+        },
+        "dashboard": {
+            "knowledgeForYou": {
+                "title": "Knowledge for you"
+            },
+            "userInfo": {
+                "likes": "{count} Likes",
+                "followers": "{count} Followers",
+                "following": "{count} Following"
+            },
+            "recentPosts": {
+                "title": "Recent Posts",
+                "createdAt": "Posted on {date}",
+                "metrics": {
+                    "views": "Views",
+                    "likes": "Likes",
+                    "comments": "Comments"
+                }
+            },
+            "postStatusChart": {
+                "title": "Post Status",
+                "description": "Your posts by publish status",
+                "published": "Published",
+                "scheduled": "Scheduled",
+                "draft": "Draft",
+                "posts": "posts"
+            },
+            "engagementChart": {
+                "title": "Engagement by Post",
+                "description": "Engagement rate (likes + comments / views) for recent posts",
+                "engagement": "Engagement %",
+                "noData": "No published posts yet"
+            },
+            "directorChart": {
+                "keyMetrics": "Key Metrics",
+                "selectTimeRange": "Select Time Range",
+                "interactStats": "Interaction Statistics",
+                "metrics": {
+                    "userViews": "User Views",
+                    "guestViews": "Guest Views",
+                    "likes": "Likes",
+                    "comments": "Comments",
+                    "views": "Views"
+                },
+                "timeRanges": {
+                    "last7Days": "Last 7 Days",
+                    "last28Days": "Last 28 Days",
+                    "last60Days": "Last 60 Days",
+                    "last365Days": "Last 365 Days"
+                }
+            }
+        },
+        "header": {
+            "profile": "Profile",
+            "logout": "Log out",
+            "settings": "Settings",
+            "accountMenu": "Account menu",
+            "unknownUser": "User"
+        },
+        "settings": {
+            "page": {
+                "title": "Settings",
+                "description": "Manage your account settings and security preferences",
+                "userBadge": "User"
+            },
+            "updateProfile": {
+                "title": "Update Profile",
+                "description": "Update your personal information and profile picture",
+                "upload": "Upload",
+                "defaultUser": "USER",
+                "fullNameLabel": "Full Name",
+                "cancel": "Cancel",
+                "save": "Save",
+                "validation": {
+                    "invalidType": "Invalid image format. Only {accepted} files are supported.",
+                    "tooLarge": "Image is too large. Maximum allowed size is {maxSizeMb} MB."
+                }
+            },
+            "changePassword": {
+                "title": "Change Password",
+                "description": "Keep your account secure by updating your password regularly",
+                "oldPassword": "Old Password",
+                "newPassword": "New Password",
+                "confirmPassword": "Confirm Password",
+                "forgotPassword": "Forgot password?",
+                "cancel": "Cancel",
+                "save": "Save"
+            },
+            "verifyEmail": {
+                "title": "Verify Email",
+                "description": "Verify your email to secure your account and unlock full features",
+                "notice": "Your account is not verified yet. We will send a verification email to {email}.",
+                "verifiedTitle": "Email Verified",
+                "verifiedDescription": "Your email has already been verified",
+                "verifiedNotice": "This account is verified with email: {email}.",
+                "emailLabel": "Email",
+                "resendButton": "Resend Email",
+                "resendError": "Unable to resend verification email. Please try again."
+            },
+            "privacy": {
+                "title": "Privacy",
+                "description": "Control who can view your social activity.",
+                "public": "Public",
+                "private": "Private",
+                "cancel": "Cancel",
+                "save": "Save",
+                "updateError": "Unable to update privacy settings. Please try again.",
+                "fields": {
+                    "likedVideos": {
+                        "label": "Liked videos",
+                        "description": "Allow others to see videos you liked."
+                    },
+                    "bookmarkedVideos": {
+                        "label": "Bookmarked videos",
+                        "description": "Allow others to see your bookmarked videos."
+                    },
+                    "followers": {
+                        "label": "Followers list",
+                        "description": "Allow others to view your followers."
+                    },
+                    "following": {
+                        "label": "Following list",
+                        "description": "Allow others to view who you follow."
+                    }
+                }
+            },
+            "nav": {
+                "profile": "Profile",
+                "security": "Security",
+                "privacy": "Privacy",
+                "email": "Email"
+            }
+        },
+        "upload": {
+            "selectVideo": "Select Video to Upload",
+            "dragAndDrop": "Or drag and drop files",
+            "dropHere": "Drop your video here",
+            "preview": "Preview",
+            "mp4OrWebmOnly": "Only MP4 or MOV supported",
+            "fileInfo": {
+                "size": "{size} MB",
+                "replace": "Replace",
+                "retry": "Retry"
+            },
+            "validation": {
+                "invalidType": "Invalid file format. Only {accepted} files are supported.",
+                "tooLarge": "File is too large. Maximum allowed size is {maxSizeMb} MB."
+            },
+            "exitDialog": {
+                "title": "Are you sure you want to exit?",
+                "description": "Your changes will not be saved.",
+                "exit": "Exit",
+                "backToEdits": "Back to Edits"
+            },
+            "selectThumbnail": {
+                "title": "Select Thumbnail",
+                "edit": "Edit",
+                "selectCover": "Select Cover",
+                "uploadCover": "Upload Cover"
+            },
+            "guidelines": {
+                "sizeAndDuration": {
+                    "title": "Size and Duration",
+                    "description": "Maximum size: 50 MB, video length: 60 minutes."
+                },
+                "fileFormats": {
+                    "title": "File Formats",
+                    "description": "Supported formats: '.mp4', '.mov'."
+                },
+                "videoResolutions": {
+                    "title": "Video Resolutions",
+                    "description": "High resolution recommended: 1080p, 1440p, 4K."
+                },
+                "aspectRatios": {
+                    "title": "Aspect Ratios",
+                    "description": "Recommended: 16:9 for landscape, 9:16 for portrait."
+                }
+            },
+            "tooltips": {
+                "play": "Play",
+                "pause": "Pause",
+                "mute": "Mute",
+                "unmute": "Unmute"
+            },
+            "resolutionReq": "Resolution 720x1280 or higher",
+            "maxFileSize": "Maximum size 50 MB",
+            "maxDuration": "Maximum duration 60 minutes",
+            "selectFile": "Select File",
+            "selectedFile": "Selected File",
+            "thumbnailUpload": {
+                "dragAndDrop": "Drag and drop a file here",
+                "or": "or",
+                "selectFile": "select file",
+                "supportedFormats": "Supported formats: JPG, JPEG and PNG.",
+                "uploadNew": "Upload new",
+                "confirm": "Confirm",
+                "validation": {
+                    "invalidType": "Invalid image format. Only {accepted} files are supported.",
+                    "tooLarge": "Image is too large. Maximum allowed size is {maxSizeMb} MB."
+                }
+            },
+            "detail": {
+                "title": "Details",
+                "description": {
+                    "label": "Description",
+                    "placeholder": "Share more about your video here..."
+                },
+                "cover": {
+                    "label": "Cover",
+                    "tooltip": "Select a cover image or upload from your device. An attractive cover can make a strong impression on viewers."
+                }
+            },
+            "settings": {
+                "title": "Settings",
+                "audience": {
+                    "label": "Who can view this video",
+                    "placeholder": "Select audience"
+                }
+            },
+            "encoding": {
+                "uploading": "Uploading {progress}%",
+                "pending": "Waiting in encoding queue...",
+                "analyzing": "Analyzing video...",
+                "processing": "Encoding {progress}%",
+                "ready": "Video ready — HLS streaming enabled",
+                "failed": "Encoding failed",
+                "retry": "Retry"
+            },
+            "errors": {
+                "invalidResponse": "Invalid server response",
+                "unauthorized": "Please log in to upload videos",
+                "serverError": "Upload failed (HTTP {status})",
+                "networkError": "Network error — check your connection and try again"
+            },
+            "processing": {
+                "title": "Processing videos",
+                "ready": "Your video \"{title}\" is ready!",
+                "readyNoTitle": "Your video is ready!",
+                "failed": "Video encoding failed",
+                "pending": "{count} video(s) processing",
+                "viewDetails": "View details"
+            },
+            "buttons": {
+                "post": "Post",
+                "discard": "Discard",
+                "waitEncoding": "Waiting for encoding..."
+            }
+        },
+        "aiStudio": {
+            "title": "AI Studio",
+            "subtitle": "Content creation, viral analysis, and scheduling — all in one place",
+            "tabs": {
+                "chat": "Creator Chat"
+            }
+        },
+        "scheduledPosts": {
+            "title": "Post Management",
+            "subtitle": "Drafts, scheduled, and published posts",
+            "tabs": {
+                "draft": "Draft",
+                "scheduled": "Scheduled",
+                "published": "Published",
+                "failed": "Failed"
+            },
+            "filters": {
+                "all": "All",
+                "draft": "Draft",
+                "scheduled": "Scheduled",
+                "published": "Published",
+                "failed": "Failed"
+            },
+            "noContent": "No posts yet.",
+            "noContentPreview": "No content",
+            "actions": {
+                "schedule": "Schedule",
+                "publishNow": "Publish Now",
+                "reschedule": "Reschedule",
+                "cancelSchedule": "Cancel",
+                "retry": "Retry",
+                "confirm": "Confirm",
+                "cancel": "Cancel"
+            },
+            "toast": {
+                "updated": "Post time updated!",
+                "updateError": "Unable to update. Please try again.",
+                "scheduled": "Post has been scheduled!",
+                "scheduleError": "Unable to schedule. Please try again.",
+                "published": "Post published!",
+                "cancelled": "Schedule cancelled."
+            }
+        },
+        "aiCreatorChat": {
+            "title": "AI Creator Chat",
+            "subtitle": "Create video content step by step",
+            "startBtn": "Start",
+            "restartBtn": "Restart",
+            "emptyTitle": "AI Studio Creator Chat",
+            "emptySubtitle": "Click <strong>Start</strong> to let AI ask step-by-step questions and create captions and hashtags for your video.",
+            "generatedContent": "Generated content",
+            "generateBtn": "Generate with AI",
+            "inputPlaceholder": "Type your answer...",
+            "skipTitle": "Skip",
+            "allQuestionsComplete": "All questions complete! Click \"Generate Content\" for AI suggestions.",
+            "generatingContent": "Generating your content...",
+            "toast": {
+                "contentCreated": "Content generated!",
+                "error": "AI encountered an error. Please try again.",
+                "errorMessage": "Sorry, I encountered an error: {message}. Please start a new conversation."
+            }
+        },
+        "wellness": {
+            "title": "Digital Wellness",
+            "subtitle": "Track and balance your usage time",
+            "tabs": {
+                "today": "Today",
+                "stats": "Stats",
+                "rules": "Rules",
+                "analysis": "AI Analysis"
+            },
+            "today": {
+                "online": "Online",
+                "watchingVideo": "Watching video",
+                "comments": "Comments",
+                "posts": "Posts",
+                "peakHour": "Peak usage time: {hour}:00 – {hourEnd}:00"
+            },
+            "stats": {
+                "totalTime": "Total time",
+                "watchingVideo": "Watching video",
+                "dailyAvg": "Daily avg",
+                "sessions": "Sessions",
+                "comments": "Comments",
+                "posts": "Posts",
+                "chartTitle": "By day",
+                "distributionTitle": "Time breakdown",
+                "otherOnline": "Browsing & other",
+                "periods": {
+                    "today": "Today",
+                    "week": "This week",
+                    "month": "This month"
+                },
+                "timeLabel": "Screen time",
+                "radarChart": {
+                    "title": "Activity breakdown",
+                    "description": "Relative activity scores across usage categories",
+                    "score": "Score",
+                    "video": "Video",
+                    "comments": "Comments",
+                    "posts": "Posts",
+                    "likes": "Likes",
+                    "other": "Other"
+                }
+            },
+            "rules": {
+                "createTitle": "Create rule with natural language",
+                "inputPlaceholder": "E.g.: Remind me to take a break if I scroll videos for more than 2 hours",
+                "analyzeBtn": "Analyze with AI",
+                "analyzing": "Analyzing",
+                "confidence": "Confidence: {pct}%",
+                "saveBtn": "Save this rule",
+                "noRules": "No rules yet. Create with AI or add manually.",
+                "disabled": "Disabled",
+                "toggleOn": "Enable",
+                "toggleOff": "Disable",
+                "toast": {
+                    "saved": "Rule saved!",
+                    "deleted": "Rule deleted."
+                },
+                "progress": {
+                    "activating": "Triggering…",
+                    "remaining": "~{minutes}m left (cycle {cycle})"
+                }
+            },
+            "ruleChat": {
+                "title": "Wellness Rule",
+                "modeAI": "AI Prompt",
+                "modeManual": "Manual",
+                "aiHint": "Describe your rule — AI will parse it into structure automatically.",
+                "aiPlaceholder": "E.g.: Remind me to rest after 1 hour of continuous use...",
+                "analyzeBtn": "Analyze",
+                "analyzing": "Analyzing…",
+                "saveRule": "Save rule",
+                "saving": "Saving…",
+                "dismiss": "Dismiss",
+                "ruleType": "Rule type",
+                "duration": "Duration (minutes)",
+                "timeRange": "Active time range",
+                "fromHour": "From",
+                "toHour": "To",
+                "action": "Action",
+                "titleLabel": "Title",
+                "titleRequired": "Title *",
+                "titlePlaceholder": "E.g.: Eye rest reminder",
+                "messageLabel": "Notification message",
+                "messagePlaceholder": "Leave blank for auto-generated",
+                "confidencePct": "{pct}% confidence",
+                "errorParse": "Could not analyze. Try rephrasing.",
+                "errorSave": "Could not save rule.",
+                "errorTitle": "Please enter a rule title.",
+                "toastSaved": "Rule saved!",
+                "types": {
+                    "continuous_usage": "Continuous use",
+                    "daily_limit": "Daily limit",
+                    "video_watch_time": "Video watch time",
+                    "late_night": "Late night use"
+                },
+                "actions": {
+                    "warning": "Warning",
+                    "soft_block": "Require confirmation"
+                },
+                "quickPrompts": [
+                    "Remind me to rest after 1 hour",
+                    "Limit 3 hours per day",
+                    "Warn after 2 hours of video",
+                    "Block after 90 minutes"
+                ],
+                "optional": "optional",
+                "defaults": {
+                    "continuous_usage": {
+                        "title": "Continuous use {duration}",
+                        "message": "You have been using for {duration} continuously. Take a break!"
+                    },
+                    "daily_limit": {
+                        "title": "Daily limit {duration}",
+                        "message": "You have reached {duration} today. Balance your time!"
+                    },
+                    "video_watch_time": {
+                        "title": "Video watch {duration}",
+                        "message": "You have watched video for {duration}. Rest your eyes!"
+                    },
+                    "late_night": {
+                        "title": "Late night use ({fromHour}:00 – {toHour}:00)",
+                        "message": "You are using the app in the late-night window. Rest to protect your health."
+                    }
+                }
+            },
+            "analysis": {
+                "analyzeBtn": "Analyze last 7 days",
+                "analyzing": "Analyzing...",
+                "trends": "Trends",
+                "concerns": "Notable concerns",
+                "recommendations": "Recommendations",
+                "suggestedRules": "Suggested rules",
+                "addRule": "Add this rule",
+                "toast": {
+                    "ruleAdded": "Rule added!"
+                }
+            }
+        },
+        "aiCopilot": {
+            "title": "AI Copilot",
+            "thinking": "Thinking…",
+            "startingSession": "Starting session…",
+            "ready": "AI Copilot ready",
+            "largeVideo": "Your video is large — describe it to me and I'll help!",
+            "emptyHint": "Ask me to write a caption, generate hashtags, analyze your hook, and more.",
+            "quickPrompts": ["Write a caption", "Generate hashtags", "Analyze viral potential", "Evaluate the hook"],
+            "quickPromptsGeneral": [
+                "My account stats",
+                "What can Snapi do?",
+                "Analyze my screen time",
+                "Content creation ideas"
+            ],
+            "quickPromptsAdmin": ["System user stats", "Pending appeals", "AI costs today", "Video encoding errors"],
+            "newSession": "New conversation",
+            "input": {
+                "placeholder": "Ask the AI Copilot anything…"
+            },
+            "navCard": {
+                "title": "Relevant pages"
+            },
+            "error": {
+                "title": "Something went wrong",
+                "generic": "An error occurred connecting to AI. Please try again.",
+                "retry": "Try again"
+            },
+            "contentCard": {
+                "applied": "Applied to form",
+                "dismissed": "Dismissed",
+                "accept": "Apply to post",
+                "reject": "Dismiss",
+                "copy": "Copy text",
+                "copied": "Copied!"
+            },
+            "scheduleCard": {
+                "panelTitle": "Proposed publish time",
+                "scheduledAs": "Scheduled: {time}",
+                "cancelled": "Cancelled",
+                "schedule": "Schedule now",
+                "changeTime": "Change time",
+                "toastSuccess": "Scheduled for {time}",
+                "toastError": "Could not schedule. Please try again."
+            },
+            "attachments": {
+                "panelTitle": "AI — Select segment / frame",
+                "frameLabel": "Capture frame",
+                "frameHint": "Seek to the position you want, then click the camera icon. Max 5 frames.",
+                "captureFrame": "Capture current frame",
+                "framesCount": "{count}/{max} frames selected",
+                "extracting": "Loading frames…",
+                "openFilmstrip": "Select frames from video",
+                "loadingThumbs": "Loading timeline…",
+                "segStart": "Start",
+                "segEnd": "End",
+                "tooShort": "Select at least {min}s",
+                "tooLong": "Max {max}s per analysis",
+                "analyzeBtn": "Analyze With AI",
+                "reAnalyzeBtn": "Re-analyze",
+                "clipSent": "Sent",
+                "reselect": "Re-select",
+                "analyzing": "Recording…",
+                "recording": "Recording clip",
+                "analyzePrompt": "Analyze this video segment from {start} to {end}"
+            },
+            "timeline": {
+                "analyze": "Analyze",
+                "analyzeQuestion": "Analyze this video segment",
+                "analyzeHook": "Check hook",
+                "analyzeHookQuestion": "Analyze the hook of this video",
+                "analyzeContent": "Analyze content",
+                "analyzeContentQuestion": "Analyze the content and suggest improvements"
+            }
+        },
+        "appeals": {
+            "create": {
+                "title": "File a New Appeal",
+                "description": "Submit an appeal for moderation actions applied to your content or account.",
+                "appealType": "Appeal type",
+                "resourceType": "Resource type",
+                "resourceId": "Resource ID",
+                "resourceIdPlaceholder": "Optional numeric resource id",
+                "reason": "Reason",
+                "reasonPlaceholder": "Describe why this moderation decision should be reviewed.",
+                "submit": "Submit appeal",
+                "submitting": "Submitting..."
+            },
+            "list": {
+                "title": "My Appeals",
+                "description": "Track status of your submitted appeals.",
+                "searchPlaceholder": "Search appeals",
+                "emptyState": "No appeals found",
+                "perPage": "Per page",
+                "showingResults": "Showing {from}-{to} of {total}",
+                "filters": {
+                    "allStatuses": "All statuses"
+                },
+                "columns": {
+                    "id": "ID",
+                    "type": "Type",
+                    "reason": "Reason",
+                    "status": "Status",
+                    "createdAt": "Created at",
+                    "response": "Admin Response",
+                    "resource": "Resource",
+                    "evidence": "Evidence",
+                    "actions": "Action"
+                },
+                "viewDetail": "View Detail",
+                "resourcePreview": "Resource Preview",
+                "search": "Search",
+                "reset": "Reset"
+            },
+            "types": {
+                "user_ban": "User Ban",
+                "user_unban": "User Unban",
+                "user_deleted": "User Deleted",
+                "post_deleted": "Post Deleted",
+                "comment_deleted": "Comment Deleted"
+            },
+            "resourceTypes": {
+                "user": "User",
+                "post": "Post",
+                "comment": "Comment"
+            },
+            "statuses": {
+                "pending": "Pending",
+                "approved": "Approved",
+                "rejected": "Rejected"
+            },
+            "messages": {
+                "createSuccess": "Appeal submitted successfully",
+                "createError": "Failed to submit appeal"
+            },
+            "errors": {
+                "reasonMinLength": "Reason must be at least 20 characters",
+                "resourceIdInvalid": "Resource ID must be a valid number"
+            },
+            "detail": {
+                "title": "Appeal Detail",
+                "fields": {
+                    "type": "Type",
+                    "status": "Status",
+                    "reason": "Your Reason",
+                    "response": "Admin Response",
+                    "createdAt": "Submitted",
+                    "reviewedAt": "Reviewed",
+                    "resource": "Resource",
+                    "evidence": "Evidence Files"
+                },
+                "noResponse": "Awaiting review...",
+                "noEvidence": "No evidence attached",
+                "resourceUnavailable": "Resource no longer available",
+                "resourceTitle": "Related Resource"
+            }
+        }
+    }
+}

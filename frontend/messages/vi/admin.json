@@ -1,0 +1,839 @@
+{
+  "AdminPage": {
+    "breadcrumbs": {
+      "home": "Trang chủ",
+      "admin": "Quản trị"
+    },
+    "common": {
+      "perPage": "Mỗi trang",
+      "showingResults": "Hiển thị {from}-{to} trên {total}",
+      "cancel": "Hủy",
+      "reset": "Đặt lại",
+      "search": "Tìm kiếm",
+      "loading": "Đang xử lý...",
+      "noResults": "Không tìm thấy kết quả",
+      "confirmAction": "Bạn có chắc không?",
+      "actions": "Thao tác",
+      "clearSearch": "Xóa"
+    },
+    "shell": {
+      "panelLabel": "Bảng quản trị",
+      "consoleSubtitle": "Hệ thống quản lý",
+      "navigation": "Điều hướng",
+      "navGroups": {
+        "manage": "Quản lý",
+        "moderate": "Kiểm duyệt",
+        "system": "Hệ thống"
+      },
+      "backToSite": "Về trang chính",
+      "accountMenu": "Menu tài khoản",
+      "settings": "Cài đặt",
+      "profile": "Hồ sơ",
+      "logout": "Đăng xuất",
+      "unknownUser": "Quản trị viên",
+      "theme": "Giao diện",
+      "themeLight": "Chế độ sáng",
+      "themeDark": "Chế độ tối",
+      "themeSystem": "Theo hệ thống",
+      "expandSidebar": "Mở thanh bên",
+      "collapseSidebar": "Thu gọn thanh bên",
+      "language": {
+        "english": "🇺🇸 Tiếng Anh",
+        "vietnamese": "🇻🇳 Tiếng Việt"
+      }
+    },
+    "aiStudio": {
+      "title": "AI Content Studio",
+      "description": "Giám sát lượng dùng, điều chỉnh cài đặt Gemini và xem toàn bộ yêu cầu tạo AI.",
+      "breadcrumb": "AI Studio",
+      "nav": {
+        "overview": "Tổng quan",
+        "promptTemplates": "Mẫu Prompt",
+        "knowledge": "Cơ sở tri thức"
+      },
+      "tabs": {
+        "metrics": "Thống kê",
+        "settings": "Cài đặt",
+        "requests": "Yêu cầu"
+      },
+      "metrics": {
+        "periods": {
+          "today": "Hôm nay",
+          "week": "Tuần này",
+          "month": "Tháng này"
+        },
+        "stats": {
+          "totalRequests": "Tổng yêu cầu",
+          "successRate": "Tỷ lệ thành công",
+          "failed": "Thất bại",
+          "applyRate": "Tỷ lệ áp dụng",
+          "uniqueUsers": "Người dùng riêng",
+          "estCost": "Chi phí ước tính"
+        },
+        "sub": {
+          "completed": "{count} đã hoàn thành",
+          "failureRate": "{rate}% tỷ lệ lỗi",
+          "suggestionsUsed": "Gợi ý đã dùng",
+          "tokens": "{count} tokens"
+        },
+        "charts": {
+          "dailyRequests": "Yêu cầu hàng ngày",
+          "completed": "Hoàn thành",
+          "failed": "Thất bại",
+          "intentBreakdown": "Phân tích mục đích nội dung"
+        },
+        "empty": {
+          "noData": "Không có dữ liệu cho khoảng thời gian này",
+          "noIntents": "Chưa có dữ liệu intent"
+        },
+        "error": "Tải thống kê thất bại. Vui lòng thử lại."
+      },
+      "settings": {
+        "status": {
+          "enabled": "AI Studio đang BẬT",
+          "disabled": "AI Studio đang TẮT",
+          "enabledDescription": "Người dùng có thể tạo gợi ý nội dung AI.",
+          "disabledDescription": "Toàn bộ yêu cầu tạo AI sẽ bị chặn."
+        },
+        "sections": {
+          "rateLimits": "Giới hạn tần suất",
+          "geminiModel": "Mô hình Gemini",
+          "cacheAsync": "Cache & bất đồng bộ"
+        },
+        "fields": {
+          "dailyLimitPerUser": {
+            "label": "Giới hạn hàng ngày mỗi người dùng",
+            "description": "Số yêu cầu AI tối đa một người dùng có thể thực hiện mỗi ngày"
+          },
+          "globalDailyLimit": {
+            "label": "Giới hạn hàng ngày toàn cầu",
+            "description": "Tổng số yêu cầu AI tối đa của tất cả người dùng mỗi ngày"
+          },
+          "rateLimitPerMinute": {
+            "label": "Giới hạn mỗi phút",
+            "description": "Giới hạn mỗi người dùng (cấp middleware API)"
+          },
+          "model": {
+            "label": "Mô hình",
+            "description": "Mô hình Gemini dùng để tạo nội dung"
+          },
+          "maxOutputTokens": {
+            "label": "Số token đầu ra tối đa",
+            "description": "Số token tối đa trong phản hồi AI"
+          },
+          "temperature": {
+            "label": "Temperature",
+            "description": "Mức sáng tạo (0.0 = xác định, 1.0 = sáng tạo)"
+          },
+          "timeoutSeconds": {
+            "label": "Thời gian chờ (giây)",
+            "description": "Thời gian tối đa chờ phản hồi từ Gemini"
+          },
+          "cacheTtlHours": {
+            "label": "Cache TTL (giờ)",
+            "description": "Thời gian lưu cache cho các yêu cầu giống nhau"
+          },
+          "asyncMode": {
+            "label": "Chế độ bất đồng bộ",
+            "description": "Xử lý qua hàng đợi (khuyến nghị) thay vì chặn HTTP"
+          },
+          "requireMinInput": {
+            "label": "Yêu cầu đầu vào tối thiểu",
+            "description": "Chặn yêu cầu không có tiêu đề/mô tả/phụ đề/OCR"
+          }
+        },
+        "lastUpdatedBy": "Cập nhật lần cuối bởi {name}",
+        "buttons": {
+          "save": "Lưu cài đặt",
+          "saving": "Đang lưu..."
+        },
+        "toast": {
+          "saved": "Đã lưu cài đặt AI Studio.",
+          "error": "Lưu cài đặt thất bại."
+        }
+      },
+      "requests": {
+        "filters": {
+          "allStatuses": "Tất cả trạng thái",
+          "pending": "Đang chờ",
+          "processing": "Đang xử lý",
+          "completed": "Hoàn thành",
+          "failed": "Thất bại"
+        },
+        "columns": {
+          "uuid": "UUID",
+          "user": "Người dùng",
+          "status": "Trạng thái",
+          "intent": "Mục đích",
+          "model": "Mô hình",
+          "tokens": "Tokens",
+          "cost": "Chi phí",
+          "latency": "Độ trễ",
+          "applied": "Đã dùng",
+          "created": "Ngày tạo",
+          "time": "Thời gian"
+        },
+        "detail": {
+          "shortCaption": "Caption ngắn",
+          "hashtags": "Hashtags",
+          "error": "Lỗi",
+          "safetyNotes": "Ghi chú an toàn"
+        },
+        "appliedMark": "✓ Đã áp dụng",
+        "noRequests": "Không tìm thấy yêu cầu nào.",
+        "total": "{count} yêu cầu",
+        "pagination": {
+          "page": "Trang {current} / {total}"
+        }
+      },
+      "knowledge": {
+        "title": "Kho kiến thức",
+        "description": "Tải tài liệu để xây dựng kho kiến thức cho AI Copilot (RAG)",
+        "breadcrumb": "Kho kiến thức",
+        "count": "{count, plural, one {# tài liệu đã lập chỉ mục} other {# tài liệu đã lập chỉ mục}}",
+        "addDocument": "Thêm tài liệu",
+        "newDocument": "Tài liệu mới",
+        "uploadFile": "Tải file",
+        "pasteText": "Dán văn bản",
+        "titleLabel": "Tiêu đề",
+        "titlePlaceholder": "VD: Quy tắc cộng đồng Snapi",
+        "descriptionLabel": "Mô tả",
+        "descriptionHint": "(tuỳ chọn, tối đa 500 ký tự)",
+        "descriptionPlaceholder": "Tóm tắt ngắn gọn tài liệu này bao gồm những nội dung gì để AI biết khi nào cần tham chiếu…",
+        "sourceTypeLabel": "Loại nguồn",
+        "languageLabel": "Ngôn ngữ",
+        "fileLabel": "File",
+        "fileHint": "(PDF, TXT, DOCX — tối đa 10 MB)",
+        "contentLabel": "Nội dung",
+        "contentPlaceholder": "Dán nội dung tài liệu vào đây (hỗ trợ Markdown)…",
+        "cancel": "Huỷ",
+        "upload": "Tải lên",
+        "uploading": "Đang tải…",
+        "indexed": "Đã lập chỉ mục",
+        "indexing": "Đang lập chỉ mục…",
+        "empty": "Chưa có tài liệu. Tải PDF, TXT hoặc DOCX để bắt đầu.",
+        "deleteTitle": "Xoá tài liệu",
+        "deleteDescription": "Thao tác này sẽ xoá toàn bộ chunk đã lập chỉ mục. Không thể hoàn tác.",
+        "deleteConfirm": "Xoá",
+        "toast": {
+          "uploaded": "Tài liệu đã được tải lên và đang lập chỉ mục",
+          "uploadFailed": "Tải tài liệu thất bại",
+          "deleted": "Đã xoá tài liệu",
+          "deleteFailed": "Xoá tài liệu thất bại",
+          "titleRequired": "Tiêu đề là bắt buộc",
+          "fileRequired": "Vui lòng chọn file",
+          "contentRequired": "Nội dung là bắt buộc",
+          "loadFailed": "Không thể tải nội dung tài liệu"
+        },
+        "sourceTypes": {
+          "faq": "FAQ",
+          "guide": "Hướng dẫn",
+          "policy": "Chính sách",
+          "feature": "Tài liệu tính năng",
+          "other": "Khác"
+        },
+        "languages": {
+          "vi": "Tiếng Việt",
+          "en": "Tiếng Anh"
+        }
+      },
+      "promptTemplates": {
+        "title": "Mẫu prompt",
+        "description": "Quản lý prompt theo gateway, engine và template xử lý của AI Copilot",
+        "breadcrumb": "Mẫu prompt",
+        "lock": "Khoá",
+        "unlock": "Mở khoá",
+        "confirmUnlockTitle": "Mở khoá mẫu",
+        "confirmUnlockDescription": "Bạn có chắc muốn mở khoá và chỉnh sửa mẫu này? Thay đổi sẽ ảnh hưởng đến toàn bộ phản hồi AI dùng template này.",
+        "cancel": "Huỷ",
+        "save": "Lưu",
+        "saving": "Đang lưu…",
+        "active": "Đang hoạt động",
+        "inactive": "Không hoạt động",
+        "unsaved": "Chưa lưu",
+        "contextNotice": "Các template ngữ cảnh được ghép tự động vào system prompt phù hợp. Thay đổi có hiệu lực sau tối đa 10 phút do cache.",
+        "fields": {
+          "systemPrompt": "Prompt hệ thống",
+          "userTemplate": "Template người dùng"
+        },
+        "toast": {
+          "saved": "Đã lưu mẫu.",
+          "saveFailed": "Lưu mẫu thất bại.",
+          "locked": "Đã khoá mẫu.",
+          "unlocked": "Đã mở khoá mẫu."
+        },
+        "categories": {
+          "platform": "Ngữ cảnh nền tảng",
+          "context": "Ngữ cảnh hệ thống",
+          "routing": "Gateway & điều phối",
+          "data": "Planner & tổng hợp dữ liệu",
+          "generative": "Tạo nội dung",
+          "analysis": "Phân tích video",
+          "fallback": "Dự phòng",
+          "style": "Phong cách & giọng điệu",
+          "moderation": "Kiểm duyệt nội dung",
+          "other": "Khác"
+        }
+      }
+    },
+    "scheduledPosts": {
+      "title": "Bài viết đã lên lịch",
+      "description": "Giám sát, kiểm soát và kiểm toán toàn bộ bài đăng đã lên lịch của creator.",
+      "breadcrumb": "Bài viết đã lên lịch",
+      "tabs": {
+        "metrics": "Thống kê",
+        "requests": "Yêu cầu"
+      },
+      "metrics": {
+        "periods": {
+          "today": "Hôm nay",
+          "week": "Tuần này",
+          "month": "Tháng này",
+          "year": "Năm này"
+        },
+        "stats": {
+          "totalScheduled": "Tổng đã lên lịch",
+          "pending": "Đang chờ",
+          "published": "Đã đăng",
+          "failed": "Thất bại",
+          "cancelled": "Đã hủy",
+          "successRate": "Tỷ lệ thành công",
+          "avgDelay": "Độ trễ trung bình",
+          "bySource": "Theo nguồn"
+        },
+        "sub": {
+          "fromScheduledAt": "Từ scheduled_at → published_at",
+          "manualCalendar": "Thủ công / Lịch"
+        },
+        "charts": {
+          "dailyTrend": "Xu hướng theo ngày",
+          "published": "Đã đăng",
+          "failed": "Thất bại",
+          "cancelled": "Đã hủy",
+          "pending": "Đang chờ"
+        },
+        "topSchedulers": {
+          "title": "Top Schedulers",
+          "scheduled": "{count} đã lên lịch",
+          "published": "{count} đã đăng"
+        }
+      },
+      "table": {
+        "filters": {
+          "allStatuses": "Tất cả trạng thái",
+          "pending": "Đang chờ",
+          "processing": "Đang xử lý",
+          "published": "Đã đăng",
+          "failed": "Thất bại",
+          "cancelled": "Đã hủy",
+          "allSources": "Tất cả nguồn",
+          "manual": "Thủ công",
+          "calendar": "Lịch",
+          "userUuidPlaceholder": "UUID người dùng..."
+        },
+        "noResults": "Không có kết quả nào.",
+        "labels": {
+          "scheduled": "Scheduled",
+          "published": "Published"
+        },
+        "actions": {
+          "cancel": "Hủy",
+          "retry": "Thử lại"
+        },
+        "toast": {
+          "cancelled": "Schedule đã bị hủy bởi admin.",
+          "cancelError": "Không thể hủy schedule.",
+          "retried": "Schedule đã được đưa vào hàng chờ lại.",
+          "retryError": "Không thể thử lại schedule."
+        },
+        "pagination": {
+          "page": "{current} / {total}"
+        }
+      }
+    },
+    "dashboard": {
+      "title": "Bảng điều khiển",
+      "description": "Tổng quan hệ thống và hoạt động kiểm duyệt",
+      "statistics": "Thống kê",
+      "recentActivity": "Hoạt động gần đây",
+      "recentAdminActivity": "Hoạt động quản trị gần đây",
+      "viewAll": "Xem tất cả",
+      "totalUsers": "Tổng người dùng",
+      "totalPosts": "Tổng video",
+      "bannedUsers": "Người dùng bị khóa",
+      "adminActions": "Hành động quản trị",
+      "thisPeriod": "+{count} trong kỳ",
+      "today": "hôm nay",
+      "needsReview": "Cần xem xét",
+      "needsReviewSub": "Hàng đợi kiểm duyệt",
+      "pendingAppeals": "Kháng cáo chờ duyệt",
+      "charts": "Biểu đồ",
+      "userGrowthChart": {
+        "title": "Người dùng mới",
+        "description": "Đăng ký mới mỗi ngày trong 7 ngày qua",
+        "users": "Người dùng"
+      },
+      "contentStatusChart": {
+        "title": "Trạng thái nội dung",
+        "description": "Bài đăng theo trạng thái xuất bản",
+        "published": "Đã đăng",
+        "scheduled": "Đã lên lịch",
+        "draft": "Bản nháp"
+      }
+    },
+    "moderation": {
+      "title": "Kiểm duyệt bài viết"
+    },
+    "users": {
+      "title": "Quản lý người dùng",
+      "description": "Quản lý trạng thái và thao tác kiểm duyệt người dùng",
+      "emptyState": "Không có người dùng",
+      "columns": {
+        "id": "ID",
+        "username": "Tên người dùng",
+        "email": "Email",
+        "status": "Trạng thái",
+        "actions": "Thao tác",
+        "aiStudio": {
+          "title": "AI Studio"
+        },
+        "scheduledPosts": {
+          "title": "Bài đăng hẹn giờ"
+        }
+      },
+      "filters": {
+        "allStatuses": "Tất cả trạng thái",
+        "active": "Hoạt động",
+        "banned": "Bị khóa",
+        "deleted": "Đã xóa",
+        "recent": "Mới nhất",
+        "oldest": "Cũ nhất"
+      },
+      "actions": {
+        "ban": "Khóa",
+        "unban": "Mở khóa",
+        "delete": "Xóa",
+        "restore": "Khôi phục",
+        "confirmBan": "Xác nhận khóa",
+        "confirmUnban": "Xác nhận mở khóa",
+        "confirmDelete": "Xác nhận xóa",
+        "confirmRestore": "Xác nhận khôi phục",
+        "resetPassword": "Đặt lại mật khẩu",
+        "sendEmail": "Gửi Email",
+        "viewDetails": "Xem chi tiết"
+      },
+      "detail": {
+        "title": "Chi tiết người dùng",
+        "stats": {
+          "followers": "Follower",
+          "following": "Đang theo dõi",
+          "likes": "Lượt thích",
+          "posts": "Bài đăng"
+        },
+        "fields": {
+          "email": "Email",
+          "role": "Vai trò",
+          "verify": "Xác thực",
+          "createdAt": "Ngày tạo",
+          "bannedAt": "Bị khóa lúc",
+          "deletedAt": "Đã xóa lúc",
+          "banReason": "Lý do khóa",
+          "status": "Trạng thái"
+        }
+      },
+      "labels": {
+        "reason": "Lý do",
+        "duration": "Thời hạn (ngày)",
+        "subject": "Tiêu đề",
+        "mailMessage": "Nội dung",
+        "newPassword": "Mật khẩu mới",
+        "confirmPassword": "Xác nhận mật khẩu"
+      },
+      "placeholders": {
+        "searchUsers": "Tìm theo tên hoặc email",
+        "banReason": "Nhập lý do khóa",
+        "deleteReason": "Nhập lý do xóa",
+        "duration": "Thời hạn tùy chọn"
+      },
+      "errors": {
+        "reasonRequired": "Lý do là bắt buộc",
+        "reasonMinLength": "Lý do tối thiểu 10 ký tự",
+        "durationInvalid": "Thời hạn phải là số dương",
+        "subjectMinLength": "Tiêu đề phải có ít nhất 3 ký tự",
+        "messageMinLength": "Nội dung phải có ít nhất 10 ký tự",
+        "passwordMinLength": "Mật khẩu phải có ít nhất 8 ký tự",
+        "passwordMismatch": "Mật khẩu không khớp"
+      },
+      "messages": {
+        "banSuccess": "Khóa người dùng thành công",
+        "banError": "Khóa người dùng thất bại",
+        "unbanSuccess": "Mở khóa người dùng thành công",
+        "unbanError": "Mở khóa người dùng thất bại",
+        "deleteSuccess": "Xóa người dùng thành công",
+        "deleteError": "Xóa người dùng thất bại",
+        "restoreSuccess": "Khôi phục người dùng thành công",
+        "restoreError": "Khôi phục người dùng thất bại",
+        "sendMailSuccess": "Gửi email thành công",
+        "sendMailError": "Gửi email thất bại",
+        "resetPasswordSuccess": "Đặt lại mật khẩu thành công",
+        "resetPasswordError": "Đặt lại mật khẩu thất bại"
+      },
+      "dialogs": {
+        "deleteTitle": "Xóa người dùng",
+        "deleteSubtitle": "Xóa tài khoản @{username}",
+        "deleteWarning": "Hành động này không thể hoàn tác.",
+        "unbanSubtitle": "Mở khóa tài khoản @{username}",
+        "restoreSubtitle": "Khôi phục tài khoản @{username}",
+        "sendMailSubtitle": "Gửi email trực tiếp đến {username}",
+        "resetPasswordTitle": "Đặt lại mật khẩu",
+        "resetPasswordSubtitle": "Đặt mật khẩu mới cho @{username}"
+      },
+      "banDialog": {
+        "subtitle": "Khóa tài khoản @{username}"
+      },
+      "hints": {
+        "durationHint": "Để trống nếu muốn khóa vĩnh viễn"
+      }
+    },
+    "posts": {
+      "title": "Kiểm duyệt bài viết",
+      "description": "Rà soát và kiểm duyệt bài viết",
+      "emptyState": "Không có bài viết",
+      "columns": {
+        "id": "ID",
+        "video": "Video",
+        "title": "Nội dung",
+        "creator": "Tác giả",
+        "author": "Tác giả",
+        "views": "Lượt xem",
+        "likes": "Lượt thích",
+        "comments": "Bình luận",
+        "visibility": "Hiển thị",
+        "status": "Trạng thái",
+        "uploadDate": "Ngày tạo",
+        "actions": "Thao tác"
+      },
+      "audience": {
+        "public": "Công khai",
+        "friends": "Bạn bè",
+        "private": "Riêng tư",
+        "following": "Đang theo dõi"
+      },
+      "liveStatus": {
+        "live": "Đang phát",
+        "removed": "Đã xóa"
+      },
+      "filters": {
+        "allStatuses": "Tất cả trạng thái",
+        "visible": "Hiển thị",
+        "recent": "Mới nhất",
+        "oldest": "Cũ nhất"
+      },
+      "status": {
+        "published": "Đã đăng",
+        "scheduled": "Đã lên lịch",
+        "draft": "Bản nháp",
+        "failed": "Thất bại",
+        "archived": "Đã lưu trữ",
+        "hidden": "Đã ẩn",
+        "deleted": "Đã xóa",
+        "live": "Đang hiển thị",
+        "all": "Tất cả"
+      },
+      "scheduledSection": {
+        "title": "Bài viết lên lịch",
+        "description": "Thống kê và danh sách bài viết đã lên lịch"
+      },
+      "actions": {
+        "delete": "Xóa",
+        "confirmDelete": "Xác nhận xóa",
+        "preview": "Xem trước"
+      },
+      "preview": {
+        "title": "Xem trước bài viết",
+        "loading": "Đang tải xem trước...",
+        "noMedia": "Không có media",
+        "stats": {
+          "likes": "Lượt thích",
+          "comments": "Bình luận",
+          "bookmarks": "Đã lưu",
+          "views": "Lượt xem"
+        },
+        "fields": {
+          "content": "Nội dung"
+        }
+      },
+      "labels": {
+        "reason": "Lý do",
+        "customReason": "Lý do tùy chỉnh"
+      },
+      "placeholders": {
+        "searchPosts": "Tìm bài viết",
+        "selectReason": "Chọn lý do",
+        "customReason": "Nhập lý do tùy chỉnh"
+      },
+      "reasons": {
+        "other": "Khác"
+      },
+      "errors": {
+        "reasonRequired": "Lý do là bắt buộc"
+      },
+      "messages": {
+        "deleteSuccess": "Xóa bài viết thành công",
+        "deleteError": "Xóa bài viết thất bại"
+      },
+      "dialogs": {
+        "deleteSubtitle": "Xóa bài viết của @{username}",
+        "deleteWarning": "Bài viết này sẽ bị loại khỏi bảng tin."
+      }
+    },
+    "comments": {
+      "title": "Kiểm duyệt bình luận",
+      "description": "Rà soát và kiểm duyệt bình luận",
+      "emptyState": "Không có bình luận",
+      "columns": {
+        "id": "ID",
+        "author": "Tác giả",
+        "content": "Nội dung",
+        "parentPost": "Bài viết gốc",
+        "date": "Ngày tạo",
+        "actions": "Thao tác"
+      },
+      "filters": {
+        "recent": "Mới nhất",
+        "oldest": "Cũ nhất"
+      },
+      "actions": {
+        "delete": "Xóa",
+        "confirmDelete": "Xác nhận xóa",
+        "view": "Xem"
+      },
+      "detail": {
+        "title": "Chi tiết bình luận",
+        "fields": {
+          "content": "Nội dung",
+          "likes": "Lượt thích",
+          "parentId": "Bình luận gốc",
+          "createdAt": "Ngày tạo",
+          "author": "Tác giả"
+        }
+      },
+      "labels": {
+        "reason": "Lý do"
+      },
+      "placeholders": {
+        "searchComments": "Tìm bình luận",
+        "deleteReason": "Nhập lý do xóa"
+      },
+      "errors": {
+        "reasonRequired": "Lý do là bắt buộc",
+        "reasonMinLength": "Lý do tối thiểu 10 ký tự"
+      },
+      "messages": {
+        "deleteSuccess": "Xóa bình luận thành công",
+        "deleteError": "Xóa bình luận thất bại"
+      },
+      "dialogs": {
+        "deleteSubtitle": "Xóa bình luận của @{username}",
+        "deleteWarning": "Hành động này không thể hoàn tác."
+      }
+    },
+    "activity": {
+      "title": "Nhật ký hoạt động",
+      "description": "Xem hoạt động kiểm duyệt và hệ thống",
+      "emptyState": "Không có hoạt động",
+      "placeholders": {
+        "searchActivity": "Tìm hoạt động"
+      },
+      "periods": {
+        "last24h": "24 giờ qua",
+        "last7d": "7 ngày qua",
+        "last30d": "30 ngày qua",
+        "allTime": "Tất cả"
+      },
+      "filters": {
+        "allTypes": "Tất cả loại"
+      },
+      "prepositions": {
+        "on": "trên"
+      },
+      "actions": {
+        "viewDetails": "Xem chi tiết"
+      },
+      "detail": {
+        "title": "Chi tiết hoạt động",
+        "fields": {
+          "action": "Hành động",
+          "actor": "Người thực hiện",
+          "resourceType": "Loại tài nguyên",
+          "resourceId": "ID tài nguyên",
+          "timestamp": "Thời điểm",
+          "reason": "Lý do",
+          "metadata": "Metadata"
+        }
+      }
+    },
+    "settings": {
+      "title": "Cài đặt quản trị",
+      "description": "Cập nhật hồ sơ và bảo mật tài khoản quản trị",
+      "adminNote": "Thay đổi chỉ áp dụng cho tài khoản admin của bạn.",
+      "tabs": {
+        "profile": "Hồ sơ",
+        "security": "Bảo mật",
+        "privacy": "Quyền riêng tư",
+        "email": "Email"
+      }
+    },
+    "appeals": {
+      "title": "Kiểm duyệt kháng cáo",
+      "description": "Xem xét và xử lý kháng cáo từ người dùng",
+      "emptyState": "Không có kháng cáo",
+      "filters": {
+        "allStatuses": "Tất cả trạng thái",
+        "allTypes": "Tất cả loại"
+      },
+      "types": {
+        "user_ban": "Khóa tài khoản",
+        "user_unban": "Mở khóa tài khoản",
+        "user_deleted": "Xóa tài khoản",
+        "post_deleted": "Xóa bài viết",
+        "comment_deleted": "Xóa bình luận"
+      },
+      "statuses": {
+        "pending": "Đang chờ",
+        "approved": "Đã duyệt",
+        "rejected": "Đã từ chối"
+      },
+      "columns": {
+        "id": "ID",
+        "user": "Người dùng",
+        "type": "Loại kháng cáo",
+        "reason": "Lý do",
+        "status": "Trạng thái",
+        "createdAt": "Ngày tạo",
+        "actions": "Thao tác",
+        "evidence": "Minh chứng"
+      },
+      "actions": {
+        "approve": "Duyệt",
+        "reject": "Từ chối",
+        "viewDetails": "Xem chi tiết"
+      },
+      "detail": {
+        "title": "Chi tiết kháng cáo",
+        "resourceTitle": "Tài nguyên",
+        "evidenceTitle": "Minh chứng",
+        "noEvidence": "Không có minh chứng",
+        "resourceUnavailable": "Tài nguyên đã bị xóa hoặc không còn khả dụng",
+        "fields": {
+          "status": "Trạng thái",
+          "type": "Loại",
+          "reason": "Lý do",
+          "response": "Phản hồi admin",
+          "reviewer": "Người duyệt",
+          "createdAt": "Ngày tạo",
+          "reviewedAt": "Ngày duyệt",
+          "resourceType": "Loại tài nguyên",
+          "resourceId": "ID tài nguyên"
+        }
+      },
+      "evidenceDialog": {
+        "title": "Minh chứng kháng cáo",
+        "imageCount": "Ảnh {current} trên {total}",
+        "imageAlt": "Ảnh minh chứng {index}",
+        "prev": "Ảnh trước",
+        "next": "Ảnh sau",
+        "zoomIn": "Phóng to",
+        "zoomOut": "Thu nhỏ",
+        "download": "Tải về"
+      },
+      "labels": {
+        "adminResponse": "Phản hồi quản trị"
+      },
+      "placeholders": {
+        "searchAppeals": "Tìm kháng cáo",
+        "approveResponse": "Phản hồi tùy chọn khi phê duyệt",
+        "rejectResponse": "Lý do bắt buộc khi từ chối"
+      },
+      "dialogs": {
+        "approve": "Phê duyệt kháng cáo này và hoàn tác hành động kiểm duyệt trước đó.",
+        "reject": "Từ chối kháng cáo này và giữ nguyên quyết định kiểm duyệt hiện tại."
+      },
+      "messages": {
+        "approveSuccess": "Phê duyệt kháng cáo thành công",
+        "rejectSuccess": "Từ chối kháng cáo thành công",
+        "reviewError": "Không thể xử lý kháng cáo",
+        "missingAppealUuid": "Thiếu mã định danh kháng cáo từ phản hồi API"
+      },
+      "errors": {
+        "rejectReasonMin": "Lý do từ chối phải có ít nhất 10 ký tự"
+      }
+    },
+    "actionLabels": {
+      "ban": "Khóa tài khoản",
+      "unban": "Mở khóa tài khoản",
+      "delete_user": "Xóa người dùng",
+      "restore_user": "Khôi phục người dùng",
+      "delete_post": "Xóa bài viết",
+      "restore_post": "Khôi phục bài viết",
+      "delete_comment": "Xóa bình luận",
+      "restore_comment": "Khôi phục bình luận",
+      "reset_user_password": "Đặt lại mật khẩu",
+      "send_email_to_user": "Gửi email",
+      "approve_appeal": "Phê duyệt kháng cáo",
+      "reject_appeal": "Từ chối kháng cáo",
+      "update": "Cập nhật",
+      "user_registered": "Người dùng đăng ký",
+      "user_verified": "Xác thực người dùng",
+      "user_banned": "Khóa người dùng",
+      "user_unbanned": "Mở khóa người dùng",
+      "post_uploaded": "Đăng bài viết",
+      "post_deleted": "Xóa bài viết",
+      "post_liked": "Thích bài viết",
+      "post_unliked": "Bỏ thích bài viết",
+      "post_bookmarked": "Lưu bài viết",
+      "comment_created": "Tạo bình luận",
+      "comment_deleted": "Xóa bình luận",
+      "user_followed": "Theo dõi người dùng",
+      "user_unfollowed": "Bỏ theo dõi người dùng",
+      "password_changed": "Thay đổi mật khẩu",
+      "login": "Đăng nhập",
+      "logout": "Đăng xuất"
+    },
+    "activitySentence": {
+      "ban": "đã khóa người dùng",
+      "unban": "đã mở khóa người dùng",
+      "delete_user": "đã xóa người dùng",
+      "restore_user": "đã khôi phục người dùng",
+      "delete_post": "đã xóa video",
+      "restore_post": "đã khôi phục video",
+      "delete_comment": "đã xóa bình luận",
+      "restore_comment": "đã khôi phục bình luận",
+      "reset_user_password": "đã đặt lại mật khẩu cho",
+      "send_email_to_user": "đã gửi email đến",
+      "approve_appeal": "đã duyệt kháng cáo",
+      "reject_appeal": "đã từ chối kháng cáo",
+      "update": "đã cập nhật",
+      "you": "Bạn"
+    },
+    "violationReasons": {
+      "spam": "Spam",
+      "harassment": "Quấy rối",
+      "inappropriate_content": "Nội dung không phù hợp",
+      "copyright_infringement": "Vi phạm bản quyền",
+      "misinformation": "Thông tin sai lệch",
+      "hate_speech": "Ngôn từ thù địch",
+      "violence": "Bạo lực",
+      "other": "Khác"
+    },
+    "userStatus": {
+      "active": "Hoạt động",
+      "banned": "Bị khóa",
+      "deleted": "Đã xóa"
+    },
+    "postStatus": {
+      "visible": "Hiển thị",
+      "deleted": "Đã xóa"
+    }
+  }
+}

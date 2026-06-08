@@ -1,0 +1,83 @@
+{
+    "ProfilePage": {
+        "bio": "No bio yet.",
+        "stats": {
+            "following": "Following",
+            "followers": "Followers",
+            "likes": "Likes"
+        },
+        "actions": {
+            "follow": "Follow",
+            "following": "Following",
+            "message": "Message",
+            "editProfile": "Edit profile",
+            "settings": "Settings",
+            "loginRequired": "Please sign in to send messages.",
+            "messageFailed": "Could not open conversation. Please try again.",
+            "messageComingSoon": "Messaging feature will be available soon!"
+        },
+        "relationsModal": {
+            "title": "Connections",
+            "tabs": {
+                "friends": "Friends",
+                "suggested": "Suggested"
+            },
+            "actions": {
+                "followBack": "Follow back",
+                "friends": "Friends"
+            },
+            "emptyTitle": "No data",
+            "empty": "No users found.",
+            "privateTitle": "Private account",
+            "privateDescription": "This list is private."
+        },
+        "editProfileDialog": {
+            "title": "Edit profile",
+            "username": {
+                "label": "Username",
+                "placeholder": "Username",
+                "profileUrl": "{url}@{username}",
+                "hint": "Usernames can only contain letters, numbers, underscores and periods. Changing your username will also change your profile link."
+            },
+            "name": {
+                "label": "Name",
+                "placeholder": "Name",
+                "hint": "Your nickname can only be changed once every 7 days."
+            },
+            "bio": {
+                "label": "Bio",
+                "placeholder": "Bio"
+            },
+            "buttons": {
+                "cancel": "Cancel",
+                "save": "Save"
+            },
+            "avatar": {
+                "label": "Avatar",
+                "placeholder": "Select an avatar",
+                "validation": {
+                    "invalidType": "Invalid image format. Only {accepted} files are supported.",
+                    "tooLarge": "Image is too large. Maximum allowed size is {maxSizeMb} MB."
+                }
+            }
+        },
+        "noContent": {
+            "videos": {
+                "title": "No content",
+                "description": "This user has not published any videos."
+            },
+            "favorites": {
+                "title": "No bookmarked posts yet",
+                "description": "This user has not bookmarked any posts yet."
+            },
+            "liked": {
+                "title": "No liked posts yet",
+                "description": "This user has not liked any posts yet."
+            },
+            "private": {
+                "title": "Private account",
+                "description": "This content is private."
+            }
+        }
+    }
+}

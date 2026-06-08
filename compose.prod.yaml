@@ -1,0 +1,315 @@
+name: ${COMPOSE_PROJECT_NAME:-snapi}_production
+
+services:
+  backend-nginx:
+    container_name: ${CONTAINER_PREFIX:-snapi}_backend_nginx
+    build:
+      context: .
+      dockerfile: ./.docker/production/backend/nginx/Dockerfile
+    restart: unless-stopped
+    environment:
+      CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN:-*}
+    volumes:
+      - laravel-storage-production:/var/www/storage:ro
+    networks:
+      - app-production
+    ports:
+      - "${NGINX_BACKEND_PORT:-${NGINX_PORT:-9696}}:80"
+    depends_on:
+      php-fpm:
+        condition: service_healthy
+
+  frontend-nginx:
+    container_name: ${CONTAINER_PREFIX:-snapi}_frontend_nginx
+    image: nginx:alpine
+    restart: unless-stopped
+    environment:
+      NGINX_ENVSUBST_TEMPLATE_DIR: /etc/nginx/templates
+      NGINX_ENVSUBST_TEMPLATE_SUFFIX: .template
+      NGINX_ENVSUBST_OUTPUT_DIR: /etc/nginx
+    volumes:
+      - ./.docker/common/nginx/frontend-templates:/etc/nginx/templates:ro
+    networks:
+      - app-production
+    ports:
+      - "${NGINX_FRONTEND_PORT:-9697}:80"
+    depends_on:
+      frontend:
+        condition: service_healthy
+
+  php-fpm:
+    container_name: ${CONTAINER_PREFIX:-snapi}_php-fpm
+    build:
+      context: .
+      dockerfile: ./.docker/common/backend/php-fpm/Dockerfile
+      target: production
+      args:
+        DOCKER_ENV: production
+    restart: unless-stopped
+    env_file:
+      - ${BACKEND_ENV_FILE:-./backend/.env}
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      DB_HOST: postgres
+      REDIS_HOST: redis
+    command: ["php-fpm", "-F"]
+    networks:
+      - app-production
+    volumes:
+      - laravel-storage-production:/var/www/storage
+    healthcheck:
+      test: ["CMD-SHELL", "php-fpm-healthcheck || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  worker:
+    container_name: ${CONTAINER_PREFIX:-snapi}_worker
+    build:
+      context: .
+      dockerfile: ./.docker/common/backend/php-fpm/Dockerfile
+      target: production
+      args:
+        DOCKER_ENV: production
+    restart: unless-stopped
+    env_file:
+      - ${BACKEND_ENV_FILE:-./backend/.env}
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      DB_HOST: postgres
+      REDIS_HOST: redis
+    command: ["/usr/bin/supervisord", "-c", "/etc/supervisord.backend.conf"]
+    networks:
+      - app-production
+    volumes:
+      - laravel-storage-production:/var/www/storage
+      - ./.docker/common/backend/php-fpm/supervisord.backend.conf:/etc/supervisord.backend.conf:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+
+  postgres:
+    container_name: ${CONTAINER_PREFIX:-snapi}_postgres
+    image: postgres:12.7
+    restart: unless-stopped
+    user: postgres
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-Snapi}
+      POSTGRES_USER: ${POSTGRES_USER:-root}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Snapi_password}
+    volumes:
+      - postgres-data-production:/var/lib/postgresql
+    networks:
+      - app-production
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-root} -d ${POSTGRES_DB:-Snapi} || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    container_name: ${CONTAINER_PREFIX:-snapi}_redis
+    networks:
+      - app-production
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    container_name: ${CONTAINER_PREFIX:-snapi}_frontend
+    build:
+      context: .
+      dockerfile: ./.docker/production/frontend/Dockerfile
+      args:
+        NEXT_PUBLIC_API_ENDPOINT: ${FRONTEND_PUBLIC_API_ENDPOINT}
+        NEXT_PUBLIC_URL: ${FRONTEND_PUBLIC_URL}
+        NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI: ${FRONTEND_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI}
+        NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${FRONTEND_PUBLIC_GOOGLE_CLIENT_ID}
+        NEXT_APP_ENV: ${NEXT_APP_ENV:-production}
+    restart: unless-stopped
+    env_file:
+      - ${FRONTEND_ENV_FILE:-./frontend/.env}
+    environment:
+      NODE_ENV: production
+      NEXT_APP_ENV: ${NEXT_APP_ENV:-production}
+      NEXT_PUBLIC_API_ENDPOINT: ${FRONTEND_PUBLIC_API_ENDPOINT}
+      NEXT_PUBLIC_URL: ${FRONTEND_PUBLIC_URL}
+      NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI: ${FRONTEND_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI}
+      NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${FRONTEND_PUBLIC_GOOGLE_CLIENT_ID}
+      PORT: "3000"
+    expose:
+      - "3000"
+    networks:
+      - app-production
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://localhost:3000').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  mailcatcher:
+    image: dockage/mailcatcher:0.7.1
+    container_name: ${CONTAINER_PREFIX:-snapi}_mailcatcher
+    profiles:
+      - tools
+    ports:
+      - ${MAILCATCHER_WEB_PORT:-1080}:1080
+      - ${MAILCATCHER_SMTP_PORT:-1025}:1025
+    networks:
+      - app-production
+    restart: unless-stopped
+
+  minio:
+    image: quay.io/minio/minio:RELEASE.2025-02-03T21-03-04Z
+    container_name: ${CONTAINER_PREFIX:-snapi}_minio
+    command: minio server /data --console-address ":9001"
+    volumes:
+      - minio-data-production:/data
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minio_root_user}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minio_root_password}
+    ports:
+      - ${MINIO_PORT:-9000}:9000
+      - ${MINIO_PORT_CONSOLE:-9001}:9001
+    networks:
+      - app-production
+    restart: unless-stopped
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.1
+    container_name: ${CONTAINER_PREFIX:-snapi}_kafka
+    restart: unless-stopped
+    ports:
+      - "${KAFKA_PORT:-9092}:9092"
+    environment:
+      CLUSTER_ID: ${KAFKA_CLUSTER_ID:-MkU3OEVBNTcwNTJENDM2Qk}
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:29093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092,CONTROLLER://0.0.0.0:29093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:${KAFKA_PORT:-9092}
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_NUM_PARTITIONS: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    volumes:
+      - kafka-data-production:/var/lib/kafka/data
+    networks:
+      - app-production
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "kafka-topics --bootstrap-server localhost:9092 --list >/dev/null 2>&1",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: ${CONTAINER_PREFIX:-snapi}_kafka_ui
+    restart: unless-stopped
+    profiles:
+      - tools
+    ports:
+      - "${KAFKA_UI_PORT:-8087}:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: snapi-kafka
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+      DYNAMIC_CONFIG_ENABLED: "true"
+    depends_on:
+      kafka:
+        condition: service_healthy
+    networks:
+      - app-production
+
+  ai-serve:
+    container_name: ${CONTAINER_PREFIX:-snapi}_ai_serve
+    build:
+      context: .
+      dockerfile: ./.docker/common/ai/serve/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - ${AI_ENV_FILE:-./ai/.env}
+    ports:
+      - "${AI_SERVE_PORT:-8001}:8001"
+    depends_on:
+      kafka:
+        condition: service_healthy
+    networks:
+      - app-production
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8001/health', timeout=5).read()",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  ai-worker:
+    container_name: ${CONTAINER_PREFIX:-snapi}_ai_worker
+    build:
+      context: .
+      dockerfile: ./.docker/common/ai/serve/Dockerfile
+    restart: unless-stopped
+    command: ["python", "-m", "serve.moderation_worker"]
+    env_file:
+      - ${AI_ENV_FILE:-./ai/.env}
+    volumes:
+      - ./ai:/app
+    depends_on:
+      ai-serve:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    networks:
+      - app-production
+
+networks:
+  app-production:
+
+volumes:
+  postgres-data-production:
+  laravel-storage-production:
+  minio-data-production:
+  kafka-data-production:

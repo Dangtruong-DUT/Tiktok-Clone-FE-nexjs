@@ -1,0 +1,384 @@
+<mxfile host="app.diagrams.net" version="21.0.0">
+  <diagram id="video-upload-arch" name="Video Upload Architecture">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="5600" pageHeight="2800" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!--  SWIMLANE BACKGROUND BANDS                                  -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <mxCell id="bg_user"   value="" style="rounded=0;html=1;fillColor=#f5f5f5;strokeColor=#999999;opacity=60;" vertex="1" parent="1"><mxGeometry x="0" y="0"   width="5600" height="90"  as="geometry"/></mxCell>
+        <mxCell id="bg_next"   value="" style="rounded=0;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;opacity=60;" vertex="1" parent="1"><mxGeometry x="0" y="90"  width="5600" height="110" as="geometry"/></mxCell>
+        <mxCell id="bg_lar"    value="" style="rounded=0;html=1;fillColor=#d5e8d4;strokeColor=#82b366;opacity=60;" vertex="1" parent="1"><mxGeometry x="0" y="200" width="5600" height="190" as="geometry"/></mxCell>
+        <mxCell id="bg_redis"  value="" style="rounded=0;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;opacity=60;" vertex="1" parent="1"><mxGeometry x="0" y="390" width="5600" height="90"  as="geometry"/></mxCell>
+        <mxCell id="bg_ff"     value="" style="rounded=0;html=1;fillColor=#fff2cc;strokeColor=#d6b656;opacity=60;" vertex="1" parent="1"><mxGeometry x="0" y="480" width="5600" height="180" as="geometry"/></mxCell>
+        <mxCell id="bg_s3"     value="" style="rounded=0;html=1;fillColor=#f0f0f0;strokeColor=#888888;opacity=60;" vertex="1" parent="1"><mxGeometry x="0" y="660" width="5600" height="90"  as="geometry"/></mxCell>
+        <mxCell id="bg_pg"     value="" style="rounded=0;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;opacity=60;" vertex="1" parent="1"><mxGeometry x="0" y="750" width="5600" height="90"  as="geometry"/></mxCell>
+        <mxCell id="bg_cdn"    value="" style="rounded=0;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=60;" vertex="1" parent="1"><mxGeometry x="0" y="840" width="5600" height="90"  as="geometry"/></mxCell>
+
+        <!-- LANE LABELS -->
+        <mxCell id="lbl_user"  value="User"          style="text;html=1;fontStyle=1;fontSize=12;fillColor=#f5f5f5;strokeColor=#999999;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="0" y="0"   width="150" height="90"  as="geometry"/></mxCell>
+        <mxCell id="lbl_next"  value="Next.js"       style="text;html=1;fontStyle=1;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="0" y="90"  width="150" height="110" as="geometry"/></mxCell>
+        <mxCell id="lbl_lar"   value="Laravel API"   style="text;html=1;fontStyle=1;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="0" y="200" width="150" height="190" as="geometry"/></mxCell>
+        <mxCell id="lbl_redis" value="Redis Queue"   style="text;html=1;fontStyle=1;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="0" y="390" width="150" height="90"  as="geometry"/></mxCell>
+        <mxCell id="lbl_ff"    value="FFmpeg Worker" style="text;html=1;fontStyle=1;fontSize=12;fillColor=#fff2cc;strokeColor=#d6b656;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="0" y="480" width="150" height="180" as="geometry"/></mxCell>
+        <mxCell id="lbl_s3"    value="S3 / MinIO"    style="text;html=1;fontStyle=1;fontSize=12;fillColor=#f0f0f0;strokeColor=#888888;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="0" y="660" width="150" height="90"  as="geometry"/></mxCell>
+        <mxCell id="lbl_pg"    value="PostgreSQL"    style="text;html=1;fontStyle=1;fontSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="0" y="750" width="150" height="90"  as="geometry"/></mxCell>
+        <mxCell id="lbl_cdn"   value="CDN"           style="text;html=1;fontStyle=1;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;align=center;verticalAlign=middle;" vertex="1" parent="1"><mxGeometry x="0" y="840" width="150" height="90"  as="geometry"/></mxCell>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!--  SECTION HEADERS &amp; DIVIDERS                             -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <mxCell id="div1" value="" style="line;strokeColor=#333333;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="760"  y="0" width="10" height="930" as="geometry"/></mxCell>
+        <mxCell id="div2" value="" style="line;strokeColor=#333333;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="1430" y="0" width="10" height="930" as="geometry"/></mxCell>
+        <mxCell id="div3" value="" style="line;strokeColor=#333333;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="1990" y="0" width="10" height="930" as="geometry"/></mxCell>
+        <mxCell id="div4" value="" style="line;strokeColor=#333333;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="2990" y="0" width="10" height="930" as="geometry"/></mxCell>
+        <mxCell id="div5" value="" style="line;strokeColor=#333333;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="3410" y="0" width="10" height="930" as="geometry"/></mxCell>
+        <mxCell id="div6" value="" style="line;strokeColor=#333333;strokeWidth=2;" vertex="1" parent="1"><mxGeometry x="3870" y="0" width="10" height="930" as="geometry"/></mxCell>
+
+        <mxCell id="sh1" value="1. UPLOAD INITIALIZATION" style="text;html=1;fontStyle=1;fontSize=13;align=center;fillColor=#e6f3ff;strokeColor=#6c8ebf;" vertex="1" parent="1"><mxGeometry x="150" y="-40" width="620" height="30" as="geometry"/></mxCell>
+        <mxCell id="sh2" value="2. DIRECT UPLOAD (Presigned Multipart)" style="text;html=1;fontStyle=1;fontSize=13;align=center;fillColor=#e6ffe6;strokeColor=#82b366;" vertex="1" parent="1"><mxGeometry x="760" y="-40" width="680" height="30" as="geometry"/></mxCell>
+        <mxCell id="sh3" value="3. UPLOAD COMPLETE" style="text;html=1;fontStyle=1;fontSize=13;align=center;fillColor=#fff9e6;strokeColor=#d6b656;" vertex="1" parent="1"><mxGeometry x="1440" y="-40" width="560" height="30" as="geometry"/></mxCell>
+        <mxCell id="sh4" value="4. HLS PROCESSING PIPELINE" style="text;html=1;fontStyle=1;fontSize=13;align=center;fillColor=#fffde6;strokeColor=#d6b656;" vertex="1" parent="1"><mxGeometry x="2000" y="-40" width="1000" height="30" as="geometry"/></mxCell>
+        <mxCell id="sh5" value="5. STATUS POLLING" style="text;html=1;fontStyle=1;fontSize=13;align=center;fillColor=#f5e6ff;strokeColor=#9673a6;" vertex="1" parent="1"><mxGeometry x="3000" y="-40" width="420" height="30" as="geometry"/></mxCell>
+        <mxCell id="sh6" value="6. PUBLISH FLOW" style="text;html=1;fontStyle=1;fontSize=13;align=center;fillColor=#e6fff5;strokeColor=#82b366;" vertex="1" parent="1"><mxGeometry x="3420" y="-40" width="460" height="30" as="geometry"/></mxCell>
+        <mxCell id="sh7" value="7. PLAYBACK / STREAMING" style="text;html=1;fontStyle=1;fontSize=13;align=center;fillColor=#ffe6e6;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="3880" y="-40" width="580" height="30" as="geometry"/></mxCell>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!--  FLOW 1 — UPLOAD INITIALIZATION                             -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <mxCell id="f1_user1"  value="Open Studio&#xa;/ Upload Form"         style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f5f5f5;strokeColor=#666666;"   vertex="1" parent="1"><mxGeometry x="165"  y="25"  width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f1_nx1"    value="Select File"                           style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;"   vertex="1" parent="1"><mxGeometry x="165"  y="115" width="100" height="40" as="geometry"/></mxCell>
+        <mxCell id="f1_nx2"    value="Client Validate&#xa;(size / MIME)"     style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;"   vertex="1" parent="1"><mxGeometry x="285"  y="115" width="115" height="40" as="geometry"/></mxCell>
+        <mxCell id="f1_nx3"    value="POST /api/upload/init"                 style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;"   vertex="1" parent="1"><mxGeometry x="420"  y="115" width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="f1_sec1"   value="JWT Auth&#xa;Middleware"               style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;"   vertex="1" parent="1"><mxGeometry x="165"  y="220" width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="f1_sec2"   value="Rate Limiter&#xa;60 req/min"           style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;"   vertex="1" parent="1"><mxGeometry x="295"  y="220" width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="f1_sec3"   value="Validate Request&#xa;(mime / size)"    style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;"   vertex="1" parent="1"><mxGeometry x="425"  y="220" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f1_lar1"   value="Create Upload&#xa;Session (DB)"        style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;"   vertex="1" parent="1"><mxGeometry x="425"  y="310" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f1_lar2"   value="Generate&#xa;Presigned URL"            style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;"   vertex="1" parent="1"><mxGeometry x="565"  y="265" width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="f1_s3a"    value="Issue Presigned URL&#xa;TTL = 1 hour"  style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f0f0f0;strokeColor=#888888;"   vertex="1" parent="1"><mxGeometry x="565"  y="680" width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="f1_pg1"    value="INSERT upload_sessions&#xa;status = PENDING" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1"><mxGeometry x="425"  y="770" width="150" height="40" as="geometry"/></mxCell>
+        <mxCell id="f1_nx4"    value="Receive: session_uuid&#xa;upload_id / presigned_urls" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1"><mxGeometry x="565"  y="115" width="155" height="40" as="geometry"/></mxCell>
+        <mxCell id="f1_user2"  value="Upload Credentials&#xa;Ready"          style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f5f5f5;strokeColor=#666666;"   vertex="1" parent="1"><mxGeometry x="600"  y="25"  width="120" height="40" as="geometry"/></mxCell>
+
+        <!-- Flow 1 arrows -->
+        <mxCell id="e_f1_1"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f1_user1" target="f1_nx1"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f1_2"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f1_nx1"   target="f1_nx2"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f1_3"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f1_nx2"   target="f1_nx3"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f1_4"  value="HTTP" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f1_nx3"   target="f1_sec1" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f1_5"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f1_sec1"  target="f1_sec2" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f1_6"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f1_sec2"  target="f1_sec3" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f1_7"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f1_sec3"  target="f1_lar1" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f1_8"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f1_lar1"  target="f1_pg1"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f1_9"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f1_lar1"  target="f1_lar2" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f1_10" value="sign" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f1_lar2" target="f1_s3a" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f1_11" value="return URL" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f1_s3a" target="f1_lar2" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f1_12" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f1_lar2"  target="f1_nx4"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f1_13" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f1_nx4"   target="f1_user2" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!--  FLOW 2 — DIRECT UPLOAD (Multipart)                        -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <mxCell id="f2_user1"  value="Chunk File&#xa;(default 5 MB)"         style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f5f5f5;strokeColor=#666666;"   vertex="1" parent="1"><mxGeometry x="780"  y="25"  width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f2_nx1"    value="GET /upload/{id}&#xa;/part/{n}"        style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;"   vertex="1" parent="1"><mxGeometry x="780"  y="115" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f2_lar1"   value="Verify Session&#xa;+ Auth"             style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;"   vertex="1" parent="1"><mxGeometry x="780"  y="232" width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="f2_lar2"   value="Generate Part&#xa;Presigned URL"       style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;"   vertex="1" parent="1"><mxGeometry x="780"  y="305" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f2_s3a"    value="Sign Part URL"                         style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f0f0f0;strokeColor=#888888;"   vertex="1" parent="1"><mxGeometry x="780"  y="680" width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="f2_user2"  value="PUT Part → S3&#xa;via Presigned URL"   style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f5f5f5;strokeColor=#666666;"  vertex="1" parent="1"><mxGeometry x="930"  y="25"  width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="f2_s3b"    value="Store Part&#xa;Return ETag"            style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f0f0f0;strokeColor=#888888;"   vertex="1" parent="1"><mxGeometry x="930"  y="680" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f2_nx2"    value="Collect ETag&#xa;per part"             style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;"   vertex="1" parent="1"><mxGeometry x="930"  y="115" width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="f2_nx3"    value="Progress Event&#xa;(0 – 100%)"         style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;"   vertex="1" parent="1"><mxGeometry x="1060" y="115" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f2_user3"  value="Progress Bar&#xa;UI Update"            style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f5f5f5;strokeColor=#666666;"   vertex="1" parent="1"><mxGeometry x="1060" y="25"  width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="f2_nx4"    value="Retry on Error&#xa;(max 3 attempts)"   style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;"   vertex="1" parent="1"><mxGeometry x="1200" y="115" width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="f2_user4"  value="Upload Failed?&#xa;Abort / Retry"      style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;"   vertex="1" parent="1"><mxGeometry x="1200" y="25"  width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f2_lar3"   value="DELETE /upload/{id}&#xa;Abort + Cleanup" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="1300" y="270" width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="f2_s3c"    value="AbortMultipart&#xa;Upload"             style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;"   vertex="1" parent="1"><mxGeometry x="1300" y="680" width="120" height="40" as="geometry"/></mxCell>
+
+        <!-- Flow 2 arrows -->
+        <mxCell id="e_f2_1"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f2_user1" target="f2_nx1"   parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f2_2"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f2_nx1"   target="f2_lar1"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f2_3"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f2_lar1"  target="f2_lar2"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f2_4"  value="sign" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f2_lar2" target="f2_s3a" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f2_5"  value="return part URL" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f2_s3a" target="f2_nx1" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f2_6"  value="PUT direct" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f2_user2" target="f2_s3b" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f2_7"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f2_s3b"   target="f2_nx2"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f2_8"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f2_nx2"   target="f2_nx3"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f2_9"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f2_nx3"   target="f2_user3" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f2_10" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;dashed=1;" edge="1" source="f2_nx4" target="f2_lar3" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f2_11" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f2_lar3"  target="f2_s3c"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!--  FLOW 3 — UPLOAD COMPLETE                                   -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <mxCell id="f3_user1"  value="All Parts&#xa;Uploaded"                style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f5f5f5;strokeColor=#666666;"   vertex="1" parent="1"><mxGeometry x="1450" y="25"  width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="f3_nx1"    value="POST /upload/{id}/complete&#xa;{parts:[{n, etag}]}" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1"><mxGeometry x="1450" y="115" width="165" height="40" as="geometry"/></mxCell>
+        <mxCell id="f3_lar1"   value="Assert Session&#xa;Completable"        style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;"   vertex="1" parent="1"><mxGeometry x="1450" y="232" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f3_lar2"   value="Complete&#xa;Multipart (S3)"           style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;"   vertex="1" parent="1"><mxGeometry x="1590" y="232" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f3_lar3"   value="Verify Object&#xa;HEAD request"        style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;"   vertex="1" parent="1"><mxGeometry x="1730" y="232" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f3_lar4"   value="INSERT&#xa;upload_files"               style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;"   vertex="1" parent="1"><mxGeometry x="1590" y="308" width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="f3_lar5"   value="Dispatch&#xa;ProcessVideoJob"          style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;"   vertex="1" parent="1"><mxGeometry x="1730" y="308" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f3_s3a"    value="CompleteMultipart&#xa;Upload"          style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f0f0f0;strokeColor=#888888;"   vertex="1" parent="1"><mxGeometry x="1590" y="680" width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="f3_s3b"    value="HeadObject&#xa;Exists Check"           style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f0f0f0;strokeColor=#888888;"   vertex="1" parent="1"><mxGeometry x="1730" y="680" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f3_redis"  value="Enqueue&#xa;ProcessVideoJob"           style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;"   vertex="1" parent="1"><mxGeometry x="1730" y="415" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f3_pg1"    value="INSERT upload_files"                   style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;"   vertex="1" parent="1"><mxGeometry x="1590" y="770" width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="f3_pg2"    value="UPDATE session&#xa;status = UPLOADED"  style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;"   vertex="1" parent="1"><mxGeometry x="1450" y="770" width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="f3_user2"  value="Processing&#xa;Started..."             style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f5f5f5;strokeColor=#666666;"   vertex="1" parent="1"><mxGeometry x="1870" y="25"  width="100" height="40" as="geometry"/></mxCell>
+        <mxCell id="f3_nx2"    value="Return: status&#xa;= UPLOADED"         style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;"   vertex="1" parent="1"><mxGeometry x="1870" y="115" width="110" height="40" as="geometry"/></mxCell>
+
+        <!-- Flow 3 arrows -->
+        <mxCell id="e_f3_1"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f3_user1" target="f3_nx1"   parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f3_2"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f3_nx1"   target="f3_lar1"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f3_3"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f3_lar1"  target="f3_lar2"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f3_4"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f3_lar2"  target="f3_lar3"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f3_5"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f3_lar2"  target="f3_s3a"   parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f3_6"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f3_lar3"  target="f3_s3b"   parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f3_7"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f3_lar3"  target="f3_lar4"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f3_8"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f3_lar4"  target="f3_lar5"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f3_9"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f3_lar4"  target="f3_pg1"   parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f3_10" value="async" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;dashed=1;" edge="1" source="f3_lar5" target="f3_redis" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f3_11" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f3_lar1"  target="f3_pg2"   parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f3_12" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f3_lar5"  target="f3_nx2"   parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f3_13" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f3_nx2"   target="f3_user2"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!--  FLOW 4 — HLS PROCESSING PIPELINE                          -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <mxCell id="f4_redis"  value="Dequeue&#xa;ProcessVideoJob"           style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;"   vertex="1" parent="1"><mxGeometry x="2010" y="415" width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="f4_ff1"    value="Download Raw&#xa;File from S3"         style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#fff2cc;strokeColor=#d6b656;"   vertex="1" parent="1"><mxGeometry x="2010" y="510" width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="f4_s3a"    value="GET raw file&#xa;(stream)"             style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f0f0f0;strokeColor=#888888;"   vertex="1" parent="1"><mxGeometry x="2010" y="680" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f4_pg1"    value="UPDATE encoding&#xa;status = PROCESSING" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1"><mxGeometry x="2010" y="770" width="140" height="40" as="geometry"/></mxCell>
+        <mxCell id="f4_ff2"    value="FFprobe&#xa;Extract Metadata"          style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#fff2cc;strokeColor=#d6b656;"   vertex="1" parent="1"><mxGeometry x="2160" y="510" width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="f4_ff3"    value="Generate&#xa;Thumbnail"                style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#fff2cc;strokeColor=#d6b656;"   vertex="1" parent="1"><mxGeometry x="2310" y="510" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f4_pg2"    value="UPDATE encoding&#xa;status = TRANSCODING" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1"><mxGeometry x="2310" y="770" width="140" height="40" as="geometry"/></mxCell>
+
+        <!-- Encode variants group -->
+        <mxCell id="f4_grp"  value="Parallel Encoding" style="rounded=1;dashed=1;fillColor=none;strokeColor=#d6b656;fontSize=11;fontStyle=1;verticalAlign=top;" vertex="1" parent="1"><mxGeometry x="2450" y="490" width="420" height="100" as="geometry"/></mxCell>
+        <mxCell id="f4_e360" value="Encode&#xa;360p"   style="rounded=1;whiteSpace=wrap;html=1;fontSize=10;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1"><mxGeometry x="2460" y="520" width="80" height="40" as="geometry"/></mxCell>
+        <mxCell id="f4_e480" value="Encode&#xa;480p"   style="rounded=1;whiteSpace=wrap;html=1;fontSize=10;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1"><mxGeometry x="2550" y="520" width="80" height="40" as="geometry"/></mxCell>
+        <mxCell id="f4_e720" value="Encode&#xa;720p"   style="rounded=1;whiteSpace=wrap;html=1;fontSize=10;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1"><mxGeometry x="2640" y="520" width="80" height="40" as="geometry"/></mxCell>
+        <mxCell id="f4_e1080" value="Encode&#xa;1080p" style="rounded=1;whiteSpace=wrap;html=1;fontSize=10;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1"><mxGeometry x="2730" y="520" width="80" height="40" as="geometry"/></mxCell>
+
+        <!-- HLS manifest -->
+        <mxCell id="f4_hls"  value="Build master.m3u8&#xa;+ variant playlists" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1"><mxGeometry x="2890" y="495" width="140" height="50" as="geometry"/></mxCell>
+        <mxCell id="f4_ff4"  value="Upload HLS&#xa;to S3"                    style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#fff2cc;strokeColor=#d6b656;"   vertex="1" parent="1"><mxGeometry x="2890" y="575" width="140" height="40" as="geometry"/></mxCell>
+
+        <!-- HLS structure note -->
+        <mxCell id="f4_hlsnote" value="master.m3u8&#xa;├ 360p/index.m3u8&#xa;├ 480p/index.m3u8&#xa;├ 720p/index.m3u8&#xa;└ 1080p/index.m3u8&#xa;  *.ts segments" style="text;html=1;align=left;whiteSpace=wrap;fontSize=10;fillColor=#fffde7;strokeColor=#d6b656;rounded=1;" vertex="1" parent="1"><mxGeometry x="2750" y="650" width="170" height="100" as="geometry"/></mxCell>
+
+        <mxCell id="f4_s3b"  value="PUT hls/{uuid}/*.m3u8&#xa;PUT hls/{uuid}/*.ts"  style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f0f0f0;strokeColor=#888888;" vertex="1" parent="1"><mxGeometry x="2890" y="680" width="150" height="40" as="geometry"/></mxCell>
+        <mxCell id="f4_pg3"  value="UPDATE encoding&#xa;status = READY&#xa;progress = 100&#xa;master_playlist_path" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1"><mxGeometry x="2890" y="755" width="155" height="55" as="geometry"/></mxCell>
+        <mxCell id="f4_pg4"  value="UPDATE session&#xa;status = READY"       style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;"   vertex="1" parent="1"><mxGeometry x="2160" y="770" width="130" height="40" as="geometry"/></mxCell>
+
+        <!-- Flow 4 arrows -->
+        <mxCell id="e_f4_1"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f3_redis"  target="f4_redis" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f4_2"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f4_redis"  target="f4_ff1"   parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f4_3"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f4_ff1"    target="f4_s3a"   parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f4_4"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f4_ff1"    target="f4_pg1"   parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f4_5"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f4_ff1"    target="f4_ff2"   parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f4_6"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f4_ff2"    target="f4_ff3"   parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f4_7"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f4_ff2"    target="f4_pg4"   parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f4_8"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f4_ff3"    target="f4_e360"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f4_9"  style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f4_ff3"    target="f4_pg2"   parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f4_10" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f4_e360"   target="f4_hls"   parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f4_11" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f4_e480"   target="f4_hls"   parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f4_12" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f4_e720"   target="f4_hls"   parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f4_13" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f4_e1080"  target="f4_hls"   parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f4_14" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f4_hls"    target="f4_ff4"   parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f4_15" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f4_ff4"    target="f4_s3b"   parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f4_16" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f4_ff4"    target="f4_pg3"   parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!--  FLOW 5 — STATUS POLLING                                    -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <mxCell id="f5_user1"  value="Polling every&#xa;2 seconds"           style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f5f5f5;strokeColor=#666666;"   vertex="1" parent="1"><mxGeometry x="3020" y="25"  width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f5_nx1"    value="GET /upload/{id}/status"               style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;"   vertex="1" parent="1"><mxGeometry x="3020" y="115" width="150" height="40" as="geometry"/></mxCell>
+        <mxCell id="f5_lar1"   value="VideoUploadService&#xa;Load session + encoding" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1"><mxGeometry x="3020" y="252" width="155" height="40" as="geometry"/></mxCell>
+        <mxCell id="f5_pg1"    value="SELECT session&#xa;JOIN video_encodings" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1"><mxGeometry x="3020" y="770" width="150" height="40" as="geometry"/></mxCell>
+        <mxCell id="f5_nx2"    value="Return: status, progress,&#xa;master_playlist_url" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1"><mxGeometry x="3200" y="115" width="160" height="40" as="geometry"/></mxCell>
+        <mxCell id="f5_user2"  value="Update Progress&#xa;Bar UI"            style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f5f5f5;strokeColor=#666666;"   vertex="1" parent="1"><mxGeometry x="3200" y="25"  width="120" height="40" as="geometry"/></mxCell>
+
+        <!-- Status enum note -->
+        <mxCell id="f5_note" value="Upload Status Enum:&#xa;PENDING&#xa;UPLOADING&#xa;UPLOADED&#xa;ANALYZING&#xa;TRANSCODING&#xa;READY&#xa;FAILED&#xa;CANCELED" style="text;html=1;align=left;whiteSpace=wrap;fontSize=10;fillColor=#e1d5e7;strokeColor=#9673a6;rounded=1;verticalAlign=top;" vertex="1" parent="1"><mxGeometry x="3200" y="220" width="140" height="150" as="geometry"/></mxCell>
+
+        <!-- Flow 5 arrows -->
+        <mxCell id="e_f5_1" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f5_user1" target="f5_nx1"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f5_2" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f5_nx1"   target="f5_lar1" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f5_3" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f5_lar1"  target="f5_pg1"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f5_4" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f5_lar1"  target="f5_nx2"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f5_5" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f5_nx2"   target="f5_user2" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!--  FLOW 6 — PUBLISH FLOW                                      -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <mxCell id="f6_user1"  value="Fill Post Details&#xa;(title, audience)" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1"><mxGeometry x="3430" y="25"  width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="f6_nx1"    value="POST /api/posts&#xa;{session_uuid, ...}" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1"><mxGeometry x="3430" y="115" width="140" height="40" as="geometry"/></mxCell>
+        <mxCell id="f6_lar1"   value="Auth + Validate&#xa;Post Request"       style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;"  vertex="1" parent="1"><mxGeometry x="3430" y="240" width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="f6_lar2"   value="Verify Session&#xa;status = READY"      style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;"  vertex="1" parent="1"><mxGeometry x="3430" y="308" width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="f6_lar3"   value="Create Post&#xa;+ Attach Media"         style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;"  vertex="1" parent="1"><mxGeometry x="3590" y="270" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f6_lar4"   value="Dispatch AI&#xa;Moderation Job"         style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;"  vertex="1" parent="1"><mxGeometry x="3730" y="270" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f6_redis"  value="Enqueue&#xa;ModerationJob"              style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;"  vertex="1" parent="1"><mxGeometry x="3730" y="415" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f6_pg1"    value="INSERT posts&#xa;INSERT medias"         style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;"  vertex="1" parent="1"><mxGeometry x="3590" y="770" width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="f6_nx2"    value="Return Post&#xa;Resource"               style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;"  vertex="1" parent="1"><mxGeometry x="3590" y="115" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f6_user2"  value="Post Published!" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="3730" y="25" width="110" height="40" as="geometry"/></mxCell>
+
+        <!-- Flow 6 arrows -->
+        <mxCell id="e_f6_1" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f6_user1" target="f6_nx1"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f6_2" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f6_nx1"   target="f6_lar1" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f6_3" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f6_lar1"  target="f6_lar2" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f6_4" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f6_lar2"  target="f6_lar3" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f6_5" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f6_lar3"  target="f6_lar4" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f6_6" value="async" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;dashed=1;fontSize=10;" edge="1" source="f6_lar4" target="f6_redis" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f6_7" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f6_lar3"  target="f6_pg1"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f6_8" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f6_lar3"  target="f6_nx2"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f6_9" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f6_nx2"   target="f6_user2" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!--  FLOW 7 — PLAYBACK / STREAMING                              -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <mxCell id="f7_user1"  value="Click Play&#xa;(Viewer)"               style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f5f5f5;strokeColor=#666666;"   vertex="1" parent="1"><mxGeometry x="3900" y="25"  width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="f7_nx1"    value="HLS.js Player&#xa;Request master.m3u8" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;"   vertex="1" parent="1"><mxGeometry x="3900" y="115" width="140" height="40" as="geometry"/></mxCell>
+        <mxCell id="f7_cdn1"   value="CDN Edge&#xa;(CloudFront)"             style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;"   vertex="1" parent="1"><mxGeometry x="3900" y="860" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="f7_s3a"    value="GET hls/{uuid}/&#xa;master.m3u8"       style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f0f0f0;strokeColor=#888888;"   vertex="1" parent="1"><mxGeometry x="3900" y="680" width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="f7_nx2"    value="Parse Variants&#xa;Auto Quality Select" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;"  vertex="1" parent="1"><mxGeometry x="4060" y="115" width="140" height="40" as="geometry"/></mxCell>
+        <mxCell id="f7_cdn2"   value="Serve Segments&#xa;(cache hit .ts)"    style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;"   vertex="1" parent="1"><mxGeometry x="4060" y="860" width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="f7_s3b"    value="GET *.ts segments&#xa;(cache miss)"    style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f0f0f0;strokeColor=#888888;"   vertex="1" parent="1"><mxGeometry x="4060" y="680" width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="f7_nx3"    value="Adaptive Bitrate&#xa;Switching (ABR)"  style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;"   vertex="1" parent="1"><mxGeometry x="4220" y="115" width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="f7_user2"  value="Video Playing&#xa;Adaptive Quality"    style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="4220" y="25" width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="f7_cdn3"   value="Cache-Control&#xa;max-age=604800"      style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;"   vertex="1" parent="1"><mxGeometry x="4220" y="860" width="130" height="40" as="geometry"/></mxCell>
+
+        <!-- Flow 7 arrows -->
+        <mxCell id="e_f7_1" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f7_user1" target="f7_nx1"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f7_2" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f7_nx1"   target="f7_cdn1" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f7_3" value="cache miss" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;dashed=1;" edge="1" source="f7_cdn1" target="f7_s3a" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f7_4" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f7_cdn1"  target="f7_nx1"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f7_5" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f7_nx1"   target="f7_nx2"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f7_6" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f7_nx2"   target="f7_cdn2" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f7_7" value="cache miss" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;dashed=1;" edge="1" source="f7_cdn2" target="f7_s3b" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f7_8" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f7_nx2"   target="f7_nx3"  parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_f7_9" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="f7_nx3"   target="f7_user2" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!--  LOWER SECTION DIVIDER                                      -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <mxCell id="hdiv" value="" style="line;strokeColor=#333333;strokeWidth=3;" vertex="1" parent="1"><mxGeometry x="0" y="970" width="5600" height="10" as="geometry"/></mxCell>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!--  DB SCHEMA (y: 1010-1500)                                   -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <mxCell id="db_title" value="DATABASE SCHEMA" style="text;html=1;fontStyle=1;fontSize=14;align=left;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1"><mxGeometry x="160" y="990" width="300" height="30" as="geometry"/></mxCell>
+
+        <!-- users table -->
+        <mxCell id="db_users_h" value="users" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9673a6;fontColor=#ffffff;strokeColor=#6e4d89;fontStyle=1;fontSize=12;" vertex="1" parent="1"><mxGeometry x="160" y="1030" width="180" height="30" as="geometry"/></mxCell>
+        <mxCell id="db_users_b" value="PK  id&#xa;    uuid&#xa;    name&#xa;    email&#xa;    password_hash" style="rounded=0;whiteSpace=wrap;html=1;align=left;fillColor=#f9f0ff;strokeColor=#9673a6;fontSize=11;spacingLeft=6;" vertex="1" parent="1"><mxGeometry x="160" y="1060" width="180" height="90" as="geometry"/></mxCell>
+
+        <!-- upload_files table -->
+        <mxCell id="db_uf_h" value="upload_files" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#6c8ebf;fontColor=#ffffff;strokeColor=#4a6fa8;fontStyle=1;fontSize=12;" vertex="1" parent="1"><mxGeometry x="370" y="1030" width="200" height="30" as="geometry"/></mxCell>
+        <mxCell id="db_uf_b" value="PK  id&#xa;    uuid&#xa;FK  user_id → users&#xa;    file_name&#xa;    mime_type&#xa;    file_size&#xa;    file_path&#xa;    disk" style="rounded=0;whiteSpace=wrap;html=1;align=left;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;spacingLeft=6;" vertex="1" parent="1"><mxGeometry x="370" y="1060" width="200" height="130" as="geometry"/></mxCell>
+
+        <!-- video_upload_sessions table -->
+        <mxCell id="db_vus_h" value="video_upload_sessions" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#82b366;fontColor=#ffffff;strokeColor=#5c8a45;fontStyle=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="590" y="1030" width="210" height="30" as="geometry"/></mxCell>
+        <mxCell id="db_vus_b" value="PK  id&#xa;    uuid&#xa;FK  user_id → users&#xa;    upload_id (S3 multipart)&#xa;    storage_key&#xa;    upload_type ENUM&#xa;    status TINYINT&#xa;    file_name / mime / size&#xa;    disk&#xa;FK  upload_file_id → upload_files&#xa;FK  video_encoding_id → v_enc&#xa;    expires_at" style="rounded=0;whiteSpace=wrap;html=1;align=left;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;spacingLeft=6;" vertex="1" parent="1"><mxGeometry x="590" y="1060" width="210" height="210" as="geometry"/></mxCell>
+
+        <!-- video_encodings table -->
+        <mxCell id="db_ve_h" value="video_encodings" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d6b656;fontColor=#ffffff;strokeColor=#b8942e;fontStyle=1;fontSize=12;" vertex="1" parent="1"><mxGeometry x="820" y="1030" width="210" height="30" as="geometry"/></mxCell>
+        <mxCell id="db_ve_b" value="PK  id&#xa;    uuid&#xa;FK  upload_file_id → upload_files&#xa;    status TINYINT&#xa;    encoding_progress (0-100)&#xa;    master_playlist_path&#xa;    resolutions JSON&#xa;    duration FLOAT&#xa;    metadata JSON&#xa;    started_at&#xa;    completed_at&#xa;    error_message" style="rounded=0;whiteSpace=wrap;html=1;align=left;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;spacingLeft=6;" vertex="1" parent="1"><mxGeometry x="820" y="1060" width="210" height="210" as="geometry"/></mxCell>
+
+        <!-- posts table -->
+        <mxCell id="db_posts_h" value="posts" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#6c8ebf;fontColor=#ffffff;strokeColor=#4a6fa8;fontStyle=1;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1050" y="1030" width="180" height="30" as="geometry"/></mxCell>
+        <mxCell id="db_posts_b" value="PK  id&#xa;    uuid&#xa;FK  user_id → users&#xa;    content&#xa;    audience ENUM&#xa;    type ENUM&#xa;    status ENUM&#xa;    deleted_at" style="rounded=0;whiteSpace=wrap;html=1;align=left;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;spacingLeft=6;" vertex="1" parent="1"><mxGeometry x="1050" y="1060" width="180" height="140" as="geometry"/></mxCell>
+
+        <!-- medias table -->
+        <mxCell id="db_med_h" value="medias" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#b85450;fontColor=#ffffff;strokeColor=#8b3c39;fontStyle=1;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1250" y="1030" width="180" height="30" as="geometry"/></mxCell>
+        <mxCell id="db_med_b" value="PK  id&#xa;FK  post_id → posts&#xa;FK  upload_file_id → upload_files&#xa;    type ENUM&#xa;    position INT" style="rounded=0;whiteSpace=wrap;html=1;align=left;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;spacingLeft=6;" vertex="1" parent="1"><mxGeometry x="1250" y="1060" width="180" height="90" as="geometry"/></mxCell>
+
+        <!-- DB relationship arrows -->
+        <mxCell id="e_db1" value="1:N" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;endArrow=ERmany;startArrow=ERone;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontSize=10;" edge="1" source="db_users_b" target="db_uf_b" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_db2" value="1:N" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;endArrow=ERmany;startArrow=ERone;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontSize=10;" edge="1" source="db_uf_b" target="db_vus_b" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_db3" value="1:1" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;endArrow=ERone;startArrow=ERone;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontSize=10;" edge="1" source="db_uf_b" target="db_ve_b" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_db4" value="1:N" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;endArrow=ERmany;startArrow=ERone;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontSize=10;" edge="1" source="db_posts_b" target="db_med_b" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_db5" value="1:N" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;endArrow=ERmany;startArrow=ERone;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontSize=10;" edge="1" source="db_uf_b" target="db_med_b" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!--  FAILURE RECOVERY (x: 1500-2700, y: 990-1500)              -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <mxCell id="err_title" value="FAILURE RECOVERY" style="text;html=1;fontStyle=1;fontSize=14;align=left;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="1520" y="990" width="280" height="30" as="geometry"/></mxCell>
+
+        <!-- Upload failure -->
+        <mxCell id="err1_h" value="Upload Failure" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1520" y="1040" width="160" height="35" as="geometry"/></mxCell>
+        <mxCell id="err1_1" value="Network Error /&#xa;Timeout"              style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="1520" y="1095" width="140" height="40" as="geometry"/></mxCell>
+        <mxCell id="err1_2" value="Retry Part&#xa;(max 3)"                  style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1"><mxGeometry x="1520" y="1155" width="140" height="40" as="geometry"/></mxCell>
+        <mxCell id="err1_3" value="All retries fail?&#xa;Abort Session"     style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="1520" y="1215" width="140" height="40" as="geometry"/></mxCell>
+        <mxCell id="err1_4" value="DELETE /upload/{id}&#xa;S3 AbortMultipart" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="1520" y="1275" width="150" height="40" as="geometry"/></mxCell>
+        <mxCell id="e_err1_1" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="err1_1" target="err1_2" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_err1_2" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="err1_2" target="err1_3" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_err1_3" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="err1_3" target="err1_4" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Processing failure -->
+        <mxCell id="err2_h" value="Processing Failure" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1720" y="1040" width="175" height="35" as="geometry"/></mxCell>
+        <mxCell id="err2_1" value="FFmpeg Crash /&#xa;Encoding Error"       style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="1720" y="1095" width="150" height="40" as="geometry"/></mxCell>
+        <mxCell id="err2_2" value="Job Fails&#xa;(attempts++)"             style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1"><mxGeometry x="1720" y="1155" width="140" height="40" as="geometry"/></mxCell>
+        <mxCell id="err2_3" value="Retry via&#xa;Laravel Queue"            style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1"><mxGeometry x="1720" y="1215" width="140" height="40" as="geometry"/></mxCell>
+        <mxCell id="err2_4" value="Max retries?&#xa;→ Dead Letter Queue"   style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="1720" y="1275" width="150" height="40" as="geometry"/></mxCell>
+        <mxCell id="err2_5" value="UPDATE encoding&#xa;status = FAILED"    style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1"><mxGeometry x="1720" y="1335" width="150" height="40" as="geometry"/></mxCell>
+        <mxCell id="e_err2_1" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="err2_1" target="err2_2" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_err2_2" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="err2_2" target="err2_3" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_err2_3" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="err2_3" target="err2_4" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_err2_4" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="err2_4" target="err2_5" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Worker crash / Session expiry -->
+        <mxCell id="err3_h" value="Cleanup Jobs (Scheduled)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=12;" vertex="1" parent="1"><mxGeometry x="1920" y="1040" width="200" height="35" as="geometry"/></mxCell>
+        <mxCell id="err3_1" value="CleanupExpiredSessions&#xa;Artisan Command"  style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1"><mxGeometry x="1920" y="1095" width="180" height="40" as="geometry"/></mxCell>
+        <mxCell id="err3_2" value="Find expired sessions&#xa;(expires_at &lt; now)"  style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1"><mxGeometry x="1920" y="1155" width="175" height="40" as="geometry"/></mxCell>
+        <mxCell id="err3_3" value="AbortMultipart&#xa;→ Delete S3 Objects"   style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f0f0f0;strokeColor=#888888;" vertex="1" parent="1"><mxGeometry x="1920" y="1215" width="160" height="40" as="geometry"/></mxCell>
+        <mxCell id="err3_4" value="Soft-delete&#xa;Session Record"           style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1"><mxGeometry x="1920" y="1275" width="150" height="40" as="geometry"/></mxCell>
+        <mxCell id="e_err3_1" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="err3_1" target="err3_2" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_err3_2" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="err3_2" target="err3_3" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_err3_3" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;fontSize=10;" edge="1" source="err3_3" target="err3_4" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!--  SECURITY LAYER (x: 2400-3500, y: 990-1500)                -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <mxCell id="sec_title" value="SECURITY LAYER" style="text;html=1;fontStyle=1;fontSize=14;align=left;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="2400" y="990" width="280" height="30" as="geometry"/></mxCell>
+
+        <mxCell id="sec1" value="JWT / Sanctum Auth&#xa;Token validation" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="2400" y="1040" width="170" height="45" as="geometry"/></mxCell>
+        <mxCell id="sec2" value="Rate Limiting&#xa;60 req/min per user" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="2400" y="1105" width="170" height="45" as="geometry"/></mxCell>
+        <mxCell id="sec3" value="MIME Type Validation&#xa;video/mp4, video/webm" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="2400" y="1170" width="170" height="45" as="geometry"/></mxCell>
+        <mxCell id="sec4" value="File Size Limit&#xa;Max 500 MB" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="2400" y="1235" width="170" height="45" as="geometry"/></mxCell>
+        <mxCell id="sec5" value="Presigned URL Expiry&#xa;TTL = 3600s" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="2590" y="1040" width="170" height="45" as="geometry"/></mxCell>
+        <mxCell id="sec6" value="S3 Bucket Policy&#xa;No public READ&#xa;Only via Presigned" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="2590" y="1105" width="170" height="60" as="geometry"/></mxCell>
+        <mxCell id="sec7" value="Session Ownership&#xa;user_id check on&#xa;every operation" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="2590" y="1185" width="170" height="55" as="geometry"/></mxCell>
+        <mxCell id="sec8" value="Upload Session TTL&#xa;expires_at enforced&#xa;Cleanup on expiry" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1"><mxGeometry x="2590" y="1260" width="170" height="55" as="geometry"/></mxCell>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!--  MONITORING &amp; LOGGING (x: 2850-4200, y: 990-1500)      -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <mxCell id="mon_title" value="MONITORING &amp; OBSERVABILITY" style="text;html=1;fontStyle=1;fontSize=14;align=left;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1"><mxGeometry x="2850" y="990" width="380" height="30" as="geometry"/></mxCell>
+
+        <mxCell id="mon1" value="Laravel Logs (Monolog)&#xa;→ CloudWatch / ELK&#xa;All request lifecycle" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1"><mxGeometry x="2850" y="1040" width="190" height="60" as="geometry"/></mxCell>
+        <mxCell id="mon2" value="Redis Queue Metrics&#xa;→ Queue depth&#xa;→ Job processing rate&#xa;→ Failed jobs count" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1"><mxGeometry x="2850" y="1120" width="190" height="65" as="geometry"/></mxCell>
+        <mxCell id="mon3" value="FFmpeg Logs&#xa;→ Encoding duration&#xa;→ Error rates&#xa;→ Progress events" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1"><mxGeometry x="2850" y="1205" width="190" height="65" as="geometry"/></mxCell>
+        <mxCell id="mon4" value="S3 / Storage Metrics&#xa;→ Bucket size&#xa;→ Request latency&#xa;→ Error rates" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f0f0f0;strokeColor=#888888;" vertex="1" parent="1"><mxGeometry x="3060" y="1040" width="190" height="65" as="geometry"/></mxCell>
+        <mxCell id="mon5" value="CDN Metrics&#xa;→ Cache hit rate&#xa;→ Bandwidth used&#xa;→ Edge latency (p99)" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="3060" y="1125" width="190" height="65" as="geometry"/></mxCell>
+        <mxCell id="mon6" value="APM (e.g. Datadog)&#xa;→ API response time&#xa;→ Upload success rate&#xa;→ Encoding SLA" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1"><mxGeometry x="3060" y="1210" width="190" height="65" as="geometry"/></mxCell>
+        <mxCell id="mon7" value="WebSocket / SSE Events&#xa;(VideoEncodingStatusUpdated)&#xa;→ Push progress to client&#xa;→ Broadcast via Redis" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1"><mxGeometry x="2850" y="1300" width="400" height="55" as="geometry"/></mxCell>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!--  LEGEND                                                     -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <mxCell id="leg_title" value="LEGEND" style="text;html=1;fontStyle=1;fontSize=13;align=left;" vertex="1" parent="1"><mxGeometry x="4300" y="990" width="150" height="30" as="geometry"/></mxCell>
+        <mxCell id="leg1" value="Client Flow"    style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1"><mxGeometry x="4300" y="1030" width="150" height="30" as="geometry"/></mxCell>
+        <mxCell id="leg2" value="Upload Flow"    style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1"><mxGeometry x="4300" y="1070" width="150" height="30" as="geometry"/></mxCell>
+        <mxCell id="leg3" value="Processing Flow" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1"><mxGeometry x="4300" y="1110" width="150" height="30" as="geometry"/></mxCell>
+        <mxCell id="leg4" value="Error / Security" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1"><mxGeometry x="4300" y="1150" width="150" height="30" as="geometry"/></mxCell>
+        <mxCell id="leg5" value="Async / Queue"  style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1"><mxGeometry x="4300" y="1190" width="150" height="30" as="geometry"/></mxCell>
+        <mxCell id="leg6" value="Storage"        style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#888888;fontSize=11;" vertex="1" parent="1"><mxGeometry x="4300" y="1230" width="150" height="30" as="geometry"/></mxCell>
+        <mxCell id="leg7" value="Database"       style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1"><mxGeometry x="4300" y="1270" width="150" height="30" as="geometry"/></mxCell>
+        <mxCell id="leg8" value="CDN / Playback" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1"><mxGeometry x="4300" y="1310" width="150" height="30" as="geometry"/></mxCell>
+        <mxCell id="leg_sync" value="─── Synchronous call"   style="text;html=1;fontSize=11;align=left;" vertex="1" parent="1"><mxGeometry x="4300" y="1360" width="170" height="25" as="geometry"/></mxCell>
+        <mxCell id="leg_async" value="- - - Async / Queue"   style="text;html=1;fontSize=11;align=left;" vertex="1" parent="1"><mxGeometry x="4300" y="1390" width="170" height="25" as="geometry"/></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

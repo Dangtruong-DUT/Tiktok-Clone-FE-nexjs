@@ -1,0 +1,101 @@
+<?php
+
+namespace App\Http\Controllers\Api\Wellness;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Wellness\SaveWellnessRuleRequest;
+use App\Http\Resources\Api\Wellness\WellnessRuleResource;
+use App\Http\Response\ApiResponse;
+use App\Services\Wellness\WellnessRuleService;
+use Illuminate\Http\JsonResponse;
+
+class WellnessRuleController extends Controller
+{
+    /**
+     * Create a new controller instance.
+     *
+     * @param  WellnessRuleService  $service
+     */
+    public function __construct(
+        private readonly WellnessRuleService $service,
+    ) {}
+
+    /**
+     * List all wellness rules for the authenticated user.
+     *
+     * @return JsonResponse
+     */
+    public function index(): JsonResponse
+    {
+        $rules = $this->service->listForUser((int) auth_user_id());
+
+        return ApiResponse::success(
+            data:    WellnessRuleResource::collection($rules)->resolve(),
+            message: 'Wellness rules retrieved.',
+        );
+    }
+
+    /**
+     * Create a new wellness rule.
+     *
+     * @param  SaveWellnessRuleRequest  $request
+     * @return JsonResponse
+     */
+    public function store(SaveWellnessRuleRequest $request): JsonResponse
+    {
+        $rule = $this->service->create((int) auth_user_id(), $request->validated());
+
+        return ApiResponse::success(
+            data:    new WellnessRuleResource($rule),
+            message: 'Wellness rule created.',
+            code:    201,
+        );
+    }
+
+    /**
+     * Update an existing wellness rule by UUID.
+     *
+     * @param  SaveWellnessRuleRequest  $request
+     * @param  string  $uuid
+     * @return JsonResponse
+     */
+    public function update(SaveWellnessRuleRequest $request, string $uuid): JsonResponse
+    {
+        $rule    = $this->service->findByUuidForUser($uuid, (int) auth_user_id());
+        $updated = $this->service->update($rule, $request->validated());
+
+        return ApiResponse::success(
+            data:    new WellnessRuleResource($updated),
+            message: 'Wellness rule updated.',
+        );
+    }
+
+    /**
+     * Delete a wellness rule by UUID.
+     *
+     * @param  string  $uuid
+     * @return JsonResponse
+     */
+    public function destroy(string $uuid): JsonResponse
+    {
+        $rule = $this->service->findByUuidForUser($uuid, (int) auth_user_id());
+        $this->service->delete($rule);
+
+        return ApiResponse::success(data: null, message: 'Wellness rule deleted.');
+    }
+
+    /**
+     * Analyze the authenticated user's screen-time and return AI-generated wellness insights.
+     *
+     * @return JsonResponse
+     */
+    public function analyze(): JsonResponse
+    {
+        $result = $this->service->analyzeUsage((int) auth_user_id());
+
+        return ApiResponse::success(
+            data:    $result,
+            message: 'Usage analysis complete.',
+        );
+    }
+}

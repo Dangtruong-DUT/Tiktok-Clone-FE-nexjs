@@ -1,0 +1,82 @@
+import z from 'zod'
+
+export const LoginReqBody = z
+    .object({
+        email: z.email(),
+        password: z.string().min(8).max(100)
+    })
+    .strict()
+
+export type LoginReqBodyType = z.infer<typeof LoginReqBody>
+
+export const RegisterReqBody = z
+    .object({
+        name: z.string().min(1).max(50),
+        email: z.email(),
+        password: z.string().min(8).max(100),
+        confirm_password: z.string().min(8).max(100),
+        date_of_birth: z.iso.datetime()
+    })
+    .strict()
+    .superRefine(({ confirm_password, password }, ctx) => {
+        if (confirm_password !== password) {
+            ctx.addIssue({
+                code: 'custom',
+                message: 'Passwords do not match',
+                path: ['confirm_password']
+            })
+        }
+    })
+
+export type RegisterReqBodyType = z.infer<typeof RegisterReqBody>
+
+export const RefreshTokenReqBody = z
+    .object({
+        refresh_token: z.string()
+    })
+    .strict()
+
+export type RefreshTokenReqBodyType = z.infer<typeof RefreshTokenReqBody>
+
+export const LogoutReqBody = z
+    .object({
+        refresh_token: z.string()
+    })
+    .strict()
+
+export type LogoutReqBodyType = z.infer<typeof LogoutReqBody>
+
+export const forgotPasswordReqBody = z
+    .object({
+        email: z.email()
+    })
+    .strict()
+
+export type ForgotPasswordReqBodyType = z.infer<typeof forgotPasswordReqBody>
+
+export const verifyForgotPasswordReqBody = z
+    .object({
+        forgot_password_token: z.string().min(10)
+    })
+    .strict()
+
+export type verifyForgotPasswordReqBodyType = z.infer<typeof verifyForgotPasswordReqBody>
+
+export const resetPasswordReqBody = z
+    .object({
+        forgot_password_token: z.string().min(10),
+        password: z.string().min(8).max(100),
+        confirm_password: z.string().min(8).max(100)
+    })
+    .strict()
+    .superRefine(({ confirm_password, password }, ctx) => {
+        if (confirm_password !== password) {
+            ctx.addIssue({
+                code: 'custom',
+                message: 'Passwords do not match',
+                path: ['confirm_password']
+            })
+        }
+    })
+
+export type ResetPasswordReqBodyType = z.infer<typeof resetPasswordReqBody>

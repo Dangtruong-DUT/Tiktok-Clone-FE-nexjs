@@ -1,0 +1,114 @@
+<?php
+
+namespace App\Models;
+
+use App\Enums\Admin\AdminActionEnum;
+use App\Enums\Common\ResourceTypeEnum;
+use App\Traits\HasUuidObservable;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+/**
+ * AdminLog - Track all administrative actions performed
+ * Stores complete audit trail for compliance and monitoring
+ */
+class AdminLog extends Model
+{
+    use HasUuidObservable;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'admin_logs';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'admin_id',
+        'resource_type',
+        'resource_id',
+        'action',
+        'reason',
+        'old_data',
+        'new_data',
+        'ip_address',
+        'user_agent',
+    ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'resource_type' => ResourceTypeEnum::class,
+            'action' => AdminActionEnum::class,
+            'old_data' => 'json',
+            'new_data' => 'json',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+        ];
+    }
+
+    /**
+     * Get the admin who performed the action
+     */
+    public function admin(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'admin_id');
+    }
+
+    /**
+     * Scope: Filter logs by admin ID
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    #[Scope]
+    public function byAdmin(Builder $query, int $adminId)
+    {
+        return $query->where('admin_id', $adminId);
+    }
+
+    /**
+     * Scope: Filter logs by resource type
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    #[Scope]
+    public function byResourceType(Builder $query, ResourceTypeEnum $resourceType)
+    {
+        return $query->where('resource_type', $resourceType->value);
+    }
+
+    /**
+     * Scope: Filter logs by action
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    #[Scope]
+    public function byAction(Builder $query, string $action)
+    {
+        return $query->where('action', $action);
+    }
+
+    /**
+     * Scope: Filter logs by date range
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    #[Scope]
+    public function dateRange(Builder $query, Carbon $from, Carbon $to)
+    {
+        return $query->whereBetween('created_at', [$from, $to]);
+    }
+}

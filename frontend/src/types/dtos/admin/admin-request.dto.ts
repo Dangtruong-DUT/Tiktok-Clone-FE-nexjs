@@ -1,0 +1,6 @@
+export * from './common/admin-common.request.dto'
+export * from './user/admin-user.request.dto'
+export * from './post/admin-post.request.dto'
+export * from './comment/admin-comment.request.dto'
+export * from './system/admin-system.request.dto'
+export * from './appeal/admin-appeal.request.dto'

@@ -1,0 +1,29 @@
+﻿{
+  "summary": {
+    "ViCTSD": {
+      "train": 7000,
+      "valid": 2000,
+      "test": 1000
+    },
+    "vihsd": {
+      "train": 24038,
+      "valid": 2671,
+      "test": 6676
+    }
+  },
+  "total_problematic_samples": 443,
+  "applied_rules": [
+    "lowercase text",
+    "unicode normalization NFC",
+    "emoji normalize/remove",
+    "remove urls emails phones",
+    "slang/abbreviation normalization",
+    "repeated character normalization",
+    "profanity variant normalization",
+    "remove special chars keep basic punctuation",
+    "whitespace cleanup",
+    "simple PhoBERT-style underscore phrases",
+    "label normalization to binary",
+    "flag suspicious/problematic samples"
+  ]
+}
