@@ -37,7 +37,7 @@ class Post extends Model
         'status',
         'published_at',
         'likes_count',
-        'shares_count',
+        'share_count',
         'comments_count',
         'bookmarks_count',
         'repost_count',

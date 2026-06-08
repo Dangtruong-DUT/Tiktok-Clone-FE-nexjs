@@ -61,6 +61,18 @@ Hỏi tôi về bất kỳ tính năng nào để biết thêm chi tiết!
 MD,
     ],
 
+    'errors' => [
+        'rate_limited'      => 'AI đang bận xử lý nhiều yêu cầu. Vui lòng thử lại sau vài giây.',
+        'overloaded'        => 'AI hiện đang quá tải. Vui lòng thử lại sau.',
+        'invalid_config'    => 'Cấu hình AI không hợp lệ. Vui lòng kiểm tra API key trong cài đặt.',
+        'permission_denied' => 'API key không có quyền truy cập model này.',
+        'generic'           => 'Đã xảy ra lỗi khi kết nối với AI. Vui lòng thử lại.',
+    ],
+
+    'labels' => [
+        'suggestion' => 'Gợi ý',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Follow-up chips (Vietnamese)

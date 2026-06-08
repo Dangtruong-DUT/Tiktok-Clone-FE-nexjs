@@ -236,17 +236,23 @@
       },
       "promptTemplates": {
         "title": "Mẫu prompt",
-        "description": "Chỉnh sửa system prompt cho từng intent AI Copilot",
+        "description": "Quản lý prompt theo gateway, engine và template xử lý của AI Copilot",
         "breadcrumb": "Mẫu prompt",
         "lock": "Khoá",
         "unlock": "Mở khoá",
         "confirmUnlockTitle": "Mở khoá mẫu",
-        "confirmUnlockDescription": "Bạn có chắc muốn mở khoá và chỉnh sửa mẫu này? Thay đổi sẽ ảnh hưởng đến toàn bộ phản hồi AI cho intent này.",
+        "confirmUnlockDescription": "Bạn có chắc muốn mở khoá và chỉnh sửa mẫu này? Thay đổi sẽ ảnh hưởng đến toàn bộ phản hồi AI dùng template này.",
         "cancel": "Huỷ",
         "save": "Lưu",
         "saving": "Đang lưu…",
         "active": "Đang hoạt động",
         "inactive": "Không hoạt động",
+        "unsaved": "Chưa lưu",
+        "contextNotice": "Các template ngữ cảnh được ghép tự động vào system prompt phù hợp. Thay đổi có hiệu lực sau tối đa 10 phút do cache.",
+        "fields": {
+          "systemPrompt": "Prompt hệ thống",
+          "userTemplate": "Template người dùng"
+        },
         "toast": {
           "saved": "Đã lưu mẫu.",
           "saveFailed": "Lưu mẫu thất bại.",
@@ -255,7 +261,12 @@
         },
         "categories": {
           "platform": "Ngữ cảnh nền tảng",
-          "routing": "Định tuyến intent",
+          "context": "Ngữ cảnh hệ thống",
+          "routing": "Gateway & điều phối",
+          "data": "Planner & tổng hợp dữ liệu",
+          "generative": "Tạo nội dung",
+          "analysis": "Phân tích video",
+          "fallback": "Dự phòng",
           "style": "Phong cách & giọng điệu",
           "moderation": "Kiểm duyệt nội dung",
           "other": "Khác"

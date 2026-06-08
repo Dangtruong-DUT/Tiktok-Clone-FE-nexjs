@@ -6,7 +6,6 @@ use App\Models\Post;
 
 /**
  * Post breakdown by status: published/hidden/draft/scheduled/deleted.
- * Includes hidden reason breakdown.
  */
 class PostStatusBreakdownTool extends AbstractAnalyticsTool
 {
@@ -43,20 +42,10 @@ class PostStatusBreakdownTool extends AbstractAnalyticsTool
             $base->where('user_id', $userId);
         }
 
-        if (isset($params['user_id']) && $isAdmin) {
+        if ($isAdmin && isset($params['user_id'])) {
             $base->where('user_id', $params['user_id']);
-        }
-
-        if (isset($filters['reason'])) {
-            $base->where('hidden_reason', $filters['reason']);
-        }
-
-        if (isset($filters['moderation_reason'])) {
-            $base->where('moderation_reason', $filters['moderation_reason']);
-        }
-
-        if (isset($filters['category'])) {
-            $base->where('category', $filters['category']);
+        } elseif ($isAdmin && isset($filters['creator_id'])) {
+            $base->where('user_id', $filters['creator_id']);
         }
 
         $breakdown = (clone $base)
@@ -65,18 +54,9 @@ class PostStatusBreakdownTool extends AbstractAnalyticsTool
             ->pluck('cnt', 'status')
             ->toArray();
 
-        $hiddenReason = (clone $base)
-            ->where('status', 'hidden')
-            ->whereNotNull('hidden_reason')
-            ->selectRaw('hidden_reason, COUNT(*) as cnt')
-            ->groupBy('hidden_reason')
-            ->pluck('cnt', 'hidden_reason')
-            ->toArray();
-
         $data = [
-            'status_breakdown'       => $breakdown,
-            'hidden_reason_breakdown' => $hiddenReason,
-            'total'                  => array_sum($breakdown),
+            'status_breakdown' => $breakdown,
+            'total'            => array_sum($breakdown),
         ];
 
         return [

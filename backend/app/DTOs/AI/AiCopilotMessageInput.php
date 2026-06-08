@@ -51,6 +51,13 @@ final readonly class AiCopilotMessageInput
         return $this->videoClip !== null && $this->videoClip !== '';
     }
 
+    public function hasCurrentContent(): bool
+    {
+        return $this->currentCaption !== null
+            || $this->currentTitle !== null
+            || $this->currentHashtags !== null;
+    }
+
     public function videoClipBase64(): string
     {
         return (string) preg_replace('/^data:video\/\w+;base64,/', '', (string) $this->videoClip);

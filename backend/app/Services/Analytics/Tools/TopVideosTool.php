@@ -41,7 +41,7 @@ class TopVideosTool extends AbstractAnalyticsTool
         $sortColumn = match ($sortBy) {
             'likes'    => 'likes_count',
             'comments' => 'comments_count',
-            'shares'   => 'shares_count',
+            'shares'   => 'share_count',
             default    => 'user_views',
         };
 
@@ -55,23 +55,21 @@ class TopVideosTool extends AbstractAnalyticsTool
             $query->where('user_id', $userId);
         }
 
-        if (isset($params['user_id']) && $isAdmin) {
+        if ($isAdmin && isset($params['user_id'])) {
             $query->where('user_id', $params['user_id']);
+        } elseif ($isAdmin && isset($filters['creator_id'])) {
+            $query->where('user_id', $filters['creator_id']);
         }
 
-        if (isset($filters['category'])) {
-            $query->where('category', $filters['category']);
-        }
-
-        $posts = $query->select(['id', 'uuid', 'title', 'user_views', 'guest_views', 'likes_count', 'comments_count', 'shares_count'])->get();
+        $posts = $query->select(['id', 'uuid', 'content', 'user_views', 'guest_views', 'likes_count', 'comments_count', 'share_count'])->get();
 
         $videos = $posts->map(fn ($post) => [
             'post_uuid'      => $post->uuid,
-            'title'          => $post->title,
+            'title'          => mb_substr((string) $post->content, 0, 80),
             'views'          => (int) $post->user_views + (int) $post->guest_views,
             'likes'          => (int) $post->likes_count,
             'comments'       => (int) $post->comments_count,
-            'shares'         => (int) $post->shares_count,
+            'shares'         => (int) $post->share_count,
             'engagement_rate' => ((int) $post->user_views + (int) $post->guest_views) > 0
                 ? round(((int) $post->likes_count + (int) $post->comments_count) / ((int) $post->user_views + (int) $post->guest_views) * 100, 2)
                 : 0.0,

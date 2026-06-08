@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useRef, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import {
     useSendMessageMutation,
     useAcceptMessageMutation,
@@ -30,6 +31,7 @@ interface UseAiCopilotOptions {
 }
 
 export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
+    const t = useTranslations('SnapiStudio.aiCopilot')
     const {
         pendingVideoClip,
         setPendingVideoClip,
@@ -188,7 +190,7 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
                     {
                         uuid: `err-${Date.now()}`,
                         role: AI_COPILOT_ROLES.ASSISTANT,
-                        content: 'Something went wrong. Please try again.',
+                        content: t('error.generic'),
                         status: AI_COPILOT_MESSAGE_STATUSES.FAILED,
                         created_at: new Date().toISOString()
                     }
@@ -207,7 +209,8 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
             sendMessage,
             openEventSource,
             videoContext,
-            videoRef
+            videoRef,
+            t
         ]
     )
 

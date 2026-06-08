@@ -43,16 +43,14 @@ class PostOverviewTool extends AbstractAnalyticsTool
             $query->where('user_id', $userId);
         }
 
-        if (isset($params['user_id']) && $isAdmin) {
+        if ($isAdmin && isset($params['user_id'])) {
             $query->where('user_id', $params['user_id']);
+        } elseif ($isAdmin && isset($filters['creator_id'])) {
+            $query->where('user_id', $filters['creator_id']);
         }
 
         if (isset($filters['status'])) {
             $query->where('status', $filters['status']);
-        }
-
-        if (isset($filters['category'])) {
-            $query->where('category', $filters['category']);
         }
 
         $total      = (clone $query)->count();
@@ -78,6 +76,10 @@ class PostOverviewTool extends AbstractAnalyticsTool
 
             if (! $isAdmin && $userId !== null) {
                 $prevQuery->where('user_id', $userId);
+            } elseif ($isAdmin && isset($params['user_id'])) {
+                $prevQuery->where('user_id', $params['user_id']);
+            } elseif ($isAdmin && isset($filters['creator_id'])) {
+                $prevQuery->where('user_id', $filters['creator_id']);
             }
 
             $prevTotal = $prevQuery->count();

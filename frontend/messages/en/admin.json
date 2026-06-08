@@ -236,17 +236,23 @@
       },
       "promptTemplates": {
         "title": "Prompt Templates",
-        "description": "Edit system prompts used by the AI Copilot for each intent",
+        "description": "Manage prompts by AI Copilot gateway, engine, and processing template",
         "breadcrumb": "Prompt Templates",
         "lock": "Lock",
         "unlock": "Unlock",
         "confirmUnlockTitle": "Unlock template",
-        "confirmUnlockDescription": "Are you sure you want to unlock and edit this template? Changes will affect all AI responses for this intent.",
+        "confirmUnlockDescription": "Are you sure you want to unlock and edit this template? Changes will affect every AI response that uses this template.",
         "cancel": "Cancel",
         "save": "Save",
         "saving": "Saving…",
         "active": "Active",
         "inactive": "Inactive",
+        "unsaved": "Unsaved",
+        "contextNotice": "Context templates are automatically composed into the matching system prompt. Changes can take up to 10 minutes to apply because of cache.",
+        "fields": {
+          "systemPrompt": "System prompt",
+          "userTemplate": "User template"
+        },
         "toast": {
           "saved": "Template saved.",
           "saveFailed": "Failed to save template.",
@@ -255,7 +261,12 @@
         },
         "categories": {
           "platform": "Platform Context",
-          "routing": "Intent Routing",
+          "context": "System Context",
+          "routing": "Gateway & Orchestration",
+          "data": "Planner & Data Synthesis",
+          "generative": "Content Generation",
+          "analysis": "Video Review",
+          "fallback": "Fallback",
           "style": "Style & Tone",
           "moderation": "Content Moderation",
           "other": "Other"

@@ -39,9 +39,9 @@ class ActiveUserTrendTool extends AbstractAnalyticsTool
 
         $rows = DB::table('sessions')
             ->whereBetween('last_activity', [$range['from']->timestamp, $range['to']->timestamp])
-            ->selectRaw('DATE(FROM_UNIXTIME(last_activity)) as date, COUNT(DISTINCT user_id) as cnt')
+            ->selectRaw('to_timestamp(last_activity)::date as date, COUNT(DISTINCT user_id) as cnt')
             ->whereNotNull('user_id')
-            ->groupByRaw('DATE(FROM_UNIXTIME(last_activity))')
+            ->groupByRaw('to_timestamp(last_activity)::date')
             ->pluck('cnt', 'date')
             ->toArray();
 
@@ -61,8 +61,8 @@ class ActiveUserTrendTool extends AbstractAnalyticsTool
             $prevAvg  = DB::table('sessions')
                 ->whereBetween('last_activity', [$cr['from']->timestamp, $cr['to']->timestamp])
                 ->whereNotNull('user_id')
-                ->selectRaw('DATE(FROM_UNIXTIME(last_activity)) as date, COUNT(DISTINCT user_id) as cnt')
-                ->groupByRaw('DATE(FROM_UNIXTIME(last_activity))')
+                ->selectRaw('to_timestamp(last_activity)::date as date, COUNT(DISTINCT user_id) as cnt')
+                ->groupByRaw('to_timestamp(last_activity)::date')
                 ->pluck('cnt')
                 ->avg();
 

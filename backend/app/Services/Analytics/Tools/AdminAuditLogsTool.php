@@ -36,7 +36,7 @@ class AdminAuditLogsTool extends AbstractAnalyticsTool
         $range   = $this->resolveDateRange($params['period']);
         $filters = (array) ($params['filters'] ?? []);
 
-        $query = DB::table('admin_audit_logs')
+        $query = DB::table('admin_logs')
             ->whereBetween('created_at', [$range['from'], $range['to']]);
 
         if (isset($filters['action_type'])) {

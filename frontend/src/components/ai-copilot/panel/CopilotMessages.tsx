@@ -9,23 +9,39 @@ import { CopilotAnalysisCard } from '../cards/CopilotAnalysisCard'
 import { CopilotNavCard } from '../cards/CopilotNavCard'
 import { CopilotScheduleCard } from '../cards/CopilotScheduleCard'
 import { CopilotSuggestions } from './CopilotSuggestions'
-import type { AiCopilotMessage, AiCopilotNavOutput, AiCopilotScheduleOutput, AiCopilotStructuredOutput } from '@/types/models/ai-copilot.model'
-import { AI_COPILOT_MESSAGE_STATUSES, AI_COPILOT_OUTPUT_TYPES, AI_COPILOT_ROLES, BOUNCE_DOT_INDEXES } from '@/constants/ai/copilot'
+import type {
+    AiCopilotMessage,
+    AiCopilotNavOutput,
+    AiCopilotScheduleOutput,
+    AiCopilotStructuredOutput
+} from '@/types/models/ai-copilot.model'
+import {
+    AI_COPILOT_MESSAGE_STATUSES,
+    AI_COPILOT_OUTPUT_TYPES,
+    AI_COPILOT_ROLES,
+    BOUNCE_DOT_INDEXES
+} from '@/constants/ai/copilot'
 
 interface CopilotMessagesProps {
-    messages:         AiCopilotMessage[]
-    isSending:        boolean
-    onAccept:         (messageUuid: string, field: string, value: string) => void
-    onReject:         (messageUuid: string) => void
+    messages: AiCopilotMessage[]
+    isSending: boolean
+    onAccept: (messageUuid: string, field: string, value: string) => void
+    onReject: (messageUuid: string) => void
     onScheduleAccept: (messageUuid: string) => void
-    onChipSelect:     (text: string) => void
-    onRetry:          () => void
+    onChipSelect: (text: string) => void
+    onRetry: () => void
 }
 
 export function CopilotMessages({
-    messages, isSending, onAccept, onReject, onScheduleAccept, onChipSelect, onRetry,
+    messages,
+    isSending,
+    onAccept,
+    onReject,
+    onScheduleAccept,
+    onChipSelect,
+    onRetry
 }: CopilotMessagesProps) {
-    const t         = useTranslations('SnapiStudio.aiCopilot')
+    const t = useTranslations('SnapiStudio.aiCopilot')
     const bottomRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
@@ -44,7 +60,7 @@ export function CopilotMessages({
                 }
 
                 const isLast = idx === messages.length - 1
-                const chips  = isLast && msg.role === AI_COPILOT_ROLES.ASSISTANT ? (msg.follow_up_chips ?? []) : []
+                const chips = isLast && msg.role === AI_COPILOT_ROLES.ASSISTANT ? (msg.follow_up_chips ?? []) : []
 
                 if (msg.role === AI_COPILOT_ROLES.USER) {
                     return (
@@ -63,8 +79,10 @@ export function CopilotMessages({
                 return (
                     <div key={msg.uuid} className='space-y-2'>
                         <div className='flex items-start gap-2'>
-                            <div className='mt-0.5 shrink-0 size-6 rounded-full bg-primary/10 border border-primary/20
-                                            flex items-center justify-center'>
+                            <div
+                                className='mt-0.5 shrink-0 size-6 rounded-full bg-primary/10 border border-primary/20
+                                            flex items-center justify-center'
+                            >
                                 <Bot className='size-3.5 text-primary' />
                             </div>
 
@@ -74,7 +92,9 @@ export function CopilotMessages({
                                         <div className='flex items-start gap-2 rounded-xl border border-destructive/30 bg-destructive/5 px-3 py-2.5'>
                                             <AlertCircle className='size-4 text-destructive shrink-0 mt-0.5' />
                                             <div className='flex-1 min-w-0'>
-                                                <p className='text-xs font-medium text-destructive mb-0.5'>{t('error.title')}</p>
+                                                <p className='text-xs font-medium text-destructive mb-0.5'>
+                                                    {t('error.title')}
+                                                </p>
                                                 <p className='text-xs text-muted-foreground leading-relaxed'>
                                                     {msg.content || t('error.generic')}
                                                 </p>
@@ -94,9 +114,7 @@ export function CopilotMessages({
                                     </div>
                                 ) : msg.structured_output?.type === AI_COPILOT_OUTPUT_TYPES.SCHEDULE_CARD ? (
                                     <>
-                                        {msg.content && (
-                                            <p className='text-sm text-foreground'>{msg.content}</p>
-                                        )}
+                                        {msg.content && <p className='text-sm text-foreground'>{msg.content}</p>}
                                         <CopilotScheduleCard
                                             messageUuid={msg.uuid}
                                             output={msg.structured_output as AiCopilotScheduleOutput}
@@ -106,9 +124,16 @@ export function CopilotMessages({
                                         />
                                     </>
                                 ) : msg.structured_output?.type === AI_COPILOT_OUTPUT_TYPES.NAV_CARD ? (
-                                    <CopilotNavCard
-                                        output={msg.structured_output as AiCopilotNavOutput}
-                                    />
+                                    <>
+                                        {msg.content && (
+                                            <CopilotAnalysisCard
+                                                content={msg.content}
+                                                isStreaming={msg.isStreaming}
+                                                streamingContent={msg.streamingContent}
+                                            />
+                                        )}
+                                        <CopilotNavCard output={msg.structured_output as AiCopilotNavOutput} />
+                                    </>
                                 ) : msg.structured_output?.type === AI_COPILOT_OUTPUT_TYPES.CONTENT_CARD ? (
                                     <CopilotContentCard
                                         messageUuid={msg.uuid}
@@ -137,12 +162,14 @@ export function CopilotMessages({
             })}
             {isSending && messages[messages.length - 1]?.role === AI_COPILOT_ROLES.USER && (
                 <div className='flex items-start gap-2'>
-                    <div className='mt-0.5 shrink-0 size-6 rounded-full bg-primary/10 border border-primary/20
-                                    flex items-center justify-center'>
+                    <div
+                        className='mt-0.5 shrink-0 size-6 rounded-full bg-primary/10 border border-primary/20
+                                    flex items-center justify-center'
+                    >
                         <Bot className='size-3.5 text-primary' />
                     </div>
                     <div className='inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl rounded-tl-sm bg-muted'>
-                        {BOUNCE_DOT_INDEXES.map(i => (
+                        {BOUNCE_DOT_INDEXES.map((i) => (
                             <span
                                 key={i}
                                 className='size-1.5 rounded-full bg-muted-foreground/70 animate-bounce'

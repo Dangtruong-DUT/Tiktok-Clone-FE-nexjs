@@ -96,7 +96,11 @@ class ContentGenerationEngine extends AbstractCopilotEngine implements CopilotEn
                 $displayContent   = $accumulated;
 
                 if ($isGenerative) {
-                    [$displayContent, $structuredOutput] = $this->parseGenerativeResponse($accumulated, $intentKey);
+                    [$displayContent, $structuredOutput] = $this->parseGenerativeResponse(
+                        $accumulated,
+                        $intentKey,
+                        $context->creatorLanguage ?? app()->getLocale(),
+                    );
                     if ($emit !== null) {
                         $emit($displayContent, true);
                     }
@@ -123,7 +127,7 @@ class ContentGenerationEngine extends AbstractCopilotEngine implements CopilotEn
      * @param  string  $intentKey
      * @return array{0: string, 1: array<string,mixed>|null}
      */
-    private function parseGenerativeResponse(string $raw, string $intentKey): array
+    private function parseGenerativeResponse(string $raw, string $intentKey, string $locale): array
     {
         $clean = $this->cleanJsonResponse($raw);
         $data  = json_decode($clean, true) ?? [];
@@ -168,7 +172,7 @@ class ContentGenerationEngine extends AbstractCopilotEngine implements CopilotEn
             [
                 'type'         => 'content_card',
                 'target_field' => $targetField,
-                'variants'     => [['label' => 'Gợi ý', 'value' => $text]],
+                'variants'     => [['label' => (string) trans('copilot.labels.suggestion', [], $locale), 'value' => $text]],
                 'hashtags'     => $data['hashtags'] ?? [],
                 'confidence'   => (float) ($data['confidence'] ?? 0.85),
             ],

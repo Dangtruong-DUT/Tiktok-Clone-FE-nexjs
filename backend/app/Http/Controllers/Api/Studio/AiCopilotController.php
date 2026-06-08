@@ -76,12 +76,15 @@ class AiCopilotController extends Controller
 
         $userMessage = $this->copilotService->createUserMessage($session, $input, $msgUuid);
 
-        if ($input->hasVideoClip() || $input->hasFrames() || $input->hasTimeline()) {
+        if ($input->hasVideoClip() || $input->hasFrames() || $input->hasTimeline() || $input->hasCurrentContent()) {
             $this->copilotService->cacheAttachments($msgUuid, [
-                'video_clip'     => $input->videoClip,
-                'frames'         => $input->frames,
-                'timeline_start' => $input->timelineStart,
-                'timeline_end'   => $input->timelineEnd,
+                'video_clip'       => $input->videoClip,
+                'frames'           => $input->frames,
+                'timeline_start'   => $input->timelineStart,
+                'timeline_end'     => $input->timelineEnd,
+                'current_caption'  => $input->currentCaption,
+                'current_title'    => $input->currentTitle,
+                'current_hashtags' => $input->currentHashtags,
             ]);
         }
 

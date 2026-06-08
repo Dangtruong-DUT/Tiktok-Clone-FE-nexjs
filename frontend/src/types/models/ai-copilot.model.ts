@@ -1,5 +1,5 @@
 import {
-    AI_COPILOT_INTENTS,
+    type AiCopilotTaskType,
     AI_COPILOT_MESSAGE_STATUSES,
     AI_COPILOT_OUTPUT_TYPES,
     AI_COPILOT_ROLES,
@@ -9,7 +9,7 @@ import {
 export type AiCopilotRole = (typeof AI_COPILOT_ROLES)[keyof typeof AI_COPILOT_ROLES]
 export type AiCopilotMessageStatus =
     (typeof AI_COPILOT_MESSAGE_STATUSES)[keyof typeof AI_COPILOT_MESSAGE_STATUSES]
-export type AiCopilotIntent = (typeof AI_COPILOT_INTENTS)[keyof typeof AI_COPILOT_INTENTS]
+export type AiCopilotIntent = string
 export type AiCopilotTargetField = (typeof AI_COPILOT_TARGET_FIELDS)[keyof typeof AI_COPILOT_TARGET_FIELDS]
 
 export interface AiCopilotContentVariant {
@@ -45,13 +45,25 @@ export interface AiCopilotNavOutput {
     routes: AiCopilotNavRoute[]
 }
 
-export type AiCopilotAnyOutput = AiCopilotStructuredOutput | AiCopilotScheduleOutput | AiCopilotNavOutput
+export interface AiCopilotAnalyticsOutput {
+    type: typeof AI_COPILOT_OUTPUT_TYPES.ANALYTICS_RESULT
+    task_type?: AiCopilotTaskType
+    response_view: string
+    tool_results: Record<string, unknown>
+}
+
+export type AiCopilotAnyOutput =
+    | AiCopilotStructuredOutput
+    | AiCopilotScheduleOutput
+    | AiCopilotNavOutput
+    | AiCopilotAnalyticsOutput
 
 export interface AiCopilotMessage {
     uuid: string
     role: AiCopilotRole
     content: string
-    intent?: AiCopilotIntent
+    intent?: AiCopilotIntent | null
+    task_type?: AiCopilotTaskType | null
     structured_output?: AiCopilotAnyOutput | null
     follow_up_chips?: string[]
     status: AiCopilotMessageStatus

@@ -30,7 +30,7 @@ return [
             'admin_only'      => false,
             'cacheable'       => true,
             'default_period'  => 'last_7_days',
-            'allowed_filters' => ['status', 'reason', 'moderation_reason', 'category', 'creator_id', 'content_type'],
+            'allowed_filters' => ['status', 'creator_id', 'content_type'],
             'required_params' => ['period'],
             'optional_params' => ['compare_with', 'filters', 'user_id'],
             'metrics'         => ['total_posts', 'published_posts', 'hidden_posts', 'scheduled_posts', 'draft_posts', 'change_pct'],
@@ -44,7 +44,7 @@ return [
             'admin_only'      => false,
             'cacheable'       => true,
             'default_period'  => 'last_7_days',
-            'allowed_filters' => ['category', 'creator_id', 'content_type', 'status'],
+            'allowed_filters' => ['creator_id', 'content_type', 'status'],
             'required_params' => ['period'],
             'optional_params' => ['compare_with', 'filters', 'user_id'],
             'metrics'         => ['total_views', 'total_likes', 'total_comments', 'total_shares', 'total_bookmarks', 'engagement_rate'],
@@ -52,16 +52,16 @@ return [
 
         'get_post_status_breakdown' => [
             'class'           => \App\Services\Analytics\Tools\PostStatusBreakdownTool::class,
-            'description'     => 'Break posts down by status: published/hidden/draft/scheduled/deleted. Hidden reason breakdown.',
+            'description'     => 'Break posts down by status: published/hidden/draft/scheduled/deleted.',
             'scopes'          => ['creator', 'admin'],
             'subjects'        => ['self', 'platform', 'specific_user'],
             'admin_only'      => false,
             'cacheable'       => true,
             'default_period'  => 'last_7_days',
-            'allowed_filters' => ['status', 'reason', 'moderation_reason', 'creator_id', 'category'],
+            'allowed_filters' => ['status', 'creator_id'],
             'required_params' => ['period'],
             'optional_params' => ['compare_with', 'filters', 'user_id'],
-            'metrics'         => ['status_breakdown', 'hidden_reason_breakdown'],
+            'metrics'         => ['status_breakdown'],
         ],
 
         'get_follower_growth' => [
@@ -76,20 +76,6 @@ return [
             'required_params' => ['period'],
             'optional_params' => ['compare_with'],
             'metrics'         => ['total_followers', 'new_followers', 'unfollows', 'net_growth', 'change_pct'],
-        ],
-
-        'get_profile_view_trend' => [
-            'class'           => \App\Services\Analytics\Tools\ProfileViewTrendTool::class,
-            'description'     => 'Daily profile view counts and trend for the creator.',
-            'scopes'          => ['creator'],
-            'subjects'        => ['self'],
-            'admin_only'      => false,
-            'cacheable'       => true,
-            'default_period'  => 'last_7_days',
-            'allowed_filters' => [],
-            'required_params' => ['period'],
-            'optional_params' => ['compare_with'],
-            'metrics'         => ['daily_series', 'total_views', 'change_pct'],
         ],
 
         'get_screen_time_overview' => [
@@ -114,7 +100,7 @@ return [
             'admin_only'      => false,
             'cacheable'       => true,
             'default_period'  => 'last_7_days',
-            'allowed_filters' => ['sort_by', 'creator_id', 'category', 'status'],
+            'allowed_filters' => ['sort_by', 'creator_id', 'status'],
             'required_params' => ['period'],
             'optional_params' => ['compare_with', 'filters', 'limit', 'user_id'],
             'metrics'         => ['video_id', 'title', 'views', 'likes', 'comments', 'shares', 'engagement_rate'],
@@ -122,7 +108,7 @@ return [
 
         'get_comment_overview' => [
             'class'           => \App\Services\Analytics\Tools\CommentOverviewTool::class,
-            'description'     => 'Total comments, comment growth, toxic comment count.',
+            'description'     => 'Total comments and comment growth. Comments are stored as posts with type=comment.',
             'scopes'          => ['creator', 'admin'],
             'subjects'        => ['self', 'platform', 'specific_user'],
             'admin_only'      => false,
@@ -131,7 +117,7 @@ return [
             'allowed_filters' => ['creator_id', 'status'],
             'required_params' => ['period'],
             'optional_params' => ['compare_with', 'filters', 'user_id'],
-            'metrics'         => ['total_comments', 'comment_growth', 'toxic_comments', 'change_pct'],
+            'metrics'         => ['total_comments', 'comment_growth', 'change_pct'],
         ],
 
         'get_ai_studio_metrics' => [
@@ -242,7 +228,7 @@ return [
             'admin_only'      => true,
             'cacheable'       => true,
             'default_period'  => 'last_30_days',
-            'allowed_filters' => ['sort_by', 'category'],
+            'allowed_filters' => ['sort_by'],
             'required_params' => ['period'],
             'optional_params' => ['filters', 'limit'],
             'metrics'         => ['creator_id', 'username', 'followers', 'views', 'posts', 'engagement_rate'],
@@ -304,20 +290,6 @@ return [
             'required_params' => ['period'],
             'optional_params' => ['filters'],
             'metrics'         => ['total_failed_jobs', 'by_queue', 'top_error_messages'],
-        ],
-
-        'get_api_error_rate' => [
-            'class'           => \App\Services\Analytics\Tools\ApiErrorRateTool::class,
-            'description'     => 'API error counts (4xx, 5xx) and error rate trend.',
-            'scopes'          => ['admin', 'system'],
-            'subjects'        => ['platform'],
-            'admin_only'      => true,
-            'cacheable'       => true,
-            'default_period'  => 'today',
-            'allowed_filters' => ['status_code', 'endpoint'],
-            'required_params' => ['period'],
-            'optional_params' => ['filters'],
-            'metrics'         => ['error_count', 'error_rate', 'by_status_code', 'daily_series'],
         ],
 
     ],

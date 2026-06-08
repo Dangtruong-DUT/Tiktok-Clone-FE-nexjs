@@ -32,8 +32,9 @@ import { toast } from 'sonner'
 
 
 const CATEGORY_BADGE_CLASS: Record<string, string> = {
+    platform: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400',
     context: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400',
-    routing: 'bg-violet-100 text-violet-700 dark:bg-violet-950/40 dark:text-violet-400',
+    routing: 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300',
     data: 'bg-sky-100 text-sky-700 dark:bg-sky-950/40 dark:text-sky-400',
     generative: 'bg-orange-100 text-orange-700 dark:bg-orange-950/40 dark:text-orange-400',
     analysis: 'bg-pink-100 text-pink-700 dark:bg-pink-950/40 dark:text-pink-400',
@@ -41,12 +42,13 @@ const CATEGORY_BADGE_CLASS: Record<string, string> = {
 }
 
 const CATEGORY_ORDER: Record<string, number> = {
-    context: 0,
-    routing: 1,
-    data: 2,
-    generative: 3,
-    analysis: 4,
-    fallback: 5
+    platform: 0,
+    context: 1,
+    routing: 2,
+    data: 3,
+    generative: 4,
+    analysis: 5,
+    fallback: 6
 }
 
 export default function PromptTemplatesPage() {
@@ -144,7 +146,7 @@ export default function PromptTemplatesPage() {
                 <div className='space-y-8'>
                     {sortedCategories.map((category) => {
                         const badgeClass = CATEGORY_BADGE_CLASS[category] ?? 'bg-zinc-100 text-zinc-600'
-                        const isContext = category === 'context'
+                        const isContext = category === 'context' || category === 'platform'
 
                         return (
                             <section key={category}>
@@ -167,8 +169,7 @@ export default function PromptTemplatesPage() {
                                     <div className='mb-3 flex items-start gap-2.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3.5 py-2.5 dark:border-emerald-900 dark:bg-emerald-950/20'>
                                         <Info className='mt-px size-4 shrink-0 text-emerald-600 dark:text-emerald-400' />
                                         <p className='text-xs text-emerald-700 dark:text-emerald-300'>
-                                            These templates are prepended automatically to every system prompt for the
-                                            matching role. Changes take effect within 10 minutes (cache TTL).
+                                            {t('contextNotice')}
                                         </p>
                                     </div>
                                 )}
@@ -206,7 +207,7 @@ export default function PromptTemplatesPage() {
                                                             )}
                                                             {hasEdits && !locked && (
                                                                 <span className='text-[10px] font-medium text-orange-500'>
-                                                                    Unsaved
+                                                                    {t('unsaved')}
                                                                 </span>
                                                             )}
                                                         </div>
@@ -226,7 +227,7 @@ export default function PromptTemplatesPage() {
                                                         <div className='space-y-4 border-t px-4 py-4'>
                                                             <div className='space-y-1.5'>
                                                                 <label className='block text-xs font-medium text-muted-foreground'>
-                                                                    System Prompt
+                                                                    {t('fields.systemPrompt')}
                                                                 </label>
                                                                 <Textarea
                                                                     value={current.system_prompt}
@@ -244,7 +245,7 @@ export default function PromptTemplatesPage() {
                                                             </div>
                                                             <div className='space-y-1.5'>
                                                                 <label className='block text-xs font-medium text-muted-foreground'>
-                                                                    User Template
+                                                                    {t('fields.userTemplate')}
                                                                 </label>
                                                                 <Textarea
                                                                     value={current.user_template}

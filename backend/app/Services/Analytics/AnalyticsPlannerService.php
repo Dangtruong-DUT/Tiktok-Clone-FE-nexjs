@@ -255,7 +255,7 @@ Respond with ONLY a valid JSON matching this schema:
       "params": {
         "period": "current_week",
         "compare_with": "previous_week",
-        "filters": { "status": "hidden" }
+        "filters": { "status": "scheduled" }
       }
     }
   ],

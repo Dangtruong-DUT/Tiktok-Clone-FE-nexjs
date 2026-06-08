@@ -11,30 +11,13 @@ export const AI_COPILOT_MESSAGE_STATUSES = {
     REJECTED: 'rejected'
 } as const
 
-export const AI_COPILOT_INTENTS = {
-    WRITE_CAPTION:        'write_caption',
-    WRITE_TITLE:          'write_title',
-    WRITE_DESCRIPTION:    'write_description',
-    GENERATE_HASHTAGS:    'generate_hashtags',
-    REWRITE_CONTENT:      'rewrite_content',
-    ANALYZE_VIDEO:        'analyze_video',
-    ANALYZE_VIDEO_SEGMENT:'analyze_video_segment',
-    ANALYZE_VIRAL:        'analyze_viral',
-    ANALYZE_RETENTION:    'analyze_retention',
-    ANALYZE_HOOK:         'analyze_hook',
-    ANALYZE_CTA:          'analyze_cta',
-    ANALYZE_AUDIENCE:     'analyze_audience',
-    ANALYZE_FRAME:        'analyze_frame',
-    SUGGEST_CTA:          'suggest_cta',
-    SCHEDULE_POST:        'schedule_post',
-    GENERAL_ADVICE:       'general_advice',
-    CLARIFICATION:        'clarification',
-    QUERY_USER_STATS:     'query_user_stats',
-    QUERY_POST_STATS:     'query_post_stats',
-    QUERY_SCREEN_TIME:    'query_screen_time',
-    NAVIGATE_TO:          'navigate_to',
-    QUERY_APP_INFO:       'query_app_info',
-    ADMIN_QUERY_STATS:    'admin_query_stats',
+export const AI_COPILOT_TASK_TYPES = {
+    CONTENT_GENERATION: 'content_generation',
+    APP_KNOWLEDGE: 'app_knowledge',
+    NAVIGATION: 'navigation',
+    ANALYTICS: 'analytics',
+    VIDEO_REVIEW: 'video_review',
+    UNKNOWN: 'unknown'
 } as const
 
 export const AI_COPILOT_TARGET_FIELDS = {
@@ -45,16 +28,18 @@ export const AI_COPILOT_TARGET_FIELDS = {
 } as const
 
 export const AI_COPILOT_OUTPUT_TYPES = {
-    CONTENT_CARD:  'content_card',
+    CONTENT_CARD: 'content_card',
     SCHEDULE_CARD: 'schedule_card',
-    NAV_CARD:      'nav_card',
+    NAV_CARD: 'nav_card',
+    ANALYTICS_RESULT: 'analytics_result'
 } as const
 
 export type AiCopilotOutputType = (typeof AI_COPILOT_OUTPUT_TYPES)[keyof typeof AI_COPILOT_OUTPUT_TYPES]
+export type AiCopilotTaskType = (typeof AI_COPILOT_TASK_TYPES)[keyof typeof AI_COPILOT_TASK_TYPES]
 
 export const AI_COPILOT_SSE_EVENT_TYPES = {
     CHUNK: 'chunk',
-    DONE: 'done',
+    DONE: 'done'
 } as const
 
 export const BOUNCE_DOT_INDEXES = [0, 1, 2] as const

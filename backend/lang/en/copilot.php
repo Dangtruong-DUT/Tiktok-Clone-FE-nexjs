@@ -61,6 +61,18 @@ Ask me about any feature for more details!
 MD,
     ],
 
+    'errors' => [
+        'rate_limited'      => 'AI is handling many requests right now. Please try again in a few seconds.',
+        'overloaded'        => 'AI is currently overloaded. Please try again shortly.',
+        'invalid_config'    => 'AI configuration is invalid. Please check the API key in settings.',
+        'permission_denied' => 'The API key does not have access to this model.',
+        'generic'           => 'Something went wrong while connecting to AI. Please try again.',
+    ],
+
+    'labels' => [
+        'suggestion' => 'Suggestion',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Follow-up chips (English)

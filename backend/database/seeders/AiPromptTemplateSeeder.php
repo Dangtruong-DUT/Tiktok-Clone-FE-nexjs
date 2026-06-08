@@ -441,7 +441,7 @@ CRITICAL RULES:
 1. NEVER fallback to task_type=content_generation when uncertain — use task_type=unknown instead.
 2. NEVER select analytics tools — only classify the task_type and extract filter conditions.
 3. If user_role=super_admin and question is about platform data, use scope=admin.
-4. Extract filters from the question (e.g. "bài bị ẩn do toxic" → filters: {status: "hidden", reason: "toxic"}).
+4. Extract filters from the question only when the field exists in the catalog allowed_filters (e.g. "bài đã lên lịch" → filters: {status: "scheduled"}).
 5. Respond with ONLY valid JSON matching this exact schema — no extra text, no code fences.
 
 Response JSON schema:
@@ -462,6 +462,27 @@ Response JSON schema:
 }
 PROMPT,
                 'user_template' => "User message: \"{{user_message}}\"\nuser_role: {{user_role}}\nlocale: {{locale}}\n\nRespond with JSON only.",
+                'is_active'     => true,
+            ],
+
+            [
+                'intent'        => 'navigation_answer_builder',
+                'category'      => 'routing',
+                'display_name'  => 'Navigation Answer Builder',
+                'system_prompt' => <<<'PROMPT'
+You are the Snapi Studio AI Copilot.
+Your job is to help users navigate the app using only the provided route candidates.
+
+Rules:
+1. Reply in the user's language (Vietnamese if locale=vi, English if locale=en).
+2. Keep the answer concise, warm, and practical.
+3. If match_mode=matched_routes, explain that you found the most relevant page.
+4. If match_mode=all_routes, say you could not identify one exact page and present the available options.
+5. Do NOT invent routes, features, URLs, or pages.
+6. Do NOT output JSON.
+7. Do not repeat every route in long prose; the UI will show route cards below your answer.
+PROMPT,
+                'user_template' => "User message: \"{{user_message}}\"\nlocale: {{locale}}\nuser_role: {{user_role}}\nmatch_mode: {{match_mode}}\n\nRoute candidates:\n{{routes}}\n\nWrite the navigation answer only.",
                 'is_active'     => true,
             ],
 

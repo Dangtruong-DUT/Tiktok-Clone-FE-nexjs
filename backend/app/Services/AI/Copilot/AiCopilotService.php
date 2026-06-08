@@ -45,9 +45,14 @@ class AiCopilotService
     public function startSession(int $userId, array $data): AiCopilotSession
     {
         $settings = AiStudioSetting::current();
+        $locale   = app()->getLocale();
 
         $existing = $this->findExistingSession($userId, $data);
         if ($existing) {
+            $existing->update([
+                'session_meta' => array_merge($existing->session_meta ?? [], ['locale' => $locale]),
+            ]);
+
             return $existing;
         }
 
@@ -57,7 +62,7 @@ class AiCopilotService
             videoCategory:     $data['context_snapshot']['video_category']     ?? null,
             videoTranscript:   $data['context_snapshot']['video_transcript']   ?? null,
             ocrText:           $data['context_snapshot']['ocr_text']           ?? null,
-            creatorLanguage:   $data['context_snapshot']['creator_language']   ?? 'vi',
+            creatorLanguage:   $locale,
             uploadSessionUuid: $data['upload_session_uuid']                    ?? null,
             postUuid:          $data['post_uuid']                              ?? null,
         );
@@ -69,7 +74,7 @@ class AiCopilotService
             'upload_session_uuid' => $data['upload_session_uuid'] ?? null,
             'video_size_bytes'    => $data['video_size_bytes']    ?? null,
             'context_snapshot'    => $context->toArray(),
-            'session_meta'        => ['locale' => $data['locale'] ?? 'vi'],
+            'session_meta'        => ['locale' => $locale],
             'expires_at'          => now()->addHours($settings->copilot_session_ttl_hours),
         ]);
 
@@ -272,11 +277,14 @@ class AiCopilotService
         $cached = Cache::pull("stream_attach:{$userMessage->uuid}", []);
 
         $input = new AiCopilotMessageInput(
-            content:       $userMessage->content,
-            frames:        $cached['frames']         ?? null,
-            timelineStart: $cached['timeline_start'] ?? null,
-            timelineEnd:   $cached['timeline_end']   ?? null,
-            videoClip:     $cached['video_clip']     ?? null,
+            content:         $userMessage->content,
+            frames:          $cached['frames']           ?? null,
+            timelineStart:   $cached['timeline_start']   ?? null,
+            timelineEnd:     $cached['timeline_end']     ?? null,
+            videoClip:       $cached['video_clip']       ?? null,
+            currentCaption:  $cached['current_caption']  ?? null,
+            currentTitle:    $cached['current_title']    ?? null,
+            currentHashtags: $cached['current_hashtags'] ?? null,
         );
 
         // Merge session snapshot with live form content sent with this message
@@ -284,6 +292,8 @@ class AiCopilotService
         $contextData['current_caption']  = $input->currentCaption  ?? ($contextData['current_caption']  ?? null);
         $contextData['current_title']    = $input->currentTitle    ?? ($contextData['current_title']    ?? null);
         $contextData['current_hashtags'] = $input->currentHashtags ?? ($contextData['current_hashtags'] ?? null);
+
+        $locale = app()->getLocale();
 
         // Use the already-loaded relation if available to avoid an extra query.
         $sessionUser = $session->relationLoaded('user') ? $session->user : ($session->user_id ? User::find($session->user_id) : null);
@@ -293,7 +303,7 @@ class AiCopilotService
             videoCategory:     $contextData['video_category']      ?? null,
             videoTranscript:   $contextData['video_transcript']    ?? null,
             ocrText:           $contextData['ocr_text']            ?? null,
-            creatorLanguage:   $contextData['creator_language']    ?? 'vi',
+            creatorLanguage:   $locale,
             uploadSessionUuid: $contextData['upload_session_uuid'] ?? null,
             postUuid:          $contextData['post_uuid']           ?? null,
             currentCaption:    $contextData['current_caption']     ?? null,
@@ -302,7 +312,6 @@ class AiCopilotService
             userId:            $session->user_id,
             userRole:          $sessionUser?->role instanceof RoleTypeEnum ? strtolower($sessionUser->role->name) : null,
         );
-        $locale  = (string) ($session->session_meta['locale'] ?? $context->creatorLanguage ?? 'vi');
         $history = $this->buildHistory($session, excludeMessageId: $userMessage->id);
 
         $startedAt = microtime(true);
@@ -364,7 +373,7 @@ class AiCopilotService
                     'token_usage'       => $result->tokenUsage,
                 ]);
             } catch (\Throwable $e) {
-                $errorText    = $this->friendlyError($e);
+                $errorText    = $this->friendlyError($e, $locale);
                 $errorMessage = AiCopilotMessage::create([
                     'uuid'          => Str::uuid()->toString(),
                     'session_id'    => $session->id,
@@ -492,26 +501,26 @@ class AiCopilotService
     /**
      * Map a Gemini or network exception to a user-friendly Vietnamese error message.
      */
-    private function friendlyError(\Throwable $e): string
+    private function friendlyError(\Throwable $e, string $locale): string
     {
         $msg = $e->getMessage();
 
         if (str_contains($msg, '429')) {
-            return 'AI đang bận xử lý nhiều yêu cầu — vui lòng thử lại sau vài giây.';
+            return (string) trans('copilot.errors.rate_limited', [], $locale);
         }
 
         if (str_contains($msg, '503') || str_contains($msg, 'overloaded')) {
-            return 'AI hiện đang quá tải — vui lòng thử lại sau.';
+            return (string) trans('copilot.errors.overloaded', [], $locale);
         }
 
         if (str_contains($msg, '400') || str_contains($msg, 'API key not valid') || str_contains($msg, 'INVALID_ARGUMENT')) {
-            return 'Cấu hình AI không hợp lệ — vui lòng kiểm tra API key trong cài đặt.';
+            return (string) trans('copilot.errors.invalid_config', [], $locale);
         }
 
         if (str_contains($msg, '403') || str_contains($msg, 'PERMISSION_DENIED')) {
-            return 'API key không có quyền truy cập model này.';
+            return (string) trans('copilot.errors.permission_denied', [], $locale);
         }
 
-        return 'Đã xảy ra lỗi khi kết nối với AI. Vui lòng thử lại.';
+        return (string) trans('copilot.errors.generic', [], $locale);
     }
 }

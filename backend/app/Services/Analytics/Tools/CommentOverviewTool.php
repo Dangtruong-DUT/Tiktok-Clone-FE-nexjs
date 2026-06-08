@@ -2,7 +2,8 @@
 
 namespace App\Services\Analytics\Tools;
 
-use Illuminate\Support\Facades\DB;
+use App\Enums\Post\PostTypeEnum;
+use App\Models\Post;
 
 /**
  * Total comments, comment growth, and toxic comment count.
@@ -36,13 +37,15 @@ class CommentOverviewTool extends AbstractAnalyticsTool
         $range   = $this->resolveDateRange($params['period']);
         $filters = (array) ($params['filters'] ?? []);
 
-        $query = DB::table('comments')
-            ->whereNull('deleted_at')
+        $query = Post::query()
+            ->where('type', PostTypeEnum::COMMENT->value)
+            ->whereNotNull('parent_id')
             ->whereBetween('created_at', [$range['from'], $range['to']]);
 
-        if (! $isAdmin && $userId !== null) {
-            $query->whereIn('post_id', function ($sub) use ($userId) {
-                $sub->select('id')->from('posts')->where('user_id', $userId)->whereNull('deleted_at');
+        $ownerId = ! $isAdmin ? $userId : ($params['user_id'] ?? $filters['creator_id'] ?? null);
+        if ($ownerId !== null) {
+            $query->whereIn('parent_id', function ($sub) use ($ownerId) {
+                $sub->select('id')->from('posts')->where('user_id', (int) $ownerId)->whereNull('deleted_at');
             });
         }
 
@@ -50,19 +53,21 @@ class CommentOverviewTool extends AbstractAnalyticsTool
             $query->where('status', $filters['status']);
         }
 
-        $total  = (clone $query)->count();
-        $toxic  = (clone $query)->where('is_toxic', true)->count();
+        $total = (clone $query)->count();
 
         $compare   = null;
         $changePct = null;
 
         if (isset($params['compare_with'])) {
             $cr = $this->resolveDateRange($params['compare_with']);
-            $pq = DB::table('comments')->whereNull('deleted_at')->whereBetween('created_at', [$cr['from'], $cr['to']]);
+            $pq = Post::query()
+                ->where('type', PostTypeEnum::COMMENT->value)
+                ->whereNotNull('parent_id')
+                ->whereBetween('created_at', [$cr['from'], $cr['to']]);
 
-            if (! $isAdmin && $userId !== null) {
-                $pq->whereIn('post_id', function ($sub) use ($userId) {
-                    $sub->select('id')->from('posts')->where('user_id', $userId)->whereNull('deleted_at');
+            if ($ownerId !== null) {
+                $pq->whereIn('parent_id', function ($sub) use ($ownerId) {
+                    $sub->select('id')->from('posts')->where('user_id', (int) $ownerId)->whereNull('deleted_at');
                 });
             }
 
@@ -74,7 +79,7 @@ class CommentOverviewTool extends AbstractAnalyticsTool
         return [
             'tool'       => $this->name(),
             'period'     => $params['period'],
-            'data'       => ['total_comments' => $total, 'toxic_comments' => $toxic],
+            'data'       => ['total_comments' => $total],
             'compare'    => $compare,
             'change_pct' => $changePct,
         ];

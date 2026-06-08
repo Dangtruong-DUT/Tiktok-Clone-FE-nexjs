@@ -44,19 +44,17 @@ class PostEngagementBreakdownTool extends AbstractAnalyticsTool
             $query->where('user_id', $userId);
         }
 
-        if (isset($params['user_id']) && $isAdmin) {
+        if ($isAdmin && isset($params['user_id'])) {
             $query->where('user_id', $params['user_id']);
-        }
-
-        if (isset($filters['category'])) {
-            $query->where('category', $filters['category']);
+        } elseif ($isAdmin && isset($filters['creator_id'])) {
+            $query->where('user_id', $filters['creator_id']);
         }
 
         $agg = (clone $query)->selectRaw(
             'COALESCE(SUM(user_views + guest_views), 0) as total_views,
              COALESCE(SUM(likes_count), 0) as total_likes,
              COALESCE(SUM(comments_count), 0) as total_comments,
-             COALESCE(SUM(shares_count), 0) as total_shares,
+             COALESCE(SUM(share_count), 0) as total_shares,
              COALESCE(SUM(bookmarks_count), 0) as total_bookmarks,
              COUNT(*) as post_count'
         )->first();
@@ -87,6 +85,10 @@ class PostEngagementBreakdownTool extends AbstractAnalyticsTool
 
             if (! $isAdmin && $userId !== null) {
                 $pq->where('user_id', $userId);
+            } elseif ($isAdmin && isset($params['user_id'])) {
+                $pq->where('user_id', $params['user_id']);
+            } elseif ($isAdmin && isset($filters['creator_id'])) {
+                $pq->where('user_id', $filters['creator_id']);
             }
 
             $prevAgg  = $pq->selectRaw('COALESCE(SUM(user_views + guest_views), 0) as total_views')->first();
