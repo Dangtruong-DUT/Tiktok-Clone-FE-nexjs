@@ -19,9 +19,6 @@ return [
     ],
 
     'tools' => [
-
-        // ────────────────── Creator Tools ──────────────────────────────────────
-
         'get_post_overview' => [
             'class'           => \App\Services\Analytics\Tools\PostOverviewTool::class,
             'description'     => 'Post count by status (published, hidden, draft, scheduled). Growth vs comparison period.',
@@ -148,7 +145,12 @@ return [
             'metrics'         => ['scheduled_total', 'published', 'failed', 'cancelled', 'success_rate', 'avg_delay_minutes'],
         ],
 
-        // ────────────────── Admin-Only Tools ───────────────────────────────────
+        /**
+         * Admin Analytics Tools - these require admin scopes and are focused on platform-wide insights,
+         * user behavior, content moderation, and system health.
+         * They often include more sensitive data and may have stricter caching policies to balance performance
+         *  with data freshness.
+         */
 
         'get_user_growth' => [
             'class'           => \App\Services\Analytics\Tools\UserGrowthTool::class,

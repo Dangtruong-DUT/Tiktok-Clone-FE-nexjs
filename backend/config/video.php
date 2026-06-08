@@ -27,7 +27,6 @@ return [
 
     'hls' => [
         'segment_duration' => 6,
-        // 'size' = shorter side of the video (works for both portrait and landscape)
         'variants' => [
             '360p'  => ['size' => 360,  'video_bitrate' => '800k',  'max_rate' => '856k',  'buf_size' => '1200k',  'audio_bitrate' => '96k',  'bandwidth' => 800000],
             '480p'  => ['size' => 480,  'video_bitrate' => '1400k', 'max_rate' => '1498k', 'buf_size' => '2100k',  'audio_bitrate' => '128k', 'bandwidth' => 1400000],
