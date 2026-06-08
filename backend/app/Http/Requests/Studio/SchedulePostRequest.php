@@ -10,8 +10,8 @@ class SchedulePostRequest extends BaseRequest
     public function rules(): array
     {
         return $this->applyBaseRules([
-            'scheduled_at' => [self::REQUIRED, self::DATE, self::AFTER . ':now'],
-            'timezone'     => [self::SOMETIMES, self::NULLABLE, self::STRING, self::MAX . ':100'],
+            'scheduled_at' => [self::REQUIRED],
+            'timezone'     => [self::SOMETIMES],
         ]);
     }
 }

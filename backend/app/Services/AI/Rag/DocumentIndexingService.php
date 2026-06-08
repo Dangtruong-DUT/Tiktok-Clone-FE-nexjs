@@ -5,13 +5,12 @@ namespace App\Services\AI\Rag;
 use App\Jobs\EmbedDocumentChunkJob;
 use App\Models\AiDocument;
 use App\Models\AiDocumentChunk;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class DocumentIndexingService
 {
     /**
-     * Create a new service instance.
-     *
      * @param  DocumentChunkingService  $chunkingService
      */
     public function __construct(
@@ -20,39 +19,53 @@ class DocumentIndexingService
 
     /**
      * Split a document into chunks and dispatch embedding jobs for each.
+     * Chunk deletion + insertion + document update run inside a single transaction
+     * so a mid-process crash cannot leave the document with zero chunks.
      */
     public function index(AiDocument $document): void
     {
         $chunks = $this->chunkingService->chunk($document->raw_content, $document->content_type);
 
-        // Remove old chunks before re-indexing
-        $document->chunks()->delete();
+        DB::transaction(function () use ($document, $chunks) {
+            $document->chunks()->delete();
 
-        $chunkModels = [];
-        foreach ($chunks as $i => $text) {
-            $chunkModels[] = AiDocumentChunk::create([
-                'uuid'           => Str::uuid()->toString(),
-                'ai_document_id' => $document->id,
-                'chunk_index'    => $i,
-                'content'        => $text,
-                'token_count'    => $this->chunkingService->estimateTokens($text),
-                'is_embedded'    => false,
+            $now  = now();
+            $rows = [];
+            foreach ($chunks as $i => $text) {
+                $rows[] = [
+                    'uuid'           => Str::uuid()->toString(),
+                    'ai_document_id' => $document->id,
+                    'chunk_index'    => $i,
+                    'content'        => $text,
+                    'token_count'    => $this->chunkingService->estimateTokens($text),
+                    'is_embedded'    => false,
+                    'created_at'     => $now,
+                    'updated_at'     => $now,
+                ];
+            }
+
+            if (! empty($rows)) {
+                AiDocumentChunk::insert($rows);
+            }
+
+            $document->update([
+                'is_indexed'  => false,
+                'chunk_count' => count($rows),
             ]);
-        }
+        });
 
-        $document->update([
-            'is_indexed' => false,
-            'chunk_count' => count($chunkModels),
-        ]);
+        // Dispatch outside the transaction so jobs only run after the commit.
+        $chunkIds = AiDocumentChunk::where('ai_document_id', $document->id)
+            ->orderBy('chunk_index')
+            ->pluck('id');
 
-        // Dispatch embedding jobs — stagger slightly to avoid rate-limit bursts
-        foreach ($chunkModels as $chunk) {
-            EmbedDocumentChunkJob::dispatch($chunk->id)->onQueue('ai-embedding');
+        foreach ($chunkIds as $chunkId) {
+            EmbedDocumentChunkJob::dispatch($chunkId)->onQueue('ai-embedding');
         }
     }
 
     /**
-     * Re-index all documents (useful for schema migrations or model changes).
+     * Re-index all documents (useful after schema migrations or model changes).
      */
     public function reindexAll(): void
     {

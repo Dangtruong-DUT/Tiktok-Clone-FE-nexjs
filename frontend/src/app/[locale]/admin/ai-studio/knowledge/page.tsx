@@ -39,7 +39,7 @@ import LoadingIcon from '@/components/lottie-icons/loading'
 type UploadMode = 'file' | 'text'
 
 interface DeleteTarget {
-    id: number
+    uuid: string
     title: string
 }
 
@@ -55,6 +55,7 @@ export default function KnowledgePage() {
     const [showForm, setShowForm] = useState(false)
     const [uploadMode, setUploadMode] = useState<UploadMode>('file')
     const [title, setTitle] = useState('')
+    const [description, setDescription] = useState('')
     const [sourceType, setSourceType] = useState('faq')
     const [language, setLanguage] = useState('vi')
     const [rawContent, setRawContent] = useState('')
@@ -63,9 +64,9 @@ export default function KnowledgePage() {
     const [viewDoc, setViewDoc] = useState<AiDocumentDetailAdminDto | null>(null)
     const fileRef = useRef<HTMLInputElement>(null)
 
-    const handleViewDocument = async (id: number) => {
+    const handleViewDocument = async (uuid: string) => {
         try {
-            const result = await fetchDocument(id).unwrap()
+            const result = await fetchDocument(uuid).unwrap()
             setViewDoc(result.data)
         } catch {
             toast.error(t('toast.loadFailed'))
@@ -101,6 +102,7 @@ export default function KnowledgePage() {
 
     const resetForm = () => {
         setTitle('')
+        setDescription('')
         setSourceType('faq')
         setLanguage('vi')
         setRawContent('')
@@ -118,6 +120,7 @@ export default function KnowledgePage() {
 
         const formData = new FormData()
         formData.append('title', title.trim())
+        if (description.trim()) formData.append('description', description.trim())
         formData.append('source_type', sourceType)
         formData.append('language', language)
 
@@ -148,7 +151,7 @@ export default function KnowledgePage() {
     const handleDeleteConfirm = async () => {
         if (!deleteTarget) return
         try {
-            await deleteDocument(deleteTarget.id).unwrap()
+            await deleteDocument(deleteTarget.uuid).unwrap()
             toast.success(t('toast.deleted'))
         } catch {
             toast.error(t('toast.deleteFailed'))
@@ -221,6 +224,20 @@ export default function KnowledgePage() {
                                             value={title}
                                             onChange={(e) => setTitle(e.target.value)}
                                             placeholder={t('titlePlaceholder')}
+                                        />
+                                    </div>
+                                    <div className='col-span-2 space-y-1.5'>
+                                        <label className='text-xs font-medium text-muted-foreground'>
+                                            {t('descriptionLabel')}{' '}
+                                            <span className='font-normal opacity-60'>{t('descriptionHint')}</span>
+                                        </label>
+                                        <Textarea
+                                            value={description}
+                                            onChange={(e) => setDescription(e.target.value)}
+                                            placeholder={t('descriptionPlaceholder')}
+                                            rows={2}
+                                            maxLength={500}
+                                            className='resize-none'
                                         />
                                     </div>
                                     <div className='space-y-1.5'>
@@ -323,7 +340,10 @@ export default function KnowledgePage() {
                                 <FileText className='size-4 text-muted-foreground shrink-0' />
                                 <div className='flex-1 min-w-0'>
                                     <p className='text-sm font-medium truncate'>{doc.title}</p>
-                                    <p className='text-xs text-muted-foreground'>
+                                    {doc.description && (
+                                        <p className='text-xs text-muted-foreground/70 truncate mt-0.5'>{doc.description}</p>
+                                    )}
+                                    <p className='text-xs text-muted-foreground mt-0.5'>
                                         {doc.source_type} · {doc.language.toUpperCase()} · {doc.chunk_count} chunks
                                     </p>
                                 </div>
@@ -345,7 +365,7 @@ export default function KnowledgePage() {
                                         size='sm'
                                         disabled={isLoadingDoc}
                                         className='h-7 w-7 p-0 text-muted-foreground hover:text-foreground'
-                                        onClick={() => handleViewDocument(doc.id)}
+                                        onClick={() => handleViewDocument(doc.uuid)}
                                     >
                                         <Eye className='size-3.5' />
                                     </Button>
@@ -354,7 +374,7 @@ export default function KnowledgePage() {
                                         size='sm'
                                         disabled={isDeleting}
                                         className='h-7 w-7 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10'
-                                        onClick={() => setDeleteTarget({ id: doc.id, title: doc.title })}
+                                        onClick={() => setDeleteTarget({ uuid: doc.uuid, title: doc.title })}
                                     >
                                         <Trash2 className='size-3.5' />
                                     </Button>
@@ -399,6 +419,9 @@ export default function KnowledgePage() {
                                     </Badge>
                                 )}
                             </div>
+                            {viewDoc.description && (
+                                <p className='text-sm text-muted-foreground'>{viewDoc.description}</p>
+                            )}
                             <div className='overflow-hidden rounded-lg border' style={{ height: '55vh' }}>
                                 <DocViewer
                                     documents={[{

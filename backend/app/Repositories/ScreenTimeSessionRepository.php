@@ -13,7 +13,7 @@ class ScreenTimeSessionRepository extends BaseRepository
 {
     public function __construct()
     {
-        parent::__construct(new ScreenTimeSession());
+        parent::__construct(app()->make(ScreenTimeSession::class));
     }
 
     /**

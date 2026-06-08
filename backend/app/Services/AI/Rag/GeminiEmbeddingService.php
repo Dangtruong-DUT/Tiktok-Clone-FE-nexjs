@@ -2,49 +2,23 @@
 
 namespace App\Services\AI\Rag;
 
-use Illuminate\Support\Facades\Http;
-use RuntimeException;
+use App\Contracts\AI\GeminiClientInterface;
 
 class GeminiEmbeddingService
 {
-    /**
-     * Create a new service instance.
-     */
-    public function __construct() {}
+    public function __construct(
+        private readonly GeminiClientInterface $geminiClient,
+    ) {}
 
     /**
      * Embed a text string and return a 768-dimensional float vector.
      *
+     * @param  string  $taskType  RETRIEVAL_QUERY (user question) | RETRIEVAL_DOCUMENT (chunk at index time)
      * @return float[]
      */
-    public function embed(string $text): array
+    public function embed(string $text, string $taskType = 'RETRIEVAL_QUERY'): array
     {
-        $apiKey  = config('gemini.api_key');
-        $baseUrl = rtrim(config('gemini.base_url', 'https://generativelanguage.googleapis.com/v1beta'), '/');
-        $model   = config('gemini.embedding.model', 'text-embedding-004');
-        $timeout = (int) config('gemini.embedding.timeout', 30);
-
-        $response = Http::withOptions(['timeout' => $timeout])
-            ->post("{$baseUrl}/models/{$model}:embedContent?key={$apiKey}", [
-                'model'   => "models/{$model}",
-                'content' => [
-                    'parts' => [['text' => $text]],
-                ],
-            ]);
-
-        if (! $response->successful()) {
-            throw new RuntimeException(
-                'Gemini embedding API error: ' . $response->status() . ' ' . $response->body()
-            );
-        }
-
-        $values = $response->json('embedding.values', []);
-
-        if (empty($values)) {
-            throw new RuntimeException('Gemini embedding returned empty values.');
-        }
-
-        return array_map('floatval', $values);
+        return $this->geminiClient->embed($text, $taskType);
     }
 
     /**

@@ -31,7 +31,7 @@ class ActivityLogRepository extends BaseRepository
             ->when($filterCollection->get('order_by'), function (Builder $query, $orderBy) {
                 $query->orderByMultiple($orderBy);
             }, function (Builder $query) {
-                $query->orderBy('created_at', 'desc');
+                $query->orderByDesc('created_at');
             });
 
         $perPage = min((int) $filterCollection->get('per_page', 20), 100);

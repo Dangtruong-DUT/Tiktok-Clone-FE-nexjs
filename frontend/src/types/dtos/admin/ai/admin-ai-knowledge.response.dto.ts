@@ -4,6 +4,7 @@ export interface AiDocumentAdminDto {
     readonly id: number
     readonly uuid: string
     readonly title: string
+    readonly description: string | null
     readonly source_type: 'faq' | 'guide' | 'policy' | 'feature' | 'other'
     readonly content_type: string
     readonly language: string

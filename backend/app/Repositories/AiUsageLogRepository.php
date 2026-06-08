@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\AiUsageLog;
-use Illuminate\Support\Facades\DB;
 
 /**
  * @extends BaseRepository<AiUsageLog>
@@ -12,7 +11,7 @@ class AiUsageLogRepository extends BaseRepository
 {
     public function __construct()
     {
-        parent::__construct(new AiUsageLog());
+        parent::__construct(app()->make(AiUsageLog::class));
     }
 
     /**

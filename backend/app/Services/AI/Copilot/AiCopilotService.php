@@ -16,7 +16,6 @@ use App\Services\AI\Copilot\Gateway\AiGateway;
 use App\Services\AI\Copilot\Orchestrator\CopilotOrchestrator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Str;
 
 class AiCopilotService
 {
@@ -40,9 +39,9 @@ class AiCopilotService
      *
      * @param  int  $userId
      * @param  array<string,mixed>  $data
-     * @return AiCopilotSession
+     * @return array{session: AiCopilotSession, created: bool}
      */
-    public function startSession(int $userId, array $data): AiCopilotSession
+    public function startSession(int $userId, array $data): array
     {
         $settings = AiStudioSetting::current();
         $locale   = app()->getLocale();
@@ -52,8 +51,9 @@ class AiCopilotService
             $existing->update([
                 'session_meta' => array_merge($existing->session_meta ?? [], ['locale' => $locale]),
             ]);
+            $existing->load(['messages' => fn ($q) => $q->orderBy('created_at')->limit(20)]);
 
-            return $existing;
+            return ['session' => $existing, 'created' => false];
         }
 
         $context = new AiCopilotSessionContext(
@@ -68,7 +68,6 @@ class AiCopilotService
         );
 
         $session = AiCopilotSession::create([
-            'uuid'                => Str::uuid()->toString(),
             'user_id'             => $userId,
             'post_id'             => isset($data['post_id']) ? (int) $data['post_id'] : null,
             'upload_session_uuid' => $data['upload_session_uuid'] ?? null,
@@ -84,7 +83,7 @@ class AiCopilotService
 
         $session->load(['messages' => fn ($q) => $q->orderBy('created_at')->limit(20)]);
 
-        return $session;
+        return ['session' => $session, 'created' => true];
     }
 
     /**
@@ -130,6 +129,7 @@ class AiCopilotService
 
     /**
      * Persist a user-authored message to the session.
+     * Aborts with 429 if the session has reached the configured message limit.
      *
      * @param  AiCopilotSession  $session
      * @param  AiCopilotMessageInput  $input
@@ -138,6 +138,8 @@ class AiCopilotService
      */
     public function createUserMessage(AiCopilotSession $session, AiCopilotMessageInput $input, string $uuid): AiCopilotMessage
     {
+        $this->assertSessionHasCapacity($session);
+
         return AiCopilotMessage::create([
             'uuid'        => $uuid,
             'session_id'  => $session->id,
@@ -163,6 +165,7 @@ class AiCopilotService
 
     /**
      * Load a message by UUID, aborting 403 if it does not belong to the user.
+     * Uses eager-loaded session to avoid an N+1 query.
      *
      * @param  string  $messageUuid
      * @param  int  $userId
@@ -170,9 +173,51 @@ class AiCopilotService
      */
     public function getMessageByUuidForUser(string $messageUuid, int $userId): AiCopilotMessage
     {
-        $message = $this->messageRepo->findByUuidOrFail($messageUuid);
+        $message = $this->messageRepo->findByUuidWithSession($messageUuid);
 
         abort_if($message->session->user_id !== $userId, 403);
+
+        return $message;
+    }
+
+    /**
+     * Accept an assistant message for the given user.
+     * Validates ownership, role (assistant only), and that status is not already finalized.
+     *
+     * @param  string  $messageUuid
+     * @param  int  $userId
+     * @return AiCopilotMessage
+     */
+    public function acceptMessage(string $messageUuid, int $userId): AiCopilotMessage
+    {
+        $message = $this->getMessageByUuidForUser($messageUuid, $userId);
+
+        abort_if($message->role !== AiCopilotMessageRoleEnum::ASSISTANT, 422, 'Only assistant messages can be accepted.');
+        abort_if(in_array($message->status, ['accepted', 'rejected'], true), 422, 'Message status is already finalized.');
+
+        $this->messageRepo->markAccepted($message);
+        $message->status = 'accepted';
+
+        return $message;
+    }
+
+    /**
+     * Reject an assistant message for the given user.
+     * Validates ownership, role (assistant only), and that status is not already finalized.
+     *
+     * @param  string  $messageUuid
+     * @param  int  $userId
+     * @return AiCopilotMessage
+     */
+    public function rejectMessage(string $messageUuid, int $userId): AiCopilotMessage
+    {
+        $message = $this->getMessageByUuidForUser($messageUuid, $userId);
+
+        abort_if($message->role !== AiCopilotMessageRoleEnum::ASSISTANT, 422, 'Only assistant messages can be rejected.');
+        abort_if(in_array($message->status, ['accepted', 'rejected'], true), 422, 'Message status is already finalized.');
+
+        $this->messageRepo->markRejected($message);
+        $message->status = 'rejected';
 
         return $message;
     }
@@ -315,7 +360,10 @@ class AiCopilotService
         $history = $this->buildHistory($session, excludeMessageId: $userMessage->id);
 
         $startedAt = microtime(true);
-        $task      = $this->aiGateway->understand(
+        $task      = null;
+
+        try {
+            $task = $this->aiGateway->understand(
                 question:            $input->content,
                 locale:              $locale,
                 isAdmin:             $context->userRole === 'super_admin',
@@ -329,86 +377,94 @@ class AiCopilotService
                 }
             };
 
-            try {
-                $result = $this->orchestrator->dispatch($task, $input, $context, $history, $chunkEmit);
+            $result = $this->orchestrator->dispatch($task, $input, $context, $history, $chunkEmit);
 
-                $structuredOutput = $result->structuredOutput ?? [];
-                $structuredOutput['task_type'] = $task->taskType;
+            $structuredOutput = $result->structuredOutput ?? [];
+            $structuredOutput['task_type'] = $task->taskType;
 
-                $assistantMessage = AiCopilotMessage::create([
-                    'uuid'               => Str::uuid()->toString(),
-                    'session_id'         => $session->id,
-                    'role'               => AiCopilotMessageRoleEnum::ASSISTANT->value,
-                    'content'            => $result->text,
-                    'intent'             => $task->intent,
-                    'intent_confidence'  => $task->confidence,
-                    'structured_output'  => $structuredOutput,
-                    'follow_up_chips'    => $result->followUpChips ?: $this->gatewayDefaultChips($task->taskType, $locale),
-                    'token_usage'        => $result->tokenUsage,
-                    'provider'           => 'gemini',
-                    'model'              => $setting->gemini_model,
-                ]);
+            $assistantMessage = AiCopilotMessage::create([
+                'session_id'         => $session->id,
+                'role'               => AiCopilotMessageRoleEnum::ASSISTANT->value,
+                'content'            => $result->text,
+                'intent'             => $task->intent,
+                'intent_confidence'  => $task->confidence,
+                'structured_output'  => $structuredOutput,
+                'follow_up_chips'    => $result->followUpChips ?: $this->gatewayDefaultChips($task->taskType, $locale),
+                'token_usage'        => $result->tokenUsage,
+                'provider'           => 'gemini',
+                'model'              => $setting->gemini_model,
+            ]);
 
-                \App\Models\AiUsageLog::record(
-                    userId:     $session->user_id,
-                    tokenUsage: $result->tokenUsage,
-                    intent:     $task->intent,
-                    status:     'success',
-                    sessionId:  $session->id,
-                    messageId:  $assistantMessage->id,
-                    latencyMs:  (int) round((microtime(true) - $startedAt) * 1000),
-                    provider:   'gemini',
-                    model:      $setting->gemini_model ?? '',
-                );
+            \App\Models\AiUsageLog::record(
+                userId:     $session->user_id,
+                tokenUsage: $result->tokenUsage,
+                intent:     $task->intent,
+                status:     'success',
+                sessionId:  $session->id,
+                messageId:  $assistantMessage->id,
+                latencyMs:  (int) round((microtime(true) - $startedAt) * 1000),
+                provider:   'gemini',
+                model:      $setting->gemini_model ?? '',
+            );
 
-                $emit('', true, [
-                    'uuid'              => $assistantMessage->uuid,
-                    'role'              => 'assistant',
-                    'content'           => $result->text,
-                    'status'            => 'success',
-                    'intent'            => $task->intent,
-                    'task_type'         => $task->taskType,
-                    'structured_output' => $structuredOutput,
-                    'follow_up_chips'   => $assistantMessage->follow_up_chips,
-                    'token_usage'       => $result->tokenUsage,
-                ]);
-            } catch (\Throwable $e) {
-                $errorText    = $this->friendlyError($e, $locale);
-                $errorMessage = AiCopilotMessage::create([
-                    'uuid'          => Str::uuid()->toString(),
-                    'session_id'    => $session->id,
-                    'role'          => AiCopilotMessageRoleEnum::ASSISTANT->value,
-                    'content'       => $errorText,
-                    'intent'        => $task->intent,
-                    'provider'      => 'gemini',
-                    'status'        => 'failed',
-                    'error_message' => $e->getMessage(),
-                ]);
+            $emit('', true, [
+                'uuid'              => $assistantMessage->uuid,
+                'role'              => 'assistant',
+                'content'           => $result->text,
+                'status'            => 'success',
+                'intent'            => $task->intent,
+                'task_type'         => $task->taskType,
+                'structured_output' => $structuredOutput,
+                'follow_up_chips'   => $assistantMessage->follow_up_chips,
+                'token_usage'       => $result->tokenUsage,
+            ]);
+        } catch (\Throwable $e) {
+            $errorText    = $this->friendlyError($e, $locale);
+            $errorMessage = AiCopilotMessage::create([
+                'session_id'    => $session->id,
+                'role'          => AiCopilotMessageRoleEnum::ASSISTANT->value,
+                'content'       => $errorText,
+                'intent'        => $task?->intent ?? 'unknown',
+                'provider'      => 'gemini',
+                'status'        => 'failed',
+                'error_message' => $e->getMessage(),
+            ]);
 
-                \App\Models\AiUsageLog::record(
-                    userId:     $session->user_id,
-                    tokenUsage: [],
-                    intent:     $task->intent,
-                    status:     'failed',
-                    sessionId:  $session->id,
-                    messageId:  $errorMessage->id,
-                    latencyMs:  (int) round((microtime(true) - $startedAt) * 1000),
-                    provider:   'gemini',
-                    model:      $setting->gemini_model ?? '',
-                );
+            \App\Models\AiUsageLog::record(
+                userId:     $session->user_id,
+                tokenUsage: [],
+                intent:     $task?->intent ?? 'unknown',
+                status:     'failed',
+                sessionId:  $session->id,
+                messageId:  $errorMessage->id,
+                latencyMs:  (int) round((microtime(true) - $startedAt) * 1000),
+                provider:   'gemini',
+                model:      $setting->gemini_model ?? '',
+            );
 
-                $emit('', true, [
-                    'uuid'              => $errorMessage->uuid,
-                    'role'              => 'assistant',
-                    'content'           => $errorText,
-                    'status'            => 'failed',
-                    'intent'            => $task->intent,
-                    'task_type'         => $task->taskType,
-                    'structured_output' => null,
-                    'follow_up_chips'   => (array) trans('copilot.chips.error', [], $locale),
-                    'token_usage'       => [],
-                ]);
-            }
+            $emit('', true, [
+                'uuid'              => $errorMessage->uuid,
+                'role'              => 'assistant',
+                'content'           => $errorText,
+                'status'            => 'failed',
+                'intent'            => $task?->intent ?? 'unknown',
+                'task_type'         => $task?->taskType ?? 'unknown',
+                'structured_output' => null,
+                'follow_up_chips'   => (array) trans('copilot.chips.error', [], $locale),
+                'token_usage'       => [],
+            ]);
+        }
+    }
+
+    /**
+     * Abort with 429 if the session has reached the configured message limit.
+     */
+    private function assertSessionHasCapacity(AiCopilotSession $session): void
+    {
+        $max   = (int) (AiStudioSetting::current()->copilot_max_messages_per_session ?? 50);
+        $count = AiCopilotMessage::where('session_id', $session->id)->count();
+
+        abort_if($count >= $max, 429, 'Session message limit reached. Please start a new session.');
     }
 
     /**
@@ -439,7 +495,6 @@ class AiCopilotService
         array                    $extra = [],
     ): AiCopilotMessage {
         return AiCopilotMessage::create(array_merge([
-            'uuid'       => Str::uuid()->toString(),
             'session_id' => $session->id,
             'role'       => $role->value,
             'content'    => $content,

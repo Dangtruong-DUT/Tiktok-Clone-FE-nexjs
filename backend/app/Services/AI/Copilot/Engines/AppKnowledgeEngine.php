@@ -53,7 +53,7 @@ class AppKnowledgeEngine extends AbstractCopilotEngine implements CopilotEngineI
     ): CopilotHandlerResult {
         $locale = $context->creatorLanguage ?? 'vi';
 
-        $ragResult = $this->tryRag($input->content, $conversationHistory, $locale);
+        $ragResult = $this->tryRag($input->content, $conversationHistory, $locale, $emit);
 
         if ($ragResult !== null) {
             if ($emit !== null) {
@@ -81,29 +81,27 @@ class AppKnowledgeEngine extends AbstractCopilotEngine implements CopilotEngineI
 
     /**
      * Attempt RAG: embed → search → Gemini synthesis.
+     * Passes pre-fetched chunks directly to RagService to avoid double embedding.
      * Returns null when no matching chunks are found.
      *
-     * @param  string  $question
+     * @param  string    $question
      * @param  array<array{role: string, parts: array}>  $conversationHistory
-     * @param  string  $locale
+     * @param  string    $locale
+     * @param  callable(string $chunk, bool $done): void|null  $emit
      * @return array{answer: string, citations: list<array<string,mixed>>}|null
      */
-    private function tryRag(string $question, array $conversationHistory, string $locale): ?array
+    private function tryRag(string $question, array $conversationHistory, string $locale, ?callable $emit = null): ?array
     {
         try {
-            $embedding = $this->embeddingService->embed($question);
+            $embedding = $this->embeddingService->embed($question, 'RETRIEVAL_QUERY');
             $chunks    = $this->searchService->search($embedding, limit: 5, threshold: 0.70);
 
             if ($chunks->isEmpty()) {
                 return null;
             }
 
-            $history = array_map(fn (array $turn) => [
-                'role'    => $turn['role'] === 'model' ? 'assistant' : 'user',
-                'content' => $turn['parts'][0]['text'] ?? '',
-            ], $conversationHistory);
-
-            return $this->ragService->answer($question, $history, $locale);
+            // $conversationHistory is already Gemini native format — pass directly, no conversion
+            return $this->ragService->answerWithChunks($question, $chunks, $conversationHistory, $locale, $emit);
         } catch (\Throwable) {
             return null;
         }

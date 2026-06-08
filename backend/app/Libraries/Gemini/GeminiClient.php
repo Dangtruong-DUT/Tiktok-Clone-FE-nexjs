@@ -7,6 +7,7 @@ use App\Exceptions\http\BusinessException;
 use App\DTOs\AI\Gemini\GeminiRequest;
 use App\DTOs\AI\Gemini\GeminiResponse;
 use Gemini\Contracts\ClientContract as VendorGeminiClient;
+use Gemini\Enums\TaskType;
 use Gemini\Responses\GenerativeModel\GenerateContentResponse;
 use Illuminate\Support\Facades\Log;
 
@@ -104,6 +105,23 @@ class GeminiClient implements GeminiClientInterface
         $onChunk('', true, $tokenUsage);
 
         return $tokenUsage;
+    }
+
+    /**
+     * Generate a text embedding vector using the configured embedding model.
+     *
+     * @return float[]
+     */
+    public function embed(string $text, string $taskType = 'RETRIEVAL_QUERY'): array
+    {
+        $model = config('gemini.embedding.model', 'text-embedding-004');
+
+        $response = $this->withRetry(
+            fn () => $this->client->embeddingModel($model)
+                ->embedContent($text, TaskType::from($taskType))
+        );
+
+        return $response->embedding->values;
     }
 
     private function withRetry(\Closure $call): mixed

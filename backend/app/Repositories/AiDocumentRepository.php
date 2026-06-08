@@ -12,7 +12,7 @@ class AiDocumentRepository extends BaseRepository
 {
     public function __construct()
     {
-        parent::__construct(new AiDocument());
+        parent::__construct(app()->make(AiDocument::class));
     }
 
     /**
@@ -26,5 +26,16 @@ class AiDocumentRepository extends BaseRepository
         return $this->query()
             ->latest()
             ->paginate($perPage);
+    }
+
+    /**
+     * Find a document by UUID or throw 404.
+     *
+     * @param  string  $uuid
+     * @return AiDocument
+     */
+    public function findByUuid(string $uuid): AiDocument
+    {
+        return $this->query()->where('uuid', $uuid)->firstOrFail();
     }
 }

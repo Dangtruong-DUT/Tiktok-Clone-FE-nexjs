@@ -5,6 +5,7 @@ import { X, Sparkles, RotateCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
+import { useDeleteSessionMutation } from '@/store/services/ai-copilot.service'
 import { useAiCopilotContext } from './AiCopilotContext'
 import { useCopilotSession } from './hooks/useCopilotSession'
 import { useAiCopilot } from './hooks/useAiCopilot'
@@ -22,11 +23,15 @@ export function AiCopilot({ role = 'creator' }: AiCopilotProps) {
 
     const { session, sessionUuid, isLoading: isSessionLoading, start, reset: resetSession } = useCopilotSession()
     const { messages, isSending, send, accept, reject, retry, initFromSession, clearMessages } = useAiCopilot({ sessionUuid })
+    const [deleteSession] = useDeleteSessionMutation()
 
     const handleNewSession = useCallback(() => {
+        if (sessionUuid) {
+            deleteSession(sessionUuid)
+        }
         clearMessages()
         resetSession()
-    }, [clearMessages, resetSession])
+    }, [sessionUuid, deleteSession, clearMessages, resetSession])
 
     useEffect(() => {
         if (isPanelOpen && !sessionUuid) {

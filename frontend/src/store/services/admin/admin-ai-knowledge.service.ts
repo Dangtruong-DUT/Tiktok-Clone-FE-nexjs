@@ -21,8 +21,8 @@ export const AdminAiKnowledgeApi = createApi({
     tagTypes:          ['AiDocument'],
     keepUnusedDataFor: 60,
     endpoints: (builder) => ({
-        getDocument: builder.query<GetAiDocumentResDto, number>({
-            query: (id) => BACKEND_API_ENDPOINT.ADMIN.AI_KNOWLEDGE.DOCUMENT(id),
+        getDocument: builder.query<GetAiDocumentResDto, string>({
+            query: (uuid) => BACKEND_API_ENDPOINT.ADMIN.AI_KNOWLEDGE.DOCUMENT(uuid),
         }),
 
         getDocuments: builder.query<ListAiDocumentsResDto, { page?: number; perPage?: number }>({
@@ -40,9 +40,9 @@ export const AdminAiKnowledgeApi = createApi({
             invalidatesTags: ['AiDocument'],
         }),
 
-        deleteDocument: builder.mutation<void, number>({
-            query: (id) => ({
-                url:    BACKEND_API_ENDPOINT.ADMIN.AI_KNOWLEDGE.DOCUMENT(id),
+        deleteDocument: builder.mutation<void, string>({
+            query: (uuid) => ({
+                url:    BACKEND_API_ENDPOINT.ADMIN.AI_KNOWLEDGE.DOCUMENT(uuid),
                 method: 'DELETE',
             }),
             invalidatesTags: ['AiDocument'],

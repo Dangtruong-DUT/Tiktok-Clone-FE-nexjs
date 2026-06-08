@@ -300,8 +300,10 @@ abstract class BaseRequest extends BaseFormRequest
                 new Enum(AppealTypeEnum::class)],
             'appeal_status' => [
                 new Enum(AppealStatusEnum::class)],
-            'date_from' => [self::NULLABLE, self::DATE_FORMAT.':Y-m-d'],
-            'date_to' => [self::NULLABLE, self::DATE_FORMAT.':Y-m-d'],
+            'date_from'    => [self::NULLABLE, self::DATE_FORMAT.':Y-m-d'],
+            'date_to'      => [self::NULLABLE, self::DATE_FORMAT.':Y-m-d'],
+            'scheduled_at' => [self::DATE, self::AFTER.':now'],
+            'timezone'     => [self::NULLABLE, self::STRING, self::MAX.':100'],
         ];
     }
 }

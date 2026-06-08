@@ -98,7 +98,7 @@ export const BACKEND_API_ENDPOINT = {
     AI_KNOWLEDGE: {
         CHAT:      '/studio/ai/knowledge/chat',
         DOCUMENTS: '/studio/ai/knowledge/documents',
-        DOCUMENT:  (id: number) => `/studio/ai/knowledge/documents/${id}`,
+        DOCUMENT:  (uuid: string) => `/studio/ai/knowledge/documents/${uuid}`,
     },
 
     WELLNESS: {
@@ -110,17 +110,16 @@ export const BACKEND_API_ENDPOINT = {
         SESSION_END:   (uuid: string) => `/users/me/wellness/sessions/${uuid}/end`,
         RULES:         '/users/me/wellness/rules',
         RULE:          (uuid: string) => `/users/me/wellness/rules/${uuid}`,
-        PARSE_RULE:    '/users/me/wellness/rules/parse',
         ANALYZE:       '/users/me/wellness/analyze',
     },
 
     STUDIO_POSTS: {
-        LIST:        '/studio/posts',
-        SCHEDULED:   '/studio/posts/scheduled',
-        SCHEDULE:    (postUuid: string) => `/studio/posts/${postUuid}/schedule`,
-        RESCHEDULE:  (schedUuid: string) => `/studio/posts/scheduled/${schedUuid}/reschedule`,
-        PUBLISH_NOW: (postUuid: string) => `/studio/posts/${postUuid}/publish-now`,
-        CANCEL:      (schedUuid: string) => `/studio/posts/scheduled/${schedUuid}/cancel`,
+        LIST:        '/posts/mine',
+        SCHEDULED:   '/posts/scheduled',
+        SCHEDULE:    (postUuid: string) => `/posts/${postUuid}/schedule`,
+        RESCHEDULE:  (schedUuid: string) => `/posts/scheduled/${schedUuid}/reschedule`,
+        PUBLISH_NOW: (postUuid: string) => `/posts/${postUuid}/publish-now`,
+        CANCEL:      (schedUuid: string) => `/posts/scheduled/${schedUuid}/cancel`,
     },
     ADMIN: {
         AI_STUDIO: {
@@ -139,7 +138,7 @@ export const BACKEND_API_ENDPOINT = {
         },
         AI_KNOWLEDGE: {
             DOCUMENTS: '/admin/ai-studio/knowledge/documents',
-            DOCUMENT:  (id: number) => `/admin/ai-studio/knowledge/documents/${id}`,
+            DOCUMENT:  (uuid: string) => `/admin/ai-studio/knowledge/documents/${uuid}`,
             UPLOAD:    '/admin/ai-studio/knowledge/documents/upload',
         },
         SCHEDULED_POSTS: {

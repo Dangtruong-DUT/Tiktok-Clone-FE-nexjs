@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Wellness\ParseNLRuleRequest;
 use App\Http\Requests\Wellness\SaveWellnessRuleRequest;
 use App\Http\Resources\Api\Wellness\WellnessRuleResource;
 use App\Http\Response\ApiResponse;
@@ -83,22 +82,6 @@ class WellnessRuleController extends Controller
         $this->service->delete($rule);
 
         return ApiResponse::success(data: null, message: 'Wellness rule deleted.');
-    }
-
-    /**
-     * Parse a natural-language rule description into a structured preview.
-     *
-     * @param  ParseNLRuleRequest  $request
-     * @return JsonResponse
-     */
-    public function parseNaturalLanguage(ParseNLRuleRequest $request): JsonResponse
-    {
-        $preview = $this->service->parseNaturalLanguage((string) $request->validated('text'));
-
-        return ApiResponse::success(
-            data:    $preview,
-            message: 'Rule parsed successfully.',
-        );
     }
 
     /**

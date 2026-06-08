@@ -118,17 +118,6 @@ class WellnessRuleService
     }
 
     /**
-     * Parse natural-language rule text and return a preview without saving it.
-     *
-     * @param  string  $text
-     * @return array<string,mixed>
-     */
-    public function parseNaturalLanguage(string $text): array
-    {
-        return $this->aiService->parseRule($text);
-    }
-
-    /**
      * Find a wellness rule by UUID for the given user.
      *
      * @param  string  $uuid

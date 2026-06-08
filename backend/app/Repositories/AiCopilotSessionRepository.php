@@ -12,7 +12,7 @@ class AiCopilotSessionRepository extends BaseRepository
 {
     public function __construct()
     {
-        parent::__construct(new AiCopilotSession());
+        parent::__construct(app()->make(AiCopilotSession::class));
     }
 
     /**
@@ -28,6 +28,7 @@ class AiCopilotSessionRepository extends BaseRepository
         return $this->query()
             ->where('uuid', $uuid)
             ->where('user_id', $userId)
+            ->where(fn ($q) => $q->whereNull('expires_at')->orWhere('expires_at', '>', now()))
             ->firstOrFail();
     }
 

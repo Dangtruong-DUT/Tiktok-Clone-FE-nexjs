@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\DB;
 
 class PgVectorSearchService
 {
+    public function __construct(
+        private readonly GeminiEmbeddingService $embeddingService,
+    ) {}
     /**
      * Find the most semantically similar embedded chunks to the given query vector.
      *
@@ -17,7 +20,7 @@ class PgVectorSearchService
      */
     public function search(array $embedding, int $limit = 5, float $threshold = 0.70): Collection
     {
-        $vectorLiteral = '[' . implode(',', $embedding) . ']';
+        $vectorLiteral = $this->embeddingService->toVectorLiteral($embedding);
 
         $rows = DB::select(
             <<<SQL

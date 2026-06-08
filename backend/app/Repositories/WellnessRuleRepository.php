@@ -12,7 +12,7 @@ class WellnessRuleRepository extends BaseRepository
 {
     public function __construct()
     {
-        parent::__construct(new WellnessRule());
+        parent::__construct(app()->make(WellnessRule::class));
     }
 
     /**

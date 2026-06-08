@@ -86,6 +86,14 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::delete('{post_uuid}/bookmark', [PostController::class, 'unbookmark'])->name('unbookmark');
             Route::get('friend', [PostController::class, 'showFriendsPosts'])->name('friends');
             Route::get('following', [PostController::class, 'showFollowingPosts'])->name('following');
+
+            // Studio post management (scheduling & publishing)
+            Route::get('mine',                         [StudioPostScheduleController::class, 'posts'])      ->name('mine');
+            Route::get('scheduled',                    [StudioPostScheduleController::class, 'index'])      ->name('scheduled.index');
+            Route::post('{post_uuid}/schedule',        [StudioPostScheduleController::class, 'schedule'])   ->middleware('throttle:10,1')->name('schedule');
+            Route::put('scheduled/{uuid}/reschedule',  [StudioPostScheduleController::class, 'reschedule'])->middleware('throttle:10,1')->name('scheduled.reschedule');
+            Route::post('{post_uuid}/publish-now',     [StudioPostScheduleController::class, 'publishNow'])->middleware('throttle:10,1')->name('publish-now');
+            Route::post('scheduled/{uuid}/cancel',     [StudioPostScheduleController::class, 'cancel'])     ->middleware('throttle:10,1')->name('scheduled.cancel');
         });
 
     // notification routes
@@ -149,10 +157,10 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
 
                 // RAG knowledge base document management
                 Route::prefix('knowledge')->name('knowledge.')->group(function () {
-                    Route::get('documents',          [AiKnowledgeAdminController::class, 'indexDocuments'])->name('documents.index');
-                    Route::post('documents/upload',  [AiKnowledgeAdminController::class, 'uploadDocument'])->name('documents.upload');
-                    Route::get('documents/{id}',     [AiKnowledgeAdminController::class, 'showDocument'])->name('documents.show');
-                    Route::delete('documents/{id}',  [AiKnowledgeAdminController::class, 'destroyDocument'])->name('documents.destroy');
+                    Route::get('documents',           [AiKnowledgeAdminController::class, 'indexDocuments'])->name('documents.index');
+                    Route::post('documents/upload',   [AiKnowledgeAdminController::class, 'uploadDocument'])->name('documents.upload');
+                    Route::get('documents/{uuid}',    [AiKnowledgeAdminController::class, 'showDocument'])->name('documents.show');
+                    Route::delete('documents/{uuid}', [AiKnowledgeAdminController::class, 'destroyDocument'])->name('documents.destroy');
                 });
             });
 
@@ -181,7 +189,6 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::post('rules',                        [WellnessRuleController::class, 'store'])->middleware('throttle:10,1')->name('rules.store');
             Route::put('rules/{uuid}',                  [WellnessRuleController::class, 'update'])->name('rules.update');
             Route::delete('rules/{uuid}',               [WellnessRuleController::class, 'destroy'])->name('rules.destroy');
-            Route::post('rules/parse',                  [WellnessRuleController::class, 'parseNaturalLanguage'])->middleware('throttle:5,1')->name('rules.parse');
             Route::post('analyze',                      [WellnessRuleController::class, 'analyze'])->middleware('throttle:3,1')->name('analyze');
         });
 
@@ -203,18 +210,6 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
                 ->name('copilot.messages.reject');
             Route::delete('copilot/sessions/{uuid}', [AiCopilotController::class, 'destroySession'])
                 ->name('copilot.sessions.destroy');
-        });
-
-    // Studio post management routes
-    Route::prefix('studio/posts')
-        ->name('studio.posts.')
-        ->group(function () {
-            Route::get('/',                             [StudioPostScheduleController::class, 'posts'])      ->name('index');
-            Route::get('scheduled',                    [StudioPostScheduleController::class, 'index'])      ->name('scheduled.index');
-            Route::post('{post_uuid}/schedule',        [StudioPostScheduleController::class, 'schedule'])   ->middleware('throttle:10,1')->name('schedule');
-            Route::put('scheduled/{uuid}/reschedule',  [StudioPostScheduleController::class, 'reschedule'])->middleware('throttle:10,1')->name('scheduled.reschedule');
-            Route::post('{post_uuid}/publish-now',     [StudioPostScheduleController::class, 'publishNow'])->middleware('throttle:10,1')->name('publish-now');
-            Route::post('scheduled/{uuid}/cancel',     [StudioPostScheduleController::class, 'cancel'])     ->middleware('throttle:10,1')->name('scheduled.cancel');
         });
 
     // video encoding management (legacy — kept for backward compat)

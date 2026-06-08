@@ -2,18 +2,26 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuidObservable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class AiDocument extends Model
 {
+    use HasUuidObservable;
+
     protected $fillable = [
-        'uuid',
         'title',
+        'description',
         'source_type',
         'source_url',
         'file_path',
         'file_disk',
+        'upload_file_id',
         'raw_content',
         'content_type',
         'chunk_count',
@@ -30,6 +38,8 @@ class AiDocument extends Model
 
     /**
      * Get the chunks associated with the document.
+     *
+     * @return HasMany<AiDocumentChunk>
      */
     public function chunks(): HasMany
     {
@@ -37,14 +47,45 @@ class AiDocument extends Model
     }
 
     /**
-     * Scope a query to only include indexed documents.
+     * Get the upload file record for this document.
+     *
+     * @return BelongsTo<UploadFile, self>
      */
-    public function scopeIndexed($query)
+    public function uploadFile(): BelongsTo
+    {
+        return $this->belongsTo(UploadFile::class, 'upload_file_id');
+    }
+
+    /**
+     * Get the public URL for the stored file.
+     *
+     * @return Attribute<string|null, never>
+     */
+    public function url(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->file_path
+                ? Storage::disk($this->file_disk ?? config('filesystems.default'))->url($this->file_path)
+                : null,
+        );
+    }
+
+    /**
+     * Scope a query to only include indexed documents.
+     *
+     * @param  Builder<self>  $query
+     * @return Builder<self>
+     */
+    public function scopeIndexed(Builder $query): Builder
     {
         return $query->where('is_indexed', true);
     }
 
-    public function scopeBySourceType($query, string $type)
+    /**
+     * @param  Builder<self>  $query
+     * @return Builder<self>
+     */
+    public function scopeBySourceType(Builder $query, string $type): Builder
     {
         return $query->where('source_type', $type);
     }

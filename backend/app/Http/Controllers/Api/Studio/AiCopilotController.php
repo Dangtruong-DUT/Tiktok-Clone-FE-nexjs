@@ -42,9 +42,14 @@ class AiCopilotController extends Controller
             return ApiResponse::error('AI Copilot is currently disabled.', 503);
         }
 
-        $session = $this->copilotService->startSession($request->user()->id, $request->validated());
+        ['session' => $session, 'created' => $created] = $this->copilotService->startSession(
+            $request->user()->id,
+            $request->validated(),
+        );
 
-        return ApiResponse::created(new AiCopilotSessionResource($session));
+        $resource = new AiCopilotSessionResource($session);
+
+        return $created ? ApiResponse::created($resource) : ApiResponse::success($resource);
     }
 
     /**
@@ -153,8 +158,7 @@ class AiCopilotController extends Controller
      */
     public function accept(UpdateCopilotMessageStatusRequest $request, string $messageUuid): JsonResponse
     {
-        $message = $this->copilotService->getMessageByUuidForUser($messageUuid, $request->user()->id);
-        $message->update(['status' => 'accepted']);
+        $message = $this->copilotService->acceptMessage($messageUuid, $request->user()->id);
 
         return ApiResponse::success(new AiCopilotMessageResource($message));
     }
@@ -167,8 +171,7 @@ class AiCopilotController extends Controller
      */
     public function reject(UpdateCopilotMessageStatusRequest $request, string $messageUuid): JsonResponse
     {
-        $message = $this->copilotService->getMessageByUuidForUser($messageUuid, $request->user()->id);
-        $message->update(['status' => 'rejected']);
+        $message = $this->copilotService->rejectMessage($messageUuid, $request->user()->id);
 
         return ApiResponse::success(new AiCopilotMessageResource($message));
     }

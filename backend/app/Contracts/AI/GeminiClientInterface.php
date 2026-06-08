@@ -30,4 +30,12 @@ interface GeminiClientInterface
      * @param  GeminiStreamChunkHandler  $onChunk
      */
     public function stream(GeminiRequest $request, callable $onChunk): GeminiResponse;
+
+    /**
+     * Generate a text embedding vector using the configured embedding model.
+     *
+     * @param  string  $taskType  RETRIEVAL_QUERY | RETRIEVAL_DOCUMENT | SEMANTIC_SIMILARITY …
+     * @return float[]
+     */
+    public function embed(string $text, string $taskType = 'RETRIEVAL_QUERY'): array;
 }

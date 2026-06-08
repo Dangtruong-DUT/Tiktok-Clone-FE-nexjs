@@ -51,12 +51,12 @@ class AiKnowledgeAdminController extends Controller
     /**
      * Retrieve a single AI knowledge document.
      *
-     * @param  int  $id
+     * @param  string  $uuid
      * @return JsonResponse
      */
-    public function showDocument(int $id): JsonResponse
+    public function showDocument(string $uuid): JsonResponse
     {
-        $document = $this->service->getDocument($id);
+        $document = $this->service->getDocument($uuid);
 
         return ApiResponse::success(new AiDocumentDetailAdminResource($document));
     }
@@ -64,12 +64,12 @@ class AiKnowledgeAdminController extends Controller
     /**
      * Delete an AI knowledge document and its indexed chunks.
      *
-     * @param  int  $id
+     * @param  string  $uuid
      * @return JsonResponse
      */
-    public function destroyDocument(int $id): JsonResponse
+    public function destroyDocument(string $uuid): JsonResponse
     {
-        $this->service->destroyDocument($id);
+        $this->service->destroyDocument($uuid);
 
         return ApiResponse::success(['message' => 'Document deleted']);
     }

@@ -5,8 +5,10 @@ namespace App\Services\AI\Copilot\Gateway;
 use App\Contracts\AI\GeminiClientInterface;
 use App\DTOs\AI\Gemini\GeminiConfig;
 use App\DTOs\AI\Gemini\GeminiRequest;
+use App\Models\AiDocument;
 use App\Models\AiStudioSetting;
 use App\Repositories\AiPromptTemplateRepository;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -46,6 +48,7 @@ class AiGateway
         $template = $this->templateRepo->findByIntent(self::GATEWAY_INTENT);
 
         $systemPrompt = $template?->system_prompt ?? $this->defaultSystemPrompt();
+        $systemPrompt = $this->injectKnowledgeCatalog($systemPrompt);
         $userPrompt   = $this->buildUserPrompt($question, $locale, $isAdmin, $template?->user_template);
 
         $recentHistory = array_slice($conversationHistory, -3);
@@ -118,6 +121,46 @@ class AiGateway
         }
 
         return "User message: \"{$question}\"\nuser_role: {$roleHint}\n{$localeHint}\n\nRespond with JSON only.";
+    }
+
+    /**
+     * Append a live knowledge catalog (title + first-chunk excerpt) to the system prompt.
+     * Cached for 5 minutes. If the knowledge base is empty, returns the prompt unchanged.
+     *
+     * Titles alone are insufficient — Gemini needs a short content excerpt to judge
+     * whether a user question is actually covered by a given document.
+     */
+    private function injectKnowledgeCatalog(string $systemPrompt): string
+    {
+        $catalog = Cache::remember('rag_knowledge_catalog', 300, function () {
+            return AiDocument::indexed()
+                ->orderBy('title')
+                ->get(['title', 'description'])
+                ->map(fn (AiDocument $doc) => [
+                    'title'       => $doc->title,
+                    'description' => $doc->description ?? '',
+                ])
+                ->all();
+        });
+
+        if (empty($catalog)) {
+            return $systemPrompt;
+        }
+
+        $list = implode("\n", array_map(function (array $doc) {
+            $line = "- {$doc['title']}";
+            if ($doc['description'] !== '') {
+                $line .= ": {$doc['description']}";
+            }
+
+            return $line;
+        }, $catalog));
+
+        return $systemPrompt
+            . "\n\n## Available Knowledge Base Documents\n"
+            . "Use task_type=app_knowledge ONLY when the user's question clearly relates to one of the documents below.\n"
+            . "If the topic is NOT covered by these documents, do NOT use task_type=app_knowledge — use task_type=unknown instead.\n\n"
+            . $list;
     }
 
     /**

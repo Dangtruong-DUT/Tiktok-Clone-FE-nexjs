@@ -3,13 +3,16 @@
 namespace App\Models;
 
 use App\Enums\Ai\AiCopilotMessageRoleEnum;
+use App\Enums\Ai\AiCopilotMessageStatusEnum;
+use App\Traits\HasUuidObservable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AiCopilotMessage extends Model
 {
+    use HasUuidObservable;
+
     protected $fillable = [
-        'uuid',
         'session_id',
         'role',
         'content',
@@ -31,6 +34,7 @@ class AiCopilotMessage extends Model
     {
         return [
             'role'             => AiCopilotMessageRoleEnum::class,
+            'status'           => AiCopilotMessageStatusEnum::class,
             'attachments'      => 'array',
             'structured_output' => 'array',
             'follow_up_chips'  => 'array',
@@ -38,11 +42,17 @@ class AiCopilotMessage extends Model
         ];
     }
 
+    /**
+     * @return BelongsTo<AiCopilotSession, self>
+     */
     public function session(): BelongsTo
     {
         return $this->belongsTo(AiCopilotSession::class, 'session_id');
     }
 
+    /**
+     * @return BelongsTo<AiPromptTemplate, self>
+     */
     public function promptTemplate(): BelongsTo
     {
         return $this->belongsTo(AiPromptTemplate::class, 'prompt_template_id');

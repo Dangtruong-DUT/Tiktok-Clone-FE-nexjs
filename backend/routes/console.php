@@ -27,3 +27,7 @@ Schedule::command('video:cleanup --days=7')
 Schedule::job(new \App\Jobs\CleanupAbandonedUploadsJob())
     ->dailyAt('04:00')
     ->withoutOverlapping();
+
+Schedule::command('model:prune', ['--model' => [\App\Models\AiCopilotSession::class]])
+    ->dailyAt('02:30')
+    ->withoutOverlapping();

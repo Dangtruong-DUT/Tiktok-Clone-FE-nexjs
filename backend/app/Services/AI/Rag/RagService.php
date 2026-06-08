@@ -11,43 +11,59 @@ use Illuminate\Support\Collection;
 class RagService
 {
     /**
-     * Create a new service instance.
-     *
      * @param  GeminiEmbeddingService  $embeddingService
-     * @param  PgVectorSearchService  $searchService
-     * @param  GeminiClientInterface  $geminiClient
+     * @param  PgVectorSearchService   $searchService
+     * @param  GeminiClientInterface   $geminiClient
      */
     public function __construct(
         private readonly GeminiEmbeddingService $embeddingService,
         private readonly PgVectorSearchService  $searchService,
-        private readonly GeminiClientInterface           $geminiClient,
+        private readonly GeminiClientInterface  $geminiClient,
     ) {}
 
     /**
      * Answer a question using RAG: embed → search → augment → generate.
+     * Use answerWithChunks() when the caller already has search results to avoid double embedding.
      *
      * @param  string  $question
-     * @param  array<array{role: string, content: string}>  $conversationHistory
+     * @param  array<array{role: string, parts: array}>  $history  Gemini native format
      * @param  string  $locale
      * @return array{answer: string, citations: array<int,array<string,mixed>>, has_docs: bool}
      */
-    public function answer(
-        string $question,
-        array  $conversationHistory = [],
-        string $locale = 'vi',
-    ): array {
-        $embedding = $this->embeddingService->embed($question);
+    public function answer(string $question, array $history = [], string $locale = 'vi'): array
+    {
+        $embedding = $this->embeddingService->embed($question, 'RETRIEVAL_QUERY');
         $chunks    = $this->searchService->search($embedding, limit: 5, threshold: 0.70);
 
-        $context  = $this->buildContext($chunks);
-        $hasDocs  = $chunks->isNotEmpty();
-        $answer   = $this->generate($question, $context, $conversationHistory, $locale);
+        return $this->answerWithChunks($question, $chunks, $history, $locale);
+    }
+
+    /**
+     * Generate an answer from pre-fetched chunks — skips the embed+search step.
+     * Call this when the caller (e.g. AppKnowledgeEngine) already performed the vector search.
+     *
+     * @param  string      $question
+     * @param  Collection  $chunks    Result from PgVectorSearchService::search()
+     * @param  array<array{role: string, parts: array}>  $history  Gemini native format
+     * @param  string      $locale
+     * @param  callable(string $chunk, bool $done): void|null  $emit  SSE streaming callback
+     * @return array{answer: string, citations: array<int,array<string,mixed>>, has_docs: bool}
+     */
+    public function answerWithChunks(
+        string     $question,
+        Collection $chunks,
+        array      $history  = [],
+        string     $locale   = 'vi',
+        ?callable  $emit     = null,
+    ): array {
+        $context   = $this->buildContext($chunks);
+        $answer    = $this->generate($question, $context, $history, $locale, $emit);
         $citations = $this->buildCitations($chunks);
 
         return [
             'answer'    => $answer,
             'citations' => $citations,
-            'has_docs'  => $hasDocs,
+            'has_docs'  => $chunks->isNotEmpty(),
         ];
     }
 
@@ -57,18 +73,17 @@ class RagService
             return '';
         }
 
-        $parts = $chunks->map(fn ($chunk, $i) =>
-            "--- Nguồn " . ($i + 1) . ": {$chunk->document_title} ---\n{$chunk->content}"
-        );
-
-        return $parts->implode("\n\n");
+        return $chunks->map(fn ($chunk, $i) =>
+            '--- Nguồn ' . ($i + 1) . ": {$chunk->document_title} ---\n{$chunk->content}"
+        )->implode("\n\n");
     }
 
     private function generate(
-        string $question,
-        string $context,
-        array  $history,
-        string $locale,
+        string    $question,
+        string    $context,
+        array     $history,
+        string    $locale,
+        ?callable $emit = null,
     ): string {
         $isVi = str_starts_with($locale, 'vi');
 
@@ -82,19 +97,9 @@ class RagService
               . "If the information is not in the documents, say so honestly.\n\n"
               . ($context !== '' ? "## Reference Documents\n{$context}" : '');
 
-        $contents = [];
-
-        foreach ($history as $msg) {
-            $contents[] = [
-                'role'  => $msg['role'] === 'assistant' ? 'model' : 'user',
-                'parts' => [['text' => $msg['content']]],
-            ];
-        }
-
-        $contents[] = [
-            'role'  => 'user',
-            'parts' => [['text' => $question]],
-        ];
+        // $history is already in Gemini native format {role: 'model'|'user', parts: [{text}]}
+        $contents   = $history;
+        $contents[] = ['role' => 'user', 'parts' => [['text' => $question]]];
 
         $answer = '';
 
@@ -104,9 +109,12 @@ class RagService
                 contents:     $contents,
                 config:       GeminiConfig::fromSetting(AiStudioSetting::current()),
             ),
-            function (string $delta, bool $done, array $tokenUsage) use (&$answer) {
+            function (string $delta, bool $done, array $tokenUsage) use (&$answer, $emit) {
                 if (! $done) {
                     $answer .= $delta;
+                    if ($emit !== null) {
+                        $emit($delta, false);
+                    }
                 }
             },
         );
@@ -117,11 +125,11 @@ class RagService
     private function buildCitations(Collection $chunks): array
     {
         return $chunks->map(fn ($chunk) => [
-            'document_title'   => $chunk->document_title,
-            'source_type'      => $chunk->document_source_type,
-            'source_url'       => $chunk->document_source_url,
-            'snippet'          => mb_strimwidth($chunk->content, 0, 200, '…'),
-            'similarity'       => round((float) $chunk->similarity, 3),
+            'document_title' => $chunk->document_title,
+            'source_type'    => $chunk->document_source_type,
+            'source_url'     => $chunk->document_source_url,
+            'snippet'        => mb_strimwidth($chunk->content, 0, 200, '…'),
+            'similarity'     => round((float) $chunk->similarity, 3),
         ])->values()->all();
     }
 }

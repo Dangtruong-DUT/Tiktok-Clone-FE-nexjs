@@ -4,7 +4,6 @@ namespace App\Http\Resources\Api\Admin;
 
 use App\Http\Resources\BaseJsonResource;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class AiDocumentDetailAdminResource extends BaseJsonResource
 {
@@ -17,6 +16,7 @@ class AiDocumentDetailAdminResource extends BaseJsonResource
             'id'           => $this->id,
             'uuid'         => $this->uuid,
             'title'        => $this->title,
+            'description'  => $this->description,
             'source_type'  => $this->source_type,
             'content_type' => $this->content_type,
             'language'     => $this->language,
@@ -25,9 +25,7 @@ class AiDocumentDetailAdminResource extends BaseJsonResource
             'is_indexed'   => (bool) $this->is_indexed,
             'indexed_at'   => $this->indexed_at?->toISOString(),
             'created_at'   => $this->created_at?->toISOString(),
-            'file_url'     => $this->file_path
-                ? Storage::disk($this->file_disk ?? config('filesystems.default'))->url($this->file_path)
-                : null,
+            'file_url'     => $this->url,
         ];
     }
 }

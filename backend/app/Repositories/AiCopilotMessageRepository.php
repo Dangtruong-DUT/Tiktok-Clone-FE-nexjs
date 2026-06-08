@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Enums\Ai\AiCopilotMessageStatusEnum;
 use App\Models\AiCopilotMessage;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -12,7 +13,7 @@ class AiCopilotMessageRepository extends BaseRepository
 {
     public function __construct()
     {
-        parent::__construct(new AiCopilotMessage());
+        parent::__construct(app()->make(AiCopilotMessage::class));
     }
 
     /**
@@ -26,10 +27,11 @@ class AiCopilotMessageRepository extends BaseRepository
     {
         return $this->query()
             ->where('session_id', $sessionId)
-            ->orderBy('created_at')
-            ->limit($limit * 2)   // fetch extra, return last N via collection
+            ->orderByDesc('created_at')
+            ->limit($limit)
             ->get()
-            ->take(-$limit);
+            ->reverse()
+            ->values();
     }
 
     /**
@@ -63,6 +65,21 @@ class AiCopilotMessageRepository extends BaseRepository
     }
 
     /**
+     * Find a message by UUID with session ownership pre-loaded (avoids N+1 on ownership check).
+     *
+     * @param  string  $uuid
+     * @return AiCopilotMessage
+     */
+    public function findByUuidWithSession(string $uuid): AiCopilotMessage
+    {
+        /** @var AiCopilotMessage */
+        return $this->query()
+            ->with('session:id,user_id')
+            ->where('uuid', $uuid)
+            ->firstOrFail();
+    }
+
+    /**
      * Find a message by UUID scoped to a specific session, or return null.
      *
      * @param  string  $uuid
@@ -86,7 +103,7 @@ class AiCopilotMessageRepository extends BaseRepository
      */
     public function markAccepted(AiCopilotMessage $message): void
     {
-        $this->query()->whereKey($message->id)->update(['status' => 'accepted']);
+        $this->query()->whereKey($message->id)->update(['status' => AiCopilotMessageStatusEnum::ACCEPTED->value]);
     }
 
     /**
@@ -97,6 +114,6 @@ class AiCopilotMessageRepository extends BaseRepository
      */
     public function markRejected(AiCopilotMessage $message): void
     {
-        $this->query()->whereKey($message->id)->update(['status' => 'rejected']);
+        $this->query()->whereKey($message->id)->update(['status' => AiCopilotMessageStatusEnum::REJECTED->value]);
     }
 }

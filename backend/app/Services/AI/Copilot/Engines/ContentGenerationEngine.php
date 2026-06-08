@@ -60,9 +60,12 @@ class ContentGenerationEngine extends AbstractCopilotEngine implements CopilotEn
         array                  $conversationHistory,
         ?callable              $emit = null,
     ): CopilotHandlerResult {
-        $intentKey    = self::INTENT_MAP[$task->intent] ?? 'general_advice';
-        $templateIntent = $this->templateRepo->findByIntent($intentKey);
-        $template     = $templateIntent ?? $this->templateRepo->findByIntent('general_advice');
+        $intentKey = self::INTENT_MAP[$task->intent] ?? 'general_advice';
+        $template  = $this->templateRepo->findByIntent($intentKey);
+
+        if ($template === null && $intentKey !== 'general_advice') {
+            $template = $this->templateRepo->findByIntent('general_advice');
+        }
 
         $systemPrompt = $this->buildSystemPrompt(
             $template ?? $this->makeFallbackTemplate(),

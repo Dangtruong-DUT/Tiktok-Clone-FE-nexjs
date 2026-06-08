@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\AiPromptTemplate;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * @extends BaseRepository<AiPromptTemplate>
@@ -11,7 +12,7 @@ class AiPromptTemplateRepository extends BaseRepository
 {
     public function __construct()
     {
-        parent::__construct(new AiPromptTemplate());
+        parent::__construct(app()->make(AiPromptTemplate::class));
     }
 
     /**
@@ -46,7 +47,7 @@ class AiPromptTemplateRepository extends BaseRepository
      *
      * @return \Illuminate\Database\Eloquent\Collection<int, AiPromptTemplate>
      */
-    public function allActive()
+    public function allActive(): Collection
     {
         return $this->query()->where('is_active', true)->orderBy('intent')->get();
     }

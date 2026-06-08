@@ -12,7 +12,6 @@ use App\Repositories\PostRepository;
 use App\Repositories\ScheduledPostRepository;
 use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Str;
 
 class PostScheduleService
 {
@@ -68,7 +67,6 @@ class PostScheduleService
 
         /** @var ScheduledPost */
         return $this->scheduledPostRepository->create([
-            'uuid'          => (string) Str::uuid(),
             'user_id'       => $userId,
             'post_id'       => $post->id,
             'scheduled_at'  => $scheduledAt,
