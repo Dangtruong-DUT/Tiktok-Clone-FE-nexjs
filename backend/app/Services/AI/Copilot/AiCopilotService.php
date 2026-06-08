@@ -140,7 +140,7 @@ class AiCopilotService
     {
         $this->assertSessionHasCapacity($session);
 
-        return AiCopilotMessage::create([
+        $message = AiCopilotMessage::create([
             'uuid'        => $uuid,
             'session_id'  => $session->id,
             'role'        => AiCopilotMessageRoleEnum::USER->value,
@@ -148,6 +148,20 @@ class AiCopilotService
             'attachments' => $input->attachmentsMeta() ?: null,
             'provider'    => 'gemini',
         ]);
+
+        if ($input->hasVideoClip() || $input->hasFrames() || $input->hasTimeline() || $input->hasCurrentContent()) {
+            $this->cacheAttachments($uuid, [
+                'video_clip'       => $input->videoClip,
+                'frames'           => $input->frames,
+                'timeline_start'   => $input->timelineStart,
+                'timeline_end'     => $input->timelineEnd,
+                'current_caption'  => $input->currentCaption,
+                'current_title'    => $input->currentTitle,
+                'current_hashtags' => $input->currentHashtags,
+            ]);
+        }
+
+        return $message;
     }
 
     /**

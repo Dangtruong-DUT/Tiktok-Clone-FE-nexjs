@@ -28,13 +28,17 @@ class PostViewService
     ) {}
 
     /**
-     * Increase view count for a post, with anti-spam measures
-     * @param  int  $postId  ID of the post being viewed
+     * Increase view count for a post, with anti-spam measures.
+     *
+     * @param  int  $postId
      * @param  int|null  $authUserId  ID of the authenticated user (null for guests)
-     * @param  string|null  $viewerFingerprint  Unique fingerprint for guest viewers
+     * @param  string|null  $ip  Request IP used to build guest fingerprint
+     * @param  string|null  $userAgent  Request User-Agent used to build guest fingerprint
      */
-    public function increaseView(int $postId, ?int $authUserId, ?string $viewerFingerprint = null): void
+    public function increaseView(int $postId, ?int $authUserId, ?string $ip = null, ?string $userAgent = null): void
     {
+        $viewerFingerprint = ($ip !== null) ? implode('|', [$ip, $userAgent ?? '']) : null;
+
         $viewerKey = $authUserId
             ? "user:{$authUserId}"
             : 'guest:'.sha1((string) $viewerFingerprint);

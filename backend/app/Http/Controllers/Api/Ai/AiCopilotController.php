@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Studio;
+namespace App\Http\Controllers\Api\Ai;
 
 use App\DTOs\AI\AiCopilotMessageInput;
 use App\Http\Controllers\Controller;
@@ -43,13 +43,15 @@ class AiCopilotController extends Controller
         }
 
         ['session' => $session, 'created' => $created] = $this->copilotService->startSession(
-            $request->user()->id,
+            (int) auth_user_id(),
             $request->validated(),
         );
 
         $resource = new AiCopilotSessionResource($session);
 
-        return $created ? ApiResponse::created($resource) : ApiResponse::success($resource);
+        return $created
+            ? ApiResponse::created(data: $resource)
+            : ApiResponse::success(data: $resource);
     }
 
     /**
@@ -60,9 +62,9 @@ class AiCopilotController extends Controller
      */
     public function showSession(ShowCopilotSessionRequest $request, string $uuid): JsonResponse
     {
-        $session = $this->copilotService->getSessionWithMessages($uuid, $request->user()->id);
+        $session = $this->copilotService->getSessionWithMessages($uuid, (int) auth_user_id());
 
-        return ApiResponse::success(new AiCopilotSessionResource($session));
+        return ApiResponse::success(data: new AiCopilotSessionResource($session));
     }
 
     /**
@@ -75,39 +77,31 @@ class AiCopilotController extends Controller
      */
     public function sendMessage(SendCopilotMessageRequest $request, string $uuid): JsonResponse
     {
-        $session  = $this->copilotService->getOwnedSession($uuid, $request->user()->id);
+        $session  = $this->copilotService->getOwnedSession($uuid, (int) auth_user_id());
         $input    = AiCopilotMessageInput::fromRequest($request->validated());
         $msgUuid  = Str::uuid()->toString();
 
         $userMessage = $this->copilotService->createUserMessage($session, $input, $msgUuid);
 
-        if ($input->hasVideoClip() || $input->hasFrames() || $input->hasTimeline() || $input->hasCurrentContent()) {
-            $this->copilotService->cacheAttachments($msgUuid, [
-                'video_clip'       => $input->videoClip,
-                'frames'           => $input->frames,
-                'timeline_start'   => $input->timelineStart,
-                'timeline_end'     => $input->timelineEnd,
-                'current_caption'  => $input->currentCaption,
-                'current_title'    => $input->currentTitle,
-                'current_hashtags' => $input->currentHashtags,
-            ]);
-        }
-
         $token = $this->copilotService->generateStreamToken(
             $session->uuid,
             $userMessage->uuid,
-            $request->user()->id,
+            (int) auth_user_id(),
         );
 
-        return ApiResponse::success([
-            'streaming'    => true,
-            'message_uuid' => $userMessage->uuid,
-            'stream_token' => $token,
-            'stream_url'   => route('api.v1.studio.ai.copilot.stream', [
-                'uuid'         => $session->uuid,
+        return ApiResponse::success(
+            data: [
+                'streaming'    => true,
                 'message_uuid' => $userMessage->uuid,
-            ]),
-        ], 'Streaming', 202);
+                'stream_token' => $token,
+                'stream_url'   => route('api.v1.studio.ai.copilot.stream', [
+                    'uuid'         => $session->uuid,
+                    'message_uuid' => $userMessage->uuid,
+                ]),
+            ],
+            message: 'Streaming.',
+            code:    202,
+        );
     }
 
     /**
@@ -158,9 +152,9 @@ class AiCopilotController extends Controller
      */
     public function accept(UpdateCopilotMessageStatusRequest $request, string $messageUuid): JsonResponse
     {
-        $message = $this->copilotService->acceptMessage($messageUuid, $request->user()->id);
+        $message = $this->copilotService->acceptMessage($messageUuid, (int) auth_user_id());
 
-        return ApiResponse::success(new AiCopilotMessageResource($message));
+        return ApiResponse::success(data: new AiCopilotMessageResource($message));
     }
 
     /**
@@ -171,9 +165,9 @@ class AiCopilotController extends Controller
      */
     public function reject(UpdateCopilotMessageStatusRequest $request, string $messageUuid): JsonResponse
     {
-        $message = $this->copilotService->rejectMessage($messageUuid, $request->user()->id);
+        $message = $this->copilotService->rejectMessage($messageUuid, (int) auth_user_id());
 
-        return ApiResponse::success(new AiCopilotMessageResource($message));
+        return ApiResponse::success(data: new AiCopilotMessageResource($message));
     }
 
     /**
@@ -184,7 +178,7 @@ class AiCopilotController extends Controller
      */
     public function destroySession(DestroyCopilotSessionRequest $request, string $uuid): Response
     {
-        $this->copilotService->expireSessionByUuid($uuid, $request->user()->id);
+        $this->copilotService->expireSessionByUuid($uuid, (int) auth_user_id());
 
         return ApiResponse::noContent();
     }

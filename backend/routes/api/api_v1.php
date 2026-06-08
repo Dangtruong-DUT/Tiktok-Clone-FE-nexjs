@@ -1,28 +1,28 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\AppealAdminController;
-use App\Http\Controllers\Api\Admin\AiCopilotAdminController;
-use App\Http\Controllers\Api\Admin\AiStudioAdminController;
-use App\Http\Controllers\Api\Admin\ScheduledPostAdminController;
+use App\Http\Controllers\Api\Admin\Ai\AiCopilotAdminController;
+use App\Http\Controllers\Api\Admin\Ai\AiKnowledgeAdminController;
+use App\Http\Controllers\Api\Admin\Ai\AiStudioAdminController;
 use App\Http\Controllers\Api\Admin\CommentAdminController;
 use App\Http\Controllers\Api\Admin\PostAdminController;
+use App\Http\Controllers\Api\Admin\ScheduledPostAdminController;
 use App\Http\Controllers\Api\Admin\SystemAdminController;
 use App\Http\Controllers\Api\Admin\UserAdminController;
-use App\Http\Controllers\Api\AppealController;
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\HashtagController;
-use App\Http\Controllers\Api\NotificationController;
-use App\Http\Controllers\Api\PostController;
-use App\Http\Controllers\Api\ScreenTimeController;
-use App\Http\Controllers\Api\WellnessRuleController;
-use App\Http\Controllers\Api\Admin\AiKnowledgeAdminController;
-use App\Http\Controllers\Api\Studio\AiCopilotController;
-use App\Http\Controllers\Api\Studio\StudioPostScheduleController;
-use App\Http\Controllers\Api\UploadController;
-use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\UserSettingsController;
-use App\Http\Controllers\Api\VideoStreamController;
-use App\Http\Controllers\Api\VideoUploadSessionController;
+use App\Http\Controllers\Api\Ai\AiCopilotController;
+use App\Http\Controllers\Api\Appeal\AppealController;
+use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Media\UploadController;
+use App\Http\Controllers\Api\Media\VideoStreamController;
+use App\Http\Controllers\Api\Media\VideoUploadSessionController;
+use App\Http\Controllers\Api\Notification\NotificationController;
+use App\Http\Controllers\Api\Post\PostController;
+use App\Http\Controllers\Api\Post\PostScheduleController;
+use App\Http\Controllers\Api\Search\HashtagController;
+use App\Http\Controllers\Api\User\UserController;
+use App\Http\Controllers\Api\User\UserSettingsController;
+use App\Http\Controllers\Api\Wellness\ScreenTimeController;
+use App\Http\Controllers\Api\Wellness\WellnessRuleController;
 use Illuminate\Support\Facades\Route;
 
 /*|--------------------------------------------------------------------------
@@ -88,12 +88,12 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::get('following', [PostController::class, 'showFollowingPosts'])->name('following');
 
             // Studio post management (scheduling & publishing)
-            Route::get('mine',                         [StudioPostScheduleController::class, 'posts'])      ->name('mine');
-            Route::get('scheduled',                    [StudioPostScheduleController::class, 'index'])      ->name('scheduled.index');
-            Route::post('{post_uuid}/schedule',        [StudioPostScheduleController::class, 'schedule'])   ->middleware('throttle:10,1')->name('schedule');
-            Route::put('scheduled/{uuid}/reschedule',  [StudioPostScheduleController::class, 'reschedule'])->middleware('throttle:10,1')->name('scheduled.reschedule');
-            Route::post('{post_uuid}/publish-now',     [StudioPostScheduleController::class, 'publishNow'])->middleware('throttle:10,1')->name('publish-now');
-            Route::post('scheduled/{uuid}/cancel',     [StudioPostScheduleController::class, 'cancel'])     ->middleware('throttle:10,1')->name('scheduled.cancel');
+            Route::get('mine',                         [PostScheduleController::class, 'posts'])      ->name('mine');
+            Route::get('scheduled',                    [PostScheduleController::class, 'index'])      ->name('scheduled.index');
+            Route::post('{post_uuid}/schedule',        [PostScheduleController::class, 'schedule'])   ->middleware('throttle:10,1')->name('schedule');
+            Route::put('scheduled/{uuid}/reschedule',  [PostScheduleController::class, 'reschedule'])->middleware('throttle:10,1')->name('scheduled.reschedule');
+            Route::post('{post_uuid}/publish-now',     [PostScheduleController::class, 'publishNow'])->middleware('throttle:10,1')->name('publish-now');
+            Route::post('scheduled/{uuid}/cancel',     [PostScheduleController::class, 'cancel'])     ->middleware('throttle:10,1')->name('scheduled.cancel');
         });
 
     // notification routes

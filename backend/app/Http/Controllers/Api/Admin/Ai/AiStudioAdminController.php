@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Admin;
+namespace App\Http\Controllers\Api\Admin\Ai;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AiStudio\GetAiStudioMetricsRequest;
@@ -20,7 +20,7 @@ class AiStudioAdminController extends Controller
      * @param  AiStudioAdminService  $service
      */
     public function __construct(
-        private readonly AiStudioAdminService $service,
+        private readonly AiStudioAdminService $aiStudioAdminService,
     ) {}
 
     /**
@@ -34,7 +34,7 @@ class AiStudioAdminController extends Controller
         $payload = $request->validated();
 
         return ApiResponse::success(
-            data: $this->service->getMetrics($payload['period'] ?? null),
+            data: $this->aiStudioAdminService->getMetrics($payload['period'] ?? null),
             message: 'AI Studio metrics retrieved.',
         );
     }
@@ -47,7 +47,7 @@ class AiStudioAdminController extends Controller
     public function settings(): JsonResponse
     {
         return ApiResponse::success(
-            data: new AiStudioSettingResource($this->service->getSettings()),
+            data: new AiStudioSettingResource($this->aiStudioAdminService->getSettings()),
             message: 'AI Studio settings retrieved.',
         );
     }
@@ -60,7 +60,7 @@ class AiStudioAdminController extends Controller
      */
     public function updateSettings(UpdateAiStudioSettingsRequest $request): JsonResponse
     {
-        $settings = $this->service->updateSettings(
+        $settings = $this->aiStudioAdminService->updateSettings(
             $request->validated(),
             (int) auth_user_id(),
         );
@@ -79,7 +79,7 @@ class AiStudioAdminController extends Controller
      */
     public function requests(GetAiStudioRequestsRequest $request): JsonResponse
     {
-        $items = $this->service->listRequests($request->validated());
+        $items = $this->aiStudioAdminService->listRequests($request->validated());
 
         return ApiResponse::success(
             data: AiUsageLogResource::collection($items),
@@ -94,6 +94,9 @@ class AiStudioAdminController extends Controller
      */
     public function availableModels(): JsonResponse
     {
-        return ApiResponse::success($this->service->getAvailableModels());
+        return ApiResponse::success(
+            data:    $this->aiStudioAdminService->getAvailableModels(),
+            message: 'Available models retrieved.',
+        );
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Notification;
 
 use App\Enums\Notification\NotificationTabEnum;
 use App\Http\Controllers\Controller;

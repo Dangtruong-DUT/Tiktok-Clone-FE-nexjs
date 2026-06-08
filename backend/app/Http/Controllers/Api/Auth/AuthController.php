@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ForgotPasswordRequest;
@@ -73,8 +73,8 @@ class AuthController extends Controller
         $user = $this->authService->me();
 
         return ApiResponse::success(
-            new AuthResource($user),
-            'User retrieved successfully'
+            data:    new AuthResource($user),
+            message: 'User retrieved successfully',
         );
     }
 
@@ -203,12 +203,13 @@ class AuthController extends Controller
         string $message = 'Login successful',
         ?Authenticatable $user = null
     ): JsonResponse {
-        $userData = $user ?? $this->authService->me();
-
-        return ApiResponse::success([
-            'access_token' => $accessToken,
-            'refresh_token' => $refreshToken,
-            'user' => $userData ? new AuthResource($userData) : null,
-        ], $message);
+        return ApiResponse::success(
+            data: [
+                'access_token'  => $accessToken,
+                'refresh_token' => $refreshToken,
+                'user'          => $user ? new AuthResource($user) : null,
+            ],
+            message: $message,
+        );
     }
 }

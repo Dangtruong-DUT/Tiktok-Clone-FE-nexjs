@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Admin;
+namespace App\Http\Controllers\Api\Admin\Ai;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AiKnowledge\GetAiDocumentsRequest;
@@ -16,10 +16,10 @@ class AiKnowledgeAdminController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param  AiKnowledgeAdminService  $service
+     * @param  AiKnowledgeAdminService  $aiKnowledgeAdminService
      */
     public function __construct(
-        private readonly AiKnowledgeAdminService $service,
+        private readonly AiKnowledgeAdminService $aiKnowledgeAdminService,
     ) {}
 
     /**
@@ -30,9 +30,12 @@ class AiKnowledgeAdminController extends Controller
      */
     public function indexDocuments(GetAiDocumentsRequest $request): JsonResponse
     {
-        $documents = $this->service->listDocuments($request->validated());
+        $documents = $this->aiKnowledgeAdminService->listDocuments($request->validated());
 
-        return ApiResponse::success(AiDocumentAdminResource::collection($documents));
+        return ApiResponse::success(
+            data:    AiDocumentAdminResource::collection($documents),
+            message: 'AI knowledge documents retrieved.',
+        );
     }
 
     /**
@@ -43,9 +46,12 @@ class AiKnowledgeAdminController extends Controller
      */
     public function uploadDocument(UploadAiDocumentRequest $request): JsonResponse
     {
-        $document = $this->service->uploadDocument($request->validated(), $request->file('file'));
+        $document = $this->aiKnowledgeAdminService->uploadDocument($request->validated(), $request->file('file'));
 
-        return ApiResponse::success(new AiDocumentAdminResource($document), 201);
+        return ApiResponse::created(
+            data:    new AiDocumentAdminResource($document),
+            message: 'Document uploaded.',
+        );
     }
 
     /**
@@ -56,9 +62,12 @@ class AiKnowledgeAdminController extends Controller
      */
     public function showDocument(string $uuid): JsonResponse
     {
-        $document = $this->service->getDocument($uuid);
+        $document = $this->aiKnowledgeAdminService->getDocument($uuid);
 
-        return ApiResponse::success(new AiDocumentDetailAdminResource($document));
+        return ApiResponse::success(
+            data:    new AiDocumentDetailAdminResource($document),
+            message: 'AI knowledge document retrieved.',
+        );
     }
 
     /**
@@ -69,8 +78,8 @@ class AiKnowledgeAdminController extends Controller
      */
     public function destroyDocument(string $uuid): JsonResponse
     {
-        $this->service->destroyDocument($uuid);
+        $this->aiKnowledgeAdminService->destroyDocument($uuid);
 
-        return ApiResponse::success(['message' => 'Document deleted']);
+        return ApiResponse::noContent();
     }
 }

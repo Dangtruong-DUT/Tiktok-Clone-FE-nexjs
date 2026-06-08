@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Media;
 
 use App\Actions\Video\DeleteVideoUploadAction;
 use App\Actions\Video\RetryVideoEncodingAction;
@@ -31,7 +31,10 @@ class VideoStreamController extends Controller
     {
         $encoding = $this->encodingService->getEncodingByFileUuid($uuid);
 
-        return ApiResponse::success(new VideoEncodingStatusResource($encoding));
+        return ApiResponse::success(
+            data:    new VideoEncodingStatusResource($encoding),
+            message: 'Encoding status retrieved.',
+        );
     }
 
     /**
@@ -45,7 +48,7 @@ class VideoStreamController extends Controller
     {
         $this->encodingService->retryFailedEncoding($uuid, $action);
 
-        return ApiResponse::success(['message' => 'Encoding job queued']);
+        return ApiResponse::success(message: 'Encoding job queued.');
     }
 
     /**
@@ -59,6 +62,6 @@ class VideoStreamController extends Controller
     {
         $this->encodingService->deleteUploadByUuid($uuid, $action);
 
-        return ApiResponse::success(null, 'Upload cancelled');
+        return ApiResponse::success(message: 'Upload cancelled.');
     }
 }

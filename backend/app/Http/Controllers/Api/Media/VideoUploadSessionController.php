@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Media;
 
 use App\Enums\Video\UploadTypeEnum;
 use App\Exceptions\http\BusinessException;
@@ -42,8 +42,8 @@ class VideoUploadSessionController extends Controller
         );
 
         return ApiResponse::created(
-            new VideoUploadSessionResource($session, $presignedUrl),
-            'Upload session created'
+            data:    new VideoUploadSessionResource($session, $presignedUrl),
+            message: 'Upload session created.',
         );
     }
 
@@ -60,10 +60,13 @@ class VideoUploadSessionController extends Controller
     {
         $part = $this->uploadService->getPartUrlByUuid($session, (int) auth_user_id(), $partNumber);
 
-        return ApiResponse::success([
-            'presigned_url' => $part->url,
-            'part_number'   => $part->partNumber,
-        ]);
+        return ApiResponse::success(
+            data: [
+                'presigned_url' => $part->url,
+                'part_number'   => $part->partNumber,
+            ],
+            message: 'Part URL generated.',
+        );
     }
 
     /**
@@ -83,8 +86,8 @@ class VideoUploadSessionController extends Controller
         );
 
         return ApiResponse::success(
-            new VideoUploadStatusResource($session),
-            'Upload completed'
+            data:    new VideoUploadStatusResource($session),
+            message: 'Upload completed.',
         );
     }
 
@@ -98,9 +101,10 @@ class VideoUploadSessionController extends Controller
     public function status(string $session): JsonResponse
     {
         return ApiResponse::success(
-            new VideoUploadStatusResource(
+            data:    new VideoUploadStatusResource(
                 $this->uploadService->getOwnedSessionByUuid($session, (int) auth_user_id())
-            )
+            ),
+            message: 'Upload status retrieved.',
         );
     }
 

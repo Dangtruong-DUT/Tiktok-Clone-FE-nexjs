@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\UpdateUserSettingsRequest;
@@ -28,7 +28,10 @@ class UserSettingsController extends Controller
     {
         $userSettings = $this->userSettingsService->show();
 
-        return ApiResponse::success(new UserSettingsResource($userSettings));
+        return ApiResponse::success(
+            data:    new UserSettingsResource($userSettings),
+            message: 'Settings retrieved.',
+        );
     }
 
     /**
@@ -40,6 +43,9 @@ class UserSettingsController extends Controller
     {
         $userSettings = $this->userSettingsService->update($request->validated());
 
-        return ApiResponse::success(new UserSettingsResource($userSettings));
+        return ApiResponse::success(
+            data:    new UserSettingsResource($userSettings),
+            message: 'Settings updated.',
+        );
     }
 }

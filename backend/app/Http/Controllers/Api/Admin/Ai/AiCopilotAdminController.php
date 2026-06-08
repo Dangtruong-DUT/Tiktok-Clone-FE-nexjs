@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Admin;
+namespace App\Http\Controllers\Api\Admin\Ai;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AiCopilot\GetAiCopilotMetricsRequest;
@@ -32,7 +32,10 @@ class AiCopilotAdminController extends Controller
      */
     public function metrics(GetAiCopilotMetricsRequest $request): JsonResponse
     {
-        return ApiResponse::success($this->adminService->getCopilotMetrics($request->validated('period')));
+        return ApiResponse::success(
+            data:    $this->adminService->getCopilotMetrics($request->validated('period')),
+            message: 'AI Copilot metrics retrieved.',
+        );
     }
 
     /**
@@ -44,7 +47,8 @@ class AiCopilotAdminController extends Controller
     public function sessions(GetAiCopilotSessionsRequest $request): JsonResponse
     {
         return ApiResponse::success(
-            AiCopilotSessionAdminResource::collection($this->adminService->getSessions($request->validated()))
+            data:    AiCopilotSessionAdminResource::collection($this->adminService->getSessions($request->validated())),
+            message: 'AI Copilot sessions retrieved.',
         );
     }
 
@@ -55,7 +59,10 @@ class AiCopilotAdminController extends Controller
      */
     public function listPromptTemplates(): JsonResponse
     {
-        return ApiResponse::success(AiPromptTemplateAdminResource::collection($this->adminService->getPromptTemplates()));
+        return ApiResponse::success(
+            data:    AiPromptTemplateAdminResource::collection($this->adminService->getPromptTemplates()),
+            message: 'Prompt templates retrieved.',
+        );
     }
 
     /**
@@ -70,10 +77,13 @@ class AiCopilotAdminController extends Controller
         $template = $this->adminService->updatePromptTemplate(
             $intent,
             $request->validated(),
-            $request->user()->id,
+            (int) auth_user_id(),
         );
 
-        return ApiResponse::success(new AiPromptTemplateAdminResource($template));
+        return ApiResponse::success(
+            data:    new AiPromptTemplateAdminResource($template),
+            message: 'Prompt template updated.',
+        );
     }
 
     /**
@@ -86,7 +96,10 @@ class AiCopilotAdminController extends Controller
     {
         $template = $this->adminService->lockTemplate($intent);
 
-        return ApiResponse::success(new AiPromptTemplateAdminResource($template));
+        return ApiResponse::success(
+            data:    new AiPromptTemplateAdminResource($template),
+            message: 'Prompt template locked.',
+        );
     }
 
     /**
@@ -99,7 +112,10 @@ class AiCopilotAdminController extends Controller
     {
         $template = $this->adminService->unlockTemplate($intent);
 
-        return ApiResponse::success(new AiPromptTemplateAdminResource($template));
+        return ApiResponse::success(
+            data:    new AiPromptTemplateAdminResource($template),
+            message: 'Prompt template unlocked.',
+        );
     }
 
     /**
@@ -112,9 +128,12 @@ class AiCopilotAdminController extends Controller
     {
         $setting = $this->adminService->updateFeatureFlags(
             $request->validated()['flags'],
-            $request->user()->id,
+            (int) auth_user_id(),
         );
 
-        return ApiResponse::success(['feature_flags' => $setting->feature_flags]);
+        return ApiResponse::success(
+            data:    ['feature_flags' => $setting->feature_flags],
+            message: 'Feature flags updated.',
+        );
     }
 }

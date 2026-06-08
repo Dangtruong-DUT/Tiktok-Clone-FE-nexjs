@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Post;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\BookmarkPostRequest;
@@ -89,15 +89,11 @@ class PostController extends Controller
         $uuid = $request->input('post_uuid');
         $post = $this->postService->getByUuidOrFail($uuid);
 
-        $viewerFingerprint = implode('|', [
-            $request->ip(),
-            (string) $request->userAgent(),
-        ]);
-
         $this->postViewService->increaseView(
-            postId: $post->id,
-            authUserId: auth('api')->id(),
-            viewerFingerprint: $viewerFingerprint
+            postId:    $post->id,
+            authUserId: auth_user_id(),
+            ip:        $request->ip(),
+            userAgent: (string) $request->userAgent(),
         );
 
         return ApiResponse::success(
