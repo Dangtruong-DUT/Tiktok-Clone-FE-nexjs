@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Auth;
 
 use App\Enums\Notification\NotificationAuthEventEnum;
 use App\Enums\User\UserVerifyStatusEnum;
 use App\Exceptions\http\BusinessException;
 use App\Exceptions\http\UnauthorizedException;
 use App\Mail\ForgotPasswordMail;
+use App\Services\Notification\NotificationService;
 use App\Mail\VerifyUserMail;
 use App\Mail\VerifyUserSuccess;
 use App\Models\User;

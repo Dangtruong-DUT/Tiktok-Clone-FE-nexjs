@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Hashtag\GetListHashtagRequest;
 use App\Http\Resources\Api\Hashtag\HashtagResource;
 use App\Http\Response\ApiResponse;
-use App\Services\HashtagService;
+use App\Services\Hashtag\HashtagService;
 use Illuminate\Http\JsonResponse;
 
 class HashtagController extends Controller

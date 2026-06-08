@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Wellness;
 
 use App\Contracts\AI\GeminiClientInterface;
 use App\DTOs\AI\Gemini\GeminiConfig;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Auth;
 
 use App\Enums\Auth\TokenTypeEnum;
 use App\Exceptions\http\BadRequestException;

@@ -8,7 +8,7 @@ use App\Http\Requests\Wellness\GetScreenTimeHistoryRequest;
 use App\Http\Requests\Wellness\GetScreenTimeStatsRequest;
 use App\Http\Requests\Wellness\UpdateVideoTimeRequest;
 use App\Http\Response\ApiResponse;
-use App\Services\ScreenTimeTrackingService;
+use App\Services\ScreenTime\ScreenTimeTrackingService;
 use Illuminate\Http\JsonResponse;
 
 class ScreenTimeController extends Controller

@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Services\PostViewService;
+use App\Services\Post\PostViewService;
 use Illuminate\Console\Command;
 
 class SyncPostViewsCommand extends Command

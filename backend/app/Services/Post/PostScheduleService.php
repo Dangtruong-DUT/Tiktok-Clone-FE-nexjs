@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\AI\Schedule;
+namespace App\Services\Post;
 
 use App\Enums\Ai\ScheduledPostSourceEnum;
 use App\Enums\Ai\ScheduledPostStatusEnum;

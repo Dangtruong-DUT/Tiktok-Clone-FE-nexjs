@@ -6,6 +6,7 @@ use App\Enums\Ai\ScheduledPostSourceEnum;
 use App\Enums\Ai\ScheduledPostStatusEnum;
 use App\Models\ScheduledPost;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 /**
@@ -78,6 +79,53 @@ class ScheduledPostRepository extends BaseRepository
             ->where('user_id', $userId)
             ->where('status', ScheduledPostStatusEnum::PENDING->value)
             ->first();
+    }
+
+    /**
+     * Get status counts for scheduled posts in a date range with optional filters.
+     *
+     * @param  Carbon  $from
+     * @param  Carbon  $to
+     * @return array<string, int>  status => count
+     */
+    public function getStatusBreakdown(Carbon $from, Carbon $to, ?string $status = null, ?string $source = null): array
+    {
+        return $this->buildSearchQuery($from, $to, $status, $source)
+            ->selectRaw('status, COUNT(*) as cnt')
+            ->groupBy('status')
+            ->pluck('cnt', 'status')
+            ->map(fn ($v) => (int) $v)
+            ->toArray();
+    }
+
+    /**
+     * Get average delay in minutes between scheduled_at and published_at in a date range.
+     *
+     * @param  Carbon  $from
+     * @param  Carbon  $to
+     */
+    public function getAvgPublishDelayMinutes(Carbon $from, Carbon $to, ?string $source = null): ?float
+    {
+        $result = $this->buildSearchQuery($from, $to, ScheduledPostStatusEnum::PUBLISHED->value, $source)
+            ->whereNotNull('published_at')
+            ->selectRaw('AVG(EXTRACT(EPOCH FROM (published_at - scheduled_at)) / 60) as avg_delay')
+            ->value('avg_delay');
+
+        return $result !== null ? round((float) $result, 1) : null;
+    }
+
+    /**
+     * Base query scoped to a date range with optional status and source filters.
+     *
+     * @param  Carbon  $from
+     * @param  Carbon  $to
+     */
+    private function buildSearchQuery(Carbon $from, Carbon $to, ?string $status = null, ?string $source = null): Builder
+    {
+        return $this->query()
+            ->whereBetween('scheduled_at', [$from, $to])
+            ->when($status !== null, fn (Builder $q) => $q->where('status', $status))
+            ->when($source !== null, fn (Builder $q) => $q->where('source', $source));
     }
 
     /**

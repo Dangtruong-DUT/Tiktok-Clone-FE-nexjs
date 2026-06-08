@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Libraries\Upload;
+namespace App\Services\Upload;
 
 use App\Contracts\Upload\UploadFileServiceInterface;
 use App\Models\UploadFile;
@@ -9,32 +9,34 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class LocalUploadFileService implements UploadFileServiceInterface
+/**
+ * Uploads files to local public disk and persists an UploadFile record.
+ * Used when the filesystems.default driver is not s3/minio (local dev without MinIO).
+ */
+class LocalFileUploadService implements UploadFileServiceInterface
 {
     /**
-     * Upload a file and create a record in the upload_files table.
+     * Upload a file to local public storage and create a record in the upload_files table.
      *
-     * @param  UploadedFile  $file  The uploaded file
-     * @param  string  $directory  The directory to store the file in
-     * @param  Relation|null  $relation  The Relation to associate the file with
-     * @return UploadFile The created UploadFile record
+     * @param  UploadedFile  $file
+     * @param  string  $directory
+     * @param  Relation|null  $relation  Eloquent relation to associate the record with
+     * @return UploadFile
      */
     public function uploadFile(
         UploadedFile $file,
         string $directory,
-        ?Relation $relation = null
+        ?Relation $relation = null,
     ): UploadFile {
-
-        $filename = Str::uuid()->toString().'.'.$file->getClientOriginalExtension();
-
-        $path = $file->storeAs($directory, $filename, 'public');
+        $filename   = Str::uuid()->toString() . '.' . $file->getClientOriginalExtension();
+        $path       = $file->storeAs($directory, $filename, 'public');
 
         $uploadFile = new UploadFile([
             'file_name' => $file->getClientOriginalName(),
             'file_path' => $path,
             'mime_type' => $file->getMimeType() ?? $file->getClientMimeType(),
             'file_size' => $file->getSize(),
-            'disk' => 'public',
+            'disk'      => 'public',
         ]);
 
         if ($relation) {
@@ -47,10 +49,10 @@ class LocalUploadFileService implements UploadFileServiceInterface
     }
 
     /**
-     * Delete a file and its record.
+     * Delete a file from local public storage and remove its database record.
      *
-     * @param  UploadFile  $uploadFile  The file to delete
-     * @return bool True if the file was deleted
+     * @param  UploadFile  $uploadFile
+     * @return bool
      */
     public function deleteFile(UploadFile $uploadFile): bool
     {

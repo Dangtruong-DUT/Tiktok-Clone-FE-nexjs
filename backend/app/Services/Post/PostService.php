@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Post;
 
 use App\Enums\Post\PostPublishStatusEnum;
 use App\Enums\Post\PostTypeEnum;
@@ -17,6 +17,7 @@ use App\Repositories\MediaRepository;
 use App\Repositories\PostRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\VideoUploadSessionRepository;
+use App\Services\AI\AiModerationService;
 use App\Models\User;
 use App\Traits\HasAuthUser;
 use Illuminate\Contracts\Pagination\CursorPaginator;

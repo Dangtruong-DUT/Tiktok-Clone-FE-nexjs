@@ -2,11 +2,16 @@
 
 namespace App\Providers;
 
-use App\Contracts\Upload\UploadStorageInterface;
-use App\Libraries\Upload\LocalUploadFileService;
-use App\Libraries\Upload\MinioUploadFileService;
 use App\Contracts\Upload\UploadFileServiceInterface;
+use App\Contracts\Upload\UploadStorageInterface;
+use App\Services\Upload\LocalFileUploadService;
 use App\Services\Upload\PresignedUploadService;
+use App\Services\Upload\SimpleFileUploadService;
+use App\Services\Upload\Storage\MultipartUploadService;
+use App\Services\Upload\Storage\ObjectStorageService;
+use App\Services\Upload\Storage\PresignedUrlService;
+use App\Services\Upload\Storage\S3ClientFactory;
+use App\Services\Upload\Storage\StorageCleanupService;
 use Illuminate\Support\ServiceProvider;
 
 class UploadFileServiceProvider extends ServiceProvider
@@ -17,14 +22,28 @@ class UploadFileServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(UploadFileServiceInterface::class, function () {
-            $storage_driver = config('filesystems.default', 'local');
+            $storageDriver = config('filesystems.default', 'local');
 
-            return match ($storage_driver) {
-                's3', 'minio' => new MinioUploadFileService,
-                default => new LocalUploadFileService,
+            return match ($storageDriver) {
+                's3', 'minio' => new SimpleFileUploadService,
+                default       => new LocalFileUploadService,
             };
         });
 
-        $this->app->bind(UploadStorageInterface::class, PresignedUploadService::class);
+        $this->app->singleton(UploadStorageInterface::class, function () {
+            $diskConfig = (array) config('filesystems.disks.s3');
+            $factory    = new S3ClientFactory;
+
+            $apiClient     = $factory->makeApiClient($diskConfig);
+            $signingClient = $factory->makeSigningClient($diskConfig);
+            $bucket        = (string) $diskConfig['bucket'];
+
+            return new PresignedUploadService(
+                presigned: new PresignedUrlService($signingClient, $bucket),
+                multipart: new MultipartUploadService($apiClient, $bucket),
+                objects:   new ObjectStorageService($apiClient, $bucket),
+                cleanup:   new StorageCleanupService($apiClient, $bucket),
+            );
+        });
     }
 }

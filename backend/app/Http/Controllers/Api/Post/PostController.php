@@ -20,8 +20,8 @@ use App\Http\Requests\Post\UnlikePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
 use App\Http\Resources\Api\Post\PostResource;
 use App\Http\Response\ApiResponse;
-use App\Services\PostService;
-use App\Services\PostViewService;
+use App\Services\Post\PostService;
+use App\Services\Post\PostViewService;
 use Illuminate\Http\JsonResponse;
 
 class PostController extends Controller

@@ -3,7 +3,7 @@
 namespace App\Listeners\Social;
 
 use App\Events\Social\UserFollowedEvent;
-use App\Services\NotificationService;
+use App\Services\Notification\NotificationService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;

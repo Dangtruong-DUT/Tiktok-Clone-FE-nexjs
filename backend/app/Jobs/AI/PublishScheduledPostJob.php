@@ -4,7 +4,7 @@ namespace App\Jobs\AI;
 
 use App\Enums\Ai\ScheduledPostStatusEnum;
 use App\Models\ScheduledPost;
-use App\Services\AI\Schedule\PostScheduleService;
+use App\Services\Post\PostScheduleService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

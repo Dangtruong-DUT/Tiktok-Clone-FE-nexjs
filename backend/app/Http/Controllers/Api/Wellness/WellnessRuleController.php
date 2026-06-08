@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Wellness\SaveWellnessRuleRequest;
 use App\Http\Resources\Api\Wellness\WellnessRuleResource;
 use App\Http\Response\ApiResponse;
-use App\Services\WellnessRuleService;
+use App\Services\Wellness\WellnessRuleService;
 use Illuminate\Http\JsonResponse;
 
 class WellnessRuleController extends Controller

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\AI;
 
 use App\Enums\Admin\AdminActionEnum;
 use App\Enums\Ai\AiModerationLabelEnum;

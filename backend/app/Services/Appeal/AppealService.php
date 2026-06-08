@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Appeal;
 
 use App\Enums\Appeal\AppealStatusEnum;
 use App\Enums\Appeal\AppealTypeEnum;

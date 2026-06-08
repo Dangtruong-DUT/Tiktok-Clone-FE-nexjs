@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\ScreenTimeSession;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
@@ -118,5 +119,52 @@ class ScreenTimeSessionRepository extends BaseRepository
             ->where('started_at', '<=', $to)
             ->whereNotNull('ended_at')
             ->count();
+    }
+
+    /**
+     * Get the hour of day (0–23) with the most sessions in the given range.
+     *
+     * @param  Carbon  $from
+     * @param  Carbon  $to
+     */
+    public function getPeakHour(int $userId, Carbon $from, Carbon $to): ?int
+    {
+        $value = $this->buildSearchQuery($userId, $from, $to)
+            ->selectRaw('EXTRACT(HOUR FROM started_at) as hour, COUNT(*) as cnt')
+            ->groupByRaw('EXTRACT(HOUR FROM started_at)')
+            ->orderByDesc('cnt')
+            ->value('hour');
+
+        return $value !== null ? (int) $value : null;
+    }
+
+    /**
+     * Get daily total duration in seconds for a date range.
+     *
+     * @param  Carbon  $from
+     * @param  Carbon  $to
+     * @return array<string, int>  date (Y-m-d) => seconds
+     */
+    public function getDailySeries(int $userId, Carbon $from, Carbon $to): array
+    {
+        return $this->buildSearchQuery($userId, $from, $to)
+            ->selectRaw('DATE(started_at) as date, COALESCE(SUM(duration_seconds), 0) as seconds')
+            ->groupByRaw('DATE(started_at)')
+            ->pluck('seconds', 'date')
+            ->map(fn ($s) => (int) $s)
+            ->toArray();
+    }
+
+    /**
+     * Base query scoped to a user and date range (shared by analytics methods).
+     *
+     * @param  Carbon  $from
+     * @param  Carbon  $to
+     */
+    private function buildSearchQuery(int $userId, Carbon $from, Carbon $to): Builder
+    {
+        return $this->query()
+            ->where('user_id', $userId)
+            ->whereBetween('started_at', [$from, $to]);
     }
 }
