@@ -3,7 +3,7 @@
 namespace App\Listeners\Admin;
 
 use App\Events\Admin\AdminModerationActionNotifiedEvent;
-use App\Services\NotificationService;
+use App\Services\Notification\NotificationService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;

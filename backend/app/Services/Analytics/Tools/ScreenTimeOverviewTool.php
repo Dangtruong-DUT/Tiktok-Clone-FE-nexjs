@@ -2,13 +2,15 @@
 
 namespace App\Services\Analytics\Tools;
 
-use Illuminate\Support\Facades\DB;
+use App\Repositories\ScreenTimeSessionRepository;
 
 /**
  * Session duration, video watch time ratio, daily usage trend, and peak hour.
  */
 class ScreenTimeOverviewTool extends AbstractAnalyticsTool
 {
+    public function __construct(private readonly ScreenTimeSessionRepository $screenTimeRepo) {}
+
     /**
      * @return string
      */
@@ -39,39 +41,20 @@ class ScreenTimeOverviewTool extends AbstractAnalyticsTool
             return ['tool' => $this->name(), 'period' => $params['period'], 'data' => [], 'compare' => null, 'change_pct' => null];
         }
 
-        $sessions = DB::table('screen_time_sessions')
-            ->where('user_id', $userId)
-            ->whereBetween('started_at', [$range['from'], $range['to']])
-            ->selectRaw('COALESCE(SUM(duration_seconds), 0) as total_seconds, COUNT(*) as session_count, COALESCE(SUM(video_watch_seconds), 0) as video_seconds')
-            ->first();
+        $totalSeconds  = $this->screenTimeRepo->sumSecondsInRange($userId, $range['from'], $range['to']);
+        $sessionCount  = $this->screenTimeRepo->countInRange($userId, $range['from'], $range['to']);
+        $videoSeconds  = $this->screenTimeRepo->sumVideoSecondsInRange($userId, $range['from'], $range['to']);
 
-        $totalSeconds   = (int) ($sessions->total_seconds ?? 0);
-        $sessionCount   = (int) ($sessions->session_count ?? 0);
-        $videoSeconds   = (int) ($sessions->video_seconds ?? 0);
+        $avgSession = $sessionCount > 0 ? round($totalSeconds / $sessionCount) : 0;
+        $videoRatio = $totalSeconds > 0 ? round($videoSeconds / $totalSeconds * 100, 1) : 0.0;
 
-        $avgSession    = $sessionCount > 0 ? round($totalSeconds / $sessionCount) : 0;
-        $videoRatio    = $totalSeconds > 0 ? round($videoSeconds / $totalSeconds * 100, 1) : 0.0;
-
-        $peakHour = DB::table('screen_time_sessions')
-            ->where('user_id', $userId)
-            ->whereBetween('started_at', [$range['from'], $range['to']])
-            ->selectRaw('EXTRACT(HOUR FROM started_at) as hour, COUNT(*) as cnt')
-            ->groupByRaw('EXTRACT(HOUR FROM started_at)')
-            ->orderByDesc('cnt')
-            ->value('hour');
+        $peakHour    = $this->screenTimeRepo->getPeakHour($userId, $range['from'], $range['to']);
+        $dailyRows   = $this->screenTimeRepo->getDailySeries($userId, $range['from'], $range['to']);
 
         $dailySeries = $this->buildDailySeries($range['from'], $range['to']);
-        $dailyRows   = DB::table('screen_time_sessions')
-            ->where('user_id', $userId)
-            ->whereBetween('started_at', [$range['from'], $range['to']])
-            ->selectRaw('DATE(started_at) as date, COALESCE(SUM(duration_seconds), 0) as seconds')
-            ->groupByRaw('DATE(started_at)')
-            ->pluck('seconds', 'date')
-            ->toArray();
-
         foreach ($dailyRows as $date => $seconds) {
             if (isset($dailySeries[$date])) {
-                $dailySeries[$date] = (int) $seconds;
+                $dailySeries[$date] = $seconds;
             }
         }
 
@@ -80,7 +63,7 @@ class ScreenTimeOverviewTool extends AbstractAnalyticsTool
             'total_screen_time'    => $totalSeconds,
             'video_watch_ratio'    => $videoRatio,
             'daily_series'         => $dailySeries,
-            'peak_hour'            => $peakHour !== null ? (int) $peakHour : null,
+            'peak_hour'            => $peakHour,
         ];
 
         return [

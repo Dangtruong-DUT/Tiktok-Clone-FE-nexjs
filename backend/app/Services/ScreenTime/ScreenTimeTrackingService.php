@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\ScreenTime;
 
 use App\Enums\Admin\ActivityTypeEnum;
 use App\Enums\Wellness\ScreenTimePeriodEnum;

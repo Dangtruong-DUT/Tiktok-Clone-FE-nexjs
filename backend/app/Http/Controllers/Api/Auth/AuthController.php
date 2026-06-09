@@ -13,7 +13,7 @@ use App\Http\Requests\Auth\VerifyEmailRequest;
 use App\Http\Requests\Auth\VerifyForgotPasswordTokenRequest;
 use App\Http\Resources\Api\Auth\AuthResource;
 use App\Http\Response\ApiResponse;
-use App\Services\AuthService;
+use App\Services\Auth\AuthService;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
 

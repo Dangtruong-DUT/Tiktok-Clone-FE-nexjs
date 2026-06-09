@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Hashtag;
 
 use App\Models\Hashtag;
 use Illuminate\Pagination\LengthAwarePaginator;

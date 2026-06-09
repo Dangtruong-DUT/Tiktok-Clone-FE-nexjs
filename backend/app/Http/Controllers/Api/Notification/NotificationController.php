@@ -10,7 +10,7 @@ use App\Http\Requests\Notification\MarkAllNotificationsAsReadRequest;
 use App\Http\Requests\Notification\MarkNotificationAsReadRequest;
 use App\Http\Resources\Api\Notification\NotificationResource;
 use App\Http\Response\ApiResponse;
-use App\Services\NotificationService;
+use App\Services\Notification\NotificationService;
 use Illuminate\Http\JsonResponse;
 
 /**

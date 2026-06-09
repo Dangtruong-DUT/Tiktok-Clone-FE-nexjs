@@ -183,6 +183,50 @@ class AppealRepository extends BaseRepository
     }
 
     /**
+     * Count appeals with the given status.
+     */
+    public function countByStatus(AppealStatusEnum $status): int
+    {
+        return $this->buildSlaBaseQuery($status)->count();
+    }
+
+    /**
+     * Get the created_at timestamp of the oldest appeal with the given status.
+     */
+    public function getOldestCreatedAt(AppealStatusEnum $status): ?string
+    {
+        return $this->buildSlaBaseQuery($status)
+            ->orderBy('created_at')
+            ->value('created_at');
+    }
+
+    /**
+     * Get average resolution time in hours for resolved appeals.
+     *
+     * @param  AppealStatusEnum[]  $resolvedStatuses
+     */
+    public function getAvgResolutionHours(array $resolvedStatuses): ?float
+    {
+        $statuses = array_map(fn (AppealStatusEnum $s) => $s->value, $resolvedStatuses);
+
+        $result = $this->query()
+            ->whereIn('status', $statuses)
+            ->whereNotNull('resolved_at')
+            ->selectRaw('AVG(EXTRACT(EPOCH FROM (resolved_at - created_at)) / 3600) as avg_hours')
+            ->value('avg_hours');
+
+        return $result !== null ? round((float) $result, 1) : null;
+    }
+
+    /**
+     * Base query filtered by a single appeal status (shared by SLA analytics methods).
+     */
+    private function buildSlaBaseQuery(AppealStatusEnum $status): Builder
+    {
+        return $this->query()->byStatus($status);
+    }
+
+    /**
      * Build search query for appeals with filters.
      *
      * @param  Collection<string,mixed>  $filterCollection

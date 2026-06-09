@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\UpdateUserSettingsRequest;
 use App\Http\Resources\Api\Settings\UserSettingsResource;
 use App\Http\Response\ApiResponse;
-use App\Services\UserSettingsService;
+use App\Services\User\UserSettingsService;
 use Illuminate\Http\JsonResponse;
 
 class UserSettingsController extends Controller

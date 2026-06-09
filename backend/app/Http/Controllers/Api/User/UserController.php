@@ -16,7 +16,7 @@ use App\Http\Requests\User\UnFollowSomeOneRequest;
 use App\Http\Requests\User\UpdateMeRequest;
 use App\Http\Resources\Api\User\UserResource;
 use App\Http\Response\ApiResponse;
-use App\Services\UserService;
+use App\Services\User\UserService;
 use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller

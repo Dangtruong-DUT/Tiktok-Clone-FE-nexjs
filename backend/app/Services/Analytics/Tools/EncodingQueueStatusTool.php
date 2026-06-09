@@ -2,13 +2,16 @@
 
 namespace App\Services\Analytics\Tools;
 
-use Illuminate\Support\Facades\DB;
+use App\Enums\Video\VideoEncodingStatusEnum;
+use App\Repositories\VideoEncodingRepository;
 
 /**
  * Video encoding queue: pending, processing, failed, stuck jobs, avg processing time.
  */
 class EncodingQueueStatusTool extends AbstractAnalyticsTool
 {
+    public function __construct(private readonly VideoEncodingRepository $encodingRepo) {}
+
     /**
      * @return string
      */
@@ -33,42 +36,24 @@ class EncodingQueueStatusTool extends AbstractAnalyticsTool
      */
     public function run(array $params, ?int $userId, bool $isAdmin): array
     {
-        $filters = (array) ($params['filters'] ?? []);
+        $filters    = (array) ($params['filters'] ?? []);
+        $resolution = isset($filters['resolution']) ? (string) $filters['resolution'] : null;
 
-        $query = DB::table('video_encodings');
+        $statusCounts = $this->encodingRepo->getStatusCounts($resolution);
 
-        if (isset($filters['resolution'])) {
-            $query->where('resolution', $filters['resolution']);
-        }
+        $pending    = $statusCounts[VideoEncodingStatusEnum::PENDING->value] ?? 0;
+        $processing = $statusCounts[VideoEncodingStatusEnum::PROCESSING->value] ?? 0;
+        $failed     = $statusCounts[VideoEncodingStatusEnum::FAILED->value] ?? 0;
 
-        $statusCounts = (clone $query)
-            ->selectRaw('status, COUNT(*) as cnt')
-            ->groupBy('status')
-            ->pluck('cnt', 'status')
-            ->toArray();
-
-        $pending    = (int) ($statusCounts[0] ?? 0);
-        $processing = (int) ($statusCounts[1] ?? 0);
-        $failed     = (int) ($statusCounts[3] ?? 0);
-
-        $stuckThreshold = now()->subHours(2);
-        $stuck = (clone $query)
-            ->whereIn('status', [0, 1])
-            ->where('updated_at', '<', $stuckThreshold)
-            ->count();
-
-        $avgProcessingTime = (clone $query)
-            ->where('status', 2)
-            ->whereNotNull('completed_at')
-            ->selectRaw('AVG(EXTRACT(EPOCH FROM (completed_at - started_at)) / 60) as avg_minutes')
-            ->value('avg_minutes');
+        $stuck             = $this->encodingRepo->countStuck(2, $resolution);
+        $avgProcessingTime = $this->encodingRepo->getAvgProcessingMinutes($resolution);
 
         $data = [
-            'pending_jobs'         => $pending,
-            'processing_jobs'      => $processing,
-            'failed_jobs'          => $failed,
-            'stuck_jobs'           => $stuck,
-            'avg_processing_time'  => $avgProcessingTime !== null ? round((float) $avgProcessingTime, 1) : null,
+            'pending_jobs'        => $pending,
+            'processing_jobs'     => $processing,
+            'failed_jobs'         => $failed,
+            'stuck_jobs'          => $stuck,
+            'avg_processing_time' => $avgProcessingTime,
         ];
 
         return [

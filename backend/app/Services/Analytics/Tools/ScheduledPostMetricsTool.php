@@ -2,13 +2,16 @@
 
 namespace App\Services\Analytics\Tools;
 
-use Illuminate\Support\Facades\DB;
+use App\Enums\Ai\ScheduledPostStatusEnum;
+use App\Repositories\ScheduledPostRepository;
 
 /**
  * Scheduled post counts, publish success rate, avg delay, and source breakdown.
  */
 class ScheduledPostMetricsTool extends AbstractAnalyticsTool
 {
+    public function __construct(private readonly ScheduledPostRepository $scheduledPostRepo) {}
+
     /**
      * @return string
      */
@@ -36,47 +39,36 @@ class ScheduledPostMetricsTool extends AbstractAnalyticsTool
         $range   = $this->resolveDateRange($params['period']);
         $filters = (array) ($params['filters'] ?? []);
 
-        $query = DB::table('scheduled_posts')
-            ->whereBetween('scheduled_at', [$range['from'], $range['to']]);
+        $statusFilter = isset($filters['status']) ? (string) $filters['status'] : null;
+        $sourceFilter = isset($filters['source']) ? (string) $filters['source'] : null;
 
-        if (! $isAdmin && $userId !== null) {
-            $query->where('user_id', $userId);
-        }
-
-        if (isset($filters['status'])) {
-            $query->where('status', $filters['status']);
-        }
-
-        if (isset($filters['source'])) {
-            $query->where('source', $filters['source']);
-        }
-
-        $statusBreakdown = (clone $query)
-            ->selectRaw('status, COUNT(*) as cnt')
-            ->groupBy('status')
-            ->pluck('cnt', 'status')
-            ->toArray();
+        $statusBreakdown = $this->scheduledPostRepo->getStatusBreakdown(
+            $range['from'],
+            $range['to'],
+            $statusFilter,
+            $sourceFilter,
+        );
 
         $total     = array_sum($statusBreakdown);
-        $published = (int) ($statusBreakdown['published'] ?? 0);
-        $failed    = (int) ($statusBreakdown['failed'] ?? 0);
-        $cancelled = (int) ($statusBreakdown['cancelled'] ?? 0);
+        $published = $statusBreakdown[ScheduledPostStatusEnum::PUBLISHED->value] ?? 0;
+        $failed    = $statusBreakdown[ScheduledPostStatusEnum::FAILED->value] ?? 0;
+        $cancelled = $statusBreakdown[ScheduledPostStatusEnum::CANCELLED->value] ?? 0;
 
         $successRate = $total > 0 ? round($published / $total * 100, 1) : 0.0;
 
-        $avgDelay = (clone $query)
-            ->where('status', 'published')
-            ->whereNotNull('published_at')
-            ->selectRaw('AVG(EXTRACT(EPOCH FROM (published_at - scheduled_at)) / 60) as avg_delay')
-            ->value('avg_delay');
+        $avgDelay = $this->scheduledPostRepo->getAvgPublishDelayMinutes(
+            $range['from'],
+            $range['to'],
+            $sourceFilter,
+        );
 
         $data = [
-            'scheduled_total' => $total,
-            'published'       => $published,
-            'failed'          => $failed,
-            'cancelled'       => $cancelled,
-            'success_rate'    => $successRate,
-            'avg_delay_minutes' => $avgDelay !== null ? round((float) $avgDelay, 1) : null,
+            'scheduled_total'   => $total,
+            'published'         => $published,
+            'failed'            => $failed,
+            'cancelled'         => $cancelled,
+            'success_rate'      => $successRate,
+            'avg_delay_minutes' => $avgDelay,
         ];
 
         return [

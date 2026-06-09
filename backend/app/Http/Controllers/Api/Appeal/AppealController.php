@@ -11,7 +11,7 @@ use App\Http\Requests\Appeal\ShowAppealRequest;
 use App\Http\Requests\Appeal\UpdateAppealRequest;
 use App\Http\Resources\Api\Appeal\AppealResource;
 use App\Http\Response\ApiResponse;
-use App\Services\AppealService;
+use App\Services\Appeal\AppealService;
 use Illuminate\Http\JsonResponse;
 
 class AppealController extends Controller

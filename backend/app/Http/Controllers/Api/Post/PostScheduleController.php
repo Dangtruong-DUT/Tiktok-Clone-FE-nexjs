@@ -10,7 +10,7 @@ use App\Http\Requests\Studio\SchedulePostRequest;
 use App\Http\Resources\Api\Studio\ScheduledPostResource;
 use App\Http\Resources\Api\Studio\StudioPostResource;
 use App\Http\Response\ApiResponse;
-use App\Services\AI\Schedule\PostScheduleService;
+use App\Services\Post\PostScheduleService;
 use Illuminate\Http\JsonResponse;
 
 class PostScheduleController extends Controller

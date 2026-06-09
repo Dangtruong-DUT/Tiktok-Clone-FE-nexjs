@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Post;
 
 use App\Repositories\PostRepository;
 use Illuminate\Support\Facades\DB;
