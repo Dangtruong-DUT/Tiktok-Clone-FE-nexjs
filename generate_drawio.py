@@ -284,8 +284,9 @@ class Generator:
 # ======================================================================
 
 SD01 = {
-    "participants": ["Frontend", "Laravel API", "AiGateway", "CopilotOrchestrator", "Gemini"],
+    "participants": ["User", "Frontend", "Laravel API", "AiGateway", "CopilotOrchestrator", "Gemini"],
     "items": [
+        ("User",       "Frontend",    "Nhập câu hỏi vào AI Copilot", "sync"),
         ("Frontend",   "Laravel API", "POST /sessions/:uuid/messages", "sync"),
         ("Laravel API","Laravel API", "Lưu userMessage (DB)", "self"),
         ("Laravel API","Laravel API", "generateStreamToken() — TTL 2 phút", "self"),
@@ -479,8 +480,9 @@ SD02C = {
 }
 
 SD03A = {
-    "participants": ["Frontend", "Laravel API", "MinIO S3"],
+    "participants": ["User", "Frontend", "Laravel API", "MinIO S3"],
     "items": [
+        ("User",       "Frontend",    "Chọn file video để tải lên", "sync"),
         ("Frontend",   "Laravel API","POST /videos/upload-sessions (file_name, file_size, mime_type)", "sync"),
         ("Laravel API","Laravel API","Tạo VideoUploadSession (PENDING)", "self"),
         ("Laravel API","MinIO S3",   "initiateMultipartUpload(key, mimeType)", "sync"),
@@ -506,6 +508,7 @@ SD03A = {
         ("Laravel API","Laravel API","Dispatch ProcessVideoToHlsJob (queue: video-processing)", "self"),
         ("Laravel API","Laravel API","Cập nhật session → UPLOADED", "self"),
         ("Laravel API","Frontend",   "status: UPLOADED, encoding_status: PENDING", "return"),
+        ("Frontend",   "User",       "Hiển thị trạng thái upload hoàn tất", "return"),
     ],
     "note": "Chunk upload đi trực tiếp Frontend → MinIO\nLaravel chỉ cấp presigned URL và quản lý metadata",
 }
