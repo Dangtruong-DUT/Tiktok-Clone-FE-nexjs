@@ -12,20 +12,20 @@ from xml.sax.saxutils import escape as _xml_escape
 OUTPUT_DIR = "output"
 
 # Layout constants
-MSG_STEP      = 45   # y increment per regular message
-SELF_H        = 30   # height of self-call loop
-SELF_GAP      = 15   # gap after self-call
-FRAME_HDR     = 22   # height of frame header label
-FRAME_PAD     = 18   # padding at bottom of frame
-FRAME_INNER   = 10   # gap between header and first message
-DIVIDER_H     = 30   # height consumed by a branch divider
+MSG_STEP      = 45
+SELF_H        = 30
+SELF_GAP      = 15
+FRAME_HDR     = 22
+FRAME_PAD     = 18
+FRAME_INNER   = 10
+DIVIDER_H     = 30
 PARTICIPANT_H = 40
 PARTICIPANT_Y = 20
 LIFELINE_Y0   = 60
 FIRST_MSG_Y   = 100
-P_GAP         = 40   # gap between participant boxes
+P_GAP         = 40
 MIN_W         = 120
-CHAR_W        = 8    # approx pixels per char (bold 11px)
+CHAR_W        = 8
 
 STYLES = {
     "participant": "rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;",
@@ -35,6 +35,7 @@ STYLES = {
     "ai":          "rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=11;",
     "cache":       "rounded=1;whiteSpace=wrap;html=1;fillColor=#d5f5e3;strokeColor=#27ae60;fontStyle=1;fontSize=11;",
     "lifeline":    "endArrow=none;html=1;dashed=1;strokeColor=#aaaaaa;",
+    "activation":  "fillColor=#FFFFFF;strokeColor=#555555;strokeWidth=1.5;",
     "msg_sync":    "endArrow=block;endFill=1;html=1;fontSize=10;",
     "msg_return":  "endArrow=open;endFill=0;dashed=1;html=1;fontSize=10;",
     "msg_self":    "endArrow=block;endFill=1;html=1;fontSize=10;",
@@ -56,7 +57,7 @@ def _pstyle(name: str) -> str:
         return 'kafka'
     if 'postgresql' in n or 'database' in n:
         return 'db'
-    if ('redis' in n):
+    if 'redis' in n:
         return 'cache'
     if ('phobert' in n or 'ai service' in n or 'textpipeline' in n
             or 'moderationworker' in n or 'classifier' in n):
@@ -72,17 +73,16 @@ class Generator:
     def __init__(self, spec: dict):
         self.spec = spec
         self._ctr = 2
-        self.p_info: dict = {}    # label → {cx, x, width}
-        self.p_order: list = []   # ordered participant labels
-        self.cells: list = []     # (layer, xml_str)
+        self.p_info: dict = {}
+        self.p_order: list = []
+        self.cells: list = []
         self.y: int = FIRST_MSG_Y
+        self.act_starts: dict = {}  # participant → y where activation began
 
-    # ------------------------------------------------------------------ #
     def _id(self) -> str:
         v = self._ctr; self._ctr += 1; return str(v)
 
     def _cx(self, name: str) -> int:
-        """Find centre-x of participant by exact or partial name."""
         if name in self.p_info:
             return self.p_info[name]['cx']
         for p in self.p_order:
@@ -94,7 +94,6 @@ class Generator:
     def _all_cx(self) -> list:
         return [self.p_info[p]['cx'] for p in self.p_order]
 
-    # ------------------------------------------------------------------ #
     def _setup_participants(self) -> int:
         x = 20
         for p in self.spec['participants']:
@@ -129,6 +128,23 @@ class Generator:
                 f'<mxPoint x="{cx}" y="{LIFELINE_Y0}" as="sourcePoint"/>'
                 f'<mxPoint x="{cx}" y="{bottom_y}" as="targetPoint"/>'
                 f'</mxGeometry></mxCell>\n'))
+
+    # ------------------------------------------------------------------ #
+    def _activate(self, name: str):
+        self.act_starts[name] = self.y
+
+    def _deactivate(self, name: str):
+        if name not in self.act_starts:
+            return
+        start_y = self.act_starts.pop(name)
+        cx = self._cx(name)
+        h = max(self.y - start_y, 20)
+        cid = self._id()
+        self.cells.append((2,
+            f'    <mxCell id="{cid}" value="" style="{STYLES["activation"]}" '
+            f'vertex="1" parent="1">'
+            f'<mxGeometry x="{cx - 6}" y="{start_y}" width="12" height="{h}" as="geometry"/>'
+            f'</mxCell>\n'))
 
     # ------------------------------------------------------------------ #
     def _msg(self, frm: str, to: str, label: str, mtype: str):
@@ -166,17 +182,16 @@ class Generator:
 
     # ------------------------------------------------------------------ #
     def _frame(self, spec: dict):
-        ftype  = spec['type']           # 'alt' | 'loop'
+        ftype  = spec['type']
         label  = spec['label']
         cxs    = self._all_cx()
         x_min  = min(cxs) - 20
         x_max  = max(cxs) + 20
         fw     = x_max - x_min
 
-        y0 = self.y                     # frame top
+        y0 = self.y
         self.y += FRAME_HDR + FRAME_INNER
 
-        # header label cell
         lbl_style = STYLES['f_alt_lbl'] if ftype == 'alt' else STYLES['f_loop_lbl']
         lw = min(len(label) * 7 + 20, fw)
         lid = self._id()
@@ -186,7 +201,6 @@ class Generator:
             f'<mxGeometry x="{x_min}" y="{y0}" width="{lw}" height="{FRAME_HDR}" as="geometry"/>'
             f'</mxCell>\n'))
 
-        # branches
         branches = spec.get('branches')
         if branches is None:
             branches = [{'label': None, 'items': spec.get('items', [])}]
@@ -214,7 +228,6 @@ class Generator:
         y1 = self.y + FRAME_PAD
         self.y = y1
 
-        # border box (layer 2 so it's behind messages)
         box_style = STYLES['f_alt_box'] if ftype == 'alt' else STYLES['f_loop_box']
         bid = self._id()
         self.cells.append((2,
@@ -227,7 +240,12 @@ class Generator:
     def _items(self, items: list):
         for it in items:
             if isinstance(it, tuple):
-                self._msg(*it)
+                if len(it) == 2 and it[0] == "activate":
+                    self._activate(it[1])
+                elif len(it) == 2 and it[0] == "deactivate":
+                    self._deactivate(it[1])
+                else:
+                    self._msg(*it)
             elif isinstance(it, dict):
                 self._frame(it)
 
@@ -258,7 +276,7 @@ class Generator:
         if self.spec.get('note'):
             self._note(self.spec['note'])
 
-        # sort: participants(0) → lifelines(1) → frames(2) → messages(3) → notes(4)
+        # layer order: participants(0) → lifelines(1) → activation+frames(2) → messages(3) → notes(4)
         sorted_cells = sorted(self.cells, key=lambda c: c[0])
 
         pw = max(total_w + 40, 850)
@@ -286,31 +304,41 @@ class Generator:
 SD01 = {
     "participants": ["User", "Frontend", "Laravel API", "AiGateway", "CopilotOrchestrator", "Gemini"],
     "items": [
-        ("User",       "Frontend",    "Nhập câu hỏi vào AI Copilot", "sync"),
-        ("Frontend",   "Laravel API", "POST /sessions/:uuid/messages", "sync"),
-        ("Laravel API","Laravel API", "Lưu userMessage (DB)", "self"),
-        ("Laravel API","Laravel API", "generateStreamToken() — TTL 2 phút", "self"),
-        ("Laravel API","Frontend",    "202 Accepted (message_uuid, stream_url, token)", "return"),
-        ("Frontend",   "Laravel API", "GET /stream/:msg_uuid?token=...", "sync"),
-        ("Laravel API","Laravel API", "validateStreamToken()", "self"),
+        ("User",        "Frontend",    "Nhập câu hỏi vào AI Copilot", "sync"),
+        ("activate",    "Frontend"),
+        ("Frontend",    "Laravel API", "POST /sessions/:uuid/messages", "sync"),
+        ("activate",    "Laravel API"),
+        ("Laravel API", "Laravel API", "Lưu userMessage (DB)", "self"),
+        ("Laravel API", "Laravel API", "generateStreamToken() — TTL 2 phút", "self"),
+        ("Laravel API", "Frontend",    "202 Accepted (message_uuid, stream_url, token)", "return"),
+        ("deactivate",  "Laravel API"),
+        ("Frontend",    "Laravel API", "GET /stream/:msg_uuid?token=...", "sync"),
+        ("activate",    "Laravel API"),
+        ("Laravel API", "Laravel API", "validateStreamToken()", "self"),
         {
             "type": "alt", "label": "alt [Token hết hạn / không hợp lệ]",
             "branches": [
                 {
                     "label": None,
                     "items": [
-                        ("Laravel API","Frontend", "SSE error — đóng stream", "return"),
+                        ("Laravel API", "Frontend", "SSE error — đóng stream", "return"),
                     ]
                 },
                 {
                     "label": "else [Token hợp lệ]",
                     "items": [
-                        ("Laravel API",        "AiGateway",           "understand(question, locale, history)", "sync"),
-                        ("AiGateway",          "Gemini",              "generateContent — JSON mode, temp=0.1", "sync"),
-                        ("Gemini",             "AiGateway",           "task_type, intent, confidence", "return"),
-                        ("AiGateway",          "Laravel API",         "GatewayTask", "return"),
-                        ("Laravel API",        "CopilotOrchestrator", "dispatch(task, input, context)", "sync"),
-                        ("CopilotOrchestrator","Gemini",              "streamGenerateContent()", "sync"),
+                        ("Laravel API",         "AiGateway",           "understand(question, locale, history)", "sync"),
+                        ("activate",            "AiGateway"),
+                        ("AiGateway",           "Gemini",              "generateContent — JSON mode, temp=0.1", "sync"),
+                        ("activate",            "Gemini"),
+                        ("Gemini",              "AiGateway",           "task_type, intent, confidence", "return"),
+                        ("deactivate",          "Gemini"),
+                        ("AiGateway",           "Laravel API",         "GatewayTask", "return"),
+                        ("deactivate",          "AiGateway"),
+                        ("Laravel API",         "CopilotOrchestrator", "dispatch(task, input, context)", "sync"),
+                        ("activate",            "CopilotOrchestrator"),
+                        ("CopilotOrchestrator", "Gemini",              "streamGenerateContent()", "sync"),
+                        ("activate",            "Gemini"),
                         {
                             "type": "loop", "label": "loop [Streaming chunks]",
                             "items": [
@@ -319,29 +347,34 @@ SD01 = {
                                 ("Laravel API",        "Frontend",            "SSE — type:chunk, delta", "return"),
                             ]
                         },
+                        ("deactivate", "Gemini"),
                         {
                             "type": "alt", "label": "alt [Gemini stream lỗi]",
                             "branches": [
                                 {
                                     "label": None,
                                     "items": [
-                                        ("Laravel API","Frontend", "SSE — type:done, status:failed", "return"),
+                                        ("Laravel API", "Frontend", "SSE — type:done, status:failed", "return"),
                                     ]
                                 },
                                 {
                                     "label": "else [Thành công]",
                                     "items": [
-                                        ("Laravel API","Laravel API","Lưu assistant message + token_usage (DB)", "self"),
-                                        ("Laravel API","Frontend",   "SSE — type:done, message, token_usage", "return"),
+                                        ("Laravel API", "Laravel API", "Lưu assistant message + token_usage (DB)", "self"),
+                                        ("Laravel API", "Frontend",    "SSE — type:done, message, token_usage", "return"),
                                     ]
                                 },
                             ]
                         },
-                        ("Frontend","Frontend","EventSource.close()", "self"),
+                        ("deactivate", "CopilotOrchestrator"),
+                        ("Frontend",   "Frontend", "EventSource.close()", "self"),
+                        ("Frontend",   "User",     "Hiển thị phản hồi AI hoàn chỉnh", "return"),
                     ]
                 },
             ]
         },
+        ("deactivate", "Laravel API"),
+        ("deactivate", "Frontend"),
     ],
     "note": "EventSource không gửi được Auth header\n→ Dùng encrypted short-lived token qua URL param (TTL 2m)",
 }
@@ -349,17 +382,28 @@ SD01 = {
 SD02A = {
     "participants": ["User", "Frontend", "Laravel API", "Apache Kafka", "AI Service\n(PhoBERT)", "PostgreSQL"],
     "items": [
-        ("User",          "Frontend",         "Gửi bình luận", "sync"),
-        ("Frontend",      "Laravel API",      "POST /comments", "sync"),
-        ("Laravel API",   "PostgreSQL",       "INSERT comment", "sync"),
-        ("Laravel API",   "Laravel API",      "AiModerationService.enqueue()", "self"),
-        ("Laravel API",   "Apache Kafka",     "Publish moderation.request.v1", "sync"),
-        ("Laravel API",   "Frontend",         "201 Created", "return"),
-        ("Apache Kafka",  "AI Service\n(PhoBERT)", "Consume moderation.request.v1", "sync"),
-        ("AI Service\n(PhoBERT)", "AI Service\n(PhoBERT)", "clean → tokenize → predict", "self"),
-        ("AI Service\n(PhoBERT)", "Apache Kafka", "Publish moderation.result.v1", "sync"),
-        ("Apache Kafka",  "Laravel API",      "Consume moderation.result.v1", "sync"),
-        ("Laravel API",   "Laravel API",      "AiModerationService.applyVerdict()", "self"),
+        ("User",       "Frontend",    "Gửi bình luận", "sync"),
+        ("activate",   "Frontend"),
+        ("Frontend",   "Laravel API", "POST /comments", "sync"),
+        ("activate",   "Laravel API"),
+        ("Laravel API","PostgreSQL",  "INSERT comment", "sync"),
+        ("activate",   "PostgreSQL"),
+        ("PostgreSQL", "Laravel API", "OK", "return"),
+        ("deactivate", "PostgreSQL"),
+        ("Laravel API","Laravel API", "AiModerationService.enqueue()", "self"),
+        ("Laravel API","Apache Kafka","Publish moderation.request.v1", "sync"),
+        ("Laravel API","Frontend",    "201 Created", "return"),
+        ("deactivate", "Laravel API"),
+        ("Frontend",   "User",        "Hiển thị bình luận", "return"),
+        ("deactivate", "Frontend"),
+        ("Apache Kafka","AI Service\n(PhoBERT)", "Consume moderation.request.v1", "sync"),
+        ("activate",   "AI Service\n(PhoBERT)"),
+        ("AI Service\n(PhoBERT)","AI Service\n(PhoBERT)", "clean → tokenize → predict", "self"),
+        ("AI Service\n(PhoBERT)","Apache Kafka", "Publish moderation.result.v1", "sync"),
+        ("deactivate", "AI Service\n(PhoBERT)"),
+        ("Apache Kafka","Laravel API", "Consume moderation.result.v1", "sync"),
+        ("activate",   "Laravel API"),
+        ("Laravel API","Laravel API", "AiModerationService.applyVerdict()", "self"),
         {
             "type": "alt", "label": "alt [Vi phạm]",
             "branches": [
@@ -367,7 +411,10 @@ SD02A = {
                     "label": None,
                     "items": [
                         ("Laravel API","PostgreSQL","Soft delete comment", "sync"),
+                        ("activate",   "PostgreSQL"),
                         ("Laravel API","PostgreSQL","Tạo AiModerationReport", "sync"),
+                        ("PostgreSQL", "Laravel API","OK", "return"),
+                        ("deactivate", "PostgreSQL"),
                         ("Laravel API","User",      "Gửi notification (in-app + email)", "return"),
                     ]
                 },
@@ -375,10 +422,14 @@ SD02A = {
                     "label": "else [Không vi phạm]",
                     "items": [
                         ("Laravel API","PostgreSQL","Tạo AiModerationReport (status=RESOLVED)", "sync"),
+                        ("activate",   "PostgreSQL"),
+                        ("PostgreSQL", "Laravel API","OK", "return"),
+                        ("deactivate", "PostgreSQL"),
                     ]
                 },
             ]
         },
+        ("deactivate", "Laravel API"),
     ],
     "note": "Pipeline kiểm duyệt bất đồng bộ — Laravel không block request\nAI Service xử lý riêng biệt, không liên quan đến request cycle",
 }
@@ -386,14 +437,19 @@ SD02A = {
 SD02B = {
     "participants": ["moderation.request.v1", "ModerationWorker", "TextPipeline", "PhoBERTClassifier", "moderation.result.v1"],
     "items": [
-        ("moderation.request.v1", "ModerationWorker",    "Consume message", "sync"),
-        ("ModerationWorker",      "TextPipeline",         "clean_text(sentence)", "sync"),
-        ("TextPipeline",          "TextPipeline",         "Normalize Unicode, xóa URL, chuẩn hoá khoảng trắng", "self"),
-        ("TextPipeline",          "ModerationWorker",     "cleaned_text", "return"),
-        ("ModerationWorker",      "ModerationWorker",     "tokenizer.encode(cleaned_text, max_length=256)", "self"),
-        ("ModerationWorker",      "PhoBERTClassifier",    "forward(input_ids, attention_mask)", "sync"),
-        ("PhoBERTClassifier",     "PhoBERTClassifier",    "softmax(logits)", "self"),
-        ("PhoBERTClassifier",     "ModerationWorker",     "label, confidence", "return"),
+        ("moderation.request.v1", "ModerationWorker",   "Consume message", "sync"),
+        ("activate",  "ModerationWorker"),
+        ("ModerationWorker", "TextPipeline",            "clean_text(sentence)", "sync"),
+        ("activate",  "TextPipeline"),
+        ("TextPipeline","TextPipeline",                 "Normalize Unicode, xóa URL, chuẩn hoá khoảng trắng", "self"),
+        ("TextPipeline","ModerationWorker",             "cleaned_text", "return"),
+        ("deactivate","TextPipeline"),
+        ("ModerationWorker","ModerationWorker",         "tokenizer.encode(cleaned_text, max_length=256)", "self"),
+        ("ModerationWorker","PhoBERTClassifier",        "forward(input_ids, attention_mask)", "sync"),
+        ("activate",  "PhoBERTClassifier"),
+        ("PhoBERTClassifier","PhoBERTClassifier",       "softmax(logits)", "self"),
+        ("PhoBERTClassifier","ModerationWorker",        "label, confidence", "return"),
+        ("deactivate","PhoBERTClassifier"),
         {
             "type": "alt", "label": "alt [confidence >= 0.8]",
             "branches": [
@@ -412,7 +468,8 @@ SD02B = {
             ]
         },
         ("ModerationWorker","moderation.result.v1","Publish (task_id, label, confidence, is_violation)", "sync"),
-        ("ModerationWorker","ModerationWorker",     "Manual commit offset", "self"),
+        ("ModerationWorker","ModerationWorker",    "Manual commit offset", "self"),
+        ("deactivate","ModerationWorker"),
     ],
     "note": "Manual commit tránh mất message khi worker gặp lỗi\nThreshold 0.8 giảm thiểu false positive",
 }
@@ -428,8 +485,13 @@ SD02C = {
     ],
     "items": [
         ("moderation.result.v1",             "ModerationResultProcessorCommand", "Consume message", "sync"),
+        ("activate",   "ModerationResultProcessorCommand"),
         ("ModerationResultProcessorCommand", "AiModerationService",              "applyVerdict(payload)", "sync"),
+        ("activate",   "AiModerationService"),
         ("AiModerationService",              "PostRepository",                   "find(resource_id)", "sync"),
+        ("activate",   "PostRepository"),
+        ("PostRepository",                   "AiModerationService",              "entity", "return"),
+        ("deactivate", "PostRepository"),
         {
             "type": "alt", "label": "alt [Resource không tồn tại]",
             "branches": [
@@ -449,16 +511,19 @@ SD02C = {
                     "label": "else [Resource hợp lệ]",
                     "items": [
                         ("AiModerationService","Database","BEGIN TRANSACTION", "sync"),
+                        ("activate",   "Database"),
                         {
                             "type": "alt", "label": "alt [is_violation = true]",
                             "branches": [
                                 {
                                     "label": None,
                                     "items": [
-                                        ("AiModerationService","Database",                   "Soft delete post/comment", "sync"),
-                                        ("AiModerationService","Database",                   "Tạo AiModerationReport (OPEN, appeal_deadline=now+7d)", "sync"),
+                                        ("AiModerationService","Database",                    "Soft delete post/comment", "sync"),
+                                        ("AiModerationService","Database",                    "Tạo AiModerationReport (OPEN, appeal_deadline=now+7d)", "sync"),
                                         ("AiModerationService","AdminModerationNoticeService","send(admin, targetUser, reason)", "sync"),
+                                        ("activate",   "AdminModerationNoticeService"),
                                         ("AdminModerationNoticeService","AdminModerationNoticeService","Dispatch email + in-app notification", "self"),
+                                        ("deactivate", "AdminModerationNoticeService"),
                                     ]
                                 },
                                 {
@@ -470,11 +535,16 @@ SD02C = {
                             ]
                         },
                         ("AiModerationService",              "Database",                         "COMMIT", "sync"),
+                        ("Database",                         "AiModerationService",              "OK", "return"),
+                        ("deactivate", "Database"),
+                        ("AiModerationService",              "ModerationResultProcessorCommand", "Done", "return"),
                         ("ModerationResultProcessorCommand", "moderation.result.v1",             "Commit offset", "sync"),
                     ]
                 },
             ]
         },
+        ("deactivate", "AiModerationService"),
+        ("deactivate", "ModerationResultProcessorCommand"),
     ],
     "note": "DB transaction đảm bảo tính nguyên tử giữa ẩn nội dung và tạo moderation report",
 }
@@ -482,33 +552,52 @@ SD02C = {
 SD03A = {
     "participants": ["User", "Frontend", "Laravel API", "MinIO S3"],
     "items": [
-        ("User",       "Frontend",    "Chọn file video để tải lên", "sync"),
-        ("Frontend",   "Laravel API","POST /videos/upload-sessions (file_name, file_size, mime_type)", "sync"),
-        ("Laravel API","Laravel API","Tạo VideoUploadSession (PENDING)", "self"),
-        ("Laravel API","MinIO S3",   "initiateMultipartUpload(key, mimeType)", "sync"),
-        ("MinIO S3",   "Laravel API","upload_id", "return"),
-        ("Laravel API","Frontend",   "session_uuid, upload_id", "return"),
+        ("User",        "Frontend",    "Chọn file video để tải lên", "sync"),
+        ("activate",    "Frontend"),
+        ("Frontend",    "Laravel API", "POST /videos/upload-sessions (file_name, file_size, mime_type)", "sync"),
+        ("activate",    "Laravel API"),
+        ("Laravel API", "Laravel API", "Tạo VideoUploadSession (PENDING)", "self"),
+        ("Laravel API", "MinIO S3",    "initiateMultipartUpload(key, mimeType)", "sync"),
+        ("activate",    "MinIO S3"),
+        ("MinIO S3",    "Laravel API", "upload_id", "return"),
+        ("deactivate",  "MinIO S3"),
+        ("Laravel API", "Frontend",    "session_uuid, upload_id", "return"),
+        ("deactivate",  "Laravel API"),
         {
             "type": "loop", "label": "loop [Mỗi chunk]",
             "items": [
-                ("Frontend",   "Laravel API","GET /upload-sessions/:uuid/parts/:n", "sync"),
-                ("Laravel API","MinIO S3",   "presignedPartUrl(key, upload_id, n)", "sync"),
-                ("MinIO S3",   "Laravel API","presigned_url", "return"),
-                ("Laravel API","Frontend",   "presigned_url", "return"),
-                ("Frontend",   "MinIO S3",   "PUT chunk trực tiếp (HTTP)", "sync"),
-                ("MinIO S3",   "Frontend",   "ETag", "return"),
+                ("Frontend",    "Laravel API", "GET /upload-sessions/:uuid/parts/:n", "sync"),
+                ("activate",    "Laravel API"),
+                ("Laravel API", "MinIO S3",    "presignedPartUrl(key, upload_id, n)", "sync"),
+                ("activate",    "MinIO S3"),
+                ("MinIO S3",    "Laravel API", "presigned_url", "return"),
+                ("deactivate",  "MinIO S3"),
+                ("Laravel API", "Frontend",    "presigned_url", "return"),
+                ("deactivate",  "Laravel API"),
+                ("Frontend",    "MinIO S3",    "PUT chunk trực tiếp (HTTP)", "sync"),
+                ("activate",    "MinIO S3"),
+                ("MinIO S3",    "Frontend",    "ETag", "return"),
+                ("deactivate",  "MinIO S3"),
             ]
         },
-        ("Frontend",   "Laravel API","PUT /upload-sessions/:uuid/complete (parts list)", "sync"),
-        ("Laravel API","Laravel API","lockForUpdate() session", "self"),
-        ("Laravel API","MinIO S3",   "completeMultipartUpload(key, upload_id, parts)", "sync"),
-        ("Laravel API","MinIO S3",   "objectExists(key) — xác minh", "sync"),
-        ("MinIO S3",   "Laravel API","200 OK", "return"),
-        ("Laravel API","Laravel API","Tạo UploadFile record", "self"),
-        ("Laravel API","Laravel API","Dispatch ProcessVideoToHlsJob (queue: video-processing)", "self"),
-        ("Laravel API","Laravel API","Cập nhật session → UPLOADED", "self"),
-        ("Laravel API","Frontend",   "status: UPLOADED, encoding_status: PENDING", "return"),
-        ("Frontend",   "User",       "Hiển thị trạng thái upload hoàn tất", "return"),
+        ("Frontend",    "Laravel API", "PUT /upload-sessions/:uuid/complete (parts list)", "sync"),
+        ("activate",    "Laravel API"),
+        ("Laravel API", "Laravel API", "lockForUpdate() session", "self"),
+        ("Laravel API", "MinIO S3",    "completeMultipartUpload(key, upload_id, parts)", "sync"),
+        ("activate",    "MinIO S3"),
+        ("MinIO S3",    "Laravel API", "OK", "return"),
+        ("deactivate",  "MinIO S3"),
+        ("Laravel API", "MinIO S3",    "objectExists(key) — xác minh", "sync"),
+        ("activate",    "MinIO S3"),
+        ("MinIO S3",    "Laravel API", "200 OK", "return"),
+        ("deactivate",  "MinIO S3"),
+        ("Laravel API", "Laravel API", "Tạo UploadFile record", "self"),
+        ("Laravel API", "Laravel API", "Dispatch ProcessVideoToHlsJob (queue: video-processing)", "self"),
+        ("Laravel API", "Laravel API", "Cập nhật session → UPLOADED", "self"),
+        ("Laravel API", "Frontend",    "status: UPLOADED, encoding_status: PENDING", "return"),
+        ("deactivate",  "Laravel API"),
+        ("Frontend",    "User",        "Hiển thị trạng thái upload hoàn tất", "return"),
+        ("deactivate",  "Frontend"),
     ],
     "note": "Chunk upload đi trực tiếp Frontend → MinIO\nLaravel chỉ cấp presigned URL và quản lý metadata",
 }
@@ -523,30 +612,55 @@ SD03B = {
         "Event Dispatcher",
     ],
     "items": [
-        ("Queue Worker",          "ProcessVideoToHlsJob",   "Nhận job (tries=3, timeout=7200s, backoff=[60,300,900]s)", "sync"),
-        ("ProcessVideoToHlsJob",  "VideoProcessingService", "process(videoEncoding, sessionId)", "sync"),
-        ("VideoProcessingService","VideoProcessingService",  "Cập nhật VideoEncoding → PROCESSING, progress=0%", "self"),
-        ("VideoProcessingService","Event Dispatcher",        "Dispatch VideoEncodingStatusUpdatedEvent", "sync"),
-        ("VideoProcessingService","MinIO S3",                "Download raw video → /tmp/uuid/input.mp4", "sync"),
-        ("VideoProcessingService","FFmpegService",           "getVideoInfo(inputPath)", "sync"),
-        ("FFmpegService",          "VideoProcessingService", "width, height, duration, bitrate", "return"),
-        ("VideoProcessingService","VideoProcessingService",  "Chọn variants phù hợp (size <= shorter_side nguồn)", "self"),
+        ("Queue Worker",         "ProcessVideoToHlsJob",   "Nhận job (tries=3, timeout=7200s, backoff=[60,300,900]s)", "sync"),
+        ("activate",             "ProcessVideoToHlsJob"),
+        ("ProcessVideoToHlsJob", "VideoProcessingService", "process(videoEncoding, sessionId)", "sync"),
+        ("activate",             "VideoProcessingService"),
+        ("VideoProcessingService","VideoProcessingService","Cập nhật VideoEncoding → PROCESSING, progress=0%", "self"),
+        ("VideoProcessingService","Event Dispatcher",      "Dispatch VideoEncodingStatusUpdatedEvent", "sync"),
+        ("activate",             "Event Dispatcher"),
+        ("Event Dispatcher",     "VideoProcessingService", "OK", "return"),
+        ("deactivate",           "Event Dispatcher"),
+        ("VideoProcessingService","MinIO S3",              "Download raw video → /tmp/uuid/input.mp4", "sync"),
+        ("activate",             "MinIO S3"),
+        ("MinIO S3",             "VideoProcessingService", "OK", "return"),
+        ("deactivate",           "MinIO S3"),
+        ("VideoProcessingService","FFmpegService",         "getVideoInfo(inputPath)", "sync"),
+        ("activate",             "FFmpegService"),
+        ("FFmpegService",        "VideoProcessingService", "width, height, duration, bitrate", "return"),
+        ("deactivate",           "FFmpegService"),
+        ("VideoProcessingService","VideoProcessingService","Chọn variants phù hợp (size <= shorter_side nguồn)", "self"),
         {
             "type": "loop", "label": "loop [Mỗi variant: 360p, 480p, 720p, 1080p...]",
             "items": [
-                ("VideoProcessingService","FFmpegService",           "encodeVariant(input, outputDir, label, variant)", "sync"),
-                ("FFmpegService",          "FFmpegService",           "Tạo .ts segments + index.m3u8", "self"),
-                ("FFmpegService",          "VideoProcessingService",  "Done", "return"),
-                ("VideoProcessingService","VideoProcessingService",   "Cập nhật progress", "self"),
-                ("VideoProcessingService","Event Dispatcher",         "Dispatch VideoEncodingStatusUpdatedEvent", "sync"),
+                ("VideoProcessingService","FFmpegService",          "encodeVariant(input, outputDir, label, variant)", "sync"),
+                ("activate",             "FFmpegService"),
+                ("FFmpegService",        "FFmpegService",           "Tạo .ts segments + index.m3u8", "self"),
+                ("FFmpegService",        "VideoProcessingService",  "Done", "return"),
+                ("deactivate",           "FFmpegService"),
+                ("VideoProcessingService","VideoProcessingService", "Cập nhật progress", "self"),
+                ("VideoProcessingService","Event Dispatcher",       "Dispatch VideoEncodingStatusUpdatedEvent", "sync"),
+                ("activate",             "Event Dispatcher"),
+                ("Event Dispatcher",     "VideoProcessingService",  "OK", "return"),
+                ("deactivate",           "Event Dispatcher"),
             ]
         },
         ("VideoProcessingService","VideoProcessingService","Build master.m3u8", "self"),
         ("VideoProcessingService","MinIO S3",              "Upload HLS files → hls/uuid/", "sync"),
+        ("activate",             "MinIO S3"),
+        ("MinIO S3",             "VideoProcessingService", "OK", "return"),
+        ("deactivate",           "MinIO S3"),
         ("VideoProcessingService","VideoProcessingService","Cập nhật VideoEncoding → READY, progress=100%", "self"),
         ("VideoProcessingService","VideoProcessingService","Cập nhật VideoUploadSession → READY", "self"),
         ("VideoProcessingService","Event Dispatcher",      "Dispatch VideoEncodingStatusUpdatedEvent", "sync"),
+        ("activate",             "Event Dispatcher"),
+        ("Event Dispatcher",     "VideoProcessingService", "OK", "return"),
+        ("deactivate",           "Event Dispatcher"),
         ("VideoProcessingService","VideoProcessingService","Cleanup /tmp/uuid/", "self"),
+        ("VideoProcessingService","ProcessVideoToHlsJob",  "Done", "return"),
+        ("deactivate",           "VideoProcessingService"),
+        ("ProcessVideoToHlsJob", "Queue Worker",           "Done", "return"),
+        ("deactivate",           "ProcessVideoToHlsJob"),
         {
             "type": "alt", "label": "alt [Lỗi xảy ra]",
             "branches": [
@@ -567,10 +681,15 @@ SD03B = {
 SD04 = {
     "participants": ["User", "Frontend", "Laravel API", "Redis", "Laravel Scheduler", "PostgreSQL"],
     "items": [
-        ("User",       "Frontend",   "Xem video", "sync"),
-        ("Frontend",   "Laravel API","POST /posts/:uuid/view", "sync"),
-        ("Laravel API","Laravel API","Tính viewerKey (user:id hoặc guest:sha1(ip|ua))", "self"),
-        ("Laravel API","Redis",      "SETNX post:view:lock:postId:viewerKey 1", "sync"),
+        ("User",       "Frontend",    "Xem video", "sync"),
+        ("activate",   "Frontend"),
+        ("Frontend",   "Laravel API", "POST /posts/:uuid/view", "sync"),
+        ("activate",   "Laravel API"),
+        ("Laravel API","Laravel API", "Tính viewerKey (user:id hoặc guest:sha1(ip|ua))", "self"),
+        ("Laravel API","Redis",       "SETNX post:view:lock:postId:viewerKey 1", "sync"),
+        ("activate",   "Redis"),
+        ("Redis",      "Laravel API", "0 hoặc 1", "return"),
+        ("deactivate", "Redis"),
         {
             "type": "alt", "label": "alt [Lock tồn tại — chống spam 60s]",
             "branches": [
@@ -583,29 +702,43 @@ SD04 = {
                 {
                     "label": "else [View hợp lệ]",
                     "items": [
-                        ("Laravel API","Redis",  "EXPIRE lock_key 60s", "sync"),
-                        ("Laravel API","Redis",  "INCR post:view:user:postId", "sync"),
-                        ("Laravel API","Redis",  "SADD post:view:posts postId", "sync"),
-                        ("Laravel API","Frontend","200 OK", "return"),
+                        ("activate",   "Redis"),
+                        ("Laravel API","Redis",    "EXPIRE lock_key 60s", "sync"),
+                        ("Laravel API","Redis",    "INCR post:view:user:postId", "sync"),
+                        ("Laravel API","Redis",    "SADD post:view:posts postId", "sync"),
+                        ("Redis",      "Laravel API","OK", "return"),
+                        ("deactivate", "Redis"),
+                        ("Laravel API","Frontend", "200 OK", "return"),
                     ]
                 },
             ]
         },
+        ("deactivate", "Laravel API"),
+        ("deactivate", "Frontend"),
         ("Laravel Scheduler","Laravel Scheduler","Chạy posts:sync-views mỗi 1 phút (withoutOverlapping)", "self"),
-        ("Laravel Scheduler","Redis",             "SMEMBERS post:view:posts", "sync"),
-        ("Redis",            "Laravel Scheduler", "[postId1, postId2, ...]", "return"),
+        ("activate",   "Laravel Scheduler"),
+        ("Laravel Scheduler","Redis",            "SMEMBERS post:view:posts", "sync"),
+        ("activate",   "Redis"),
+        ("Redis",      "Laravel Scheduler",      "[postId1, postId2, ...]", "return"),
+        ("deactivate", "Redis"),
         {
             "type": "loop", "label": "loop [Mỗi postId]",
             "items": [
-                ("Laravel Scheduler","Redis",      "GET post:view:user:postId", "sync"),
-                ("Redis",            "Laravel Scheduler","view_count", "return"),
-                ("Laravel Scheduler","PostgreSQL", "BEGIN TRANSACTION", "sync"),
-                ("Laravel Scheduler","PostgreSQL", "PostRepository.incrementViews(postId, views)", "sync"),
-                ("Laravel Scheduler","Redis",      "DEL post:view:user:postId", "sync"),
-                ("Laravel Scheduler","Redis",      "SREM post:view:posts postId", "sync"),
-                ("Laravel Scheduler","PostgreSQL", "COMMIT", "sync"),
+                ("Laravel Scheduler","Redis",       "GET post:view:user:postId", "sync"),
+                ("activate",   "Redis"),
+                ("Redis",      "Laravel Scheduler", "view_count", "return"),
+                ("deactivate", "Redis"),
+                ("Laravel Scheduler","PostgreSQL",  "BEGIN TRANSACTION", "sync"),
+                ("activate",   "PostgreSQL"),
+                ("Laravel Scheduler","PostgreSQL",  "PostRepository.incrementViews(postId, views)", "sync"),
+                ("Laravel Scheduler","Redis",       "DEL post:view:user:postId", "sync"),
+                ("Laravel Scheduler","Redis",       "SREM post:view:posts postId", "sync"),
+                ("Laravel Scheduler","PostgreSQL",  "COMMIT", "sync"),
+                ("PostgreSQL", "Laravel Scheduler", "OK", "return"),
+                ("deactivate", "PostgreSQL"),
             ]
         },
+        ("deactivate", "Laravel Scheduler"),
     ],
     "note": "Redis là fast path — API không block bởi database\nPostgreSQL cập nhật theo lô định kỳ, giảm tải ghi trực tiếp",
 }
