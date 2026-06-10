@@ -11,7 +11,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { UpdateUserBody, UpdateUserBodyType } from '@/types/dtos/user/user-request.dto'
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'
@@ -24,6 +24,7 @@ import { getAcceptedFileAttribute, validateUploadFile } from '@/utils/validation
 export default function UpdateProfileForm() {
     const t = useTranslations('SnapiStudio.settings')
     const [fileImage, setFileImage] = useState<File | null>(null)
+    const [avatarPreview, setAvatarPreview] = useState<string | undefined>(undefined)
     const avatarPreviewRef = useRef<HTMLInputElement>(null)
     const [isPhotoEditorVisible, setIsPhotoEditorVisible] = useState<boolean>(false)
 
@@ -50,6 +51,18 @@ export default function UpdateProfileForm() {
         })
     }, [user, form])
 
+    useEffect(() => {
+        if (!fileImage) {
+            setAvatarPreview(user?.avatar ?? undefined)
+            return
+        }
+
+        const nextPreview = URL.createObjectURL(fileImage)
+        setAvatarPreview(nextPreview)
+
+        return () => URL.revokeObjectURL(nextPreview)
+    }, [fileImage, user?.avatar])
+
     const isLoading = isUploadingAvatar || isUpdatingProfile
 
     const handleSubmit = useCallback(
@@ -70,6 +83,8 @@ export default function UpdateProfileForm() {
                 const { name, bio, username } = updateProfileRes.data
 
                 form.reset({ name, bio: bio || '', username: username || '' })
+                setFileImage(null)
+                setAvatarPreview(updateProfileRes.data.avatar ?? undefined)
                 toast.success(updateProfileRes.message)
             } catch (error) {
                 handleFormError<UpdateUserBodyType>({
@@ -81,37 +96,31 @@ export default function UpdateProfileForm() {
         [form, uploadImageMutateAsync, updateProfileMutateAsync, isLoading, fileImage]
     )
 
-    const avatarSrc = useMemo(
-        () => (fileImage != null ? URL.createObjectURL(fileImage) : (user?.avatar ?? undefined)),
-        [fileImage, user?.avatar]
-    )
-
-    const handleChangeAvatar = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-        const selectedFile = e.target.files?.[0] || null
-        if (!selectedFile) {
-            e.target.value = ''
-            return
-        }
-
-        const validation = validateUploadFile(selectedFile, 'image')
-        if (!validation.isValid) {
-            if (validation.code === 'invalid_type') {
-                toast.error(
-                    t('updateProfile.validation.invalidType', { accepted: validation.acceptedExtensions })
-                )
-            } else {
-                toast.error(
-                    t('updateProfile.validation.tooLarge', { maxSizeMb: validation.maxSizeMb })
-                )
+    const handleChangeAvatar = useCallback(
+        (e: ChangeEvent<HTMLInputElement>) => {
+            const selectedFile = e.target.files?.[0] || null
+            if (!selectedFile) {
+                e.target.value = ''
+                return
             }
-            e.target.value = ''
-            return
-        }
 
-        setFileImage(selectedFile)
-        if (selectedFile) setIsPhotoEditorVisible(true)
-        e.target.value = ''
-    }, [t])
+            const validation = validateUploadFile(selectedFile, 'image')
+            if (!validation.isValid) {
+                if (validation.code === 'invalid_type') {
+                    toast.error(t('updateProfile.validation.invalidType', { accepted: validation.acceptedExtensions }))
+                } else {
+                    toast.error(t('updateProfile.validation.tooLarge', { maxSizeMb: validation.maxSizeMb }))
+                }
+                e.target.value = ''
+                return
+            }
+
+            setFileImage(selectedFile)
+            if (selectedFile) setIsPhotoEditorVisible(true)
+            e.target.value = ''
+        },
+        [t]
+    )
 
     if (!user) {
         return (
@@ -139,15 +148,10 @@ export default function UpdateProfileForm() {
             <PhotoEditorDialog
                 setVisible={setIsPhotoEditorVisible}
                 isVisible={isPhotoEditorVisible}
-                photoUrl={avatarSrc!}
+                photoUrl={avatarPreview ?? user?.avatar ?? ''}
                 onConfirm={setFileImage}
             />
-            <form
-                noValidate
-                className='space-y-6'
-                onSubmit={form.handleSubmit(handleSubmit)}
-                method='POST'
-            >
+            <form noValidate className='space-y-6' onSubmit={form.handleSubmit(handleSubmit)} method='POST'>
                 {/* Avatar section */}
                 <FormField
                     control={form.control}
@@ -156,9 +160,10 @@ export default function UpdateProfileForm() {
                         <FormItem>
                             <div className='flex flex-col items-center gap-3'>
                                 <Avatar className='size-24 border-2 border-brand/20'>
-                                    <AvatarImage src={avatarSrc} className='object-cover' />
+                                    <AvatarImage src={avatarPreview} className='object-cover' />
                                     <AvatarFallback className='text-xl'>
-                                        {user.name.split(' ').at(-1)?.[0]?.toUpperCase() || 'U'}
+                                        {user.name.split(' ').at(-1)?.[0]?.toUpperCase() ||
+                                            t('updateProfile.avatarFallback')}
                                     </AvatarFallback>
                                 </Avatar>
 
@@ -181,7 +186,7 @@ export default function UpdateProfileForm() {
                                         <Camera className='h-3.5 w-3.5' />
                                         {t('updateProfile.upload')}
                                     </Button>
-                                    <p className='text-xs text-muted-foreground'>JPG or PNG · max 4MB</p>
+                                    <p className='text-xs text-muted-foreground'>{t('updateProfile.avatarHint')}</p>
                                 </div>
                             </div>
                             <FormMessage />
@@ -214,10 +219,12 @@ export default function UpdateProfileForm() {
                             <FormItem>
                                 <div className='space-y-1.5'>
                                     <Label htmlFor='username' className='text-sm font-medium'>
-                                        Username
+                                        {t('updateProfile.usernameLabel')}
                                     </Label>
                                     <div className='relative'>
-                                        <span className='absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm'>@</span>
+                                        <span className='absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm'>
+                                            @
+                                        </span>
                                         <Input id='username' type='text' className='pl-7' {...field} />
                                     </div>
                                     <FormMessage />
@@ -233,13 +240,13 @@ export default function UpdateProfileForm() {
                             <FormItem>
                                 <div className='space-y-1.5'>
                                     <Label htmlFor='bio' className='text-sm font-medium'>
-                                        Bio
+                                        {t('updateProfile.bioLabel')}
                                     </Label>
                                     <Textarea
                                         id='bio'
                                         rows={3}
                                         className='resize-none'
-                                        placeholder='Tell viewers about your channel'
+                                        placeholder={t('updateProfile.bioPlaceholder')}
                                         {...field}
                                     />
                                     <FormMessage />
@@ -250,13 +257,7 @@ export default function UpdateProfileForm() {
                 </div>
 
                 {/* Save button */}
-                <Button
-                    size='lg'
-                    type='submit'
-                    variant='brand'
-                    isLoading={isLoading}
-                    className='w-full rounded-full'
-                >
+                <Button size='lg' type='submit' variant='brand' isLoading={isLoading} className='w-full rounded-full'>
                     {t('updateProfile.save')}
                 </Button>
             </form>

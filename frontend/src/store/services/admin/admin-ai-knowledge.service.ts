@@ -16,43 +16,39 @@ interface UploadDocumentPayload {
 }
 
 export const AdminAiKnowledgeApi = createApi({
-    reducerPath:       'adminAiKnowledgeApi',
-    baseQuery:         baseQueryWithReauth,
-    tagTypes:          ['AiDocument'],
+    reducerPath: 'adminAiKnowledgeApi',
+    baseQuery: baseQueryWithReauth,
+    tagTypes: ['AiDocument'],
     keepUnusedDataFor: 60,
     endpoints: (builder) => ({
         getDocument: builder.query<GetAiDocumentResDto, string>({
-            query: (uuid) => BACKEND_API_ENDPOINT.ADMIN.AI_KNOWLEDGE.DOCUMENT(uuid),
+            query: (uuid) => BACKEND_API_ENDPOINT.ADMIN.AI_KNOWLEDGE.DOCUMENT(uuid)
         }),
 
         getDocuments: builder.query<ListAiDocumentsResDto, { page?: number; perPage?: number }>({
             query: ({ page = 1, perPage = 20 } = {}) =>
                 `${BACKEND_API_ENDPOINT.ADMIN.AI_KNOWLEDGE.DOCUMENTS}?page=${page}&per_page=${perPage}`,
-            providesTags: ['AiDocument'],
+            providesTags: ['AiDocument']
         }),
 
         uploadDocument: builder.mutation<UploadAiDocumentResDto, UploadDocumentPayload>({
             query: ({ formData }) => ({
-                url:    BACKEND_API_ENDPOINT.ADMIN.AI_KNOWLEDGE.UPLOAD,
+                url: BACKEND_API_ENDPOINT.ADMIN.AI_KNOWLEDGE.UPLOAD,
                 method: 'POST',
-                body:   formData,
+                body: formData
             }),
-            invalidatesTags: ['AiDocument'],
+            invalidatesTags: ['AiDocument']
         }),
 
         deleteDocument: builder.mutation<void, string>({
             query: (uuid) => ({
-                url:    BACKEND_API_ENDPOINT.ADMIN.AI_KNOWLEDGE.DOCUMENT(uuid),
-                method: 'DELETE',
+                url: BACKEND_API_ENDPOINT.ADMIN.AI_KNOWLEDGE.DOCUMENT(uuid),
+                method: 'DELETE'
             }),
-            invalidatesTags: ['AiDocument'],
-        }),
-    }),
+            invalidatesTags: ['AiDocument']
+        })
+    })
 })
 
-export const {
-    useLazyGetDocumentQuery,
-    useGetDocumentsQuery,
-    useUploadDocumentMutation,
-    useDeleteDocumentMutation,
-} = AdminAiKnowledgeApi
+export const { useLazyGetDocumentQuery, useGetDocumentsQuery, useUploadDocumentMutation, useDeleteDocumentMutation } =
+    AdminAiKnowledgeApi

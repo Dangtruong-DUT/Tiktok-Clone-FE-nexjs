@@ -57,14 +57,17 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
 
     return (
         <section
-            className={cn('block relative z-0 top-0 left-0 w-full h-full group cursor-pointer overflow-hidden rounded-2xl bg-black', className)}
+            className={cn(
+                'block relative z-0 top-0 left-0 w-full h-full group cursor-pointer overflow-hidden rounded-2xl bg-black',
+                className
+            )}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
             {post.thumbnail_url && (
-                <div 
-                    className="absolute inset-0 bg-cover bg-center blur-2xl opacity-40 scale-125 z-0 pointer-events-none" 
-                    style={{ backgroundImage: `url(${post.thumbnail_url})` }} 
+                <div
+                    className='absolute inset-0 bg-cover bg-center blur-2xl opacity-40 scale-125 z-0 pointer-events-none'
+                    style={{ backgroundImage: `url(${post.thumbnail_url})` }}
                 />
             )}
 
@@ -110,8 +113,6 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
                     <LoadingIcon loop className='size-12' />
                 </div>
             )}
-
-
 
             <VideoControlsBottom
                 post={post}

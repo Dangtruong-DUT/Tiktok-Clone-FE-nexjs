@@ -2,15 +2,17 @@ import { Role } from '@/constants/enum'
 import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
 import { Settings, LayoutPanelLeft, BookUp, Scale, HeartPulse } from 'lucide-react'
 
+export const NAV_ITEM_TITLES = ['home', 'posts', 'wellness', 'appeals', 'settings'] as const
+export type NavItemTitle = (typeof NAV_ITEM_TITLES)[number]
+
 interface NavItem {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    title: any
+    title: NavItemTitle
     href: string
     Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
     role?: Role[]
 }
 
-export const navItems: NavItem[] = [
+export const navItems = [
     {
         title: 'home',
         href: SNAPISTUDIO_ROUTES.ROOT,
@@ -41,4 +43,4 @@ export const navItems: NavItem[] = [
         Icon: Settings,
         role: [Role.USER, Role.SUPER_ADMIN]
     }
-]
+] satisfies NavItem[]

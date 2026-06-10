@@ -15,20 +15,12 @@ interface CopilotContentCardProps {
     onReject: (messageUuid: string) => void
 }
 
-export function CopilotContentCard({
-    messageUuid,
-    output,
-    status,
-    onAccept,
-    onReject,
-}: CopilotContentCardProps) {
+export function CopilotContentCard({ messageUuid, output, status, onAccept, onReject }: CopilotContentCardProps) {
     const t = useTranslations('SnapiStudio.aiCopilot')
     const { hasFormPatch } = useAiCopilotContext()
     const canApply = hasFormPatch(output.target_field)
     const [selectedVariant, setSelectedVariant] = useState(0)
-    const [selectedHashtags, setSelectedHashtags] = useState<Set<number>>(
-        new Set(output.hashtags.map((_, i) => i)),
-    )
+    const [selectedHashtags, setSelectedHashtags] = useState<Set<number>>(new Set(output.hashtags.map((_, i) => i)))
     const [copied, setCopied] = useState(false)
 
     const isDone = status === 'accepted' || status === 'rejected'
@@ -37,9 +29,7 @@ export function CopilotContentCard({
     const selectedTagsArr = output.hashtags.filter((_, i) => selectedHashtags.has(i))
 
     const handleCopy = async () => {
-        const text = selectedTagsArr.length
-            ? `${currentText}\n\n${selectedTagsArr.join(' ')}`
-            : currentText
+        const text = selectedTagsArr.length ? `${currentText}\n\n${selectedTagsArr.join(' ')}` : currentText
         await navigator.clipboard.writeText(text).catch(() => {})
         setCopied(true)
         setTimeout(() => setCopied(false), 1800)
@@ -56,32 +46,44 @@ export function CopilotContentCard({
     }
 
     const toggleHashtag = (idx: number) => {
-        setSelectedHashtags(prev => {
+        setSelectedHashtags((prev) => {
             const next = new Set(prev)
-            next.has(idx) ? next.delete(idx) : next.add(idx)
+            if (next.has(idx)) {
+                next.delete(idx)
+            } else {
+                next.add(idx)
+            }
             return next
         })
     }
 
-    // ── Done state ──────────────────────────────────────────────────────────
     if (isDone) {
         return (
-            <div className={cn(
-                'flex items-center gap-1.5 text-xs rounded-lg px-2.5 py-1.5 mt-1 w-fit',
-                status === 'accepted'
-                    ? 'bg-green-500/10 text-green-600 dark:text-green-400'
-                    : 'bg-muted text-muted-foreground',
-            )}>
-                {status === 'accepted'
-                    ? <><Check className='size-3' />{t('contentCard.applied')}</>
-                    : <><X className='size-3' />{t('contentCard.dismissed')}</>}
+            <div
+                className={cn(
+                    'flex items-center gap-1.5 text-xs rounded-lg px-2.5 py-1.5 mt-1 w-fit',
+                    status === 'accepted'
+                        ? 'bg-green-500/10 text-green-600 dark:text-green-400'
+                        : 'bg-muted text-muted-foreground'
+                )}
+            >
+                {status === 'accepted' ? (
+                    <>
+                        <Check className='size-3' />
+                        {t('contentCard.applied')}
+                    </>
+                ) : (
+                    <>
+                        <X className='size-3' />
+                        {t('contentCard.dismissed')}
+                    </>
+                )}
             </div>
         )
     }
 
     return (
         <div className='mt-1.5 rounded-2xl border border-border/50 bg-card overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300'>
-            {/* ── Variant selector ──────────────────────────────────────── */}
             {output.variants.length > 1 && (
                 <div className='flex gap-0 border-b border-border'>
                     {output.variants.map((v, i) => (
@@ -92,7 +94,7 @@ export function CopilotContentCard({
                                 'flex-1 py-2 text-[11px] font-medium transition-colors relative',
                                 selectedVariant === i
                                     ? 'text-primary bg-primary/5'
-                                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/40',
+                                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/40'
                             )}
                         >
                             {v.label}
@@ -104,7 +106,6 @@ export function CopilotContentCard({
                 </div>
             )}
 
-            {/* ── Content text ──────────────────────────────────────────── */}
             <div className='relative px-3.5 pt-3 pb-2.5 group'>
                 <p className='text-sm leading-relaxed text-foreground whitespace-pre-wrap break-words pr-7'>
                     {currentText}
@@ -115,13 +116,10 @@ export function CopilotContentCard({
                                transition-opacity p-1 rounded-xl hover:bg-muted text-muted-foreground'
                     title={t('contentCard.copy')}
                 >
-                    {copied
-                        ? <CheckCheck className='size-3.5 text-green-500' />
-                        : <Copy className='size-3.5' />}
+                    {copied ? <CheckCheck className='size-3.5 text-green-500' /> : <Copy className='size-3.5' />}
                 </button>
             </div>
 
-            {/* ── Hashtag chips ─────────────────────────────────────────── */}
             {output.hashtags.length > 0 && (
                 <div className='px-3.5 pb-3 flex flex-wrap gap-1.5'>
                     {output.hashtags.map((tag, i) => (
@@ -133,7 +131,7 @@ export function CopilotContentCard({
                                 'border transition-all',
                                 selectedHashtags.has(i)
                                     ? 'bg-primary/10 border-primary/30 text-primary'
-                                    : 'bg-transparent border-border text-muted-foreground hover:border-primary/30 hover:text-primary/70',
+                                    : 'bg-transparent border-border text-muted-foreground hover:border-primary/30 hover:text-primary/70'
                             )}
                         >
                             <Hash className='size-2.5 opacity-60' />
@@ -143,7 +141,6 @@ export function CopilotContentCard({
                 </div>
             )}
 
-            {/* ── Actions ──────────────────────────────────────────────── */}
             <div className='flex border-t border-border'>
                 <button
                     onClick={() => onReject(messageUuid)}
@@ -171,9 +168,7 @@ export function CopilotContentCard({
                                    text-xs font-semibold text-muted-foreground
                                    hover:bg-muted hover:text-foreground transition-colors'
                     >
-                        {copied
-                            ? <CheckCheck className='size-3.5 text-green-500' />
-                            : <Copy className='size-3.5' />}
+                        {copied ? <CheckCheck className='size-3.5 text-green-500' /> : <Copy className='size-3.5' />}
                         {copied ? t('contentCard.copied') : t('contentCard.copy')}
                     </button>
                 )}

@@ -30,7 +30,7 @@ export function useScreenTimeTracker(isAuthenticated: boolean) {
     const videoWatchSeconds = useAppSelector((s) => s.wellness.videoWatchSeconds)
     const isAlertVisible = useAppSelector((s) => s.wellness.isAlertVisible)
     const dismissedRules = useAppSelector((s) => s.wellness.dismissedRules)
-    const snoozedRules   = useAppSelector((s) => s.wellness.snoozedRules)
+    const snoozedRules = useAppSelector((s) => s.wellness.snoozedRules)
 
     const [startSession] = useStartSessionMutation()
     const [sendHeartbeat] = useSendHeartbeatMutation()
@@ -132,7 +132,7 @@ export function useScreenTimeTracker(isAuthenticated: boolean) {
                 credentials: 'include',
                 keepalive: true,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ duration_seconds: duration }),
+                body: JSON.stringify({ duration_seconds: duration })
             }).catch(() => {})
         }
 
@@ -186,7 +186,8 @@ export function useScreenTimeTracker(isAuthenticated: boolean) {
             for (const rule of rules) {
                 if (!rule.is_enabled) continue
                 if (dismissedRules.includes(rule.uuid)) continue
-                if (snoozedRules[rule.uuid] && now < snoozedRules[rule.uuid]) continue
+                const snoozedUntil = snoozedRules[rule.uuid]
+                if (snoozedUntil && now < snoozedUntil) continue
 
                 let triggered = false
                 const cycleKey = rule.uuid
@@ -245,7 +246,16 @@ export function useScreenTimeTracker(isAuthenticated: boolean) {
                 }
             }
         },
-        [isAlertVisible, todayTotalSeconds, todayVideoSeconds, videoWatchSeconds, sessionStartedAt, dismissedRules, snoozedRules, dispatch]
+        [
+            isAlertVisible,
+            todayTotalSeconds,
+            todayVideoSeconds,
+            videoWatchSeconds,
+            sessionStartedAt,
+            dismissedRules,
+            snoozedRules,
+            dispatch
+        ]
     )
 
     useEffect(() => {

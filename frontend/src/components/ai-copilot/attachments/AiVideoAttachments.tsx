@@ -19,8 +19,15 @@ function fmt(s: number): string {
 
 export function AiVideoAttachments({ videoUrl, onSeek }: AiVideoAttachmentsProps) {
     const t = useTranslations('SnapiStudio.aiCopilot')
-    const { timelineSelection, setTimelineSelection, setPendingVideoClip, setPendingMessage, openPanel, setClipAndSend, setVideoRef } =
-        useAiCopilotContext()
+    const {
+        timelineSelection,
+        setTimelineSelection,
+        setPendingVideoClip,
+        setPendingMessage,
+        openPanel,
+        setClipAndSend,
+        setVideoRef
+    } = useAiCopilotContext()
 
     const videoRef = useRef<HTMLVideoElement>(null)
     const sentSelRef = useRef<{ start: number; end: number } | null>(null)
@@ -84,23 +91,26 @@ export function AiVideoAttachments({ videoUrl, onSeek }: AiVideoAttachmentsProps
     }, [duration, setTimelineSelection])
 
     // Register clipAndSend in context so CopilotInput chips can trigger it
-    const clipAndSendFn = useCallback(async (start: number, end: number, question: string) => {
-        const video = videoRef.current
-        if (!video || isRecording) return
-        setIsRecording(true)
-        setClipProgress(0)
-        const clip = await clipVideoSegment(video, start, end, (elapsed, total) => {
-            setClipProgress(Math.min(99, Math.round((elapsed / total) * 100)))
-        })
-        setClipProgress(0)
-        setIsRecording(false)
-        if (clip) {
-            sentSelRef.current = { start, end }
-            setPendingVideoClip(clip)
-            setClipSent(true)
-            setPendingMessage(question)
-        }
-    }, [videoRef, isRecording, setPendingVideoClip, setPendingMessage])
+    const clipAndSendFn = useCallback(
+        async (start: number, end: number, question: string) => {
+            const video = videoRef.current
+            if (!video || isRecording) return
+            setIsRecording(true)
+            setClipProgress(0)
+            const clip = await clipVideoSegment(video, start, end, (elapsed, total) => {
+                setClipProgress(Math.min(99, Math.round((elapsed / total) * 100)))
+            })
+            setClipProgress(0)
+            setIsRecording(false)
+            if (clip) {
+                sentSelRef.current = { start, end }
+                setPendingVideoClip(clip)
+                setClipSent(true)
+                setPendingMessage(question)
+            }
+        },
+        [videoRef, isRecording, setPendingVideoClip, setPendingMessage]
+    )
 
     useEffect(() => {
         if (videoUrl) {
@@ -128,7 +138,6 @@ export function AiVideoAttachments({ videoUrl, onSeek }: AiVideoAttachmentsProps
             />
 
             <div className='rounded-xl border border-border bg-card overflow-hidden'>
-                {/* ── Header ─── */}
                 <div className='flex items-center justify-between px-3 py-2 gap-2'>
                     <span className='text-xs font-medium text-foreground'>{t('attachments.panelTitle')}</span>
 
@@ -195,7 +204,6 @@ export function AiVideoAttachments({ videoUrl, onSeek }: AiVideoAttachmentsProps
                     </div>
                 )}
 
-                {/* ── Timeline ────────────────────────────────────────────── */}
                 <div className='px-3 pb-3 border-t border-border pt-2'>
                     <VideoAnalysisTimeline videoRef={videoRef} duration={duration} onSeek={onSeek} />
                 </div>

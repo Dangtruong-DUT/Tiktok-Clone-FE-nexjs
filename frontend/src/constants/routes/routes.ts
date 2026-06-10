@@ -37,7 +37,7 @@ export const SNAPISTUDIO_ROUTES = {
     UPLOAD: '/snapistudio/upload',
     UPLOAD_POST: (postId: string) => `/snapistudio/upload/post/${postId}`,
     SCHEDULED_POSTS: '/snapistudio/scheduled-posts',
-    WELLNESS:   '/snapistudio/wellness',
+    WELLNESS: '/snapistudio/wellness'
 } as const
 
 export const USER_ROUTES = {

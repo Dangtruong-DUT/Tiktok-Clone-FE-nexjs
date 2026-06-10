@@ -18,6 +18,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
+import type { OffsetPaginationMeta } from '@/types/common/pagination-meta.type'
 import {
     useListStudioPostsQuery,
     useSchedulePostMutation,
@@ -50,7 +51,6 @@ function formatDateTime(iso: string): string {
 const toDatetimeLocal = (iso: string) => iso.slice(0, 16)
 const fromDatetimeLocal = (v: string) => new Date(v).toISOString()
 
-// ── Inline reschedule form ────────────────────────────────────────────────────
 function RescheduleInline({
     schedUuid,
     currentTime,
@@ -99,7 +99,6 @@ function RescheduleInline({
     )
 }
 
-// ── Inline schedule form for drafts ──────────────────────────────────────────
 function ScheduleInline({
     postUuid,
     onSaved,
@@ -149,7 +148,6 @@ function ScheduleInline({
     )
 }
 
-// ── Post card ─────────────────────────────────────────────────────────────────
 function PostCard({ post }: { post: StudioPostItem }) {
     const t = useTranslations('SnapiStudio.scheduledPosts')
     const [rescheduleOpen, setRescheduleOpen] = useState(false)
@@ -288,7 +286,6 @@ function PostCard({ post }: { post: StudioPostItem }) {
     )
 }
 
-// ── Main component — filter chips, no inner tabs ──────────────────────────────
 export default function ScheduledPostsContent() {
     const t = useTranslations('SnapiStudio.scheduledPosts')
     const [filter, setFilter] = useState<FilterKey>('all')
@@ -310,7 +307,7 @@ export default function ScheduledPostsContent() {
     )
 
     const posts = (data?.data ?? []) as StudioPostItem[]
-    const lastPage = (data as any)?.meta?.last_page ?? 1
+    const lastPage = (data?.meta as OffsetPaginationMeta | undefined)?.last_page ?? 1
 
     const handleFilterChange = (key: FilterKey) => {
         setFilter(key)

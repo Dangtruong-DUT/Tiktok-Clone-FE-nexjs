@@ -20,7 +20,7 @@ export interface VideoStatusState {
 
 export function useVideoStatus(sessionUuid: string | null | undefined): VideoStatusState {
     const [shouldPoll, setShouldPoll] = useState(true)
-    const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated)
+    const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
 
     useEffect(() => {
         setShouldPoll(true)
@@ -28,7 +28,7 @@ export function useVideoStatus(sessionUuid: string | null | undefined): VideoSta
 
     const { data, isError } = useGetVideoUploadStatusQuery(sessionUuid ?? '', {
         skip: !sessionUuid || !shouldPoll || !isAuthenticated,
-        pollingInterval: POLL_INTERVAL_MS,
+        pollingInterval: POLL_INTERVAL_MS
     })
 
     const statusData = data?.data

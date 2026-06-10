@@ -98,13 +98,30 @@
                 "columns": {
                     "content": "Content",
                     "privacy": "Privacy",
+                    "status": "Status",
+                    "scheduledAt": "Scheduled at",
+                    "publishedAt": "Published at",
+                    "createdAt": "Created at",
+                    "contentThumbnailAlt": "Post thumbnail",
                     "views": "Views",
                     "comments": "Comments",
                     "actions": "Actions"
                 },
                 "actions": {
                     "edit": "Edit",
-                    "delete": "Delete"
+                    "delete": "Delete",
+                    "publishNow": "Publish now",
+                    "cancelSchedule": "Cancel schedule"
+                },
+                "messages": {
+                    "publishFailed": "Unable to publish the post. Please try again.",
+                    "cancelScheduleFailed": "Unable to cancel the schedule. Please try again."
+                },
+                "deleteDialog": {
+                    "title": "Delete post?",
+                    "description": "This post will be permanently deleted and cannot be recovered.",
+                    "confirm": "Delete",
+                    "failed": "Failed to delete post."
                 }
             },
             "search": {
@@ -122,6 +139,20 @@
                     "friends": "Friends",
                     "private": "Private",
                     "unknown": "Unknown"
+                },
+                "statusPlaceholder": "Filter by status",
+                "status": {
+                    "all": "All statuses",
+                    "draft": "Draft",
+                    "scheduled": "Scheduled",
+                    "published": "Published",
+                    "failed": "Failed"
+                },
+                "schedulePlaceholder": "Filter by schedule",
+                "schedule": {
+                    "all": "All posts",
+                    "scheduled": "Scheduled posts",
+                    "unscheduled": "Unscheduled posts"
                 }
             },
             "emptyState": "No posts found.",
@@ -197,7 +228,12 @@
                 "description": "Update your personal information and profile picture",
                 "upload": "Upload",
                 "defaultUser": "USER",
+                "avatarFallback": "U",
                 "fullNameLabel": "Full Name",
+                "usernameLabel": "Username",
+                "bioLabel": "Bio",
+                "bioPlaceholder": "Tell viewers about your channel",
+                "avatarHint": "JPG or PNG · max 4MB",
                 "cancel": "Cancel",
                 "save": "Save",
                 "validation": {
@@ -316,11 +352,16 @@
             "maxDuration": "Maximum duration 60 minutes",
             "selectFile": "Select File",
             "selectedFile": "Selected File",
+            "page": {
+                "title": "Upload Video",
+                "description": "Upload a video and prepare it for publishing"
+            },
             "thumbnailUpload": {
                 "dragAndDrop": "Drag and drop a file here",
                 "or": "or",
                 "selectFile": "select file",
                 "supportedFormats": "Supported formats: JPG, JPEG and PNG.",
+                "previewAlt": "Selected thumbnail preview",
                 "uploadNew": "Upload new",
                 "confirm": "Confirm",
                 "validation": {
@@ -372,7 +413,14 @@
             "buttons": {
                 "post": "Post",
                 "discard": "Discard",
-                "waitEncoding": "Waiting for encoding..."
+                "waitEncoding": "Waiting for encoding...",
+                "update": "Update",
+                "cancel": "Cancel"
+            },
+            "toast": {
+                "updated": "Post updated successfully",
+                "scheduled": "Post scheduled successfully",
+                "draftSaved": "Post saved as draft"
             }
         },
         "aiStudio": {

@@ -58,15 +58,12 @@ export function ScheduledPostMetrics() {
     if (!metrics) return null
 
     const successRate = metrics.success_rate != null ? `${metrics.success_rate.toFixed(1)}%` : '—'
-    const avgDelay =
-        metrics.avg_delay_minutes != null ? `${Math.round(metrics.avg_delay_minutes)}m` : '—'
+    const avgDelay = metrics.avg_delay_minutes != null ? `${Math.round(metrics.avg_delay_minutes)}m` : '—'
 
     return (
         <div className='space-y-4'>
             <div className='flex items-center justify-between'>
-                <p className='text-sm font-medium text-muted-foreground'>
-                    {t('scheduledPosts.tabs.metrics')}
-                </p>
+                <p className='text-sm font-medium text-muted-foreground'>{t('scheduledPosts.tabs.metrics')}</p>
                 <Select value={period} onValueChange={(v) => setPeriod(v as Period)}>
                     <SelectTrigger className='h-8 w-28 text-xs'>
                         <SelectValue />

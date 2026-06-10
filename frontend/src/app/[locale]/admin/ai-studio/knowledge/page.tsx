@@ -173,9 +173,7 @@ export default function KnowledgePage() {
             <AdminContainer>
                 {/* Header */}
                 <div className='flex items-center justify-between mb-6'>
-                    <p className='text-sm text-muted-foreground'>
-                        {t('count', { count: documents.length })}
-                    </p>
+                    <p className='text-sm text-muted-foreground'>{t('count', { count: documents.length })}</p>
                     <Button size='sm' onClick={() => setShowForm(true)} className='gap-1.5'>
                         <Plus className='size-4' />
                         {t('addDocument')}
@@ -341,7 +339,9 @@ export default function KnowledgePage() {
                                 <div className='flex-1 min-w-0'>
                                     <p className='text-sm font-medium truncate'>{doc.title}</p>
                                     {doc.description && (
-                                        <p className='text-xs text-muted-foreground/70 truncate mt-0.5'>{doc.description}</p>
+                                        <p className='text-xs text-muted-foreground/70 truncate mt-0.5'>
+                                            {doc.description}
+                                        </p>
                                     )}
                                     <p className='text-xs text-muted-foreground mt-0.5'>
                                         {doc.source_type} · {doc.language.toUpperCase()} · {doc.chunk_count} chunks
@@ -424,17 +424,21 @@ export default function KnowledgePage() {
                             )}
                             <div className='overflow-hidden rounded-lg border' style={{ height: '55vh' }}>
                                 <DocViewer
-                                    documents={[{
-                                        uri: viewDoc.file_url ?? docBlobUrl ?? '',
-                                        fileType: viewDoc.file_url
-                                            ? viewDoc.file_url.split('.').pop()
-                                            : viewDoc.content_type === 'html' ? 'html' : 'txt',
-                                    }]}
+                                    documents={[
+                                        {
+                                            uri: viewDoc.file_url ?? docBlobUrl ?? '',
+                                            fileType: viewDoc.file_url
+                                                ? viewDoc.file_url.split('.').pop()
+                                                : viewDoc.content_type === 'html'
+                                                  ? 'html'
+                                                  : 'txt'
+                                        }
+                                    ]}
                                     pluginRenderers={DocViewerRenderers}
                                     config={{
                                         header: { disableHeader: true },
-                                        pdfZoom: { defaultZoom: 1 },
-                                        pdfVerticalScrollByDefault: true,
+                                        pdfZoom: { defaultZoom: 1, zoomJump: 0.1 },
+                                        pdfVerticalScrollByDefault: true
                                     }}
                                     style={{ height: '100%', background: 'transparent' }}
                                 />

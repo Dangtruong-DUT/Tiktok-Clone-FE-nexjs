@@ -511,7 +511,6 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
     return (
         <div className='w-full max-w-[1200px] mx-auto py-8 md:py-16 px-4 sm:px-6'>
             <div className='grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24'>
-                
                 {/* Left Column: Context & Guidelines */}
                 <div className='lg:col-span-5 order-2 lg:order-1'>
                     <div className='sticky top-24'>
@@ -521,30 +520,40 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
                         <h1 className='text-3xl font-bold tracking-tight text-foreground md:text-4xl lg:text-5xl mb-4'>
                             {t('title')}
                         </h1>
-                        <p className='text-base text-muted-foreground leading-relaxed mb-10'>
-                            {t('description')}
-                        </p>
+                        <p className='text-base text-muted-foreground leading-relaxed mb-10'>{t('description')}</p>
 
                         <div className='flex flex-col gap-8'>
                             <div className='flex gap-4'>
-                                <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-foreground font-semibold ring-4 ring-background'>1</div>
+                                <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-foreground font-semibold ring-4 ring-background'>
+                                    1
+                                </div>
                                 <div className='pt-2'>
                                     <h3 className='font-semibold text-foreground'>Submit Request</h3>
-                                    <p className='text-sm text-muted-foreground mt-1 leading-relaxed'>Provide a clear, detailed explanation and attach any relevant evidence.</p>
+                                    <p className='text-sm text-muted-foreground mt-1 leading-relaxed'>
+                                        Provide a clear, detailed explanation and attach any relevant evidence.
+                                    </p>
                                 </div>
                             </div>
                             <div className='flex gap-4'>
-                                <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-foreground font-semibold ring-4 ring-background'>2</div>
+                                <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-foreground font-semibold ring-4 ring-background'>
+                                    2
+                                </div>
                                 <div className='pt-2'>
                                     <h3 className='font-semibold text-foreground'>Under Review</h3>
-                                    <p className='text-sm text-muted-foreground mt-1 leading-relaxed'>Our moderation team will carefully evaluate your case against our guidelines.</p>
+                                    <p className='text-sm text-muted-foreground mt-1 leading-relaxed'>
+                                        Our moderation team will carefully evaluate your case against our guidelines.
+                                    </p>
                                 </div>
                             </div>
                             <div className='flex gap-4'>
-                                <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-foreground font-semibold ring-4 ring-background'>3</div>
+                                <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-foreground font-semibold ring-4 ring-background'>
+                                    3
+                                </div>
                                 <div className='pt-2'>
                                     <h3 className='font-semibold text-foreground'>Final Decision</h3>
-                                    <p className='text-sm text-muted-foreground mt-1 leading-relaxed'>You will receive a notification with the outcome. Decisions are final.</p>
+                                    <p className='text-sm text-muted-foreground mt-1 leading-relaxed'>
+                                        You will receive a notification with the outcome. Decisions are final.
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -564,18 +573,26 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
                                 <div className='grid gap-6'>
                                     <div className='grid grid-cols-2 gap-6 text-sm pb-5 border-b border-border/40'>
                                         <div className='space-y-1.5'>
-                                            <span className='text-[11px] font-semibold text-muted-foreground uppercase tracking-wider'>{t('form.appealType')}</span>
+                                            <span className='text-[11px] font-semibold text-muted-foreground uppercase tracking-wider'>
+                                                {t('form.appealType')}
+                                            </span>
                                             <p className='font-medium text-foreground text-base'>
                                                 {appealInfo.appeal_type ? tTypes(appealInfo.appeal_type as never) : '—'}
                                             </p>
                                         </div>
                                         <div className='space-y-1.5'>
-                                            <span className='text-[11px] font-semibold text-muted-foreground uppercase tracking-wider'>{t('form.resourceType')}</span>
-                                            <p className='font-medium text-foreground text-base capitalize'>{appealInfo.resource_type}</p>
+                                            <span className='text-[11px] font-semibold text-muted-foreground uppercase tracking-wider'>
+                                                {t('form.resourceType')}
+                                            </span>
+                                            <p className='font-medium text-foreground text-base capitalize'>
+                                                {appealInfo.resource_type}
+                                            </p>
                                         </div>
                                         {isEditFlow && (
                                             <div className='col-span-2 flex flex-col gap-1.5 pt-2'>
-                                                <span className='text-[11px] font-semibold text-muted-foreground uppercase tracking-wider'>{t('form.status')}</span>
+                                                <span className='text-[11px] font-semibold text-muted-foreground uppercase tracking-wider'>
+                                                    {t('form.status')}
+                                                </span>
                                                 <div>
                                                     <Badge
                                                         variant='outline'
@@ -587,7 +604,9 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
                                                                   : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20'
                                                         }
                                                     >
-                                                        {appealInfo.status ? tStatuses(appealInfo.status as never) : '—'}
+                                                        {appealInfo.status
+                                                            ? tStatuses(appealInfo.status as never)
+                                                            : '—'}
                                                     </Badge>
                                                 </div>
                                             </div>
@@ -608,9 +627,16 @@ export function AppealFormClient({ appealUuid, appealType, resourceType, resourc
                             )}
 
                             <div className='space-y-3'>
-                                <label htmlFor='appeal-reason' className='text-sm font-semibold text-foreground flex items-center justify-between'>
-                                    <span>{t('form.reasonLabel')} <span className='text-red-500'>*</span></span>
-                                    <span className={`text-[11px] font-medium tracking-wide uppercase ${reason.trim().length < 20 ? 'text-red-500' : 'text-emerald-500'}`}>
+                                <label
+                                    htmlFor='appeal-reason'
+                                    className='text-sm font-semibold text-foreground flex items-center justify-between'
+                                >
+                                    <span>
+                                        {t('form.reasonLabel')} <span className='text-red-500'>*</span>
+                                    </span>
+                                    <span
+                                        className={`text-[11px] font-medium tracking-wide uppercase ${reason.trim().length < 20 ? 'text-red-500' : 'text-emerald-500'}`}
+                                    >
                                         {reason.trim().length} / 1000
                                     </span>
                                 </label>

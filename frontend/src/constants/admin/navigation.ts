@@ -31,9 +31,7 @@ export interface NavGroup {
 export const ADMIN_NAV_GROUPS: NavGroup[] = [
     {
         labelKey: 'dashboard.title',
-        items: [
-            { titleKey: 'dashboard.title', href: ADMIN_ROUTES.DASHBOARD, icon: LayoutDashboard }
-        ]
+        items: [{ titleKey: 'dashboard.title', href: ADMIN_ROUTES.DASHBOARD, icon: LayoutDashboard }]
     },
     {
         labelKey: 'shell.navGroups.manage',

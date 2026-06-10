@@ -29,9 +29,9 @@ export interface AiCopilotCurrentContentDto {
 }
 
 export interface SendAiCopilotMessageReqBodyDto {
-    sessionUuid:     string
-    content:         string
-    attachments?:    SendAiCopilotMessageAttachmentsDto
+    sessionUuid: string
+    content: string
+    attachments?: SendAiCopilotMessageAttachmentsDto
     current_content?: AiCopilotCurrentContentDto
 }
 

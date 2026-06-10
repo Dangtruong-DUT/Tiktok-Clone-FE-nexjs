@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
-import { CreatePostReqBodyType, UpdatePostReqBody, UpdatePostReqBodyType } from '@/types/dtos/post/post-request.dto'
+import { UpdatePostReqBody, UpdatePostReqBodyType } from '@/types/dtos/post/post-request.dto'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Audience } from '@/constants/enum'
+import { Audience, AUDIENCE_VALUES } from '@/constants/enum'
 import { Info } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import VideoPreview from '@/app/[locale]/(user)/snapistudio/upload/_components/video-preview'
@@ -33,12 +33,22 @@ import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
 import { useAiCopilotContext } from '@/components/ai-copilot/AiCopilotContext'
 import { AiVideoAttachments } from '@/components/ai-copilot/attachments/AiVideoAttachments'
 
+const UPDATE_POST_AUDIENCE_VALUES = new Set(AUDIENCE_VALUES)
+
+function toUpdatePostAudience(value: number | null | undefined): UpdatePostReqBodyType['audience'] {
+    if (value != null && UPDATE_POST_AUDIENCE_VALUES.has(value as (typeof AUDIENCE_VALUES)[number])) {
+        return value as UpdatePostReqBodyType['audience']
+    }
+
+    return Audience.PUBLIC
+}
+
 export default function FormUpdatePost() {
     const t = useTranslations('SnapiStudio.upload')
     const { id } = useParams<{ id: string }>() ?? { id: '' }
     const { setVideoContext, registerFormPatch, unregisterFormPatch } = useAiCopilotContext()
     const [uploadImageMutate, uploadImageResult] = useUploadImageMutation()
-    const [updatePostMutate, createPostResult] = useUpdatePostMutation()
+    const [updatePostMutate, updatePostResult] = useUpdatePostMutation()
     const { searchParams, setSearchParams } = useSearchParamsLoader()
     const currentUser = useCurrentUserData()
     const redirectFrom = searchParams?.get('from')
@@ -80,8 +90,8 @@ export default function FormUpdatePost() {
 
     useEffect(() => {
         if (post) {
-            form.setValue('content', post.content)
-            form.setValue('audience', post.audience as any)
+            form.setValue('content', post.content ?? '')
+            form.setValue('audience', toUpdatePostAudience(post.audience))
             form.setValue('thumbnail', post.thumbnail_file_id ?? undefined)
             form.setValue(
                 'hashtags',
@@ -93,8 +103,8 @@ export default function FormUpdatePost() {
 
             // Push post context to AI Copilot
             setVideoContext({
-                post_uuid:         post.uuid,
-                video_description: post.content,
+                post_uuid: post.uuid,
+                video_description: post.content ?? ''
             })
         }
     }, [post, form, setVideoContext])
@@ -102,7 +112,7 @@ export default function FormUpdatePost() {
     // Register form field patches for AI Copilot Accept flow
     useEffect(() => {
         registerFormPatch('content', (val) =>
-            form.setValue('content', val, { shouldDirty: true, shouldValidate: true }),
+            form.setValue('content', val, { shouldDirty: true, shouldValidate: true })
         )
         return () => {
             unregisterFormPatch('content')
@@ -124,10 +134,10 @@ export default function FormUpdatePost() {
         form.reset()
     }
 
-    const isCreatePostLoading = createPostResult.isLoading || uploadImageResult.isLoading
+    const isUpdatePostLoading = updatePostResult.isLoading || uploadImageResult.isLoading
 
     const onsubmit = async (data: UpdatePostReqBodyType) => {
-        if (isCreatePostLoading || !post) return
+        if (isUpdatePostLoading || !post) return
         try {
             let thumbnail = data.thumbnail
             if (thumbnailFile) {
@@ -144,11 +154,11 @@ export default function FormUpdatePost() {
                 mentions: undefined,
                 thumbnail
             }
-            await updatePostMutate({ post_uuid: post.uuid, body }).unwrap()
-            toast('Post updated successfully')
+            const response = await updatePostMutate({ post_uuid: post.uuid, body }).unwrap()
+            toast.success(response.message ?? t('toast.updated'))
         } catch (error) {
             logger.error(error)
-            handleFormError<CreatePostReqBodyType>({
+            handleFormError<UpdatePostReqBodyType>({
                 error,
                 setFormError: form.setError
             })
@@ -156,7 +166,7 @@ export default function FormUpdatePost() {
     }
 
     const onCancel = () => {
-        if (isCreatePostLoading) return
+        if (isUpdatePostLoading) return
         if (redirectFrom) {
             router.push(redirectFrom)
         } else {
@@ -257,10 +267,10 @@ export default function FormUpdatePost() {
                                 size='lg'
                                 variant='brand'
                                 type='submit'
-                                isLoading={isCreatePostLoading}
+                                isLoading={isUpdatePostLoading}
                                 className='w-[200px]'
                             >
-                                Save
+                                {t('buttons.update')}
                             </Button>
                             <Button
                                 size='lg'
@@ -268,9 +278,9 @@ export default function FormUpdatePost() {
                                 type='button'
                                 className='cursor-pointer w-[200px]'
                                 onClick={onCancel}
-                                disabled={isCreatePostLoading}
+                                disabled={isUpdatePostLoading}
                             >
-                                Cancel
+                                {t('buttons.cancel')}
                             </Button>
                         </div>
                     </div>

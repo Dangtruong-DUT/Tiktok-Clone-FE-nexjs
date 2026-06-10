@@ -15,8 +15,7 @@ import { useEffect, useState } from 'react'
 import { Search, X } from 'lucide-react'
 
 import { SearchParamsLoader, useSearchParamsLoader } from '@/components/common/search-params-loader'
-import { useListStudioPostsQuery, useSchedulePostMutation } from '@/store/services/studio-post-schedule.service'
-import { useDeletePostMutation } from '@/store/services/posts.service'
+import { useListStudioPostsQuery } from '@/store/services/studio-post-schedule.service'
 import { DataTable } from '@/components/ui/data-table'
 import { TablePanel } from '@/components/data-display/table-panel'
 import { TablePagination } from '@/components/data-display/table-pagination'
@@ -24,7 +23,7 @@ import type { OffsetPaginationMeta } from '@/types/common/pagination-meta.type'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import AlertDialogDeleteDish from '@/app/[locale]/(user)/snapistudio/content/_components/alert-confirm-delete-post'
+import AlertDialogDeletePost from '@/app/[locale]/(user)/snapistudio/content/_components/alert-confirm-delete-post'
 import { usePostTableContext } from '@/app/[locale]/(user)/snapistudio/content/_context/content-table.context'
 import { useStudioColumns } from '@/app/[locale]/(user)/snapistudio/content/_components/columns'
 import { TableSkeleton } from '@/components/data-display/table-skeleton'
@@ -117,12 +116,12 @@ export default function TableContent() {
         table.setPageIndex(0)
     }
 
-    const hasActiveFilters = appliedSearchQuery || appliedStatus !== 'all' || appliedSchedule !== 'all'
+    const hasActiveFilters = Boolean(appliedSearchQuery || appliedStatus !== 'all' || appliedSchedule !== 'all')
 
     return (
         <div className='w-full space-y-3'>
             <SearchParamsLoader onParamsReceived={setSearchParams} />
-            <AlertDialogDeleteDish postIdDelete={postIdDelete} setPostIdDelete={setPostIdDelete} />
+            <AlertDialogDeletePost postIdDelete={postIdDelete} setPostIdDelete={setPostIdDelete} />
 
             <TablePanel
                 isFetching={isFetchingPosts}
@@ -155,26 +154,26 @@ export default function TableContent() {
                             onValueChange={(v) => setStatusFilter(v as StudioPostStatus | 'all')}
                         >
                             <SelectTrigger className='w-[150px] rounded-none'>
-                                <SelectValue placeholder='Trạng thái' />
+                                <SelectValue placeholder={t('filter.statusPlaceholder')} />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value='all'>Tất cả trạng thái</SelectItem>
-                                <SelectItem value='draft'>Bản nháp</SelectItem>
-                                <SelectItem value='scheduled'>Lên lịch</SelectItem>
-                                <SelectItem value='published'>Đã đăng</SelectItem>
-                                <SelectItem value='failed'>Thất bại</SelectItem>
+                                <SelectItem value='all'>{t('filter.status.all')}</SelectItem>
+                                <SelectItem value='draft'>{t('filter.status.draft')}</SelectItem>
+                                <SelectItem value='scheduled'>{t('filter.status.scheduled')}</SelectItem>
+                                <SelectItem value='published'>{t('filter.status.published')}</SelectItem>
+                                <SelectItem value='failed'>{t('filter.status.failed')}</SelectItem>
                             </SelectContent>
                         </Select>
 
                         {/* Schedule status select */}
                         <Select value={scheduleFilter} onValueChange={(v) => setScheduleFilter(v as ScheduleFilter)}>
                             <SelectTrigger className='w-[170px] rounded-none'>
-                                <SelectValue placeholder='Lịch đăng' />
+                                <SelectValue placeholder={t('filter.schedulePlaceholder')} />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value='all'>Mọi bài</SelectItem>
-                                <SelectItem value='1'>Đã lên lịch</SelectItem>
-                                <SelectItem value='0'>Chưa lên lịch</SelectItem>
+                                <SelectItem value='all'>{t('filter.schedule.all')}</SelectItem>
+                                <SelectItem value='1'>{t('filter.schedule.scheduled')}</SelectItem>
+                                <SelectItem value='0'>{t('filter.schedule.unscheduled')}</SelectItem>
                             </SelectContent>
                         </Select>
 

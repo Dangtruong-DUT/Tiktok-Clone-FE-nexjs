@@ -7,14 +7,34 @@ import { AI_TIME_PERIODS, type AiTimePeriod } from '@/constants/admin/ai'
 import { Card } from '@/components/ui/card'
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart'
 import { Skeleton } from '@/components/ui/skeleton'
-import { 
-    AreaChart, Area, 
-    BarChart, Bar, 
-    PieChart, Pie, 
-    RadarChart, Radar, PolarGrid, PolarAngleAxis,
-    XAxis, YAxis, CartesianGrid, Legend, Cell 
+import {
+    AreaChart,
+    Area,
+    BarChart,
+    Bar,
+    PieChart,
+    Pie,
+    RadarChart,
+    Radar,
+    PolarGrid,
+    PolarAngleAxis,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Legend,
+    Cell
 } from 'recharts'
-import { Users, Zap, DollarSign, CheckCircle, XCircle, BarChart2, Activity, PieChart as PieChartIcon, Target } from 'lucide-react'
+import {
+    Users,
+    Zap,
+    DollarSign,
+    CheckCircle,
+    XCircle,
+    BarChart2,
+    Activity,
+    PieChart as PieChartIcon,
+    Target
+} from 'lucide-react'
 
 const dailyChartConfig = {
     total: {
@@ -49,7 +69,7 @@ const INTENT_COLORS = [
     '#f59e0b', // amber-500
     '#84cc16', // lime-500
     '#3b82f6', // blue-500
-    '#ec4899', // pink-500
+    '#ec4899' // pink-500
 ]
 
 function StatCard({
@@ -101,27 +121,27 @@ export function AiStudioMetrics() {
     const intentData = metrics
         ? (() => {
               const totalIntents = Object.values(metrics.intent_breakdown).reduce((a, b) => a + b, 0)
-              const threshold = totalIntents * 0.03; // 3%
-              
-              const result: { intent: string; count: number }[] = [];
-              let otherCount = 0;
-              
+              const threshold = totalIntents * 0.03 // 3%
+
+              const result: { intent: string; count: number }[] = []
+              let otherCount = 0
+
               Object.entries(metrics.intent_breakdown)
                   .sort(([, a], [, b]) => b - a)
                   .forEach(([intent, count]) => {
                       // Group into 'other' if < 3% AND we already have at least 5 slices
                       if (count < threshold && result.length >= 5) {
-                          otherCount += count;
+                          otherCount += count
                       } else {
-                          result.push({ intent: intent.replace(/_/g, ' '), count });
+                          result.push({ intent: intent.replace(/_/g, ' '), count })
                       }
-                  });
-                  
+                  })
+
               if (otherCount > 0) {
-                  result.push({ intent: 'other', count: otherCount });
+                  result.push({ intent: 'other', count: otherCount })
               }
-              
-              return result;
+
+              return result
           })()
         : []
 
@@ -198,18 +218,40 @@ export function AiStudioMetrics() {
                         </div>
                         {metrics.daily_series.length > 0 ? (
                             <ChartContainer config={dailyChartConfig} className='h-[250px] w-full aspect-auto'>
-                                <AreaChart data={metrics.daily_series} margin={{ left: -20, right: 10, top: 10, bottom: 0 }}>
+                                <AreaChart
+                                    data={metrics.daily_series}
+                                    margin={{ left: -20, right: 10, top: 10, bottom: 0 }}
+                                >
                                     <defs>
-                                        <linearGradient id="fillRequests" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="var(--color-total)" stopOpacity={0.8}/>
-                                            <stop offset="95%" stopColor="var(--color-total)" stopOpacity={0.1}/>
+                                        <linearGradient id='fillRequests' x1='0' y1='0' x2='0' y2='1'>
+                                            <stop offset='5%' stopColor='var(--color-total)' stopOpacity={0.8} />
+                                            <stop offset='95%' stopColor='var(--color-total)' stopOpacity={0.1} />
                                         </linearGradient>
                                     </defs>
                                     <CartesianGrid strokeDasharray='3 3' stroke='var(--border)' vertical={false} />
-                                    <XAxis dataKey='date' tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} tickMargin={10} />
-                                    <YAxis tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} allowDecimals={false} axisLine={false} tickLine={false} />
+                                    <XAxis
+                                        dataKey='date'
+                                        tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
+                                        axisLine={false}
+                                        tickLine={false}
+                                        tickMargin={10}
+                                    />
+                                    <YAxis
+                                        tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
+                                        allowDecimals={false}
+                                        axisLine={false}
+                                        tickLine={false}
+                                    />
                                     <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-                                    <Area type="monotone" dataKey="total" stroke="var(--color-total)" strokeWidth={3} fillOpacity={1} fill="url(#fillRequests)" name="Requests" />
+                                    <Area
+                                        type='monotone'
+                                        dataKey='total'
+                                        stroke='var(--color-total)'
+                                        strokeWidth={3}
+                                        fillOpacity={1}
+                                        fill='url(#fillRequests)'
+                                        name='Requests'
+                                    />
                                 </AreaChart>
                             </ChartContainer>
                         ) : (
@@ -225,12 +267,35 @@ export function AiStudioMetrics() {
                         </div>
                         {metrics.daily_series.length > 0 ? (
                             <ChartContainer config={tokenChartConfig} className='h-[250px] w-full aspect-auto'>
-                                <BarChart data={metrics.daily_series} barSize={24} margin={{ left: -20, right: 10, top: 10, bottom: 0 }}>
+                                <BarChart
+                                    data={metrics.daily_series}
+                                    barSize={24}
+                                    margin={{ left: -20, right: 10, top: 10, bottom: 0 }}
+                                >
                                     <CartesianGrid strokeDasharray='3 3' stroke='var(--border)' vertical={false} />
-                                    <XAxis dataKey='date' tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} tickMargin={10} />
-                                    <YAxis tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} allowDecimals={false} axisLine={false} tickLine={false} />
-                                    <ChartTooltip cursor={{ fill: 'var(--muted)', opacity: 0.5 }} content={<ChartTooltipContent />} />
-                                    <Bar dataKey='tokens' fill='var(--color-tokens)' name='Tokens' radius={[4, 4, 0, 0]} />
+                                    <XAxis
+                                        dataKey='date'
+                                        tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
+                                        axisLine={false}
+                                        tickLine={false}
+                                        tickMargin={10}
+                                    />
+                                    <YAxis
+                                        tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
+                                        allowDecimals={false}
+                                        axisLine={false}
+                                        tickLine={false}
+                                    />
+                                    <ChartTooltip
+                                        cursor={{ fill: 'var(--muted)', opacity: 0.5 }}
+                                        content={<ChartTooltipContent />}
+                                    />
+                                    <Bar
+                                        dataKey='tokens'
+                                        fill='var(--color-tokens)'
+                                        name='Tokens'
+                                        radius={[4, 4, 0, 0]}
+                                    />
                                 </BarChart>
                             </ChartContainer>
                         ) : (
@@ -250,12 +315,12 @@ export function AiStudioMetrics() {
                                     <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
                                     <Pie
                                         data={intentData}
-                                        dataKey="count"
-                                        nameKey="intent"
-                                        cx="50%"
-                                        cy="50%"
+                                        dataKey='count'
+                                        nameKey='intent'
+                                        cx='50%'
+                                        cy='50%'
                                         outerRadius={75}
-                                        stroke="var(--background)"
+                                        stroke='var(--background)'
                                         strokeWidth={2}
                                         labelLine={{ stroke: 'var(--muted-foreground)', strokeWidth: 1 }}
                                         label={({ x, y, cx, cy, percent }) => {
@@ -263,23 +328,28 @@ export function AiStudioMetrics() {
                                                 <text
                                                     x={x}
                                                     y={y}
-                                                    fill="var(--foreground)"
+                                                    fill='var(--foreground)'
                                                     textAnchor={x > cx ? 'start' : 'end'}
-                                                    dominantBaseline="central"
+                                                    dominantBaseline='central'
                                                     fontSize={12}
                                                 >
                                                     {`${(percent * 100).toFixed(1)}%`}
                                                 </text>
-                                            );
+                                            )
                                         }}
                                     >
                                         {intentData.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={INTENT_COLORS[index % INTENT_COLORS.length]} />
+                                            <Cell
+                                                key={`cell-${index}`}
+                                                fill={INTENT_COLORS[index % INTENT_COLORS.length]}
+                                            />
                                         ))}
                                     </Pie>
-                                    <Legend 
-                                        wrapperStyle={{ fontSize: 12, marginTop: '20px' }} 
-                                        formatter={(value) => <span style={{ color: 'var(--foreground)' }}>{value}</span>}
+                                    <Legend
+                                        wrapperStyle={{ fontSize: 12, marginTop: '20px' }}
+                                        formatter={(value) => (
+                                            <span style={{ color: 'var(--foreground)' }}>{value}</span>
+                                        )}
                                     />
                                 </PieChart>
                             </ChartContainer>
@@ -296,11 +366,20 @@ export function AiStudioMetrics() {
                         </div>
                         {intentData.length > 0 ? (
                             <ChartContainer config={intentChartConfig} className='h-[250px] w-full aspect-auto'>
-                                <RadarChart cx="50%" cy="50%" outerRadius={75} data={intentData}>
-                                    <PolarGrid stroke="var(--border)" />
-                                    <PolarAngleAxis dataKey="intent" tick={{ fill: 'var(--muted-foreground)', fontSize: 11 }} />
+                                <RadarChart cx='50%' cy='50%' outerRadius={75} data={intentData}>
+                                    <PolarGrid stroke='var(--border)' />
+                                    <PolarAngleAxis
+                                        dataKey='intent'
+                                        tick={{ fill: 'var(--muted-foreground)', fontSize: 11 }}
+                                    />
                                     <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-                                    <Radar name="Requests" dataKey="count" stroke="var(--color-count)" fill="var(--color-count)" fillOpacity={0.5} />
+                                    <Radar
+                                        name='Requests'
+                                        dataKey='count'
+                                        stroke='var(--color-count)'
+                                        fill='var(--color-count)'
+                                        fillOpacity={0.5}
+                                    />
                                 </RadarChart>
                             </ChartContainer>
                         ) : (

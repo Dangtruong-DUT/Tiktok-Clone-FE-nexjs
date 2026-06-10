@@ -7,14 +7,7 @@ import { TablePagination } from '@/components/data-display/table-pagination'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow
-} from '@/components/ui/table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { AI_USAGE_LOG_STATUSES } from '@/constants/admin/ai'
 import type { AiUsageLogItemDto } from '@/types/dtos/admin/ai/admin-ai-studio.response.dto'
 import type { OffsetPaginationMeta } from '@/types/common/pagination-meta.type'

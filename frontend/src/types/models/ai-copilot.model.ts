@@ -7,8 +7,7 @@ import {
 } from '@/constants/ai/copilot'
 
 export type AiCopilotRole = (typeof AI_COPILOT_ROLES)[keyof typeof AI_COPILOT_ROLES]
-export type AiCopilotMessageStatus =
-    (typeof AI_COPILOT_MESSAGE_STATUSES)[keyof typeof AI_COPILOT_MESSAGE_STATUSES]
+export type AiCopilotMessageStatus = (typeof AI_COPILOT_MESSAGE_STATUSES)[keyof typeof AI_COPILOT_MESSAGE_STATUSES]
 export type AiCopilotIntent = string
 export type AiCopilotTargetField = (typeof AI_COPILOT_TARGET_FIELDS)[keyof typeof AI_COPILOT_TARGET_FIELDS]
 
@@ -35,13 +34,13 @@ export interface AiCopilotScheduleOutput {
 }
 
 export interface AiCopilotNavRoute {
-    label:       string
-    path:        string
+    label: string
+    path: string
     description: string
 }
 
 export interface AiCopilotNavOutput {
-    type:   typeof AI_COPILOT_OUTPUT_TYPES.NAV_CARD
+    type: typeof AI_COPILOT_OUTPUT_TYPES.NAV_CARD
     routes: AiCopilotNavRoute[]
 }
 

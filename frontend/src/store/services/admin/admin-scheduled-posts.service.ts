@@ -5,58 +5,64 @@ import type { AdminScheduledPostMetrics, AdminScheduledPostItem } from '@/types/
 import type { ApiSuccessResponseWithData, ApiSuccessResponseWithMeta } from '@/types/common/http-response.type'
 
 interface AdminScheduledPostFilters {
-    status?:    string
-    source?:    string
+    status?: string
+    source?: string
     user_uuid?: string
     date_from?: string
-    date_to?:   string
-    page?:      number
-    per_page?:  number
+    date_to?: string
+    page?: number
+    per_page?: number
 }
 
 export const AdminScheduledPostsApi = createApi({
-    reducerPath:       'adminScheduledPostsApi',
-    baseQuery:         baseQueryWithReauth,
-    tagTypes:          ['AdminScheduledPost'],
+    reducerPath: 'adminScheduledPostsApi',
+    baseQuery: baseQueryWithReauth,
+    tagTypes: ['AdminScheduledPost'],
     keepUnusedDataFor: 60,
     endpoints: (builder) => ({
-        getScheduledPostMetrics: builder.query<ApiSuccessResponseWithData<AdminScheduledPostMetrics>, { period?: string }>({
+        getScheduledPostMetrics: builder.query<
+            ApiSuccessResponseWithData<AdminScheduledPostMetrics>,
+            { period?: string }
+        >({
             query: ({ period = 'today' }) => ({
-                url:    BACKEND_API_ENDPOINT.ADMIN.SCHEDULED_POSTS.METRICS,
-                params: { period },
+                url: BACKEND_API_ENDPOINT.ADMIN.SCHEDULED_POSTS.METRICS,
+                params: { period }
             }),
-            providesTags: ['AdminScheduledPost'],
+            providesTags: ['AdminScheduledPost']
         }),
 
-        listScheduledPosts: builder.query<ApiSuccessResponseWithMeta<AdminScheduledPostItem[]>, AdminScheduledPostFilters>({
+        listScheduledPosts: builder.query<
+            ApiSuccessResponseWithMeta<AdminScheduledPostItem[]>,
+            AdminScheduledPostFilters
+        >({
             query: (params) => ({
-                url:    BACKEND_API_ENDPOINT.ADMIN.SCHEDULED_POSTS.REQUESTS,
-                params,
+                url: BACKEND_API_ENDPOINT.ADMIN.SCHEDULED_POSTS.REQUESTS,
+                params
             }),
-            providesTags: ['AdminScheduledPost'],
+            providesTags: ['AdminScheduledPost']
         }),
 
         adminCancelSchedule: builder.mutation<ApiSuccessResponseWithData<AdminScheduledPostItem>, string>({
             query: (uuid) => ({
-                url:    BACKEND_API_ENDPOINT.ADMIN.SCHEDULED_POSTS.CANCEL(uuid),
-                method: 'POST',
+                url: BACKEND_API_ENDPOINT.ADMIN.SCHEDULED_POSTS.CANCEL(uuid),
+                method: 'POST'
             }),
-            invalidatesTags: ['AdminScheduledPost'],
+            invalidatesTags: ['AdminScheduledPost']
         }),
 
         adminRetrySchedule: builder.mutation<ApiSuccessResponseWithData<AdminScheduledPostItem>, string>({
             query: (uuid) => ({
-                url:    BACKEND_API_ENDPOINT.ADMIN.SCHEDULED_POSTS.RETRY(uuid),
-                method: 'POST',
+                url: BACKEND_API_ENDPOINT.ADMIN.SCHEDULED_POSTS.RETRY(uuid),
+                method: 'POST'
             }),
-            invalidatesTags: ['AdminScheduledPost'],
-        }),
-    }),
+            invalidatesTags: ['AdminScheduledPost']
+        })
+    })
 })
 
 export const {
     useGetScheduledPostMetricsQuery,
     useListScheduledPostsQuery,
     useAdminCancelScheduleMutation,
-    useAdminRetryScheduleMutation,
+    useAdminRetryScheduleMutation
 } = AdminScheduledPostsApi

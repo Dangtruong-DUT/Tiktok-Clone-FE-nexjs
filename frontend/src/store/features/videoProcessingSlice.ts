@@ -31,9 +31,7 @@ function loadFromStorage(): TrackedEncoding[] {
         const cutoff = Date.now() - STALE_HOURS * 60 * 60 * 1000
         return parsed.filter(
             (e) =>
-                UUID_RE.test(e.sessionUuid) &&
-                new Date(e.trackedAt).getTime() > cutoff &&
-                !isTerminalStatus(e.status)
+                UUID_RE.test(e.sessionUuid) && new Date(e.trackedAt).getTime() > cutoff && !isTerminalStatus(e.status)
         )
     } catch {
         return []

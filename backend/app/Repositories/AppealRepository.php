@@ -234,7 +234,21 @@ class AppealRepository extends BaseRepository
      */
     private function buildSearchQuery(Collection $filterCollection): Builder
     {
+        $keyword = trim((string) $filterCollection->get('q', ''));
+
         return $this->query()
+            ->when($keyword !== '', function (Builder $query) use ($keyword) {
+                $like = '%'.$keyword.'%';
+
+                $query->where(function (Builder $searchQuery) use ($like) {
+                    $searchQuery
+                        ->where('reason', 'ilike', $like)
+                        ->orWhereRaw('CAST(uuid AS TEXT) ILIKE ?', [$like])
+                        ->orWhere('appeal_type', 'ilike', $like)
+                        ->orWhere('resource_type', 'ilike', $like)
+                        ->orWhere('status', 'ilike', $like);
+                });
+            })
             ->when($filterCollection->get('appeal_status'), function (Builder $query, $appealStatus) {
                 $query->where('status', $appealStatus);
             })

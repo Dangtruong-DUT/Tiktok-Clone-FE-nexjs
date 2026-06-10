@@ -111,110 +111,110 @@ export function WellnessRuleChat() {
             {!isMinimised && (
                 <div className='flex-1 overflow-y-auto scrollbar-hidden'>
                     <div className='p-4 space-y-3'>
-                            <div>
-                                <label className='text-xs font-medium text-muted-foreground mb-1.5 block'>
-                                    {t('ruleType')}
-                                </label>
-                                <div className='grid grid-cols-2 gap-1.5'>
-                                    {RULE_TYPES.map((rt) => (
-                                        <button
-                                            key={rt.value}
-                                            onClick={() => setManual((m) => ({ ...m, type: rt.value }))}
-                                            className={cn(
-                                                'rounded-lg border px-2 py-1.5 text-[11px] font-medium transition-colors text-left',
-                                                manual.type === rt.value
-                                                    ? 'border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-600'
-                                                    : 'border-border text-muted-foreground hover:bg-muted'
-                                            )}
-                                        >
-                                            {rt.label}
-                                        </button>
-                                    ))}
-                                </div>
+                        <div>
+                            <label className='text-xs font-medium text-muted-foreground mb-1.5 block'>
+                                {t('ruleType')}
+                            </label>
+                            <div className='grid grid-cols-2 gap-1.5'>
+                                {RULE_TYPES.map((rt) => (
+                                    <button
+                                        key={rt.value}
+                                        onClick={() => setManual((m) => ({ ...m, type: rt.value }))}
+                                        className={cn(
+                                            'rounded-lg border px-2 py-1.5 text-[11px] font-medium transition-colors text-left',
+                                            manual.type === rt.value
+                                                ? 'border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-600'
+                                                : 'border-border text-muted-foreground hover:bg-muted'
+                                        )}
+                                    >
+                                        {rt.label}
+                                    </button>
+                                ))}
                             </div>
-
-                            <div>
-                                <label className='text-xs font-medium text-muted-foreground mb-1 block'>
-                                    {t('duration')}
-                                </label>
-                                <div className='flex items-center gap-3'>
-                                    <input
-                                        type='range'
-                                        min={10}
-                                        max={240}
-                                        step={5}
-                                        value={manual.minutes}
-                                        onChange={(e) => setManual((m) => ({ ...m, minutes: +e.target.value }))}
-                                        className='flex-1 accent-emerald-600'
-                                    />
-                                    <span className='text-sm font-semibold tabular-nums w-12 text-right text-foreground'>
-                                        {fmt(manual.minutes)}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className='text-xs font-medium text-muted-foreground mb-1.5 block'>
-                                    {t('action')}
-                                </label>
-                                <div className='grid grid-cols-2 gap-1.5'>
-                                    {ACTIONS.map((a) => (
-                                        <button
-                                            key={a.value}
-                                            onClick={() => setManual((m) => ({ ...m, action: a.value }))}
-                                            className={cn(
-                                                'rounded-lg border px-2 py-1.5 text-[11px] font-medium transition-colors',
-                                                manual.action === a.value
-                                                    ? 'border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-600'
-                                                    : 'border-border text-muted-foreground hover:bg-muted'
-                                            )}
-                                        >
-                                            {a.label}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className='text-xs font-medium text-muted-foreground mb-1 block'>
-                                    {t('titleRequired')}
-                                </label>
-                                <input
-                                    type='text'
-                                    value={manual.title}
-                                    onChange={(e) => setManual((m) => ({ ...m, title: e.target.value }))}
-                                    placeholder={t('titlePlaceholder')}
-                                    className='w-full rounded-lg border border-border bg-muted/40 px-3 py-2 text-sm
-                                               text-foreground placeholder:text-muted-foreground
-                                               outline-none focus:ring-1 focus:ring-primary/50'
-                                />
-                            </div>
-
-                            <div>
-                                <label className='text-xs font-medium text-muted-foreground mb-1 block'>
-                                    {t('messageLabel')}
-                                </label>
-                                <input
-                                    type='text'
-                                    value={manual.message}
-                                    onChange={(e) => setManual((m) => ({ ...m, message: e.target.value }))}
-                                    placeholder={t('messagePlaceholder')}
-                                    className='w-full rounded-lg border border-border bg-muted/40 px-3 py-2 text-sm
-                                               text-foreground placeholder:text-muted-foreground
-                                               outline-none focus:ring-1 focus:ring-primary/50'
-                                />
-                            </div>
-
-                            <Button
-                                onClick={handleSaveManual}
-                                disabled={isCreating || !manual.title.trim()}
-                                size='sm'
-                                className='w-full gap-2 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600'
-                            >
-                                <CheckCircle2 className='size-3.5' />
-                                {isCreating ? t('saving') : t('saveRule')}
-                            </Button>
                         </div>
+
+                        <div>
+                            <label className='text-xs font-medium text-muted-foreground mb-1 block'>
+                                {t('duration')}
+                            </label>
+                            <div className='flex items-center gap-3'>
+                                <input
+                                    type='range'
+                                    min={10}
+                                    max={240}
+                                    step={5}
+                                    value={manual.minutes}
+                                    onChange={(e) => setManual((m) => ({ ...m, minutes: +e.target.value }))}
+                                    className='flex-1 accent-emerald-600'
+                                />
+                                <span className='text-sm font-semibold tabular-nums w-12 text-right text-foreground'>
+                                    {fmt(manual.minutes)}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className='text-xs font-medium text-muted-foreground mb-1.5 block'>
+                                {t('action')}
+                            </label>
+                            <div className='grid grid-cols-2 gap-1.5'>
+                                {ACTIONS.map((a) => (
+                                    <button
+                                        key={a.value}
+                                        onClick={() => setManual((m) => ({ ...m, action: a.value }))}
+                                        className={cn(
+                                            'rounded-lg border px-2 py-1.5 text-[11px] font-medium transition-colors',
+                                            manual.action === a.value
+                                                ? 'border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-600'
+                                                : 'border-border text-muted-foreground hover:bg-muted'
+                                        )}
+                                    >
+                                        {a.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className='text-xs font-medium text-muted-foreground mb-1 block'>
+                                {t('titleRequired')}
+                            </label>
+                            <input
+                                type='text'
+                                value={manual.title}
+                                onChange={(e) => setManual((m) => ({ ...m, title: e.target.value }))}
+                                placeholder={t('titlePlaceholder')}
+                                className='w-full rounded-lg border border-border bg-muted/40 px-3 py-2 text-sm
+                                               text-foreground placeholder:text-muted-foreground
+                                               outline-none focus:ring-1 focus:ring-primary/50'
+                            />
+                        </div>
+
+                        <div>
+                            <label className='text-xs font-medium text-muted-foreground mb-1 block'>
+                                {t('messageLabel')}
+                            </label>
+                            <input
+                                type='text'
+                                value={manual.message}
+                                onChange={(e) => setManual((m) => ({ ...m, message: e.target.value }))}
+                                placeholder={t('messagePlaceholder')}
+                                className='w-full rounded-lg border border-border bg-muted/40 px-3 py-2 text-sm
+                                               text-foreground placeholder:text-muted-foreground
+                                               outline-none focus:ring-1 focus:ring-primary/50'
+                            />
+                        </div>
+
+                        <Button
+                            onClick={handleSaveManual}
+                            disabled={isCreating || !manual.title.trim()}
+                            size='sm'
+                            className='w-full gap-2 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600'
+                        >
+                            <CheckCircle2 className='size-3.5' />
+                            {isCreating ? t('saving') : t('saveRule')}
+                        </Button>
+                    </div>
                 </div>
             )}
         </div>

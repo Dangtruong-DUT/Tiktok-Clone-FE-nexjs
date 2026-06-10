@@ -313,7 +313,7 @@ class AppealService
 
     /**
      * Get appeals for authenticated user.
-     * @param  array{appeal_status?: string, appeal_type?: string, per_page?: int}  $filters
+     * @param  array{appeal_status?: string, appeal_type?: string, per_page?: int, q?: string}  $filters
      */
     public function getAppeals(array $filters): LengthAwarePaginator
     {

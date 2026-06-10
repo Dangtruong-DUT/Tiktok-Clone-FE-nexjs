@@ -1,15 +1,5 @@
 import type { LucideIcon } from 'lucide-react'
-import {
-    Ban,
-    Check,
-    KeyRound,
-    Mail,
-    RefreshCw,
-    ShieldCheck,
-    Trash2,
-    UserX,
-    X,
-} from 'lucide-react'
+import { Ban, Check, KeyRound, Mail, RefreshCw, ShieldCheck, Trash2, UserX, X } from 'lucide-react'
 
 export const ADMIN_ACTIONS = {
     BAN: 'ban',
@@ -59,5 +49,5 @@ export const ADMIN_ACTION_ICONS: Record<string, ActionIconConfig> = {
     [ADMIN_ACTIONS.RESTORE_COMMENT]: { icon: RefreshCw, className: 'bg-emerald-500/15 text-emerald-400' },
     [ADMIN_ACTIONS.SEND_EMAIL_TO_USER]: { icon: Mail, className: 'bg-blue-500/15 text-blue-400' },
     [ADMIN_ACTIONS.RESET_USER_PASSWORD]: { icon: KeyRound, className: 'bg-blue-500/15 text-blue-400' },
-    [ADMIN_ACTIONS.UPDATE]: { icon: RefreshCw, className: 'bg-zinc-500/15 text-zinc-400' },
+    [ADMIN_ACTIONS.UPDATE]: { icon: RefreshCw, className: 'bg-zinc-500/15 text-zinc-400' }
 }

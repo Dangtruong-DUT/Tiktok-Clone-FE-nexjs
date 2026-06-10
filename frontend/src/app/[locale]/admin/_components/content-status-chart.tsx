@@ -78,9 +78,7 @@ export function ContentStatusChart() {
                                 )}
                             </div>
                         ))}
-                        {total === 0 && (
-                            <p className='text-xs text-muted-foreground'>No posts yet</p>
-                        )}
+                        {total === 0 && <p className='text-xs text-muted-foreground'>No posts yet</p>}
                     </div>
                 </div>
             </CardContent>

@@ -30,7 +30,6 @@ import { Lock, Unlock, Save, ChevronDown, ChevronUp, Info } from 'lucide-react'
 import LoadingIcon from '@/components/lottie-icons/loading'
 import { toast } from 'sonner'
 
-
 const CATEGORY_BADGE_CLASS: Record<string, string> = {
     platform: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400',
     context: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400',
@@ -175,7 +174,7 @@ export default function PromptTemplatesPage() {
                                 )}
 
                                 <div className='space-y-2'>
-                                    {grouped[category].map((tpl) => {
+                                    {(grouped[category] ?? []).map((tpl) => {
                                         const isOpen = expanded === tpl.intent
                                         const hasEdits = !!edits[tpl.intent]
                                         const current = { ...tpl, ...edits[tpl.intent] }

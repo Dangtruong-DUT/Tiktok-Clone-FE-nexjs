@@ -14,47 +14,47 @@ import type {
 } from '@/types/dtos/admin/ai/admin-ai-studio.response.dto'
 
 export const AdminAiStudioApi = createApi({
-    baseQuery:         baseQueryWithReauth,
-    tagTypes:          ['AiStudioSettings', 'AiStudioMetrics', 'AiStudioRequests', 'AiStudioModels'],
-    reducerPath:       'adminAiStudioApi',
+    baseQuery: baseQueryWithReauth,
+    tagTypes: ['AiStudioSettings', 'AiStudioMetrics', 'AiStudioRequests', 'AiStudioModels'],
+    reducerPath: 'adminAiStudioApi',
     keepUnusedDataFor: 60,
     endpoints: (builder) => ({
         getAiMetrics: builder.query<GetAiMetricsResDto, GetAiMetricsQueryDto>({
             query: ({ period = 'today' }) => ({
-                url:    BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.METRICS,
-                params: { period },
+                url: BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.METRICS,
+                params: { period }
             }),
-            providesTags: ['AiStudioMetrics'],
+            providesTags: ['AiStudioMetrics']
         }),
 
         getAiSettings: builder.query<GetAiSettingsResDto, void>({
             query: () => BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.SETTINGS,
-            providesTags: ['AiStudioSettings'],
+            providesTags: ['AiStudioSettings']
         }),
 
         updateAiSettings: builder.mutation<GetAiSettingsResDto, UpdateAiStudioSettingsReqBodyDto>({
             query: (body) => ({
-                url:    BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.SETTINGS,
+                url: BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.SETTINGS,
                 method: 'PUT',
-                body,
+                body
             }),
-            invalidatesTags: ['AiStudioSettings'],
+            invalidatesTags: ['AiStudioSettings']
         }),
 
         listAiRequests: builder.query<ListAiRequestsResDto, ListAiRequestsQueryDto>({
             query: (params) => ({
-                url:    BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.REQUESTS,
-                params,
+                url: BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.REQUESTS,
+                params
             }),
-            providesTags: ['AiStudioRequests'],
+            providesTags: ['AiStudioRequests']
         }),
 
         getAvailableModels: builder.query<GetAiAvailableModelsResDto, void>({
             query: () => BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.MODELS,
             providesTags: ['AiStudioModels'],
-            keepUnusedDataFor: 3600,
-        }),
-    }),
+            keepUnusedDataFor: 3600
+        })
+    })
 })
 
 export const {
@@ -62,5 +62,5 @@ export const {
     useGetAiSettingsQuery,
     useUpdateAiSettingsMutation,
     useListAiRequestsQuery,
-    useGetAvailableModelsQuery,
+    useGetAvailableModelsQuery
 } = AdminAiStudioApi

@@ -246,7 +246,6 @@ export default function WellnessPage() {
                 </div>
             </div>
 
-            {/* ── Section 2: Stats ── */}
             <section className='space-y-3'>
                 <SectionHeader
                     icon={BarChart2}
@@ -409,7 +408,6 @@ export default function WellnessPage() {
 
             <Separator />
 
-            {/* ── Section 3: Rules ── */}
             <section className='space-y-4'>
                 <SectionHeader
                     icon={Shield}

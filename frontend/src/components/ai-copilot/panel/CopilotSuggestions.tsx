@@ -3,8 +3,8 @@
 import { cn } from '@/lib/utils'
 
 interface CopilotSuggestionsProps {
-    chips:     string[]
-    onSelect:  (chip: string) => void
+    chips: string[]
+    onSelect: (chip: string) => void
     className?: string
 }
 
@@ -13,7 +13,7 @@ export function CopilotSuggestions({ chips, onSelect, className }: CopilotSugges
 
     return (
         <div className={cn('flex flex-wrap gap-1.5 pt-1', className)}>
-            {chips.map(chip => (
+            {chips.map((chip) => (
                 <button
                     key={chip}
                     onClick={() => onSelect(chip)}

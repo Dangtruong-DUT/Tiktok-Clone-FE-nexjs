@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { Eye, Search, X } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
@@ -40,20 +40,10 @@ export function StudioAppealsTable() {
         page,
         per_page: perPage,
         appeal_status: statusFilter === FILTER_ALL ? undefined : statusFilter,
+        q: searchTerm.trim() || undefined,
         order_by: ['-created_at']
     })
-
-    const appeals = useMemo(() => {
-        const list = data?.data ?? []
-        const keyword = searchTerm.trim().toLowerCase()
-        if (!keyword) return list
-        return list.filter((appeal) =>
-            [appeal.appeal_type, appeal.resource_type, appeal.reason, appeal.status]
-                .join(' ')
-                .toLowerCase()
-                .includes(keyword)
-        )
-    }, [data?.data, searchTerm])
+    const appeals = data?.data ?? []
 
     const pagination = data?.meta
 

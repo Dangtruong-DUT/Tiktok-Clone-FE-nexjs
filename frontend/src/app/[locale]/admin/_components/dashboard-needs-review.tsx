@@ -20,8 +20,8 @@ const REVIEW_ITEMS: ReviewItemConfig[] = [
         labelKey: 'dashboard.pendingAppeals',
         getValue: (s) => s.pending_appeals,
         href: ADMIN_ROUTES.APPEALS,
-        dotClass: 'bg-blue-400',
-    },
+        dotClass: 'bg-blue-400'
+    }
 ]
 
 export function DashboardNeedsReview() {

@@ -84,7 +84,7 @@ export function MarkdownText({ content, className }: MarkdownTextProps) {
                             {children}
                         </th>
                     ),
-                    td: ({ children }) => <td className='px-2 py-1 text-foreground'>{children}</td>,
+                    td: ({ children }) => <td className='px-2 py-1 text-foreground'>{children}</td>
                 }}
             >
                 {content}

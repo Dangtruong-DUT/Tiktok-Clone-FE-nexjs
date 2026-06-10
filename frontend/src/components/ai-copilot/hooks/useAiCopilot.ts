@@ -15,10 +15,25 @@ import type { AiCopilotSseEventDto, SendAiCopilotMessageAttachmentsDto } from '@
 import { AI_COPILOT_MESSAGE_STATUSES, AI_COPILOT_ROLES, AI_COPILOT_SSE_EVENT_TYPES } from '@/constants/ai/copilot'
 
 const ANALYZE_KEYWORDS = [
-    'phân tích', 'cải thiện', 'improve', 'analyze', 'analyse',
-    'hook', 'retention', 'viral', 'caption', 'hashtag',
-    'gợi ý', 'đề xuất', 'suggest', 'review', 'xem xét',
-    'giúp tôi', 'help me', 'nhận xét', 'feedback'
+    'phân tích',
+    'cải thiện',
+    'improve',
+    'analyze',
+    'analyse',
+    'hook',
+    'retention',
+    'viral',
+    'caption',
+    'hashtag',
+    'gợi ý',
+    'đề xuất',
+    'suggest',
+    'review',
+    'xem xét',
+    'giúp tôi',
+    'help me',
+    'nhận xét',
+    'feedback'
 ]
 
 function hasAnalyzeKeyword(text: string): boolean {

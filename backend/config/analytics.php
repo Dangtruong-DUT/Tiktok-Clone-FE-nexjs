@@ -250,7 +250,6 @@ return [
             'metrics'         => ['total_actions', 'action_breakdown', 'top_admins'],
         ],
 
-        // ────────────────── System Analytics Tools ─────────────────────────────
 
         'get_system_health' => [
             'class'           => \App\Services\Analytics\Tools\SystemHealthTool::class,

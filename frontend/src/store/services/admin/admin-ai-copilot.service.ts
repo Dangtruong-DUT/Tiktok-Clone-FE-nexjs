@@ -16,60 +16,59 @@ import type {
 } from '@/types/dtos/admin/ai/admin-ai-copilot.response.dto'
 
 export const AdminAiCopilotApi = createApi({
-    reducerPath:       'adminAiCopilotApi',
-    baseQuery:         baseQueryWithReauth,
-    tagTypes:          ['AiPromptTemplate', 'AiCopilotSettings'],
+    reducerPath: 'adminAiCopilotApi',
+    baseQuery: baseQueryWithReauth,
+    tagTypes: ['AiPromptTemplate', 'AiCopilotSettings'],
     keepUnusedDataFor: 60,
     endpoints: (builder) => ({
         getCopilotMetrics: builder.query<GetCopilotMetricsResDto, GetCopilotMetricsQueryDto>({
-            query: ({ period = 'today' }) =>
-                `${BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.COPILOT_METRICS}?period=${period}`,
+            query: ({ period = 'today' }) => `${BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.COPILOT_METRICS}?period=${period}`
         }),
 
         getCopilotSessions: builder.query<GetCopilotSessionsResDto, GetCopilotSessionsQueryDto>({
             query: ({ page = 1, perPage = 20 }) =>
-                `${BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.COPILOT_SESSIONS}?page=${page}&per_page=${perPage}`,
+                `${BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.COPILOT_SESSIONS}?page=${page}&per_page=${perPage}`
         }),
 
         listPromptTemplates: builder.query<ListPromptTemplatesResDto, void>({
             query: () => BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.PROMPT_TEMPLATES,
-            providesTags: ['AiPromptTemplate'],
+            providesTags: ['AiPromptTemplate']
         }),
 
         updatePromptTemplate: builder.mutation<UpdatePromptTemplateResDto, UpdatePromptTemplateMutationDto>({
             query: ({ intent, data }) => ({
-                url:    BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.PROMPT_TEMPLATE(intent),
+                url: BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.PROMPT_TEMPLATE(intent),
                 method: 'PUT',
-                body:   data,
+                body: data
             }),
-            invalidatesTags: ['AiPromptTemplate'],
+            invalidatesTags: ['AiPromptTemplate']
         }),
 
         lockPromptTemplate: builder.mutation<UpdatePromptTemplateResDto, string>({
             query: (intent) => ({
-                url:    BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.LOCK_TEMPLATE(intent),
-                method: 'PATCH',
+                url: BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.LOCK_TEMPLATE(intent),
+                method: 'PATCH'
             }),
-            invalidatesTags: ['AiPromptTemplate'],
+            invalidatesTags: ['AiPromptTemplate']
         }),
 
         unlockPromptTemplate: builder.mutation<UpdatePromptTemplateResDto, string>({
             query: (intent) => ({
-                url:    BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.UNLOCK_TEMPLATE(intent),
-                method: 'PATCH',
+                url: BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.UNLOCK_TEMPLATE(intent),
+                method: 'PATCH'
             }),
-            invalidatesTags: ['AiPromptTemplate'],
+            invalidatesTags: ['AiPromptTemplate']
         }),
 
         updateFeatureFlags: builder.mutation<UpdateFeatureFlagsResDto, UpdateFeatureFlagsReqBodyDto>({
             query: ({ flags }) => ({
-                url:    BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.FEATURE_FLAGS,
+                url: BACKEND_API_ENDPOINT.ADMIN.AI_STUDIO.FEATURE_FLAGS,
                 method: 'POST',
-                body:   { flags },
+                body: { flags }
             }),
-            invalidatesTags: ['AiCopilotSettings'],
-        }),
-    }),
+            invalidatesTags: ['AiCopilotSettings']
+        })
+    })
 })
 
 export const {
@@ -79,5 +78,5 @@ export const {
     useUpdatePromptTemplateMutation,
     useLockPromptTemplateMutation,
     useUnlockPromptTemplateMutation,
-    useUpdateFeatureFlagsMutation,
+    useUpdateFeatureFlagsMutation
 } = AdminAiCopilotApi

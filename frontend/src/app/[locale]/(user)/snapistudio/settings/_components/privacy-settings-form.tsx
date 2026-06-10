@@ -127,7 +127,7 @@ export default function PrivacySettingsForm() {
         try {
             const response = await updateSettingsMutate(changedPayload).unwrap()
             setDraftSettings(mapToPrivacyFormState(response.data))
-            toast.success('Update privacy settings successfully')
+            toast.success(response.message)
         } catch (error) {
             const parsedError = formatFetchBaseQueryErrorMessage(error as FetchBaseQueryError)
             toast.error(parsedError.description || t('privacy.updateError'))

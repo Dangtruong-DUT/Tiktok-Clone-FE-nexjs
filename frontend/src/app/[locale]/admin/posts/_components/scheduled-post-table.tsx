@@ -114,39 +114,29 @@ export function ScheduledPostTable() {
             ) : (
                 <div className={cn('space-y-2', isFetching && 'opacity-60 pointer-events-none')}>
                     {items.map((item) => (
-                        <div
-                            key={item.uuid}
-                            className='rounded-lg border bg-card px-4 py-3 flex items-start gap-3'
-                        >
+                        <div key={item.uuid} className='rounded-lg border bg-card px-4 py-3 flex items-start gap-3'>
                             <div className='flex-1 min-w-0 space-y-1'>
                                 <div className='flex items-center gap-2 flex-wrap'>
                                     <Badge
                                         variant='outline'
                                         className={cn(
                                             'text-xs border-transparent font-medium',
-                                            SCHEDULED_STATUS_BADGE[item.status] ??
-                                                'bg-muted text-muted-foreground'
+                                            SCHEDULED_STATUS_BADGE[item.status] ?? 'bg-muted text-muted-foreground'
                                         )}
                                     >
                                         {item.status_label ?? item.status}
                                     </Badge>
                                     {item.user && (
-                                        <span className='text-xs text-muted-foreground'>
-                                            @{item.user.username}
-                                        </span>
+                                        <span className='text-xs text-muted-foreground'>@{item.user.username}</span>
                                     )}
                                     <span className='text-xs text-muted-foreground ml-auto tabular-nums'>
                                         {formatDateShort(item.scheduled_at)}
                                     </span>
                                 </div>
                                 {item.post?.content && (
-                                    <p className='text-xs text-muted-foreground line-clamp-1'>
-                                        {item.post.content}
-                                    </p>
+                                    <p className='text-xs text-muted-foreground line-clamp-1'>{item.post.content}</p>
                                 )}
-                                {item.error_message && (
-                                    <p className='text-xs text-destructive'>{item.error_message}</p>
-                                )}
+                                {item.error_message && <p className='text-xs text-destructive'>{item.error_message}</p>}
                             </div>
 
                             <div className='flex shrink-0 items-center gap-1.5'>
@@ -170,12 +160,7 @@ export function ScheduledPostTable() {
                                         onClick={() => handleRetry(item.uuid)}
                                         disabled={isRetrying}
                                     >
-                                        <RefreshCw
-                                            className={cn(
-                                                'size-3.5',
-                                                isRetrying && 'animate-spin'
-                                            )}
-                                        />
+                                        <RefreshCw className={cn('size-3.5', isRetrying && 'animate-spin')} />
                                         {t('scheduledPosts.table.actions.retry')}
                                     </Button>
                                 )}
@@ -193,9 +178,7 @@ export function ScheduledPostTable() {
                     onPageChange={setPage}
                     onPerPageChange={() => {}}
                     perPageLabel={t('common.perPage')}
-                    showingResultsFormatter={(from, to, total) =>
-                        t('common.showingResults', { from, to, total })
-                    }
+                    showingResultsFormatter={(from, to, total) => t('common.showingResults', { from, to, total })}
                 />
             )}
         </div>

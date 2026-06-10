@@ -21,7 +21,12 @@ import { formatCompactNumber } from '@/utils/formatting/format-number.util'
 import { formatDateShort } from '@/utils/formatting/format-time.util'
 import { useAdminTableState } from '@/hooks/use-admin-table-state'
 import { useDialog } from '@/hooks/use-dialog'
-import { PostStatusFilter, type PostStatusFilterType, AUDIENCE_CONFIGS, POST_STATUS_BADGE } from '@/constants/status/post'
+import {
+    PostStatusFilter,
+    type PostStatusFilterType,
+    AUDIENCE_CONFIGS,
+    POST_STATUS_BADGE
+} from '@/constants/status/post'
 import type { SortOrder } from '@/constants/ui/table'
 import type { AdminPost } from '@/types/dtos/admin/admin-response.dto'
 import { cn } from '@/lib/utils'
@@ -140,9 +145,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value={PostStatusFilter.ALL}>
-                                            {t('posts.status.all')}
-                                        </SelectItem>
+                                        <SelectItem value={PostStatusFilter.ALL}>{t('posts.status.all')}</SelectItem>
                                         <SelectItem value={PostStatusFilter.PUBLISHED}>
                                             {t('posts.status.published')}
                                         </SelectItem>
@@ -218,7 +221,8 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
                         <TableBody>
                             {posts.map((post) => {
                                 const isDeleted = !!post.deleted_at
-                                const audienceConfig = post.audience != null ? (AUDIENCE_CONFIGS[post.audience] ?? null) : null
+                                const audienceConfig =
+                                    post.audience != null ? (AUDIENCE_CONFIGS[post.audience] ?? null) : null
                                 const AudienceIcon = audienceConfig?.icon
 
                                 return (

@@ -1,834 +1,834 @@
 {
-  "AdminPage": {
-    "breadcrumbs": {
-      "home": "Home",
-      "admin": "Admin"
-    },
-    "common": {
-      "perPage": "Per page",
-      "showingResults": "Showing {from}-{to} of {total}",
-      "cancel": "Cancel",
-      "reset": "Reset",
-      "search": "Search",
-      "loading": "Loading...",
-      "noResults": "No results found",
-      "confirmAction": "Are you sure?",
-      "actions": "Actions",
-      "clearSearch": "Clear"
-    },
-    "shell": {
-      "panelLabel": "Admin Panel",
-      "consoleSubtitle": "Management Console",
-      "navigation": "Navigation",
-      "navGroups": {
-        "manage": "Manage",
-        "moderate": "Moderate",
-        "system": "System"
-      },
-      "backToSite": "Back to site",
-      "accountMenu": "Account menu",
-      "settings": "Settings",
-      "profile": "Profile",
-      "logout": "Log out",
-      "unknownUser": "Administrator",
-      "theme": "Theme",
-      "themeLight": "Light",
-      "themeDark": "Dark",
-      "themeSystem": "System",
-      "expandSidebar": "Expand sidebar",
-      "collapseSidebar": "Collapse sidebar",
-      "language": {
-        "english": "🇺🇸 English",
-        "vietnamese": "🇻🇳 Vietnamese"
-      }
-    },
-    "aiStudio": {
-      "title": "AI Content Studio",
-      "description": "Monitor usage, tune Gemini settings, and review all AI generation requests.",
-      "breadcrumb": "AI Studio",
-      "nav": {
-        "overview": "Overview",
-        "promptTemplates": "Prompt Templates",
-        "knowledge": "Knowledge Base"
-      },
-      "tabs": {
-        "metrics": "Metrics",
-        "settings": "Settings",
-        "requests": "Requests"
-      },
-      "metrics": {
-        "periods": {
-          "today": "Today",
-          "week": "This week",
-          "month": "This month"
+    "AdminPage": {
+        "breadcrumbs": {
+            "home": "Home",
+            "admin": "Admin"
         },
-        "stats": {
-          "totalRequests": "Total requests",
-          "successRate": "Success rate",
-          "failed": "Failed",
-          "applyRate": "Apply rate",
-          "uniqueUsers": "Unique users",
-          "estCost": "Est. cost"
+        "common": {
+            "perPage": "Per page",
+            "showingResults": "Showing {from}-{to} of {total}",
+            "cancel": "Cancel",
+            "reset": "Reset",
+            "search": "Search",
+            "loading": "Loading...",
+            "noResults": "No results found",
+            "confirmAction": "Are you sure?",
+            "actions": "Actions",
+            "clearSearch": "Clear"
         },
-        "sub": {
-          "completed": "{count} completed",
-          "failureRate": "{rate}% failure rate",
-          "suggestionsUsed": "Suggestions used",
-          "tokens": "{count} tokens"
+        "shell": {
+            "panelLabel": "Admin Panel",
+            "consoleSubtitle": "Management Console",
+            "navigation": "Navigation",
+            "navGroups": {
+                "manage": "Manage",
+                "moderate": "Moderate",
+                "system": "System"
+            },
+            "backToSite": "Back to site",
+            "accountMenu": "Account menu",
+            "settings": "Settings",
+            "profile": "Profile",
+            "logout": "Log out",
+            "unknownUser": "Administrator",
+            "theme": "Theme",
+            "themeLight": "Light",
+            "themeDark": "Dark",
+            "themeSystem": "System",
+            "expandSidebar": "Expand sidebar",
+            "collapseSidebar": "Collapse sidebar",
+            "language": {
+                "english": "🇺🇸 English",
+                "vietnamese": "🇻🇳 Vietnamese"
+            }
         },
-        "charts": {
-          "dailyRequests": "Daily requests",
-          "completed": "Completed",
-          "failed": "Failed",
-          "intentBreakdown": "Content intent breakdown"
+        "aiStudio": {
+            "title": "AI Content Studio",
+            "description": "Monitor usage, tune Gemini settings, and review all AI generation requests.",
+            "breadcrumb": "AI Studio",
+            "nav": {
+                "overview": "Overview",
+                "promptTemplates": "Prompt Templates",
+                "knowledge": "Knowledge Base"
+            },
+            "tabs": {
+                "metrics": "Metrics",
+                "settings": "Settings",
+                "requests": "Requests"
+            },
+            "metrics": {
+                "periods": {
+                    "today": "Today",
+                    "week": "This week",
+                    "month": "This month"
+                },
+                "stats": {
+                    "totalRequests": "Total requests",
+                    "successRate": "Success rate",
+                    "failed": "Failed",
+                    "applyRate": "Apply rate",
+                    "uniqueUsers": "Unique users",
+                    "estCost": "Est. cost"
+                },
+                "sub": {
+                    "completed": "{count} completed",
+                    "failureRate": "{rate}% failure rate",
+                    "suggestionsUsed": "Suggestions used",
+                    "tokens": "{count} tokens"
+                },
+                "charts": {
+                    "dailyRequests": "Daily requests",
+                    "completed": "Completed",
+                    "failed": "Failed",
+                    "intentBreakdown": "Content intent breakdown"
+                },
+                "empty": {
+                    "noData": "No data available for this period",
+                    "noIntents": "No intent data yet"
+                },
+                "error": "Failed to load metrics. Please try again."
+            },
+            "settings": {
+                "status": {
+                    "enabled": "AI Studio is ENABLED",
+                    "disabled": "AI Studio is DISABLED",
+                    "enabledDescription": "Users can generate AI content suggestions.",
+                    "disabledDescription": "All AI generation requests will be blocked."
+                },
+                "sections": {
+                    "rateLimits": "Rate limits",
+                    "geminiModel": "Gemini model",
+                    "cacheAsync": "Cache & async"
+                },
+                "fields": {
+                    "dailyLimitPerUser": {
+                        "label": "Daily limit per user",
+                        "description": "Max AI requests a single user can make per day"
+                    },
+                    "globalDailyLimit": {
+                        "label": "Global daily limit",
+                        "description": "Max total AI requests across all users per day"
+                    },
+                    "rateLimitPerMinute": {
+                        "label": "Rate limit per minute",
+                        "description": "Throttle per user (API middleware level)"
+                    },
+                    "model": {
+                        "label": "Model",
+                        "description": "Gemini model used for generation"
+                    },
+                    "maxOutputTokens": {
+                        "label": "Max output tokens",
+                        "description": "Max tokens in AI response"
+                    },
+                    "temperature": {
+                        "label": "Temperature",
+                        "description": "Creativity level (0.0 = deterministic, 1.0 = creative)"
+                    },
+                    "timeoutSeconds": {
+                        "label": "Timeout (seconds)",
+                        "description": "Max time to wait for Gemini response"
+                    },
+                    "cacheTtlHours": {
+                        "label": "Cache TTL (hours)",
+                        "description": "How long identical requests are cached"
+                    },
+                    "asyncMode": {
+                        "label": "Async mode",
+                        "description": "Process via queue (recommended) instead of blocking HTTP"
+                    },
+                    "requireMinInput": {
+                        "label": "Require minimum input",
+                        "description": "Block requests with no title/description/transcript/OCR"
+                    }
+                },
+                "lastUpdatedBy": "Last updated by {name}",
+                "buttons": {
+                    "save": "Save settings",
+                    "saving": "Saving..."
+                },
+                "toast": {
+                    "saved": "AI Studio settings saved.",
+                    "error": "Failed to save settings."
+                }
+            },
+            "requests": {
+                "filters": {
+                    "allStatuses": "All statuses",
+                    "pending": "Pending",
+                    "processing": "Processing",
+                    "completed": "Completed",
+                    "failed": "Failed"
+                },
+                "columns": {
+                    "uuid": "UUID",
+                    "user": "User",
+                    "status": "Status",
+                    "intent": "Intent",
+                    "model": "Model",
+                    "tokens": "Tokens",
+                    "cost": "Cost",
+                    "latency": "Latency",
+                    "applied": "Applied",
+                    "created": "Created",
+                    "time": "Time"
+                },
+                "detail": {
+                    "shortCaption": "Short caption",
+                    "hashtags": "Hashtags",
+                    "error": "Error",
+                    "safetyNotes": "Safety notes"
+                },
+                "appliedMark": "✓ Applied",
+                "noRequests": "No requests found.",
+                "total": "{count} total",
+                "pagination": {
+                    "page": "Page {current} of {total}"
+                }
+            },
+            "knowledge": {
+                "title": "Knowledge Base",
+                "description": "Upload documents to build the AI Copilot knowledge base (RAG)",
+                "breadcrumb": "Knowledge Base",
+                "count": "{count, plural, one {# document indexed} other {# documents indexed}}",
+                "addDocument": "Add Document",
+                "newDocument": "New Document",
+                "uploadFile": "Upload File",
+                "pasteText": "Paste Text",
+                "titleLabel": "Title",
+                "titlePlaceholder": "e.g. Snapi Community Guidelines",
+                "descriptionLabel": "Description",
+                "descriptionHint": "(optional, max 500 chars)",
+                "descriptionPlaceholder": "Briefly describe what this document covers so the AI knows when to reference it…",
+                "sourceTypeLabel": "Source Type",
+                "languageLabel": "Language",
+                "fileLabel": "File",
+                "fileHint": "(PDF, TXT, DOCX — max 10 MB)",
+                "contentLabel": "Content",
+                "contentPlaceholder": "Paste your document content here (Markdown supported)…",
+                "cancel": "Cancel",
+                "upload": "Upload",
+                "uploading": "Uploading…",
+                "indexed": "Indexed",
+                "indexing": "Indexing…",
+                "empty": "No documents yet. Upload a PDF, TXT, or DOCX to get started.",
+                "deleteTitle": "Delete document",
+                "deleteDescription": "This will also remove all indexed chunks. This action cannot be undone.",
+                "deleteConfirm": "Delete",
+                "toast": {
+                    "uploaded": "Document uploaded and queued for indexing",
+                    "uploadFailed": "Failed to upload document",
+                    "deleted": "Document deleted",
+                    "deleteFailed": "Failed to delete document",
+                    "titleRequired": "Title is required",
+                    "fileRequired": "Please select a file",
+                    "contentRequired": "Content is required",
+                    "loadFailed": "Failed to load document content"
+                },
+                "sourceTypes": {
+                    "faq": "FAQ",
+                    "guide": "Guide",
+                    "policy": "Policy",
+                    "feature": "Feature Docs",
+                    "other": "Other"
+                },
+                "languages": {
+                    "vi": "Vietnamese",
+                    "en": "English"
+                }
+            },
+            "promptTemplates": {
+                "title": "Prompt Templates",
+                "description": "Manage prompts by AI Copilot gateway, engine, and processing template",
+                "breadcrumb": "Prompt Templates",
+                "lock": "Lock",
+                "unlock": "Unlock",
+                "confirmUnlockTitle": "Unlock template",
+                "confirmUnlockDescription": "Are you sure you want to unlock and edit this template? Changes will affect every AI response that uses this template.",
+                "cancel": "Cancel",
+                "save": "Save",
+                "saving": "Saving…",
+                "active": "Active",
+                "inactive": "Inactive",
+                "unsaved": "Unsaved",
+                "contextNotice": "Context templates are automatically composed into the matching system prompt. Changes can take up to 10 minutes to apply because of cache.",
+                "fields": {
+                    "systemPrompt": "System prompt",
+                    "userTemplate": "User template"
+                },
+                "toast": {
+                    "saved": "Template saved.",
+                    "saveFailed": "Failed to save template.",
+                    "locked": "Template locked.",
+                    "unlocked": "Template unlocked."
+                },
+                "categories": {
+                    "platform": "Platform Context",
+                    "context": "System Context",
+                    "routing": "Gateway & Orchestration",
+                    "data": "Planner & Data Synthesis",
+                    "generative": "Content Generation",
+                    "analysis": "Video Review",
+                    "fallback": "Fallback",
+                    "style": "Style & Tone",
+                    "moderation": "Content Moderation",
+                    "other": "Other"
+                }
+            }
         },
-        "empty": {
-          "noData": "No data available for this period",
-          "noIntents": "No intent data yet"
+        "scheduledPosts": {
+            "title": "Scheduled Posts",
+            "description": "Monitor, control, and audit all creator-scheduled posts across the platform.",
+            "breadcrumb": "Scheduled Posts",
+            "tabs": {
+                "metrics": "Metrics",
+                "requests": "Requests"
+            },
+            "metrics": {
+                "periods": {
+                    "today": "Today",
+                    "week": "This week",
+                    "month": "This month",
+                    "year": "This year"
+                },
+                "stats": {
+                    "totalScheduled": "Total Scheduled",
+                    "pending": "Pending",
+                    "published": "Published",
+                    "failed": "Failed",
+                    "cancelled": "Cancelled",
+                    "successRate": "Success Rate",
+                    "avgDelay": "Avg Publish Delay",
+                    "bySource": "By Source"
+                },
+                "sub": {
+                    "fromScheduledAt": "From scheduled_at → published_at",
+                    "manualCalendar": "Manual / Calendar"
+                },
+                "charts": {
+                    "dailyTrend": "Daily trend",
+                    "published": "Published",
+                    "failed": "Failed",
+                    "cancelled": "Cancelled",
+                    "pending": "Pending"
+                },
+                "topSchedulers": {
+                    "title": "Top Schedulers",
+                    "scheduled": "{count} scheduled",
+                    "published": "{count} published"
+                }
+            },
+            "table": {
+                "filters": {
+                    "allStatuses": "All statuses",
+                    "pending": "Pending",
+                    "processing": "Processing",
+                    "published": "Published",
+                    "failed": "Failed",
+                    "cancelled": "Cancelled",
+                    "allSources": "All sources",
+                    "manual": "Manual",
+                    "calendar": "Calendar",
+                    "userUuidPlaceholder": "User UUID..."
+                },
+                "noResults": "No results.",
+                "labels": {
+                    "scheduled": "Scheduled",
+                    "published": "Published"
+                },
+                "actions": {
+                    "cancel": "Cancel",
+                    "retry": "Retry"
+                },
+                "toast": {
+                    "cancelled": "Schedule cancelled by admin.",
+                    "cancelError": "Failed to cancel schedule.",
+                    "retried": "Schedule re-queued.",
+                    "retryError": "Failed to retry schedule."
+                },
+                "pagination": {
+                    "page": "{current} / {total}"
+                }
+            }
         },
-        "error": "Failed to load metrics. Please try again."
-      },
-      "settings": {
-        "status": {
-          "enabled": "AI Studio is ENABLED",
-          "disabled": "AI Studio is DISABLED",
-          "enabledDescription": "Users can generate AI content suggestions.",
-          "disabledDescription": "All AI generation requests will be blocked."
+        "dashboard": {
+            "title": "Admin Dashboard",
+            "description": "Overview of system state and moderation activity",
+            "statistics": "Statistics",
+            "recentActivity": "Recent Activity",
+            "recentAdminActivity": "Recent admin activity",
+            "viewAll": "View all",
+            "totalUsers": "Total Users",
+            "totalPosts": "Total Videos",
+            "bannedUsers": "Banned Users",
+            "adminActions": "Admin Actions",
+            "thisPeriod": "+{count} this period",
+            "today": "today",
+            "needsReview": "Needs review",
+            "needsReviewSub": "Open moderation queue",
+            "pendingAppeals": "Pending appeals",
+            "charts": "Charts",
+            "userGrowthChart": {
+                "title": "New Users",
+                "description": "Daily new registrations over the last 7 days",
+                "users": "Users"
+            },
+            "contentStatusChart": {
+                "title": "Content Status",
+                "description": "Posts by publish status",
+                "published": "Published",
+                "scheduled": "Scheduled",
+                "draft": "Draft"
+            }
         },
-        "sections": {
-          "rateLimits": "Rate limits",
-          "geminiModel": "Gemini model",
-          "cacheAsync": "Cache & async"
+        "moderation": {
+            "title": "Post Moderation"
         },
-        "fields": {
-          "dailyLimitPerUser": {
-            "label": "Daily limit per user",
-            "description": "Max AI requests a single user can make per day"
-          },
-          "globalDailyLimit": {
-            "label": "Global daily limit",
-            "description": "Max total AI requests across all users per day"
-          },
-          "rateLimitPerMinute": {
-            "label": "Rate limit per minute",
-            "description": "Throttle per user (API middleware level)"
-          },
-          "model": {
-            "label": "Model",
-            "description": "Gemini model used for generation"
-          },
-          "maxOutputTokens": {
-            "label": "Max output tokens",
-            "description": "Max tokens in AI response"
-          },
-          "temperature": {
-            "label": "Temperature",
-            "description": "Creativity level (0.0 = deterministic, 1.0 = creative)"
-          },
-          "timeoutSeconds": {
-            "label": "Timeout (seconds)",
-            "description": "Max time to wait for Gemini response"
-          },
-          "cacheTtlHours": {
-            "label": "Cache TTL (hours)",
-            "description": "How long identical requests are cached"
-          },
-          "asyncMode": {
-            "label": "Async mode",
-            "description": "Process via queue (recommended) instead of blocking HTTP"
-          },
-          "requireMinInput": {
-            "label": "Require minimum input",
-            "description": "Block requests with no title/description/transcript/OCR"
-          }
+        "users": {
+            "title": "User Management",
+            "description": "Manage user status and moderation actions",
+            "emptyState": "No users found",
+            "columns": {
+                "id": "ID",
+                "username": "Username",
+                "email": "Email",
+                "status": "Status",
+                "joinDate": "Join Date",
+                "actions": "Actions"
+            },
+            "filters": {
+                "allStatuses": "All statuses",
+                "active": "Active",
+                "banned": "Banned",
+                "deleted": "Deleted",
+                "recent": "Recent",
+                "oldest": "Oldest"
+            },
+            "actions": {
+                "ban": "Ban",
+                "unban": "Unban",
+                "delete": "Delete",
+                "restore": "Restore",
+                "confirmBan": "Confirm Ban",
+                "confirmUnban": "Confirm Unban",
+                "confirmDelete": "Confirm Delete",
+                "confirmRestore": "Confirm Restore",
+                "resetPassword": "Reset Password",
+                "sendEmail": "Send Email",
+                "viewDetails": "View details"
+            },
+            "detail": {
+                "title": "User Details",
+                "stats": {
+                    "followers": "Followers",
+                    "following": "Following",
+                    "likes": "Likes",
+                    "posts": "Posts"
+                },
+                "fields": {
+                    "email": "Email",
+                    "role": "Role",
+                    "verify": "Verify status",
+                    "createdAt": "Created at",
+                    "bannedAt": "Banned at",
+                    "deletedAt": "Deleted at",
+                    "banReason": "Ban reason",
+                    "status": "Status"
+                }
+            },
+            "labels": {
+                "reason": "Reason",
+                "duration": "Duration (days)",
+                "subject": "Subject",
+                "mailMessage": "Message",
+                "newPassword": "New password",
+                "confirmPassword": "Confirm password"
+            },
+            "placeholders": {
+                "searchUsers": "Search by username or email",
+                "banReason": "Enter ban reason",
+                "deleteReason": "Enter deletion reason",
+                "duration": "Optional duration"
+            },
+            "errors": {
+                "reasonRequired": "Reason is required",
+                "reasonMinLength": "Reason must be at least 10 characters",
+                "durationInvalid": "Duration must be a positive number",
+                "subjectMinLength": "Subject must be at least 3 characters",
+                "messageMinLength": "Message must be at least 10 characters",
+                "passwordMinLength": "Password must be at least 8 characters",
+                "passwordMismatch": "Passwords do not match"
+            },
+            "messages": {
+                "banSuccess": "User banned successfully",
+                "banError": "Failed to ban user",
+                "unbanSuccess": "User unbanned successfully",
+                "unbanError": "Failed to unban user",
+                "deleteSuccess": "User deleted successfully",
+                "deleteError": "Failed to delete user",
+                "restoreSuccess": "User restored successfully",
+                "restoreError": "Failed to restore user",
+                "sendMailSuccess": "Email sent successfully",
+                "sendMailError": "Failed to send email",
+                "resetPasswordSuccess": "Password reset successfully",
+                "resetPasswordError": "Failed to reset password"
+            },
+            "dialogs": {
+                "deleteTitle": "Delete User",
+                "deleteSubtitle": "Delete account for @{username}",
+                "deleteWarning": "This action cannot be undone.",
+                "unbanSubtitle": "Unban account for @{username}",
+                "restoreSubtitle": "Restore account for @{username}",
+                "sendMailSubtitle": "Send a direct email to {username}",
+                "resetPasswordTitle": "Reset User Password",
+                "resetPasswordSubtitle": "Set a new password for @{username}"
+            },
+            "banDialog": {
+                "subtitle": "Ban account for @{username}"
+            },
+            "hints": {
+                "durationHint": "Leave empty for permanent ban"
+            }
         },
-        "lastUpdatedBy": "Last updated by {name}",
-        "buttons": {
-          "save": "Save settings",
-          "saving": "Saving..."
+        "posts": {
+            "title": "Post Moderation",
+            "description": "Review and moderate posts",
+            "emptyState": "No posts found",
+            "columns": {
+                "id": "ID",
+                "video": "Video",
+                "title": "Content",
+                "creator": "Creator",
+                "author": "Author",
+                "views": "Views",
+                "likes": "Likes",
+                "comments": "Comments",
+                "visibility": "Visibility",
+                "status": "Status",
+                "uploadDate": "Created At",
+                "actions": "Actions"
+            },
+            "audience": {
+                "public": "Public",
+                "friends": "Friends",
+                "private": "Private",
+                "following": "Following"
+            },
+            "liveStatus": {
+                "live": "Live",
+                "removed": "Removed"
+            },
+            "filters": {
+                "allStatuses": "All statuses",
+                "visible": "Visible",
+                "recent": "Recent",
+                "oldest": "Oldest"
+            },
+            "status": {
+                "published": "Published",
+                "scheduled": "Scheduled",
+                "draft": "Draft",
+                "failed": "Failed",
+                "archived": "Archived",
+                "hidden": "Hidden",
+                "deleted": "Removed",
+                "live": "Live",
+                "all": "All"
+            },
+            "scheduledSection": {
+                "title": "Scheduled Posts",
+                "description": "Scheduled post metrics and requests"
+            },
+            "actions": {
+                "delete": "Delete",
+                "confirmDelete": "Confirm Delete",
+                "preview": "Preview"
+            },
+            "preview": {
+                "title": "Post Preview",
+                "loading": "Loading preview...",
+                "noMedia": "No media available",
+                "stats": {
+                    "likes": "Likes",
+                    "comments": "Comments",
+                    "bookmarks": "Bookmarks",
+                    "views": "Views"
+                },
+                "fields": {
+                    "content": "Content"
+                }
+            },
+            "labels": {
+                "reason": "Reason",
+                "customReason": "Custom Reason"
+            },
+            "placeholders": {
+                "searchPosts": "Search posts",
+                "selectReason": "Select reason",
+                "customReason": "Enter custom reason"
+            },
+            "reasons": {
+                "other": "Other"
+            },
+            "errors": {
+                "reasonRequired": "Reason is required"
+            },
+            "messages": {
+                "deleteSuccess": "Post deleted successfully",
+                "deleteError": "Failed to delete post"
+            },
+            "dialogs": {
+                "deleteSubtitle": "Delete post from @{username}",
+                "deleteWarning": "This post will be removed from feeds."
+            }
         },
-        "toast": {
-          "saved": "AI Studio settings saved.",
-          "error": "Failed to save settings."
+        "comments": {
+            "title": "Comment Moderation",
+            "description": "Review and moderate comments",
+            "emptyState": "No comments found",
+            "columns": {
+                "id": "ID",
+                "author": "Author",
+                "content": "Content",
+                "parentPost": "Parent Post",
+                "date": "Created At",
+                "actions": "Actions"
+            },
+            "filters": {
+                "recent": "Recent",
+                "oldest": "Oldest"
+            },
+            "actions": {
+                "delete": "Delete",
+                "confirmDelete": "Confirm Delete",
+                "view": "View"
+            },
+            "detail": {
+                "title": "Comment Details",
+                "fields": {
+                    "content": "Content",
+                    "likes": "Likes",
+                    "parentId": "Parent Comment",
+                    "createdAt": "Created at",
+                    "author": "Author"
+                }
+            },
+            "labels": {
+                "reason": "Reason"
+            },
+            "placeholders": {
+                "searchComments": "Search comments",
+                "deleteReason": "Enter deletion reason"
+            },
+            "errors": {
+                "reasonRequired": "Reason is required",
+                "reasonMinLength": "Reason must be at least 10 characters"
+            },
+            "messages": {
+                "deleteSuccess": "Comment deleted successfully",
+                "deleteError": "Failed to delete comment"
+            },
+            "dialogs": {
+                "deleteSubtitle": "Delete comment by @{username}",
+                "deleteWarning": "This action cannot be undone."
+            }
+        },
+        "activity": {
+            "title": "Activity Logs",
+            "description": "View moderation and system activities",
+            "emptyState": "No activity found",
+            "placeholders": {
+                "searchActivity": "Search activity"
+            },
+            "periods": {
+                "last24h": "Last 24 hours",
+                "last7d": "Last 7 days",
+                "last30d": "Last 30 days",
+                "allTime": "All time"
+            },
+            "filters": {
+                "allTypes": "All types"
+            },
+            "prepositions": {
+                "on": "on"
+            },
+            "actions": {
+                "viewDetails": "View details"
+            },
+            "detail": {
+                "title": "Activity Details",
+                "fields": {
+                    "action": "Action",
+                    "actor": "Actor",
+                    "resourceType": "Resource type",
+                    "resourceId": "Resource ID",
+                    "timestamp": "Timestamp",
+                    "reason": "Reason",
+                    "metadata": "Metadata"
+                }
+            }
+        },
+        "settings": {
+            "title": "Admin Settings",
+            "description": "Update your profile and account security settings",
+            "adminNote": "Changes apply to your admin account only.",
+            "tabs": {
+                "profile": "Profile",
+                "security": "Security",
+                "privacy": "Privacy",
+                "email": "Email"
+            }
+        },
+        "appeals": {
+            "title": "Appeal Moderation",
+            "description": "Review and process user appeals",
+            "emptyState": "No appeals found",
+            "filters": {
+                "allStatuses": "All statuses",
+                "allTypes": "All types"
+            },
+            "types": {
+                "user_ban": "User Ban",
+                "user_unban": "User Unban",
+                "user_deleted": "User Deleted",
+                "post_deleted": "Post Deleted",
+                "comment_deleted": "Comment Deleted"
+            },
+            "statuses": {
+                "pending": "Pending",
+                "approved": "Approved",
+                "rejected": "Rejected"
+            },
+            "columns": {
+                "id": "ID",
+                "user": "User",
+                "type": "Appeal Type",
+                "reason": "Reason",
+                "status": "Status",
+                "createdAt": "Created At",
+                "actions": "Actions",
+                "evidence": "Evidence"
+            },
+            "actions": {
+                "approve": "Approve",
+                "reject": "Reject",
+                "viewDetails": "View details"
+            },
+            "detail": {
+                "title": "Appeal Details",
+                "resourceTitle": "Resource",
+                "evidenceTitle": "Evidence",
+                "noEvidence": "No evidence files",
+                "resourceUnavailable": "Resource may be deleted or unavailable",
+                "fields": {
+                    "status": "Status",
+                    "type": "Type",
+                    "reason": "Reason",
+                    "response": "Admin response",
+                    "reviewer": "Reviewer",
+                    "createdAt": "Created at",
+                    "reviewedAt": "Reviewed at",
+                    "resourceType": "Resource type",
+                    "resourceId": "Resource ID"
+                }
+            },
+            "evidenceDialog": {
+                "title": "Appeal Evidence",
+                "imageCount": "Image {current} of {total}",
+                "imageAlt": "Evidence image {index}",
+                "prev": "Previous image",
+                "next": "Next image",
+                "zoomIn": "Zoom in",
+                "zoomOut": "Zoom out",
+                "download": "Download"
+            },
+            "labels": {
+                "adminResponse": "Admin response"
+            },
+            "placeholders": {
+                "searchAppeals": "Search appeals",
+                "approveResponse": "Optional response for appeal approval",
+                "rejectResponse": "Required reason for rejection"
+            },
+            "dialogs": {
+                "approve": "Approve this appeal and reverse the previous moderation action.",
+                "reject": "Reject this appeal and keep the current moderation decision."
+            },
+            "messages": {
+                "approveSuccess": "Appeal approved successfully",
+                "rejectSuccess": "Appeal rejected successfully",
+                "reviewError": "Unable to process appeal",
+                "missingAppealUuid": "Appeal identifier is missing from API response"
+            },
+            "errors": {
+                "rejectReasonMin": "Reject reason must be at least 10 characters"
+            }
+        },
+        "actionLabels": {
+            "ban": "Ban User",
+            "unban": "Unban User",
+            "delete_user": "Delete User",
+            "restore_user": "Restore User",
+            "delete_post": "Delete Post",
+            "restore_post": "Restore Post",
+            "delete_comment": "Delete Comment",
+            "restore_comment": "Restore Comment",
+            "reset_user_password": "Reset Password",
+            "send_email_to_user": "Send Email",
+            "approve_appeal": "Approve Appeal",
+            "reject_appeal": "Reject Appeal",
+            "update": "Update",
+            "user_registered": "User Registered",
+            "user_verified": "User Verified",
+            "user_banned": "User Banned",
+            "user_unbanned": "User Unbanned",
+            "post_uploaded": "Post Uploaded",
+            "post_deleted": "Post Deleted",
+            "post_liked": "Post Liked",
+            "post_unliked": "Post Unliked",
+            "post_bookmarked": "Post Bookmarked",
+            "comment_created": "Comment Created",
+            "comment_deleted": "Comment Deleted",
+            "user_followed": "User Followed",
+            "user_unfollowed": "User Unfollowed",
+            "password_changed": "Password Changed",
+            "login": "Login",
+            "logout": "Logout"
+        },
+        "activitySentence": {
+            "ban": "banned user",
+            "unban": "unbanned user",
+            "delete_user": "deleted user",
+            "restore_user": "restored user",
+            "delete_post": "removed video",
+            "restore_post": "restored video",
+            "delete_comment": "removed comment",
+            "restore_comment": "restored comment",
+            "reset_user_password": "reset password for",
+            "send_email_to_user": "sent email to",
+            "approve_appeal": "approved appeal",
+            "reject_appeal": "rejected appeal",
+            "update": "updated",
+            "you": "You"
+        },
+        "violationReasons": {
+            "spam": "Spam",
+            "harassment": "Harassment",
+            "inappropriate_content": "Inappropriate Content",
+            "copyright_infringement": "Copyright Infringement",
+            "misinformation": "Misinformation",
+            "hate_speech": "Hate Speech",
+            "violence": "Violence",
+            "other": "Other"
+        },
+        "userStatus": {
+            "active": "Active",
+            "banned": "Banned",
+            "deleted": "Deleted"
+        },
+        "postStatus": {
+            "visible": "Visible",
+            "deleted": "Deleted"
         }
-      },
-      "requests": {
-        "filters": {
-          "allStatuses": "All statuses",
-          "pending": "Pending",
-          "processing": "Processing",
-          "completed": "Completed",
-          "failed": "Failed"
-        },
-        "columns": {
-          "uuid": "UUID",
-          "user": "User",
-          "status": "Status",
-          "intent": "Intent",
-          "model": "Model",
-          "tokens": "Tokens",
-          "cost": "Cost",
-          "latency": "Latency",
-          "applied": "Applied",
-          "created": "Created",
-          "time": "Time"
-        },
-        "detail": {
-          "shortCaption": "Short caption",
-          "hashtags": "Hashtags",
-          "error": "Error",
-          "safetyNotes": "Safety notes"
-        },
-        "appliedMark": "✓ Applied",
-        "noRequests": "No requests found.",
-        "total": "{count} total",
-        "pagination": {
-          "page": "Page {current} of {total}"
-        }
-      },
-      "knowledge": {
-        "title": "Knowledge Base",
-        "description": "Upload documents to build the AI Copilot knowledge base (RAG)",
-        "breadcrumb": "Knowledge Base",
-        "count": "{count, plural, one {# document indexed} other {# documents indexed}}",
-        "addDocument": "Add Document",
-        "newDocument": "New Document",
-        "uploadFile": "Upload File",
-        "pasteText": "Paste Text",
-        "titleLabel": "Title",
-        "titlePlaceholder": "e.g. Snapi Community Guidelines",
-        "descriptionLabel": "Description",
-        "descriptionHint": "(optional, max 500 chars)",
-        "descriptionPlaceholder": "Briefly describe what this document covers so the AI knows when to reference it…",
-        "sourceTypeLabel": "Source Type",
-        "languageLabel": "Language",
-        "fileLabel": "File",
-        "fileHint": "(PDF, TXT, DOCX — max 10 MB)",
-        "contentLabel": "Content",
-        "contentPlaceholder": "Paste your document content here (Markdown supported)…",
-        "cancel": "Cancel",
-        "upload": "Upload",
-        "uploading": "Uploading…",
-        "indexed": "Indexed",
-        "indexing": "Indexing…",
-        "empty": "No documents yet. Upload a PDF, TXT, or DOCX to get started.",
-        "deleteTitle": "Delete document",
-        "deleteDescription": "This will also remove all indexed chunks. This action cannot be undone.",
-        "deleteConfirm": "Delete",
-        "toast": {
-          "uploaded": "Document uploaded and queued for indexing",
-          "uploadFailed": "Failed to upload document",
-          "deleted": "Document deleted",
-          "deleteFailed": "Failed to delete document",
-          "titleRequired": "Title is required",
-          "fileRequired": "Please select a file",
-          "contentRequired": "Content is required",
-          "loadFailed": "Failed to load document content"
-        },
-        "sourceTypes": {
-          "faq": "FAQ",
-          "guide": "Guide",
-          "policy": "Policy",
-          "feature": "Feature Docs",
-          "other": "Other"
-        },
-        "languages": {
-          "vi": "Vietnamese",
-          "en": "English"
-        }
-      },
-      "promptTemplates": {
-        "title": "Prompt Templates",
-        "description": "Manage prompts by AI Copilot gateway, engine, and processing template",
-        "breadcrumb": "Prompt Templates",
-        "lock": "Lock",
-        "unlock": "Unlock",
-        "confirmUnlockTitle": "Unlock template",
-        "confirmUnlockDescription": "Are you sure you want to unlock and edit this template? Changes will affect every AI response that uses this template.",
-        "cancel": "Cancel",
-        "save": "Save",
-        "saving": "Saving…",
-        "active": "Active",
-        "inactive": "Inactive",
-        "unsaved": "Unsaved",
-        "contextNotice": "Context templates are automatically composed into the matching system prompt. Changes can take up to 10 minutes to apply because of cache.",
-        "fields": {
-          "systemPrompt": "System prompt",
-          "userTemplate": "User template"
-        },
-        "toast": {
-          "saved": "Template saved.",
-          "saveFailed": "Failed to save template.",
-          "locked": "Template locked.",
-          "unlocked": "Template unlocked."
-        },
-        "categories": {
-          "platform": "Platform Context",
-          "context": "System Context",
-          "routing": "Gateway & Orchestration",
-          "data": "Planner & Data Synthesis",
-          "generative": "Content Generation",
-          "analysis": "Video Review",
-          "fallback": "Fallback",
-          "style": "Style & Tone",
-          "moderation": "Content Moderation",
-          "other": "Other"
-        }
-      }
-    },
-    "scheduledPosts": {
-      "title": "Scheduled Posts",
-      "description": "Monitor, control, and audit all creator-scheduled posts across the platform.",
-      "breadcrumb": "Scheduled Posts",
-      "tabs": {
-        "metrics": "Metrics",
-        "requests": "Requests"
-      },
-      "metrics": {
-        "periods": {
-          "today": "Today",
-          "week": "This week",
-          "month": "This month",
-          "year": "This year"
-        },
-        "stats": {
-          "totalScheduled": "Total Scheduled",
-          "pending": "Pending",
-          "published": "Published",
-          "failed": "Failed",
-          "cancelled": "Cancelled",
-          "successRate": "Success Rate",
-          "avgDelay": "Avg Publish Delay",
-          "bySource": "By Source"
-        },
-        "sub": {
-          "fromScheduledAt": "From scheduled_at → published_at",
-          "manualCalendar": "Manual / Calendar"
-        },
-        "charts": {
-          "dailyTrend": "Daily trend",
-          "published": "Published",
-          "failed": "Failed",
-          "cancelled": "Cancelled",
-          "pending": "Pending"
-        },
-        "topSchedulers": {
-          "title": "Top Schedulers",
-          "scheduled": "{count} scheduled",
-          "published": "{count} published"
-        }
-      },
-      "table": {
-        "filters": {
-          "allStatuses": "All statuses",
-          "pending": "Pending",
-          "processing": "Processing",
-          "published": "Published",
-          "failed": "Failed",
-          "cancelled": "Cancelled",
-          "allSources": "All sources",
-          "manual": "Manual",
-          "calendar": "Calendar",
-          "userUuidPlaceholder": "User UUID..."
-        },
-        "noResults": "No results.",
-        "labels": {
-          "scheduled": "Scheduled",
-          "published": "Published"
-        },
-        "actions": {
-          "cancel": "Cancel",
-          "retry": "Retry"
-        },
-        "toast": {
-          "cancelled": "Schedule cancelled by admin.",
-          "cancelError": "Failed to cancel schedule.",
-          "retried": "Schedule re-queued.",
-          "retryError": "Failed to retry schedule."
-        },
-        "pagination": {
-          "page": "{current} / {total}"
-        }
-      }
-    },
-    "dashboard": {
-      "title": "Admin Dashboard",
-      "description": "Overview of system state and moderation activity",
-      "statistics": "Statistics",
-      "recentActivity": "Recent Activity",
-      "recentAdminActivity": "Recent admin activity",
-      "viewAll": "View all",
-      "totalUsers": "Total Users",
-      "totalPosts": "Total Videos",
-      "bannedUsers": "Banned Users",
-      "adminActions": "Admin Actions",
-      "thisPeriod": "+{count} this period",
-      "today": "today",
-      "needsReview": "Needs review",
-      "needsReviewSub": "Open moderation queue",
-      "pendingAppeals": "Pending appeals",
-      "charts": "Charts",
-      "userGrowthChart": {
-        "title": "New Users",
-        "description": "Daily new registrations over the last 7 days",
-        "users": "Users"
-      },
-      "contentStatusChart": {
-        "title": "Content Status",
-        "description": "Posts by publish status",
-        "published": "Published",
-        "scheduled": "Scheduled",
-        "draft": "Draft"
-      }
-    },
-    "moderation": {
-      "title": "Post Moderation"
-    },
-    "users": {
-      "title": "User Management",
-      "description": "Manage user status and moderation actions",
-      "emptyState": "No users found",
-      "columns": {
-        "id": "ID",
-        "username": "Username",
-        "email": "Email",
-        "status": "Status",
-        "joinDate": "Join Date",
-        "actions": "Actions"
-      },
-      "filters": {
-        "allStatuses": "All statuses",
-        "active": "Active",
-        "banned": "Banned",
-        "deleted": "Deleted",
-        "recent": "Recent",
-        "oldest": "Oldest"
-      },
-      "actions": {
-        "ban": "Ban",
-        "unban": "Unban",
-        "delete": "Delete",
-        "restore": "Restore",
-        "confirmBan": "Confirm Ban",
-        "confirmUnban": "Confirm Unban",
-        "confirmDelete": "Confirm Delete",
-        "confirmRestore": "Confirm Restore",
-        "resetPassword": "Reset Password",
-        "sendEmail": "Send Email",
-        "viewDetails": "View details"
-      },
-      "detail": {
-        "title": "User Details",
-        "stats": {
-          "followers": "Followers",
-          "following": "Following",
-          "likes": "Likes",
-          "posts": "Posts"
-        },
-        "fields": {
-          "email": "Email",
-          "role": "Role",
-          "verify": "Verify status",
-          "createdAt": "Created at",
-          "bannedAt": "Banned at",
-          "deletedAt": "Deleted at",
-          "banReason": "Ban reason",
-          "status": "Status"
-        }
-      },
-      "labels": {
-        "reason": "Reason",
-        "duration": "Duration (days)",
-        "subject": "Subject",
-        "mailMessage": "Message",
-        "newPassword": "New password",
-        "confirmPassword": "Confirm password"
-      },
-      "placeholders": {
-        "searchUsers": "Search by username or email",
-        "banReason": "Enter ban reason",
-        "deleteReason": "Enter deletion reason",
-        "duration": "Optional duration"
-      },
-      "errors": {
-        "reasonRequired": "Reason is required",
-        "reasonMinLength": "Reason must be at least 10 characters",
-        "durationInvalid": "Duration must be a positive number",
-        "subjectMinLength": "Subject must be at least 3 characters",
-        "messageMinLength": "Message must be at least 10 characters",
-        "passwordMinLength": "Password must be at least 8 characters",
-        "passwordMismatch": "Passwords do not match"
-      },
-      "messages": {
-        "banSuccess": "User banned successfully",
-        "banError": "Failed to ban user",
-        "unbanSuccess": "User unbanned successfully",
-        "unbanError": "Failed to unban user",
-        "deleteSuccess": "User deleted successfully",
-        "deleteError": "Failed to delete user",
-        "restoreSuccess": "User restored successfully",
-        "restoreError": "Failed to restore user",
-        "sendMailSuccess": "Email sent successfully",
-        "sendMailError": "Failed to send email",
-        "resetPasswordSuccess": "Password reset successfully",
-        "resetPasswordError": "Failed to reset password"
-      },
-      "dialogs": {
-        "deleteTitle": "Delete User",
-        "deleteSubtitle": "Delete account for @{username}",
-        "deleteWarning": "This action cannot be undone.",
-        "unbanSubtitle": "Unban account for @{username}",
-        "restoreSubtitle": "Restore account for @{username}",
-        "sendMailSubtitle": "Send a direct email to {username}",
-        "resetPasswordTitle": "Reset User Password",
-        "resetPasswordSubtitle": "Set a new password for @{username}"
-      },
-      "banDialog": {
-        "subtitle": "Ban account for @{username}"
-      },
-      "hints": {
-        "durationHint": "Leave empty for permanent ban"
-      }
-    },
-    "posts": {
-      "title": "Post Moderation",
-      "description": "Review and moderate posts",
-      "emptyState": "No posts found",
-      "columns": {
-        "id": "ID",
-        "video": "Video",
-        "title": "Content",
-        "creator": "Creator",
-        "author": "Author",
-        "views": "Views",
-        "likes": "Likes",
-        "comments": "Comments",
-        "visibility": "Visibility",
-        "status": "Status",
-        "uploadDate": "Created At",
-        "actions": "Actions"
-      },
-      "audience": {
-        "public": "Public",
-        "friends": "Friends",
-        "private": "Private",
-        "following": "Following"
-      },
-      "liveStatus": {
-        "live": "Live",
-        "removed": "Removed"
-      },
-      "filters": {
-        "allStatuses": "All statuses",
-        "visible": "Visible",
-        "recent": "Recent",
-        "oldest": "Oldest"
-      },
-      "status": {
-        "published": "Published",
-        "scheduled": "Scheduled",
-        "draft": "Draft",
-        "failed": "Failed",
-        "archived": "Archived",
-        "hidden": "Hidden",
-        "deleted": "Removed",
-        "live": "Live",
-        "all": "All"
-      },
-      "scheduledSection": {
-        "title": "Scheduled Posts",
-        "description": "Scheduled post metrics and requests"
-      },
-      "actions": {
-        "delete": "Delete",
-        "confirmDelete": "Confirm Delete",
-        "preview": "Preview"
-      },
-      "preview": {
-        "title": "Post Preview",
-        "loading": "Loading preview...",
-        "noMedia": "No media available",
-        "stats": {
-          "likes": "Likes",
-          "comments": "Comments",
-          "bookmarks": "Bookmarks",
-          "views": "Views"
-        },
-        "fields": {
-          "content": "Content"
-        }
-      },
-      "labels": {
-        "reason": "Reason",
-        "customReason": "Custom Reason"
-      },
-      "placeholders": {
-        "searchPosts": "Search posts",
-        "selectReason": "Select reason",
-        "customReason": "Enter custom reason"
-      },
-      "reasons": {
-        "other": "Other"
-      },
-      "errors": {
-        "reasonRequired": "Reason is required"
-      },
-      "messages": {
-        "deleteSuccess": "Post deleted successfully",
-        "deleteError": "Failed to delete post"
-      },
-      "dialogs": {
-        "deleteSubtitle": "Delete post from @{username}",
-        "deleteWarning": "This post will be removed from feeds."
-      }
-    },
-    "comments": {
-      "title": "Comment Moderation",
-      "description": "Review and moderate comments",
-      "emptyState": "No comments found",
-      "columns": {
-        "id": "ID",
-        "author": "Author",
-        "content": "Content",
-        "parentPost": "Parent Post",
-        "date": "Created At",
-        "actions": "Actions"
-      },
-      "filters": {
-        "recent": "Recent",
-        "oldest": "Oldest"
-      },
-      "actions": {
-        "delete": "Delete",
-        "confirmDelete": "Confirm Delete",
-        "view": "View"
-      },
-      "detail": {
-        "title": "Comment Details",
-        "fields": {
-          "content": "Content",
-          "likes": "Likes",
-          "parentId": "Parent Comment",
-          "createdAt": "Created at",
-          "author": "Author"
-        }
-      },
-      "labels": {
-        "reason": "Reason"
-      },
-      "placeholders": {
-        "searchComments": "Search comments",
-        "deleteReason": "Enter deletion reason"
-      },
-      "errors": {
-        "reasonRequired": "Reason is required",
-        "reasonMinLength": "Reason must be at least 10 characters"
-      },
-      "messages": {
-        "deleteSuccess": "Comment deleted successfully",
-        "deleteError": "Failed to delete comment"
-      },
-      "dialogs": {
-        "deleteSubtitle": "Delete comment by @{username}",
-        "deleteWarning": "This action cannot be undone."
-      }
-    },
-    "activity": {
-      "title": "Activity Logs",
-      "description": "View moderation and system activities",
-      "emptyState": "No activity found",
-      "placeholders": {
-        "searchActivity": "Search activity"
-      },
-      "periods": {
-        "last24h": "Last 24 hours",
-        "last7d": "Last 7 days",
-        "last30d": "Last 30 days",
-        "allTime": "All time"
-      },
-      "filters": {
-        "allTypes": "All types"
-      },
-      "prepositions": {
-        "on": "on"
-      },
-      "actions": {
-        "viewDetails": "View details"
-      },
-      "detail": {
-        "title": "Activity Details",
-        "fields": {
-          "action": "Action",
-          "actor": "Actor",
-          "resourceType": "Resource type",
-          "resourceId": "Resource ID",
-          "timestamp": "Timestamp",
-          "reason": "Reason",
-          "metadata": "Metadata"
-        }
-      }
-    },
-    "settings": {
-      "title": "Admin Settings",
-      "description": "Update your profile and account security settings",
-      "adminNote": "Changes apply to your admin account only.",
-      "tabs": {
-        "profile": "Profile",
-        "security": "Security",
-        "privacy": "Privacy",
-        "email": "Email"
-      }
-    },
-    "appeals": {
-      "title": "Appeal Moderation",
-      "description": "Review and process user appeals",
-      "emptyState": "No appeals found",
-      "filters": {
-        "allStatuses": "All statuses",
-        "allTypes": "All types"
-      },
-      "types": {
-        "user_ban": "User Ban",
-        "user_unban": "User Unban",
-        "user_deleted": "User Deleted",
-        "post_deleted": "Post Deleted",
-        "comment_deleted": "Comment Deleted"
-      },
-      "statuses": {
-        "pending": "Pending",
-        "approved": "Approved",
-        "rejected": "Rejected"
-      },
-      "columns": {
-        "id": "ID",
-        "user": "User",
-        "type": "Appeal Type",
-        "reason": "Reason",
-        "status": "Status",
-        "createdAt": "Created At",
-        "actions": "Actions",
-        "evidence": "Evidence"
-      },
-      "actions": {
-        "approve": "Approve",
-        "reject": "Reject",
-        "viewDetails": "View details"
-      },
-      "detail": {
-        "title": "Appeal Details",
-        "resourceTitle": "Resource",
-        "evidenceTitle": "Evidence",
-        "noEvidence": "No evidence files",
-        "resourceUnavailable": "Resource may be deleted or unavailable",
-        "fields": {
-          "status": "Status",
-          "type": "Type",
-          "reason": "Reason",
-          "response": "Admin response",
-          "reviewer": "Reviewer",
-          "createdAt": "Created at",
-          "reviewedAt": "Reviewed at",
-          "resourceType": "Resource type",
-          "resourceId": "Resource ID"
-        }
-      },
-      "evidenceDialog": {
-        "title": "Appeal Evidence",
-        "imageCount": "Image {current} of {total}",
-        "imageAlt": "Evidence image {index}",
-        "prev": "Previous image",
-        "next": "Next image",
-        "zoomIn": "Zoom in",
-        "zoomOut": "Zoom out",
-        "download": "Download"
-      },
-      "labels": {
-        "adminResponse": "Admin response"
-      },
-      "placeholders": {
-        "searchAppeals": "Search appeals",
-        "approveResponse": "Optional response for appeal approval",
-        "rejectResponse": "Required reason for rejection"
-      },
-      "dialogs": {
-        "approve": "Approve this appeal and reverse the previous moderation action.",
-        "reject": "Reject this appeal and keep the current moderation decision."
-      },
-      "messages": {
-        "approveSuccess": "Appeal approved successfully",
-        "rejectSuccess": "Appeal rejected successfully",
-        "reviewError": "Unable to process appeal",
-        "missingAppealUuid": "Appeal identifier is missing from API response"
-      },
-      "errors": {
-        "rejectReasonMin": "Reject reason must be at least 10 characters"
-      }
-    },
-    "actionLabels": {
-      "ban": "Ban User",
-      "unban": "Unban User",
-      "delete_user": "Delete User",
-      "restore_user": "Restore User",
-      "delete_post": "Delete Post",
-      "restore_post": "Restore Post",
-      "delete_comment": "Delete Comment",
-      "restore_comment": "Restore Comment",
-      "reset_user_password": "Reset Password",
-      "send_email_to_user": "Send Email",
-      "approve_appeal": "Approve Appeal",
-      "reject_appeal": "Reject Appeal",
-      "update": "Update",
-      "user_registered": "User Registered",
-      "user_verified": "User Verified",
-      "user_banned": "User Banned",
-      "user_unbanned": "User Unbanned",
-      "post_uploaded": "Post Uploaded",
-      "post_deleted": "Post Deleted",
-      "post_liked": "Post Liked",
-      "post_unliked": "Post Unliked",
-      "post_bookmarked": "Post Bookmarked",
-      "comment_created": "Comment Created",
-      "comment_deleted": "Comment Deleted",
-      "user_followed": "User Followed",
-      "user_unfollowed": "User Unfollowed",
-      "password_changed": "Password Changed",
-      "login": "Login",
-      "logout": "Logout"
-    },
-    "activitySentence": {
-      "ban": "banned user",
-      "unban": "unbanned user",
-      "delete_user": "deleted user",
-      "restore_user": "restored user",
-      "delete_post": "removed video",
-      "restore_post": "restored video",
-      "delete_comment": "removed comment",
-      "restore_comment": "restored comment",
-      "reset_user_password": "reset password for",
-      "send_email_to_user": "sent email to",
-      "approve_appeal": "approved appeal",
-      "reject_appeal": "rejected appeal",
-      "update": "updated",
-      "you": "You"
-    },
-    "violationReasons": {
-      "spam": "Spam",
-      "harassment": "Harassment",
-      "inappropriate_content": "Inappropriate Content",
-      "copyright_infringement": "Copyright Infringement",
-      "misinformation": "Misinformation",
-      "hate_speech": "Hate Speech",
-      "violence": "Violence",
-      "other": "Other"
-    },
-    "userStatus": {
-      "active": "Active",
-      "banned": "Banned",
-      "deleted": "Deleted"
-    },
-    "postStatus": {
-      "visible": "Visible",
-      "deleted": "Deleted"
     }
-  }
 }

@@ -206,7 +206,7 @@ export function useUploadFormManager() {
                     scheduled_at: new Date(scheduledAt).toISOString(),
                     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
                 }).unwrap()
-                toast.success('Bài đăng đã được hẹn giờ thành công!', { position: 'top-center' })
+                toast.success(t('toast.scheduled'), { position: 'top-center' })
             } else {
                 toast.success(res.message, { position: 'top-center' })
             }
@@ -241,12 +241,12 @@ export function useUploadFormManager() {
                 mentions: undefined,
                 medias: [{ type: mediaType, session_uuid: sessionUuid }],
                 thumbnail: thumbnailId,
-                save_as_draft: true as const,
+                save_as_draft: true as const
             }
 
             await createPost(body).unwrap()
             postCreatedRef.current = true
-            toast.success('Bài đăng đã được lưu nháp!', { position: 'top-center' })
+            toast.success(t('toast.draftSaved'), { position: 'top-center' })
             scheduledAtRef.current = null
             onReset()
             router.push(SNAPISTUDIO_ROUTES.CONTENT)

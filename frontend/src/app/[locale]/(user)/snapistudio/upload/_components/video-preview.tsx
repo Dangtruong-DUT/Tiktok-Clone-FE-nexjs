@@ -17,14 +17,14 @@ import RichTextContent from '@/components/common/rich-text-content'
 
 interface SeekTarget {
     time: number
-    key:  number
+    key: number
 }
 
 interface VideoPreviewProps {
-    videoSrc:  string | null
-    content:   string
+    videoSrc: string | null
+    content: string
     className?: string
-    seekTo?:   SeekTarget | null
+    seekTo?: SeekTarget | null
 }
 
 export default function VideoPreview({ videoSrc, content, className, seekTo }: VideoPreviewProps) {

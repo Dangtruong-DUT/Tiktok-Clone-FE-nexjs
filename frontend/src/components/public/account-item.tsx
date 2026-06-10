@@ -20,9 +20,12 @@ export default function AccountItem({
 }: AccountItemProps) {
     return (
         <div
-            className={cn('transition-all duration-300 ease-in-out p-2 rounded-xl hover:bg-accent hover:scale-[1.02] active:scale-[0.98] group', {
-                className
-            })}
+            className={cn(
+                'transition-all duration-300 ease-in-out p-2 rounded-xl hover:bg-accent hover:scale-[1.02] active:scale-[0.98] group',
+                {
+                    className
+                }
+            )}
         >
             <div className='flex items-center space-x-3'>
                 <div className='relative'>

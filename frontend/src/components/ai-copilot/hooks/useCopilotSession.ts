@@ -19,7 +19,7 @@ export function useCopilotSession(options: UseCopilotSessionOptions = {}) {
     const [startSession, { isLoading: isStarting }] = useStartSessionMutation()
 
     const { data: sessionData, isLoading: isLoadingSession } = useGetSessionQuery(sessionUuid!, {
-        skip: !sessionUuid,
+        skip: !sessionUuid
     })
 
     const session = sessionData?.data ?? null
@@ -32,15 +32,15 @@ export function useCopilotSession(options: UseCopilotSessionOptions = {}) {
             try {
                 const res = await startSession({
                     context_snapshot: {
-                        video_title:       videoContext.video_title,
+                        video_title: videoContext.video_title,
                         video_description: videoContext.video_description,
-                        video_category:    videoContext.video_category,
-                        video_transcript:  videoContext.video_transcript,
-                        ocr_text:          videoContext.ocr_text,
-                        creator_language:  videoContext.creator_language ?? 'vi',
-                        upload_session_uuid: videoContext.upload_session_uuid,
+                        video_category: videoContext.video_category,
+                        video_transcript: videoContext.video_transcript,
+                        ocr_text: videoContext.ocr_text,
+                        creator_language: videoContext.creator_language ?? 'vi',
+                        upload_session_uuid: videoContext.upload_session_uuid
                     },
-                    ...extra,
+                    ...extra
                 }).unwrap()
 
                 setSessionUuid(res.data.uuid)
@@ -49,7 +49,7 @@ export function useCopilotSession(options: UseCopilotSessionOptions = {}) {
                 startedRef.current = false
             }
         },
-        [startSession, videoContext, options],
+        [startSession, videoContext, options]
     )
 
     const reset = useCallback(() => {
@@ -69,6 +69,6 @@ export function useCopilotSession(options: UseCopilotSessionOptions = {}) {
         sessionUuid,
         isLoading: isStarting || isLoadingSession,
         start,
-        reset,
+        reset
     }
 }

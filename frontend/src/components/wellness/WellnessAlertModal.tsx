@@ -6,8 +6,8 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { suppressRule, snoozeRule } from '@/store/features/wellnessSlice'
 
 export function WellnessAlertModal() {
-    const dispatch    = useAppDispatch()
-    const isVisible   = useAppSelector((s) => s.wellness.isAlertVisible)
+    const dispatch = useAppDispatch()
+    const isVisible = useAppSelector((s) => s.wellness.isAlertVisible)
     const activeAlert = useAppSelector((s) => s.wellness.activeAlert)
 
     if (!isVisible || !activeAlert) return null
@@ -21,19 +21,12 @@ export function WellnessAlertModal() {
                     </div>
                 </div>
 
-                <h2 className='text-center text-base font-semibold text-foreground'>
-                    {activeAlert.title}
-                </h2>
+                <h2 className='text-center text-base font-semibold text-foreground'>{activeAlert.title}</h2>
 
-                <p className='mt-2 text-center text-sm text-muted-foreground leading-relaxed'>
-                    {activeAlert.message}
-                </p>
+                <p className='mt-2 text-center text-sm text-muted-foreground leading-relaxed'>{activeAlert.message}</p>
 
                 <div className='mt-5 flex flex-col gap-2'>
-                    <Button
-                        onClick={() => dispatch(snoozeRule(activeAlert.ruleUuid))}
-                        className='w-full gap-2'
-                    >
+                    <Button onClick={() => dispatch(snoozeRule(activeAlert.ruleUuid))} className='w-full gap-2'>
                         <Coffee size={15} />
                         Nhắc lại sau 10 phút
                     </Button>

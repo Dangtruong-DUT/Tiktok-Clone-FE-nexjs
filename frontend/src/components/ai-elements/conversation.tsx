@@ -7,11 +7,9 @@ import { ArrowDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
-
 export type ConversationProps = ComponentProps<typeof StickToBottom>
 export type ConversationContentProps = ComponentProps<typeof StickToBottom.Content>
 export type ConversationScrollButtonProps = ComponentProps<typeof Button>
-
 
 export function Conversation({ className, ...props }: ConversationProps) {
     return (
@@ -26,12 +24,7 @@ export function Conversation({ className, ...props }: ConversationProps) {
 }
 
 export function ConversationContent({ className, ...props }: ConversationContentProps) {
-    return (
-        <StickToBottom.Content
-            className={cn('flex flex-col gap-4 p-4', className)}
-            {...props}
-        />
-    )
+    return <StickToBottom.Content className={cn('flex flex-col gap-4 p-4', className)} {...props} />
 }
 
 export function ConversationScrollButton({ className, ...props }: ConversationScrollButtonProps) {
@@ -45,10 +38,7 @@ export function ConversationScrollButton({ className, ...props }: ConversationSc
 
     return (
         <Button
-            className={cn(
-                'absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full shadow-md',
-                className
-            )}
+            className={cn('absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full shadow-md', className)}
             onClick={handleClick}
             size='icon'
             type='button'

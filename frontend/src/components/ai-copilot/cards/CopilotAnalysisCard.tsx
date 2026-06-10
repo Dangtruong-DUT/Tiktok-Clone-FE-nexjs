@@ -13,13 +13,13 @@ interface CopilotAnalysisCardProps {
 
 export function CopilotAnalysisCard({ content, isStreaming, streamingContent, className }: CopilotAnalysisCardProps) {
     const displayText = isStreaming ? (streamingContent ?? '') : content
-    const isWaiting   = isStreaming && !displayText
+    const isWaiting = isStreaming && !displayText
 
     return (
         <div className={cn('min-w-0', className)}>
             {isWaiting ? (
                 <div className='inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl rounded-tl-sm bg-muted'>
-                    {BOUNCE_DOT_INDEXES.map(i => (
+                    {BOUNCE_DOT_INDEXES.map((i) => (
                         <span
                             key={i}
                             className='size-1.5 rounded-full bg-muted-foreground/70 animate-bounce'

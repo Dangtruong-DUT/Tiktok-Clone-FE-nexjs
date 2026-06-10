@@ -18,6 +18,7 @@ export const GetMyAppealsParamsSchema = z
         per_page: z.number().int().positive().optional(),
         appeal_status: AppealStatusSchema.optional(),
         appeal_type: AppealTypeSchema.optional(),
+        q: z.string().trim().min(1).optional(),
         order_by: z.array(z.enum(['created_at', '-created_at'])).optional()
     })
     .strict()

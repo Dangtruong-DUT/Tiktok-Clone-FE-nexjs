@@ -5,48 +5,54 @@ import type { ScreenTimeStatsType, ScreenTimeDailySeries, StartSessionResponse }
 import type { ApiSuccessResponseWithData } from '@/types/common/http-response.type'
 
 export const ScreenTimeApi = createApi({
-    reducerPath:       'screenTimeApi',
-    baseQuery:         baseQueryWithReauth,
-    tagTypes:          ['ScreenTime'],
+    reducerPath: 'screenTimeApi',
+    baseQuery: baseQueryWithReauth,
+    tagTypes: ['ScreenTime'],
     keepUnusedDataFor: 60,
     endpoints: (builder) => ({
         getStats: builder.query<ApiSuccessResponseWithData<ScreenTimeStatsType>, { period?: string }>({
             query: ({ period = 'today' }) => ({
-                url:    BACKEND_API_ENDPOINT.WELLNESS.STATS,
-                params: { period },
+                url: BACKEND_API_ENDPOINT.WELLNESS.STATS,
+                params: { period }
             }),
-            providesTags: ['ScreenTime'],
+            providesTags: ['ScreenTime']
         }),
 
-        getHistory: builder.query<ApiSuccessResponseWithData<ScreenTimeDailySeries[]>, { date_from?: string; date_to?: string }>({
-            query: (params) => ({ url: BACKEND_API_ENDPOINT.WELLNESS.HISTORY, params }),
+        getHistory: builder.query<
+            ApiSuccessResponseWithData<ScreenTimeDailySeries[]>,
+            { date_from?: string; date_to?: string }
+        >({
+            query: (params) => ({ url: BACKEND_API_ENDPOINT.WELLNESS.HISTORY, params })
         }),
 
         startSession: builder.mutation<ApiSuccessResponseWithData<StartSessionResponse>, void>({
-            query: () => ({ url: BACKEND_API_ENDPOINT.WELLNESS.SESSION_START, method: 'POST' }),
+            query: () => ({ url: BACKEND_API_ENDPOINT.WELLNESS.SESSION_START, method: 'POST' })
         }),
 
         sendHeartbeat: builder.mutation<ApiSuccessResponseWithData<null>, string>({
-            query: (uuid) => ({ url: BACKEND_API_ENDPOINT.WELLNESS.HEARTBEAT(uuid), method: 'POST' }),
+            query: (uuid) => ({ url: BACKEND_API_ENDPOINT.WELLNESS.HEARTBEAT(uuid), method: 'POST' })
         }),
 
-        updateVideoTime: builder.mutation<ApiSuccessResponseWithData<{ video_seconds: number }>, { uuid: string; video_seconds: number }>({
+        updateVideoTime: builder.mutation<
+            ApiSuccessResponseWithData<{ video_seconds: number }>,
+            { uuid: string; video_seconds: number }
+        >({
             query: ({ uuid, video_seconds }) => ({
-                url:    BACKEND_API_ENDPOINT.WELLNESS.VIDEO_TIME(uuid),
+                url: BACKEND_API_ENDPOINT.WELLNESS.VIDEO_TIME(uuid),
                 method: 'POST',
-                body:   { video_seconds },
-            }),
+                body: { video_seconds }
+            })
         }),
 
         endSession: builder.mutation<ApiSuccessResponseWithData<null>, { uuid: string; duration_seconds: number }>({
             query: ({ uuid, duration_seconds }) => ({
-                url:    BACKEND_API_ENDPOINT.WELLNESS.SESSION_END(uuid),
+                url: BACKEND_API_ENDPOINT.WELLNESS.SESSION_END(uuid),
                 method: 'POST',
-                body:   { duration_seconds },
+                body: { duration_seconds }
             }),
-            invalidatesTags: ['ScreenTime'],
-        }),
-    }),
+            invalidatesTags: ['ScreenTime']
+        })
+    })
 })
 
 export const {
@@ -55,5 +61,5 @@ export const {
     useStartSessionMutation,
     useSendHeartbeatMutation,
     useUpdateVideoTimeMutation,
-    useEndSessionMutation,
+    useEndSessionMutation
 } = ScreenTimeApi

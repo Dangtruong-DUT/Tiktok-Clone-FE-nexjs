@@ -58,11 +58,16 @@ export default function NavLinks({ collapsed, onToggle }: NavLinksProps) {
                             </button>
                         ) : (
                             <div className='flex w-full items-center justify-between'>
-                                <Link href={SNAPISTUDIO_ROUTES.ROOT} className='group flex min-w-0 items-center gap-2.5'>
+                                <Link
+                                    href={SNAPISTUDIO_ROUTES.ROOT}
+                                    className='group flex min-w-0 items-center gap-2.5'
+                                >
                                     <SmallLogo className='h-7 w-7 shrink-0' />
                                     <div className='min-w-0'>
                                         <p className='truncate text-sm font-bold leading-none text-white'>snapi</p>
-                                        <p className='mt-[3px] truncate text-[10px] leading-none text-zinc-400'>Studio</p>
+                                        <p className='mt-[3px] truncate text-[10px] leading-none text-zinc-400'>
+                                            Studio
+                                        </p>
                                     </div>
                                 </Link>
                                 <button
@@ -87,7 +92,11 @@ export default function NavLinks({ collapsed, onToggle }: NavLinksProps) {
                                             href={SNAPISTUDIO_ROUTES.UPLOAD}
                                             className={cn(
                                                 'mb-2 flex h-9 w-full items-center justify-center rounded-xl bg-orange-500 text-white hover:bg-orange-400 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]',
-                                                { 'opacity-40 pointer-events-none': pathname.includes(SNAPISTUDIO_ROUTES.UPLOAD) }
+                                                {
+                                                    'opacity-40 pointer-events-none': pathname.includes(
+                                                        SNAPISTUDIO_ROUTES.UPLOAD
+                                                    )
+                                                }
                                             )}
                                         >
                                             <Plus className='h-4 w-4' />
@@ -99,14 +108,20 @@ export default function NavLinks({ collapsed, onToggle }: NavLinksProps) {
                                 <>
                                     <Link
                                         href={SNAPISTUDIO_ROUTES.UPLOAD}
-                                        className={cn({ 'pointer-events-none': pathname.includes(SNAPISTUDIO_ROUTES.UPLOAD) })}
+                                        className={cn({
+                                            'pointer-events-none': pathname.includes(SNAPISTUDIO_ROUTES.UPLOAD)
+                                        })}
                                     >
                                         <button
                                             disabled={pathname.includes(SNAPISTUDIO_ROUTES.UPLOAD)}
                                             className={cn(
                                                 'mb-2 w-full flex items-center justify-center gap-1.5 rounded-xl py-2 text-sm font-semibold',
                                                 'bg-orange-500 text-white hover:bg-orange-400 transition-colors',
-                                                { 'opacity-40 cursor-not-allowed': pathname.includes(SNAPISTUDIO_ROUTES.UPLOAD) }
+                                                {
+                                                    'opacity-40 cursor-not-allowed': pathname.includes(
+                                                        SNAPISTUDIO_ROUTES.UPLOAD
+                                                    )
+                                                }
                                             )}
                                         >
                                             <Plus className='size-4' />
@@ -261,7 +276,9 @@ export default function NavLinks({ collapsed, onToggle }: NavLinksProps) {
                                         {t('back')}
                                     </span>
                                 </Link>
-                                <p className='px-2.5 text-[10px] text-zinc-600'>© {new Date().getFullYear()} snapi · Studio</p>
+                                <p className='px-2.5 text-[10px] text-zinc-600'>
+                                    © {new Date().getFullYear()} snapi · Studio
+                                </p>
                             </>
                         )}
                     </div>

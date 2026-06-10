@@ -124,7 +124,6 @@ class AiStudioAdminService
             ->paginate((int) ($filters['per_page'] ?? 20));
     }
 
-    // ─── Private helpers ─────────────────────────────────────────────────────
 
     /** @return array<string,int> */
     private function intentBreakdown(Carbon $from): array

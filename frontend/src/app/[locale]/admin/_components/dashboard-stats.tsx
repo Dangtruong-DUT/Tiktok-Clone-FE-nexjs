@@ -28,7 +28,7 @@ const STAT_CARDS: StatCardConfig[] = [
         subKey: 'dashboard.thisPeriod',
         icon: Users,
         iconClass: 'text-blue-400',
-        subClass: 'text-blue-400',
+        subClass: 'text-blue-400'
     },
     {
         titleKey: 'dashboard.totalPosts',
@@ -37,7 +37,7 @@ const STAT_CARDS: StatCardConfig[] = [
         subKey: 'dashboard.thisPeriod',
         icon: Video,
         iconClass: 'text-purple-400',
-        subClass: 'text-purple-400',
+        subClass: 'text-purple-400'
     },
     {
         titleKey: 'dashboard.bannedUsers',
@@ -46,7 +46,7 @@ const STAT_CARDS: StatCardConfig[] = [
         subKey: null,
         icon: ShieldOff,
         iconClass: 'text-red-400',
-        subClass: 'text-red-400',
+        subClass: 'text-red-400'
     },
     {
         titleKey: 'dashboard.adminActions',
@@ -55,8 +55,8 @@ const STAT_CARDS: StatCardConfig[] = [
         subKey: 'dashboard.today',
         icon: Activity,
         iconClass: 'text-emerald-400',
-        subClass: 'text-emerald-400',
-    },
+        subClass: 'text-emerald-400'
+    }
 ]
 
 interface DashboardStatsProps {
@@ -89,7 +89,10 @@ export function DashboardStats({ stats, period = 'today' }: DashboardStatsProps)
                 const subValue = card.getSubValue(resolvedStats)
 
                 return (
-                    <Card key={card.titleKey} className='bg-card border-border/50 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 ease-out'>
+                    <Card
+                        key={card.titleKey}
+                        className='bg-card border-border/50 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 ease-out'
+                    >
                         <CardContent className='p-5'>
                             <div className='flex items-start justify-between'>
                                 <div className='min-w-0'>

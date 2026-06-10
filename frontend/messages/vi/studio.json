@@ -98,13 +98,30 @@
                 "columns": {
                     "content": "Nội dung",
                     "privacy": "Quyền riêng tư",
+                    "status": "Trạng thái",
+                    "scheduledAt": "Dự kiến đăng",
+                    "publishedAt": "Đã đăng lúc",
+                    "createdAt": "Tạo lúc",
+                    "contentThumbnailAlt": "Ảnh thu nhỏ của bài đăng",
                     "views": "Lượt xem",
                     "comments": "Bình luận",
                     "actions": "Thao tác"
                 },
                 "actions": {
                     "edit": "Chỉnh sửa",
-                    "delete": "Xóa"
+                    "delete": "Xóa",
+                    "publishNow": "Đăng ngay",
+                    "cancelSchedule": "Huỷ lịch đăng"
+                },
+                "messages": {
+                    "publishFailed": "Không thể đăng bài. Vui lòng thử lại.",
+                    "cancelScheduleFailed": "Không thể huỷ lịch. Vui lòng thử lại."
+                },
+                "deleteDialog": {
+                    "title": "Xóa bài đăng?",
+                    "description": "Bài đăng này sẽ bị xóa vĩnh viễn và không thể khôi phục.",
+                    "confirm": "Xóa",
+                    "failed": "Không thể xóa bài đăng."
                 }
             },
             "search": {
@@ -122,6 +139,20 @@
                     "friends": "Bạn bè",
                     "private": "Riêng tư",
                     "unknown": "Không xác định"
+                },
+                "statusPlaceholder": "Lọc theo trạng thái",
+                "status": {
+                    "all": "Tất cả trạng thái",
+                    "draft": "Bản nháp",
+                    "scheduled": "Đã lên lịch",
+                    "published": "Đã đăng",
+                    "failed": "Thất bại"
+                },
+                "schedulePlaceholder": "Lọc theo lịch đăng",
+                "schedule": {
+                    "all": "Tất cả bài",
+                    "scheduled": "Bài đã lên lịch",
+                    "unscheduled": "Bài chưa lên lịch"
                 }
             },
             "emptyState": "Không tìm thấy bài viết nào.",
@@ -197,7 +228,12 @@
                 "description": "Cập nhật thông tin cá nhân và ảnh đại diện của bạn",
                 "upload": "Tải lên",
                 "defaultUser": "USER",
+                "avatarFallback": "U",
                 "fullNameLabel": "Họ và tên",
+                "usernameLabel": "Tên người dùng",
+                "bioLabel": "Tiểu sử",
+                "bioPlaceholder": "Giới thiệu ngắn gọn cho người xem",
+                "avatarHint": "JPG hoặc PNG · tối đa 4MB",
                 "cancel": "Hủy",
                 "save": "Lưu",
                 "validation": {
@@ -316,11 +352,16 @@
             "maxDuration": "Thời lượng tối đa 60 phút",
             "selectFile": "Chọn tệp",
             "selectedFile": "Tệp đã chọn",
+            "page": {
+                "title": "Tải video lên",
+                "description": "Tải video lên và chuẩn bị cho việc xuất bản"
+            },
             "thumbnailUpload": {
                 "dragAndDrop": "Kéo và thả tệp vào đây",
                 "or": "hoặc",
                 "selectFile": "chọn tệp",
                 "supportedFormats": "Định dạng hỗ trợ: JPG, JPEG và PNG.",
+                "previewAlt": "Xem trước ảnh thumbnail đã chọn",
                 "uploadNew": "Tải ảnh mới",
                 "confirm": "Xác nhận",
                 "validation": {
@@ -372,7 +413,14 @@
             "buttons": {
                 "post": "Đăng",
                 "discard": "Hủy",
-                "waitEncoding": "Đang chờ mã hóa..."
+                "waitEncoding": "Đang chờ mã hóa...",
+                "update": "Cập nhật",
+                "cancel": "Hủy"
+            },
+            "toast": {
+                "updated": "Đã cập nhật bài đăng",
+                "scheduled": "Đã hẹn giờ bài đăng",
+                "draftSaved": "Đã lưu bài đăng nháp"
             }
         },
         "aiStudio": {

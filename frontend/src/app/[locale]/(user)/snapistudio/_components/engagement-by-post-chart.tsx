@@ -63,13 +63,7 @@ export function EngagementByPostChart() {
                 <ChartContainer config={chartConfig} className='h-[160px] w-full'>
                     <BarChart data={chartData} margin={{ left: 4, right: 4, top: 4, bottom: 4 }}>
                         <CartesianGrid vertical={false} strokeDasharray='3 3' />
-                        <XAxis
-                            dataKey='label'
-                            tickLine={false}
-                            axisLine={false}
-                            tick={{ fontSize: 9 }}
-                            interval={0}
-                        />
+                        <XAxis dataKey='label' tickLine={false} axisLine={false} tick={{ fontSize: 9 }} interval={0} />
                         <YAxis
                             tickLine={false}
                             axisLine={false}
@@ -79,10 +73,7 @@ export function EngagementByPostChart() {
                         />
                         <ChartTooltip
                             content={
-                                <ChartTooltipContent
-                                    nameKey='label'
-                                    formatter={(v) => [`${v}%`, t('engagement')]}
-                                />
+                                <ChartTooltipContent nameKey='label' formatter={(v) => [`${v}%`, t('engagement')]} />
                             }
                         />
                         <Bar dataKey='engagement' fill='var(--color-engagement)' radius={[4, 4, 0, 0]} />

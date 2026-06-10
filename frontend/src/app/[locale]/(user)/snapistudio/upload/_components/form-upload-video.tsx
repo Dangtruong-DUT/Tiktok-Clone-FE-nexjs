@@ -56,27 +56,25 @@ export default function FormUploadVideo() {
     const isUploading = uploadStatus === 'uploading'
     const isSubmitDisabled = isSubmitLoading || isUploading || !sessionUuid
 
-    const content  = form.watch('content')
+    const content = form.watch('content')
     const hashtags = form.watch('hashtags')
 
     // Sync live form content to AI Copilot context — AI reads this to help improve/rewrite
     useEffect(() => {
         setVideoContext({
-            video_description:   content   ?? '',
+            video_description: content ?? '',
             upload_session_uuid: sessionUuid ?? undefined,
             // Map hashtags array to space-separated string for the AI context
-            video_category:      hashtags?.join(' ') ?? '',
+            video_category: hashtags?.join(' ') ?? ''
         })
     }, [content, hashtags, sessionUuid, setVideoContext])
 
     // Register form field patch callbacks for Accept flow
     useEffect(() => {
         registerFormPatch('content', (val) =>
-            form.setValue('content', val, { shouldDirty: true, shouldValidate: true }),
+            form.setValue('content', val, { shouldDirty: true, shouldValidate: true })
         )
-        registerFormPatch('title', (val) =>
-            form.setValue('content', val, { shouldDirty: true, shouldValidate: true }),
-        )
+        registerFormPatch('title', (val) => form.setValue('content', val, { shouldDirty: true, shouldValidate: true }))
         return () => {
             unregisterFormPatch('content')
             unregisterFormPatch('title')
@@ -235,7 +233,7 @@ export default function FormUploadVideo() {
                                             type='datetime-local'
                                             value={scheduledAt}
                                             min={new Date(Date.now() + 60_000).toISOString().slice(0, 16)}
-                                            onChange={e => handleScheduleChange(e.target.value)}
+                                            onChange={(e) => handleScheduleChange(e.target.value)}
                                             className='w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary/50'
                                         />
                                         {scheduledAt && (
@@ -263,7 +261,9 @@ export default function FormUploadVideo() {
                                         className='w-44'
                                     >
                                         {showSchedule && scheduledAt ? (
-                                            <><CalendarClock size={15} /> Hẹn giờ đăng</>
+                                            <>
+                                                <CalendarClock size={15} /> Hẹn giờ đăng
+                                            </>
                                         ) : (
                                             t('buttons.post')
                                         )}
@@ -318,7 +318,6 @@ export default function FormUploadVideo() {
                     )}
                 </form>
             </Form>
-
         </>
     )
 }

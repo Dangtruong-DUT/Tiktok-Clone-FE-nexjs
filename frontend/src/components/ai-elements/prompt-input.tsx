@@ -8,11 +8,13 @@ import { cn } from '@/lib/utils'
 
 export type ChatStatus = 'ready' | 'submitted' | 'streaming' | 'error'
 
-interface SubmitMessage { text: string }
+interface SubmitMessage {
+    text: string
+}
 
 interface PromptInputContextValue {
-    value:    string
-    status:   ChatStatus
+    value: string
+    status: ChatStatus
     onSubmit: (msg: SubmitMessage) => void
 }
 
@@ -25,22 +27,27 @@ function usePromptInputContext() {
 }
 
 interface PromptInputProps extends PropsWithChildren {
-    value?:          string
-    onValueChange?:  (v: string) => void
-    status?:         ChatStatus
-    onSubmit:        (msg: SubmitMessage) => void
-    className?:      string
+    value?: string
+    onValueChange?: (v: string) => void
+    status?: ChatStatus
+    onSubmit: (msg: SubmitMessage) => void
+    className?: string
 }
 
 export function PromptInput({
-    value = '', onValueChange: _onValueChange, status = 'ready', onSubmit, children, className,
+    value = '',
+    onValueChange: _onValueChange,
+    status = 'ready',
+    onSubmit,
+    children,
+    className
 }: PromptInputProps) {
     const handleFormSubmit = useCallback(
         (e: FormEvent) => {
             e.preventDefault()
             if (value.trim() && status === 'ready') onSubmit({ text: value.trim() })
         },
-        [value, status, onSubmit],
+        [value, status, onSubmit]
     )
 
     return (
@@ -52,7 +59,7 @@ export function PromptInput({
                     'rounded-xl border border-border bg-card text-foreground',
                     'shadow-sm transition-colors',
                     'hover:border-border/80 focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary/10',
-                    className,
+                    className
                 )}
             >
                 {children}
@@ -85,7 +92,7 @@ export function PromptInputTextarea({ className, onKeyDown, ...props }: PromptIn
             }
             onKeyDown?.(e)
         },
-        [props.value, value, status, onSubmit, onKeyDown],
+        [props.value, value, status, onSubmit, onKeyDown]
     )
 
     return (
@@ -97,7 +104,7 @@ export function PromptInputTextarea({ className, onKeyDown, ...props }: PromptIn
                 'text-sm text-foreground outline-none',
                 'placeholder:text-muted-foreground',
                 'max-h-[120px] min-h-[44px]',
-                className,
+                className
             )}
             onKeyDown={handleKeyDown}
             {...props}
@@ -108,12 +115,7 @@ export function PromptInputTextarea({ className, onKeyDown, ...props }: PromptIn
 export type PromptInputFooterProps = HTMLAttributes<HTMLDivElement>
 
 export function PromptInputFooter({ className, ...props }: PromptInputFooterProps) {
-    return (
-        <div
-            className={cn('flex items-center justify-between px-2.5 pb-2', className)}
-            {...props}
-        />
-    )
+    return <div className={cn('flex items-center justify-between px-2.5 pb-2', className)} {...props} />
 }
 
 export type PromptInputToolsProps = HTMLAttributes<HTMLDivElement>
@@ -134,7 +136,7 @@ interface PromptInputSubmitProps extends Omit<ComponentProps<typeof Button>, 'ty
 
 export function PromptInputSubmit({ status: externalStatus, className, disabled, ...props }: PromptInputSubmitProps) {
     const { value, status: ctxStatus } = usePromptInputContext()
-    const status    = externalStatus ?? ctxStatus
+    const status = externalStatus ?? ctxStatus
     const isDisabled = disabled ?? (!value.trim() || status !== 'ready')
 
     return (
@@ -145,7 +147,7 @@ export function PromptInputSubmit({ status: externalStatus, className, disabled,
                 'size-7 shrink-0 rounded-lg',
                 'bg-primary text-primary-foreground',
                 'disabled:bg-muted disabled:text-muted-foreground',
-                className,
+                className
             )}
             disabled={isDisabled}
             {...props}

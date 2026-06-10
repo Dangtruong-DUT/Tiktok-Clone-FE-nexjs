@@ -1,18 +1,20 @@
 'use client'
 
 import { useCallback } from 'react'
+import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 import { useDeletePostMutation } from '@/store/services/posts.service'
 import { ConfirmDialog } from '@/components/common/confirm-dialog'
 import { extractApiErrorMessage } from '@/utils/errors/extract-api-error.util'
 
-export default function AlertDialogDeleteDish({
+export default function AlertDialogDeletePost({
     postIdDelete,
     setPostIdDelete
 }: {
     postIdDelete: string | null
     setPostIdDelete: (value: string | null) => void
 }) {
+    const t = useTranslations('SnapiStudio.content.table')
     const [deletePostMutate, { isLoading }] = useDeletePostMutation()
 
     const handleDelete = useCallback(async () => {
@@ -22,9 +24,9 @@ export default function AlertDialogDeleteDish({
             toast.success(res.message)
             setPostIdDelete(null)
         } catch (error) {
-            toast.error(extractApiErrorMessage(error) ?? 'Failed to delete post')
+            toast.error(extractApiErrorMessage(error) ?? t('deleteDialog.failed'))
         }
-    }, [deletePostMutate, postIdDelete, setPostIdDelete])
+    }, [deletePostMutate, postIdDelete, setPostIdDelete, t])
 
     return (
         <ConfirmDialog
@@ -32,9 +34,9 @@ export default function AlertDialogDeleteDish({
             onOpenChange={(open) => {
                 if (!open) setPostIdDelete(null)
             }}
-            title='Delete Post?'
-            description="Are you certain you want to delete this post? Once deleted, you won't be able to recover it."
-            confirmLabel='Delete'
+            title={t('deleteDialog.title')}
+            description={t('deleteDialog.description')}
+            confirmLabel={t('deleteDialog.confirm')}
             isLoading={isLoading}
             onConfirm={handleDelete}
             confirmClassName='bg-destructive text-white hover:bg-destructive/90'

@@ -46,7 +46,7 @@ export function isRecentAction(dateString: string | null, hoursThreshold = 24): 
 
 const DEFAULT_ICON_CONFIG: ActionIconConfig = {
     icon: ShieldCheck,
-    className: 'bg-zinc-500/15 text-zinc-400',
+    className: 'bg-zinc-500/15 text-zinc-400'
 }
 
 export function getActionIconConfig(actionKey: string): ActionIconConfig {
@@ -68,8 +68,9 @@ function extractTargetUsername(log: AdminActivityListItem): string | null {
     if (!('action' in log)) return null
     const oldUsername = (log.old_data as Record<string, unknown> | null)?.username
     const newUsername = (log.new_data as Record<string, unknown> | null)?.target_username
-    return (typeof oldUsername === 'string' ? oldUsername : null) ??
-           (typeof newUsername === 'string' ? newUsername : null)
+    return (
+        (typeof oldUsername === 'string' ? oldUsername : null) ?? (typeof newUsername === 'string' ? newUsername : null)
+    )
 }
 
 export function formatActivityResourceRef(log: AdminActivityListItem): string {

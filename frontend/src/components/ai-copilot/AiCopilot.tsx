@@ -13,6 +13,10 @@ import { CopilotMessages } from './panel/CopilotMessages'
 import { CopilotInput } from './panel/CopilotInput'
 import { BOUNCE_DOT_INDEXES } from '@/constants/ai/copilot'
 
+function toStringArray(value: unknown): string[] {
+    return Array.isArray(value) && value.every((item): item is string => typeof item === 'string') ? value : []
+}
+
 interface AiCopilotProps {
     role?: 'admin' | 'creator'
 }
@@ -22,7 +26,9 @@ export function AiCopilot({ role = 'creator' }: AiCopilotProps) {
     const { isPanelOpen, openPanel, closePanel, videoContext, hasAnyFormField } = useAiCopilotContext()
 
     const { session, sessionUuid, isLoading: isSessionLoading, start, reset: resetSession } = useCopilotSession()
-    const { messages, isSending, send, accept, reject, retry, initFromSession, clearMessages } = useAiCopilot({ sessionUuid })
+    const { messages, isSending, send, accept, reject, retry, initFromSession, clearMessages } = useAiCopilot({
+        sessionUuid
+    })
     const [deleteSession] = useDeleteSessionMutation()
 
     const handleNewSession = useCallback(() => {
@@ -44,12 +50,10 @@ export function AiCopilot({ role = 'creator' }: AiCopilotProps) {
     }, [session, initFromSession])
 
     const displayMessages = messages.length === 0 && !isSessionLoading ? [] : messages
-    const adminChips   = t.raw('quickPromptsAdmin') as string[]
-    const formChips    = t.raw('quickPrompts') as string[]
-    const generalChips = t.raw('quickPromptsGeneral') as string[]
-    const quickPrompts = role === 'admin'
-        ? adminChips
-        : hasAnyFormField ? formChips : generalChips
+    const adminChips = toStringArray(t.raw('quickPromptsAdmin'))
+    const formChips = toStringArray(t.raw('quickPrompts'))
+    const generalChips = toStringArray(t.raw('quickPromptsGeneral'))
+    const quickPrompts = role === 'admin' ? adminChips : hasAnyFormField ? formChips : generalChips
 
     return (
         <>
@@ -67,12 +71,14 @@ export function AiCopilot({ role = 'creator' }: AiCopilotProps) {
             )}
 
             {isPanelOpen && (
-                <div className={cn(
-                    'fixed bottom-6 right-6 z-50 flex flex-col text-foreground',
-                    'w-[420px] rounded-2xl border border-border bg-card shadow-2xl',
-                    'transition-all duration-300',
-                    'h-[640px] max-h-[calc(100vh-5rem)]',
-                )}>
+                <div
+                    className={cn(
+                        'fixed bottom-6 right-6 z-50 flex flex-col text-foreground',
+                        'w-[420px] rounded-2xl border border-border bg-card shadow-2xl',
+                        'transition-all duration-300',
+                        'h-[640px] max-h-[calc(100vh-5rem)]'
+                    )}
+                >
                     <div className='flex items-center justify-between px-4 py-3 border-b border-border shrink-0'>
                         <div className='flex items-center gap-2'>
                             <div className='size-6 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center'>
@@ -82,7 +88,7 @@ export function AiCopilot({ role = 'creator' }: AiCopilotProps) {
 
                             {isSending && (
                                 <span className='flex items-center gap-0.5 ml-1'>
-                                    {BOUNCE_DOT_INDEXES.map(i => (
+                                    {BOUNCE_DOT_INDEXES.map((i) => (
                                         <span
                                             key={i}
                                             className='size-1 rounded-full bg-primary animate-bounce'
@@ -94,13 +100,22 @@ export function AiCopilot({ role = 'creator' }: AiCopilotProps) {
                         </div>
 
                         {messages.length > 0 && (
-                            <Button variant='ghost' size='icon' className='size-7 text-muted-foreground hover:text-foreground'
-                                onClick={handleNewSession} title={t('newSession')}>
+                            <Button
+                                variant='ghost'
+                                size='icon'
+                                className='size-7 text-muted-foreground hover:text-foreground'
+                                onClick={handleNewSession}
+                                title={t('newSession')}
+                            >
                                 <RotateCcw className='size-3.5' />
                             </Button>
                         )}
-                        <Button variant='ghost' size='icon' className='size-7 text-muted-foreground hover:text-foreground'
-                            onClick={closePanel}>
+                        <Button
+                            variant='ghost'
+                            size='icon'
+                            className='size-7 text-muted-foreground hover:text-foreground'
+                            onClick={closePanel}
+                        >
                             <X className='size-3.5' />
                         </Button>
                     </div>
@@ -119,8 +134,10 @@ export function AiCopilot({ role = 'creator' }: AiCopilotProps) {
                     {!isSessionLoading && sessionUuid && displayMessages.length === 0 && (
                         <div className='flex-1 flex flex-col items-center justify-center gap-5 px-6 text-center'>
                             <div className='space-y-2'>
-                                <div className='mx-auto size-12 rounded-2xl bg-primary/10 border border-primary/20
-                                                flex items-center justify-center'>
+                                <div
+                                    className='mx-auto size-12 rounded-2xl bg-primary/10 border border-primary/20
+                                                flex items-center justify-center'
+                                >
                                     <Sparkles className='size-6 text-primary' />
                                 </div>
                                 <p className='text-sm font-semibold text-foreground'>{t('ready')}</p>
@@ -130,7 +147,7 @@ export function AiCopilot({ role = 'creator' }: AiCopilotProps) {
                             </div>
 
                             <div className='flex flex-wrap gap-2 justify-center w-full'>
-                                {quickPrompts.map(chip => (
+                                {quickPrompts.map((chip) => (
                                     <button
                                         key={chip}
                                         onClick={() => send(chip)}
@@ -152,7 +169,7 @@ export function AiCopilot({ role = 'creator' }: AiCopilotProps) {
                             isSending={isSending}
                             onAccept={accept}
                             onReject={reject}
-                            onScheduleAccept={msgUuid => accept(msgUuid, '', '')}
+                            onScheduleAccept={(msgUuid) => accept(msgUuid, '', '')}
                             onChipSelect={send}
                             onRetry={retry}
                         />

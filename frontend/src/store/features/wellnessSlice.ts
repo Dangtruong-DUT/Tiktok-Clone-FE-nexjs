@@ -95,9 +95,15 @@ const wellnessSlice = createSlice({
 })
 
 export const {
-    setSession, clearSession, showAlert, dismissAlert,
-    addVideoSeconds, setTodayStats,
-    suppressRule, snoozeRule, clearSessionDismissals,
+    setSession,
+    clearSession,
+    showAlert,
+    dismissAlert,
+    addVideoSeconds,
+    setTodayStats,
+    suppressRule,
+    snoozeRule,
+    clearSessionDismissals
 } = wellnessSlice.actions
 
 export default wellnessSlice.reducer

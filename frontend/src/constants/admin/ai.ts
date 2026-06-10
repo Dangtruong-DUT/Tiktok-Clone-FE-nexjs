@@ -23,7 +23,15 @@ export const AI_USAGE_LOG_STATUSES = {
 
 export type AiUsageLogStatus = (typeof AI_USAGE_LOG_STATUSES)[keyof typeof AI_USAGE_LOG_STATUSES]
 
-export const AI_STUDIO_REQUEST_TABLE_COLUMNS = ['User', 'Intent', 'Tokens', 'Cost', 'Latency', 'Status', 'Time'] as const
+export const AI_STUDIO_REQUEST_TABLE_COLUMNS = [
+    'User',
+    'Intent',
+    'Tokens',
+    'Cost',
+    'Latency',
+    'Status',
+    'Time'
+] as const
 
 export const AI_COPILOT_FEATURE_FLAGS = {
     STREAMING: {
@@ -48,7 +56,6 @@ export const AI_COPILOT_FEATURE_FLAGS = {
     }
 } as const
 
-export type AiCopilotFeatureFlagKey =
-    (typeof AI_COPILOT_FEATURE_FLAGS)[keyof typeof AI_COPILOT_FEATURE_FLAGS]['key']
+export type AiCopilotFeatureFlagKey = (typeof AI_COPILOT_FEATURE_FLAGS)[keyof typeof AI_COPILOT_FEATURE_FLAGS]['key']
 
 export const AI_COPILOT_FEATURE_FLAG_LIST = Object.values(AI_COPILOT_FEATURE_FLAGS)

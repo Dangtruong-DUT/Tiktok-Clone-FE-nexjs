@@ -1,8 +1,9 @@
 'use client'
+
 import { Button } from '@/components/ui/button'
 import { CloudUpload } from 'lucide-react'
 import Image from 'next/image'
-import { ChangeEvent, DragEvent, MouseEvent, useRef, useState } from 'react'
+import { ChangeEvent, DragEvent, MouseEvent, useEffect, useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
 import { getAcceptedFileAttribute, validateUploadFile } from '@/utils/validation/upload-file.util'
@@ -11,11 +12,14 @@ interface UploadThumbnailFromDeviceProps {
     setCoverImage: (image: File) => void
     className?: string
 }
+
 export default function UploadThumbnailFromDevice({ setCoverImage, className }: UploadThumbnailFromDeviceProps) {
     const t = useTranslations('SnapiStudio.upload.thumbnailUpload')
     const [file, setFile] = useState<File | null>(null)
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
     const inputRef = useRef<HTMLInputElement | null>(null)
+
     const handleDrop = (e: DragEvent<HTMLDivElement>) => {
         e.preventDefault()
         const files = e.dataTransfer.files
@@ -73,6 +77,18 @@ export default function UploadThumbnailFromDevice({ setCoverImage, className }: 
         }
     }
 
+    useEffect(() => {
+        if (!file) {
+            setPreviewUrl(null)
+            return
+        }
+
+        const url = URL.createObjectURL(file)
+        setPreviewUrl(url)
+
+        return () => URL.revokeObjectURL(url)
+    }, [file])
+
     return (
         <div className={className}>
             {file && (
@@ -80,8 +96,8 @@ export default function UploadThumbnailFromDevice({ setCoverImage, className }: 
                     <Image
                         width={243}
                         height={324}
-                        src={URL.createObjectURL(file)}
-                        alt='Uploaded Thumbnail '
+                        src={previewUrl ?? ''}
+                        alt={t('previewAlt')}
                         className='w-[243px] h-[324px] object-cover'
                     />
                 </div>
@@ -108,7 +124,7 @@ export default function UploadThumbnailFromDevice({ setCoverImage, className }: 
                 <footer className='flex items-center justify-end p-4 border-t bg-background'>
                     <Button
                         size='lg'
-                        variant={'secondary'}
+                        variant='secondary'
                         type='button'
                         className='cursor-pointer mr-2'
                         onClick={handleOpenFileDialog}

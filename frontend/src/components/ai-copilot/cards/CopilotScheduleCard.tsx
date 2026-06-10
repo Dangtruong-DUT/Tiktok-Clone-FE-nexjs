@@ -23,9 +23,9 @@ export function CopilotScheduleCard({ messageUuid, output, status, onAccept, onR
     const handleAccept = async () => {
         try {
             await schedulePost({
-                postUuid:     output.post_uuid,
+                postUuid: output.post_uuid,
                 scheduled_at: output.scheduled_at,
-                timezone:     output.timezone,
+                timezone: output.timezone
             }).unwrap()
             onAccept(messageUuid)
             toast.success(t('scheduleCard.toastSuccess', { time: output.human_readable }))
@@ -67,8 +67,10 @@ export function CopilotScheduleCard({ messageUuid, output, status, onAccept, onR
 
             <div className='flex items-center gap-2'>
                 <div className='h-1 flex-1 rounded-full bg-muted overflow-hidden'>
-                    <div className='h-full bg-primary rounded-full'
-                        style={{ width: `${Math.round(output.confidence * 100)}%` }} />
+                    <div
+                        className='h-full bg-primary rounded-full'
+                        style={{ width: `${Math.round(output.confidence * 100)}%` }}
+                    />
                 </div>
                 <span className='text-[10px] text-muted-foreground tabular-nums'>
                     {Math.round(output.confidence * 100)}%
@@ -80,8 +82,13 @@ export function CopilotScheduleCard({ messageUuid, output, status, onAccept, onR
                     {isLoading ? <Loader2 className='size-3 mr-1 animate-spin' /> : <Check className='size-3 mr-1' />}
                     {t('scheduleCard.schedule')}
                 </Button>
-                <Button size='sm' variant='outline' className='flex-1 h-7 text-xs'
-                    onClick={() => onReject(messageUuid)} disabled={isLoading}>
+                <Button
+                    size='sm'
+                    variant='outline'
+                    className='flex-1 h-7 text-xs'
+                    onClick={() => onReject(messageUuid)}
+                    disabled={isLoading}
+                >
                     <X className='size-3 mr-1' />
                     {t('scheduleCard.changeTime')}
                 </Button>

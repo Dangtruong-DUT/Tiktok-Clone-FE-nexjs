@@ -33,9 +33,12 @@ function FollowButton({
     const content = (
         <Button
             variant={isFollowedState ? 'outline' : 'default'}
-            className={cn(' h-9!  rounded-xl! font-semibold! cursor-pointer text-lg! transition-all duration-300 hover:scale-105 active:scale-95', {
-                'primary-button px-2! min-w-[164px] min-h-[36px] ': !isFollowedState
-            })}
+            className={cn(
+                ' h-9!  rounded-xl! font-semibold! cursor-pointer text-lg! transition-all duration-300 hover:scale-105 active:scale-95',
+                {
+                    'primary-button px-2! min-w-[164px] min-h-[36px] ': !isFollowedState
+                }
+            )}
             onClick={handleClick}
         >
             {isFollowedState ? 'Following' : 'Follow'}

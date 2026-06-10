@@ -2,15 +2,15 @@
 export const NEXT_API_ENDPOINT = {
     AUTH: {
         REFRESH_TOKEN: '/api/auth/refresh-token',
-        LOGIN:         '/api/auth/login',
-        GOOGLE_LOGIN:  '/api/auth/login/google',
-        LOGOUT:        '/api/auth/logout',
-        REGISTER:      '/api/auth/register',
-        VERIFY_EMAIL:  '/api/auth/verify-email'
+        LOGIN: '/api/auth/login',
+        GOOGLE_LOGIN: '/api/auth/login/google',
+        LOGOUT: '/api/auth/logout',
+        REGISTER: '/api/auth/register',
+        VERIFY_EMAIL: '/api/auth/verify-email'
     },
     WELLNESS: {
-        SESSION_END: (uuid: string) => `/api/proxy/wellness/session-end/${uuid}`,
-    },
+        SESSION_END: (uuid: string) => `/api/proxy/wellness/session-end/${uuid}`
+    }
 } as const
 
 /** Backend API routes — consumed via httpClient or RTK Query baseQueryWithReauth. */
@@ -86,66 +86,66 @@ export const BACKEND_API_ENDPOINT = {
         DETAIL: (uuid: string) => `/appeals/${uuid}`
     },
     AI_COPILOT: {
-        SESSIONS:       '/studio/ai/copilot/sessions',
-        SESSION:        (uuid: string) => `/studio/ai/copilot/sessions/${uuid}`,
-        MESSAGES:       (uuid: string) => `/studio/ai/copilot/sessions/${uuid}/messages`,
-        STREAM:         (sessionUuid: string, msgUuid: string) =>
-                            `/studio/ai/copilot/sessions/${sessionUuid}/stream/${msgUuid}`,
-        ACCEPT:         (msgUuid: string) => `/studio/ai/copilot/messages/${msgUuid}/accept`,
-        REJECT:         (msgUuid: string) => `/studio/ai/copilot/messages/${msgUuid}/reject`,
-        DELETE_SESSION: (uuid: string) => `/studio/ai/copilot/sessions/${uuid}`,
+        SESSIONS: '/studio/ai/copilot/sessions',
+        SESSION: (uuid: string) => `/studio/ai/copilot/sessions/${uuid}`,
+        MESSAGES: (uuid: string) => `/studio/ai/copilot/sessions/${uuid}/messages`,
+        STREAM: (sessionUuid: string, msgUuid: string) =>
+            `/studio/ai/copilot/sessions/${sessionUuid}/stream/${msgUuid}`,
+        ACCEPT: (msgUuid: string) => `/studio/ai/copilot/messages/${msgUuid}/accept`,
+        REJECT: (msgUuid: string) => `/studio/ai/copilot/messages/${msgUuid}/reject`,
+        DELETE_SESSION: (uuid: string) => `/studio/ai/copilot/sessions/${uuid}`
     },
     AI_KNOWLEDGE: {
-        CHAT:      '/studio/ai/knowledge/chat',
+        CHAT: '/studio/ai/knowledge/chat',
         DOCUMENTS: '/studio/ai/knowledge/documents',
-        DOCUMENT:  (uuid: string) => `/studio/ai/knowledge/documents/${uuid}`,
+        DOCUMENT: (uuid: string) => `/studio/ai/knowledge/documents/${uuid}`
     },
 
     WELLNESS: {
-        STATS:         '/users/me/wellness/stats',
-        HISTORY:       '/users/me/wellness/history',
+        STATS: '/users/me/wellness/stats',
+        HISTORY: '/users/me/wellness/history',
         SESSION_START: '/users/me/wellness/sessions/start',
-        HEARTBEAT:     (uuid: string) => `/users/me/wellness/sessions/${uuid}/heartbeat`,
-        VIDEO_TIME:    (uuid: string) => `/users/me/wellness/sessions/${uuid}/video-time`,
-        SESSION_END:   (uuid: string) => `/users/me/wellness/sessions/${uuid}/end`,
-        RULES:         '/users/me/wellness/rules',
-        RULE:          (uuid: string) => `/users/me/wellness/rules/${uuid}`,
-        ANALYZE:       '/users/me/wellness/analyze',
+        HEARTBEAT: (uuid: string) => `/users/me/wellness/sessions/${uuid}/heartbeat`,
+        VIDEO_TIME: (uuid: string) => `/users/me/wellness/sessions/${uuid}/video-time`,
+        SESSION_END: (uuid: string) => `/users/me/wellness/sessions/${uuid}/end`,
+        RULES: '/users/me/wellness/rules',
+        RULE: (uuid: string) => `/users/me/wellness/rules/${uuid}`,
+        ANALYZE: '/users/me/wellness/analyze'
     },
 
     STUDIO_POSTS: {
-        LIST:        '/posts/mine',
-        SCHEDULED:   '/posts/scheduled',
-        SCHEDULE:    (postUuid: string) => `/posts/${postUuid}/schedule`,
-        RESCHEDULE:  (schedUuid: string) => `/posts/scheduled/${schedUuid}/reschedule`,
+        LIST: '/posts/mine',
+        SCHEDULED: '/posts/scheduled',
+        SCHEDULE: (postUuid: string) => `/posts/${postUuid}/schedule`,
+        RESCHEDULE: (schedUuid: string) => `/posts/scheduled/${schedUuid}/reschedule`,
         PUBLISH_NOW: (postUuid: string) => `/posts/${postUuid}/publish-now`,
-        CANCEL:      (schedUuid: string) => `/posts/scheduled/${schedUuid}/cancel`,
+        CANCEL: (schedUuid: string) => `/posts/scheduled/${schedUuid}/cancel`
     },
     ADMIN: {
         AI_STUDIO: {
-            METRICS:  '/admin/ai-studio/metrics',
+            METRICS: '/admin/ai-studio/metrics',
             SETTINGS: '/admin/ai-studio/settings',
             REQUESTS: '/admin/ai-studio/requests',
-            MODELS:   '/admin/ai-studio/models',
+            MODELS: '/admin/ai-studio/models',
             // AI Copilot admin
-            COPILOT_METRICS:   '/admin/ai-studio/copilot/metrics',
-            COPILOT_SESSIONS:  '/admin/ai-studio/copilot/sessions',
-            PROMPT_TEMPLATES:     '/admin/ai-studio/prompt-templates',
-            PROMPT_TEMPLATE:      (intent: string) => `/admin/ai-studio/prompt-templates/${intent}`,
-            LOCK_TEMPLATE:        (intent: string) => `/admin/ai-studio/prompt-templates/${intent}/lock`,
-            UNLOCK_TEMPLATE:      (intent: string) => `/admin/ai-studio/prompt-templates/${intent}/unlock`,
-            FEATURE_FLAGS:        '/admin/ai-studio/feature-flags',
+            COPILOT_METRICS: '/admin/ai-studio/copilot/metrics',
+            COPILOT_SESSIONS: '/admin/ai-studio/copilot/sessions',
+            PROMPT_TEMPLATES: '/admin/ai-studio/prompt-templates',
+            PROMPT_TEMPLATE: (intent: string) => `/admin/ai-studio/prompt-templates/${intent}`,
+            LOCK_TEMPLATE: (intent: string) => `/admin/ai-studio/prompt-templates/${intent}/lock`,
+            UNLOCK_TEMPLATE: (intent: string) => `/admin/ai-studio/prompt-templates/${intent}/unlock`,
+            FEATURE_FLAGS: '/admin/ai-studio/feature-flags'
         },
         AI_KNOWLEDGE: {
             DOCUMENTS: '/admin/ai-studio/knowledge/documents',
-            DOCUMENT:  (uuid: string) => `/admin/ai-studio/knowledge/documents/${uuid}`,
-            UPLOAD:    '/admin/ai-studio/knowledge/documents/upload',
+            DOCUMENT: (uuid: string) => `/admin/ai-studio/knowledge/documents/${uuid}`,
+            UPLOAD: '/admin/ai-studio/knowledge/documents/upload'
         },
         SCHEDULED_POSTS: {
-            METRICS:      '/admin/scheduled-posts/metrics',
-            REQUESTS:     '/admin/scheduled-posts/requests',
-            CANCEL:       (uuid: string) => `/admin/scheduled-posts/${uuid}/cancel`,
-            RETRY:        (uuid: string) => `/admin/scheduled-posts/${uuid}/retry`,
-        },
+            METRICS: '/admin/scheduled-posts/metrics',
+            REQUESTS: '/admin/scheduled-posts/requests',
+            CANCEL: (uuid: string) => `/admin/scheduled-posts/${uuid}/cancel`,
+            RETRY: (uuid: string) => `/admin/scheduled-posts/${uuid}/retry`
+        }
     }
 } as const

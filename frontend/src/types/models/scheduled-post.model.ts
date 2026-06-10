@@ -4,51 +4,51 @@ export type ScheduledPostStatus = (typeof SCHEDULED_POST_STATUSES)[keyof typeof 
 export type ScheduledPostSource = (typeof SCHEDULED_POST_SOURCES)[keyof typeof SCHEDULED_POST_SOURCES]
 
 export interface ScheduledPostType {
-    uuid:          string
-    status:        ScheduledPostStatus
-    status_label:  string
-    source:        ScheduledPostSource
-    scheduled_at:  string
+    uuid: string
+    status: ScheduledPostStatus
+    status_label: string
+    source: ScheduledPostSource
+    scheduled_at: string
     user_timezone: string
-    published_at:  string | null
+    published_at: string | null
     error_message: string | null
     post: {
-        uuid:    string
+        uuid: string
         content: string | null
-        status:  string
+        status: string
     } | null
     created_at: string
 }
 
 export interface ScheduledPostDailySeries {
-    date:      string
-    total:     number
+    date: string
+    total: number
     published: number
-    failed:    number
+    failed: number
     cancelled: number
-    pending:   number
+    pending: number
 }
 
 export interface ScheduledPostTopScheduler {
-    uuid:      string
-    username:  string
-    name:      string
-    total:     number
+    uuid: string
+    username: string
+    name: string
+    total: number
     published: number
 }
 
 export interface AdminScheduledPostMetrics {
-    period:            string
-    total:             number
-    pending:           number
-    published:         number
-    failed:            number
-    cancelled:         number
-    success_rate:      number | null
+    period: string
+    total: number
+    pending: number
+    published: number
+    failed: number
+    cancelled: number
+    success_rate: number | null
     avg_delay_minutes: number | null
-    by_source:         { manual: number; calendar: number }
-    daily_series:      ScheduledPostDailySeries[]
-    top_schedulers:    ScheduledPostTopScheduler[]
+    by_source: { manual: number; calendar: number }
+    daily_series: ScheduledPostDailySeries[]
+    top_schedulers: ScheduledPostTopScheduler[]
 }
 
 export interface AdminScheduledPostItem extends ScheduledPostType {

@@ -28,28 +28,28 @@ export const makeStore = () => {
     return configureStore({
         devTools: true,
         reducer: {
-            [UserApi.reducerPath]:               UserApi.reducer,
-            [SearchApi.reducerPath]:             SearchApi.reducer,
-            [UploadApi.reducerPath]:             UploadApi.reducer,
-            [AuthApi.reducerPath]:               AuthApi.reducer,
-            [PostApi.reducerPath]:               PostApi.reducer,
-            [NotificationApi.reducerPath]:       NotificationApi.reducer,
-            [AdminApi.reducerPath]:              AdminApi.reducer,
-            [AppealApi.reducerPath]:             AppealApi.reducer,
-            [AdminAiStudioApi.reducerPath]:      AdminAiStudioApi.reducer,
+            [UserApi.reducerPath]: UserApi.reducer,
+            [SearchApi.reducerPath]: SearchApi.reducer,
+            [UploadApi.reducerPath]: UploadApi.reducer,
+            [AuthApi.reducerPath]: AuthApi.reducer,
+            [PostApi.reducerPath]: PostApi.reducer,
+            [NotificationApi.reducerPath]: NotificationApi.reducer,
+            [AdminApi.reducerPath]: AdminApi.reducer,
+            [AppealApi.reducerPath]: AppealApi.reducer,
+            [AdminAiStudioApi.reducerPath]: AdminAiStudioApi.reducer,
             [AdminScheduledPostsApi.reducerPath]: AdminScheduledPostsApi.reducer,
             [StudioPostScheduleApi.reducerPath]: StudioPostScheduleApi.reducer,
-            [ScreenTimeApi.reducerPath]:         ScreenTimeApi.reducer,
-            [WellnessRuleApi.reducerPath]:       WellnessRuleApi.reducer,
-            [AiCopilotApi.reducerPath]:          AiCopilotApi.reducer,
-            [AdminAiCopilotApi.reducerPath]:     AdminAiCopilotApi.reducer,
-            [AdminAiKnowledgeApi.reducerPath]:   AdminAiKnowledgeApi.reducer,
-            auth:            authReducer,
-            app:             appReducer,
-            modal:           modalReducer,
-            video:           videoReducer,
+            [ScreenTimeApi.reducerPath]: ScreenTimeApi.reducer,
+            [WellnessRuleApi.reducerPath]: WellnessRuleApi.reducer,
+            [AiCopilotApi.reducerPath]: AiCopilotApi.reducer,
+            [AdminAiCopilotApi.reducerPath]: AdminAiCopilotApi.reducer,
+            [AdminAiKnowledgeApi.reducerPath]: AdminAiKnowledgeApi.reducer,
+            auth: authReducer,
+            app: appReducer,
+            modal: modalReducer,
+            video: videoReducer,
             videoProcessing: videoProcessingReducer,
-            wellness:        wellnessReducer,
+            wellness: wellnessReducer
         },
         middleware: (getDefaultMiddleware) =>
             getDefaultMiddleware().concat(
@@ -70,13 +70,13 @@ export const makeStore = () => {
                 AdminAiCopilotApi.middleware,
                 AdminAiKnowledgeApi.middleware,
                 authMiddleware,
-                errorHandleMiddleware,
-            ),
+                errorHandleMiddleware
+            )
     })
 }
 
-export type AppStore    = ReturnType<typeof makeStore>
-export type RootState   = ReturnType<AppStore['getState']>
+export type AppStore = ReturnType<typeof makeStore>
+export type RootState = ReturnType<AppStore['getState']>
 export type AppDispatch = AppStore['dispatch']
 
 export type storeApiType = { dispatch: AppDispatch; getState: () => RootState }

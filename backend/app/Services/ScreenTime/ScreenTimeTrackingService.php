@@ -256,7 +256,6 @@ class ScreenTimeTrackingService
         return $this->getDailySeries($userId, $from, $to);
     }
 
-    // ── Private helpers ──────────────────────────────────────────────────────
 
     private function getPeakHour(int $userId, Carbon $from, Carbon $to): ?int
     {
