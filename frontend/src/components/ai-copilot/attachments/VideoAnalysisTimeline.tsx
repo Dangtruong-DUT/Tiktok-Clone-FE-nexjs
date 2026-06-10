@@ -273,40 +273,34 @@ export function VideoAnalysisTimeline({ videoRef, duration, onSeek }: VideoAnaly
                 )}
 
                 {/* Dimmed areas outside selection */}
-                {timelineSelection && (
-                    <>
-                        <div
-                            className='absolute inset-y-0 left-0 bg-background/60 pointer-events-none'
-                            style={{ width: `${pct(start)}%` }}
-                        />
-                        <div
-                            className='absolute inset-y-0 right-0 bg-background/60 pointer-events-none'
-                            style={{ width: `${100 - pct(end)}%` }}
-                        />
-                    </>
-                )}
+                <div
+                    className='absolute inset-y-0 left-0 bg-background/60 pointer-events-none'
+                    style={{ width: `${pct(start)}%` }}
+                />
+                <div
+                    className='absolute inset-y-0 right-0 bg-background/60 pointer-events-none'
+                    style={{ width: `${100 - pct(end)}%` }}
+                />
 
                 {/* Draggable selection zone */}
-                {timelineSelection && (
+                <div
+                    className='absolute inset-y-0 border-2 border-primary cursor-grab active:cursor-grabbing'
+                    style={{ left: `${pct(start)}%`, width: `${pct(end) - pct(start)}%` }}
+                    onPointerDown={startDrag('middle')}
+                >
                     <div
-                        className='absolute inset-y-0 border-2 border-primary cursor-grab active:cursor-grabbing'
-                        style={{ left: `${pct(start)}%`, width: `${pct(end) - pct(start)}%` }}
-                        onPointerDown={startDrag('middle')}
+                        className='absolute inset-y-0 left-0 w-3 flex items-center justify-center cursor-ew-resize bg-primary z-10'
+                        onPointerDown={startDrag('start')}
                     >
-                        <div
-                            className='absolute inset-y-0 left-0 w-3 flex items-center justify-center cursor-ew-resize bg-primary z-10'
-                            onPointerDown={startDrag('start')}
-                        >
-                            <div className='w-0.5 h-3 rounded-full bg-primary-foreground' />
-                        </div>
-                        <div
-                            className='absolute inset-y-0 right-0 w-3 flex items-center justify-center cursor-ew-resize bg-primary z-10'
-                            onPointerDown={startDrag('end')}
-                        >
-                            <div className='w-0.5 h-3 rounded-full bg-primary-foreground' />
-                        </div>
+                        <div className='w-0.5 h-3 rounded-full bg-primary-foreground' />
                     </div>
-                )}
+                    <div
+                        className='absolute inset-y-0 right-0 w-3 flex items-center justify-center cursor-ew-resize bg-primary z-10'
+                        onPointerDown={startDrag('end')}
+                    >
+                        <div className='w-0.5 h-3 rounded-full bg-primary-foreground' />
+                    </div>
+                </div>
 
                 {/* Playhead */}
                 <div
@@ -316,24 +310,22 @@ export function VideoAnalysisTimeline({ videoRef, duration, onSeek }: VideoAnaly
             </div>
 
             {/* Time info + warning */}
-            {timelineSelection && (
-                <div className='flex items-center justify-between text-[10px] tabular-nums'>
-                    <span className='text-muted-foreground font-medium'>{fmt(start)}</span>
-                    <span
-                        className={cn(
-                            'font-semibold px-2 py-0.5 rounded-full text-[9px]',
-                            warning === 'too_long' && 'bg-destructive/10 text-destructive',
-                            warning === 'too_short' && 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
-                            !warning && 'bg-primary/10 text-primary'
-                        )}
-                    >
-                        {fmt(selDuration)}
-                        {warning === 'too_long' && ` · max ${TIMELINE.MAX_DURATION}s`}
-                        {warning === 'too_short' && ` · min ${TIMELINE.MIN_DURATION}s`}
-                    </span>
-                    <span className='text-muted-foreground font-medium'>{fmt(end)}</span>
-                </div>
-            )}
+            <div className='flex items-center justify-between text-[10px] tabular-nums'>
+                <span className='text-muted-foreground font-medium'>{fmt(start)}</span>
+                <span
+                    className={cn(
+                        'font-semibold px-2 py-0.5 rounded-full text-[9px]',
+                        warning === 'too_long' && 'bg-destructive/10 text-destructive',
+                        warning === 'too_short' && 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
+                        !warning && 'bg-primary/10 text-primary'
+                    )}
+                >
+                    {fmt(selDuration)}
+                    {warning === 'too_long' && ` · max ${TIMELINE.MAX_DURATION}s`}
+                    {warning === 'too_short' && ` · min ${TIMELINE.MIN_DURATION}s`}
+                </span>
+                <span className='text-muted-foreground font-medium'>{fmt(end)}</span>
+            </div>
         </div>
     )
 }

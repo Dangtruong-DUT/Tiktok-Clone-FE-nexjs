@@ -28,6 +28,7 @@ class AiCopilotMessage extends Model
         'prompt_template_id',
         'status',
         'error_message',
+        'uuid',
     ];
 
     protected function casts(): array

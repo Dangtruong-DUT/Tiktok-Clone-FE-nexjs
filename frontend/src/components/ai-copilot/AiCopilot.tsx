@@ -99,25 +99,27 @@ export function AiCopilot({ role = 'creator' }: AiCopilotProps) {
                             )}
                         </div>
 
-                        {messages.length > 0 && (
+                        <div className='flex items-center gap-1'>
+                            {messages.length > 0 && (
+                                <Button
+                                    variant='ghost'
+                                    size='icon'
+                                    className='size-7 text-muted-foreground hover:text-foreground'
+                                    onClick={handleNewSession}
+                                    title={t('newSession')}
+                                >
+                                    <RotateCcw className='size-3.5' />
+                                </Button>
+                            )}
                             <Button
                                 variant='ghost'
                                 size='icon'
                                 className='size-7 text-muted-foreground hover:text-foreground'
-                                onClick={handleNewSession}
-                                title={t('newSession')}
+                                onClick={closePanel}
                             >
-                                <RotateCcw className='size-3.5' />
+                                <X className='size-3.5' />
                             </Button>
-                        )}
-                        <Button
-                            variant='ghost'
-                            size='icon'
-                            className='size-7 text-muted-foreground hover:text-foreground'
-                            onClick={closePanel}
-                        >
-                            <X className='size-3.5' />
-                        </Button>
+                        </div>
                     </div>
 
                     {(isSessionLoading || (isPanelOpen && !sessionUuid)) && messages.length === 0 && (

@@ -37,8 +37,10 @@ export function AiVideoAttachments({ videoUrl, onSeek }: AiVideoAttachmentsProps
     const [clipProgress, setClipProgress] = useState(0)
     const [clipSent, setClipSent] = useState(false)
 
-    const selDur = timelineSelection ? timelineSelection.end - timelineSelection.start : 0
-    const canAnalyze = !!timelineSelection && !isRecording && selDur >= 5 && selDur <= 30
+    const selStart = timelineSelection?.start ?? 0
+    const selEnd = timelineSelection?.end ?? Math.min(30, duration)
+    const selDur = selEnd - selStart
+    const canAnalyze = !isRecording && selDur >= 5 && selDur <= 30
 
     // Reset "sent" badge when user drags to a new selection
     useEffect(() => {
@@ -51,12 +53,13 @@ export function AiVideoAttachments({ videoUrl, onSeek }: AiVideoAttachmentsProps
 
     const handleAnalyze = useCallback(async () => {
         const video = videoRef.current
-        if (!timelineSelection || !video || isRecording) return
+        if (!video || isRecording) return
         setIsRecording(true)
         setClipProgress(0)
         setClipSent(false)
 
-        const { start, end } = timelineSelection
+        const start = selStart
+        const end = selEnd
         const clip = await clipVideoSegment(video, start, end, (elapsed, total) => {
             setClipProgress(Math.min(99, Math.round((elapsed / total) * 100)))
         })
@@ -74,7 +77,8 @@ export function AiVideoAttachments({ videoUrl, onSeek }: AiVideoAttachmentsProps
         setIsRecording(false)
     }, [
         videoRef,
-        timelineSelection,
+        selStart,
+        selEnd,
         isRecording,
         setPendingVideoClip,
         setTimelineSelection,
