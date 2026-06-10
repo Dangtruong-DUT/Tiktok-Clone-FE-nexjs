@@ -170,12 +170,6 @@ class VideoUploadService
                 );
             }
 
-            if (! $this->storage->objectExists($session->storage_key)) {
-                throw new BusinessException(
-                    "Object [{$session->storage_key}] not found on storage after upload."
-                );
-            }
-
             $uploadFile = $this->uploadFileRepository->create([
                 'file_name'  => $session->file_name,
                 'mime_type'  => $session->mime_type,

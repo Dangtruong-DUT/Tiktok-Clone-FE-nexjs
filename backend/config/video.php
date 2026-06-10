@@ -17,7 +17,7 @@ return [
     |
     */
     'upload' => [
-        'max_file_size_bytes'       => env('VIDEO_UPLOAD_MAX_FILE_SIZE', 500 * 1024 * 1024),  // 500 MB
+        'max_file_size_bytes'       => env('VIDEO_UPLOAD_MAX_FILE_SIZE', 1024 * 1024 * 1024),  // 1 GB
         'multipart_threshold_bytes' => env('VIDEO_UPLOAD_MULTIPART_THRESHOLD', 50 * 1024 * 1024),  // 50 MB
         'chunk_size_bytes'          => env('VIDEO_UPLOAD_CHUNK_SIZE', 15 * 1024 * 1024),  // 15 MB
         'presigned_ttl_seconds'     => env('VIDEO_UPLOAD_PRESIGNED_TTL', 3600),  // 1 hour

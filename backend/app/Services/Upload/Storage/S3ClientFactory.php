@@ -41,11 +41,16 @@ class S3ClientFactory
      */
     public function makeSigningClient(array $diskConfig): S3Client
     {
-        $config          = $this->baseConfig($diskConfig);
-        $publicEndpoint  = rtrim((string) ($diskConfig['url'] ?? $diskConfig['endpoint'] ?? ''), '/');
+        $config = $this->baseConfig($diskConfig);
 
-        if ($publicEndpoint !== '') {
-            $config['endpoint'] = $publicEndpoint;
+        $configuredPublicEndpoint = rtrim((string) ($diskConfig['url'] ?? $diskConfig['endpoint'] ?? ''), '/');
+        $configuredBucketName     = rtrim((string) ($diskConfig['bucket'] ?? ''), '/');
+
+        if ($configuredPublicEndpoint !== '') {
+            $config['endpoint'] = $this->normalizePublicEndpoint(
+                publicEndpoint: $configuredPublicEndpoint,
+                bucketName: $configuredBucketName,
+            );
         }
 
         return new S3Client($config);
@@ -73,5 +78,25 @@ class S3ClientFactory
         }
 
         return $config;
+    }
+
+    /**
+     * Normalize the public endpoint used for signing so it does not already contain the bucket name.
+     * Laravel's S3 disk URL may already include "/{bucket}", but the AWS SDK adds the bucket again
+     * when path-style addressing is enabled. Stripping the suffix keeps presigned multipart URLs valid.
+     */
+    private function normalizePublicEndpoint(string $publicEndpoint, string $bucketName): string
+    {
+        if ($bucketName === '') {
+            return $publicEndpoint;
+        }
+
+        $bucketSuffix = '/' . ltrim($bucketName, '/');
+
+        if (! str_ends_with($publicEndpoint, $bucketSuffix)) {
+            return $publicEndpoint;
+        }
+
+        return rtrim(substr($publicEndpoint, 0, -strlen($bucketSuffix)), '/');
     }
 }

@@ -16,7 +16,7 @@ export const UPLOAD_CONSTRAINTS = {
         mimeTypes: ['image/jpeg', 'image/png'] as const
     },
     video: {
-        maxSizeBytes: 500 * 1024 * 1024, // 500 MB
+        maxSizeBytes: 1024 * 1024 * 1024, // 1 GB
         mimes: ['mp4', 'mov', 'webm'] as const,
         mimeTypes: ['video/mp4', 'video/quicktime', 'video/webm'] as const
     }

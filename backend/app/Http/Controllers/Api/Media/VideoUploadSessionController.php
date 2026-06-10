@@ -70,7 +70,7 @@ class VideoUploadSessionController extends Controller
     }
 
     /**
-     * Complete an upload session, verify the object on storage, and queue processing.
+     * Complete an upload session and queue processing.
      *
      * @param  CompleteUploadSessionRequest  $request
      * @param  string  $session
