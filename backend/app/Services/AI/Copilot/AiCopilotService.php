@@ -8,10 +8,10 @@ use App\Enums\Ai\AiCopilotMessageRoleEnum;
 use App\Enums\User\RoleTypeEnum;
 use App\Models\AiCopilotMessage;
 use App\Models\AiCopilotSession;
-use App\Models\AiStudioSetting;
 use App\Models\User;
 use App\Repositories\AiCopilotMessageRepository;
 use App\Repositories\AiCopilotSessionRepository;
+use App\Repositories\AiStudioSettingRepository;
 use App\Services\AI\Copilot\Gateway\AiGateway;
 use App\Services\AI\Copilot\Orchestrator\CopilotOrchestrator;
 use Illuminate\Support\Facades\Cache;
@@ -32,6 +32,7 @@ class AiCopilotService
         private readonly AiCopilotMessageRepository $messageRepo,
         private readonly AiGateway                  $aiGateway,
         private readonly CopilotOrchestrator        $orchestrator,
+        private readonly AiStudioSettingRepository   $settingRepository,
     ) {}
 
     /**
@@ -43,7 +44,7 @@ class AiCopilotService
      */
     public function startSession(int $userId, array $data): array
     {
-        $settings = AiStudioSetting::current();
+        $settings = $this->settingRepository->current();
         $locale   = app()->getLocale();
 
         $existing = $this->findExistingSession($userId, $data);
@@ -93,7 +94,7 @@ class AiCopilotService
      */
     public function isEnabled(): bool
     {
-        return (bool) AiStudioSetting::current()->copilot_enabled;
+        return (bool) $this->settingRepository->current()->copilot_enabled;
     }
 
     /**
@@ -330,7 +331,7 @@ class AiCopilotService
     public function stream(AiCopilotSession $session, AiCopilotMessage $userMessage, callable $emit): void
     {
         // Load setting once — reused throughout this method to avoid repeated DB queries.
-        $setting = AiStudioSetting::current();
+        $setting = $this->settingRepository->current();
 
         // Recover large binary attachments cached by the controller before the SSE handshake
         $cached = Cache::pull("stream_attach:{$userMessage->uuid}", []);
@@ -475,7 +476,7 @@ class AiCopilotService
      */
     private function assertSessionHasCapacity(AiCopilotSession $session): void
     {
-        $max   = (int) (AiStudioSetting::current()->copilot_max_messages_per_session ?? 50);
+        $max   = (int) ($this->settingRepository->current()->copilot_max_messages_per_session ?? 50);
         $count = AiCopilotMessage::where('session_id', $session->id)->count();
 
         abort_if($count >= $max, 429, 'Session message limit reached. Please start a new session.');

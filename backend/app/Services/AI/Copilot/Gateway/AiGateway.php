@@ -6,7 +6,7 @@ use App\Contracts\AI\GeminiClientInterface;
 use App\DTOs\AI\Gemini\GeminiConfig;
 use App\DTOs\AI\Gemini\GeminiRequest;
 use App\Models\AiDocument;
-use App\Models\AiStudioSetting;
+use App\Repositories\AiStudioSettingRepository;
 use App\Repositories\AiPromptTemplateRepository;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -27,6 +27,7 @@ class AiGateway
     public function __construct(
         private readonly GeminiClientInterface      $gemini,
         private readonly AiPromptTemplateRepository $templateRepo,
+        private readonly AiStudioSettingRepository  $settingRepository,
     ) {}
 
     /**
@@ -61,7 +62,7 @@ class AiGateway
             $result = $this->gemini->send(new GeminiRequest(
                 systemPrompt: $systemPrompt,
                 contents:     $contents,
-                config:       GeminiConfig::fromSetting(AiStudioSetting::current(), [
+                config:       GeminiConfig::fromSetting($this->settingRepository->current(), [
                     'temperature'      => 0.1,
                     'maxOutputTokens'  => 300,
                     'responseMimeType' => 'application/json',

@@ -4,6 +4,7 @@ namespace App\Services\Admin;
 
 use App\Models\AiStudioSetting;
 use App\Models\AiUsageLog;
+use App\Repositories\AiStudioSettingRepository;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
@@ -13,7 +14,9 @@ class AiStudioAdminService
     /**
      * Create a new service instance.
      */
-    public function __construct() {}
+    public function __construct(
+        private readonly AiStudioSettingRepository $settingRepository,
+    ) {}
 
     /**
      * Get aggregated copilot usage metrics for the admin dashboard.
@@ -61,7 +64,7 @@ class AiStudioAdminService
      */
     public function getSettings(): AiStudioSetting
     {
-        return AiStudioSetting::current();
+        return $this->settingRepository->current();
     }
 
     /**
@@ -83,7 +86,7 @@ class AiStudioAdminService
      */
     public function updateSettings(array $data, int $adminId): AiStudioSetting
     {
-        $settings = AiStudioSetting::current();
+        $settings = $this->settingRepository->current();
         $settings->update(array_merge($data, ['updated_by' => $adminId]));
         Cache::forget('ai_studio_settings');
 

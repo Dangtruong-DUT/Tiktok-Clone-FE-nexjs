@@ -5,6 +5,8 @@ namespace App\Services\Wellness;
 use App\Exceptions\http\BusinessException;
 use App\Models\WellnessRule;
 use App\Repositories\WellnessRuleRepository;
+use App\Repositories\UserRepository;
+use App\Services\ScreenTime\ScreenTimeTrackingService;
 use App\Services\Wellness\WellnessAiService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -23,6 +25,7 @@ class WellnessRuleService
      */
     public function __construct(
         private readonly WellnessRuleRepository    $repository,
+        private readonly UserRepository            $userRepository,
         private readonly WellnessAiService         $aiService,
         private readonly ScreenTimeTrackingService $screenTimeService,
     ) {}
@@ -48,8 +51,8 @@ class WellnessRuleService
     public function create(int $userId, array $data): WellnessRule
     {
         return DB::transaction(function () use ($userId, $data): WellnessRule {
-            // Lock the user's existing rules to prevent race-condition over-count
-            WellnessRule::where('user_id', $userId)->lockForUpdate()->count();
+            // Lock the owning user row to serialize rule creation for this account.
+            $this->userRepository->findByIdForUpdate($userId);
 
             if ($this->repository->countForUser($userId) >= self::MAX_RULES_PER_USER) {
                 throw new BusinessException(

@@ -5,7 +5,7 @@ namespace App\Services\Wellness;
 use App\Contracts\AI\GeminiClientInterface;
 use App\DTOs\AI\Gemini\GeminiConfig;
 use App\DTOs\AI\Gemini\GeminiRequest;
-use App\Models\AiStudioSetting;
+use App\Repositories\AiStudioSettingRepository;
 
 class WellnessAiService
 {
@@ -16,6 +16,7 @@ class WellnessAiService
      */
     public function __construct(
         private readonly GeminiClientInterface $gemini,
+        private readonly AiStudioSettingRepository $settingRepository,
     ) {}
 
     /**
@@ -72,7 +73,7 @@ PROMPT;
         $result = $this->gemini->send(new GeminiRequest(
             systemPrompt: $systemPrompt,
             contents:     [['role' => 'user', 'parts' => [['text' => $userPrompt]]]],
-            config:       GeminiConfig::fromSetting(AiStudioSetting::current(), [
+            config:       GeminiConfig::fromSetting($this->settingRepository->current(), [
                 'responseMimeType' => 'application/json',
             ]),
         ))->toArray();

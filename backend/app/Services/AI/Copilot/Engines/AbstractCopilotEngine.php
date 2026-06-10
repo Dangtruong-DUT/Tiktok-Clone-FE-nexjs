@@ -8,7 +8,7 @@ use App\DTOs\AI\AiCopilotSessionContext;
 use App\DTOs\AI\Gemini\GeminiConfig;
 use App\DTOs\AI\Gemini\GeminiRequest;
 use App\Models\AiPromptTemplate;
-use App\Models\AiStudioSetting;
+use App\Repositories\AiStudioSettingRepository;
 use App\Repositories\AiPromptTemplateRepository;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -26,6 +26,7 @@ abstract class AbstractCopilotEngine
     public function __construct(
         protected readonly GeminiClientInterface      $gemini,
         protected readonly AiPromptTemplateRepository $templateRepo,
+        protected readonly AiStudioSettingRepository  $settingRepository,
     ) {}
 
     /**
@@ -41,7 +42,7 @@ abstract class AbstractCopilotEngine
         return new GeminiRequest(
             systemPrompt: $systemPrompt,
             contents:     $contents,
-            config:       GeminiConfig::fromSetting(AiStudioSetting::current(), $overrides),
+            config:       GeminiConfig::fromSetting($this->settingRepository->current(), $overrides),
         );
     }
 

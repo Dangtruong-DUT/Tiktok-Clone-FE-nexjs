@@ -5,7 +5,7 @@ namespace App\Services\Analytics;
 use App\Contracts\AI\GeminiClientInterface;
 use App\DTOs\AI\Gemini\GeminiConfig;
 use App\DTOs\AI\Gemini\GeminiRequest;
-use App\Models\AiStudioSetting;
+use App\Repositories\AiStudioSettingRepository;
 use App\Repositories\AiPromptTemplateRepository;
 use Illuminate\Support\Facades\Log;
 
@@ -24,6 +24,7 @@ class AnalyticsAnswerBuilder
     public function __construct(
         private readonly GeminiClientInterface      $gemini,
         private readonly AiPromptTemplateRepository $templateRepo,
+        private readonly AiStudioSettingRepository  $settingRepository,
     ) {}
 
     /**
@@ -49,7 +50,7 @@ class AnalyticsAnswerBuilder
             $result = $this->gemini->send(new GeminiRequest(
                 systemPrompt: $systemPrompt,
                 contents:     [['role' => 'user', 'parts' => [['text' => $userPrompt]]]],
-                config:       GeminiConfig::fromSetting(AiStudioSetting::current(), [
+                config:       GeminiConfig::fromSetting($this->settingRepository->current(), [
                     'temperature'      => 0.3,
                     'maxOutputTokens'  => 600,
                     'responseMimeType' => 'application/json',

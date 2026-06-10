@@ -4,6 +4,7 @@ namespace App\Services\Admin;
 
 use App\Models\AiPromptTemplate;
 use App\Models\AiStudioSetting;
+use App\Repositories\AiStudioSettingRepository;
 use App\Repositories\AiCopilotSessionRepository;
 use App\Repositories\AiPromptTemplateRepository;
 use App\Repositories\AiUsageLogRepository;
@@ -21,6 +22,7 @@ class AiCopilotAdminService
         private readonly AiUsageLogRepository       $usageRepo,
         private readonly AiCopilotSessionRepository $sessionRepo,
         private readonly AiPromptTemplateRepository $templateRepo,
+        private readonly AiStudioSettingRepository  $settingRepository,
     ) {}
 
     /**
@@ -83,7 +85,7 @@ class AiCopilotAdminService
      */
     public function updateFeatureFlags(array $flags, int $adminId): AiStudioSetting
     {
-        $setting = AiStudioSetting::current();
+        $setting = $this->settingRepository->current();
         $merged  = array_merge($setting->feature_flags ?? [], $flags);
 
         $setting->update([

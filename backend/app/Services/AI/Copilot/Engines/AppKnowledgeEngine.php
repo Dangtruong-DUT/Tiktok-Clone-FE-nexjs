@@ -10,6 +10,7 @@ use App\Services\AI\Copilot\Gateway\GatewayTask;
 use App\Services\AI\Rag\GeminiEmbeddingService;
 use App\Services\AI\Rag\PgVectorSearchService;
 use App\Services\AI\Rag\RagService;
+use App\Repositories\AiStudioSettingRepository;
 
 /**
  * Answers questions about Snapi Studio features and platform documentation.
@@ -27,11 +28,12 @@ class AppKnowledgeEngine extends AbstractCopilotEngine implements CopilotEngineI
     public function __construct(
         \App\Contracts\AI\GeminiClientInterface      $gemini,
         \App\Repositories\AiPromptTemplateRepository $templateRepo,
+        AiStudioSettingRepository                    $settingRepository,
         private readonly RagService                  $ragService,
         private readonly GeminiEmbeddingService      $embeddingService,
         private readonly PgVectorSearchService       $searchService,
     ) {
-        parent::__construct($gemini, $templateRepo);
+        parent::__construct($gemini, $templateRepo, $settingRepository);
     }
 
     /**

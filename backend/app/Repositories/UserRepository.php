@@ -68,6 +68,14 @@ class UserRepository extends BaseRepository
     }
 
     /**
+     * Find a user by primary key and lock the row for update.
+     */
+    public function findByIdForUpdate(int $id): User
+    {
+        return $this->query()->whereKey($id)->lockForUpdate()->firstOrFail();
+    }
+
+    /**
      * Find a user by uuid including soft-deleted records.
      */
     public function findWithTrashedByUuidOrFail(string $uuid): User

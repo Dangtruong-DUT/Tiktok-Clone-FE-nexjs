@@ -75,8 +75,8 @@ export function WellnessRuleChat() {
             <button
                 onClick={() => setIsOpen(true)}
                 className='fixed bottom-6 left-6 z-40 flex items-center justify-center
-                           size-12 rounded-full bg-emerald-600 text-white shadow-lg
-                           hover:bg-emerald-700 transition-all hover:scale-105 active:scale-95'
+                           size-12 rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/20
+                           hover:bg-primary/90 transition-all hover:scale-105 active:scale-95'
                 aria-label={t('title')}
             >
                 <Shield className='size-5' />
@@ -88,14 +88,14 @@ export function WellnessRuleChat() {
         <div
             className={cn(
                 'fixed bottom-6 left-6 z-40 flex flex-col rounded-2xl',
-                'border border-border bg-background shadow-2xl w-[360px] transition-all',
+                'w-[360px] border border-primary/15 bg-background shadow-2xl shadow-primary/10 transition-all',
                 isMinimised ? 'h-12 overflow-hidden' : 'max-h-[580px]'
             )}
         >
             {/* Header */}
             <div className='flex items-center justify-between px-4 py-3 border-b border-border shrink-0'>
                 <div className='flex items-center gap-2'>
-                    <Shield className='size-4 text-emerald-500' />
+                    <Shield className='size-4 text-primary' />
                     <span className='text-sm font-semibold'>{t('title')}</span>
                 </div>
                 <div className='flex items-center gap-0.5'>
@@ -123,7 +123,7 @@ export function WellnessRuleChat() {
                                         className={cn(
                                             'rounded-lg border px-2 py-1.5 text-[11px] font-medium transition-colors text-left',
                                             manual.type === rt.value
-                                                ? 'border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-600'
+                                                ? 'border-primary bg-primary/10 text-primary dark:bg-primary/15 dark:text-primary'
                                                 : 'border-border text-muted-foreground hover:bg-muted'
                                         )}
                                     >
@@ -145,7 +145,7 @@ export function WellnessRuleChat() {
                                     step={5}
                                     value={manual.minutes}
                                     onChange={(e) => setManual((m) => ({ ...m, minutes: +e.target.value }))}
-                                    className='flex-1 accent-emerald-600'
+                                    className='flex-1 accent-primary'
                                 />
                                 <span className='text-sm font-semibold tabular-nums w-12 text-right text-foreground'>
                                     {fmt(manual.minutes)}
@@ -165,7 +165,7 @@ export function WellnessRuleChat() {
                                         className={cn(
                                             'rounded-lg border px-2 py-1.5 text-[11px] font-medium transition-colors',
                                             manual.action === a.value
-                                                ? 'border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-600'
+                                                ? 'border-primary bg-primary/10 text-primary dark:bg-primary/15 dark:text-primary'
                                                 : 'border-border text-muted-foreground hover:bg-muted'
                                         )}
                                     >
@@ -209,7 +209,7 @@ export function WellnessRuleChat() {
                             onClick={handleSaveManual}
                             disabled={isCreating || !manual.title.trim()}
                             size='sm'
-                            className='w-full gap-2 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600'
+                            className='w-full gap-2 bg-primary text-primary-foreground hover:bg-primary/90'
                         >
                             <CheckCircle2 className='size-3.5' />
                             {isCreating ? t('saving') : t('saveRule')}

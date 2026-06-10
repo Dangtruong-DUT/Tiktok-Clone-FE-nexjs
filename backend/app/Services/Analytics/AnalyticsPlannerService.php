@@ -5,7 +5,7 @@ namespace App\Services\Analytics;
 use App\Contracts\AI\GeminiClientInterface;
 use App\DTOs\AI\Gemini\GeminiConfig;
 use App\DTOs\AI\Gemini\GeminiRequest;
-use App\Models\AiStudioSetting;
+use App\Repositories\AiStudioSettingRepository;
 use App\Repositories\AiPromptTemplateRepository;
 use App\Services\AI\Copilot\Gateway\GatewayTask;
 use Illuminate\Support\Facades\Log;
@@ -28,6 +28,7 @@ class AnalyticsPlannerService
         private readonly GeminiClientInterface      $gemini,
         private readonly AiPromptTemplateRepository $templateRepo,
         private readonly MetricsCatalog             $catalog,
+        private readonly AiStudioSettingRepository  $settingRepository,
     ) {}
 
     /**
@@ -56,7 +57,7 @@ class AnalyticsPlannerService
             $result = $this->gemini->send(new GeminiRequest(
                 systemPrompt: $systemPrompt,
                 contents:     [['role' => 'user', 'parts' => [['text' => $userPrompt]]]],
-                config:       GeminiConfig::fromSetting(AiStudioSetting::current(), [
+                config:       GeminiConfig::fromSetting($this->settingRepository->current(), [
                     'temperature'      => 0.1,
                     'maxOutputTokens'  => 400,
                     'responseMimeType' => 'application/json',

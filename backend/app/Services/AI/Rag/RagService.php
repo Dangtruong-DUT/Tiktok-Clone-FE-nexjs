@@ -5,7 +5,7 @@ namespace App\Services\AI\Rag;
 use App\Contracts\AI\GeminiClientInterface;
 use App\DTOs\AI\Gemini\GeminiConfig;
 use App\DTOs\AI\Gemini\GeminiRequest;
-use App\Models\AiStudioSetting;
+use App\Repositories\AiStudioSettingRepository;
 use Illuminate\Support\Collection;
 
 class RagService
@@ -19,6 +19,7 @@ class RagService
         private readonly GeminiEmbeddingService $embeddingService,
         private readonly PgVectorSearchService  $searchService,
         private readonly GeminiClientInterface  $geminiClient,
+        private readonly AiStudioSettingRepository $settingRepository,
     ) {}
 
     /**
@@ -107,7 +108,7 @@ class RagService
             new GeminiRequest(
                 systemPrompt: $systemPrompt,
                 contents:     $contents,
-                config:       GeminiConfig::fromSetting(AiStudioSetting::current()),
+                config:       GeminiConfig::fromSetting($this->settingRepository->current()),
             ),
             function (string $delta, bool $done, array $tokenUsage) use (&$answer, $emit) {
                 if (! $done) {

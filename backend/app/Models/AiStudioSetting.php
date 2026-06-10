@@ -1,15 +1,14 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AiStudioSetting extends Model
 {
-
     /**
-     *  The attributes that are mass assignable.
+     * The attributes that are mass assignable.
+     *
      * @var array<int, string>
     */
     protected $fillable = [
@@ -49,10 +48,11 @@ class AiStudioSetting extends Model
     }
 
     /**
-    * is_feature_enabled checks if a specific feature flag is enabled in the settings.
-    * @param string $flag The name of the feature flag to check.
-    * @return bool Returns
-    */
+     * Check whether a feature flag is enabled in the settings.
+     *
+     * @param  string  $flag
+     * @return bool
+     */
     public function isFeatureEnabled(string $flag): bool
     {
         $flags = $this->feature_flags ?? [];
@@ -62,6 +62,7 @@ class AiStudioSetting extends Model
 
     /**
      * Get the user that last updated the settings.
+     *
      * @return BelongsTo
      */
     public function updatedBy(): BelongsTo

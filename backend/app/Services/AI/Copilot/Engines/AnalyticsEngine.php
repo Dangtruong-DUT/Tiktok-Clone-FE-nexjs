@@ -10,6 +10,7 @@ use App\Services\AI\Copilot\Gateway\GatewayTask;
 use App\Services\Analytics\AnalyticsAnswerBuilder;
 use App\Services\Analytics\AnalyticsPlannerService;
 use App\Services\Analytics\AnalyticsToolExecutor;
+use App\Repositories\AiStudioSettingRepository;
 
 /**
  * Handles analytics queries using a Planner → ToolExecutor → AnswerBuilder pipeline.
@@ -27,11 +28,12 @@ class AnalyticsEngine extends AbstractCopilotEngine implements CopilotEngineInte
     public function __construct(
         \App\Contracts\AI\GeminiClientInterface      $gemini,
         \App\Repositories\AiPromptTemplateRepository $templateRepo,
+        AiStudioSettingRepository                    $settingRepository,
         private readonly AnalyticsPlannerService     $planner,
         private readonly AnalyticsToolExecutor       $executor,
         private readonly AnalyticsAnswerBuilder      $answerBuilder,
     ) {
-        parent::__construct($gemini, $templateRepo);
+        parent::__construct($gemini, $templateRepo, $settingRepository);
     }
 
     /**
