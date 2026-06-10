@@ -45,13 +45,7 @@ function buildSentenceJSX(log: AdminActivityListItem, t: ReturnType<typeof useTr
             {ref.text && (
                 <>
                     {' '}
-                    <span
-                        className={
-                            ref.isUserRef ? 'text-orange-400 font-mono text-xs' : 'text-orange-400 font-mono text-xs'
-                        }
-                    >
-                        {ref.text}
-                    </span>
+                    <span className='text-orange-400 font-mono text-xs'>{ref.text}</span>
                 </>
             )}
         </>
@@ -190,7 +184,10 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
                             )}
                             {activityType !== 'all' && (
                                 <Badge variant='secondary' className='text-xs'>
-                                    {ACTIVITY_TYPES.find((item) => item.value === activityType)?.label}
+                                    {t(
+                                        ACTIVITY_TYPES.find((item) => item.value === activityType)
+                                            ?.labelKey as Parameters<typeof t>[0]
+                                    )}
                                 </Badge>
                             )}
                         </div>
@@ -229,7 +226,7 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
                                 <SelectItem value='all'>{t('activity.filters.allTypes')}</SelectItem>
                                 {ACTIVITY_TYPES.map((activity) => (
                                     <SelectItem key={activity.value} value={activity.value}>
-                                        {activity.label}
+                                        {t(activity.labelKey as Parameters<typeof t>[0])}
                                     </SelectItem>
                                 ))}
                             </SelectContent>

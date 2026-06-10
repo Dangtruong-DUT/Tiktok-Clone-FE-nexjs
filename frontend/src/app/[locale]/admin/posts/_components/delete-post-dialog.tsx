@@ -51,9 +51,7 @@ export function DeletePostDialog({ open, postUuid, authorUsername, onOpenChange,
         try {
             const violationReason = VIOLATION_REASONS.find((r) => r.value === data.reason)
             const finalReason =
-                data.reason === 'other'
-                    ? data.customReason!.trim()
-                    : `Violation: ${violationReason?.label ?? data.reason}`
+                data.reason === 'other' ? data.customReason!.trim() : (violationReason?.value ?? data.reason)
 
             await deletePost({
                 post_uuid: postUuid,
@@ -104,7 +102,7 @@ export function DeletePostDialog({ open, postUuid, authorUsername, onOpenChange,
                             <SelectContent>
                                 {VIOLATION_REASONS.map((reason) => (
                                     <SelectItem key={reason.value} value={reason.value}>
-                                        {reason.label}
+                                        {t(reason.labelKey as Parameters<typeof t>[0])}
                                     </SelectItem>
                                 ))}
                                 <SelectItem value='other'>{t('posts.reasons.other')}</SelectItem>

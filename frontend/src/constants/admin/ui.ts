@@ -22,27 +22,32 @@ export const SORT_OPTIONS = {
 
 export type SortOption = (typeof SORT_OPTIONS)[keyof typeof SORT_OPTIONS]
 
+export interface AdminLabeledOption<TValue extends string = string> {
+    value: TValue
+    labelKey: string
+}
+
 export const VIOLATION_REASONS = [
-    { value: 'spam', label: 'Spam' },
-    { value: 'harassment', label: 'Harassment' },
-    { value: 'inappropriate_content', label: 'Inappropriate Content' },
-    { value: 'copyright_infringement', label: 'Copyright Infringement' },
-    { value: 'misinformation', label: 'Misinformation' },
-    { value: 'hate_speech', label: 'Hate Speech' },
-    { value: 'violence', label: 'Violence' }
-] as const
+    { value: 'spam', labelKey: 'posts.violationReasons.spam' },
+    { value: 'harassment', labelKey: 'posts.violationReasons.harassment' },
+    { value: 'inappropriate_content', labelKey: 'posts.violationReasons.inappropriateContent' },
+    { value: 'copyright_infringement', labelKey: 'posts.violationReasons.copyrightInfringement' },
+    { value: 'misinformation', labelKey: 'posts.violationReasons.misinformation' },
+    { value: 'hate_speech', labelKey: 'posts.violationReasons.hateSpeech' },
+    { value: 'violence', labelKey: 'posts.violationReasons.violence' }
+] as const satisfies readonly AdminLabeledOption[]
 
 export const ACTIVITY_TYPES = [
-    { value: ADMIN_ACTIONS.BAN, label: 'Ban User' },
-    { value: ADMIN_ACTIONS.UNBAN, label: 'Unban User' },
-    { value: ADMIN_ACTIONS.DELETE_USER, label: 'Delete User' },
-    { value: ADMIN_ACTIONS.RESTORE_USER, label: 'Restore User' },
-    { value: ADMIN_ACTIONS.DELETE_POST, label: 'Delete Post' },
-    { value: ADMIN_ACTIONS.RESTORE_POST, label: 'Restore Post' },
-    { value: ADMIN_ACTIONS.DELETE_COMMENT, label: 'Delete Comment' },
-    { value: ADMIN_ACTIONS.RESTORE_COMMENT, label: 'Restore Comment' },
-    { value: ADMIN_ACTIONS.APPROVE_APPEAL, label: 'Approve Appeal' },
-    { value: ADMIN_ACTIONS.REJECT_APPEAL, label: 'Reject Appeal' },
-    { value: ADMIN_ACTIONS.RESET_USER_PASSWORD, label: 'Reset Password' },
-    { value: ADMIN_ACTIONS.SEND_EMAIL_TO_USER, label: 'Send Email' }
-] as const
+    { value: ADMIN_ACTIONS.BAN, labelKey: 'activity.types.banUser' },
+    { value: ADMIN_ACTIONS.UNBAN, labelKey: 'activity.types.unbanUser' },
+    { value: ADMIN_ACTIONS.DELETE_USER, labelKey: 'activity.types.deleteUser' },
+    { value: ADMIN_ACTIONS.RESTORE_USER, labelKey: 'activity.types.restoreUser' },
+    { value: ADMIN_ACTIONS.DELETE_POST, labelKey: 'activity.types.deletePost' },
+    { value: ADMIN_ACTIONS.RESTORE_POST, labelKey: 'activity.types.restorePost' },
+    { value: ADMIN_ACTIONS.DELETE_COMMENT, labelKey: 'activity.types.deleteComment' },
+    { value: ADMIN_ACTIONS.RESTORE_COMMENT, labelKey: 'activity.types.restoreComment' },
+    { value: ADMIN_ACTIONS.APPROVE_APPEAL, labelKey: 'activity.types.approveAppeal' },
+    { value: ADMIN_ACTIONS.REJECT_APPEAL, labelKey: 'activity.types.rejectAppeal' },
+    { value: ADMIN_ACTIONS.RESET_USER_PASSWORD, labelKey: 'activity.types.resetUserPassword' },
+    { value: ADMIN_ACTIONS.SEND_EMAIL_TO_USER, labelKey: 'activity.types.sendEmailToUser' }
+] as const satisfies readonly AdminLabeledOption[]

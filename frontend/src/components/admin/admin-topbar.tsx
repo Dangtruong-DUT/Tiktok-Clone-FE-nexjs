@@ -45,7 +45,7 @@ export function AdminTopbar({ title, breadcrumbs, actions, onToggleSidebar }: Ad
                     size='icon'
                     className='h-8 w-8 shrink-0 text-muted-foreground hover:text-foreground'
                     onClick={onToggleSidebar}
-                    aria-label='Toggle sidebar'
+                    aria-label={t('shell.toggleSidebar')}
                 >
                     <PanelLeft className='h-4 w-4' />
                 </Button>

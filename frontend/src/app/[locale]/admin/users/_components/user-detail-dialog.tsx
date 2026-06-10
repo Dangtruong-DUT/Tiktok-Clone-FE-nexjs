@@ -112,7 +112,10 @@ export function UserDetailDialog({ open, user, onOpenChange }: UserDetailDialogP
                             />
                         )}
                         {user.ban_expires_at && (
-                            <DetailRow label={t('users.detail.fields.banExpires')} value={formatDateTime(user.ban_expires_at)} />
+                            <DetailRow
+                                label={t('users.detail.fields.banExpires')}
+                                value={formatDateTime(user.ban_expires_at)}
+                            />
                         )}
                         <DetailRow
                             label={t('users.detail.fields.banReason')}

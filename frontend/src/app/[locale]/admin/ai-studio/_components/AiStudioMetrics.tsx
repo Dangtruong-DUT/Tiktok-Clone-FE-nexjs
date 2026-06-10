@@ -35,27 +35,7 @@ import {
     PieChart as PieChartIcon,
     Target
 } from 'lucide-react'
-
-const dailyChartConfig = {
-    total: {
-        label: 'Requests',
-        color: 'var(--chart-1)'
-    }
-} satisfies ChartConfig
-
-const tokenChartConfig = {
-    tokens: {
-        label: 'Tokens',
-        color: 'var(--chart-2)'
-    }
-} satisfies ChartConfig
-
-const intentChartConfig = {
-    count: {
-        label: 'Requests',
-        color: 'var(--chart-3)'
-    }
-} satisfies ChartConfig
+import { humanizeEnumValue } from '@/utils/formatting/format-label.util'
 
 const INTENT_COLORS = [
     '#f97316', // orange-500
@@ -112,6 +92,27 @@ export function AiStudioMetrics() {
     const { data, isLoading, isError } = useGetAiMetricsQuery({ period })
     const metrics = data?.data
 
+    const dailyChartConfig = {
+        total: {
+            label: t('aiStudio.metrics.charts.requests'),
+            color: 'var(--chart-1)'
+        }
+    } satisfies ChartConfig
+
+    const tokenChartConfig = {
+        tokens: {
+            label: t('aiStudio.metrics.charts.tokens'),
+            color: 'var(--chart-2)'
+        }
+    } satisfies ChartConfig
+
+    const intentChartConfig = {
+        count: {
+            label: t('aiStudio.metrics.charts.requests'),
+            color: 'var(--chart-3)'
+        }
+    } satisfies ChartConfig
+
     const PERIODS = [
         { value: AI_TIME_PERIODS.TODAY, label: t('aiStudio.metrics.periods.today') },
         { value: AI_TIME_PERIODS.WEEK, label: t('aiStudio.metrics.periods.week') },
@@ -133,12 +134,12 @@ export function AiStudioMetrics() {
                       if (count < threshold && result.length >= 5) {
                           otherCount += count
                       } else {
-                          result.push({ intent: intent.replace(/_/g, ' '), count })
+                          result.push({ intent: humanizeEnumValue(intent), count })
                       }
                   })
 
               if (otherCount > 0) {
-                  result.push({ intent: 'other', count: otherCount })
+                  result.push({ intent: t('aiStudio.metrics.charts.other'), count: otherCount })
               }
 
               return result
@@ -250,7 +251,7 @@ export function AiStudioMetrics() {
                                         strokeWidth={3}
                                         fillOpacity={1}
                                         fill='url(#fillRequests)'
-                                        name='Requests'
+                                        name={t('aiStudio.metrics.charts.requests')}
                                     />
                                 </AreaChart>
                             </ChartContainer>
@@ -263,7 +264,7 @@ export function AiStudioMetrics() {
                     <Card className='p-6 border-border/50 shadow-sm'>
                         <div className='flex items-center gap-2 mb-6'>
                             <BarChart2 size={18} className='text-muted-foreground' />
-                            <h3 className='text-sm font-semibold'>Daily Token Usage</h3>
+                            <h3 className='text-sm font-semibold'>{t('aiStudio.metrics.charts.dailyTokens')}</h3>
                         </div>
                         {metrics.daily_series.length > 0 ? (
                             <ChartContainer config={tokenChartConfig} className='h-[250px] w-full aspect-auto'>
@@ -293,7 +294,7 @@ export function AiStudioMetrics() {
                                     <Bar
                                         dataKey='tokens'
                                         fill='var(--color-tokens)'
-                                        name='Tokens'
+                                        name={t('aiStudio.metrics.charts.tokens')}
                                         radius={[4, 4, 0, 0]}
                                     />
                                 </BarChart>
@@ -362,7 +363,7 @@ export function AiStudioMetrics() {
                     <Card className='p-6 border-border/50 shadow-sm'>
                         <div className='flex items-center gap-2 mb-6'>
                             <Target size={18} className='text-muted-foreground' />
-                            <h3 className='text-sm font-semibold'>Intent Radar Profile</h3>
+                            <h3 className='text-sm font-semibold'>{t('aiStudio.metrics.charts.intentRadarProfile')}</h3>
                         </div>
                         {intentData.length > 0 ? (
                             <ChartContainer config={intentChartConfig} className='h-[250px] w-full aspect-auto'>
@@ -374,7 +375,7 @@ export function AiStudioMetrics() {
                                     />
                                     <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
                                     <Radar
-                                        name='Requests'
+                                        name={t('aiStudio.metrics.charts.requests')}
                                         dataKey='count'
                                         stroke='var(--color-count)'
                                         fill='var(--color-count)'

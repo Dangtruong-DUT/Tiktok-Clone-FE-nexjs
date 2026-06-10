@@ -35,7 +35,7 @@ function StatCard({
     )
 }
 
-export function ScheduledPostMetrics() {
+export function PostManagementMetrics() {
     const t = useTranslations('AdminPage')
     const [period, setPeriod] = useState<Period>('week')
 
@@ -63,7 +63,7 @@ export function ScheduledPostMetrics() {
     return (
         <div className='space-y-4'>
             <div className='flex items-center justify-between'>
-                <p className='text-sm font-medium text-muted-foreground'>{t('scheduledPosts.tabs.metrics')}</p>
+                <p className='text-sm font-medium text-muted-foreground'>{t('posts.managementSection.tabs.metrics')}</p>
                 <Select value={period} onValueChange={(v) => setPeriod(v as Period)}>
                     <SelectTrigger className='h-8 w-28 text-xs'>
                         <SelectValue />

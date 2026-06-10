@@ -6,7 +6,7 @@ import { AdminLayout, AdminContainer } from '@/components/admin'
 import { Suspense } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { PostModerationTable } from './_components/post-moderation-table'
-import { ScheduledPostsSection } from './_components/scheduled-posts-section'
+import { PostManagementSection } from './_components/post-management-section'
 import { ADMIN_ROUTES } from '@/constants/routes/routes'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: LocalesType }> }): Promise<Metadata> {
@@ -57,7 +57,7 @@ export default async function AdminPostsPage() {
                         <PostModerationTable />
                     </Suspense>
 
-                    <ScheduledPostsSection />
+                    <PostManagementSection />
                 </div>
             </AdminContainer>
         </AdminLayout>

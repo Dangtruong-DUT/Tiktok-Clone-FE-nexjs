@@ -20,6 +20,7 @@
             "panelLabel": "Bảng quản trị",
             "consoleSubtitle": "Hệ thống quản lý",
             "navigation": "Điều hướng",
+            "toggleSidebar": "Bật/tắt thanh bên",
             "navGroups": {
                 "manage": "Quản lý",
                 "moderate": "Kiểm duyệt",
@@ -62,6 +63,17 @@
                     "week": "Tuần này",
                     "month": "Tháng này"
                 },
+                "charts": {
+                    "requests": "Yêu cầu",
+                    "tokens": "Tokens",
+                    "other": "Khác",
+                    "dailyRequests": "Yêu cầu hàng ngày",
+                    "dailyTokens": "Sử dụng token hàng ngày",
+                    "intentRadarProfile": "Hồ sơ radar intent",
+                    "completed": "Hoàn thành",
+                    "failed": "Thất bại",
+                    "intentBreakdown": "Phân tích mục đích nội dung"
+                },
                 "stats": {
                     "totalRequests": "Tổng yêu cầu",
                     "successRate": "Tỷ lệ thành công",
@@ -75,12 +87,6 @@
                     "failureRate": "{rate}% tỷ lệ lỗi",
                     "suggestionsUsed": "Gợi ý đã dùng",
                     "tokens": "{count} tokens"
-                },
-                "charts": {
-                    "dailyRequests": "Yêu cầu hàng ngày",
-                    "completed": "Hoàn thành",
-                    "failed": "Thất bại",
-                    "intentBreakdown": "Phân tích mục đích nội dung"
                 },
                 "empty": {
                     "noData": "Không có dữ liệu cho khoảng thời gian này",
@@ -163,6 +169,12 @@
                     "completed": "Hoàn thành",
                     "failed": "Thất bại"
                 },
+                "statuses": {
+                    "success": "Thành công",
+                    "failed": "Thất bại",
+                    "accepted": "Đã chấp nhận",
+                    "rejected": "Đã từ chối"
+                },
                 "columns": {
                     "uuid": "UUID",
                     "user": "Người dùng",
@@ -187,6 +199,24 @@
                 "total": "{count} yêu cầu",
                 "pagination": {
                     "page": "Trang {current} / {total}"
+                }
+            },
+            "featureFlags": {
+                "streaming": {
+                    "label": "Phản hồi luồng",
+                    "description": "Bật SSE token streaming cho phản hồi AI theo thời gian thực"
+                },
+                "frameAnalysis": {
+                    "label": "Phân tích khung hình",
+                    "description": "Cho phép người dùng chụp và gửi khung hình video tới AI"
+                },
+                "timelineContext": {
+                    "label": "Ngữ cảnh dòng thời gian",
+                    "description": "Cho phép người dùng chọn một đoạn video làm ngữ cảnh"
+                },
+                "viralAnalysis": {
+                    "label": "Phân tích viral",
+                    "description": "Bật intent phân tích tiềm năng viral"
                 }
             },
             "knowledge": {
@@ -553,6 +583,14 @@
                 "title": "Bài viết lên lịch",
                 "description": "Thống kê và danh sách bài viết đã lên lịch"
             },
+            "managementSection": {
+                "title": "Quản lý bài viết",
+                "description": "Theo dõi kiểm duyệt, xuất bản và hàng chờ của tất cả bài viết.",
+                "tabs": {
+                    "metrics": "Thống kê",
+                    "requests": "Yêu cầu"
+                }
+            },
             "actions": {
                 "delete": "Xóa",
                 "confirmDelete": "Xác nhận xóa",
@@ -583,6 +621,15 @@
             },
             "reasons": {
                 "other": "Khác"
+            },
+            "violationReasons": {
+                "spam": "Spam",
+                "harassment": "Quấy rối",
+                "inappropriateContent": "Nội dung không phù hợp",
+                "copyrightInfringement": "Vi phạm bản quyền",
+                "misinformation": "Thông tin sai lệch",
+                "hateSpeech": "Ngôn từ thù ghét",
+                "violence": "Bạo lực"
             },
             "errors": {
                 "reasonRequired": "Lý do là bắt buộc"
@@ -662,6 +709,20 @@
             },
             "filters": {
                 "allTypes": "Tất cả loại"
+            },
+            "types": {
+                "banUser": "Khóa tài khoản",
+                "unbanUser": "Mở khóa tài khoản",
+                "deleteUser": "Xóa tài khoản",
+                "restoreUser": "Khôi phục tài khoản",
+                "deletePost": "Xóa bài viết",
+                "restorePost": "Khôi phục bài viết",
+                "deleteComment": "Xóa bình luận",
+                "restoreComment": "Khôi phục bình luận",
+                "approveAppeal": "Duyệt kháng cáo",
+                "rejectAppeal": "Từ chối kháng cáo",
+                "resetUserPassword": "Đặt lại mật khẩu",
+                "sendEmailToUser": "Gửi email"
             },
             "prepositions": {
                 "on": "trên"

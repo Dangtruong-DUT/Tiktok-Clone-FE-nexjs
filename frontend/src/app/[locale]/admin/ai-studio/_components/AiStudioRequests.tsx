@@ -11,8 +11,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { AI_USAGE_LOG_STATUSES } from '@/constants/admin/ai'
 import type { AiUsageLogItemDto } from '@/types/dtos/admin/ai/admin-ai-studio.response.dto'
 import type { OffsetPaginationMeta } from '@/types/common/pagination-meta.type'
+import { humanizeEnumValue } from '@/utils/formatting/format-label.util'
 
-function LogRow({ item }: { item: AiUsageLogItemDto }) {
+function LogRow({ item, t }: { item: AiUsageLogItemDto; t: ReturnType<typeof useTranslations<'AdminPage'>> }) {
     return (
         <TableRow>
             <TableCell className='text-xs font-mono text-muted-foreground'>
@@ -21,7 +22,7 @@ function LogRow({ item }: { item: AiUsageLogItemDto }) {
             <TableCell>
                 {item.intent ? (
                     <Badge variant='secondary' className='text-[10px] capitalize'>
-                        {item.intent.replace(/_/g, ' ')}
+                        {humanizeEnumValue(item.intent)}
                     </Badge>
                 ) : (
                     <span className='text-xs text-muted-foreground'>-</span>
@@ -39,7 +40,13 @@ function LogRow({ item }: { item: AiUsageLogItemDto }) {
                     variant={item.status === AI_USAGE_LOG_STATUSES.SUCCESS ? 'default' : 'destructive'}
                     className='text-[10px]'
                 >
-                    {item.status}
+                    {item.status === AI_USAGE_LOG_STATUSES.SUCCESS
+                        ? t('aiStudio.requests.statuses.success')
+                        : item.status === AI_USAGE_LOG_STATUSES.FAILED
+                          ? t('aiStudio.requests.statuses.failed')
+                          : item.status === AI_USAGE_LOG_STATUSES.ACCEPTED
+                            ? t('aiStudio.requests.statuses.accepted')
+                            : t('aiStudio.requests.statuses.rejected')}
                 </Badge>
             </TableCell>
             <TableCell className='text-xs text-muted-foreground'>
@@ -91,7 +98,7 @@ export function AiStudioRequests() {
                                     </TableCell>
                                 </TableRow>
                             ))}
-                        {!isLoading && items.map((item) => <LogRow key={item.id} item={item} />)}
+                        {!isLoading && items.map((item) => <LogRow key={item.id} item={item} t={t} />)}
                         {!isLoading && items.length === 0 && (
                             <TableRow>
                                 <TableCell

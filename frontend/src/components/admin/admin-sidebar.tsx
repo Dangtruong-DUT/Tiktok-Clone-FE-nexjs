@@ -6,6 +6,7 @@ import { Link } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
 import { ADMIN_ROUTES } from '@/constants/routes/routes'
 import { ADMIN_NAV_GROUPS } from '@/constants/admin/navigation'
+import { BRAND_CONFIG } from '@/config/brand.config'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
@@ -75,7 +76,9 @@ export function AdminSidebar({ collapsed, onToggle, stats }: AdminSidebarProps) 
                                 <Link href={ADMIN_ROUTES.DASHBOARD} className='group flex min-w-0 items-center gap-2.5'>
                                     <SmallLogo className='h-7 w-7 shrink-0' />
                                     <div className='min-w-0'>
-                                        <p className='truncate text-sm font-bold leading-none text-white'>snapi</p>
+                                        <p className='truncate text-sm font-bold leading-none text-white'>
+                                            {BRAND_CONFIG.APP_NAME}
+                                        </p>
                                         <p className='mt-[3px] truncate text-[10px] leading-none text-zinc-400'>
                                             {t('shell.panelLabel')}
                                         </p>
@@ -296,9 +299,11 @@ export function AdminSidebar({ collapsed, onToggle, stats }: AdminSidebarProps) 
                                         <SelectContent>
                                             {LANGUAGES.map(({ value, labelKey }) => (
                                                 <SelectItem key={value} value={value} className='text-xs'>
-                                                    {labelKey === 'en'
-                                                        ? t('shell.language.english')
-                                                        : t('shell.language.vietnamese')}
+                                                    {t(
+                                                        `shell.language.${labelKey === 'en' ? 'english' : 'vietnamese'}` as Parameters<
+                                                            typeof t
+                                                        >[0]
+                                                    )}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
@@ -324,7 +329,7 @@ export function AdminSidebar({ collapsed, onToggle, stats }: AdminSidebarProps) 
                                     </DropdownMenu>
                                 </div>
                                 <p className='px-2.5 text-[10px] text-zinc-600'>
-                                    © {new Date().getFullYear()} snapi · v1.0.0
+                                    © {new Date().getFullYear()} {BRAND_CONFIG.APP_NAME} · v{BRAND_CONFIG.APP_VERSION}
                                 </p>
                             </>
                         )}

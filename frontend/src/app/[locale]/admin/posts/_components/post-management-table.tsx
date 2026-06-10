@@ -19,7 +19,6 @@ import {
 import { SCHEDULED_POST_STATUSES } from '@/constants/studio-post'
 import { POST_STATUS_BADGE } from '@/constants/status/post'
 import { formatDateShort } from '@/utils/formatting/format-time.util'
-import type { OffsetPaginationMeta } from '@/types/common/pagination-meta.type'
 
 const SCHEDULED_STATUS_BADGE: Record<string, string> = {
     pending: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300',
@@ -31,7 +30,7 @@ const SCHEDULED_STATUS_BADGE: Record<string, string> = {
 
 type StatusFilter = 'all' | 'pending' | 'processing' | 'published' | 'failed' | 'cancelled'
 
-export function ScheduledPostTable() {
+export function PostManagementTable() {
     const t = useTranslations('AdminPage')
     const [page, setPage] = useState(1)
     const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
@@ -48,6 +47,7 @@ export function ScheduledPostTable() {
 
     const items = data?.data ?? []
     const pagination = data?.meta
+    const offsetPagination = pagination?.type === 'offset' ? pagination : undefined
 
     const handleCancel = async (uuid: string) => {
         try {
@@ -170,9 +170,9 @@ export function ScheduledPostTable() {
                 </div>
             )}
 
-            {pagination && pagination.last_page > 1 && (
+            {offsetPagination && offsetPagination.last_page > 1 && (
                 <TablePagination
-                    pagination={pagination as OffsetPaginationMeta}
+                    pagination={offsetPagination}
                     page={page}
                     perPage={perPage}
                     onPageChange={setPage}

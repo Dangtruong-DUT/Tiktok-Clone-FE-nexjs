@@ -20,6 +20,7 @@
             "panelLabel": "Admin Panel",
             "consoleSubtitle": "Management Console",
             "navigation": "Navigation",
+            "toggleSidebar": "Toggle sidebar",
             "navGroups": {
                 "manage": "Manage",
                 "moderate": "Moderate",
@@ -62,6 +63,17 @@
                     "week": "This week",
                     "month": "This month"
                 },
+                "charts": {
+                    "requests": "Requests",
+                    "tokens": "Tokens",
+                    "other": "Other",
+                    "dailyRequests": "Daily requests",
+                    "dailyTokens": "Daily token usage",
+                    "intentRadarProfile": "Intent radar profile",
+                    "completed": "Completed",
+                    "failed": "Failed",
+                    "intentBreakdown": "Content intent breakdown"
+                },
                 "stats": {
                     "totalRequests": "Total requests",
                     "successRate": "Success rate",
@@ -75,12 +87,6 @@
                     "failureRate": "{rate}% failure rate",
                     "suggestionsUsed": "Suggestions used",
                     "tokens": "{count} tokens"
-                },
-                "charts": {
-                    "dailyRequests": "Daily requests",
-                    "completed": "Completed",
-                    "failed": "Failed",
-                    "intentBreakdown": "Content intent breakdown"
                 },
                 "empty": {
                     "noData": "No data available for this period",
@@ -163,6 +169,12 @@
                     "completed": "Completed",
                     "failed": "Failed"
                 },
+                "statuses": {
+                    "success": "Success",
+                    "failed": "Failed",
+                    "accepted": "Accepted",
+                    "rejected": "Rejected"
+                },
                 "columns": {
                     "uuid": "UUID",
                     "user": "User",
@@ -187,6 +199,24 @@
                 "total": "{count} total",
                 "pagination": {
                     "page": "Page {current} of {total}"
+                }
+            },
+            "featureFlags": {
+                "streaming": {
+                    "label": "Streaming Responses",
+                    "description": "Enable SSE token streaming for real-time AI responses"
+                },
+                "frameAnalysis": {
+                    "label": "Frame Analysis",
+                    "description": "Allow users to capture and send video frames to the AI"
+                },
+                "timelineContext": {
+                    "label": "Timeline Context",
+                    "description": "Allow users to select a video segment as context"
+                },
+                "viralAnalysis": {
+                    "label": "Viral Analysis",
+                    "description": "Enable viral potential analysis intent"
                 }
             },
             "knowledge": {
@@ -548,6 +578,14 @@
                 "title": "Scheduled Posts",
                 "description": "Scheduled post metrics and requests"
             },
+            "managementSection": {
+                "title": "Post Management",
+                "description": "Monitor moderation, publishing, and queue activity across all posts.",
+                "tabs": {
+                    "metrics": "Metrics",
+                    "requests": "Requests"
+                }
+            },
             "actions": {
                 "delete": "Delete",
                 "confirmDelete": "Confirm Delete",
@@ -578,6 +616,15 @@
             },
             "reasons": {
                 "other": "Other"
+            },
+            "violationReasons": {
+                "spam": "Spam",
+                "harassment": "Harassment",
+                "inappropriateContent": "Inappropriate content",
+                "copyrightInfringement": "Copyright infringement",
+                "misinformation": "Misinformation",
+                "hateSpeech": "Hate speech",
+                "violence": "Violence"
             },
             "errors": {
                 "reasonRequired": "Reason is required"
@@ -657,6 +704,20 @@
             },
             "filters": {
                 "allTypes": "All types"
+            },
+            "types": {
+                "banUser": "Ban user",
+                "unbanUser": "Unban user",
+                "deleteUser": "Delete user",
+                "restoreUser": "Restore user",
+                "deletePost": "Delete post",
+                "restorePost": "Restore post",
+                "deleteComment": "Delete comment",
+                "restoreComment": "Restore comment",
+                "approveAppeal": "Approve appeal",
+                "rejectAppeal": "Reject appeal",
+                "resetUserPassword": "Reset password",
+                "sendEmailToUser": "Send email"
             },
             "prepositions": {
                 "on": "on"

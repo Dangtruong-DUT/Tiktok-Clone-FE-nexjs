@@ -24,35 +24,37 @@ export const AI_USAGE_LOG_STATUSES = {
 export type AiUsageLogStatus = (typeof AI_USAGE_LOG_STATUSES)[keyof typeof AI_USAGE_LOG_STATUSES]
 
 export const AI_STUDIO_REQUEST_TABLE_COLUMNS = [
-    'User',
-    'Intent',
-    'Tokens',
-    'Cost',
-    'Latency',
-    'Status',
-    'Time'
+    'aiStudio.requests.columns.user',
+    'aiStudio.requests.columns.intent',
+    'aiStudio.requests.columns.tokens',
+    'aiStudio.requests.columns.cost',
+    'aiStudio.requests.columns.latency',
+    'aiStudio.requests.columns.status',
+    'aiStudio.requests.columns.time'
 ] as const
+
+export type AiStudioRequestTableColumnKey = (typeof AI_STUDIO_REQUEST_TABLE_COLUMNS)[number]
 
 export const AI_COPILOT_FEATURE_FLAGS = {
     STREAMING: {
         key: 'streaming',
-        label: 'Streaming Responses',
-        description: 'Enable SSE token streaming for real-time AI responses'
+        labelKey: 'aiStudio.featureFlags.streaming.label',
+        descriptionKey: 'aiStudio.featureFlags.streaming.description'
     },
     FRAME_ANALYSIS: {
         key: 'frame_analysis',
-        label: 'Frame Analysis',
-        description: 'Allow users to capture and send video frames to the AI'
+        labelKey: 'aiStudio.featureFlags.frameAnalysis.label',
+        descriptionKey: 'aiStudio.featureFlags.frameAnalysis.description'
     },
     TIMELINE_CONTEXT: {
         key: 'timeline_context',
-        label: 'Timeline Context',
-        description: 'Allow users to select a video segment as context'
+        labelKey: 'aiStudio.featureFlags.timelineContext.label',
+        descriptionKey: 'aiStudio.featureFlags.timelineContext.description'
     },
     VIRAL_ANALYSIS: {
         key: 'viral_analysis',
-        label: 'Viral Analysis',
-        description: 'Enable viral potential analysis intent'
+        labelKey: 'aiStudio.featureFlags.viralAnalysis.label',
+        descriptionKey: 'aiStudio.featureFlags.viralAnalysis.description'
     }
 } as const
 

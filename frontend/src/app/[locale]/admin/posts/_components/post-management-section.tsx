@@ -3,18 +3,18 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { ChevronDown, ChevronUp, Calendar } from 'lucide-react'
-import { ScheduledPostMetrics } from './scheduled-post-metrics'
-import { ScheduledPostTable } from './scheduled-post-table'
+import { PostManagementMetrics } from './post-management-metrics'
+import { PostManagementTable } from './post-management-table'
 import { cn } from '@/lib/utils'
 
 const TABS = [
-    { key: 'metrics' as const, labelKey: 'scheduledPosts.tabs.metrics' },
-    { key: 'requests' as const, labelKey: 'scheduledPosts.tabs.requests' }
+    { key: 'metrics' as const, labelKey: 'posts.managementSection.tabs.metrics' },
+    { key: 'requests' as const, labelKey: 'posts.managementSection.tabs.requests' }
 ]
 
 type TabKey = 'metrics' | 'requests'
 
-export function ScheduledPostsSection() {
+export function PostManagementSection() {
     const t = useTranslations('AdminPage')
     const [isOpen, setIsOpen] = useState(false)
     const [activeTab, setActiveTab] = useState<TabKey>('metrics')
@@ -26,15 +26,15 @@ export function ScheduledPostsSection() {
                 onClick={() => setIsOpen((v) => !v)}
                 className='w-full flex items-center justify-between px-5 py-4 hover:bg-muted/50 transition-colors'
             >
-                <div className='flex items-center gap-2.5'>
-                    <div className='flex size-7 items-center justify-center rounded-lg bg-primary/10'>
-                        <Calendar size={14} className='text-primary' />
+                    <div className='flex items-center gap-2.5'>
+                        <div className='flex size-7 items-center justify-center rounded-lg bg-primary/10'>
+                            <Calendar size={14} className='text-primary' />
+                        </div>
+                        <div className='text-left'>
+                            <p className='text-sm font-semibold'>{t('posts.managementSection.title')}</p>
+                            <p className='text-xs text-muted-foreground'>{t('posts.managementSection.description')}</p>
+                        </div>
                     </div>
-                    <div className='text-left'>
-                        <p className='text-sm font-semibold'>{t('posts.scheduledSection.title')}</p>
-                        <p className='text-xs text-muted-foreground'>{t('posts.scheduledSection.description')}</p>
-                    </div>
-                </div>
                 {isOpen ? (
                     <ChevronUp className='size-4 text-muted-foreground' />
                 ) : (
@@ -62,8 +62,8 @@ export function ScheduledPostsSection() {
                     </div>
 
                     <div className='p-5'>
-                        {activeTab === 'metrics' && <ScheduledPostMetrics />}
-                        {activeTab === 'requests' && <ScheduledPostTable />}
+                        {activeTab === 'metrics' && <PostManagementMetrics />}
+                        {activeTab === 'requests' && <PostManagementTable />}
                     </div>
                 </div>
             )}
