@@ -219,7 +219,7 @@ export default function FormUploadVideo() {
                                         <div className='flex items-center justify-between'>
                                             <div className='flex items-center gap-2'>
                                                 <CalendarClock size={15} className='text-primary' />
-                                                <span className='text-sm font-medium'>Hẹn giờ đăng bài</span>
+                                                <span className='text-sm font-medium'>{t('schedule.title')}</span>
                                             </div>
                                             <button
                                                 type='button'
@@ -238,13 +238,12 @@ export default function FormUploadVideo() {
                                         />
                                         {scheduledAt && (
                                             <p className='text-xs text-muted-foreground'>
-                                                Bài sẽ được đăng lúc{' '}
-                                                <strong>
-                                                    {new Date(scheduledAt).toLocaleString('vi-VN', {
+                                                {t('schedule.preview', {
+                                                    date: new Date(scheduledAt).toLocaleString(undefined, {
                                                         dateStyle: 'short',
                                                         timeStyle: 'short'
-                                                    })}
-                                                </strong>
+                                                    })
+                                                })}
                                             </p>
                                         )}
                                     </div>
@@ -262,7 +261,7 @@ export default function FormUploadVideo() {
                                     >
                                         {showSchedule && scheduledAt ? (
                                             <>
-                                                <CalendarClock size={15} /> Hẹn giờ đăng
+                                                <CalendarClock size={15} /> {t('buttons.scheduleNow')}
                                             </>
                                         ) : (
                                             t('buttons.post')
@@ -278,7 +277,7 @@ export default function FormUploadVideo() {
                                             disabled={isSubmitDisabled}
                                         >
                                             <CalendarClock size={15} />
-                                            Hẹn giờ
+                                            {t('buttons.schedule')}
                                         </Button>
                                     )}
                                     <Button
@@ -290,7 +289,7 @@ export default function FormUploadVideo() {
                                         disabled={isSubmitDisabled}
                                     >
                                         <BookmarkCheck size={15} />
-                                        Lưu nháp
+                                        {t('buttons.saveDraft')}
                                     </Button>
                                     <Button
                                         size='lg'

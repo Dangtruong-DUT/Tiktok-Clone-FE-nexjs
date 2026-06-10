@@ -415,7 +415,14 @@
                 "discard": "Discard",
                 "waitEncoding": "Waiting for encoding...",
                 "update": "Update",
-                "cancel": "Cancel"
+                "cancel": "Cancel",
+                "schedule": "Schedule",
+                "scheduleNow": "Schedule now",
+                "saveDraft": "Save draft"
+            },
+            "schedule": {
+                "title": "Schedule post",
+                "preview": "Post will be published at {date}"
             },
             "toast": {
                 "updated": "Post updated successfully",

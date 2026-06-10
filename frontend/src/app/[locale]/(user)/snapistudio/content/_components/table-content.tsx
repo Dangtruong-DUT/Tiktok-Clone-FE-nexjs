@@ -1,11 +1,9 @@
 'use client'
 
 import {
-    ColumnFiltersState,
     SortingState,
     VisibilityState,
     getCoreRowModel,
-    getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
     useReactTable
@@ -42,7 +40,6 @@ export default function TableContent() {
     const { setPostIdDelete, postIdDelete } = usePostTableContext()
 
     const [sorting, setSorting] = useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = useState({})
     const [searchKeyword, setSearchKeyword] = useState('')
@@ -75,16 +72,14 @@ export default function TableContent() {
         data,
         columns,
         onSortingChange: setSorting,
-        onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
         onPaginationChange: setPagination,
         autoResetPageIndex: false,
-        state: { sorting, columnFilters, columnVisibility, rowSelection, pagination },
+        state: { sorting, columnVisibility, rowSelection, pagination },
         manualPagination: true,
         pageCount: (queryData?.meta as OffsetPaginationMeta | undefined)?.last_page ?? -1
     })

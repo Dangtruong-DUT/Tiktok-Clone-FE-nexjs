@@ -415,7 +415,14 @@
                 "discard": "Hủy",
                 "waitEncoding": "Đang chờ mã hóa...",
                 "update": "Cập nhật",
-                "cancel": "Hủy"
+                "cancel": "Hủy",
+                "schedule": "Hẹn giờ",
+                "scheduleNow": "Hẹn giờ đăng",
+                "saveDraft": "Lưu nháp"
+            },
+            "schedule": {
+                "title": "Hẹn giờ đăng bài",
+                "preview": "Bài sẽ được đăng lúc {date}"
             },
             "toast": {
                 "updated": "Đã cập nhật bài đăng",
