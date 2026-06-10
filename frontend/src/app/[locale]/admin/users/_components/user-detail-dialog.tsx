@@ -103,12 +103,16 @@ export function UserDetailDialog({ open, user, onOpenChange }: UserDetailDialogP
                         />
                         {user.ban_duration_days != null && (
                             <DetailRow
-                                label='Ban Duration'
-                                value={user.ban_duration_days === 0 ? 'Permanent' : `${user.ban_duration_days} days`}
+                                label={t('users.detail.fields.banDuration')}
+                                value={
+                                    user.ban_duration_days === 0
+                                        ? t('users.detail.values.permanent')
+                                        : t('users.detail.values.days', { count: user.ban_duration_days })
+                                }
                             />
                         )}
                         {user.ban_expires_at && (
-                            <DetailRow label='Ban Expires' value={formatDateTime(user.ban_expires_at)} />
+                            <DetailRow label={t('users.detail.fields.banExpires')} value={formatDateTime(user.ban_expires_at)} />
                         )}
                         <DetailRow
                             label={t('users.detail.fields.banReason')}

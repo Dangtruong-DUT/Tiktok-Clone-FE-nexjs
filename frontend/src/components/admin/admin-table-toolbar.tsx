@@ -24,20 +24,22 @@ interface AdminTableToolbarProps {
 export function AdminTableToolbar({
     searchValue,
     onSearchChange,
-    searchPlaceholder = 'Search…',
+    searchPlaceholder,
     filters,
     actions,
     hasActiveFilters,
     onResetFilters,
-    resetLabel = 'Reset',
+    resetLabel,
     isFetching,
     className
 }: AdminTableToolbarProps) {
     const t = useTranslations('AdminPage')
     const [inputValue, setInputValue] = useState(searchValue)
+    const searchPlaceholderText = searchPlaceholder ?? t('common.search')
+    const resetLabelText = resetLabel ?? t('common.reset')
 
     useEffect(() => {
-        if (!searchValue) setInputValue('')
+        setInputValue(searchValue)
     }, [searchValue])
 
     const handleSubmit = () => onSearchChange(inputValue)
@@ -50,7 +52,7 @@ export function AdminTableToolbar({
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-                    placeholder={searchPlaceholder}
+                    placeholder={searchPlaceholderText}
                     className='rounded-none pl-9 pr-9'
                 />
                 <button
@@ -60,7 +62,7 @@ export function AdminTableToolbar({
                         onSearchChange('')
                     }}
                     disabled={!inputValue}
-                    aria-label='Clear'
+                    aria-label={t('common.clearSearch')}
                     className='absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground/50 transition-colors hover:text-muted-foreground disabled:pointer-events-none disabled:opacity-30'
                 >
                     <X className='h-3.5 w-3.5' />
@@ -88,7 +90,7 @@ export function AdminTableToolbar({
                     className='flex h-11 shrink-0 items-center gap-1.5 border border-border/60 px-3 text-sm text-muted-foreground transition-colors hover:border-border hover:text-foreground disabled:pointer-events-none disabled:opacity-30'
                 >
                     <X className='h-3.5 w-3.5' />
-                    {resetLabel}
+                    {resetLabelText}
                 </button>
             )}
 

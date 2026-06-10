@@ -21,13 +21,21 @@ interface AppealDetailDialogProps {
     onOpenChange: (open: boolean) => void
 }
 
+interface AppealDetailLabels {
+    thumbnailAlt: string
+    deleted: string
+    banned: string
+    approvedHeading: string
+    rejectedHeading: string
+}
+
 const STATUS_STYLE: Record<string, string> = {
     [APPEAL_STATUSES.PENDING]: 'bg-amber-50 text-amber-700 border-amber-200',
     [APPEAL_STATUSES.APPROVED]: 'bg-emerald-50 text-emerald-700 border-emerald-200',
     [APPEAL_STATUSES.REJECTED]: 'bg-red-50 text-red-700 border-red-200'
 }
 
-function ResourcePreviewBlock({ preview }: { preview: ResourcePreview }) {
+function ResourcePreviewBlock({ preview, labels }: { preview: ResourcePreview; labels: AppealDetailLabels }) {
     if (preview.type === 'post') {
         return (
             <div className='space-y-3'>
@@ -35,7 +43,7 @@ function ResourcePreviewBlock({ preview }: { preview: ResourcePreview }) {
                     <div className='relative h-48 w-full overflow-hidden rounded-lg bg-black'>
                         <Image
                             src={preview.thumbnail_url}
-                            alt='Post thumbnail'
+                            alt={labels.thumbnailAlt}
                             fill
                             className='object-cover'
                             unoptimized
@@ -43,7 +51,7 @@ function ResourcePreviewBlock({ preview }: { preview: ResourcePreview }) {
                         {preview.is_deleted && (
                             <div className='absolute inset-0 flex items-center justify-center bg-black/60'>
                                 <span className='rounded-full bg-red-500/90 px-2.5 py-1 text-xs font-medium text-white'>
-                                    Deleted
+                                    {labels.deleted}
                                 </span>
                             </div>
                         )}
@@ -77,7 +85,7 @@ function ResourcePreviewBlock({ preview }: { preview: ResourcePreview }) {
                 </div>
                 {preview.is_deleted && (
                     <Badge variant='outline' className='text-xs border-red-200 text-red-600 bg-red-50'>
-                        Deleted
+                        {labels.deleted}
                     </Badge>
                 )}
             </div>
@@ -98,12 +106,12 @@ function ResourcePreviewBlock({ preview }: { preview: ResourcePreview }) {
                     <div className='mt-1 flex gap-1.5'>
                         {preview.is_banned && (
                             <Badge variant='outline' className='text-xs border-orange-200 text-orange-600 bg-orange-50'>
-                                Banned
+                                {labels.banned}
                             </Badge>
                         )}
                         {preview.is_deleted && (
                             <Badge variant='outline' className='text-xs border-red-200 text-red-600 bg-red-50'>
-                                Deleted
+                                {labels.deleted}
                             </Badge>
                         )}
                     </div>
@@ -118,6 +126,13 @@ function ResourcePreviewBlock({ preview }: { preview: ResourcePreview }) {
 export function AppealDetailDialog({ open, appeal, onOpenChange }: AppealDetailDialogProps) {
     const t = useTranslations('AdminPage')
     const [showGallery, setShowGallery] = useState(false)
+    const resourceLabels: AppealDetailLabels = {
+        thumbnailAlt: t('appeals.detail.labels.thumbnailAlt'),
+        deleted: t('appeals.detail.labels.deleted'),
+        banned: t('appeals.detail.labels.banned'),
+        approvedHeading: t('appeals.detail.labels.approvedHeading'),
+        rejectedHeading: t('appeals.detail.labels.rejectedHeading')
+    }
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -131,7 +146,7 @@ export function AppealDetailDialog({ open, appeal, onOpenChange }: AppealDetailD
                         <CheckCircle2 className='h-5 w-5 text-emerald-600 shrink-0 mt-0.5' />
                         <div>
                             <p className='text-sm font-semibold text-emerald-800 dark:text-emerald-300'>
-                                Appeal Approved — Action Reversed
+                                {resourceLabels.approvedHeading}
                             </p>
                             {appeal.admin_response && (
                                 <p className='text-xs text-emerald-700 dark:text-emerald-400 mt-0.5'>
@@ -145,7 +160,9 @@ export function AppealDetailDialog({ open, appeal, onOpenChange }: AppealDetailD
                     <div className='flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 dark:bg-red-950/40 px-4 py-3'>
                         <XCircle className='h-5 w-5 text-red-600 shrink-0 mt-0.5' />
                         <div>
-                            <p className='text-sm font-semibold text-red-800 dark:text-red-300'>Appeal Rejected</p>
+                            <p className='text-sm font-semibold text-red-800 dark:text-red-300'>
+                                {resourceLabels.rejectedHeading}
+                            </p>
                             {appeal.admin_response && (
                                 <p className='text-xs text-red-700 dark:text-red-400 mt-0.5'>{appeal.admin_response}</p>
                             )}
@@ -236,7 +253,7 @@ export function AppealDetailDialog({ open, appeal, onOpenChange }: AppealDetailD
                         <p className='text-sm font-semibold'>{t('appeals.detail.resourceTitle')}</p>
                         <div className='rounded-lg border bg-muted/20 p-4'>
                             {appeal.resource_preview ? (
-                                <ResourcePreviewBlock preview={appeal.resource_preview} />
+                                <ResourcePreviewBlock preview={appeal.resource_preview} labels={resourceLabels} />
                             ) : (
                                 <div className='flex flex-col items-center gap-2 py-4 text-center'>
                                     <FileText className='h-8 w-8 text-muted-foreground' />

@@ -1,4 +1,5 @@
 import z from 'zod'
+import { VALIDATION_MESSAGES } from '@/constants/validation'
 
 export const LoginReqBody = z
     .object({
@@ -22,7 +23,7 @@ export const RegisterReqBody = z
         if (confirm_password !== password) {
             ctx.addIssue({
                 code: 'custom',
-                message: 'Passwords do not match',
+                message: VALIDATION_MESSAGES.passwordsDoNotMatch,
                 path: ['confirm_password']
             })
         }
@@ -73,7 +74,7 @@ export const resetPasswordReqBody = z
         if (confirm_password !== password) {
             ctx.addIssue({
                 code: 'custom',
-                message: 'Passwords do not match',
+                message: VALIDATION_MESSAGES.passwordsDoNotMatch,
                 path: ['confirm_password']
             })
         }

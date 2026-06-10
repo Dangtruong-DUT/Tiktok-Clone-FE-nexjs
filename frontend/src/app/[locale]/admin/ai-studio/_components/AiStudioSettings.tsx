@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useMemo } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
@@ -71,34 +72,43 @@ export function AiStudioSettings() {
     const [update, { isLoading: isSaving }] = useUpdateAiSettingsMutation()
     const availableModels = modelsData?.data ?? []
 
-    const settingsValues: UpdateAiStudioSettingsReqBodyDto | undefined = data?.data
-        ? {
-              daily_limit_per_user: data.data.daily_limit_per_user,
-              global_daily_limit: data.data.global_daily_limit,
-              rate_limit_per_minute: data.data.rate_limit_per_minute,
-              is_enabled: data.data.is_enabled,
-              require_min_input: data.data.require_min_input,
-              gemini_model: data.data.gemini_model,
-              max_output_tokens: data.data.max_output_tokens,
-              temperature: data.data.temperature,
-              timeout_seconds: data.data.timeout_seconds,
-              cache_ttl_hours: data.data.cache_ttl_hours,
-              async_mode: data.data.async_mode
-          }
-        : undefined
+    const settingsValues = useMemo<UpdateAiStudioSettingsReqBodyDto | undefined>(() => {
+        if (!data?.data) return undefined
+
+        return {
+            daily_limit_per_user: data.data.daily_limit_per_user,
+            global_daily_limit: data.data.global_daily_limit,
+            rate_limit_per_minute: data.data.rate_limit_per_minute,
+            is_enabled: data.data.is_enabled,
+            require_min_input: data.data.require_min_input,
+            gemini_model: data.data.gemini_model,
+            max_output_tokens: data.data.max_output_tokens,
+            temperature: data.data.temperature,
+            timeout_seconds: data.data.timeout_seconds,
+            cache_ttl_hours: data.data.cache_ttl_hours,
+            async_mode: data.data.async_mode
+        }
+    }, [data?.data])
 
     const currentModel = settingsValues?.gemini_model
     const modelOptions =
         currentModel && !availableModels.includes(currentModel) ? [currentModel, ...availableModels] : availableModels
 
-    const { control, handleSubmit } = useForm<UpdateAiStudioSettingsReqBodyDto>({
+    const { control, handleSubmit, reset, formState } = useForm<UpdateAiStudioSettingsReqBodyDto>({
         resolver: zodResolver(UpdateAiStudioSettingsReqBodySchema),
-        values: settingsValues
+        defaultValues: settingsValues
     })
+
+    useEffect(() => {
+        if (settingsValues && !formState.isDirty) {
+            reset(settingsValues)
+        }
+    }, [formState.isDirty, reset, settingsValues])
 
     const onSubmit = async (values: UpdateAiStudioSettingsReqBodyDto) => {
         try {
             await update(values).unwrap()
+            reset(values)
             toast.success(t('aiStudio.settings.toast.saved'))
         } catch {
             toast.error(t('aiStudio.settings.toast.error'))
@@ -218,7 +228,7 @@ export function AiStudioSettings() {
                             >
                                 <Select value={field.value ?? currentModel ?? ''} onValueChange={field.onChange}>
                                     <SelectTrigger className='w-56 h-8 text-sm'>
-                                        <SelectValue placeholder='Select model…' />
+                                        <SelectValue placeholder={t('aiStudio.settings.placeholders.model')} />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {modelOptions.map((model) => (

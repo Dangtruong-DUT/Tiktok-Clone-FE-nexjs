@@ -47,7 +47,7 @@ export function ScheduledPostTable() {
     const [retrySchedule, { isLoading: isRetrying }] = useAdminRetryScheduleMutation()
 
     const items = data?.data ?? []
-    const pagination = (data as any)?.meta
+    const pagination = data?.meta
 
     const handleCancel = async (uuid: string) => {
         try {

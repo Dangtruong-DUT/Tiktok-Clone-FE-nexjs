@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { USER_STATUS_FILTER_VALUES } from '@/constants/status/user'
+import { VALIDATION_MESSAGES } from '@/constants/validation'
 
 export const GetAdminUsersParamsSchema = z
     .object({
@@ -74,7 +75,7 @@ export const BanUserFormSchema = z.object({
         .string()
         .optional()
         .refine((v) => !v || (!isNaN(Number(v)) && Number(v) >= 1), {
-            message: 'Duration must be at least 1 day'
+            message: VALIDATION_MESSAGES.durationMustBeAtLeastOneDay
         })
 })
 
@@ -84,7 +85,7 @@ export const ResetPasswordFormSchema = z
         confirmPassword: z.string()
     })
     .refine((data) => data.password === data.confirmPassword, {
-        message: 'Passwords do not match',
+        message: VALIDATION_MESSAGES.passwordsDoNotMatch,
         path: ['confirmPassword']
     })
 

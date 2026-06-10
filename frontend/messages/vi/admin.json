@@ -142,6 +142,9 @@
                         "description": "Chặn yêu cầu không có tiêu đề/mô tả/phụ đề/OCR"
                     }
                 },
+                "placeholders": {
+                    "model": "Chọn mô hình…"
+                },
                 "lastUpdatedBy": "Cập nhật lần cuối bởi {name}",
                 "buttons": {
                     "save": "Lưu cài đặt",
@@ -437,8 +440,14 @@
                     "createdAt": "Ngày tạo",
                     "bannedAt": "Bị khóa lúc",
                     "deletedAt": "Đã xóa lúc",
+                    "banDuration": "Thời hạn khóa",
+                    "banExpires": "Hết hạn khóa",
                     "banReason": "Lý do khóa",
                     "status": "Trạng thái"
+                },
+                "values": {
+                    "permanent": "Vĩnh viễn",
+                    "days": "{count} ngày"
                 }
             },
             "labels": {
@@ -725,6 +734,13 @@
                 "evidenceTitle": "Minh chứng",
                 "noEvidence": "Không có minh chứng",
                 "resourceUnavailable": "Tài nguyên đã bị xóa hoặc không còn khả dụng",
+                "labels": {
+                    "thumbnailAlt": "Ảnh thu nhỏ bài viết",
+                    "deleted": "Đã xóa",
+                    "banned": "Bị khóa",
+                    "approvedHeading": "Kháng cáo đã được duyệt - Hành động đã được hoàn tác",
+                    "rejectedHeading": "Kháng cáo bị từ chối"
+                },
                 "fields": {
                     "status": "Trạng thái",
                     "type": "Loại",

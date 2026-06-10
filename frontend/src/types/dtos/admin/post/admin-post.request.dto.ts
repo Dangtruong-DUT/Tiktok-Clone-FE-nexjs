@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { POST_STATUS_FILTER_VALUES } from '@/constants/status/post'
+import { VALIDATION_MESSAGES } from '@/constants/validation'
 
 export const GetAdminPostsParamsSchema = z
     .object({
@@ -30,7 +31,7 @@ export const DeletePostFormSchema = z
         customReason: z.string().optional()
     })
     .refine((data) => data.reason !== 'other' || (data.customReason && data.customReason.trim().length > 0), {
-        message: 'Custom reason is required',
+        message: VALIDATION_MESSAGES.customReasonRequired,
         path: ['customReason']
     })
 

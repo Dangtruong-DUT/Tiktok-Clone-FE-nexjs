@@ -142,6 +142,9 @@
                         "description": "Block requests with no title/description/transcript/OCR"
                     }
                 },
+                "placeholders": {
+                    "model": "Select model…"
+                },
                 "lastUpdatedBy": "Last updated by {name}",
                 "buttons": {
                     "save": "Save settings",
@@ -432,8 +435,14 @@
                     "createdAt": "Created at",
                     "bannedAt": "Banned at",
                     "deletedAt": "Deleted at",
+                    "banDuration": "Ban duration",
+                    "banExpires": "Ban expires",
                     "banReason": "Ban reason",
                     "status": "Status"
+                },
+                "values": {
+                    "permanent": "Permanent",
+                    "days": "{count} days"
                 }
             },
             "labels": {
@@ -720,6 +729,13 @@
                 "evidenceTitle": "Evidence",
                 "noEvidence": "No evidence files",
                 "resourceUnavailable": "Resource may be deleted or unavailable",
+                "labels": {
+                    "thumbnailAlt": "Post thumbnail",
+                    "deleted": "Deleted",
+                    "banned": "Banned",
+                    "approvedHeading": "Appeal Approved - Action Reversed",
+                    "rejectedHeading": "Appeal Rejected"
+                },
                 "fields": {
                     "status": "Status",
                     "type": "Type",
