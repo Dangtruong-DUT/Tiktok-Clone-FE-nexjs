@@ -324,7 +324,7 @@ export function AiStudioMetrics() {
                                         stroke='var(--background)'
                                         strokeWidth={2}
                                         labelLine={{ stroke: 'var(--muted-foreground)', strokeWidth: 1 }}
-                                        label={({ x, y, cx, cy, percent }) => {
+                                        label={({ x, y, cx, percent }) => {
                                             return (
                                                 <text
                                                     x={x}

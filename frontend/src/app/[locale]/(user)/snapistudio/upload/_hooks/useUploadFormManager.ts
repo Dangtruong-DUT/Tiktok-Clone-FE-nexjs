@@ -126,7 +126,7 @@ export function useUploadFormManager() {
         if (videoFile) {
             upload(videoFile)
         }
-    }, [videoFile])
+    }, [upload, videoFile])
 
     // Show upload error toasts
     useEffect(() => {

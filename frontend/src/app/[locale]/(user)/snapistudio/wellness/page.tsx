@@ -23,7 +23,7 @@ import {
     useUpdateRuleMutation,
     useDeleteRuleMutation
 } from '@/store/services/wellness-rule.service'
-import { WELLNESS_ACTION_LABELS, WELLNESS_PERIODS } from '@/constants/wellness'
+import { WELLNESS_PERIODS } from '@/constants/wellness'
 import type { WellnessPeriod, WellnessRuleItem } from '@/types/models/screen-time.model'
 
 type RuleTypeValue = 'continuous_usage' | 'daily_limit' | 'video_watch_time' | 'late_night'

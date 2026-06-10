@@ -26,15 +26,15 @@ export function PostManagementSection() {
                 onClick={() => setIsOpen((v) => !v)}
                 className='w-full flex items-center justify-between px-5 py-4 hover:bg-muted/50 transition-colors'
             >
-                    <div className='flex items-center gap-2.5'>
-                        <div className='flex size-7 items-center justify-center rounded-lg bg-primary/10'>
-                            <Calendar size={14} className='text-primary' />
-                        </div>
-                        <div className='text-left'>
-                            <p className='text-sm font-semibold'>{t('posts.managementSection.title')}</p>
-                            <p className='text-xs text-muted-foreground'>{t('posts.managementSection.description')}</p>
-                        </div>
+                <div className='flex items-center gap-2.5'>
+                    <div className='flex size-7 items-center justify-center rounded-lg bg-primary/10'>
+                        <Calendar size={14} className='text-primary' />
                     </div>
+                    <div className='text-left'>
+                        <p className='text-sm font-semibold'>{t('posts.managementSection.title')}</p>
+                        <p className='text-xs text-muted-foreground'>{t('posts.managementSection.description')}</p>
+                    </div>
+                </div>
                 {isOpen ? (
                     <ChevronUp className='size-4 text-muted-foreground' />
                 ) : (

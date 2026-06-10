@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import SomethingWentWrongIcon from '@/components/lottie-icons/something-went-wrong-icon'
 
 type ErrorPageContentProps = {
@@ -25,12 +26,12 @@ export function ErrorPageContent({ title, description, tryAgain, backHome, onRes
                 >
                     {tryAgain}
                 </button>
-                <a
+                <Link
                     href='/'
                     className='border-border hover:bg-accent rounded-full border px-6 py-2.5 text-sm font-semibold transition-colors'
                 >
                     {backHome}
-                </a>
+                </Link>
             </div>
         </div>
     )

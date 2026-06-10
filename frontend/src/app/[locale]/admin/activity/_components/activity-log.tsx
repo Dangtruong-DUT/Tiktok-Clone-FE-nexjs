@@ -86,7 +86,7 @@ export function ActivityLog({ type = 'all' }: ActivityLogProps) {
         order_by: ['-created_at']
     })
 
-    const logs: AdminActivityListItem[] = data?.data ?? []
+    const logs = useMemo<AdminActivityListItem[]>(() => data?.data ?? [], [data?.data])
     const pagination = data?.meta as OffsetPaginationMeta | undefined
 
     const filteredLogs = useMemo(() => {

@@ -56,7 +56,7 @@ export default function VerifyPage() {
                 setVerifyStatus(AsyncStatus.ERROR)
             }
         },
-        [verifyEmailMutate]
+        [dispatch, router, verifyEmailMutate]
     )
 
     useEffect(() => {

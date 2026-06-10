@@ -7,7 +7,6 @@ import {
     Flag,
     MessageCircle,
     Settings,
-    Sparkles,
     UserRound,
     Video,
     LayoutDashboard

@@ -141,7 +141,7 @@ export function useHlsPlayer(
             hlsRef.current?.destroy()
             hlsRef.current = null
         }
-    }, [hlsUrl, videoRef])
+    }, [hlsUrl, messages?.noHlsSupport, messages?.videoUnavailable, onError, onReady, videoRef])
 
     const switchLevel = useCallback((levelIndex: number) => {
         if (hlsRef.current) {

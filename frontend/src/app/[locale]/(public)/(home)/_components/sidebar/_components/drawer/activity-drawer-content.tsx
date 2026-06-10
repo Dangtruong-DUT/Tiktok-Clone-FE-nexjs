@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useMemo, useState } from 'react'
+import Image from 'next/image'
 import DialogHeader from '@/components/ui/modal-header'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -250,7 +251,7 @@ function AdminEntityPreview({ notification }: { notification: NotificationType }
     if (action === 'delete_post' && entity.thumbnail_url) {
         return (
             <div className='relative h-16 aspect-[9/16] overflow-hidden rounded-lg bg-muted shrink-0'>
-                <img src={entity.thumbnail_url} alt='post' className='size-full object-cover' />
+                <Image src={entity.thumbnail_url} alt='post' fill sizes='36px' className='object-cover' />
                 <span className='absolute bottom-1 right-1 flex size-5 items-center justify-center rounded-full bg-black/65 text-white'>
                     <Video size={12} />
                 </span>
@@ -364,10 +365,12 @@ function NotificationItem({
                     <AdminEntityPreview notification={notification} />
                 ) : showThumbnail ? (
                     <div className='relative h-16 aspect-[9/16] overflow-hidden rounded-lg bg-muted'>
-                        <img
+                        <Image
                             src={notification.entity?.thumbnail_url ?? ''}
                             alt='notification-thumbnail'
-                            className='size-full object-cover'
+                            fill
+                            sizes='36px'
+                            className='object-cover'
                         />
                         {!isSystemNotification && (
                             <span className='absolute bottom-1 right-1 flex size-5 items-center justify-center rounded-full bg-black/65 text-white'>

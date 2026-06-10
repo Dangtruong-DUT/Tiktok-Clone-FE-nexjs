@@ -102,8 +102,11 @@ export default function MentionHashtagTextField({
         }
     )
 
-    const users = (usersRes?.pages.flatMap((page) => page.data) ?? []) as UserType[]
-    const hashtags = (hashtagsRes?.pages.flatMap((page) => page.data) ?? []) as HashtagType[]
+    const users = useMemo<UserType[]>(() => usersRes?.pages.flatMap((page) => page.data) ?? [], [usersRes?.pages])
+    const hashtags = useMemo<HashtagType[]>(
+        () => hashtagsRes?.pages.flatMap((page) => page.data) ?? [],
+        [hashtagsRes?.pages]
+    )
 
     const suggestions = useMemo(() => {
         if (!activeToken) return []

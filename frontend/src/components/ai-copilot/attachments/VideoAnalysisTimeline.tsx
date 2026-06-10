@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 import { Loader2 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
@@ -257,12 +258,14 @@ export function VideoAnalysisTimeline({ videoRef, duration, onSeek }: VideoAnaly
                 ) : (
                     <div className='flex h-full'>
                         {thumbnails.map((thumb, i) => (
-                            <div key={i} className='flex-1 min-w-0 h-full'>
-                                <img
+                            <div key={i} className='relative flex-1 min-w-0 h-full'>
+                                <Image
                                     src={thumb.dataUrl}
                                     alt=''
-                                    className='w-full h-full object-cover'
-                                    draggable={false}
+                                    fill
+                                    unoptimized
+                                    sizes='100vw'
+                                    className='object-cover'
                                 />
                             </div>
                         ))}

@@ -130,7 +130,7 @@ export default function ProfileRelationsModal({
         }
     }, [activeTab, followersQuery, followingQuery, friendsQuery, suggestedQuery])
 
-    const serverUsers = activeQuery.data?.data ?? []
+    const serverUsers = useMemo(() => activeQuery.data?.data ?? [], [activeQuery.data?.data])
     const users = localUsersByTab[activeTab] ?? serverUsers
     const isLoading = activeQuery.isLoading
     const isPrivateData = (activeQuery.error as { status?: number } | undefined)?.status === HTTP_STATUS.FORBIDDEN

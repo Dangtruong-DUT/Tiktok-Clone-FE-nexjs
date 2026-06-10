@@ -9,6 +9,7 @@ export async function POST(request: NextRequest) {
         const response = await AuthRequestApi.verifyForgotPassword(body)
         return NextResponse.json(response)
     } catch (error) {
+        void error
         return NextResponse.json(
             { message: 'Invalid reset password token. Please check the token and try again.' },
             { status: HTTP_STATUS.BAD_REQUEST }

@@ -34,14 +34,7 @@ interface PromptInputProps extends PropsWithChildren {
     className?: string
 }
 
-export function PromptInput({
-    value = '',
-    onValueChange: _onValueChange,
-    status = 'ready',
-    onSubmit,
-    children,
-    className
-}: PromptInputProps) {
+export function PromptInput({ value = '', status = 'ready', onSubmit, children, className }: PromptInputProps) {
     const handleFormSubmit = useCallback(
         (e: FormEvent) => {
             e.preventDefault()

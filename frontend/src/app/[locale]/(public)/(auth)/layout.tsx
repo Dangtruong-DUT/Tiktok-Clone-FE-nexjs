@@ -5,7 +5,6 @@ import { LocalesType } from '@/i18n/config'
 import { Link } from '@/i18n/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { Metadata, ResolvingMetadata } from 'next'
-import { set } from 'lodash'
 import { LEGAL_ROUTES } from '@/constants/routes/routes'
 
 export async function generateMetadata(
