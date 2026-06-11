@@ -13,8 +13,8 @@ import VideoPreview from '@/app/[locale]/(user)/snapistudio/upload/_components/v
 import SelectThumbnailDialog from '@/app/[locale]/(user)/snapistudio/upload/_components/select-thumbnail-dialog'
 import AudienceSelect from '@/components/forms/audience-select'
 
-import { useUploadImageMutation } from '@/store/services/upload.service'
-import { useGetPostDetailQuery, useUpdatePostMutation } from '@/store/services/posts.service'
+import { useUploadImageMutation } from '@/store/services/content/upload.service'
+import { useGetPostDetailQuery, useUpdatePostMutation } from '@/store/services/content/posts.service'
 import { handleFormError } from '@/utils/errors/handle-form-errors.util'
 import { SearchParamsLoader, useSearchParamsLoader } from '@/components/common/search-params-loader'
 import { useRouter } from '@/i18n/navigation'

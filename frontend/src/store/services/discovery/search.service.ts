@@ -1,4 +1,4 @@
-import baseQueryWithReauth from '@/store/services/client'
+import baseQueryWithReauth from '@/store/services/base/client'
 import { BACKEND_API_ENDPOINT } from '@/constants/api/endpoints'
 import { SearchPostRes } from '@/types/dtos/post/post-response.dto'
 import { GetListUserResType } from '@/types/dtos/user/user-response.dto'

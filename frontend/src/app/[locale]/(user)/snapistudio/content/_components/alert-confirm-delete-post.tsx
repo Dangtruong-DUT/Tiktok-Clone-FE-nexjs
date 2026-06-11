@@ -3,7 +3,7 @@
 import { useCallback } from 'react'
 import { useTranslations } from 'next-intl'
 import { toast } from 'sonner'
-import { useDeletePostMutation } from '@/store/services/posts.service'
+import { useDeletePostMutation } from '@/store/services/content/posts.service'
 import { ConfirmDialog } from '@/components/common/confirm-dialog'
 import { extractApiErrorMessage } from '@/utils/errors/extract-api-error.util'
 

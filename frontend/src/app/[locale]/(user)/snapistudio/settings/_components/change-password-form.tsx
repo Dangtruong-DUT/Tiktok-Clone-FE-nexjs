@@ -12,7 +12,7 @@ import { useCallback } from 'react'
 import { toast } from 'sonner'
 import { handleFormError } from '@/utils/errors/handle-form-errors.util'
 import { ChangePasswordBody, ChangePasswordBodyType } from '@/types/dtos/user/user-request.dto'
-import { useChangePasswordMutation } from '@/store/services/user.service'
+import { useChangePasswordMutation } from '@/store/services/user/user.service'
 import { Link } from '@/i18n/navigation'
 import { AUTH_ROUTES } from '@/constants/routes/routes'
 

@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
-import baseQueryWithReauth from '@/store/services/client'
+import baseQueryWithReauth from '@/store/services/base/client'
 
 export const AdminApi = createApi({
     reducerPath: 'AdminApi',

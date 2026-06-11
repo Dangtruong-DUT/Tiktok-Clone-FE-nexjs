@@ -1,7 +1,7 @@
 'use client'
 
 import { CommentBody } from '@/components/comment-section/comment-body'
-import { useGetCommentsInfiniteQuery } from '@/store/services/posts.service'
+import { useGetCommentsInfiniteQuery } from '@/store/services/content/posts.service'
 import { GetListCommentRes } from '@/types/dtos/post/post-response.dto'
 import { CommentType } from '@/types/models/comment.model'
 import {

@@ -1,7 +1,7 @@
 'use client'
 
 import useDebounceCallback from '@/hooks/shared/useCallback'
-import { useFollowUserMutation, useUnfollowUserMutation } from '@/store/services/user.service'
+import { useFollowUserMutation, useUnfollowUserMutation } from '@/store/services/user/user.service'
 import { useCallback, useEffect, useState } from 'react'
 import { logger } from '@/utils/logger.util'
 

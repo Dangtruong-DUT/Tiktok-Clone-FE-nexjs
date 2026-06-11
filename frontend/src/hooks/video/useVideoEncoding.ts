@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { EncodingStatus, MediaType } from '@/constants/enum'
-import { useGetVideoEncodingStatusQuery } from '@/store/services/upload.service'
+import { useGetVideoEncodingStatusQuery } from '@/store/services/content/upload.service'
 
 const POLL_INTERVAL_MS = 3000
 

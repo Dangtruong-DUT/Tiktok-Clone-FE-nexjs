@@ -4,7 +4,7 @@ import { Bar, BarChart, Cell, XAxis, YAxis } from 'recharts'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useListStudioPostsQuery } from '@/store/services/studio-post-schedule.service'
+import { useListStudioPostsQuery } from '@/store/services/content/studio-post-schedule.service'
 import { useTranslations } from 'next-intl'
 
 const STATUS_COLORS = {

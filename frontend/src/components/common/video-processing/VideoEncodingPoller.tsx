@@ -13,7 +13,7 @@ import {
     untrackEncoding,
     updateEncodingStatus
 } from '@/store/features/videoProcessingSlice'
-import { useGetVideoUploadStatusQuery } from '@/store/services/upload.service'
+import { useGetVideoUploadStatusQuery } from '@/store/services/content/upload.service'
 import { useAppSelector } from '@/store/hooks'
 
 interface VideoEncodingPollerProps {

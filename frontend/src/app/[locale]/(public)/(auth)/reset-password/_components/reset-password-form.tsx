@@ -9,7 +9,7 @@ import { PasswordInput } from '@/components/ui/password-input'
 
 import { useTranslations } from 'next-intl'
 import { resetPasswordReqBody, ResetPasswordReqBodyType } from '@/types/dtos/auth/auth-request.dto'
-import { useResetPasswordMutation } from '@/store/services/user.service'
+import { useResetPasswordMutation } from '@/store/services/user/user.service'
 import { Loader } from 'lucide-react'
 import { handleFormError } from '@/utils/errors/handle-form-errors.util'
 import { useState } from 'react'

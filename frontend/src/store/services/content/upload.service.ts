@@ -1,4 +1,4 @@
-import baseQueryWithReauth from '@/store/services/client'
+import baseQueryWithReauth from '@/store/services/base/client'
 import { BACKEND_API_ENDPOINT } from '@/constants/api/endpoints'
 import { UploadImageResponse, UploadVideoResponse } from '@/types/dtos/upload/upload-response.dto'
 import { VideoEncodingStatusResponse } from '@/types/dtos/upload/video-encoding-status-response.dto'

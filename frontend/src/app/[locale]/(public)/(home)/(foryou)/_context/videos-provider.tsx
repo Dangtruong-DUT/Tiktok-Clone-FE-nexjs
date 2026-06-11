@@ -2,7 +2,7 @@
 import { ScrollType } from '@/hooks/ui/useScrollIndexObserver'
 import { TikTokPostType } from '@/types/models/post.model'
 import React, { createContext, useMemo } from 'react'
-import { useGetListPostInfiniteQuery } from '@/store/services/posts.service'
+import { useGetListPostInfiniteQuery } from '@/store/services/content/posts.service'
 import { useHandleVideos } from '@/app/[locale]/(public)/(home)/(foryou)/_hooks/useHandleVideos'
 import {
     BaseQueryFn,

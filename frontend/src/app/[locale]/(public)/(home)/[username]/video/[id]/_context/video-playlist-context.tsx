@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react'
 import { TikTokPostType } from '@/types/models/post.model'
-import { useGetRelatedPostsInfiniteQuery } from '@/store/services/posts.service'
+import { useGetRelatedPostsInfiniteQuery } from '@/store/services/content/posts.service'
 import {
     BaseQueryFn,
     FetchArgs,

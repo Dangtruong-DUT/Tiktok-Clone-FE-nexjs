@@ -14,13 +14,13 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, RadarChart, Radar, PolarGri
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
-import { useGetStatsQuery } from '@/store/services/screen-time.service'
+import { useGetStatsQuery } from '@/store/services/wellness/screen-time.service'
 import {
     useListRulesQuery,
     useCreateRuleMutation,
     useUpdateRuleMutation,
     useDeleteRuleMutation
-} from '@/store/services/wellness-rule.service'
+} from '@/store/services/wellness/wellness-rule.service'
 import { WELLNESS_PERIODS } from '@/constants/wellness'
 import type { WellnessPeriod, WellnessRuleItem } from '@/types/models/screen-time.model'
 

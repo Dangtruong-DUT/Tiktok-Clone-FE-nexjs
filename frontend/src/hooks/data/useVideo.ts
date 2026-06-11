@@ -6,7 +6,7 @@ import {
     useLikePostMutation,
     useUnBookmarkPostMutation,
     useUnlikePostMutation
-} from '@/store/services/posts.service'
+} from '@/store/services/content/posts.service'
 import { useCallback, useEffect, useState } from 'react'
 import { logger } from '@/utils/logger.util'
 

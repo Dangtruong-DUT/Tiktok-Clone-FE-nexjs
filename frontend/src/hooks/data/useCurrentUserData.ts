@@ -1,5 +1,5 @@
 import { useAppSelector } from '@/store/hooks'
-import { useGetMeQuery } from '@/store/services/user.service'
+import { useGetMeQuery } from '@/store/services/user/user.service'
 import { UserType } from '@/types/models/user.model'
 import { useMemo } from 'react'
 

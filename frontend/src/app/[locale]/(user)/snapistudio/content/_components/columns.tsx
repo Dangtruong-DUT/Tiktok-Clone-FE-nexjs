@@ -20,7 +20,7 @@ import { BsFillImageFill } from 'react-icons/bs'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { usePostTableContext } from '@/app/[locale]/(user)/snapistudio/content/_context/content-table.context'
-import { usePublishNowMutation, useCancelScheduleMutation } from '@/store/services/studio-post-schedule.service'
+import { usePublishNowMutation, useCancelScheduleMutation } from '@/store/services/content/studio-post-schedule.service'
 import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
 import type { StudioPostItem } from '@/types/models/studio-post.model'
 

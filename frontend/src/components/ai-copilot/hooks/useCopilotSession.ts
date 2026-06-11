@@ -1,10 +1,10 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useStartSessionMutation, useGetSessionQuery } from '@/store/services/ai-copilot.service'
+import { useStartSessionMutation, useGetSessionQuery } from '@/store/services/ai/ai-copilot.service'
 import { useAiCopilotContext } from '../AiCopilotContext'
 import type { AiCopilotSession } from '@/types/models/ai-copilot.model'
-import type { StartSessionPayload } from '@/store/services/ai-copilot.service'
+import type { StartSessionPayload } from '@/store/services/ai/ai-copilot.service'
 
 interface UseCopilotSessionOptions {
     /** Fired when the session is ready (new or resumed) */

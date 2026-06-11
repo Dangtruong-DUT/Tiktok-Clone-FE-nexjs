@@ -31,7 +31,7 @@ import {
     useCreateAppealMutation,
     useUpdateAppealMutation,
     useGetResourcePreviewQuery
-} from '@/store/services/appeal.service'
+} from '@/store/services/user/appeal.service'
 import { useAppSelector } from '@/store/hooks'
 import { useAppContext } from '@/provider/app-provider'
 import { AuthStatus } from '@/constants/status/async'

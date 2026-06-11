@@ -15,10 +15,10 @@ import {
     useGetNotificationsInfiniteQuery,
     useMarkAllAsReadMutation,
     useMarkAsReadMutation
-} from '@/store/services/notification.service'
+} from '@/store/services/discovery/notification.service'
 import { NotificationTabType } from '@/types/dtos/notification/notification-request.dto'
 import { NotificationType } from '@/types/models/notification.model'
-import { useFollowUserMutation, useUnfollowUserMutation } from '@/store/services/user.service'
+import { useFollowUserMutation, useUnfollowUserMutation } from '@/store/services/user/user.service'
 import FollowToggleButton from '@/components/public/follow-toggle-button'
 import { useAppSelector } from '@/store/hooks'
 import { APP_ROUTES, USER_ROUTES } from '@/constants/routes/routes'

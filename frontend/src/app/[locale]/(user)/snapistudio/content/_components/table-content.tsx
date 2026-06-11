@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react'
 import { Search, X } from 'lucide-react'
 
 import { SearchParamsLoader, useSearchParamsLoader } from '@/components/common/search-params-loader'
-import { useListStudioPostsQuery } from '@/store/services/studio-post-schedule.service'
+import { useListStudioPostsQuery } from '@/store/services/content/studio-post-schedule.service'
 import { DataTable } from '@/components/ui/data-table'
 import { TablePanel } from '@/components/data-display/table-panel'
 import { TablePagination } from '@/components/data-display/table-pagination'

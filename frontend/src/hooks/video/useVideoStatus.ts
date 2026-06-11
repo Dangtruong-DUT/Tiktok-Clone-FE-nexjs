@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { TERMINAL_UPLOAD_STATUSES, VideoUploadStatus } from '@/constants/enum'
-import { useGetVideoUploadStatusQuery } from '@/store/services/upload.service'
+import { useGetVideoUploadStatusQuery } from '@/store/services/content/upload.service'
 import { useAppSelector } from '@/store/hooks'
 
 const POLL_INTERVAL_MS = 3000

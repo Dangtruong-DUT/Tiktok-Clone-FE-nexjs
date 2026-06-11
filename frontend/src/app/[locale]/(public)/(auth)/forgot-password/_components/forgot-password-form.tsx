@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input'
 
 import { useTranslations } from 'next-intl'
 import { forgotPasswordReqBody, ForgotPasswordReqBodyType } from '@/types/dtos/auth/auth-request.dto'
-import { useForgotPasswordMutation } from '@/store/services/user.service'
+import { useForgotPasswordMutation } from '@/store/services/user/user.service'
 import { Loader } from 'lucide-react'
 import { handleFormError } from '@/utils/errors/handle-form-errors.util'
 import { useState } from 'react'

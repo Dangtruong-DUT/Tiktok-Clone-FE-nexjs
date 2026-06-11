@@ -2,7 +2,7 @@
 import { Settings, Share } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'
-import { useGetUserByUsernameQuery } from '@/store/services/user.service'
+import { useGetUserByUsernameQuery } from '@/store/services/user/user.service'
 import { toast } from 'sonner'
 import { useFollowUser } from '@/hooks/data/useUser'
 import ButtonFollow from '@/app/[locale]/(public)/(home)/[username]/_components/button-follow'

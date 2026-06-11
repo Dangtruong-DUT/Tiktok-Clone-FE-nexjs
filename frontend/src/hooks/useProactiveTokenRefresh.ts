@@ -1,6 +1,6 @@
 'use client'
 
-import { useLogoutMutation, useRefreshTokenMutation } from '@/store/services/auth.service'
+import { useLogoutMutation, useRefreshTokenMutation } from '@/store/services/user/auth.service'
 import { useEffect, useRef } from 'react'
 import { getClientAccessTokenTimes } from '@/utils/auth/cookies.util'
 import { useAppSelector } from '@/store/hooks'

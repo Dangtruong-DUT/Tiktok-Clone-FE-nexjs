@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/utils'
 import { Textarea } from '@/components/ui/textarea'
-import { useSearchHashtagsInfiniteQuery, useSearchUsersInfiniteQuery } from '@/store/services/search.service'
+import { useSearchHashtagsInfiniteQuery, useSearchUsersInfiniteQuery } from '@/store/services/discovery/search.service'
 import useDebounce from '@/hooks/shared/useDebounce'
 import { useMemo, useRef, useState } from 'react'
 import type { UserType } from '@/types/models/user.model'

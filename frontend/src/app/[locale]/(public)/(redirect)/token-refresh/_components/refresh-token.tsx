@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSearchParams } from 'next/navigation'
-import { useLogoutMutation, useRefreshTokenMutation } from '@/store/services/auth.service'
+import { useLogoutMutation, useRefreshTokenMutation } from '@/store/services/user/auth.service'
 import { APP_ROUTES } from '@/constants/routes/routes'
 import { getSafeInternalRedirectPath } from '@/utils/auth/redirect-path.util'
 

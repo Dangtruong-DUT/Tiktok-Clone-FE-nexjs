@@ -3,7 +3,7 @@
 import { useAppDispatch } from '@/store/hooks'
 import { useRouter as userI18nRouter } from '@/i18n/navigation'
 import { useRouter } from 'next/navigation'
-import { useLoginMutation, useLogoutMutation, useRegisterMutation } from '@/store/services/auth.service'
+import { useLoginMutation, useLogoutMutation, useRegisterMutation } from '@/store/services/user/auth.service'
 import { clearStore } from '@/store'
 import { startLoadingByKey, stopLoadingByKey } from '@/store/features/appSlice'
 import { Role } from '@/constants/enum'

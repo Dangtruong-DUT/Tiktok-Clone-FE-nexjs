@@ -1,6 +1,6 @@
 import { Audience, PosterType } from '@/constants/enum'
 import { BACKEND_API_ENDPOINT } from '@/constants/api/endpoints'
-import baseQueryWithReauth from '@/store/services/client'
+import baseQueryWithReauth from '@/store/services/base/client'
 import { GetListCommentRes, GetListPostRes, GetPostDetailRes } from '@/types/dtos/post/post-response.dto'
 import { ApiSuccessResponseWithData } from '@/types/common/http-response.type'
 import { TikTokPostType } from '@/types/models/post.model'

@@ -2,7 +2,7 @@
 
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'
 import { useRouter } from '@/i18n/navigation'
-import { useGetPostOfUserPagingQuery } from '@/store/services/posts.service'
+import { useGetPostOfUserPagingQuery } from '@/store/services/content/posts.service'
 import { TikTokPostType } from '@/types/models/post.model'
 import { formatCompactNumber } from '@/utils/formatting/format-number.util'
 import { formatISOToDisplayDate } from '@/utils/formatting/format-time.util'

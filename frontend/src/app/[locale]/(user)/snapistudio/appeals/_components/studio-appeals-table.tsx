@@ -17,7 +17,7 @@ import { EmptyState } from '@/components/common/empty-state'
 import { useDialog } from '@/hooks/use-dialog'
 import { formatDateTime } from '@/utils/formatting/format-time.util'
 import { APPEAL_STATUSES, APPEAL_STATUS_VALUES, type AppealStatus } from '@/constants/appeal'
-import { useGetMyAppealsQuery } from '@/store/services/appeal.service'
+import { useGetMyAppealsQuery } from '@/store/services/user/appeal.service'
 import { AppealDetailDialog, STATUS_STYLES } from './appeal-detail-dialog'
 import type { Appeal } from '@/types/models/appeal.model'
 

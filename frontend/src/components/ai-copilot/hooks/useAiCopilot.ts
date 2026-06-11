@@ -7,7 +7,7 @@ import {
     useAcceptMessageMutation,
     useRejectMessageMutation,
     type StreamingMessageData
-} from '@/store/services/ai-copilot.service'
+} from '@/store/services/ai/ai-copilot.service'
 import { useAiCopilotContext } from '../AiCopilotContext'
 import { clipVideoSegment } from '../attachments/VideoAnalysisTimeline'
 import type { AiCopilotMessage } from '@/types/models/ai-copilot.model'

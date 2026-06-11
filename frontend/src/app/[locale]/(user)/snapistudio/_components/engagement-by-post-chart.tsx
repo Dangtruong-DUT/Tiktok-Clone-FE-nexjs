@@ -4,7 +4,7 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useGetPostOfUserPagingQuery } from '@/store/services/posts.service'
+import { useGetPostOfUserPagingQuery } from '@/store/services/content/posts.service'
 import useCurrentUserData from '@/hooks/data/useCurrentUserData'
 import { useTranslations } from 'next-intl'
 

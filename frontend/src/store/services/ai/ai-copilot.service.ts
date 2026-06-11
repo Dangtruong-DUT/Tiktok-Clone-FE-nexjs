@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
-import baseQueryWithReauth from '@/store/services/client'
+import baseQueryWithReauth from '@/store/services/base/client'
 import { BACKEND_API_ENDPOINT } from '@/constants/api/endpoints'
 import type { AiCopilotSession, AiCopilotSessionContext } from '@/types/models/ai-copilot.model'
 import type { ApiSuccessResponseWithData } from '@/types/common/http-response.type'

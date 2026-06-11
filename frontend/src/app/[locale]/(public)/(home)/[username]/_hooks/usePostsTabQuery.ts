@@ -4,7 +4,7 @@ import {
     useGetBookmarkedPostsOfUserInfiniteQuery,
     useGetLikedPostsOfUserInfiniteQuery,
     useGetPostOfUserInfiniteQuery
-} from '@/store/services/posts.service'
+} from '@/store/services/content/posts.service'
 import { useMemo } from 'react'
 
 interface UsePostsTabQueryProps {

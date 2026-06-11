@@ -8,7 +8,7 @@ import {
     isTerminalStatus,
     TrackedEncoding
 } from '@/store/features/videoProcessingSlice'
-import { useGetVideoUploadStatusQuery } from '@/store/services/upload.service'
+import { useGetVideoUploadStatusQuery } from '@/store/services/content/upload.service'
 import { VideoUploadStatus } from '@/constants/enum'
 import { cn } from '@/lib/utils'
 import { CheckCircle2, AlertCircle, X, ExternalLink, Loader2 } from 'lucide-react'

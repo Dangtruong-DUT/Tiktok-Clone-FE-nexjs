@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { MdVerified } from 'react-icons/md'
 import { UserVerifyStatus } from '@/constants/enum'
-import { useSearchUsersGetQuery } from '@/store/services/search.service'
+import { useSearchUsersGetQuery } from '@/store/services/discovery/search.service'
 import { useTranslations } from 'next-intl'
 import { APP_ROUTES, USER_ROUTES } from '@/constants/routes/routes'
 

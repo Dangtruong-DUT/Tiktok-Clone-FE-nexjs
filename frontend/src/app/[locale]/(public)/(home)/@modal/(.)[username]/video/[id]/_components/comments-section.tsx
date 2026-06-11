@@ -4,7 +4,7 @@ import CommentForm from '@/components/comment-section/comment-form'
 import CommentList from '@/components/comment-section/comment-list'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { useGetPostDetailQuery } from '@/store/services/posts.service'
+import { useGetPostDetailQuery } from '@/store/services/content/posts.service'
 import { X } from 'lucide-react'
 
 interface CommentsSectionProps {

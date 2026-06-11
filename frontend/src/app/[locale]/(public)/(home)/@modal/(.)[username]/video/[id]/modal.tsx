@@ -1,7 +1,7 @@
 'use client'
 
 import VideoDetailDialog from '@/components/video-dialog'
-import { useGetPostDetailQuery } from '@/store/services/posts.service'
+import { useGetPostDetailQuery } from '@/store/services/content/posts.service'
 
 interface ModalVideoDetailProps {
     isVisible: boolean

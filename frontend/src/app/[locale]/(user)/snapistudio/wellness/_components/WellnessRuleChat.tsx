@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
-import { useCreateRuleMutation } from '@/store/services/wellness-rule.service'
+import { useCreateRuleMutation } from '@/store/services/wellness/wellness-rule.service'
 
 type RuleTypeValue = 'continuous_usage' | 'daily_limit' | 'video_watch_time' | 'late_night'
 type ActionTypeValue = 'warning' | 'soft_block'

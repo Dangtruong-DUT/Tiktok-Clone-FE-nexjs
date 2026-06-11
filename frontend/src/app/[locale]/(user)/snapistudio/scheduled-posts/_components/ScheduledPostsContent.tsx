@@ -25,7 +25,7 @@ import {
     useReschedulePostMutation,
     usePublishNowMutation,
     useCancelScheduleMutation
-} from '@/store/services/studio-post-schedule.service'
+} from '@/store/services/content/studio-post-schedule.service'
 import { STUDIO_POST_STATUSES } from '@/constants/studio-post'
 import { POST_STATUS_BADGE } from '@/constants/status/post'
 import type { StudioPostStatus, StudioPostItem } from '@/types/models/studio-post.model'

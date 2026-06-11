@@ -4,7 +4,7 @@ import { CalendarClock, Check, X, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
-import { useSchedulePostMutation } from '@/store/services/studio-post-schedule.service'
+import { useSchedulePostMutation } from '@/store/services/content/studio-post-schedule.service'
 import type { AiCopilotScheduleOutput, AiCopilotMessageStatus } from '@/types/models/ai-copilot.model'
 
 interface CopilotScheduleCardProps {

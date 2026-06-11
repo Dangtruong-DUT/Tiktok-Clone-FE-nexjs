@@ -15,7 +15,7 @@ import {
     useGetFriendsOfUserQuery,
     useGetSuggestedUsersQuery,
     useUnfollowUserMutation
-} from '@/store/services/user.service'
+} from '@/store/services/user/user.service'
 import { UserType } from '@/types/models/user.model'
 import type { OffsetPaginationMeta } from '@/types/common/pagination-meta.type'
 import { useTranslations } from 'next-intl'
