@@ -8,7 +8,7 @@ import { useGetMeQuery } from '@/store/services/user/user.service'
 import GlobalAppLoader from '@/components/common/global-app-loader'
 import WelcomeScreen from '@/components/common/welcome-screen'
 import { VideoProcessingTracker } from '@/components/common/video-processing/VideoProcessingTracker'
-import { useProactiveTokenRefresh } from '@/hooks/useProactiveTokenRefresh'
+import { useProactiveTokenRefresh } from '@/hooks/data/useProactiveTokenRefresh'
 import { AuthStatus, AuthStatusType } from '@/constants/status/async'
 
 interface AppContextType {

@@ -1,6 +1,6 @@
 'use client'
 
-import useDebounceCallback from '@/hooks/shared/useCallback'
+import useDebounceCallback from '@/hooks/shared/useDebounceCallback'
 import {
     useBookmarkPostMutation,
     useLikePostMutation,

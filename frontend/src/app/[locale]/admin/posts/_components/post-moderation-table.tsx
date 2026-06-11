@@ -19,8 +19,8 @@ import { PostPreviewDialog } from './post-preview-dialog'
 import { truncateText } from '@/utils/admin/admin.util'
 import { formatCompactNumber } from '@/utils/formatting/format-number.util'
 import { formatDateShort } from '@/utils/formatting/format-time.util'
-import { useAdminTableState } from '@/hooks/use-admin-table-state'
-import { useDialog } from '@/hooks/use-dialog'
+import { useAdminTableState } from '@/hooks/admin/useAdminTableState'
+import { useDialog } from '@/hooks/ui/useDialog'
 import {
     PostStatusFilter,
     type PostStatusFilterType,
