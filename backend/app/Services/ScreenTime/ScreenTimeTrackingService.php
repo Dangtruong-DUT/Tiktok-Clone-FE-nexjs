@@ -122,7 +122,7 @@ class ScreenTimeTrackingService
 
         // Cap video_seconds at the session's elapsed wall-clock time to prevent
         // clients from inflating watch-time stats.
-        $maxSeconds = max(0, now()->diffInSeconds($session->started_at));
+        $maxSeconds = (int) now()->diffInSeconds($session->started_at, true);
 
         /** @var ScreenTimeSession */
         return $this->repository->update($session->id, [
@@ -158,7 +158,7 @@ class ScreenTimeTrackingService
 
         // Cap client-provided duration at actual server-side elapsed time to prevent
         // clients from submitting inflated durations.
-        $serverElapsed = max(0, now()->diffInSeconds($session->started_at));
+        $serverElapsed = (int) now()->diffInSeconds($session->started_at, true);
         $safeDuration  = min($durationSeconds, $serverElapsed);
 
         /** @var ScreenTimeSession */
@@ -200,7 +200,8 @@ class ScreenTimeTrackingService
 
         $to = now();
 
-        $totalSeconds = $this->repository->sumSecondsInRange($userId, $from, $to);
+        $liveSeconds  = $this->getLiveSessionSeconds($userId, $from, $to);
+        $totalSeconds = $this->repository->sumSecondsInRange($userId, $from, $to) + $liveSeconds;
         $videoSeconds = $this->repository->sumVideoSecondsInRange($userId, $from, $to);
         $sessions     = $this->repository->countInRange($userId, $from, $to);
 
@@ -232,7 +233,7 @@ class ScreenTimeTrackingService
             'likes_count'       => $likes,
             'avg_daily_seconds' => $days > 0 ? (int) round($totalSeconds / $days) : 0,
             'peak_hour'         => $this->getPeakHour($userId, $from, $to),
-            'daily_series'      => $this->getDailySeries($userId, $from, $to),
+            'daily_series'      => $this->getDailySeries($userId, $from, $to, $liveSeconds),
         ];
     }
 
@@ -253,9 +254,30 @@ class ScreenTimeTrackingService
             ? Carbon::parse($dateTo)->endOfDay()
             : now()->endOfDay();
 
-        return $this->getDailySeries($userId, $from, $to);
+        return $this->getDailySeries($userId, $from, $to, $this->getLiveSessionSeconds($userId, $from, $to));
     }
 
+    /**
+     * Elapsed seconds of the user's currently active (not yet ended) session,
+     * if it started within the given range. duration_seconds is only persisted
+     * once a session ends, so without this the active session contributes 0
+     * to "today" stats while it's still open.
+     *
+     * @param  int  $userId
+     * @param  Carbon  $from
+     * @param  Carbon  $to
+     * @return int
+     */
+    private function getLiveSessionSeconds(int $userId, Carbon $from, Carbon $to): int
+    {
+        $active = $this->repository->findActiveForUser($userId);
+
+        if (! $active || ! $active->started_at->between($from, $to)) {
+            return 0;
+        }
+
+        return (int) now()->diffInSeconds($active->started_at, true);
+    }
 
     private function getPeakHour(int $userId, Carbon $from, Carbon $to): ?int
     {
@@ -272,10 +294,16 @@ class ScreenTimeTrackingService
         return $row ? (int) $row->hour : null;
     }
 
-    /** @return array<int,array<string,mixed>> */
-    private function getDailySeries(int $userId, Carbon $from, Carbon $to): array
+    /**
+     * @param  int  $userId
+     * @param  Carbon  $from
+     * @param  Carbon  $to
+     * @param  int  $liveSecondsToday  Elapsed seconds of the active session, folded into today's row.
+     * @return array<int,array<string,mixed>>
+     */
+    private function getDailySeries(int $userId, Carbon $from, Carbon $to, int $liveSecondsToday = 0): array
     {
-        return DB::table('screen_time_sessions')
+        $series = DB::table('screen_time_sessions')
             ->where('user_id', $userId)
             ->where('started_at', '>=', $from)
             ->where('started_at', '<=', $to)
@@ -295,5 +323,23 @@ class ScreenTimeTrackingService
                 'video_seconds' => (int) $row->video_seconds,
             ])
             ->toArray();
+
+        if ($liveSecondsToday <= 0) {
+            return $series;
+        }
+
+        $today = now()->toDateString();
+        foreach ($series as &$row) {
+            if ($row['date'] === $today) {
+                $row['seconds'] += $liveSecondsToday;
+
+                return $series;
+            }
+        }
+        unset($row);
+
+        $series[] = ['date' => $today, 'seconds' => $liveSecondsToday, 'video_seconds' => 0];
+
+        return $series;
     }
 }

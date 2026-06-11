@@ -536,13 +536,13 @@
                 }
             },
             "rules": {
-                "createTitle": "Tạo rule bằng ngôn ngữ tự nhiên",
+                "createTitle": "Tạo quy tắc",
                 "inputPlaceholder": "Ví dụ: Nhắc tôi nghỉ ngơi nếu lướt video quá 2 tiếng",
                 "analyzeBtn": "Phân tích bằng AI",
                 "analyzing": "Đang phân tích",
                 "confidence": "Độ chắc chắn: {pct}%",
                 "saveBtn": "Lưu rule này",
-                "noRules": "Chưa có quy tắc nào. Tạo bằng AI hoặc thêm thủ công.",
+                "noRules": "Chưa có quy tắc nào. Hãy thêm quy tắc mới.",
                 "disabled": "Đã tắt",
                 "toggleOn": "Bật",
                 "toggleOff": "Tắt",

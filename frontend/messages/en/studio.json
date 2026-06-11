@@ -536,13 +536,13 @@
                 }
             },
             "rules": {
-                "createTitle": "Create rule with natural language",
+                "createTitle": "Create rule",
                 "inputPlaceholder": "E.g.: Remind me to take a break if I scroll videos for more than 2 hours",
                 "analyzeBtn": "Analyze with AI",
                 "analyzing": "Analyzing",
                 "confidence": "Confidence: {pct}%",
                 "saveBtn": "Save this rule",
-                "noRules": "No rules yet. Create with AI or add manually.",
+                "noRules": "No rules yet. Please add a new rule.",
                 "disabled": "Disabled",
                 "toggleOn": "Enable",
                 "toggleOff": "Disable",
