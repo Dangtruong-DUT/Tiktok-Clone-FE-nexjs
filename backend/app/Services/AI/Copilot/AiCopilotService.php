@@ -16,6 +16,7 @@ use App\Services\AI\Copilot\Gateway\AiGateway;
 use App\Services\AI\Copilot\Orchestrator\CopilotOrchestrator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 
 class AiCopilotService
 {

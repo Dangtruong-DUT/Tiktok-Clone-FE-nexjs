@@ -69,6 +69,8 @@ class AiGateway
                 ]),
             ))->toArray();
 
+            Log::alert('Raw gateway response', ['response' => $result, 'session_id' => null, 'message_id' => null]);
+
             $clean   = $this->stripCodeFences((string) ($result['text'] ?? ''));
             $payload = json_decode(trim($clean), true);
 

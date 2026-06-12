@@ -45,5 +45,11 @@
     },
     "StudioLayout": {
         "upload": "Tải lên"
+    },
+    "Theme": {
+        "title": "Giao diện",
+        "light": "Sáng",
+        "dark": "Tối",
+        "system": "Hệ thống"
     }
 }

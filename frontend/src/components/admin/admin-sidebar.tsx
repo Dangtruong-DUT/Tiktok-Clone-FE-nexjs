@@ -8,16 +8,12 @@ import { ADMIN_ROUTES } from '@/constants/routes/routes'
 import { ADMIN_NAV_GROUPS } from '@/constants/admin/navigation'
 import { BRAND_CONFIG } from '@/config/brand.config'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import SmallLogo from '@/components/common/small-logo'
-import { LANGUAGES } from '@/i18n/config'
-import useLanguage from '@/hooks/shared/useLanguage'
-import { useTheme } from 'next-themes'
-import { ArrowLeft, ChevronDown, Monitor, Moon, PanelLeftClose, Sun } from 'lucide-react'
+import { ArrowLeft, ChevronDown, PanelLeftClose } from 'lucide-react'
 import type { DashboardStats } from '@/types/dtos/admin/admin-response.dto'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
-import { useEffect, useState } from 'react'
+import { LanguageSelect } from '@/components/common/language-select'
+import { ThemeDropdown } from '@/components/common/theme-dropdown'
 
 interface AdminSidebarProps {
     collapsed: boolean
@@ -29,20 +25,10 @@ export function AdminSidebar({ collapsed, onToggle, stats }: AdminSidebarProps) 
     const pathname = usePathname()
     const t = useTranslations('AdminPage')
     const locale = useLocale()
-    const { onChange: onLocaleChange, isPending: isLocalePending } = useLanguage()
-    const { setTheme, resolvedTheme } = useTheme()
-    const [mounted, setMounted] = useState(false)
-
-    useEffect(() => {
-        setMounted(true)
-    }, [])
-
-    // Always render Monitor on server to match SSR output, swap after mount
-    const ThemeIcon = mounted ? (resolvedTheme === 'dark' ? Moon : resolvedTheme === 'light' ? Sun : Monitor) : Monitor
 
     const localizedPath = (route: string) => `/${locale}${route}`
     const isActive = (route: string) =>
-        route === ADMIN_ROUTES.DASHBOARD ? pathname === localizedPath(route) : pathname?.includes(localizedPath(route))
+        pathname === localizedPath(route) || pathname?.startsWith(localizedPath(route) + '/')
     const isChildActive = (item: (typeof ADMIN_NAV_GROUPS)[0]['items'][0]) =>
         item.children?.some(
             (c) => pathname === localizedPath(c.href) || pathname?.startsWith(localizedPath(c.href) + '/')
@@ -249,32 +235,7 @@ export function AdminSidebar({ collapsed, onToggle, stats }: AdminSidebarProps) 
                     <div className='shrink-0 border-t border-white/8 px-2 py-3 space-y-0.5'>
                         {collapsed ? (
                             <>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <button className='flex h-9 w-full items-center justify-center rounded-xl text-zinc-400 hover:bg-white/8 hover:text-zinc-200 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]'>
-                                                    <ThemeIcon className='h-4 w-4' />
-                                                </button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent side='right' align='end'>
-                                                <DropdownMenuItem onClick={() => setTheme('light')}>
-                                                    <Sun className='mr-2 h-4 w-4' /> {t('shell.themeLight')}
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => setTheme('dark')}>
-                                                    <Moon className='mr-2 h-4 w-4' /> {t('shell.themeDark')}
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => setTheme('system')}>
-                                                    <Monitor className='mr-2 h-4 w-4' /> {t('shell.themeSystem')}
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </TooltipTrigger>
-                                    <TooltipContent side='right' className='text-xs'>
-                                        {t('shell.theme')}
-                                    </TooltipContent>
-                                </Tooltip>
-
+                                <ThemeDropdown collapsed />
                                 <Tooltip>
                                     <TooltipTrigger asChild>
                                         <Link
@@ -292,41 +253,8 @@ export function AdminSidebar({ collapsed, onToggle, stats }: AdminSidebarProps) 
                         ) : (
                             <>
                                 <div className='flex items-center gap-1.5 px-0.5'>
-                                    <Select value={locale} onValueChange={onLocaleChange} disabled={isLocalePending}>
-                                        <SelectTrigger className='h-8 flex-1 border-0 bg-white/5 text-xs text-zinc-400 hover:bg-white/8 hover:text-zinc-200 focus:ring-0 focus:ring-offset-0 transition-colors [&>svg]:text-zinc-500'>
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {LANGUAGES.map(({ value, labelKey }) => (
-                                                <SelectItem key={value} value={value} className='text-xs'>
-                                                    {t(
-                                                        `shell.language.${labelKey === 'en' ? 'english' : 'vietnamese'}` as Parameters<
-                                                            typeof t
-                                                        >[0]
-                                                    )}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <button className='flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-zinc-200 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]'>
-                                                <ThemeIcon className='h-3.5 w-3.5' />
-                                            </button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent side='top' align='end' className='min-w-[120px]'>
-                                            <DropdownMenuItem onClick={() => setTheme('light')} className='text-xs'>
-                                                <Sun className='mr-2 h-3.5 w-3.5' /> {t('shell.themeLight')}
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => setTheme('dark')} className='text-xs'>
-                                                <Moon className='mr-2 h-3.5 w-3.5' /> {t('shell.themeDark')}
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => setTheme('system')} className='text-xs'>
-                                                <Monitor className='mr-2 h-3.5 w-3.5' /> {t('shell.themeSystem')}
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
+                                    <LanguageSelect className='flex-1' />
+                                    <ThemeDropdown />
                                 </div>
                                 <p className='px-2.5 text-[10px] text-zinc-600'>
                                     © {new Date().getFullYear()} {BRAND_CONFIG.APP_NAME} · v{BRAND_CONFIG.APP_VERSION}

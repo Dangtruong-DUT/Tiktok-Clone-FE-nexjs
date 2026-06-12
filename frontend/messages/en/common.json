@@ -45,5 +45,11 @@
     },
     "StudioLayout": {
         "upload": "Upload"
+    },
+    "Theme": {
+        "title": "Theme",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
     }
 }
