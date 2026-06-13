@@ -195,13 +195,13 @@ class PostRepository extends BaseRepository
                 fn (Builder $userQuery) => $userQuery->where('uuid', $userUuid));
         })
             ->when($status, function (Builder $query, string $status) {
-                match ($status) {
-                    'visible'  => $query->whereNull('deleted_at'),
-                    'deleted'  => $query->whereNotNull('deleted_at'),
-                    'all'      => null,
-                    // Lifecycle status values from PostPublishStatusEnum
-                    default    => $query->where('posts.status', $status),
-                };
+                if ($status === 'visible') {
+                    $query->whereNull('deleted_at');
+                } elseif ($status === 'deleted') {
+                    $query->whereNotNull('deleted_at');
+                } elseif ($status !== 'all') {
+                    $query->where('posts.status', $status);
+                }
             })
             ->when($filterCollection->get('order_by'), function (Builder $query, $orderBy) {
                 $query->orderByMultiple($orderBy);

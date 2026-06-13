@@ -20,7 +20,6 @@ import { logger } from '@/utils/logger.util'
 import { useConfirmNavigation } from '@/hooks/shared/useConfirmNavigation'
 import { useRouter } from '@/i18n/navigation'
 import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
-import { APP_TIMEZONE } from '@/constants/studio-post'
 import { Audience, MediaType, PosterType, VideoUploadStatus } from '@/constants/enum'
 import { CreatePostReqBody, CreatePostReqBodyType } from '@/types/dtos/post/post-request.dto'
 import useVideoFrames from '@/hooks/video/useVideoFrames'
@@ -205,8 +204,7 @@ export function useUploadFormManager() {
             if (scheduledAt) {
                 await schedulePost({
                     postUuid: res.data.uuid,
-                    scheduled_at: new Date(scheduledAt).toISOString(),
-                    timezone: APP_TIMEZONE
+                    scheduled_at: new Date(scheduledAt).toISOString()
                 }).unwrap()
                 toast.success(t('toast.scheduled'), { position: 'top-center' })
             } else {
@@ -217,6 +215,11 @@ export function useUploadFormManager() {
             onReset()
             router.push(SNAPISTUDIO_ROUTES.CONTENT)
         } catch (error) {
+            if (postCreatedRef.current) {
+                toast.error(t('toast.scheduleFailed'))
+                router.push(SNAPISTUDIO_ROUTES.CONTENT)
+                return
+            }
             logger.error(error)
             handleFormError<CreatePostReqBodyType>({ error, setFormError: form.setError })
         }

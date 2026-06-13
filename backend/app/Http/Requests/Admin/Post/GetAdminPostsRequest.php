@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin\Post;
 
+use App\Enums\Post\PostPublishStatusEnum;
 use App\Http\Requests\BaseListRequest;
 use Illuminate\Validation\Rule;
 
@@ -19,7 +20,7 @@ class GetAdminPostsRequest extends BaseListRequest
             'user_uuid' => [self::NULLABLE],
             'status' => [
                 self::NULLABLE,
-                Rule::in(['all', 'visible', 'deleted', 'draft', 'scheduled', 'published', 'failed', 'archived', 'hidden']),
+                Rule::in(['all', 'visible', 'deleted', ...array_column(PostPublishStatusEnum::cases(), 'value')]),
             ],
             'date_from' => [self::NULLABLE],
             'date_to' => [self::NULLABLE],

@@ -26,14 +26,7 @@ import type { StudioPostItem } from '@/types/models/studio-post.model'
 
 function fmtDateTime(iso: string | null | undefined): string {
     if (!iso) return '—'
-
-    return new Date(iso).toLocaleString(undefined, {
-        year: '2-digit',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
-    })
+    return iso.slice(0, 16).replace('T', ' ')
 }
 
 const STATUS_STYLE: Record<string, string> = {

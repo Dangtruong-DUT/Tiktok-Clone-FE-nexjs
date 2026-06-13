@@ -15,7 +15,7 @@ import AudienceSelect from '@/components/forms/audience-select'
 
 import { useUploadImageMutation } from '@/store/services/content/upload.service'
 import { useGetPostDetailQuery, useUpdatePostMutation } from '@/store/services/content/posts.service'
-import { useCancelScheduleMutation, useReschedulePostMutation, useSchedulePostMutation } from '@/store/services/content/studio-post-schedule.service'
+import { useCancelScheduleMutation, usePublishNowMutation, useReschedulePostMutation, useSchedulePostMutation } from '@/store/services/content/studio-post-schedule.service'
 import { handleFormError } from '@/utils/errors/handle-form-errors.util'
 import { SearchParamsLoader, useSearchParamsLoader } from '@/components/common/search-params-loader'
 import { useRouter } from '@/i18n/navigation'
@@ -31,7 +31,6 @@ import { extractHashtags } from '@/utils/social-token.util'
 import MentionHashtagTextField from '@/components/forms/mention-hashtag-text-field'
 import { logger } from '@/utils/logger.util'
 import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
-import { APP_TIMEZONE } from '@/constants/studio-post'
 import { useAiCopilotContext } from '@/components/ai-copilot/AiCopilotContext'
 import { AiVideoAttachments } from '@/components/ai-copilot/attachments/AiVideoAttachments'
 
@@ -54,6 +53,7 @@ export default function FormUpdatePost() {
     const [schedulePost, schedulePostResult] = useSchedulePostMutation()
     const [reschedulePost, reschedulePostResult] = useReschedulePostMutation()
     const [cancelSchedule, cancelScheduleResult] = useCancelScheduleMutation()
+    const [publishNow, publishNowResult] = usePublishNowMutation()
     const { searchParams, setSearchParams } = useSearchParamsLoader()
     const currentUser = useCurrentUserData()
     const redirectFrom = searchParams?.get('from')
@@ -91,7 +91,7 @@ export default function FormUpdatePost() {
 
     useEffect(() => {
         if (pendingSchedule?.scheduled_at) {
-            setScheduledAt(new Date(pendingSchedule.scheduled_at).toISOString().slice(0, 16))
+            setScheduledAt(pendingSchedule.scheduled_at.slice(0, 16))
             setShowSchedule(true)
         }
     }, [pendingSchedule])
@@ -156,12 +156,12 @@ export default function FormUpdatePost() {
     }
 
     const isScheduleLoading =
-        schedulePostResult.isLoading || reschedulePostResult.isLoading || cancelScheduleResult.isLoading
+        schedulePostResult.isLoading || reschedulePostResult.isLoading || cancelScheduleResult.isLoading || publishNowResult.isLoading
     const isUpdatePostLoading = updatePostResult.isLoading || uploadImageResult.isLoading || isScheduleLoading
 
     const onSchedule = async () => {
         if (!post || !scheduledAt || isUpdatePostLoading) return
-        const body = { scheduled_at: new Date(scheduledAt).toISOString(), timezone: APP_TIMEZONE }
+        const body = { scheduled_at: new Date(scheduledAt).toISOString() }
         try {
             if (pendingSchedule) {
                 await reschedulePost({ schedUuid: pendingSchedule.uuid, ...body }).unwrap()
@@ -169,6 +169,17 @@ export default function FormUpdatePost() {
                 await schedulePost({ postUuid: post.uuid, ...body }).unwrap()
             }
             toast.success(t('toast.scheduled'))
+        } catch (error) {
+            logger.error(error)
+        }
+    }
+
+    const onPublishNow = async () => {
+        if (!post || isUpdatePostLoading) return
+        try {
+            await publishNow(post.uuid).unwrap()
+            toast.success(t('toast.published'))
+            router.push(SNAPISTUDIO_ROUTES.CONTENT)
         } catch (error) {
             logger.error(error)
         }
@@ -398,6 +409,19 @@ export default function FormUpdatePost() {
                             >
                                 {t('buttons.update')}
                             </Button>
+                            {canSchedule && (
+                                <Button
+                                    size='lg'
+                                    variant='default'
+                                    type='button'
+                                    isLoading={publishNowResult.isLoading}
+                                    disabled={isUpdatePostLoading}
+                                    onClick={onPublishNow}
+                                    className='w-[200px]'
+                                >
+                                    {t('buttons.publishNow')}
+                                </Button>
+                            )}
                             <Button
                                 size='lg'
                                 variant={'secondary'}

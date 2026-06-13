@@ -420,7 +420,8 @@
                 "scheduleNow": "Hẹn giờ đăng",
                 "reschedule": "Đặt lại giờ",
                 "cancelSchedule": "Hủy lịch",
-                "saveDraft": "Lưu nháp"
+                "saveDraft": "Lưu nháp",
+                "publishNow": "Đăng ngay"
             },
             "schedule": {
                 "title": "Hẹn giờ đăng bài",
@@ -429,8 +430,10 @@
             "toast": {
                 "updated": "Đã cập nhật bài đăng",
                 "scheduled": "Đã hẹn giờ bài đăng",
+                "scheduleFailed": "Đã tạo bài nhưng hẹn giờ thất bại — bạn có thể hẹn giờ lại từ trang nội dung",
                 "scheduleCancelled": "Đã hủy lịch đăng",
-                "draftSaved": "Đã lưu bài đăng nháp"
+                "draftSaved": "Đã lưu bài đăng nháp",
+                "published": "Đã đăng bài thành công"
             }
         },
         "aiStudio": {

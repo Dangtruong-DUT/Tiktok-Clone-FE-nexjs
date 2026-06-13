@@ -18,7 +18,6 @@ import {
 } from '@/store/services/admin/admin-scheduled-posts.service'
 import { SCHEDULED_POST_STATUSES } from '@/constants/studio-post'
 import { POST_STATUS_BADGE } from '@/constants/status/post'
-import { formatDateTime } from '@/utils/formatting/format-time.util'
 
 const SCHEDULED_STATUS_BADGE: Record<string, string> = {
     pending: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300',
@@ -131,11 +130,11 @@ export function PostManagementTable() {
                                     )}
                                     <div className='ml-auto flex flex-col items-end gap-0.5'>
                                         <span className='text-xs text-muted-foreground tabular-nums'>
-                                            {t('scheduledPosts.table.labels.scheduled')}: {formatDateTime(item.scheduled_at)}
+                                            {t('scheduledPosts.table.labels.scheduled')}: {item.scheduled_at.slice(0, 16).replace('T', ' ')}
                                         </span>
                                         {item.published_at && (
                                             <span className='text-xs text-emerald-600 dark:text-emerald-400 tabular-nums'>
-                                                {t('scheduledPosts.table.labels.published')}: {formatDateTime(item.published_at)}
+                                                {t('scheduledPosts.table.labels.published')}: {item.published_at.slice(0, 16).replace('T', ' ')}
                                             </span>
                                         )}
                                     </div>

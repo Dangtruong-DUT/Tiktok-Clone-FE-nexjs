@@ -1,5 +1,3 @@
-export const APP_TIMEZONE = 'Asia/Ho_Chi_Minh'
-
 export const STUDIO_POST_STATUSES = {
     DRAFT: 'draft',
     SCHEDULED: 'scheduled',

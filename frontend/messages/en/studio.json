@@ -420,7 +420,8 @@
                 "scheduleNow": "Schedule now",
                 "reschedule": "Reschedule",
                 "cancelSchedule": "Cancel schedule",
-                "saveDraft": "Save draft"
+                "saveDraft": "Save draft",
+                "publishNow": "Publish now"
             },
             "schedule": {
                 "title": "Schedule post",
@@ -429,8 +430,10 @@
             "toast": {
                 "updated": "Post updated successfully",
                 "scheduled": "Post scheduled successfully",
+                "scheduleFailed": "Post created but scheduling failed — you can reschedule from your content",
                 "scheduleCancelled": "Schedule cancelled",
-                "draftSaved": "Post saved as draft"
+                "draftSaved": "Post saved as draft",
+                "published": "Post published successfully"
             }
         },
         "aiStudio": {

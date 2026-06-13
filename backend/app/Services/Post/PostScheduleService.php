@@ -6,6 +6,7 @@ use App\Enums\Ai\ScheduledPostSourceEnum;
 use App\Enums\Ai\ScheduledPostStatusEnum;
 use App\Enums\Post\PostPublishStatusEnum;
 use App\Exceptions\http\BadRequestException;
+use App\Exceptions\http\ForbiddenException;
 use App\Models\Post;
 use App\Models\ScheduledPost;
 use App\Repositories\PostRepository;
@@ -42,7 +43,7 @@ class PostScheduleService
     public function schedulePost(Post $post, int $userId, array $payload): ScheduledPost
     {
         if ($post->user_id !== $userId) {
-            throw new BadRequestException('You do not own this post.');
+            throw new ForbiddenException('You do not own this post.');
         }
 
         if (! in_array($post->status, [PostPublishStatusEnum::DRAFT, PostPublishStatusEnum::FAILED], true)) {
@@ -79,7 +80,7 @@ class PostScheduleService
     public function cancelSchedule(ScheduledPost $scheduledPost, int $userId): ScheduledPost
     {
         if ($scheduledPost->user_id !== $userId) {
-            throw new BadRequestException('You do not own this scheduled post.');
+            throw new ForbiddenException('You do not own this scheduled post.');
         }
 
         if ($scheduledPost->status !== ScheduledPostStatusEnum::PENDING) {
@@ -97,7 +98,7 @@ class PostScheduleService
     public function publishNow(Post $post, int $userId): Post
     {
         if ($post->user_id !== $userId) {
-            throw new BadRequestException('You do not own this post.');
+            throw new ForbiddenException('You do not own this post.');
         }
 
         if (! in_array($post->status, [
@@ -173,7 +174,7 @@ class PostScheduleService
     public function reschedule(ScheduledPost $scheduledPost, int $userId, array $payload): ScheduledPost
     {
         if ($scheduledPost->user_id !== $userId) {
-            throw new BadRequestException('You do not own this scheduled post.');
+            throw new ForbiddenException('You do not own this scheduled post.');
         }
 
         if ($scheduledPost->status !== ScheduledPostStatusEnum::PENDING) {
@@ -215,7 +216,7 @@ class PostScheduleService
     {
         return $this->postRepository->paginateForStudioUser(
             userId: $userId,
-            perPage: (int) ($filters['per_page'] ?? 20),
+            perPage: (int) ($filters['per_page'] ?? 10),
             status: isset($filters['status']) && $filters['status'] !== '' ? (string) $filters['status'] : null,
             search: trim((string) ($filters['q'] ?? '')),
             hasScheduleFilter: array_key_exists('has_schedule', $filters),

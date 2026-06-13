@@ -29,7 +29,7 @@ export function useAdminTableState(defaultStatus = 'all'): UseAdminTableStateRet
     const [draftStatus, setDraftStatus] = useState(defaultStatus)
     const [draftSort, setDraftSort] = useState<SortOrder>('recent')
 
-    const hasActiveFilters = statusFilter !== 'all' || sortBy !== 'recent'
+    const hasActiveFilters = statusFilter !== 'all' || sortBy !== 'recent' || searchTerm !== ''
 
     const handleSearch = (value: string) => {
         setSearchTerm(value)
@@ -43,6 +43,7 @@ export function useAdminTableState(defaultStatus = 'all'): UseAdminTableStateRet
         setDraftSort('recent')
         setStatusFilter('all')
         setSortBy('recent')
+        setSearchTerm('')
         setPage(1)
     }
 
