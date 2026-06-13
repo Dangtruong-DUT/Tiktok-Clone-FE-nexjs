@@ -22,10 +22,7 @@ use App\Services\Analytics\MetricsCatalog;
 use Gemini\Client as GeminiClient;
 use Gemini\Contracts\ClientContract as GeminiClientContract;
 use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\HandlerStack;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
-use Psr\Http\Message\ResponseInterface;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
@@ -45,7 +42,7 @@ class AppServiceProvider extends ServiceProvider
             return \Gemini::factory()
                 ->withApiKey(apiKey: $apiKey)
                 ->withBaseUrl(baseUrl: $baseUrl)
-                ->withHttpClient(client: new GuzzleClient(['timeout' => $timeout, 'handler' => $stack]))
+                ->withHttpClient(client: new GuzzleClient(['timeout' => $timeout]))
                 ->make();
         });
 

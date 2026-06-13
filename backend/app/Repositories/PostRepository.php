@@ -203,13 +203,9 @@ class PostRepository extends BaseRepository
                     $query->where('posts.status', $status);
                 }
             })
-            ->when($filterCollection->get('order_by'), function (Builder $query, $orderBy) {
-                $query->orderByMultiple($orderBy);
-            }, function (Builder $query) {
-                $query->orderByDesc('created_at');
-            });
+            ->orderByDesc('created_at');
 
-        $perPage = min((int) $filterCollection->get('per_page', 20), 100);
+        $perPage = min((int) $filterCollection->get('per_page', 10), 100);
 
         return $query
             ->with([

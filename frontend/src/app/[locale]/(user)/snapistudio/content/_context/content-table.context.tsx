@@ -10,6 +10,8 @@ type PostTableContextType = {
     postIdEdit: number | undefined
     postIdDelete: string | null
     setPostIdDelete: (value: string | null) => void
+    selectedPostUuid: string | null
+    setSelectedPostUuid: (value: string | null) => void
     changeAudienceStatus: ({ status, postId }: { status: AudienceValue; postId: string }) => void
     getAudienceStatus: ({ postId, fallback }: { postId: string; fallback: Audience }) => Audience
     clearAudienceStatus: (postId: string) => void
@@ -20,6 +22,8 @@ const PostTableContext = createContext<PostTableContextType>({
     postIdEdit: undefined,
     postIdDelete: null,
     setPostIdDelete: () => {},
+    selectedPostUuid: null,
+    setSelectedPostUuid: () => {},
     changeAudienceStatus: () => {},
     getAudienceStatus: ({ fallback }) => fallback,
     clearAudienceStatus: () => {}
@@ -32,6 +36,7 @@ export function usePostTableContext() {
 function PostTableProvider({ children }: { children: React.ReactNode }) {
     const [postIdEdit, setPostIdEdit] = useState<number | undefined>()
     const [postIdDelete, setPostIdDelete] = useState<string | null>(null)
+    const [selectedPostUuid, setSelectedPostUuid] = useState<string | null>(null)
     const [audienceStatusMap, setAudienceStatusMap] = useState<Record<string, AudienceValue>>({})
     const [updatePost] = useUpdatePostMutation()
 
@@ -76,6 +81,8 @@ function PostTableProvider({ children }: { children: React.ReactNode }) {
                 setPostIdEdit,
                 postIdDelete,
                 setPostIdDelete,
+                selectedPostUuid,
+                setSelectedPostUuid,
                 changeAudienceStatus,
                 getAudienceStatus,
                 clearAudienceStatus

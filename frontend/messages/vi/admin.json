@@ -564,9 +564,7 @@
             },
             "filters": {
                 "allStatuses": "Tất cả trạng thái",
-                "visible": "Hiển thị",
-                "recent": "Mới nhất",
-                "oldest": "Cũ nhất"
+                "visible": "Hiển thị"
             },
             "status": {
                 "published": "Đã đăng",
@@ -574,7 +572,6 @@
                 "draft": "Bản nháp",
                 "failed": "Thất bại",
                 "archived": "Đã lưu trữ",
-                "hidden": "Đã ẩn",
                 "deleted": "Đã xóa",
                 "live": "Đang hiển thị",
                 "all": "Tất cả"

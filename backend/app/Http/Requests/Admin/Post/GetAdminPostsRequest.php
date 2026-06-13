@@ -26,11 +26,6 @@ class GetAdminPostsRequest extends BaseListRequest
             'date_to' => [self::NULLABLE],
             'page' => [self::NULLABLE],
             'per_page' => [self::NULLABLE],
-            'order_by' => [
-                self::NULLABLE,
-                self::ARRAY,
-            ],
-            'order_by.*' => [Rule::in(['id', 'created_at', 'likes_count', '-id', '-created_at', '-likes_count'])],
         ]);
     }
 }

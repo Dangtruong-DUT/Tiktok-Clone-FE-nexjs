@@ -27,7 +27,6 @@ import {
     AUDIENCE_CONFIGS,
     POST_STATUS_BADGE
 } from '@/constants/status/post'
-import type { SortOrder } from '@/constants/ui/table'
 import type { AdminPost } from '@/types/dtos/admin/admin-response.dto'
 import { cn } from '@/lib/utils'
 
@@ -70,13 +69,10 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
         perPage,
         searchTerm,
         statusFilter,
-        sortBy,
         draftStatus,
-        draftSort,
         hasActiveFilters,
         setPage,
         setDraftStatus,
-        setDraftSort,
         handleSearch,
         handleReset,
         handlePerPageChange
@@ -92,7 +88,7 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
             (statusFilter as PostStatusFilterType) !== PostStatusFilter.ALL
                 ? (statusFilter as PostStatusFilterType)
                 : undefined,
-        order_by: [sortBy === 'recent' ? '-created_at' : 'created_at']
+        order_by: ['-created_at']
     })
 
     const posts = data?.data ?? []
@@ -161,21 +157,9 @@ export function PostModerationTable({ onPostDeleted }: PostModerationTableProps)
                                         <SelectItem value={PostStatusFilter.ARCHIVED}>
                                             {t('posts.status.archived')}
                                         </SelectItem>
-                                        <SelectItem value={PostStatusFilter.HIDDEN}>
-                                            {t('posts.status.hidden')}
-                                        </SelectItem>
                                         <SelectItem value={PostStatusFilter.DELETED}>
                                             {t('posts.status.deleted')}
                                         </SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                <Select value={draftSort} onValueChange={(v) => setDraftSort(v as SortOrder)}>
-                                    <SelectTrigger className='filter-select w-32'>
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value='recent'>{t('posts.filters.recent')}</SelectItem>
-                                        <SelectItem value='oldest'>{t('posts.filters.oldest')}</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </>

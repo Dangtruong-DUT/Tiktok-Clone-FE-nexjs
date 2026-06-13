@@ -66,7 +66,8 @@
       "Bash(git rm *)",
       "Bash(which node *)",
       "Read(//usr/bin/**)",
-      "Bash(~/.nvm/versions/node/v22.21.1/bin/node node_modules/.bin/tsc --noEmit)"
+      "Bash(~/.nvm/versions/node/v22.21.1/bin/node node_modules/.bin/tsc --noEmit)",
+      "Bash(grep \"\\\\.tsx$\")"
     ],
     "additionalDirectories": [
       "/private/tmp"

@@ -25,6 +25,8 @@ import AlertDialogDeletePost from '@/app/[locale]/(user)/snapistudio/content/_co
 import { usePostTableContext } from '@/app/[locale]/(user)/snapistudio/content/_context/content-table.context'
 import { useStudioColumns } from '@/app/[locale]/(user)/snapistudio/content/_components/columns'
 import { TableSkeleton } from '@/components/data-display/table-skeleton'
+import VideoDetailDialog from '@/components/video-dialog'
+import { useGetPostDetailQuery } from '@/store/services/content/posts.service'
 import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
 import type { StudioPostItem, StudioPostStatus } from '@/types/models/studio-post.model'
 
@@ -37,7 +39,11 @@ export default function TableContent() {
 
     const page = searchParams?.get('page') ? Number(searchParams.get('page')) : 1
 
-    const { setPostIdDelete, postIdDelete } = usePostTableContext()
+    const { setPostIdDelete, postIdDelete, selectedPostUuid, setSelectedPostUuid } = usePostTableContext()
+
+    const { data: postDetailData, isFetching: isFetchingDetail } = useGetPostDetailQuery(selectedPostUuid ?? '', {
+        skip: !selectedPostUuid
+    })
 
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -117,6 +123,12 @@ export default function TableContent() {
         <div className='w-full space-y-3'>
             <SearchParamsLoader onParamsReceived={setSearchParams} />
             <AlertDialogDeletePost postIdDelete={postIdDelete} setPostIdDelete={setPostIdDelete} />
+            <VideoDetailDialog
+                isVisible={!!selectedPostUuid}
+                handleClose={() => setSelectedPostUuid(null)}
+                post={postDetailData?.data}
+                isLoading={isFetchingDetail}
+            />
 
             <TablePanel
                 isFetching={isFetchingPosts}

@@ -31,7 +31,6 @@ export const PostStatusFilter = {
     DRAFT: 'draft',
     FAILED: 'failed',
     ARCHIVED: 'archived',
-    HIDDEN: 'hidden'
 } as const
 
 export type PostStatusFilterType = (typeof PostStatusFilter)[keyof typeof PostStatusFilter]
@@ -47,7 +46,7 @@ export const POST_STATUS_BADGE: Record<string, string> = {
     draft: 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300',
     failed: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300',
     archived: 'bg-amber-100 text-amber-700 dark:bg-amber-800/40 dark:text-amber-300',
-    hidden: 'bg-orange-100 text-orange-700 dark:bg-orange-800/40 dark:text-orange-300',
+
     deleted: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300',
     visible: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300'
 }

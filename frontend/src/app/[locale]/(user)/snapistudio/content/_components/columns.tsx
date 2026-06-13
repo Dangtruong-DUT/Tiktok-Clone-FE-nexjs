@@ -22,20 +22,12 @@ import { cn } from '@/lib/utils'
 import { usePostTableContext } from '@/app/[locale]/(user)/snapistudio/content/_context/content-table.context'
 import { usePublishNowMutation, useCancelScheduleMutation } from '@/store/services/content/studio-post-schedule.service'
 import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
+import { POST_STATUS_BADGE } from '@/constants/status/post'
 import type { StudioPostItem } from '@/types/models/studio-post.model'
 
 function fmtDateTime(iso: string | null | undefined): string {
     if (!iso) return '—'
     return iso.slice(0, 16).replace('T', ' ')
-}
-
-const STATUS_STYLE: Record<string, string> = {
-    draft: 'bg-muted text-muted-foreground border-border',
-    scheduled:
-        'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-950/40 dark:text-yellow-400 dark:border-yellow-900',
-    published:
-        'bg-green-100 text-green-700 border-green-200 dark:bg-green-950/40 dark:text-green-400 dark:border-green-900',
-    failed: 'bg-red-100 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-900'
 }
 
 type PostCellProps = {
@@ -44,10 +36,11 @@ type PostCellProps = {
 
 function ContentCell({ row }: PostCellProps) {
     const t = useTranslations('SnapiStudio.content.table')
-    const { thumbnail_url, content } = row.original
+    const { setSelectedPostUuid } = usePostTableContext()
+    const { uuid, thumbnail_url, content } = row.original
 
     return (
-        <div className='flex gap-3 items-center py-1'>
+        <div className='flex gap-3 items-center py-1 cursor-pointer' onClick={() => setSelectedPostUuid(uuid)}>
             {thumbnail_url ? (
                 <Image
                     src={thumbnail_url}
@@ -63,18 +56,9 @@ function ContentCell({ row }: PostCellProps) {
             )}
 
             <div className='flex flex-col gap-1 min-w-0'>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <span className='truncate font-medium text-sm max-w-[180px] hover:underline cursor-help block text-foreground'>
-                            {content || <span className='italic text-muted-foreground'>—</span>}
-                        </span>
-                    </TooltipTrigger>
-                    {content && (
-                        <TooltipContent side='top' className='max-w-xs'>
-                            <p className='text-xs'>{content}</p>
-                        </TooltipContent>
-                    )}
-                </Tooltip>
+                <span className='truncate font-medium text-sm max-w-[180px] block text-foreground hover:underline'>
+                    {content || <span className='italic text-muted-foreground'>—</span>}
+                </span>
             </div>
         </div>
     )
@@ -84,7 +68,13 @@ function StatusCell({ row }: PostCellProps) {
     const { status, status_label } = row.original
 
     return (
-        <Badge variant='outline' className={cn('text-xs font-medium', STATUS_STYLE[status] ?? STATUS_STYLE.draft)}>
+        <Badge
+            variant='outline'
+            className={cn(
+                'text-xs font-medium border-transparent',
+                POST_STATUS_BADGE[status] ?? POST_STATUS_BADGE['draft']
+            )}
+        >
             {status_label}
         </Badge>
     )

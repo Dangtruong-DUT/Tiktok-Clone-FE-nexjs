@@ -3,8 +3,7 @@ export const STUDIO_POST_STATUSES = {
     SCHEDULED: 'scheduled',
     PUBLISHED: 'published',
     FAILED: 'failed',
-    ARCHIVED: 'archived',
-    HIDDEN: 'hidden'
+    ARCHIVED: 'archived'
 } as const
 
 export const SCHEDULED_POST_STATUSES = {

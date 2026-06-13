@@ -55,14 +55,12 @@ class PostOverviewTool extends AbstractAnalyticsTool
 
         $total      = (clone $query)->count();
         $published  = (clone $query)->where('status', 'published')->count();
-        $hidden     = (clone $query)->where('status', 'hidden')->count();
         $draft      = (clone $query)->where('status', 'draft')->count();
         $scheduled  = (clone $query)->where('status', 'scheduled')->count();
 
         $data = [
             'total_posts'     => $total,
             'published_posts' => $published,
-            'hidden_posts'    => $hidden,
             'draft_posts'     => $draft,
             'scheduled_posts' => $scheduled,
         ];

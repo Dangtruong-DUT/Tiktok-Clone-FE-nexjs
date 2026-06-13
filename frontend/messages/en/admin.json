@@ -559,9 +559,7 @@
             },
             "filters": {
                 "allStatuses": "All statuses",
-                "visible": "Visible",
-                "recent": "Recent",
-                "oldest": "Oldest"
+                "visible": "Visible"
             },
             "status": {
                 "published": "Published",
@@ -569,7 +567,6 @@
                 "draft": "Draft",
                 "failed": "Failed",
                 "archived": "Archived",
-                "hidden": "Hidden",
                 "deleted": "Removed",
                 "live": "Live",
                 "all": "All"

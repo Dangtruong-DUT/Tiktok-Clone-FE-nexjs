@@ -14,7 +14,6 @@ enum PostPublishStatusEnum: string implements BaseEnumInterface
     case PUBLISHED = 'published';
     case FAILED    = 'failed';
     case ARCHIVED  = 'archived';
-    case HIDDEN    = 'hidden';
 
     public function label(): string
     {
@@ -24,7 +23,6 @@ enum PostPublishStatusEnum: string implements BaseEnumInterface
             self::PUBLISHED => 'Published',
             self::FAILED    => 'Failed',
             self::ARCHIVED  => 'Archived',
-            self::HIDDEN    => 'Hidden',
         };
     }
 
@@ -36,7 +34,6 @@ enum PostPublishStatusEnum: string implements BaseEnumInterface
             self::PUBLISHED => 'Đã đăng',
             self::FAILED    => 'Thất bại',
             self::ARCHIVED  => 'Đã lưu trữ',
-            self::HIDDEN    => 'Đã ẩn',
         };
     }
 
