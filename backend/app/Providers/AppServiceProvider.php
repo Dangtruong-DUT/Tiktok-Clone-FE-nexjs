@@ -22,7 +22,10 @@ use App\Services\Analytics\MetricsCatalog;
 use Gemini\Client as GeminiClient;
 use Gemini\Contracts\ClientContract as GeminiClientContract;
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\HandlerStack;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
+use Psr\Http\Message\ResponseInterface;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
@@ -35,14 +38,14 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(GeminiClientContract::class, static function (): GeminiClient {
-            $apiKey  = (string) config('gemini.api_key', '');
-            $baseUrl = (string) config('gemini.base_url', 'https://generativelanguage.googleapis.com/v1beta');
-            $timeout = (int)    config('gemini.request_timeout', 30);
+            $apiKey   = (string) config('gemini.api_key', '');
+            $baseUrl  = rtrim((string) config('gemini.base_url', 'https://generativelanguage.googleapis.com/v1beta/'), '/') . '/';
+            $timeout  = (int)    config('gemini.request_timeout', 30);
 
             return \Gemini::factory()
-                ->withQueryParam(name: 'key', value: $apiKey)
+                ->withApiKey(apiKey: $apiKey)
                 ->withBaseUrl(baseUrl: $baseUrl)
-                ->withHttpClient(client: new GuzzleClient(['timeout' => $timeout]))
+                ->withHttpClient(client: new GuzzleClient(['timeout' => $timeout, 'handler' => $stack]))
                 ->make();
         });
 

@@ -16,6 +16,7 @@ import { useVideoStatus } from '@/hooks/video/useVideoStatus'
 import { convertBase64ToFile } from '@/utils/file.util'
 import { extractHashtags } from '@/utils/social-token.util'
 import { handleFormError } from '@/utils/errors/handle-form-errors.util'
+import { datetimeLocalToUtcIso } from '@/utils/formatting/format-time.util'
 import { logger } from '@/utils/logger.util'
 import { useConfirmNavigation } from '@/hooks/shared/useConfirmNavigation'
 import { useRouter } from '@/i18n/navigation'
@@ -204,7 +205,7 @@ export function useUploadFormManager() {
             if (scheduledAt) {
                 await schedulePost({
                     postUuid: res.data.uuid,
-                    scheduled_at: new Date(scheduledAt).toISOString()
+                    scheduled_at: datetimeLocalToUtcIso(scheduledAt)
                 }).unwrap()
                 toast.success(t('toast.scheduled'), { position: 'top-center' })
             } else {

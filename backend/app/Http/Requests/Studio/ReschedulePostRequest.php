@@ -11,7 +11,6 @@ class ReschedulePostRequest extends BaseRequest
     {
         return $this->applyBaseRules([
             'scheduled_at' => [self::REQUIRED],
-            'timezone'     => [self::SOMETIMES],
         ]);
     }
 }

@@ -87,3 +87,34 @@ export function formatISOToDisplayDate(data: string): string {
         return ''
     }
 }
+
+export function datetimeLocalToUtcIso(value: string): string {
+    if (!value) return ''
+
+    const normalized = value.length === 16 ? `${value}:00.000Z` : value.endsWith('Z') ? value : `${value}Z`
+    const parsed = new Date(normalized)
+
+    if (Number.isNaN(parsed.getTime())) {
+        return ''
+    }
+
+    return parsed.toISOString()
+}
+
+export function utcIsoToDatetimeLocal(value: string): string {
+    if (!value) return ''
+
+    const normalized = /(?:Z|[+-]\d{2}:\d{2})$/.test(value) ? value : `${value}Z`
+    const date = new Date(normalized)
+    if (Number.isNaN(date.getTime())) {
+        return ''
+    }
+
+    const pad = (n: number) => String(n).padStart(2, '0')
+
+    return [
+        date.getUTCFullYear(),
+        pad(date.getUTCMonth() + 1),
+        pad(date.getUTCDate())
+    ].join('-') + `T${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}`
+}

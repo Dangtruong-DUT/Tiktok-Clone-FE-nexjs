@@ -24,8 +24,7 @@ export function CopilotScheduleCard({ messageUuid, output, status, onAccept, onR
         try {
             await schedulePost({
                 postUuid: output.post_uuid,
-                scheduled_at: output.scheduled_at,
-                timezone: output.timezone
+                scheduled_at: output.scheduled_at
             }).unwrap()
             onAccept(messageUuid)
             toast.success(t('scheduleCard.toastSuccess', { time: output.human_readable }))

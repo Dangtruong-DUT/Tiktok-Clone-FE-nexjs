@@ -55,10 +55,9 @@ class PostScheduleService
         }
 
         $scheduledAtInput = (string) $payload['scheduled_at'];
-        $timezone = (string) ($payload['timezone'] ?? 'UTC');
 
-        // scheduled_at is sent as UTC ISO from frontend — parse without timezone interpretation
-        $scheduledAt = Carbon::parse($scheduledAtInput)->utc();
+        // scheduled_at is treated as an absolute UTC timestamp.
+        $scheduledAt = Carbon::parse($scheduledAtInput, 'UTC');
 
         if ($scheduledAt->isPast()) {
             throw new BadRequestException('Scheduled time must be in the future.');
@@ -71,7 +70,7 @@ class PostScheduleService
             'user_id'       => $userId,
             'post_id'       => $post->id,
             'scheduled_at'  => $scheduledAt,
-            'user_timezone' => $timezone,
+            'user_timezone' => 'UTC',
             'status'        => ScheduledPostStatusEnum::PENDING,
             'source'        => ScheduledPostSourceEnum::MANUAL,
         ]);
@@ -182,10 +181,9 @@ class PostScheduleService
         }
 
         $scheduledAtInput = (string) $payload['scheduled_at'];
-        $timezone = (string) ($payload['timezone'] ?? 'UTC');
 
-        // scheduled_at is sent as UTC ISO from frontend — parse without timezone interpretation
-        $scheduledAt = Carbon::parse($scheduledAtInput)->utc();
+        // scheduled_at is treated as an absolute UTC timestamp.
+        $scheduledAt = Carbon::parse($scheduledAtInput, 'UTC');
 
         if ($scheduledAt->isPast()) {
             throw new BadRequestException('Scheduled time must be in the future.');
@@ -194,7 +192,6 @@ class PostScheduleService
         /** @var ScheduledPost */
         return $this->scheduledPostRepository->update($scheduledPost->id, [
             'scheduled_at'  => $scheduledAt,
-            'user_timezone' => $timezone,
         ]);
     }
 

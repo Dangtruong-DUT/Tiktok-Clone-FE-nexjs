@@ -15,6 +15,7 @@ import MentionHashtagTextField from '@/components/forms/mention-hashtag-text-fie
 import { useUploadFormManager } from '@/app/[locale]/(user)/snapistudio/upload/_hooks/useUploadFormManager'
 import { useAiCopilotContext } from '@/components/ai-copilot/AiCopilotContext'
 import { AiVideoAttachments } from '@/components/ai-copilot/attachments/AiVideoAttachments'
+import { datetimeLocalToUtcIso } from '@/utils/formatting/format-time.util'
 
 export default function FormUploadVideo() {
     const t = useTranslations('SnapiStudio.upload')
@@ -83,7 +84,7 @@ export default function FormUploadVideo() {
 
     const handleScheduleChange = (value: string) => {
         setScheduledAtLocal(value)
-        setScheduledAt(value ? new Date(value).toISOString() : null)
+        setScheduledAt(value ? datetimeLocalToUtcIso(value) : null)
     }
 
     const handleClearSchedule = () => {
@@ -239,9 +240,10 @@ export default function FormUploadVideo() {
                                         {scheduledAt && (
                                             <p className='text-xs text-muted-foreground'>
                                                 {t('schedule.preview', {
-                                                    date: new Date(scheduledAt).toLocaleString(undefined, {
+                                                    date: new Date(`${scheduledAt}:00Z`).toLocaleString(undefined, {
                                                         dateStyle: 'short',
-                                                        timeStyle: 'short'
+                                                        timeStyle: 'short',
+                                                        timeZone: 'UTC'
                                                     })
                                                 })}
                                             </p>

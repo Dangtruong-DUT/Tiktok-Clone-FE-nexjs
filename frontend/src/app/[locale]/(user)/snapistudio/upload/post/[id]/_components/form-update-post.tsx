@@ -30,6 +30,7 @@ import { useTranslations } from 'next-intl'
 import { extractHashtags } from '@/utils/social-token.util'
 import MentionHashtagTextField from '@/components/forms/mention-hashtag-text-field'
 import { logger } from '@/utils/logger.util'
+import { datetimeLocalToUtcIso, utcIsoToDatetimeLocal } from '@/utils/formatting/format-time.util'
 import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
 import { useAiCopilotContext } from '@/components/ai-copilot/AiCopilotContext'
 import { AiVideoAttachments } from '@/components/ai-copilot/attachments/AiVideoAttachments'
@@ -91,7 +92,7 @@ export default function FormUpdatePost() {
 
     useEffect(() => {
         if (pendingSchedule?.scheduled_at) {
-            setScheduledAt(pendingSchedule.scheduled_at.slice(0, 16))
+            setScheduledAt(utcIsoToDatetimeLocal(pendingSchedule.scheduled_at))
             setShowSchedule(true)
         }
     }, [pendingSchedule])
@@ -161,7 +162,7 @@ export default function FormUpdatePost() {
 
     const onSchedule = async () => {
         if (!post || !scheduledAt || isUpdatePostLoading) return
-        const body = { scheduled_at: new Date(scheduledAt).toISOString() }
+        const body = { scheduled_at: datetimeLocalToUtcIso(scheduledAt) }
         try {
             if (pendingSchedule) {
                 await reschedulePost({ schedUuid: pendingSchedule.uuid, ...body }).unwrap()
@@ -352,9 +353,10 @@ export default function FormUpdatePost() {
                                         {scheduledAt && (
                                             <p className='text-xs text-muted-foreground'>
                                                 {t('schedule.preview', {
-                                                    date: new Date(scheduledAt).toLocaleString(undefined, {
+                                                    date: new Date(`${scheduledAt}:00Z`).toLocaleString(undefined, {
                                                         dateStyle: 'short',
-                                                        timeStyle: 'short'
+                                                        timeStyle: 'short',
+                                                        timeZone: 'UTC'
                                                     })
                                                 })}
                                             </p>

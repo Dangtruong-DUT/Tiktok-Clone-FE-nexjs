@@ -3,7 +3,7 @@
 return [
     'api_key'           => env('GEMINI_API_KEY'),
     'model'             => env('GEMINI_MODEL', 'gemini-2.0-flash'),
-    'base_url'          => env('GEMINI_BASE_URL', 'https://generativelanguage.googleapis.com/v1beta'),
+    'base_url'          => env('GEMINI_BASE_URL', 'https://generativelanguage.googleapis.com/v1beta/'),
     'request_timeout'   => (int)   env('GEMINI_TIMEOUT', 30),
     'available_models'  => [
         'gemini-2.5-flash',
