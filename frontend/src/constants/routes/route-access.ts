@@ -5,7 +5,7 @@ function buildLocalizedRoutes(basePaths: string[]) {
     return locales.flatMap((locale) => basePaths.map((basePath) => `/${locale}${basePath}`))
 }
 
-const SUPER_ADMIN_BASE_PATHS = [ADMIN_ROUTES.DASHBOARD]
+const SUPER_ADMIN_BASE_PATHS = [ADMIN_ROUTES.DASHBOARD, ADMIN_ROUTES.ADMIN_ROOT]
 const BANNED_BASE_PATHS = [APP_ROUTES.BANNED]
 const USER_PROTECTED_BASE_PATHS = [
     APP_ROUTES.BUSINESS_SUITE,

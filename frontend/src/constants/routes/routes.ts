@@ -46,7 +46,8 @@ export const USER_ROUTES = {
 } as const
 
 export const ADMIN_ROUTES = {
-    DASHBOARD: '/admin',
+    DASHBOARD: '/dashboard',
+    ADMIN_ROOT: '/admin',
     USERS: '/admin/users',
     POSTS: '/admin/posts',
     COMMENTS: '/admin/comments',
