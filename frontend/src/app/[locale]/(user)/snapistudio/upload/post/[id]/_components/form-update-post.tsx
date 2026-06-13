@@ -1,13 +1,13 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { UpdatePostReqBody, UpdatePostReqBodyType } from '@/types/dtos/post/post-request.dto'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Audience, AUDIENCE_VALUES } from '@/constants/enum'
-import { Info } from 'lucide-react'
+import { CalendarClock, Info, X } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import VideoPreview from '@/app/[locale]/(user)/snapistudio/upload/_components/video-preview'
 import SelectThumbnailDialog from '@/app/[locale]/(user)/snapistudio/upload/_components/select-thumbnail-dialog'
@@ -15,6 +15,7 @@ import AudienceSelect from '@/components/forms/audience-select'
 
 import { useUploadImageMutation } from '@/store/services/content/upload.service'
 import { useGetPostDetailQuery, useUpdatePostMutation } from '@/store/services/content/posts.service'
+import { useCancelScheduleMutation, useReschedulePostMutation, useSchedulePostMutation } from '@/store/services/content/studio-post-schedule.service'
 import { handleFormError } from '@/utils/errors/handle-form-errors.util'
 import { SearchParamsLoader, useSearchParamsLoader } from '@/components/common/search-params-loader'
 import { useRouter } from '@/i18n/navigation'
@@ -30,6 +31,7 @@ import { extractHashtags } from '@/utils/social-token.util'
 import MentionHashtagTextField from '@/components/forms/mention-hashtag-text-field'
 import { logger } from '@/utils/logger.util'
 import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
+import { APP_TIMEZONE } from '@/constants/studio-post'
 import { useAiCopilotContext } from '@/components/ai-copilot/AiCopilotContext'
 import { AiVideoAttachments } from '@/components/ai-copilot/attachments/AiVideoAttachments'
 
@@ -49,6 +51,9 @@ export default function FormUpdatePost() {
     const { setVideoContext, registerFormPatch, unregisterFormPatch } = useAiCopilotContext()
     const [uploadImageMutate, uploadImageResult] = useUploadImageMutation()
     const [updatePostMutate, updatePostResult] = useUpdatePostMutation()
+    const [schedulePost, schedulePostResult] = useSchedulePostMutation()
+    const [reschedulePost, reschedulePostResult] = useReschedulePostMutation()
+    const [cancelSchedule, cancelScheduleResult] = useCancelScheduleMutation()
     const { searchParams, setSearchParams } = useSearchParamsLoader()
     const currentUser = useCurrentUserData()
     const redirectFrom = searchParams?.get('from')
@@ -74,6 +79,22 @@ export default function FormUpdatePost() {
             thumbnail: undefined
         }
     })
+
+    const pendingSchedule = useMemo(
+        () => (post?.scheduled_post?.status === 'pending' ? post.scheduled_post : null),
+        [post]
+    )
+    const canSchedule = post?.status === 'draft' || post?.status === 'failed' || post?.status === 'scheduled'
+
+    const [showSchedule, setShowSchedule] = useState(false)
+    const [scheduledAt, setScheduledAt] = useState('')
+
+    useEffect(() => {
+        if (pendingSchedule?.scheduled_at) {
+            setScheduledAt(new Date(pendingSchedule.scheduled_at).toISOString().slice(0, 16))
+            setShowSchedule(true)
+        }
+    }, [pendingSchedule])
 
     const [videoUrl, setVideoUrl] = useState<string | null>(null)
 
@@ -134,7 +155,36 @@ export default function FormUpdatePost() {
         form.reset()
     }
 
-    const isUpdatePostLoading = updatePostResult.isLoading || uploadImageResult.isLoading
+    const isScheduleLoading =
+        schedulePostResult.isLoading || reschedulePostResult.isLoading || cancelScheduleResult.isLoading
+    const isUpdatePostLoading = updatePostResult.isLoading || uploadImageResult.isLoading || isScheduleLoading
+
+    const onSchedule = async () => {
+        if (!post || !scheduledAt || isUpdatePostLoading) return
+        const body = { scheduled_at: new Date(scheduledAt).toISOString(), timezone: APP_TIMEZONE }
+        try {
+            if (pendingSchedule) {
+                await reschedulePost({ schedUuid: pendingSchedule.uuid, ...body }).unwrap()
+            } else {
+                await schedulePost({ postUuid: post.uuid, ...body }).unwrap()
+            }
+            toast.success(t('toast.scheduled'))
+        } catch (error) {
+            logger.error(error)
+        }
+    }
+
+    const onCancelSchedule = async () => {
+        if (!pendingSchedule || isUpdatePostLoading) return
+        try {
+            await cancelSchedule(pendingSchedule.uuid).unwrap()
+            setScheduledAt('')
+            setShowSchedule(false)
+            toast.success(t('toast.scheduleCancelled'))
+        } catch (error) {
+            logger.error(error)
+        }
+    }
 
     const onsubmit = async (data: UpdatePostReqBodyType) => {
         if (isUpdatePostLoading || !post) return
@@ -262,6 +312,82 @@ export default function FormUpdatePost() {
                                 )}
                             />
                         </div>
+                        {canSchedule && (
+                            <div className='mt-5 rounded-xl border border-border bg-card p-4 space-y-3'>
+                                <div className='flex items-center justify-between'>
+                                    <div className='flex items-center gap-2'>
+                                        <CalendarClock size={15} className='text-primary' />
+                                        <span className='text-sm font-medium'>{t('schedule.title')}</span>
+                                    </div>
+                                    {showSchedule && (
+                                        <button
+                                            type='button'
+                                            onClick={() => { setShowSchedule(false); setScheduledAt('') }}
+                                            className='text-muted-foreground hover:text-foreground'
+                                        >
+                                            <X size={15} />
+                                        </button>
+                                    )}
+                                </div>
+                                {showSchedule ? (
+                                    <>
+                                        <input
+                                            type='datetime-local'
+                                            value={scheduledAt}
+                                            min={new Date(Date.now() + 60_000).toISOString().slice(0, 16)}
+                                            onChange={(e) => setScheduledAt(e.target.value)}
+                                            className='w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary/50'
+                                        />
+                                        {scheduledAt && (
+                                            <p className='text-xs text-muted-foreground'>
+                                                {t('schedule.preview', {
+                                                    date: new Date(scheduledAt).toLocaleString(undefined, {
+                                                        dateStyle: 'short',
+                                                        timeStyle: 'short'
+                                                    })
+                                                })}
+                                            </p>
+                                        )}
+                                        <div className='flex gap-2'>
+                                            <Button
+                                                type='button'
+                                                size='sm'
+                                                variant='brand'
+                                                disabled={!scheduledAt || isUpdatePostLoading}
+                                                isLoading={isScheduleLoading}
+                                                onClick={onSchedule}
+                                            >
+                                                <CalendarClock size={13} />
+                                                {pendingSchedule ? t('buttons.reschedule') : t('buttons.scheduleNow')}
+                                            </Button>
+                                            {pendingSchedule && (
+                                                <Button
+                                                    type='button'
+                                                    size='sm'
+                                                    variant='outline'
+                                                    disabled={isUpdatePostLoading}
+                                                    onClick={onCancelSchedule}
+                                                >
+                                                    {t('buttons.cancelSchedule')}
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </>
+                                ) : (
+                                    <Button
+                                        type='button'
+                                        size='sm'
+                                        variant='outline'
+                                        className='gap-2'
+                                        onClick={() => setShowSchedule(true)}
+                                    >
+                                        <CalendarClock size={13} />
+                                        {t('buttons.schedule')}
+                                    </Button>
+                                )}
+                            </div>
+                        )}
+
                         <div className='flex gap-4 mt-10'>
                             <Button
                                 size='lg'

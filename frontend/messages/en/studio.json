@@ -418,6 +418,8 @@
                 "cancel": "Cancel",
                 "schedule": "Schedule",
                 "scheduleNow": "Schedule now",
+                "reschedule": "Reschedule",
+                "cancelSchedule": "Cancel schedule",
                 "saveDraft": "Save draft"
             },
             "schedule": {
@@ -427,6 +429,7 @@
             "toast": {
                 "updated": "Post updated successfully",
                 "scheduled": "Post scheduled successfully",
+                "scheduleCancelled": "Schedule cancelled",
                 "draftSaved": "Post saved as draft"
             }
         },
@@ -784,7 +787,14 @@
                 "noResponse": "Awaiting review...",
                 "noEvidence": "No evidence attached",
                 "resourceUnavailable": "Resource no longer available",
-                "resourceTitle": "Related Resource"
+                "resourceTitle": "Related Resource",
+                "close": "Close",
+                "timeline": "Timeline",
+                "appealSubmitted": "Appeal submitted",
+                "appealApproved": "Appeal approved",
+                "appealRejected": "Appeal rejected",
+                "actionReversed": "Action Reversed",
+                "pendingReview": "Pending review..."
             }
         }
     }

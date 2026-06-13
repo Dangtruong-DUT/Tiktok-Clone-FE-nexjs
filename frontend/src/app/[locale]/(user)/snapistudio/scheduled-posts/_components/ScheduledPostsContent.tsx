@@ -26,7 +26,7 @@ import {
     usePublishNowMutation,
     useCancelScheduleMutation
 } from '@/store/services/content/studio-post-schedule.service'
-import { STUDIO_POST_STATUSES } from '@/constants/studio-post'
+import { STUDIO_POST_STATUSES, APP_TIMEZONE } from '@/constants/studio-post'
 import { POST_STATUS_BADGE } from '@/constants/status/post'
 import type { StudioPostStatus, StudioPostItem } from '@/types/models/studio-post.model'
 
@@ -118,7 +118,7 @@ function ScheduleInline({
             await schedule({
                 postUuid,
                 scheduled_at: fromDatetimeLocal(value),
-                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+                timezone: APP_TIMEZONE
             }).unwrap()
             toast.success(t('toast.scheduled'))
             onSaved()

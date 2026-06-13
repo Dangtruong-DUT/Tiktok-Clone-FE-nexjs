@@ -82,6 +82,7 @@ class AiGateway
         } catch (\Throwable $e) {
             Log::channel(config('ai.logging.channel', 'stack'))->warning('AI Gateway parse failed, falling back to unknown', [
                 'error' => $e->getMessage(),
+
             ]);
 
             return GatewayTask::unknown();

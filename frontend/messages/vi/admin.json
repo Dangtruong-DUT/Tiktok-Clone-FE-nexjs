@@ -366,8 +366,8 @@
                 },
                 "noResults": "Không có kết quả nào.",
                 "labels": {
-                    "scheduled": "Scheduled",
-                    "published": "Published"
+                    "scheduled": "Lên lịch",
+                    "published": "Đã đăng"
                 },
                 "actions": {
                     "cancel": "Hủy",

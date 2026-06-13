@@ -256,7 +256,10 @@ class Post extends Model
         }
 
         return $query->where(function ($q) use ($authUserId) {
-            $q->where('user_id', $authUserId)
+            $q->where(function ($own) use ($authUserId) {
+                $own->where('user_id', $authUserId)
+                    ->where('status', PostPublishStatusEnum::PUBLISHED->value);
+            })
               ->orWhere(function ($pub) {
                   $pub->where('status', PostPublishStatusEnum::PUBLISHED->value)
                       ->where('audience', AudienceTypeEnum::PUBLIC->value);

@@ -5,11 +5,11 @@ import { useTranslations } from 'next-intl'
 import { AdminLayout, AdminContainer } from '@/components/admin'
 import { AI_STUDIO_TABS, type AiStudioTabKey } from '@/constants/admin/ai'
 import { ADMIN_ROUTES } from '@/constants/routes/routes'
-import { AiStudioMetrics } from './_components/AiStudioMetrics'
-import { AiStudioSettings } from './_components/AiStudioSettings'
-import { AiStudioRequests } from './_components/AiStudioRequests'
 import { cn } from '@/lib/utils'
 import { BarChart2, Settings, List } from 'lucide-react'
+import { AiStudioMetrics } from '../_components/AiStudioMetrics'
+import { AiStudioSettings } from '../_components/AiStudioSettings'
+import { AiStudioRequests } from '../_components/AiStudioRequests'
 
 export default function AdminAiStudioPage() {
     const t = useTranslations('AdminPage')

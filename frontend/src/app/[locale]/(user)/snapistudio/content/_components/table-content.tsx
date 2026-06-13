@@ -148,7 +148,7 @@ export default function TableContent() {
                             value={statusFilter}
                             onValueChange={(v) => setStatusFilter(v as StudioPostStatus | 'all')}
                         >
-                            <SelectTrigger className='w-[150px] rounded-none'>
+                            <SelectTrigger className='filter-select w-[150px]'>
                                 <SelectValue placeholder={t('filter.statusPlaceholder')} />
                             </SelectTrigger>
                             <SelectContent>
@@ -162,7 +162,7 @@ export default function TableContent() {
 
                         {/* Schedule status select */}
                         <Select value={scheduleFilter} onValueChange={(v) => setScheduleFilter(v as ScheduleFilter)}>
-                            <SelectTrigger className='w-[170px] rounded-none'>
+                            <SelectTrigger className='filter-select w-[170px]'>
                                 <SelectValue placeholder={t('filter.schedulePlaceholder')} />
                             </SelectTrigger>
                             <SelectContent>

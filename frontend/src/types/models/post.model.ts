@@ -30,4 +30,10 @@ export interface TikTokPostType {
     readonly author: UserType
     readonly thumbnail_url: string
     readonly thumbnail_file_id?: number | null
+    readonly status?: string
+    readonly scheduled_post?: {
+        uuid: string
+        status: string
+        scheduled_at: string
+    } | null
 }

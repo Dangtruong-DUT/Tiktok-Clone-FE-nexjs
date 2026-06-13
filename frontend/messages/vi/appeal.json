@@ -32,6 +32,19 @@
             "submitting": "Đang gửi...",
             "submitError": "Không thể gửi kháng cáo. Vui lòng thử lại."
         },
+        "preview": {
+            "relatedPost": "Bài viết liên quan",
+            "relatedComment": "Bình luận liên quan",
+            "yourAccount": "Tài khoản của bạn"
+        },
+        "steps": {
+            "submit": "Gửi yêu cầu",
+            "submitDesc": "Cung cấp giải thích rõ ràng, chi tiết và đính kèm bằng chứng liên quan.",
+            "review": "Đang xem xét",
+            "reviewDesc": "Đội kiểm duyệt sẽ đánh giá kỹ lưỡng trường hợp của bạn theo quy định.",
+            "decision": "Quyết định cuối cùng",
+            "decisionDesc": "Bạn sẽ nhận được thông báo về kết quả. Quyết định là cuối cùng."
+        },
         "types": {
             "user_ban": "Khóa tài khoản",
             "user_deleted": "Xóa tài khoản",

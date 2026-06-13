@@ -40,7 +40,6 @@ class AppServiceProvider extends ServiceProvider
             $timeout = (int)    config('gemini.request_timeout', 30);
 
             return \Gemini::factory()
-                ->withApiKey(apiKey: $apiKey)
                 ->withQueryParam(name: 'key', value: $apiKey)
                 ->withBaseUrl(baseUrl: $baseUrl)
                 ->withHttpClient(client: new GuzzleClient(['timeout' => $timeout]))

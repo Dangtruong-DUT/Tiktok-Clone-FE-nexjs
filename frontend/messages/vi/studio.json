@@ -418,6 +418,8 @@
                 "cancel": "Hủy",
                 "schedule": "Hẹn giờ",
                 "scheduleNow": "Hẹn giờ đăng",
+                "reschedule": "Đặt lại giờ",
+                "cancelSchedule": "Hủy lịch",
                 "saveDraft": "Lưu nháp"
             },
             "schedule": {
@@ -427,6 +429,7 @@
             "toast": {
                 "updated": "Đã cập nhật bài đăng",
                 "scheduled": "Đã hẹn giờ bài đăng",
+                "scheduleCancelled": "Đã hủy lịch đăng",
                 "draftSaved": "Đã lưu bài đăng nháp"
             }
         },
@@ -789,7 +792,14 @@
                 "noResponse": "Đang chờ xét duyệt...",
                 "noEvidence": "Không có bằng chứng đính kèm",
                 "resourceUnavailable": "Tài nguyên không còn khả dụng",
-                "resourceTitle": "Tài nguyên liên quan"
+                "resourceTitle": "Tài nguyên liên quan",
+                "close": "Đóng",
+                "timeline": "Dòng thời gian",
+                "appealSubmitted": "Đã gửi kháng cáo",
+                "appealApproved": "Kháng cáo được chấp thuận",
+                "appealRejected": "Kháng cáo bị từ chối",
+                "actionReversed": "Hành động đã được đảo ngược",
+                "pendingReview": "Đang chờ xét duyệt..."
             }
         }
     }

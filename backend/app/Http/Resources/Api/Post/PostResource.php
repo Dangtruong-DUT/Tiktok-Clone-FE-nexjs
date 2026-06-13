@@ -37,6 +37,13 @@ class PostResource extends BaseJsonResource
             'user_views' => $this->user_views,
             'author' => UserResource::make($this->whenLoaded('user')),
             'thumbnail_url' => $this->thumbnail_url,
+            'thumbnail_file_id' => $this->thumbnail_file_id,
+            'status' => $this->status?->value,
+            'scheduled_post' => $this->whenLoaded('scheduledPost', fn () => $this->scheduledPost ? [
+                'uuid'         => $this->scheduledPost->uuid,
+                'status'       => $this->scheduledPost->status?->value,
+                'scheduled_at' => $this->scheduledPost->scheduled_at?->toIso8601String(),
+            ] : null),
         ];
     }
 }

@@ -15,12 +15,12 @@ export const AppealResourceTypeSchema = z.enum(APPEAL_RESOURCE_TYPE_VALUES)
 
 export type { AppealType, AppealStatus, AppealResourceType, AppealReviewAction } from '@/constants/appeal'
 
-interface ResourcePreviewAuthor {
+export interface ResourcePreviewAuthor {
     readonly username: string
     readonly avatar: string | null
 }
 
-interface ResourcePreviewBase {
+export interface ResourcePreviewBase {
     readonly uuid?: string | null
     readonly content: string | null
     readonly is_deleted?: boolean
@@ -28,18 +28,18 @@ interface ResourcePreviewBase {
     readonly created_at?: string | null
 }
 
-interface PostResourcePreview extends ResourcePreviewBase {
+export interface PostResourcePreview extends ResourcePreviewBase {
     readonly type: typeof RESOURCE_PREVIEW_TYPES.POST
     readonly thumbnail_url?: string | null
     readonly likes_count?: number
     readonly comments_count?: number
 }
 
-interface CommentResourcePreview extends ResourcePreviewBase {
+export interface CommentResourcePreview extends ResourcePreviewBase {
     readonly type: typeof RESOURCE_PREVIEW_TYPES.COMMENT
 }
 
-interface UserResourcePreview {
+export interface UserResourcePreview {
     readonly type: typeof RESOURCE_PREVIEW_TYPES.USER
     readonly uuid?: string | null
     readonly username: string

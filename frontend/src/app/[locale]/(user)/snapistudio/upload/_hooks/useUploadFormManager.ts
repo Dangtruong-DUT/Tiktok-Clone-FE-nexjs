@@ -20,6 +20,7 @@ import { logger } from '@/utils/logger.util'
 import { useConfirmNavigation } from '@/hooks/shared/useConfirmNavigation'
 import { useRouter } from '@/i18n/navigation'
 import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
+import { APP_TIMEZONE } from '@/constants/studio-post'
 import { Audience, MediaType, PosterType, VideoUploadStatus } from '@/constants/enum'
 import { CreatePostReqBody, CreatePostReqBodyType } from '@/types/dtos/post/post-request.dto'
 import useVideoFrames from '@/hooks/video/useVideoFrames'
@@ -181,7 +182,8 @@ export function useUploadFormManager() {
                 hashtags: extractHashtags(data.content),
                 mentions: undefined,
                 medias: [{ type: mediaType, session_uuid: sessionUuid }],
-                thumbnail: imageResponse.data.id
+                thumbnail: imageResponse.data.id,
+                ...(scheduledAtRef.current ? { save_as_draft: true as const } : {})
             }
 
             const res = await createPost(body).unwrap()
@@ -204,7 +206,7 @@ export function useUploadFormManager() {
                 await schedulePost({
                     postUuid: res.data.uuid,
                     scheduled_at: new Date(scheduledAt).toISOString(),
-                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+                    timezone: APP_TIMEZONE
                 }).unwrap()
                 toast.success(t('toast.scheduled'), { position: 'top-center' })
             } else {

@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl'
 import { CheckCircle2, Clock, FileText, XCircle } from 'lucide-react'
 import Image from 'next/image'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { APPEAL_STATUSES } from '@/constants/appeal'
@@ -72,7 +72,7 @@ export function AppealDetailDialog({ open, appeal, onClose }: AppealDetailDialog
                                 <CheckCircle2 className='h-5 w-5 text-emerald-600 shrink-0 mt-0.5' />
                                 <div>
                                     <p className='text-sm font-semibold text-emerald-800 dark:text-emerald-300'>
-                                        {t('statuses.approved')} — Action Reversed
+                                        {t('statuses.approved')} — {t('detail.actionReversed')}
                                     </p>
                                     {appeal.admin_response && (
                                         <p className='text-xs text-emerald-700 dark:text-emerald-400 mt-0.5'>
@@ -106,12 +106,12 @@ export function AppealDetailDialog({ open, appeal, onClose }: AppealDetailDialog
 
                         <div className='space-y-2'>
                             <p className='text-xs uppercase tracking-wide text-muted-foreground font-medium'>
-                                Timeline
+                                {t('detail.timeline')}
                             </p>
                             <ol className='relative border-l border-border ml-3 space-y-4'>
                                 <li className='pl-5'>
                                     <span className='absolute -left-1.5 mt-1 h-3 w-3 rounded-full border border-background bg-emerald-500' />
-                                    <p className='text-xs font-medium text-foreground'>Appeal submitted</p>
+                                    <p className='text-xs font-medium text-foreground'>{t('detail.appealSubmitted')}</p>
                                     <p className='text-xs text-muted-foreground'>{formatDateTime(appeal.created_at)}</p>
                                 </li>
                                 {appeal.reviewed_at && (
@@ -124,8 +124,9 @@ export function AppealDetailDialog({ open, appeal, onClose }: AppealDetailDialog
                                             }`}
                                         />
                                         <p className='text-xs font-medium text-foreground'>
-                                            Appeal{' '}
-                                            {appeal.status === APPEAL_STATUSES.APPROVED ? 'approved' : 'rejected'}
+                                            {appeal.status === APPEAL_STATUSES.APPROVED
+                                                ? t('detail.appealApproved')
+                                                : t('detail.appealRejected')}
                                         </p>
                                         <p className='text-xs text-muted-foreground'>
                                             {formatDateTime(appeal.reviewed_at)}
@@ -135,7 +136,7 @@ export function AppealDetailDialog({ open, appeal, onClose }: AppealDetailDialog
                                 {!appeal.reviewed_at && (
                                     <li className='pl-5 opacity-50'>
                                         <span className='absolute -left-1.5 mt-1 h-3 w-3 rounded-full border-2 border-muted-foreground bg-background' />
-                                        <p className='text-xs font-medium text-muted-foreground'>Pending review...</p>
+                                        <p className='text-xs font-medium text-muted-foreground'>{t('detail.pendingReview')}</p>
                                     </li>
                                 )}
                             </ol>
@@ -184,11 +185,11 @@ export function AppealDetailDialog({ open, appeal, onClose }: AppealDetailDialog
                     </div>
                 </div>
 
-                <div className='flex justify-end pt-2'>
+                <DialogFooter>
                     <Button variant='outline' size='sm' onClick={onClose}>
-                        Close
+                        {t('detail.close')}
                     </Button>
-                </div>
+                </DialogFooter>
             </DialogContent>
         </Dialog>
     )

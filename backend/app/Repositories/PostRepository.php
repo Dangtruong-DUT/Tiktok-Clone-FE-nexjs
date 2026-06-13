@@ -488,6 +488,7 @@ class PostRepository extends BaseRepository
                 'media.file',
                 'media.file.videoEncoding',
                 'thumbnailFile',
+                'scheduledPost',
             ])
             ->withExists([
                 'userLikes as is_liked' => fn (Builder $likesQuery) => $likesQuery->where('user_id', $queryUserId),

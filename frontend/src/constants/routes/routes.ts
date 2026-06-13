@@ -53,7 +53,7 @@ export const ADMIN_ROUTES = {
     APPEALS: '/admin/appeals',
     ACTIVITY: '/admin/activity',
     SETTINGS: '/admin/settings',
-    AI_STUDIO: '/admin/ai-studio',
+    AI_STUDIO: '/admin/ai-studio/metrics',
     AI_STUDIO_PROMPT_TEMPLATES: '/admin/ai-studio/prompt-templates',
     AI_STUDIO_KNOWLEDGE: '/admin/ai-studio/knowledge',
     SCHEDULED_POSTS: '/admin/scheduled-posts'

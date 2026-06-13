@@ -32,6 +32,19 @@
             "submitting": "Submitting...",
             "submitError": "Failed to submit your appeal. Please try again."
         },
+        "preview": {
+            "relatedPost": "Related post",
+            "relatedComment": "Related comment",
+            "yourAccount": "Your account"
+        },
+        "steps": {
+            "submit": "Submit request",
+            "submitDesc": "Provide a clear, detailed explanation and attach any relevant evidence.",
+            "review": "Under review",
+            "reviewDesc": "Our moderation team will carefully evaluate your case against our guidelines.",
+            "decision": "Final decision",
+            "decisionDesc": "You will receive a notification with the outcome. Decisions are final."
+        },
         "types": {
             "user_ban": "Account Suspension",
             "user_deleted": "Account Deletion",
