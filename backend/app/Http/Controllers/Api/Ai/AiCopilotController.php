@@ -39,7 +39,7 @@ class AiCopilotController extends Controller
     public function startSession(StartCopilotSessionRequest $request): JsonResponse
     {
         if (! $this->copilotService->isEnabled()) {
-            return ApiResponse::error('AI Copilot is currently disabled.', 503);
+            return ApiResponse::error(trans('exceptions.ai.copilot_disabled'), 503);
         }
 
         ['session' => $session, 'created' => $created] = $this->copilotService->startSession(
@@ -99,7 +99,7 @@ class AiCopilotController extends Controller
                     'message_uuid' => $userMessage->uuid,
                 ]),
             ],
-            message: 'Streaming.',
+            message: trans('messages.ai.streaming'),
             code:    202,
         );
     }
@@ -174,9 +174,9 @@ class AiCopilotController extends Controller
      * Expire a session immediately (user-initiated close).
      *
      * @param  DestroyCopilotSessionRequest  $request
-     * @return Response
+     * @return JsonResponse
      */
-    public function destroySession(DestroyCopilotSessionRequest $request, string $uuid): Response
+    public function destroySession(DestroyCopilotSessionRequest $request, string $uuid): JsonResponse
     {
         $this->copilotService->expireSessionByUuid($uuid, (int) auth_user_id());
 

@@ -3,10 +3,11 @@ import { toast } from 'sonner'
 import { formatFetchBaseQueryErrorMessage } from '@/store/utils/formatFetchBaseQueryErrorMessage.util'
 import { isBusinessException, isFetchBaseQueryError } from '../../utils/errors/api-error-guards.util'
 import { HTTP_STATUS } from '@/constants/api/http-status'
+import type { storeApiType } from '@/store'
 
 const silentStatuses = [HTTP_STATUS.UNPROCESSABLE_ENTITY, HTTP_STATUS.TOO_MANY_REQUESTS, HTTP_STATUS.FORBIDDEN]
 
-export const errorHandleMiddleware: Middleware = () => (next) => (action) => {
+export const errorHandleMiddleware: Middleware = (storeAPI: storeApiType) => (next) => (action) => {
     if (!isRejectedWithValue(action)) return next(action)
 
     if (!isFetchBaseQueryError(action.payload)) return next(action)
@@ -20,7 +21,8 @@ export const errorHandleMiddleware: Middleware = () => (next) => (action) => {
     )
         return next(action)
 
-    const toastMessage = formatFetchBaseQueryErrorMessage(action.payload)
+    const { lang } = storeAPI.getState().app
+    const toastMessage = formatFetchBaseQueryErrorMessage(action.payload, lang)
     toast.error(toastMessage.title, {
         description: toastMessage.description,
         duration: 5000

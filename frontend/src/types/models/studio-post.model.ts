@@ -6,7 +6,6 @@ interface StudioScheduledPostBrief {
     uuid: string
     status: string
     scheduled_at: string
-    user_timezone: string
     error_message: string | null
 }
 

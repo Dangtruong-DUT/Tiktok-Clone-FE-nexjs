@@ -41,7 +41,7 @@ class AuthController extends Controller
         return $this->respondWithToken(
             $registerResult['access_token'],
             $registerResult['refresh_token'],
-            'Registration successful',
+            trans('messages.auth.registered'),
             $registerResult['user']
         );
     }
@@ -59,7 +59,7 @@ class AuthController extends Controller
         return $this->respondWithToken(
             $loginResult['access_token'],
             $loginResult['refresh_token'],
-            'Login successful',
+            trans('messages.auth.logged_in'),
             $loginResult['user']
         );
     }
@@ -74,7 +74,7 @@ class AuthController extends Controller
 
         return ApiResponse::success(
             data:    new AuthResource($user),
-            message: 'User retrieved successfully',
+            message: trans('messages.auth.user_retrieved'),
         );
     }
 
@@ -117,7 +117,7 @@ class AuthController extends Controller
         return $this->respondWithToken(
             $result['access_token'],
             $result['refresh_token'],
-            'Token refreshed successfully',
+            trans('messages.auth.token_refreshed'),
             $result['user']
         );
     }
@@ -131,7 +131,7 @@ class AuthController extends Controller
     {
         $this->authService->forgot($request->input('email'));
 
-        return ApiResponse::success(message: 'Forgot password validation email sent successfully');
+        return ApiResponse::success(message: trans('messages.auth.forgot_email_sent'));
     }
 
     /**
@@ -144,7 +144,7 @@ class AuthController extends Controller
         $credentials = $request->validated();
         $this->authService->verifyForgotPasswordToken($credentials);
 
-        return ApiResponse::success(message: 'Forgot password token verified successfully');
+        return ApiResponse::success(message: trans('messages.auth.token_verified'));
     }
 
     /**
@@ -157,7 +157,7 @@ class AuthController extends Controller
         $credentials = $request->validated();
         $this->authService->resetPassword($credentials);
 
-        return ApiResponse::success(message: 'Password has been reset successfully');
+        return ApiResponse::success(message: trans('messages.auth.password_reset'));
     }
 
     /**
@@ -173,7 +173,7 @@ class AuthController extends Controller
         return $this->respondWithToken(
             $result['access_token'],
             $result['refresh_token'],
-            'Email has been verified successfully',
+            trans('messages.auth.email_verified'),
             $result['user']
         );
     }
@@ -186,7 +186,7 @@ class AuthController extends Controller
     {
         $this->authService->resendVerifyEmail();
 
-        return ApiResponse::success(message: 'Verification email resent successfully');
+        return ApiResponse::success(message: trans('messages.auth.email_resent'));
     }
 
     /**

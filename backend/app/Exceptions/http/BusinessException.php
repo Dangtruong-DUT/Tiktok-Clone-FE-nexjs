@@ -9,10 +9,10 @@ class BusinessException extends BaseException
     /**
      * Create a new business exception instance.
      */
-    public function __construct(string $message = 'Business error occurred', array $errors = [])
+    public function __construct(?string $message = null, array $errors = [])
     {
         parent::__construct(
-            message: $message,
+            message: $message ?? trans('exceptions.business'),
             errorCode: 'BUSINESS_ERROR',
             errors: $errors,
             httpStatusCode: Response::HTTP_UNPROCESSABLE_ENTITY

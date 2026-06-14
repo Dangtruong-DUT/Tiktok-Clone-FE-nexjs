@@ -14,5 +14,16 @@
         "title": "Đã xảy ra lỗi",
         "description": "Có lỗi không mong muốn xảy ra trong khu vực này.",
         "tryAgain": "Thử lại"
+    },
+    "api": {
+        "unknownTitle": "Lỗi không xác định",
+        "unknownDescription": "Đã xảy ra lỗi không xác định",
+        "serverErrorTitle": "Lỗi máy chủ",
+        "serverErrorDescription": "Vui lòng thử lại sau.",
+        "notFoundTitle": "Không tìm thấy",
+        "notFoundDescription": "Tài nguyên yêu cầu không tồn tại.",
+        "badRequestTitle": "Yêu cầu không hợp lệ",
+        "badRequestDescription": "Yêu cầu không hợp lệ. Vui lòng kiểm tra lại đầu vào.",
+        "errorOccurredTitle": "Đã xảy ra lỗi"
     }
 }

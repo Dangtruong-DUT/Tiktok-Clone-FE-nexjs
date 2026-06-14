@@ -21,7 +21,7 @@ export default function HomeLayout({
             <SidebarProvider>
                 <Sidebar />
             </SidebarProvider>
-            <main className='flex-1 h-screen overflow-auto'>{children}</main>
+            <main className='flex-1 h-screen overflow-auto transition-all duration-700 ease-out'>{children}</main>
             {modal}
         </div>
     )

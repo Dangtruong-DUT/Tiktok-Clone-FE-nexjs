@@ -39,7 +39,7 @@ class NotificationController extends Controller
 
         return ApiResponse::success(
             data: NotificationResource::collection($notifications),
-            message: 'Notifications retrieved successfully'
+            message: trans('messages.notification.retrieved')
         );
     }
 
@@ -56,7 +56,7 @@ class NotificationController extends Controller
 
         return ApiResponse::success(
             data: ['unread_count' => $count],
-            message: 'Unread notifications count retrieved successfully'
+            message: trans('messages.notification.unread_count')
         );
     }
 
@@ -71,7 +71,7 @@ class NotificationController extends Controller
             (string) $request->validated('notification_uuid')
         );
 
-        return ApiResponse::success(message: 'Notification marked as read successfully');
+        return ApiResponse::success(message: trans('messages.notification.marked_read'));
     }
 
     /**
@@ -86,7 +86,7 @@ class NotificationController extends Controller
 
         return ApiResponse::success(
             data: ['updated_count' => $updatedCount],
-            message: 'Notifications marked as read successfully'
+            message: trans('messages.notification.all_marked_read')
         );
     }
 }

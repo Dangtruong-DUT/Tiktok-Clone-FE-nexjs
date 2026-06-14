@@ -33,7 +33,7 @@ class VideoStreamController extends Controller
 
         return ApiResponse::success(
             data:    new VideoEncodingStatusResource($encoding),
-            message: 'Encoding status retrieved.',
+            message: trans('messages.media.encoding_status'),
         );
     }
 
@@ -48,7 +48,7 @@ class VideoStreamController extends Controller
     {
         $this->encodingService->retryFailedEncoding($uuid, $action);
 
-        return ApiResponse::success(message: 'Encoding job queued.');
+        return ApiResponse::success(message: trans('messages.media.encoding_queued'));
     }
 
     /**
@@ -62,6 +62,6 @@ class VideoStreamController extends Controller
     {
         $this->encodingService->deleteUploadByUuid($uuid, $action);
 
-        return ApiResponse::success(message: 'Upload cancelled.');
+        return ApiResponse::success(message: trans('messages.media.upload_cancelled'));
     }
 }

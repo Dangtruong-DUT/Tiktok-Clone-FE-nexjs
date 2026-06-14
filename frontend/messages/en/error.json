@@ -14,5 +14,16 @@
         "title": "Something went wrong",
         "description": "An unexpected error occurred in this section.",
         "tryAgain": "Try again"
+    },
+    "api": {
+        "unknownTitle": "Unknown Error",
+        "unknownDescription": "An unknown error occurred",
+        "serverErrorTitle": "Server Error",
+        "serverErrorDescription": "Please try again later.",
+        "notFoundTitle": "Not Found",
+        "notFoundDescription": "The requested resource was not found.",
+        "badRequestTitle": "Bad Request",
+        "badRequestDescription": "The request was invalid. Please check your input and try again.",
+        "errorOccurredTitle": "Error Occurred"
     }
 }

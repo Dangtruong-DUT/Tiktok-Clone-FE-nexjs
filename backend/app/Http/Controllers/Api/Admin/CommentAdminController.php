@@ -35,16 +35,16 @@ class CommentAdminController extends Controller
 
         return ApiResponse::success(
             data: AdminCommentResource::collection($comments),
-            message: 'Comments retrieved successfully'
+            message: trans('messages.admin.comments_retrieved')
         );
     }
 
     /**
      * Delete a comment (soft delete).
      * @param  DeleteCommentRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteComment(DeleteCommentRequest $request): \Illuminate\Http\Response
+    public function deleteComment(DeleteCommentRequest $request): \Illuminate\Http\JsonResponse
     {
         $this->commentAdminService->deleteComment($request->validated());
 

@@ -83,7 +83,7 @@ export default async function LocaleLayout({
         <html lang={locale} suppressHydrationWarning>
             <body className={`${tiktokDisplayFont.variable} ${tiktokFont.variable} antialiased`}>
                 <NextIntlClientProvider>
-                    <StoreProvider>
+                    <StoreProvider locale={locale}>
                         <AppProvider initialAuthenticated={hasRefreshToken}>
                             <ThemeProvider
                                 attribute='class'

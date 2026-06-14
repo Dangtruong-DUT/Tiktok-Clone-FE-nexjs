@@ -9,7 +9,6 @@ export interface ScheduledPostType {
     status_label: string
     source: ScheduledPostSource
     scheduled_at: string
-    user_timezone: string
     published_at: string | null
     error_message: string | null
     post: {

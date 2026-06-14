@@ -19,7 +19,6 @@ class ScheduledPost extends Model
         'user_id',
         'post_id',
         'scheduled_at',
-        'user_timezone',
         'status',
         'source',
         'published_at',

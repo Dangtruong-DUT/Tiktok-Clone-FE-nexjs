@@ -59,14 +59,14 @@ class PostService
         $postType = $payload['type'] ?? PostTypeEnum::POST->value;
 
         if ($postType !== PostTypeEnum::POST->value && empty($payload['parent_id'])) {
-            throw new BusinessException('Parent ID is required for this post type.', [
-                'type' => 'Parent ID is required for this post type.',
+            throw new BusinessException(trans('exceptions.post.parent_required'), [
+                'type' => trans('exceptions.post.parent_required'),
             ]);
         }
 
         if ($postType === PostTypeEnum::POST->value && ! empty($payload['parent_id'])) {
-            throw new BusinessException('Parent ID is not allowed for this post type.', [
-                'type' => 'Parent ID is not allowed for this post type.',
+            throw new BusinessException(trans('exceptions.post.parent_not_allowed'), [
+                'type' => trans('exceptions.post.parent_not_allowed'),
             ]);
         }
 
@@ -80,7 +80,7 @@ class PostService
             if (! empty($payload['parent_id'])) {
                 $parentPost = $this->postRepository->findById($payload['parent_id']);
                 if (! $parentPost) {
-                    throw new NotFoundException('Parent post not found');
+                    throw new NotFoundException(trans('exceptions.post.parent_not_found'));
                 }
 
                 $this->updateParentCounter($parentPost, $postType, 'increment');
@@ -141,7 +141,7 @@ class PostService
 
         $authUserId = auth_user_id();
         if ($post->user_id !== $authUserId) {
-            throw new ForbiddenException('You can only update your own post');
+            throw new ForbiddenException(trans('exceptions.post.forbidden_update'));
         }
 
         $mentionSyncData = $this->resolveMentionSyncData($payload);
@@ -151,10 +151,12 @@ class PostService
         $dataToUpdate = array_intersect_key($payload, array_flip($allowedFields));
 
         if (empty($dataToUpdate) && ! array_key_exists('mentions', $payload) && ! array_key_exists('hashtags', $payload)) {
-            throw new BusinessException('At least one field must be provided for update');
+            throw new BusinessException(trans('exceptions.post.no_fields'));
         }
 
-        DB::transaction(function () use ($post, $payload, $dataToUpdate, $mentionSyncData, $hashtagSyncData): void {
+        $newMentionedUserIds = array_values(array_diff(array_keys($mentionSyncData), $existingMentionUserIds));
+
+        DB::transaction(function () use ($post, $payload, $dataToUpdate, $mentionSyncData, $hashtagSyncData, $authUserId, $newMentionedUserIds): void {
             if (! empty($dataToUpdate)) {
                 $this->postRepository->update($post->id, [
                     'content' => $dataToUpdate['content'] ?? $post->content,
@@ -172,12 +174,11 @@ class PostService
             if (array_key_exists('hashtags', $payload)) {
                 $this->syncHashtags($post, $hashtagSyncData);
             }
-        });
 
-        $newMentionedUserIds = array_values(array_diff(array_keys($mentionSyncData), $existingMentionUserIds));
-        if (! empty($newMentionedUserIds)) {
-            event(new UserMentionedEvent($authUserId, $post, $newMentionedUserIds));
-        }
+            if (! empty($newMentionedUserIds)) {
+                event(new UserMentionedEvent($authUserId, $post, $newMentionedUserIds));
+            }
+        });
 
         return $this->postRepository->getByIdWithDetail($post->id, $authUserId);
     }
@@ -190,10 +191,14 @@ class PostService
     public function delete(string $uuid): void
     {
         DB::transaction(function () use ($uuid): void {
-            $post = $this->findPostOrFail($uuid);
+            $post = $this->postRepository->findByUuidWithLock($uuid);
+
+            if (! $post) {
+                throw new NotFoundException(trans('exceptions.post.not_found'));
+            }
 
             if ($post->user_id !== auth_user_id()) {
-                throw new ForbiddenException('You can only delete your own post');
+                throw new ForbiddenException(trans('exceptions.post.forbidden_delete'));
             }
 
             if ($post->parent_id) {
@@ -217,7 +222,7 @@ class PostService
         $userId = auth_user_id();
         $postDetail = $this->postRepository->getByUuidWithDetail($uuid, $userId);
         if (! $postDetail) {
-            throw new NotFoundException('Post not found');
+            throw new NotFoundException(trans('exceptions.post.not_found'));
         }
 
         return $postDetail;
@@ -405,11 +410,16 @@ class PostService
     public function like(string $uuid): void
     {
         DB::transaction(function () use ($uuid) {
-            $post = $this->findPostOrFail($uuid);
+            $post = $this->postRepository->findByUuidWithLock($uuid);
+            if (! $post) {
+                throw new NotFoundException(trans('exceptions.post.not_found'));
+            }
+
             if ($post->userLikes()->where('user_id', auth_user_id())->exists()) {
                 return;
             }
-            $post->userLikes()->syncWithoutDetaching([auth_user_id()]);
+
+            $post->userLikes()->attach(auth_user_id());
             $post->increment('likes_count');
 
             event(new PostLikedEvent(auth_user_id(), $post));
@@ -423,11 +433,15 @@ class PostService
     public function unlike(string $uuid): void
     {
         DB::transaction(function () use ($uuid) {
-            $post = $this->findPostOrFail($uuid);
+            $post = $this->postRepository->findByUuidWithLock($uuid);
+            if (! $post) {
+                throw new NotFoundException(trans('exceptions.post.not_found'));
+            }
 
             if (! $post->userLikes()->where('user_id', auth_user_id())->exists()) {
                 return;
             }
+
             $post->userLikes()->detach(auth_user_id());
             $post->decrement('likes_count');
         });
@@ -440,12 +454,16 @@ class PostService
     public function bookmark(string $uuid): void
     {
         DB::transaction(function () use ($uuid) {
-            $post = $this->findPostOrFail($uuid);
+            $post = $this->postRepository->findByUuidWithLock($uuid);
+            if (! $post) {
+                throw new NotFoundException(trans('exceptions.post.not_found'));
+            }
 
             if ($post->userBookmarks()->where('user_id', auth_user_id())->exists()) {
                 return;
             }
-            $post->userBookmarks()->syncWithoutDetaching([auth_user_id()]);
+
+            $post->userBookmarks()->attach(auth_user_id());
             $post->increment('bookmarks_count');
         });
     }
@@ -457,11 +475,15 @@ class PostService
     public function unbookmark(string $uuid): void
     {
         DB::transaction(function () use ($uuid) {
-            $post = $this->findPostOrFail($uuid);
+            $post = $this->postRepository->findByUuidWithLock($uuid);
+            if (! $post) {
+                throw new NotFoundException(trans('exceptions.post.not_found'));
+            }
 
             if (! $post->userBookmarks()->where('user_id', auth_user_id())->exists()) {
                 return;
             }
+
             $post->userBookmarks()->detach(auth_user_id());
             $post->decrement('bookmarks_count');
         });
@@ -476,7 +498,7 @@ class PostService
         $post = $this->postRepository->findByUuid($uuid);
 
         if (! $post) {
-            throw new NotFoundException('Post not found');
+            throw new NotFoundException(trans('exceptions.post.not_found'));
         }
 
         return $post;

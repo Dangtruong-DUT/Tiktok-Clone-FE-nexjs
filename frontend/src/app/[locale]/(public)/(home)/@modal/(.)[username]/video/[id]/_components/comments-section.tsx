@@ -28,7 +28,7 @@ export default function CommentsSection({
     return (
         <section
             className={cn(
-                'flex-1 min-h-screen flex flex-col py-3 pl-3 bg-sidebar border-l overflow-hidden transition-all duration-700 ease-out',
+                'flex-1 min-h-screen flex flex-col py-3 pl-3 bg-sidebar border-l overflow-hidden',
                 className,
                 isVisible
                     ? 'w-96 max-w-92 px-3 py-3 opacity-100 translate-x-0'

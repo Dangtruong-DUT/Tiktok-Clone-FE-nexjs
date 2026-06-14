@@ -51,7 +51,8 @@ export default function FormUploadVideo() {
         onReset,
         onSubmit,
         onSaveAsDraft,
-        setScheduledAt
+        setScheduledAt,
+        scheduledAtUtc
     } = useUploadFormManager()
 
     const isUploading = uploadStatus === 'uploading'
@@ -237,13 +238,12 @@ export default function FormUploadVideo() {
                                             onChange={(e) => handleScheduleChange(e.target.value)}
                                             className='w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary/50'
                                         />
-                                        {scheduledAt && (
+                                        {scheduledAtUtc && (
                                             <p className='text-xs text-muted-foreground'>
                                                 {t('schedule.preview', {
-                                                    date: new Date(`${scheduledAt}:00Z`).toLocaleString(undefined, {
+                                                    date: new Date(scheduledAtUtc).toLocaleString(undefined, {
                                                         dateStyle: 'short',
-                                                        timeStyle: 'short',
-                                                        timeZone: 'UTC'
+                                                        timeStyle: 'short'
                                                     })
                                                 })}
                                             </p>

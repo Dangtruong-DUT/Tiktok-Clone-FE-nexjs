@@ -16,7 +16,6 @@ class ScheduledPostResource extends BaseJsonResource
             'status_label'   => $this->status?->translate() ?? null,
             'source'         => $this->source?->value ?? $this->source,
             'scheduled_at'   => $this->scheduled_at?->toIso8601String(),
-            'user_timezone'  => $this->user_timezone,
             'published_at'   => $this->published_at?->toIso8601String(),
             'error_message'  => $this->when(
                 $this->status?->value === 'failed',

@@ -48,7 +48,7 @@ class PostController extends Controller
 
         return ApiResponse::created(
             data: new PostResource($post),
-            message: 'Post created successfully'
+            message: trans('messages.post.created')
         );
     }
 
@@ -63,7 +63,7 @@ class PostController extends Controller
 
         return ApiResponse::success(
             data: new PostResource($post),
-            message: 'Post updated successfully'
+            message: trans('messages.post.updated')
         );
     }
 
@@ -98,7 +98,7 @@ class PostController extends Controller
 
         return ApiResponse::success(
             data: new PostResource($post),
-            message: 'Post retrieved successfully'
+            message: trans('messages.post.retrieved')
         );
     }
 
@@ -113,7 +113,7 @@ class PostController extends Controller
 
         return ApiResponse::success(
             data: PostResource::collection($posts),
-            message: 'Posts retrieved successfully'
+            message: trans('messages.posts.retrieved')
         );
     }
 
@@ -128,7 +128,7 @@ class PostController extends Controller
 
         return ApiResponse::success(
             data: PostResource::collection($posts),
-            message: 'Friends posts retrieved successfully'
+            message: trans('messages.posts.friends')
         );
     }
 
@@ -143,7 +143,7 @@ class PostController extends Controller
 
         return ApiResponse::success(
             data: PostResource::collection($posts),
-            message: 'Following posts retrieved successfully'
+            message: trans('messages.posts.following')
         );
     }
 
@@ -158,7 +158,7 @@ class PostController extends Controller
 
         return ApiResponse::success(
             data: PostResource::collection($children),
-            message: 'Child posts retrieved successfully'
+            message: trans('messages.posts.children')
         );
     }
 
@@ -173,7 +173,7 @@ class PostController extends Controller
 
         return ApiResponse::success(
             data: PostResource::collection($posts),
-            message: 'Related posts retrieved successfully'
+            message: trans('messages.posts.related')
         );
     }
 
@@ -236,7 +236,7 @@ class PostController extends Controller
 
         return ApiResponse::success(
             data: PostResource::collection($posts),
-            message: 'User posts retrieved successfully'
+            message: trans('messages.posts.user')
         );
     }
 
@@ -251,7 +251,7 @@ class PostController extends Controller
 
         return ApiResponse::success(
             data: PostResource::collection($posts),
-            message: 'Liked posts retrieved successfully'
+            message: trans('messages.posts.liked')
         );
     }
 
@@ -266,7 +266,7 @@ class PostController extends Controller
 
         return ApiResponse::success(
             data: PostResource::collection($posts),
-            message: 'Bookmarked posts retrieved successfully'
+            message: trans('messages.posts.bookmarked')
         );
     }
 }

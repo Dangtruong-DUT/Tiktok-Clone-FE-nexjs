@@ -43,7 +43,7 @@ class VideoUploadSessionController extends Controller
 
         return ApiResponse::created(
             data:    new VideoUploadSessionResource($session, $presignedUrl),
-            message: 'Upload session created.',
+            message: trans('messages.media.session_created'),
         );
     }
 
@@ -65,7 +65,7 @@ class VideoUploadSessionController extends Controller
                 'presigned_url' => $part->url,
                 'part_number'   => $part->partNumber,
             ],
-            message: 'Part URL generated.',
+            message: trans('messages.media.part_url'),
         );
     }
 
@@ -87,7 +87,7 @@ class VideoUploadSessionController extends Controller
 
         return ApiResponse::success(
             data:    new VideoUploadStatusResource($session),
-            message: 'Upload completed.',
+            message: trans('messages.media.upload_completed'),
         );
     }
 
@@ -104,7 +104,7 @@ class VideoUploadSessionController extends Controller
             data:    new VideoUploadStatusResource(
                 $this->uploadService->getOwnedSessionByUuid($session, (int) auth_user_id())
             ),
-            message: 'Upload status retrieved.',
+            message: trans('messages.media.status_retrieved'),
         );
     }
 
@@ -112,10 +112,10 @@ class VideoUploadSessionController extends Controller
      * Abort an upload session, cleaning up any stored objects and encoding jobs.
      *
      * @param  string  $session
-     * @return Response
+     * @return JsonResponse
      * @throws ForbiddenException
      */
-    public function abort(string $session): Response
+    public function abort(string $session): JsonResponse
     {
         $this->uploadService->abortSessionByUuid($session, (int) auth_user_id());
 

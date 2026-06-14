@@ -75,37 +75,31 @@ class PostViewService
 
         $synced = 0;
 
-        DB::transaction(function () use ($postIds, &$synced) {
+        foreach ($postIds as $rawPostId) {
+            $postId = (int) $rawPostId;
 
-            foreach ($postIds as $postId) {
-                $postId = (int) $postId;
-
-                if ($postId <= 0) {
-                    Redis::srem(self::REDIS_POST_IDS_SET_KEY, (string) $postId);
-
-                    continue;
-                }
-
-                $userKey = self::USER_VIEW_KEY_PREFIX.$postId;
-                $guestKey = self::GUEST_VIEW_KEY_PREFIX.$postId;
-
-                $userViews = (int) (Redis::get($userKey) ?? 0);
-                $guestViews = (int) (Redis::get($guestKey) ?? 0);
-
-                if ($userViews > 0 || $guestViews > 0) {
-                    $this->postRepository->incrementViews(
-                        $postId,
-                        $userViews,
-                        $guestViews
-                    );
-                }
-
-                Redis::del($userKey, $guestKey);
-                Redis::srem(self::REDIS_POST_IDS_SET_KEY, (string) $postId);
-
-                $synced++;
+            if ($postId <= 0) {
+                Redis::srem(self::REDIS_POST_IDS_SET_KEY, $rawPostId);
+                continue;
             }
-        });
+
+            $userKey = self::USER_VIEW_KEY_PREFIX.$postId;
+            $guestKey = self::GUEST_VIEW_KEY_PREFIX.$postId;
+
+            // Atomically read-and-delete each counter before touching the DB.
+            // If the DB write fails below, the worst case is we lose these view
+            // counts for this sync cycle — acceptable vs. losing them permanently
+            // by deleting inside a DB transaction that then rolls back.
+            $userViews  = (int) (Redis::getdel($userKey)  ?? 0);
+            $guestViews = (int) (Redis::getdel($guestKey) ?? 0);
+            Redis::srem(self::REDIS_POST_IDS_SET_KEY, $rawPostId);
+
+            if ($userViews > 0 || $guestViews > 0) {
+                $this->postRepository->incrementViews($postId, $userViews, $guestViews);
+            }
+
+            $synced++;
+        }
 
         return $synced;
     }

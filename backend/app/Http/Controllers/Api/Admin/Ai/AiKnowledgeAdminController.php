@@ -34,7 +34,7 @@ class AiKnowledgeAdminController extends Controller
 
         return ApiResponse::success(
             data:    AiDocumentAdminResource::collection($documents),
-            message: 'AI knowledge documents retrieved.',
+            message: trans('messages.admin.ai_documents_retrieved'),
         );
     }
 
@@ -50,7 +50,7 @@ class AiKnowledgeAdminController extends Controller
 
         return ApiResponse::created(
             data:    new AiDocumentAdminResource($document),
-            message: 'Document uploaded.',
+            message: trans('messages.admin.document_uploaded'),
         );
     }
 
@@ -66,7 +66,7 @@ class AiKnowledgeAdminController extends Controller
 
         return ApiResponse::success(
             data:    new AiDocumentDetailAdminResource($document),
-            message: 'AI knowledge document retrieved.',
+            message: trans('messages.admin.ai_document_retrieved'),
         );
     }
 

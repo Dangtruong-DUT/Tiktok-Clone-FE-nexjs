@@ -9,10 +9,10 @@ class BadRequestException extends BaseException
     /**
      * Create a new business exception instance.
      */
-    public function __construct(string $message = 'Bad request', array $errors = [])
+    public function __construct(?string $message = null, array $errors = [])
     {
         parent::__construct(
-            message: $message,
+            message: $message ?? trans('exceptions.bad_request'),
             errorCode: 'BAD_REQUEST',
             errors: $errors,
             httpStatusCode: Response::HTTP_BAD_REQUEST

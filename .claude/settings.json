@@ -67,7 +67,8 @@
       "Bash(which node *)",
       "Read(//usr/bin/**)",
       "Bash(~/.nvm/versions/node/v22.21.1/bin/node node_modules/.bin/tsc --noEmit)",
-      "Bash(grep \"\\\\.tsx$\")"
+      "Bash(grep \"\\\\.tsx$\")",
+      "Bash(xargs perl -i -pe \"s/__\\\\\\('/trans\\('/g\")"
     ],
     "additionalDirectories": [
       "/private/tmp"

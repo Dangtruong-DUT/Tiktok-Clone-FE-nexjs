@@ -16,7 +16,6 @@ import { useVideoStatus } from '@/hooks/video/useVideoStatus'
 import { convertBase64ToFile } from '@/utils/file.util'
 import { extractHashtags } from '@/utils/social-token.util'
 import { handleFormError } from '@/utils/errors/handle-form-errors.util'
-import { datetimeLocalToUtcIso } from '@/utils/formatting/format-time.util'
 import { logger } from '@/utils/logger.util'
 import { useConfirmNavigation } from '@/hooks/shared/useConfirmNavigation'
 import { useRouter } from '@/i18n/navigation'
@@ -40,8 +39,10 @@ export function useUploadFormManager() {
     const [schedulePost, schedulePostResult] = useSchedulePostMutation()
 
     const scheduledAtRef = useRef<string | null>(null)
+    const [scheduledAtUtc, setScheduledAtUtc] = useState<string | null>(null)
     const setScheduledAt = useCallback((iso: string | null) => {
         scheduledAtRef.current = iso
+        setScheduledAtUtc(iso)
     }, [])
 
     const [isInitialRender, setIsInitialRender] = useState(true)
@@ -205,7 +206,7 @@ export function useUploadFormManager() {
             if (scheduledAt) {
                 await schedulePost({
                     postUuid: res.data.uuid,
-                    scheduled_at: datetimeLocalToUtcIso(scheduledAt)
+                    scheduled_at: scheduledAt
                 }).unwrap()
                 toast.success(t('toast.scheduled'), { position: 'top-center' })
             } else {
@@ -217,6 +218,8 @@ export function useUploadFormManager() {
             router.push(SNAPISTUDIO_ROUTES.CONTENT)
         } catch (error) {
             if (postCreatedRef.current) {
+                scheduledAtRef.current = null
+                setScheduledAtUtc(null)
                 toast.error(t('toast.scheduleFailed'))
                 router.push(SNAPISTUDIO_ROUTES.CONTENT)
                 return
@@ -286,6 +289,7 @@ export function useUploadFormManager() {
         onReset,
         onSubmit,
         onSaveAsDraft,
-        setScheduledAt
+        setScheduledAt,
+        scheduledAtUtc
     }
 }

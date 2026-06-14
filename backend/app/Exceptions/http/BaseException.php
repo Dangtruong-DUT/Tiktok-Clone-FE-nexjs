@@ -15,12 +15,12 @@ abstract class BaseException extends Exception
     protected array $errors;
 
     public function __construct(
-        string $message = 'Internal server error',
+        ?string $message = null,
         string $errorCode = 'BASE_ERROR',
         array $errors = [],
         int $httpStatusCode = Response::HTTP_INTERNAL_SERVER_ERROR
     ) {
-        $this->message = $message;
+        $this->message = $message ?? trans('exceptions.internal');
         $this->errorCode = $errorCode;
         $this->errors = $errors;
         $this->httpStatusCode = $httpStatusCode;

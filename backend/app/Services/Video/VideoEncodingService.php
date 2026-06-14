@@ -58,7 +58,7 @@ class VideoEncodingService
         $encoding = $this->getEncodingByFileUuid($uuid);
 
         if ($encoding->status !== VideoEncodingStatusEnum::FAILED) {
-            throw new BadRequestException('Encoding can only be retried when status is FAILED');
+            throw new BadRequestException(trans('exceptions.video.encoding_retry'));
         }
 
         $action->execute($encoding);
@@ -77,7 +77,7 @@ class VideoEncodingService
         $uploadFile = $this->uploadFileRepository->query()->where('uuid', $uuid)->firstOrFail();
 
         if ($this->mediaRepository->query()->where('upload_file_id', $uploadFile->id)->exists()) {
-            throw new BadRequestException('Cannot delete a video linked to a post');
+            throw new BadRequestException(trans('exceptions.video.linked_to_post'));
         }
 
         $action->execute($uploadFile);

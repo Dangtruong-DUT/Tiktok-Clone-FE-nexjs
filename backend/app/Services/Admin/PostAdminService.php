@@ -8,6 +8,8 @@ use App\Enums\Common\ResourceTypeEnum;
 use App\Events\Admin\AdminActionLoggedEvent;
 use App\Enums\Post\PostTypeEnum;
 use App\Exceptions\http\BadRequestException;
+use App\Exceptions\http\ConflictException;
+use App\Exceptions\http\NotFoundException;
 use App\Repositories\PostRepository;
 use App\Traits\HasAuthUser;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -47,10 +49,18 @@ class PostAdminService
     public function deletePost(array $payload): void
     {
         $admin = $this->guard()->user();
-        $post = $this->postRepository->findByUuidOrFail((string) $payload['post_uuid']);
+        $post = $this->postRepository->findWithTrashedByUuid((string) $payload['post_uuid']);
+
+        if (! $post) {
+            throw new NotFoundException(trans('exceptions.post.not_found'));
+        }
+
+        if ($post->trashed()) {
+            throw new ConflictException(trans('exceptions.post.already_deleted'));
+        }
 
         if ($post->type !== PostTypeEnum::POST) {
-            throw new BadRequestException('This is not a post');
+            throw new BadRequestException(trans('exceptions.post.not_a_post'));
         }
 
         DB::transaction(function () use ($admin, $post, $payload) {
@@ -72,19 +82,22 @@ class PostAdminService
                 newData: null,
             ));
 
-            $this->adminModerationNoticeService->send(
-                admin: $admin,
-                targetUser: $post->user,
-                action: AdminActionEnum::DELETE_POST,
-                reason: (string) $payload['reason'],
-                entityType: ModelEntityTypeEnum::POST,
-                entityId: $post->id,
-                context: [
-                    'resource_type' => ResourceTypeEnum::POST->value,
-                    'resource_id' => $post->id,
-                    'resource_uuid' => $post->uuid,
-                ]
-            );
+            $targetUser = $post->user;
+            if ($targetUser) {
+                $this->adminModerationNoticeService->send(
+                    admin: $admin,
+                    targetUser: $targetUser,
+                    action: AdminActionEnum::DELETE_POST,
+                    reason: (string) $payload['reason'],
+                    entityType: ModelEntityTypeEnum::POST,
+                    entityId: $post->id,
+                    context: [
+                        'resource_type' => ResourceTypeEnum::POST->value,
+                        'resource_id' => $post->id,
+                        'resource_uuid' => $post->uuid,
+                    ]
+                );
+            }
         });
     }
 }

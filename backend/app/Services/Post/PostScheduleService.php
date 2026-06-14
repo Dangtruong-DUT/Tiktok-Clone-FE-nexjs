@@ -13,6 +13,7 @@ use App\Repositories\PostRepository;
 use App\Repositories\ScheduledPostRepository;
 use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class PostScheduleService
 {
@@ -43,15 +44,15 @@ class PostScheduleService
     public function schedulePost(Post $post, int $userId, array $payload): ScheduledPost
     {
         if ($post->user_id !== $userId) {
-            throw new ForbiddenException('You do not own this post.');
+            throw new ForbiddenException(trans('exceptions.schedule.forbidden_post'));
         }
 
         if (! in_array($post->status, [PostPublishStatusEnum::DRAFT, PostPublishStatusEnum::FAILED], true)) {
-            throw new BadRequestException('Only draft or failed posts can be scheduled.');
+            throw new BadRequestException(trans('exceptions.schedule.invalid_status'));
         }
 
         if ($this->scheduledPostRepository->findByPostForUser($post->id, $userId)) {
-            throw new BadRequestException('This post is already scheduled. Cancel the existing schedule first.');
+            throw new BadRequestException(trans('exceptions.schedule.already_scheduled'));
         }
 
         $scheduledAtInput = (string) $payload['scheduled_at'];
@@ -60,44 +61,45 @@ class PostScheduleService
         $scheduledAt = Carbon::parse($scheduledAtInput, 'UTC');
 
         if ($scheduledAt->isPast()) {
-            throw new BadRequestException('Scheduled time must be in the future.');
+            throw new BadRequestException(trans('exceptions.schedule.time_in_future'));
         }
 
         $post->update(['status' => PostPublishStatusEnum::SCHEDULED]);
 
         /** @var ScheduledPost */
         return $this->scheduledPostRepository->create([
-            'user_id'       => $userId,
-            'post_id'       => $post->id,
-            'scheduled_at'  => $scheduledAt,
-            'user_timezone' => 'UTC',
-            'status'        => ScheduledPostStatusEnum::PENDING,
-            'source'        => ScheduledPostSourceEnum::MANUAL,
+            'user_id'      => $userId,
+            'post_id'      => $post->id,
+            'scheduled_at' => $scheduledAt,
+            'status'       => ScheduledPostStatusEnum::PENDING,
+            'source'       => ScheduledPostSourceEnum::MANUAL,
         ]);
     }
 
     public function cancelSchedule(ScheduledPost $scheduledPost, int $userId): ScheduledPost
     {
         if ($scheduledPost->user_id !== $userId) {
-            throw new ForbiddenException('You do not own this scheduled post.');
+            throw new ForbiddenException(trans('exceptions.schedule.forbidden_schedule'));
         }
 
         if ($scheduledPost->status !== ScheduledPostStatusEnum::PENDING) {
-            throw new BadRequestException('Only pending schedules can be cancelled.');
+            throw new BadRequestException(trans('exceptions.schedule.not_pending'));
         }
 
-        $scheduledPost->post->update(['status' => PostPublishStatusEnum::DRAFT]);
-
         /** @var ScheduledPost */
-        return $this->scheduledPostRepository->update($scheduledPost->id, [
-            'status' => ScheduledPostStatusEnum::CANCELLED,
-        ]);
+        return DB::transaction(function () use ($scheduledPost) {
+            $scheduledPost->post->update(['status' => PostPublishStatusEnum::DRAFT]);
+
+            return $this->scheduledPostRepository->update($scheduledPost->id, [
+                'status' => ScheduledPostStatusEnum::CANCELLED,
+            ]);
+        });
     }
 
     public function publishNow(Post $post, int $userId): Post
     {
         if ($post->user_id !== $userId) {
-            throw new ForbiddenException('You do not own this post.');
+            throw new ForbiddenException(trans('exceptions.schedule.forbidden_post'));
         }
 
         if (! in_array($post->status, [
@@ -105,22 +107,23 @@ class PostScheduleService
             PostPublishStatusEnum::SCHEDULED,
             PostPublishStatusEnum::FAILED,
         ], true)) {
-            throw new BadRequestException('Post cannot be published in its current state.');
+            throw new BadRequestException(trans('exceptions.schedule.invalid_status_publish'));
         }
 
-        // Cancel any existing pending schedule
-        $existing = $this->scheduledPostRepository->findByPostForUser($post->id, $userId);
-        if ($existing) {
-            $this->scheduledPostRepository->update($existing->id, [
-                'status'       => ScheduledPostStatusEnum::CANCELLED,
+        DB::transaction(function () use ($post, $userId) {
+            $existing = $this->scheduledPostRepository->findByPostForUser($post->id, $userId);
+            if ($existing) {
+                $this->scheduledPostRepository->update($existing->id, [
+                    'status'       => ScheduledPostStatusEnum::CANCELLED,
+                    'published_at' => now(),
+                ]);
+            }
+
+            $post->update([
+                'status'       => PostPublishStatusEnum::PUBLISHED,
                 'published_at' => now(),
             ]);
-        }
-
-        $post->update([
-            'status'       => PostPublishStatusEnum::PUBLISHED,
-            'published_at' => now(),
-        ]);
+        });
 
         return $post->fresh();
     }
@@ -173,11 +176,11 @@ class PostScheduleService
     public function reschedule(ScheduledPost $scheduledPost, int $userId, array $payload): ScheduledPost
     {
         if ($scheduledPost->user_id !== $userId) {
-            throw new ForbiddenException('You do not own this scheduled post.');
+            throw new ForbiddenException(trans('exceptions.schedule.forbidden_schedule'));
         }
 
         if ($scheduledPost->status !== ScheduledPostStatusEnum::PENDING) {
-            throw new BadRequestException('Only pending schedules can be rescheduled.');
+            throw new BadRequestException(trans('exceptions.schedule.not_pending_reschedule'));
         }
 
         $scheduledAtInput = (string) $payload['scheduled_at'];
@@ -186,7 +189,7 @@ class PostScheduleService
         $scheduledAt = Carbon::parse($scheduledAtInput, 'UTC');
 
         if ($scheduledAt->isPast()) {
-            throw new BadRequestException('Scheduled time must be in the future.');
+            throw new BadRequestException(trans('exceptions.schedule.time_in_future'));
         }
 
         /** @var ScheduledPost */

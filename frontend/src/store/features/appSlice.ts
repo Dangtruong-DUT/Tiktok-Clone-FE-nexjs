@@ -1,11 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { defaultLocale, LocalesType } from '@/i18n/config'
 
 interface AppState {
     loadingByKey: Record<string, number>
+    lang: LocalesType
 }
 
 const initialState: AppState = {
-    loadingByKey: {}
+    loadingByKey: {},
+    lang: defaultLocale
 }
 
 const appSlice = createSlice({
@@ -39,11 +42,14 @@ const appSlice = createSlice({
         },
         clearAllLoading: (state) => {
             state.loadingByKey = {}
+        },
+        setLang: (state, action: PayloadAction<LocalesType>) => {
+            state.lang = action.payload
         }
     }
 })
 
-export const { setLoadingByKey, startLoadingByKey, stopLoadingByKey, clearAllLoading } = appSlice.actions
+export const { setLoadingByKey, startLoadingByKey, stopLoadingByKey, clearAllLoading, setLang } = appSlice.actions
 
 const appReducer = appSlice.reducer
 export default appReducer

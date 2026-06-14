@@ -9,10 +9,10 @@ class UnauthorizedException extends BaseException
     /**
      * Create a new Unauthorized exception instance.
      */
-    public function __construct(string $message = 'Unauthorized access', array $errors = [])
+    public function __construct(?string $message = null, array $errors = [])
     {
         parent::__construct(
-            message: $message,
+            message: $message ?? trans('exceptions.unauthorized'),
             errorCode: 'UNAUTHORIZED_ERROR',
             errors: $errors,
             httpStatusCode: Response::HTTP_UNAUTHORIZED

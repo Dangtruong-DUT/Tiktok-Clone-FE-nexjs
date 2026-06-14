@@ -34,7 +34,7 @@ class ScreenTimeController extends Controller
 
         return ApiResponse::success(
             data:    $this->screenTimeTrackingService->getStats((int) auth_user_id(), $payload['period'] ?? null),
-            message: 'Screen time stats retrieved.',
+            message: trans('messages.wellness.stats'),
         );
     }
 
@@ -54,7 +54,7 @@ class ScreenTimeController extends Controller
                 $payload['date_from'] ?? null,
                 $payload['date_to'] ?? null,
             ),
-            message: 'Screen time history retrieved.',
+            message: trans('messages.wellness.history'),
         );
     }
 
@@ -69,7 +69,7 @@ class ScreenTimeController extends Controller
 
         return ApiResponse::success(
             data:    ['uuid' => $session->uuid, 'started_at' => $session->started_at->toIso8601String()],
-            message: 'Session started.',
+            message: trans('messages.wellness.session_started'),
             code:    201,
         );
     }
@@ -84,7 +84,7 @@ class ScreenTimeController extends Controller
     {
         $this->screenTimeTrackingService->heartbeatByUuid($uuid, (int) auth_user_id());
 
-        return ApiResponse::success(data: null, message: 'Heartbeat recorded.');
+        return ApiResponse::success(data: null, message: trans('messages.wellness.heartbeat'));
     }
 
     /**
@@ -104,7 +104,7 @@ class ScreenTimeController extends Controller
 
         return ApiResponse::success(
             data:    ['video_seconds' => $updated->video_seconds],
-            message: 'Video time updated.',
+            message: trans('messages.wellness.video_time_updated'),
         );
     }
 
@@ -123,6 +123,6 @@ class ScreenTimeController extends Controller
             (int) $request->validated('duration_seconds'),
         );
 
-        return ApiResponse::success(data: null, message: 'Session ended.');
+        return ApiResponse::success(data: null, message: trans('messages.wellness.session_ended'));
     }
 }

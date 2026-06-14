@@ -10,6 +10,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 
 class PostRepository extends BaseRepository
@@ -24,16 +25,10 @@ class PostRepository extends BaseRepository
      */
     public function incrementViews(int $postId, int $userViews, int $guestViews): bool
     {
-        $post = $this->query()->whereKey($postId)->first();
-
-        if ($post === null) {
-            return false;
-        }
-
-        $post->user_views += $userViews;
-        $post->guest_views += $guestViews;
-
-        return $post->save();
+        return (bool) $this->query()->whereKey($postId)->update([
+            'user_views'  => DB::raw("user_views + {$userViews}"),
+            'guest_views' => DB::raw("guest_views + {$guestViews}"),
+        ]);
     }
 
     /**
@@ -112,6 +107,14 @@ class PostRepository extends BaseRepository
     public function findWithTrashedById(int $id): ?Post
     {
         return $this->query()->withTrashed()->whereKey($id)->first();
+    }
+
+    /**
+     * Find a post by UUID with a pessimistic write lock (SELECT ... FOR UPDATE).
+     */
+    public function findByUuidWithLock(string $uuid): ?Post
+    {
+        return $this->query()->where('uuid', $uuid)->lockForUpdate()->first();
     }
 
     /**

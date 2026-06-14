@@ -31,7 +31,7 @@ class ScheduledPostAdminController extends Controller
     {
         return ApiResponse::success(
             data: $this->service->getMetrics($request->validated('period')),
-            message: 'Scheduled post metrics retrieved.',
+            message: trans('messages.admin.scheduled_metrics'),
         );
     }
 
@@ -47,7 +47,7 @@ class ScheduledPostAdminController extends Controller
 
         return ApiResponse::success(
             data: ScheduledPostAdminResource::collection($items),
-            message: 'Scheduled posts retrieved.',
+            message: trans('messages.admin.scheduled_retrieved'),
         );
     }
 
@@ -64,7 +64,7 @@ class ScheduledPostAdminController extends Controller
 
         return ApiResponse::success(
             data: new ScheduledPostAdminResource($updated),
-            message: 'Schedule cancelled by admin.',
+            message: trans('messages.admin.schedule_cancelled'),
         );
     }
 
@@ -81,7 +81,7 @@ class ScheduledPostAdminController extends Controller
 
         return ApiResponse::success(
             data: new ScheduledPostAdminResource($updated),
-            message: 'Schedule re-queued for retry.',
+            message: trans('messages.admin.schedule_requeued'),
         );
     }
 }

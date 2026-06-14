@@ -21,21 +21,21 @@ class CheckUserStatus
             $user = JWTAuth::parseToken()->authenticate();
 
             if (! $user) {
-                return ApiResponse::notFound('User not found');
+                return ApiResponse::notFound(trans('auth.user_not_found'));
             }
 
             if ($user->isBanned()) {
-                return ApiResponse::forbidden('Your account has been banned');
+                return ApiResponse::forbidden(trans('auth.account_banned'));
             }
 
             $requireVerify = filter_var($requireVerify, FILTER_VALIDATE_BOOLEAN);
             if ($requireVerify && ! $user->isVerified()) {
-                return ApiResponse::forbidden('Your account is not verified');
+                return ApiResponse::forbidden(trans('auth.account_not_verified'));
             }
 
             return $next($request);
         } catch (JWTException $exception) {
-            return ApiResponse::unauthorized('Unauthorized');
+            return ApiResponse::unauthorized(trans('auth.unauthorized'));
         }
     }
 }

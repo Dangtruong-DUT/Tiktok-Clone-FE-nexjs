@@ -26,7 +26,6 @@ class StudioPostResource extends BaseJsonResource
                 'uuid'          => $this->scheduledPost->uuid,
                 'status'        => $this->scheduledPost->status?->value,
                 'scheduled_at'  => $this->scheduledPost->scheduled_at?->toIso8601String(),
-                'user_timezone' => $this->scheduledPost->user_timezone,
                 'error_message' => $this->scheduledPost->error_message,
             ] : null),
         ];

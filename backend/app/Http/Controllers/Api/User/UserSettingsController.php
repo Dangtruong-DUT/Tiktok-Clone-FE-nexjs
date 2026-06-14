@@ -30,7 +30,7 @@ class UserSettingsController extends Controller
 
         return ApiResponse::success(
             data:    new UserSettingsResource($userSettings),
-            message: 'Settings retrieved.',
+            message: trans('messages.settings.retrieved'),
         );
     }
 
@@ -45,7 +45,7 @@ class UserSettingsController extends Controller
 
         return ApiResponse::success(
             data:    new UserSettingsResource($userSettings),
-            message: 'Settings updated.',
+            message: trans('messages.settings.updated'),
         );
     }
 }

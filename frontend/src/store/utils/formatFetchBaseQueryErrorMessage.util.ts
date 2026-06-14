@@ -1,50 +1,43 @@
 import { HTTP_STATUS } from '@/constants/api/http-status'
 import { isPayloadErrorWithMessage } from '@/utils/errors/api-error-guards.util'
+import { LocalesType } from '@/i18n/config'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
+
+import enError from '../../../messages/en/error.json'
+import viError from '../../../messages/vi/error.json'
 
 export interface ReadableErrorMessageReturn {
     title: string
     description: string
 }
-export function formatFetchBaseQueryErrorMessage(error: FetchBaseQueryError): ReadableErrorMessageReturn {
+
+export function formatFetchBaseQueryErrorMessage(
+    error: FetchBaseQueryError,
+    lang: LocalesType
+): ReadableErrorMessageReturn {
+    const m = lang === 'vi' ? viError.api : enError.api
+
     const silentStatuses = [HTTP_STATUS.UNPROCESSABLE_ENTITY, HTTP_STATUS.TOO_MANY_REQUESTS]
     if (typeof error.status === 'string' || (silentStatuses as readonly number[]).includes(error.status)) {
-        return {
-            title: 'Unknown Error',
-            description: 'An unknown error occurred'
-        }
+        return { title: m.unknownTitle, description: m.unknownDescription }
+    }
+
+    // Backend message takes priority — already translated via X-Locale header
+    if (isPayloadErrorWithMessage(error)) {
+        return { title: m.errorOccurredTitle, description: error.data.message }
     }
 
     if (error.status >= 500) {
-        return {
-            title: 'Server Error',
-            description: 'Please try again later.'
-        }
+        return { title: m.serverErrorTitle, description: m.serverErrorDescription }
     }
 
     if (error.status === HTTP_STATUS.NOT_FOUND) {
-        return {
-            title: 'Not Found',
-            description: 'The requested resource was not found.'
-        }
+        return { title: m.notFoundTitle, description: m.notFoundDescription }
     }
 
     if (error.status === HTTP_STATUS.BAD_REQUEST) {
-        return {
-            title: 'Bad Request',
-            description: 'The request was invalid. Please check your input and try again.'
-        }
+        return { title: m.badRequestTitle, description: m.badRequestDescription }
     }
 
-    if (isPayloadErrorWithMessage(error)) {
-        return {
-            title: 'Error Occurred',
-            description: error.data.message
-        }
-    }
-
-    return {
-        title: 'Unknown Error',
-        description: 'An unknown error occurred'
-    }
+    return { title: m.unknownTitle, description: m.unknownDescription }
 }

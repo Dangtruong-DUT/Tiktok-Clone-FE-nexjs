@@ -31,7 +31,7 @@ class WellnessRuleController extends Controller
 
         return ApiResponse::success(
             data:    WellnessRuleResource::collection($rules)->resolve(),
-            message: 'Wellness rules retrieved.',
+            message: trans('messages.wellness.rules_retrieved'),
         );
     }
 
@@ -47,7 +47,7 @@ class WellnessRuleController extends Controller
 
         return ApiResponse::success(
             data:    new WellnessRuleResource($rule),
-            message: 'Wellness rule created.',
+            message: trans('messages.wellness.rule_created'),
             code:    201,
         );
     }
@@ -66,7 +66,7 @@ class WellnessRuleController extends Controller
 
         return ApiResponse::success(
             data:    new WellnessRuleResource($updated),
-            message: 'Wellness rule updated.',
+            message: trans('messages.wellness.rule_updated'),
         );
     }
 
@@ -81,7 +81,7 @@ class WellnessRuleController extends Controller
         $rule = $this->service->findByUuidForUser($uuid, (int) auth_user_id());
         $this->service->delete($rule);
 
-        return ApiResponse::success(data: null, message: 'Wellness rule deleted.');
+        return ApiResponse::success(data: null, message: trans('messages.wellness.rule_deleted'));
     }
 
     /**
@@ -95,7 +95,7 @@ class WellnessRuleController extends Controller
 
         return ApiResponse::success(
             data:    $result,
-            message: 'Usage analysis complete.',
+            message: trans('messages.wellness.analysis'),
         );
     }
 }

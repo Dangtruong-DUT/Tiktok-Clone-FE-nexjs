@@ -34,7 +34,7 @@ class AiCopilotAdminController extends Controller
     {
         return ApiResponse::success(
             data:    $this->adminService->getCopilotMetrics($request->validated('period')),
-            message: 'AI Copilot metrics retrieved.',
+            message: trans('messages.admin.ai_metrics'),
         );
     }
 
@@ -48,7 +48,7 @@ class AiCopilotAdminController extends Controller
     {
         return ApiResponse::success(
             data:    AiCopilotSessionAdminResource::collection($this->adminService->getSessions($request->validated())),
-            message: 'AI Copilot sessions retrieved.',
+            message: trans('messages.admin.ai_sessions'),
         );
     }
 
@@ -61,7 +61,7 @@ class AiCopilotAdminController extends Controller
     {
         return ApiResponse::success(
             data:    AiPromptTemplateAdminResource::collection($this->adminService->getPromptTemplates()),
-            message: 'Prompt templates retrieved.',
+            message: trans('messages.admin.ai_templates'),
         );
     }
 
@@ -82,7 +82,7 @@ class AiCopilotAdminController extends Controller
 
         return ApiResponse::success(
             data:    new AiPromptTemplateAdminResource($template),
-            message: 'Prompt template updated.',
+            message: trans('messages.admin.ai_template_updated'),
         );
     }
 
@@ -98,7 +98,7 @@ class AiCopilotAdminController extends Controller
 
         return ApiResponse::success(
             data:    new AiPromptTemplateAdminResource($template),
-            message: 'Prompt template locked.',
+            message: trans('messages.admin.ai_template_locked'),
         );
     }
 
@@ -114,7 +114,7 @@ class AiCopilotAdminController extends Controller
 
         return ApiResponse::success(
             data:    new AiPromptTemplateAdminResource($template),
-            message: 'Prompt template unlocked.',
+            message: trans('messages.admin.ai_template_unlocked'),
         );
     }
 
@@ -133,7 +133,7 @@ class AiCopilotAdminController extends Controller
 
         return ApiResponse::success(
             data:    ['feature_flags' => $setting->feature_flags],
-            message: 'Feature flags updated.',
+            message: trans('messages.admin.ai_flags_updated'),
         );
     }
 }

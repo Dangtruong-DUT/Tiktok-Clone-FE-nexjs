@@ -18,7 +18,7 @@ class PostScheduleController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param  PostScheduleService  $service
+     * @param  PostScheduleService  $postScheduleService
      */
     public function __construct(
         private readonly PostScheduleService $postScheduleService,
@@ -39,7 +39,7 @@ class PostScheduleController extends Controller
 
         return ApiResponse::success(
             data:    ScheduledPostResource::collection($items),
-            message: 'Scheduled posts retrieved.',
+            message: trans('messages.schedule.retrieved'),
         );
     }
 
@@ -58,8 +58,9 @@ class PostScheduleController extends Controller
 
         return ApiResponse::success(
             data:    StudioPostResource::collection($paginator->getCollection()),
-            message: 'Studio posts retrieved.',
+            message: trans('messages.studio.posts_retrieved'),
             meta:    [
+                'type'         => 'offset',
                 'current_page' => $paginator->currentPage(),
                 'last_page'    => $paginator->lastPage(),
                 'per_page'     => $paginator->perPage(),
@@ -85,7 +86,7 @@ class PostScheduleController extends Controller
 
         return ApiResponse::created(
             data:    new ScheduledPostResource($scheduledPost),
-            message: 'Post scheduled.',
+            message: trans('messages.post.scheduled'),
         );
     }
 
@@ -107,7 +108,7 @@ class PostScheduleController extends Controller
 
         return ApiResponse::success(
             data:    new ScheduledPostResource($updated),
-            message: 'Schedule updated.',
+            message: trans('messages.schedule.updated'),
         );
     }
 
@@ -123,7 +124,7 @@ class PostScheduleController extends Controller
 
         return ApiResponse::success(
             data:    ['uuid' => $post->uuid, 'status' => $post->status?->value],
-            message: 'Post published.',
+            message: trans('messages.post.published'),
         );
     }
 
@@ -140,7 +141,7 @@ class PostScheduleController extends Controller
 
         return ApiResponse::success(
             data:    new ScheduledPostResource($updated),
-            message: 'Schedule cancelled.',
+            message: trans('messages.schedule.cancelled'),
         );
     }
 

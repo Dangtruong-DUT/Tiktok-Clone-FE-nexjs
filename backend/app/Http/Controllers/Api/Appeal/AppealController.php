@@ -39,7 +39,7 @@ class AppealController extends Controller
 
         return ApiResponse::created(
             data: new AppealResource($appeal),
-            message: 'Appeal filed successfully',
+            message: trans('messages.appeal.filed'),
         );
     }
 
@@ -62,7 +62,7 @@ class AppealController extends Controller
 
         return ApiResponse::success(
             data: new AppealResource($appeal),
-            message: 'Appeal updated successfully',
+            message: trans('messages.appeal.updated'),
         );
     }
 
@@ -79,7 +79,7 @@ class AppealController extends Controller
 
         return ApiResponse::success(
             data: new AppealResource($appeal),
-            message: 'Appeal retrieved successfully',
+            message: trans('messages.appeal.retrieved'),
         );
     }
 
@@ -99,7 +99,7 @@ class AppealController extends Controller
 
         return ApiResponse::success(
             data: $preview,
-            message: 'Resource preview retrieved successfully',
+            message: trans('messages.appeal.resource_preview'),
         );
     }
 
@@ -116,7 +116,7 @@ class AppealController extends Controller
 
         return ApiResponse::success(
             data: AppealResource::collection($appeals),
-            message: 'Appeals retrieved successfully',
+            message: trans('messages.appeal.list_retrieved'),
         );
     }
 }
