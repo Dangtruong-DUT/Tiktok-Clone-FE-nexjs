@@ -2,10 +2,8 @@
 
 namespace App\Services\ScreenTime;
 
-use App\Enums\Admin\ActivityTypeEnum;
 use App\Enums\Wellness\ScreenTimePeriodEnum;
 use App\Exceptions\http\BusinessException;
-use App\Models\ActivityLog;
 use App\Models\ScreenTimeSession;
 use App\Repositories\ScreenTimeSessionRepository;
 use Carbon\Carbon;
@@ -71,16 +69,24 @@ class ScreenTimeTrackingService
      * @param  ScreenTimeSession  $session
      * @return ScreenTimeSession
      */
-    public function heartbeat(ScreenTimeSession $session): ScreenTimeSession
+    public function heartbeat(ScreenTimeSession $session, string $pageType = 'other'): ScreenTimeSession
     {
         if ($session->ended_at !== null) {
-            throw new BusinessException('Session has already ended.');
+            throw new BusinessException(trans('exceptions.wellness.session_ended'));
+        }
+
+        $elapsed = (int) min(90, now()->diffInSeconds($session->last_heartbeat_at ?? $session->started_at, true));
+
+        $columnMap = ['comment' => 'comment_seconds', 'posts' => 'post_seconds', 'likes' => 'likes_seconds'];
+        $column    = $columnMap[$pageType] ?? null;
+
+        $update = ['last_heartbeat_at' => now()];
+        if ($column !== null && $elapsed > 0) {
+            $update[$column] = $session->{$column} + $elapsed;
         }
 
         /** @var ScreenTimeSession */
-        return $this->repository->update($session->id, [
-            'last_heartbeat_at' => now(),
-        ]);
+        return $this->repository->update($session->id, $update);
     }
 
     /**
@@ -102,9 +108,9 @@ class ScreenTimeTrackingService
      * @param  int  $userId
      * @return ScreenTimeSession
      */
-    public function heartbeatByUuid(string $uuid, int $userId): ScreenTimeSession
+    public function heartbeatByUuid(string $uuid, int $userId, string $pageType = 'other'): ScreenTimeSession
     {
-        return $this->heartbeat($this->getSessionByUuidForUser($uuid, $userId));
+        return $this->heartbeat($this->getSessionByUuidForUser($uuid, $userId), $pageType);
     }
 
     /**
@@ -205,32 +211,18 @@ class ScreenTimeTrackingService
         $videoSeconds = $this->repository->sumVideoSecondsInRange($userId, $from, $to);
         $sessions     = $this->repository->countInRange($userId, $from, $to);
 
-        // Interaction counts from activity_logs — single query grouped by type.
-        $activityTypes = [
-            ActivityTypeEnum::COMMENT_CREATED->value,
-            ActivityTypeEnum::POST_UPLOADED->value,
-            ActivityTypeEnum::POST_LIKED->value,
-        ];
-
-        $activityCounts = ActivityLog::where('user_id', $userId)
-            ->whereIn('activity_type', $activityTypes)
-            ->where('created_at', '>=', $from)
-            ->selectRaw('activity_type, COUNT(*) as cnt')
-            ->groupBy('activity_type')
-            ->pluck('cnt', 'activity_type');
-
-        $comments = (int) ($activityCounts[ActivityTypeEnum::COMMENT_CREATED->value] ?? 0);
-        $posts    = (int) ($activityCounts[ActivityTypeEnum::POST_UPLOADED->value]   ?? 0);
-        $likes    = (int) ($activityCounts[ActivityTypeEnum::POST_LIKED->value]      ?? 0);
+        $commentSeconds = $this->repository->sumCommentSecondsInRange($userId, $from, $to);
+        $postSeconds    = $this->repository->sumPostSecondsInRange($userId, $from, $to);
+        $likesSeconds   = $this->repository->sumLikesSecondsInRange($userId, $from, $to);
 
         return [
             'period'            => $period,
             'total_seconds'     => $totalSeconds,
             'video_seconds'     => $videoSeconds,
             'sessions_count'    => $sessions,
-            'comments_count'    => $comments,
-            'posts_count'       => $posts,
-            'likes_count'       => $likes,
+            'comment_seconds'   => $commentSeconds,
+            'post_seconds'      => $postSeconds,
+            'likes_seconds'     => $likesSeconds,
             'avg_daily_seconds' => $days > 0 ? (int) round($totalSeconds / $days) : 0,
             'peak_hour'         => $this->getPeakHour($userId, $from, $to),
             'daily_series'      => $this->getDailySeries($userId, $from, $to, $liveSeconds),

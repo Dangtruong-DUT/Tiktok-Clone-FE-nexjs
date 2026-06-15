@@ -20,9 +20,9 @@ export interface ScreenTimeStatsType {
     total_seconds: number
     video_seconds: number
     sessions_count: number
-    comments_count: number
-    posts_count: number
-    likes_count: number
+    comment_seconds: number
+    post_seconds: number
+    likes_seconds: number
     avg_daily_seconds: number
     peak_hour: number | null
     daily_series: ScreenTimeDailySeries[]

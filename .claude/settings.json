@@ -68,7 +68,11 @@
       "Read(//usr/bin/**)",
       "Bash(~/.nvm/versions/node/v22.21.1/bin/node node_modules/.bin/tsc --noEmit)",
       "Bash(grep \"\\\\.tsx$\")",
-      "Bash(xargs perl -i -pe \"s/__\\\\\\('/trans\\('/g\")"
+      "Bash(xargs perl -i -pe \"s/__\\\\\\('/trans\\('/g\")",
+      "Bash(command -v node)",
+      "Bash(find /usr/local /opt/homebrew ~/.nvm /Users/nguyendangtruong -name \"node\" -type f 2>/dev/null | head -5)",
+      "Read(//usr/local/**)",
+      "Bash(/Users/nguyendangtruong/.nvm/versions/node/v22.21.1/bin/node /Users/nguyendangtruong/Documents/DUT/Orther/project/Tiktok-v2/frontend/node_modules/.bin/tsc --noEmit)"
     ],
     "additionalDirectories": [
       "/private/tmp"

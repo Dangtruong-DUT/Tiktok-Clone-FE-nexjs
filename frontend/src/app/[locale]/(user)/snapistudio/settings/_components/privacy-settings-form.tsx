@@ -11,7 +11,7 @@ import { UpdateUserSettingsBodyType } from '@/types/dtos/user/user-request.dto'
 import { UserSettingsType } from '@/types/models/user-settings.model'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import { ShieldCheck } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -42,6 +42,7 @@ function mapToPrivacyFormState(data: UserSettingsType): PrivacyFormState {
 
 export default function PrivacySettingsForm() {
     const t = useTranslations('SnapiStudio.settings')
+    const lang = useLocale()
     const { data: settingsRes, isLoading, isFetching } = useGetUserSettingsQuery()
     const [updateSettingsMutate, { isLoading: isUpdating }] = useUpdateUserSettingsMutation()
 
@@ -129,10 +130,10 @@ export default function PrivacySettingsForm() {
             setDraftSettings(mapToPrivacyFormState(response.data))
             toast.success(response.message)
         } catch (error) {
-            const parsedError = formatFetchBaseQueryErrorMessage(error as FetchBaseQueryError)
+            const parsedError = formatFetchBaseQueryErrorMessage(error as FetchBaseQueryError, lang)
             toast.error(parsedError.description || t('privacy.updateError'))
         }
-    }, [currentSettings, hasChanges, initialSettings, isUpdating, privacyFields, t, updateSettingsMutate])
+    }, [currentSettings, hasChanges, initialSettings, isUpdating, privacyFields, t, updateSettingsMutate, lang])
 
     if (isLoading || (isFetching && !currentSettings) || !currentSettings) {
         return (

@@ -19,6 +19,9 @@ class ScreenTimeSession extends Model
         'ended_at',
         'duration_seconds',
         'video_seconds',
+        'comment_seconds',
+        'post_seconds',
+        'likes_seconds',
         'last_heartbeat_at',
     ];
 
@@ -30,6 +33,9 @@ class ScreenTimeSession extends Model
             'last_heartbeat_at' => 'datetime',
             'duration_seconds'  => 'integer',
             'video_seconds'     => 'integer',
+            'comment_seconds'   => 'integer',
+            'post_seconds'      => 'integer',
+            'likes_seconds'     => 'integer',
             'created_at'        => 'datetime',
             'updated_at'        => 'datetime',
             'deleted_at'        => 'datetime',

@@ -193,24 +193,21 @@ export default function WellnessPage() {
         score: { label: t('stats.radarChart.score'), color: 'var(--chart-2)' }
     } satisfies ChartConfig
 
-    const radarData =
-        stats && stats.total_seconds > 0
-            ? [
-                  {
-                      activity: t('stats.radarChart.video'),
-                      score: Math.round((stats.video_seconds / stats.total_seconds) * 100)
-                  },
-                  { activity: t('stats.radarChart.comments'), score: Math.min(100, stats.comments_count * 10) },
-                  { activity: t('stats.radarChart.posts'), score: Math.min(100, stats.posts_count * 20) },
-                  { activity: t('stats.radarChart.likes'), score: Math.min(100, stats.likes_count * 5) },
-                  {
-                      activity: t('stats.radarChart.other'),
-                      score: Math.round(
-                          (Math.max(0, stats.total_seconds - stats.video_seconds) / stats.total_seconds) * 100
-                      )
-                  }
-              ]
-            : []
+    const radarData = (() => {
+        if (!stats || stats.total_seconds <= 0) return []
+        const toPercent = (s: number) => Math.round((s / stats.total_seconds) * 100)
+        const otherSeconds = Math.max(
+            0,
+            stats.total_seconds - stats.video_seconds - stats.comment_seconds - stats.post_seconds - stats.likes_seconds
+        )
+        return [
+            { activity: t('stats.radarChart.video'),    score: toPercent(stats.video_seconds) },
+            { activity: t('stats.radarChart.comments'), score: toPercent(stats.comment_seconds) },
+            { activity: t('stats.radarChart.posts'),    score: toPercent(stats.post_seconds) },
+            { activity: t('stats.radarChart.likes'),    score: toPercent(stats.likes_seconds) },
+            { activity: t('stats.radarChart.other'),    score: toPercent(otherSeconds) },
+        ]
+    })()
 
     return (
         <div className='flex min-h-full flex-col'>

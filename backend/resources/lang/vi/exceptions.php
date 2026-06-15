@@ -56,4 +56,7 @@ return [
     'ai' => [
         'copilot_disabled' => 'AI Copilot hiện đang bị tắt.',
     ],
+    'wellness' => [
+        'session_ended' => 'Phiên theo dõi đã kết thúc.',
+    ],
 ];

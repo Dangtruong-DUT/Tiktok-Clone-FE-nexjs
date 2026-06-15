@@ -29,8 +29,12 @@ export const ScreenTimeApi = createApi({
             query: () => ({ url: BACKEND_API_ENDPOINT.WELLNESS.SESSION_START, method: 'POST' })
         }),
 
-        sendHeartbeat: builder.mutation<ApiSuccessResponseWithData<null>, string>({
-            query: (uuid) => ({ url: BACKEND_API_ENDPOINT.WELLNESS.HEARTBEAT(uuid), method: 'POST' })
+        sendHeartbeat: builder.mutation<ApiSuccessResponseWithData<null>, { uuid: string; page_type?: string }>({
+            query: ({ uuid, page_type }) => ({
+                url: BACKEND_API_ENDPOINT.WELLNESS.HEARTBEAT(uuid),
+                method: 'POST',
+                body: page_type ? { page_type } : {}
+            })
         }),
 
         updateVideoTime: builder.mutation<

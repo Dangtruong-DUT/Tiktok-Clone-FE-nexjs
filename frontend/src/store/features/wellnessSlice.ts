@@ -1,6 +1,8 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import type { WellnessAction } from '@/types/models/screen-time.model'
 
+type WellnessPageType = 'posts' | 'comment' | 'likes' | 'other'
+
 const WELLNESS_SLICE_NAME = 'wellness' as const
 
 interface WellnessAlert {
@@ -20,6 +22,7 @@ interface WellnessState {
     todayVideoSeconds: number
     dismissedRules: string[]
     snoozedRules: Record<string, number>
+    pageType: WellnessPageType
 }
 
 const initialState: WellnessState = {
@@ -31,7 +34,8 @@ const initialState: WellnessState = {
     todayTotalSeconds: 0,
     todayVideoSeconds: 0,
     dismissedRules: [],
-    snoozedRules: {}
+    snoozedRules: {},
+    pageType: 'posts'
 }
 
 const wellnessSlice = createSlice({
@@ -90,6 +94,10 @@ const wellnessSlice = createSlice({
         clearSessionDismissals(state) {
             state.dismissedRules = []
             state.snoozedRules = {}
+        },
+
+        setPageType(state, action: PayloadAction<WellnessPageType>) {
+            state.pageType = action.payload
         }
     }
 })
@@ -103,7 +111,8 @@ export const {
     setTodayStats,
     suppressRule,
     snoozeRule,
-    clearSessionDismissals
+    clearSessionDismissals,
+    setPageType
 } = wellnessSlice.actions
 
 export default wellnessSlice.reducer

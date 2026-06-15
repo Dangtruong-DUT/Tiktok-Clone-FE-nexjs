@@ -10,6 +10,7 @@ use App\Http\Requests\Wellness\UpdateVideoTimeRequest;
 use App\Http\Response\ApiResponse;
 use App\Services\ScreenTime\ScreenTimeTrackingService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class ScreenTimeController extends Controller
 {
@@ -80,9 +81,10 @@ class ScreenTimeController extends Controller
      * @param  string  $uuid
      * @return JsonResponse
      */
-    public function heartbeat(string $uuid): JsonResponse
+    public function heartbeat(Request $request, string $uuid): JsonResponse
     {
-        $this->screenTimeTrackingService->heartbeatByUuid($uuid, (int) auth_user_id());
+        $data = $request->validate(['page_type' => 'nullable|string|in:posts,comment,likes']);
+        $this->screenTimeTrackingService->heartbeatByUuid($uuid, (int) auth_user_id(), $data['page_type'] ?? 'other');
 
         return ApiResponse::success(data: null, message: trans('messages.wellness.heartbeat'));
     }

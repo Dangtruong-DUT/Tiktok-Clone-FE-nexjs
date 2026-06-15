@@ -56,4 +56,7 @@ return [
     'ai' => [
         'copilot_disabled' => 'AI Copilot is currently disabled.',
     ],
+    'wellness' => [
+        'session_ended' => 'Session has already ended.',
+    ],
 ];

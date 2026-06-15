@@ -1,10 +1,13 @@
 'use client'
 
+import { useEffect } from 'react'
 import CommentForm from '@/components/comment-section/comment-form'
 import CommentList from '@/components/comment-section/comment-list'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useGetPostDetailQuery } from '@/store/services/content/posts.service'
+import { useAppDispatch } from '@/store/hooks'
+import { setPageType } from '@/store/features/wellnessSlice'
 import { X } from 'lucide-react'
 
 interface CommentsSectionProps {
@@ -23,6 +26,14 @@ export default function CommentsSection({
     isVisible
 }: CommentsSectionProps) {
     const { data: postDetailRes } = useGetPostDetailQuery(id, { skip: !id })
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        if (isVisible) {
+            dispatch(setPageType('comment'))
+            return () => { dispatch(setPageType('posts')) }
+        }
+    }, [isVisible, dispatch])
     const postId = postDetailRes?.data.id
 
     return (
