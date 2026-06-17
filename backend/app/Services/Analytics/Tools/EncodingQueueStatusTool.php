@@ -37,9 +37,14 @@ class EncodingQueueStatusTool extends AbstractAnalyticsTool
      */
     public function run(array $params, ?int $userId, bool $isAdmin): array
     {
+        $range = $this->resolveDateRange((string) ($params['period'] ?? 'today'));
+        $from  = $range['from'];
+        $to    = $range['to'];
+
         $filters    = (array) ($params['filters'] ?? []);
         $resolution = isset($filters['resolution']) ? (string) $filters['resolution'] : null;
 
+        // Queue state: current snapshot, no period filter
         $statusCounts = $this->encodingRepo->getStatusCounts($resolution);
 
         $pending    = $statusCounts[VideoEncodingStatusEnum::PENDING->value] ?? 0;
@@ -49,9 +54,17 @@ class EncodingQueueStatusTool extends AbstractAnalyticsTool
         $stuck             = $this->encodingRepo->countStuck(2, $resolution);
         $avgProcessingTime = $this->encodingRepo->getAvgProcessingMinutes($resolution);
 
-        $errorSummary = DB::table('video_encodings')
+        // Error summary: period-filtered for trending analysis
+        $errorQuery = DB::table('video_encodings')
             ->where('status', VideoEncodingStatusEnum::FAILED->value)
             ->whereNotNull('error_message')
+            ->whereBetween('created_at', [$from, $to]);
+
+        if ($resolution !== null) {
+            $errorQuery->where('resolution', $resolution);
+        }
+
+        $errorSummary = $errorQuery
             ->selectRaw("SUBSTRING(error_message, 1, 100) as pattern, COUNT(*) as cnt")
             ->groupByRaw("SUBSTRING(error_message, 1, 100)")
             ->orderByDesc('cnt')
@@ -70,8 +83,15 @@ class EncodingQueueStatusTool extends AbstractAnalyticsTool
         ];
 
         if (isset($params['limit'])) {
-            $data['items'] = DB::table('video_encodings')
+            $itemsQuery = DB::table('video_encodings')
                 ->where('status', VideoEncodingStatusEnum::FAILED->value)
+                ->whereBetween('created_at', [$from, $to]);
+
+            if ($resolution !== null) {
+                $itemsQuery->where('resolution', $resolution);
+            }
+
+            $data['items'] = $itemsQuery
                 ->orderByDesc('created_at')
                 ->limit((int) $params['limit'])
                 ->select(['uuid', 'status', 'error_message', 'created_at'])

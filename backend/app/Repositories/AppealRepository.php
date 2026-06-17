@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Enums\Appeal\AppealStatusEnum;
 use App\Models\Appeal;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -202,16 +203,23 @@ class AppealRepository extends BaseRepository
 
     /**
      * Get average resolution time in hours for resolved appeals.
+     * When $from/$to are supplied, filters to appeals resolved within that window.
      *
      * @param  AppealStatusEnum[]  $resolvedStatuses
      */
-    public function getAvgResolutionHours(array $resolvedStatuses): ?float
+    public function getAvgResolutionHours(array $resolvedStatuses, ?Carbon $from = null, ?Carbon $to = null): ?float
     {
         $statuses = array_map(fn (AppealStatusEnum $s) => $s->value, $resolvedStatuses);
 
-        $result = $this->query()
+        $query = $this->query()
             ->whereIn('status', $statuses)
-            ->whereNotNull('resolved_at')
+            ->whereNotNull('resolved_at');
+
+        if ($from !== null && $to !== null) {
+            $query->whereBetween('resolved_at', [$from, $to]);
+        }
+
+        $result = $query
             ->selectRaw('AVG(EXTRACT(EPOCH FROM (resolved_at - created_at)) / 3600) as avg_hours')
             ->value('avg_hours');
 

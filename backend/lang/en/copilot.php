@@ -40,7 +40,8 @@ return [
     ],
 
     'messages' => [
-        'clarification' => 'I am not fully sure what you need. Do you want to create content, view statistics, ask for guidance, or analyze a video?',
+        'clarification'       => 'I am not fully sure what you need. Do you want to create content, view statistics, ask for guidance, or analyze a video?',
+        'clarification_admin' => 'I am not fully sure what you need. Do you want to view system statistics, manage users, check appeals, or ask about the platform?',
         'navigation_all' => 'Here are all available Snapi Studio pages:',
         'navigation_matched' => 'I found a page that matches your request:',
         'analytics_clarification' => 'Which statistics would you like to see? For example: posts, users, AI, appeals, or system health.',

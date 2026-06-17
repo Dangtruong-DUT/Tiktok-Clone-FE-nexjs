@@ -253,8 +253,13 @@ class AiGateway
             . "Use `scopes`/`subjects` to set the correct scope and subject fields. "
             . "Extract `filters` only from `allowed_filters` for that tool — do not add other filter keys. "
             . "For `period`: if the user specifies one use it; otherwise use the tool's `default_period` and do NOT ask for clarification just because period is missing. "
-            . "Set needs_clarification=true only when the user's intent itself is genuinely ambiguous. "
-            . "If no tool matches the user's question, set task_type=unknown instead.\n\n"
+            . "VAGUE QUERY RULE: When the user asks about their account/stats in general ('thống kê', 'tài khoản', 'xem số liệu', 'my stats', 'account statistics', 'số liệu của tôi') without specifying a metric, pick the closest general tool — do NOT ask for clarification. "
+            . "Defaults: scope=creator → `get_post_overview`; scope=admin → `get_user_growth`. "
+            . "NEVER return intent=null when task_type=analytics — always pick the best matching tool. "
+            . "When task_type=analytics, needs_tools MUST be true even if needs_clarification=true. "
+            . "Set needs_clarification=true only when the topic is entirely unclear (not just vague or missing a period). "
+            . "If the question is about kháng cáo/appeals, prefer `get_appeal_overview` for status counts and `get_appeal_sla_metrics` for backlog/SLA questions. "
+            . "If no tool whatsoever matches the user's question, set task_type=unknown instead.\n\n"
             . implode("\n", $lines);
     }
 
@@ -286,6 +291,11 @@ FIELD CANONICAL VALUES:
   - analytics → exact tool name from "## Available Analytics Intents" below. NEVER invent.
   - others → short English snake_case label (write_caption, navigate_to_settings, analyze_hook)
 
+Analytics routing guidance:
+- Questions about appeal/kháng cáo status, pending appeals, approval/rejection counts, or moderation review should route to `get_appeal_overview`.
+- Questions about appeal backlog, oldest pending appeal, or resolution time should route to `get_appeal_sla_metrics`.
+- Do not ask for clarification just because the user omitted the period; use the tool's default period.
+
 `entities` — English canonical nouns ONLY. NEVER translate from the user's language.
   Valid: users, posts, videos, comments, followers, hashtags, appeals, encodings, ai_usage, queue
 
@@ -293,9 +303,9 @@ FIELD CANONICAL VALUES:
   Valid: today, yesterday, last_7_days, current_week, previous_week, current_month, previous_month, last_30_days, current_quarter, last_90_days, current_year, previous_year
 
 `filters` — keys from tool's allowed_filters only. English values only.
-`needs_tools` — true only when task_type=analytics
+`needs_tools` — true when task_type=analytics (ALWAYS true for analytics, even when needs_clarification=true)
 `needs_rag`   — true only when task_type=app_knowledge
-`needs_clarification` — true only when intent is genuinely ambiguous (NOT just missing period)
+`needs_clarification` — true only when the topic is completely unclear. For vague analytics queries ("my stats", "account stats"), pick a default tool instead of asking. NEVER set intent=null for analytics.
 
 Respond with ONLY valid JSON:
 {

@@ -40,7 +40,8 @@ return [
     ],
 
     'messages' => [
-        'clarification' => 'Mình chưa hiểu rõ yêu cầu. Bạn muốn tạo nội dung, xem thống kê, hỏi hướng dẫn, hay phân tích video?',
+        'clarification'       => 'Mình chưa hiểu rõ yêu cầu. Bạn muốn tạo nội dung, xem thống kê, hỏi hướng dẫn, hay phân tích video?',
+        'clarification_admin' => 'Mình chưa hiểu rõ yêu cầu. Bạn muốn xem thống kê hệ thống, quản lý người dùng, kiểm tra kháng cáo, hay hỏi về nền tảng?',
         'navigation_all' => 'Dưới đây là tất cả các trang trong Snapi Studio:',
         'navigation_matched' => 'Tìm thấy trang phù hợp với yêu cầu của bạn:',
         'analytics_clarification' => 'Bạn muốn xem thống kê gì cụ thể? Ví dụ: bài đăng, người dùng, AI, kháng cáo, hoặc hệ thống.',

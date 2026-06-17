@@ -60,7 +60,7 @@ class CopilotOrchestrator
         };
 
         if ($engine === null) {
-            return $this->clarificationResult($task, $context->creatorLanguage ?? 'vi');
+            return $this->clarificationResult($task, $context, $context->creatorLanguage ?? 'vi');
         }
 
         return $engine->handle($task, $input, $context, $conversationHistory, $emit);
@@ -69,13 +69,21 @@ class CopilotOrchestrator
     /**
      * Build a clarification result when task_type=unknown or no engine matched.
      *
-     * @param  GatewayTask  $task
+     * @param  GatewayTask              $task
+     * @param  AiCopilotSessionContext  $context
      * @return CopilotHandlerResult
      */
-    private function clarificationResult(GatewayTask $task, string $locale): CopilotHandlerResult
+    private function clarificationResult(GatewayTask $task, AiCopilotSessionContext $context, string $locale): CopilotHandlerResult
     {
-        $text = $task->clarificationQuestion
-            ?? (string) trans('copilot.messages.clarification', [], $locale);
+        $isAdmin        = $context->userRole === 'super_admin';
+        $genericCreator = (string) trans('copilot.messages.clarification', [], $locale);
+        $taskQuestion   = $task->clarificationQuestion;
+
+        if ($isAdmin && ($taskQuestion === null || $taskQuestion === $genericCreator)) {
+            $text = (string) trans('copilot.messages.clarification_admin', [], $locale);
+        } else {
+            $text = $taskQuestion ?? $genericCreator;
+        }
 
         return new CopilotHandlerResult(
             text:          $text,

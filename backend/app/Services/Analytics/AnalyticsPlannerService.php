@@ -44,7 +44,7 @@ class AnalyticsPlannerService
      *   clarification_question: string|null
      * }
      */
-    public function plan(GatewayTask $task, bool $isAdmin, string $question, string $locale): array
+    public function plan(GatewayTask $task, bool $isAdmin, string $question): array
     {
         $toolsContext = $this->catalog->buildToolsContext($task->scope);
         $periods      = implode(', ', $this->catalog->validPeriods());
@@ -68,38 +68,33 @@ class AnalyticsPlannerService
             $plan  = json_decode(trim($clean), true);
 
             if (json_last_error() !== JSON_ERROR_NONE || ! is_array($plan)) {
-                return $this->clarificationPlan($locale);
+                return $this->scopeDefaultPlan($isAdmin, $task);
             }
 
-            return $this->validateAndFilter($plan, $task->scope, $isAdmin, $locale);
+            return $this->validateAndFilter($plan, $isAdmin, $task);
         } catch (\Throwable $e) {
             Log::channel(config('ai.logging.channel', 'stack'))->warning('AnalyticsPlannerService failed', [
                 'error' => $e->getMessage(),
             ]);
 
-            return $this->clarificationPlan($locale);
+            return $this->scopeDefaultPlan($isAdmin, $task);
         }
     }
 
     /**
      * Validate the Gemini-generated plan against the tool catalog.
      * Filters out unknown tools, invalid periods, and admin-only tools for non-admins.
-     * Returns clarification plan when no valid tools remain.
+     * Falls back to scopeDefaultPlan when no valid tools remain.
      *
      * @param  array<string,mixed>  $raw
-     * @param  string  $scope
-     * @param  bool    $isAdmin
+     * @param  bool        $isAdmin
+     * @param  GatewayTask $task
      * @return array{tools: list<array{tool_name: string, params: array<string,mixed>}>, response_view: string, needs_clarification: bool, clarification_question: string|null}
      */
-    private function validateAndFilter(array $raw, string $scope, bool $isAdmin, string $locale): array
+    private function validateAndFilter(array $raw, bool $isAdmin, GatewayTask $task): array
     {
         if ($raw['needs_clarification'] ?? false) {
-            return [
-                'tools'                  => [],
-                'response_view'          => 'clarification',
-                'needs_clarification'    => true,
-                'clarification_question' => $raw['clarification_question'] ?? null,
-            ];
+            return $this->scopeDefaultPlan($isAdmin, $task);
         }
 
         $validTools    = [];
@@ -121,8 +116,8 @@ class AnalyticsPlannerService
 
             $period = (string) ($params['period'] ?? '');
             if ($period === '' || ! in_array($period, $validPeriods, true)) {
-                $toolDef       = $this->catalog->tool($toolName) ?? [];
-                $params['period'] = $toolDef['default_period'] ?? 'last_7_days';
+                $toolDef          = $this->catalog->tool($toolName) ?? [];
+                $params['period'] = $toolDef['default_period'] ?? 'current_week';
             }
 
             $toolDef        = $this->catalog->tool($toolName) ?? [];
@@ -137,7 +132,7 @@ class AnalyticsPlannerService
         }
 
         if (empty($validTools)) {
-            return $this->clarificationPlan($locale);
+            return $this->scopeDefaultPlan($isAdmin, $task);
         }
 
         return [
@@ -149,17 +144,71 @@ class AnalyticsPlannerService
     }
 
     /**
-     * Build the clarification fallback plan.
+     * Return a plan without asking the user for clarification.
+     * Priority: use gateway's intent hint if it maps to a known tool; otherwise use scope default.
      *
-     * @return array{tools: list<empty>, response_view: string, needs_clarification: bool, clarification_question: string}
+     * @return array{tools: list<array{tool_name: string, params: array<string,mixed>}>, response_view: string, needs_clarification: bool, clarification_question: null}
      */
-    private function clarificationPlan(string $locale): array
+    private function scopeDefaultPlan(bool $isAdmin, GatewayTask $task): array
     {
+        $intentHint = $task->intent;
+
+        if ($intentHint !== null && $this->catalog->exists($intentHint)) {
+            if (! $this->catalog->isAdminOnly($intentHint) || $isAdmin) {
+                return $this->buildFallbackToolPlan($intentHint, $task);
+            }
+        }
+
+        $defaultTool = $isAdmin ? 'get_user_growth' : 'get_post_overview';
+        $toolDef     = $this->catalog->tool($defaultTool) ?? [];
+
         return [
-            'tools'                  => [],
-            'response_view'          => 'clarification',
-            'needs_clarification'    => true,
-            'clarification_question' => (string) trans('copilot.messages.analytics_clarification', [], $locale),
+            'tools' => [[
+                'tool_name' => $defaultTool,
+                'params'    => ['period' => $toolDef['default_period'] ?? 'current_week'],
+            ]],
+            'response_view'          => 'summary_card',
+            'needs_clarification'    => false,
+            'clarification_question' => null,
+        ];
+    }
+
+    /**
+     * Build a single-tool plan from the gateway's intent hint + task context.
+     *
+     * @return array{tools: list<array{tool_name: string, params: array<string,mixed>}>, response_view: string, needs_clarification: bool, clarification_question: null}
+     */
+    private function buildFallbackToolPlan(string $toolName, GatewayTask $task): array
+    {
+        $toolDef      = $this->catalog->tool($toolName) ?? [];
+        $validPeriods = $this->catalog->validPeriods();
+
+        $period = ($task->period !== null && in_array($task->period, $validPeriods, true))
+            ? $task->period
+            : ($toolDef['default_period'] ?? 'current_week');
+
+        $allowedFilters = (array) ($toolDef['allowed_filters'] ?? []);
+        $taskFilters    = (array) ($task->filters ?? []);
+        $filters        = ! empty($allowedFilters) && ! empty($taskFilters)
+            ? array_intersect_key($taskFilters, array_flip($allowedFilters))
+            : [];
+
+        $params = ['period' => $period];
+        if (! empty($filters)) {
+            $params['filters'] = $filters;
+        }
+        if ($task->compareWith !== null) {
+            $params['compare_with'] = $task->compareWith;
+        }
+
+        $hasBreakdown = str_contains($toolName, 'breakdown')
+            || in_array($toolName, ['get_appeal_overview', 'get_post_overview', 'get_user_growth'], true);
+
+        return [
+            'tools' => [['tool_name' => $toolName, 'params' => $params]],
+            'response_view'          => $hasBreakdown ? 'summary_with_breakdown' : 'summary_card',
+            'needs_clarification'    => false,
+            'clarification_question' => null,
         ];
     }
 

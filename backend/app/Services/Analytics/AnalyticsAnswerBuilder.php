@@ -52,7 +52,7 @@ class AnalyticsAnswerBuilder
                 contents:     [['role' => 'user', 'parts' => [['text' => $userPrompt]]]],
                 config:       GeminiConfig::fromSetting($this->settingRepository->current(), [
                     'temperature'      => 0.3,
-                    'maxOutputTokens'  => 600,
+                    'maxOutputTokens'  => 15000,
                     'responseMimeType' => 'application/json',
                 ]),
             ))->toArray();

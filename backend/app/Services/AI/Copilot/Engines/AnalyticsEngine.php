@@ -58,7 +58,7 @@ class AnalyticsEngine extends AbstractCopilotEngine implements CopilotEngineInte
         $userId  = $context->userId;
 
         // Step 1: Planner selects tools from catalog based on GatewayTask
-        $plan = $this->planner->plan($task, $isAdmin, $input->content, $locale);
+        $plan = $this->planner->plan($task, $isAdmin, $input->content);
 
         if ($plan['needs_clarification'] ?? false) {
             $text = $plan['clarification_question']

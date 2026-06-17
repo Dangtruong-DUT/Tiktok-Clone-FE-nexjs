@@ -35,6 +35,10 @@ class TopCreatorsTool extends AbstractAnalyticsTool
      */
     public function run(array $params, ?int $userId, bool $isAdmin): array
     {
+        $range = $this->resolveDateRange((string) ($params['period'] ?? 'current_month'));
+        $from  = $range['from'];
+        $to    = $range['to'];
+
         $filters = (array) ($params['filters'] ?? []);
         $sortBy  = (string) ($filters['sort_by'] ?? 'followers');
         $limit   = (int) ($params['limit'] ?? 10);
@@ -44,11 +48,12 @@ class TopCreatorsTool extends AbstractAnalyticsTool
         $base = User::query()->where('role', '!=', RoleTypeEnum::SUPER_ADMIN->value);
 
         if ($sortBy === 'views') {
-            // `users` has no total_views column — compute via subquery on posts
+            // `users` has no total_views column — compute via subquery on posts created in period
             $postStats = DB::table('posts')
                 ->selectRaw('user_id, COALESCE(SUM(user_views + guest_views), 0) as total_views')
                 ->where('status', 'published')
                 ->whereNull('deleted_at')
+                ->whereBetween('created_at', [$from, $to])
                 ->groupBy('user_id');
 
             $creators = $base
@@ -72,9 +77,11 @@ class TopCreatorsTool extends AbstractAnalyticsTool
                 ])
                 ->toArray();
         } elseif ($sortBy === 'posts') {
-            // `users` has no posts_count column — compute via withCount
+            // `users` has no posts_count column — compute via withCount, filtered to period
             $creators = $base
-                ->withCount(['posts' => fn ($q) => $q->where('status', 'published')->whereNull('deleted_at')])
+                ->withCount(['posts' => fn ($q) => $q->where('status', 'published')
+                    ->whereNull('deleted_at')
+                    ->whereBetween('created_at', [$from, $to])])
                 ->orderByDesc('posts_count')
                 ->limit($limit)
                 ->select(['users.id', 'users.uuid', 'users.username', 'users.followers_count'])
@@ -88,7 +95,7 @@ class TopCreatorsTool extends AbstractAnalyticsTool
                 ])
                 ->toArray();
         } else {
-            // Default: sort by followers_count (the only pre-computed sort column on users)
+            // Default: sort by followers_count (cumulative counter — no period filter applicable)
             $creators = $base
                 ->orderByDesc('followers_count')
                 ->limit($limit)
@@ -105,10 +112,16 @@ class TopCreatorsTool extends AbstractAnalyticsTool
 
         $creatorIds = array_column($creators, 'user_id');
         if (! empty($creatorIds)) {
-            $engagementMap = DB::table('posts')
+            $engagementQuery = DB::table('posts')
                 ->whereIn('user_id', $creatorIds)
                 ->where('status', 'published')
-                ->whereNull('deleted_at')
+                ->whereNull('deleted_at');
+
+            if ($sortBy !== 'followers') {
+                $engagementQuery->whereBetween('created_at', [$from, $to]);
+            }
+
+            $engagementMap = $engagementQuery
                 ->selectRaw('user_id, COALESCE(SUM(likes_count + comments_count), 0) as eng, COALESCE(SUM(user_views + guest_views), 0) as views')
                 ->groupBy('user_id')
                 ->get()

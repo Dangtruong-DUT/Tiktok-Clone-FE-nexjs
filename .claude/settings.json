@@ -77,7 +77,13 @@
       "Bash(php -l app/Services/Analytics/Tools/PostOverviewTool.php)",
       "Bash(php -l app/Services/Analytics/Tools/PostEngagementBreakdownTool.php)",
       "Bash(php -l app/Services/Analytics/Tools/UserGrowthTool.php)",
-      "Bash(php -l app/Services/Analytics/Tools/TopCreatorsTool.php)"
+      "Bash(php -l app/Services/Analytics/Tools/TopCreatorsTool.php)",
+      "Bash(php -l app/Services/AI/Copilot/Gateway/AiGateway.php)",
+      "Bash(php -l /Users/nguyendangtruong/Documents/DUT/Orther/project/Tiktok-v2/backend/app/Services/AI/Copilot/Orchestrator/CopilotOrchestrator.php)",
+      "Bash(php -l app/Services/Analytics/AnalyticsAnswerBuilder.php)",
+      "Bash(php -l app/Services/Analytics/AnalyticsPlannerService.php)",
+      "Bash(php -l app/Services/AI/Copilot/Engines/AnalyticsEngine.php)",
+      "Bash(php -l /Users/nguyendangtruong/Documents/DUT/Orther/project/Tiktok-v2/backend/app/Services/Analytics/AnalyticsPlannerService.php)"
     ],
     "additionalDirectories": [
       "/private/tmp"

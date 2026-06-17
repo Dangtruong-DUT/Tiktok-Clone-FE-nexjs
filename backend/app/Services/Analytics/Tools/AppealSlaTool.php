@@ -37,18 +37,25 @@ class AppealSlaTool extends AbstractAnalyticsTool
      */
     public function run(array $params, ?int $userId, bool $isAdmin): array
     {
+        $range = $this->resolveDateRange((string) ($params['period'] ?? 'current_month'));
+        $from  = $range['from'];
+        $to    = $range['to'];
+
+        // Backlog state is always current (not period-filtered)
         $pendingCount = $this->appealRepo->countByStatus(AppealStatusEnum::PENDING);
 
         $oldestPending = $this->appealRepo->getOldestCreatedAt(AppealStatusEnum::PENDING);
         $oldestDays    = $oldestPending ? (int) now()->diffInDays($oldestPending) : null;
 
+        // Resolution metrics filtered to the requested period
         $avgResolutionHours = $this->appealRepo->getAvgResolutionHours([
             AppealStatusEnum::APPROVED,
             AppealStatusEnum::REJECTED,
-        ]);
+        ], $from, $to);
 
         $byType = DB::table('appeals')
             ->selectRaw('appeal_type, COUNT(*) as cnt')
+            ->whereBetween('created_at', [$from, $to])
             ->groupBy('appeal_type')
             ->orderByDesc('cnt')
             ->pluck('cnt', 'appeal_type')

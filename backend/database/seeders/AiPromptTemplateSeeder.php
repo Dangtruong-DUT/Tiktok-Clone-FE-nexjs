@@ -433,6 +433,14 @@ FIELD CANONICAL VALUES:
   - task_type=app_knowledge → snake_case label, e.g. how_to_upload, what_is_copilot
   - all others → short English snake_case label, e.g. write_caption, navigate_to_settings, analyze_hook
 
+Analytics routing guidance:
+- Questions about appeal/kháng cáo status, pending appeals, approval/rejection counts, or moderation review should route to `get_appeal_overview`.
+- Questions about appeal backlog, oldest pending appeal, or resolution time should route to `get_appeal_sla_metrics`.
+- Do not ask for clarification just because the user omitted the period; use the tool's default period.
+- VAGUE QUERY DEFAULT: When the user asks about their account/stats in general ("thống kê", "tài khoản", "xem số liệu", "thống kê tài khoản", "my stats", "account statistics", "số liệu của tôi") without specifying a metric, always pick the most general matching tool — NEVER return intent=null or ask for clarification. Defaults: scope=creator → `get_post_overview`; scope=admin → `get_user_growth`.
+- When task_type=analytics, `needs_tools` MUST always be true, even when needs_clarification=true.
+- NEVER return intent=null when task_type=analytics.
+
 `entities` — English canonical nouns only. NEVER translate.
   Valid values: posts, users, videos, comments, followers, hashtags, appeals, encodings, ai_usage, queue, audit_logs
   Example: user says "người dùng" → entities: ["users"]; "bài đăng" → ["posts"]
@@ -444,9 +452,9 @@ FIELD CANONICAL VALUES:
 
 `filters` — keys MUST come from the tool's `allowed_filters` in the catalog. Use English values only.
 
-`needs_tools` — true ONLY when task_type=analytics
+`needs_tools` — MUST be true whenever task_type=analytics (even when needs_clarification=true)
 `needs_rag`   — true ONLY when task_type=app_knowledge
-`needs_clarification` — true ONLY when the user's intent is genuinely ambiguous (not just missing period)
+`needs_clarification` — true ONLY when the topic is completely unclear. For vague analytics queries ("my stats", "thống kê tài khoản"), pick a default tool instead of asking. NEVER set intent=null for analytics.
 `clarification_question` — user's language (Vietnamese if locale=vi, English if locale=en), or null
 
 INTENT ROUTING RULES:
@@ -514,6 +522,8 @@ Rules:
 5. If the question cannot be answered with any available tool, set needs_clarification=true.
 6. If needs_clarification=true, provide a clarification_question in the user's language (Vietnamese or English).
 7. response_view must be one of: summary_card, summary_with_breakdown, comparison_table, trend_chart, top_list, plain_text.
+8. Questions about kháng cáo/appeals status should normally use `get_appeal_overview`, even when the user does not mention a period.
+9. Use `get_appeal_sla_metrics` for backlog, oldest pending appeal, or resolution-time questions.
 
 List intent detection:
 If the user's question contains listing keywords ("liệt kê", "danh sách", "ai đang", "bài nào", "những ai", "show me", "list", "who is", "which ones", "kể ra"), set params.limit = 10 for the relevant tool. This returns actual item rows (max 10) alongside aggregates. Use top_list as response_view when limit is set.
