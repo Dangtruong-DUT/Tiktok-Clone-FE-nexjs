@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef } from 'react'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { addVideoSeconds } from '@/store/features/wellnessSlice'
+import { addVideoSeconds as addVideoSecondsAction } from '@/store/features/wellnessSlice'
 import { useUpdateVideoTimeMutation } from '@/store/services/wellness/screen-time.service'
 
 const VIDEO_FLUSH_INTERVAL_MS = 30_000
@@ -35,7 +35,7 @@ export function useVideoTracker(sessionUuid: string | null): {
         const interval = setInterval(() => {
             const secs = videoAccumulatorRef.current
             if (secs > 0) {
-                dispatch(addVideoSeconds(secs))
+                dispatch(addVideoSecondsAction(secs))
                 // Send cumulative total (after Redux update) so backend max() logic works correctly
                 updateVideoTimeRef.current({
                     uuid: sessionUuid,

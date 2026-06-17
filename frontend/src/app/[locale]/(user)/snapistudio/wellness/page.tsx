@@ -1,7 +1,20 @@
 'use client'
 
 import { useState } from 'react'
-import { HeartPulse, Clock, BarChart2, Shield, Plus, Trash2, CheckCircle2, X, Timer, MessageCircle, Heart, FileText } from 'lucide-react'
+import {
+    HeartPulse,
+    Clock,
+    BarChart2,
+    Shield,
+    Plus,
+    Trash2,
+    CheckCircle2,
+    X,
+    Timer,
+    MessageCircle,
+    Heart,
+    FileText
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
@@ -53,15 +66,7 @@ function formatDuration(seconds: number): string {
     return h > 0 ? `${h}h ${m}m` : `${m}m`
 }
 
-function StatCard({
-    label,
-    value,
-    icon: Icon
-}: {
-    label: string
-    value: string | number
-    icon: React.ElementType
-}) {
+function StatCard({ label, value, icon: Icon }: { label: string; value: string | number; icon: React.ElementType }) {
     return (
         <div className='rounded-xl border bg-card p-5 shadow-xs'>
             <div className='flex items-center justify-between'>
@@ -69,9 +74,7 @@ function StatCard({
                 <Icon className='h-4 w-4 text-muted-foreground' />
             </div>
             <div className='mt-2.5'>
-                <span className='text-2xl font-semibold tracking-tight tabular-nums text-foreground'>
-                    {value}
-                </span>
+                <span className='text-2xl font-semibold tracking-tight tabular-nums text-foreground'>{value}</span>
             </div>
         </div>
     )
@@ -198,25 +201,27 @@ export default function WellnessPage() {
         const toPercent = (s: number) => Math.round((s / stats.total_seconds) * 100)
         const maxCount = Math.max(stats.comments_count, stats.likes_count, stats.posts_count, 1)
         return [
-            { activity: t('stats.radarChart.video'),    score: toPercent(stats.video_seconds) },
+            { activity: t('stats.radarChart.video'), score: toPercent(stats.video_seconds) },
             { activity: t('stats.radarChart.comments'), score: Math.round((stats.comments_count / maxCount) * 100) },
-            { activity: t('stats.radarChart.posts'),    score: Math.round((stats.posts_count / maxCount) * 100) },
-            { activity: t('stats.radarChart.likes'),    score: Math.round((stats.likes_count / maxCount) * 100) },
-            { activity: t('stats.radarChart.other'),    score: toPercent(Math.max(0, stats.total_seconds - stats.video_seconds)) },
+            { activity: t('stats.radarChart.posts'), score: Math.round((stats.posts_count / maxCount) * 100) },
+            { activity: t('stats.radarChart.likes'), score: Math.round((stats.likes_count / maxCount) * 100) },
+            {
+                activity: t('stats.radarChart.other'),
+                score: toPercent(Math.max(0, stats.total_seconds - stats.video_seconds))
+            }
         ]
     })()
 
     return (
         <div className='flex min-h-full flex-col'>
             <div className='flex-1 mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 space-y-8 animate-in slide-in-from-bottom-4 duration-500 ease-out fill-mode-forwards'>
-                
                 {/* Header */}
                 <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b pb-6'>
                     <div>
                         <h1 className='text-2xl font-bold tracking-tight text-foreground'>{t('title')}</h1>
                         <p className='mt-1 text-sm text-muted-foreground'>{t('subtitle')}</p>
                     </div>
-                    
+
                     <div className='flex flex-wrap items-center gap-3'>
                         {/* Time periods selector */}
                         <div className='inline-flex rounded-lg border bg-muted/50 p-1 shadow-xs'>
@@ -254,45 +259,35 @@ export default function WellnessPage() {
                         ))}
                     </div>
                 ) : stats ? (
-                    <div className='grid grid-cols-2 gap-4 sm:grid-cols-4'>
-                        <StatCard
-                            label={t('stats.totalTime')}
-                            value={formatDuration(stats.total_seconds)}
-                            icon={Clock}
-                        />
-                        <StatCard
-                            label={t('stats.watchingVideo')}
-                            value={formatDuration(stats.video_seconds)}
-                            icon={HeartPulse}
-                        />
-                        <StatCard
-                            label={t('stats.dailyAvg')}
-                            value={formatDuration(stats.avg_daily_seconds)}
-                            icon={BarChart2}
-                        />
-                        <StatCard
-                            label={t('tabs.rules')}
-                            value={`${activeRulesCount}/${rules.length}`}
-                            icon={Shield}
-                        />
-                    </div>
-                    <div className='grid grid-cols-3 gap-4'>
-                        <StatCard
-                            label={t('stats.comments')}
-                            value={stats.comments_count}
-                            icon={MessageCircle}
-                        />
-                        <StatCard
-                            label={t('stats.likes')}
-                            value={stats.likes_count}
-                            icon={Heart}
-                        />
-                        <StatCard
-                            label={t('stats.posts')}
-                            value={stats.posts_count}
-                            icon={FileText}
-                        />
-                    </div>
+                    <>
+                        <div className='grid grid-cols-2 gap-4 sm:grid-cols-4'>
+                            <StatCard
+                                label={t('stats.totalTime')}
+                                value={formatDuration(stats.total_seconds)}
+                                icon={Clock}
+                            />
+                            <StatCard
+                                label={t('stats.watchingVideo')}
+                                value={formatDuration(stats.video_seconds)}
+                                icon={HeartPulse}
+                            />
+                            <StatCard
+                                label={t('stats.dailyAvg')}
+                                value={formatDuration(stats.avg_daily_seconds)}
+                                icon={BarChart2}
+                            />
+                            <StatCard
+                                label={t('tabs.rules')}
+                                value={`${activeRulesCount}/${rules.length}`}
+                                icon={Shield}
+                            />
+                        </div>
+                        <div className='grid grid-cols-3 gap-4'>
+                            <StatCard label={t('stats.comments')} value={stats.comments_count} icon={MessageCircle} />
+                            <StatCard label={t('stats.likes')} value={stats.likes_count} icon={Heart} />
+                            <StatCard label={t('stats.posts')} value={stats.posts_count} icon={FileText} />
+                        </div>
+                    </>
                 ) : null}
 
                 {/* Charts */}
@@ -302,12 +297,8 @@ export default function WellnessPage() {
                             {stats.daily_series.length > 0 && (
                                 <div className='rounded-xl border bg-card p-5 shadow-xs'>
                                     <div className='mb-4 flex items-center justify-between'>
-                                        <p className='text-sm font-semibold text-foreground'>
-                                            {t('stats.chartTitle')}
-                                        </p>
-                                        <span className='text-xs text-muted-foreground'>
-                                            {t('stats.timeLabel')}
-                                        </span>
+                                        <p className='text-sm font-semibold text-foreground'>{t('stats.chartTitle')}</p>
+                                        <span className='text-xs text-muted-foreground'>{t('stats.timeLabel')}</span>
                                     </div>
                                     <ChartContainer config={chartConfig} className='h-[220px] w-full aspect-auto'>
                                         <BarChart
@@ -379,9 +370,7 @@ export default function WellnessPage() {
 
                         {stats.total_seconds > 0 && (
                             <div className='rounded-xl border bg-card p-5 shadow-xs'>
-                                <p className='text-sm font-semibold text-foreground'>
-                                    {t('stats.distributionTitle')}
-                                </p>
+                                <p className='text-sm font-semibold text-foreground'>{t('stats.distributionTitle')}</p>
                                 <div className='mt-4 space-y-4'>
                                     {[
                                         {
@@ -476,9 +465,7 @@ export default function WellnessPage() {
                                             </Select>
                                         </div>
                                         <div className='space-y-1'>
-                                            <p className='text-[10px] text-muted-foreground'>
-                                                {t('ruleChat.toHour')}
-                                            </p>
+                                            <p className='text-[10px] text-muted-foreground'>{t('ruleChat.toHour')}</p>
                                             <Select
                                                 value={String(form.toHour)}
                                                 onValueChange={(v) => setForm((f) => ({ ...f, toHour: +v }))}
@@ -597,19 +584,23 @@ export default function WellnessPage() {
                                                 <Badge className='border border-primary/15 bg-primary/5 text-xs text-primary hover:bg-primary/5'>
                                                     {rule.type_label}
                                                 </Badge>
-                                                <Badge variant='outline' className='border-border/50 bg-background text-xs'>
+                                                <Badge
+                                                    variant='outline'
+                                                    className='border-border/50 bg-background text-xs'
+                                                >
                                                     {rule.action_label}
                                                 </Badge>
                                                 {!rule.is_enabled && (
-                                                    <Badge variant='outline' className='border-border/50 text-xs text-muted-foreground'>
+                                                    <Badge
+                                                        variant='outline'
+                                                        className='border-border/50 text-xs text-muted-foreground'
+                                                    >
                                                         {t('rules.disabled')}
                                                     </Badge>
                                                 )}
                                             </div>
                                             <div className='space-y-1'>
-                                                <p className='text-sm font-semibold text-foreground'>
-                                                    {rule.title}
-                                                </p>
+                                                <p className='text-sm font-semibold text-foreground'>{rule.title}</p>
                                                 <p className='text-xs leading-relaxed text-muted-foreground'>
                                                     {rule.message}
                                                 </p>
@@ -622,7 +613,9 @@ export default function WellnessPage() {
                                                 onCheckedChange={(checked) =>
                                                     updateRule({ uuid: rule.uuid, is_enabled: checked })
                                                 }
-                                                aria-label={rule.is_enabled ? t('rules.toggleOff') : t('rules.toggleOn')}
+                                                aria-label={
+                                                    rule.is_enabled ? t('rules.toggleOff') : t('rules.toggleOn')
+                                                }
                                             />
                                             <button
                                                 type='button'

@@ -83,7 +83,8 @@
       "Bash(php -l app/Services/Analytics/AnalyticsAnswerBuilder.php)",
       "Bash(php -l app/Services/Analytics/AnalyticsPlannerService.php)",
       "Bash(php -l app/Services/AI/Copilot/Engines/AnalyticsEngine.php)",
-      "Bash(php -l /Users/nguyendangtruong/Documents/DUT/Orther/project/Tiktok-v2/backend/app/Services/Analytics/AnalyticsPlannerService.php)"
+      "Bash(php -l /Users/nguyendangtruong/Documents/DUT/Orther/project/Tiktok-v2/backend/app/Services/Analytics/AnalyticsPlannerService.php)",
+      "Bash(/Users/nguyendangtruong/.nvm/versions/node/v22.21.1/bin/npm run *)"
     ],
     "additionalDirectories": [
       "/private/tmp"
