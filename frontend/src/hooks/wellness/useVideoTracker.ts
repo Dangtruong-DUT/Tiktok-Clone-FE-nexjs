@@ -33,7 +33,7 @@ export function useVideoTracker(sessionUuid: string | null): {
         if (!sessionUuid) return
 
         const interval = setInterval(() => {
-            const secs = videoAccumulatorRef.current
+            const secs = Math.round(videoAccumulatorRef.current)
             if (secs > 0) {
                 dispatch(addVideoSecondsAction(secs))
                 // Send cumulative total (after Redux update) so backend max() logic works correctly
