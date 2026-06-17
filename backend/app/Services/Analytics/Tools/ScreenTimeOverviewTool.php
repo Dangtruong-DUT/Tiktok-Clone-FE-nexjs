@@ -58,9 +58,10 @@ class ScreenTimeOverviewTool extends AbstractAnalyticsTool
             }
         }
 
-        $commentSeconds = $this->screenTimeRepo->sumCommentSecondsInRange($userId, $range['from'], $range['to']);
-        $postSeconds    = $this->screenTimeRepo->sumPostSecondsInRange($userId, $range['from'], $range['to']);
-        $likesSeconds   = $this->screenTimeRepo->sumLikesSecondsInRange($userId, $range['from'], $range['to']);
+        $commentsCount = $this->screenTimeRepo->sumCommentsCountInRange($userId, $range['from'], $range['to']);
+        $likesCount    = $this->screenTimeRepo->sumLikesCountInRange($userId, $range['from'], $range['to']);
+        $postsCount    = $this->screenTimeRepo->sumPostsCountInRange($userId, $range['from'], $range['to']);
+        $otherSeconds  = max(0, $totalSeconds - $videoSeconds);
 
         $data = [
             'avg_session_duration' => $avgSession,
@@ -68,10 +69,12 @@ class ScreenTimeOverviewTool extends AbstractAnalyticsTool
             'video_watch_ratio'    => $videoRatio,
             'daily_series'         => $dailySeries,
             'peak_hour'            => $peakHour,
-            'page_time_breakdown'  => [
-                'comment_seconds' => $commentSeconds,
-                'post_seconds'    => $postSeconds,
-                'likes_seconds'   => $likesSeconds,
+            'activity_breakdown'   => [
+                'video_seconds'  => $videoSeconds,
+                'other_seconds'  => $otherSeconds,
+                'comments_count' => $commentsCount,
+                'likes_count'    => $likesCount,
+                'posts_count'    => $postsCount,
             ],
         ];
 

@@ -45,7 +45,7 @@ class VideoReviewEngine extends AbstractCopilotEngine implements CopilotEngineIn
         array                  $conversationHistory,
         ?callable              $emit = null,
     ): CopilotHandlerResult {
-        $intentKey = self::INTENT_MAP[$task->intent] ?? 'analyze_video';
+        $intentKey = self::INTENT_MAP[$task->intent] ?? ($input->hasTimeline() ? 'analyze_video_segment' : 'analyze_video');
         $template  = $this->templateRepo->findByIntent($intentKey)
             ?? $this->templateRepo->findByIntent('analyze_video');
 

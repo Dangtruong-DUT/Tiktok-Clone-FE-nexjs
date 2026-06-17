@@ -437,9 +437,12 @@ Analytics routing guidance:
 - Questions about appeal/kháng cáo status, pending appeals, approval/rejection counts, or moderation review should route to `get_appeal_overview`.
 - Questions about appeal backlog, oldest pending appeal, or resolution time should route to `get_appeal_sla_metrics`.
 - Do not ask for clarification just because the user omitted the period; use the tool's default period.
-- VAGUE QUERY DEFAULT: When the user asks about their account/stats in general ("thống kê", "tài khoản", "xem số liệu", "thống kê tài khoản", "my stats", "account statistics", "số liệu của tôi") without specifying a metric, always pick the most general matching tool — NEVER return intent=null or ask for clarification. Defaults: scope=creator → `get_post_overview`; scope=admin → `get_user_growth`.
+- VAGUE QUERY DEFAULT: When the user asks about their account/stats in general ("thống kê", "tài khoản", "xem số liệu", "thống kê tài khoản", "my stats", "account statistics", "số liệu của tôi") without specifying a metric, always pick the most general matching tool — NEVER return intent=null or ask for clarification. Defaults: scope=creator → `get_account_overview`; scope=admin → `get_user_growth`.
 - When task_type=analytics, `needs_tools` MUST always be true, even when needs_clarification=true.
 - NEVER return intent=null when task_type=analytics.
+
+Video review routing guidance:
+- If the user asks to analyze a selected video segment / clip, or gives a time range like `00:00` to `00:05`, route to `task_type=video_review` with `intent=analyze_video_segment`.
 
 `entities` — English canonical nouns only. NEVER translate.
   Valid values: posts, users, videos, comments, followers, hashtags, appeals, encodings, ai_usage, queue, audit_logs
@@ -469,7 +472,7 @@ Response JSON schema:
   "task_type": "analytics",
   "scope": "admin",
   "subject": "platform",
-  "intent": "get_user_growth",
+  "intent": "get_account_overview",
   "entities": ["users"],
   "filters": {},
   "period": "last_7_days",

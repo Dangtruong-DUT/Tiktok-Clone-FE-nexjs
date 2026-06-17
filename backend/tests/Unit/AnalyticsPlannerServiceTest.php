@@ -93,14 +93,32 @@ it('uses task intent as fallback for appeal SLA questions', function () {
         ->and($plan['tools'][0]['tool_name'])->toBe('get_appeal_sla_metrics');
 });
 
-it('uses get_post_overview as creator default when intent is unclear', function () {
+it('uses get_account_overview as creator default when intent is unclear about account stats', function () {
     // fromArray() coerces null intent to 'unclear' — use the same string
     $task = makeTask(['scope' => 'creator', 'intent' => 'unclear']);
 
     $plan = makePlannerService()->plan($task, false, 'Thống kê tài khoản của tôi');
 
     expect($plan['needs_clarification'])->toBeFalse()
-        ->and($plan['tools'][0]['tool_name'])->toBe('get_post_overview');
+        ->and($plan['tools'][0]['tool_name'])->toBe('get_account_overview');
+});
+
+it('remaps a post overview plan to account overview for account statistics questions', function () {
+    $geminiJson = json_encode([
+        'tools'                  => [[
+            'tool_name' => 'get_post_overview',
+            'params'    => ['period' => 'current_month'],
+        ]],
+        'response_view'          => 'summary_with_breakdown',
+        'needs_clarification'    => false,
+        'clarification_question' => null,
+    ]);
+
+    $task = makeTask(['scope' => 'creator', 'intent' => 'get_post_overview']);
+    $plan = makePlannerService($geminiJson)->plan($task, false, 'Thống kê tài khoản của tôi');
+
+    expect($plan['needs_clarification'])->toBeFalse()
+        ->and($plan['tools'][0]['tool_name'])->toBe('get_account_overview');
 });
 
 it('uses get_user_growth as admin default when intent is unclear', function () {

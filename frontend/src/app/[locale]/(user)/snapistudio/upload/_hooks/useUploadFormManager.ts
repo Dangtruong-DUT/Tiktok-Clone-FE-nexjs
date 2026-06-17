@@ -17,6 +17,7 @@ import { convertBase64ToFile } from '@/utils/file.util'
 import { extractHashtags } from '@/utils/social-token.util'
 import { handleFormError } from '@/utils/errors/handle-form-errors.util'
 import { logger } from '@/utils/logger.util'
+import { useWellness } from '@/provider/wellness-context'
 import { useConfirmNavigation } from '@/hooks/shared/useConfirmNavigation'
 import { useRouter } from '@/i18n/navigation'
 import { SNAPISTUDIO_ROUTES } from '@/constants/routes/routes'
@@ -37,6 +38,7 @@ export function useUploadFormManager() {
     const [uploadImage, uploadImageResult] = useUploadImageMutation()
     const [createPost, createPostResult] = useCreatePostMutation()
     const [schedulePost, schedulePostResult] = useSchedulePostMutation()
+    const { trackAction } = useWellness()
 
     const scheduledAtRef = useRef<string | null>(null)
     const [scheduledAtUtc, setScheduledAtUtc] = useState<string | null>(null)
@@ -189,6 +191,7 @@ export function useUploadFormManager() {
 
             const res = await createPost(body).unwrap()
             postCreatedRef.current = true
+            trackAction('post')
 
             if (!videoStatus.isTerminal) {
                 dispatch(

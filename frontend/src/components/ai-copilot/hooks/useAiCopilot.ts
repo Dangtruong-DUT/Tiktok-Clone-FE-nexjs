@@ -139,25 +139,31 @@ export function useAiCopilot({ sessionUuid, surface }: UseAiCopilotOptions) {
             }
             setMessages((prev) => [...prev, userMsg])
 
-            // Auto-capture a short clip if the user is asking for analysis but hasn't selected a segment
-            let autoClip: string | null = null
+            // Capture the selected timeline segment, or fall back to a short auto-clip for analysis prompts.
+            let clipToSend: string | null = pendingVideoClip
+            let timelineToSend = timelineSelection
             const vidEl = videoRef?.current ?? null
             const canUseEditorContext = surface === 'studio_editor'
-            if (canUseEditorContext && !pendingVideoClip && !timelineSelection && hasAnalyzeKeyword(content) && vidEl) {
-                const vid = vidEl
-                const clipEnd = Math.min(15, vid.duration || 15)
-                if (clipEnd > 2) {
-                    autoClip = await clipVideoSegment(vid, 0, clipEnd)
+            if (canUseEditorContext && !clipToSend && vidEl) {
+                if (timelineSelection) {
+                    clipToSend = await clipVideoSegment(vidEl, timelineSelection.start, timelineSelection.end)
+                } else if (hasAnalyzeKeyword(content)) {
+                    const clipEnd = Math.min(15, vidEl.duration || 15)
+                    if (clipEnd > 2) {
+                        clipToSend = await clipVideoSegment(vidEl, 0, clipEnd)
+                        timelineToSend = { start: 0, end: clipEnd }
+                    }
                 }
             }
 
             const attachments: SendAiCopilotMessageAttachmentsDto = {}
-            const effectiveClip = surface === 'studio_editor' ? pendingVideoClip ?? autoClip : null
-            if (effectiveClip) attachments.video_clip = effectiveClip
-            if (surface === 'studio_editor' && timelineSelection) {
+            if (surface === 'studio_editor' && clipToSend) {
+                attachments.video_clip = clipToSend
+            }
+            if (surface === 'studio_editor' && timelineToSend) {
                 attachments.timeline = {
-                    start_seconds: timelineSelection.start,
-                    end_seconds: timelineSelection.end
+                    start_seconds: timelineToSend.start,
+                    end_seconds: timelineToSend.end
                 }
             }
 

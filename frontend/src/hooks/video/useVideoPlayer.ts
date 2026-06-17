@@ -7,6 +7,7 @@ import { logger } from '@/utils/logger.util'
 
 interface UseVideoPlayerOptions {
     onVideoEnd?: () => void
+    onPlayTime?: (seconds: number) => void
 }
 
 export function useVideoPlayer(
@@ -33,7 +34,7 @@ export function useVideoPlayer(
     const [duration, setDuration] = useState(0)
     const [isLoading, setIsLoading] = useState(false)
 
-    const { onVideoEnd } = options
+    const { onVideoEnd, onPlayTime } = options
 
     useEffect(() => {
         const video = videoRef.current
@@ -58,7 +59,15 @@ export function useVideoPlayer(
         const video = videoRef.current
         if (!video) return
 
-        const updateTime = () => setCurrentTime(video.currentTime)
+        let lastTime = video.currentTime
+        const updateTime = () => {
+            const delta = video.currentTime - lastTime
+            if (delta > 0 && delta < 2 && !video.paused) {
+                onPlayTime?.(delta)
+            }
+            lastTime = video.currentTime
+            setCurrentTime(video.currentTime)
+        }
         const updateDuration = () => setDuration(video.duration)
         const handleVideoEnd = () => {
             setIsPlaying(false)
@@ -88,7 +97,7 @@ export function useVideoPlayer(
             video.removeEventListener('loadedmetadata', updateDuration)
             video.removeEventListener('ended', handleVideoEnd)
         }
-    }, [videoRef, onVideoEnd])
+    }, [videoRef, onVideoEnd, onPlayTime])
 
     useEffect(() => {
         const video = videoRef.current

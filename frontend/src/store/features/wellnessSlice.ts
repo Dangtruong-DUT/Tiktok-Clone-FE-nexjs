@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import type { WellnessAction } from '@/types/models/screen-time.model'
 
-type WellnessPageType = 'posts' | 'comment' | 'likes' | 'other'
+type WellnessPageType = 'video' | 'other'
 
 const WELLNESS_SLICE_NAME = 'wellness' as const
 
@@ -35,7 +35,7 @@ const initialState: WellnessState = {
     todayVideoSeconds: 0,
     dismissedRules: [],
     snoozedRules: {},
-    pageType: 'posts'
+    pageType: 'other'
 }
 
 const wellnessSlice = createSlice({

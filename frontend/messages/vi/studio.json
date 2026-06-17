@@ -539,7 +539,8 @@
                     "posts": "Đăng bài",
                     "likes": "Thích",
                     "other": "Khác"
-                }
+                },
+                "likes": "Lượt thích"
             },
             "rules": {
                 "createTitle": "Tạo quy tắc",
@@ -644,7 +645,12 @@
             "ready": "AI Copilot sẵn sàng",
             "largeVideo": "Video của bạn khá lớn — hãy mô tả nội dung và tôi sẽ hỗ trợ!",
             "emptyHint": "Hãy hỏi tôi để viết caption, tạo hashtag, phân tích hook và nhiều hơn nữa.",
-            "quickPrompts": ["Viết caption", "Tạo hashtag", "Phân tích viral", "Đánh giá hook"],
+            "quickPrompts": [
+                "Viết caption",
+                "Tạo hashtag",
+                "Phân tích viral",
+                "Đánh giá hook"
+            ],
             "quickPromptsGeneral": [
                 "Thống kê tài khoản của tôi",
                 "Hỏi về tính năng Snapi",

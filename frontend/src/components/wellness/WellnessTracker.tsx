@@ -6,18 +6,28 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { setPageType } from '@/store/features/wellnessSlice'
 import { useScreenTimeTracker } from '@/hooks/wellness/useScreenTimeTracker'
 import { WellnessAlertModal } from './WellnessAlertModal'
+import { WellnessContext } from '@/provider/wellness-context'
 
-export function WellnessTracker() {
+export function WellnessTracker({ children }: { children: React.ReactNode }) {
     const isAuthenticated = useAppSelector((s) => !!s.auth.isAuthenticated)
     const pathname = usePathname()
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        const isAdminOrStudio = pathname.includes('/snapistudio') || pathname.includes('/admin')
-        dispatch(setPageType(isAdminOrStudio ? 'other' : 'posts'))
+        const isVideoFeed =
+            pathname === '/' ||
+            pathname.endsWith('/following') ||
+            pathname.endsWith('/friends')
+        const isVideoDetail = /\/[^/]+\/video\/[^/]+/.test(pathname)
+        dispatch(setPageType(isVideoFeed || isVideoDetail ? 'video' : 'other'))
     }, [pathname, dispatch])
 
-    useScreenTimeTracker(isAuthenticated)
+    const { addVideoSeconds, trackAction } = useScreenTimeTracker(isAuthenticated)
 
-    return <WellnessAlertModal />
+    return (
+        <WellnessContext.Provider value={{ reportVideoTime: addVideoSeconds, trackAction }}>
+            {children}
+            <WellnessAlertModal />
+        </WellnessContext.Provider>
+    )
 }

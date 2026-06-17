@@ -103,31 +103,31 @@ class ScreenTimeSessionRepository extends BaseRepository
             ->sum('video_seconds');
     }
 
-    public function sumCommentSecondsInRange(int $userId, Carbon $from, Carbon $to): int
+    public function sumCommentsCountInRange(int $userId, Carbon $from, Carbon $to): int
     {
         return (int) $this->query()
             ->where('user_id', $userId)
             ->where('started_at', '>=', $from)
             ->where('started_at', '<=', $to)
-            ->sum('comment_seconds');
+            ->sum('comments_count');
     }
 
-    public function sumPostSecondsInRange(int $userId, Carbon $from, Carbon $to): int
+    public function sumLikesCountInRange(int $userId, Carbon $from, Carbon $to): int
     {
         return (int) $this->query()
             ->where('user_id', $userId)
             ->where('started_at', '>=', $from)
             ->where('started_at', '<=', $to)
-            ->sum('post_seconds');
+            ->sum('likes_count');
     }
 
-    public function sumLikesSecondsInRange(int $userId, Carbon $from, Carbon $to): int
+    public function sumPostsCountInRange(int $userId, Carbon $from, Carbon $to): int
     {
         return (int) $this->query()
             ->where('user_id', $userId)
             ->where('started_at', '>=', $from)
             ->where('started_at', '<=', $to)
-            ->sum('likes_seconds');
+            ->sum('posts_count');
     }
 
     /**

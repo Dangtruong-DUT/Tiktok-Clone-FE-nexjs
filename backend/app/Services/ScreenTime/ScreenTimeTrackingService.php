@@ -75,18 +75,45 @@ class ScreenTimeTrackingService
             throw new BusinessException(trans('exceptions.wellness.session_ended'));
         }
 
-        $elapsed = (int) min(90, now()->diffInSeconds($session->last_heartbeat_at ?? $session->started_at, true));
+        /** @var ScreenTimeSession */
+        return $this->repository->update($session->id, ['last_heartbeat_at' => now()]);
+    }
 
-        $columnMap = ['comment' => 'comment_seconds', 'posts' => 'post_seconds', 'likes' => 'likes_seconds'];
-        $column    = $columnMap[$pageType] ?? null;
+    /**
+     * Increment an action count (comment, like, or post) for the given session.
+     *
+     * @param  ScreenTimeSession  $session
+     * @param  string  $action  One of: comment, like, post
+     * @return ScreenTimeSession
+     */
+    public function incrementAction(ScreenTimeSession $session, string $action): ScreenTimeSession
+    {
+        if ($session->ended_at !== null) {
+            throw new BusinessException(trans('exceptions.wellness.session_ended'));
+        }
 
-        $update = ['last_heartbeat_at' => now()];
-        if ($column !== null && $elapsed > 0) {
-            $update[$column] = $session->{$column} + $elapsed;
+        $columnMap = ['comment' => 'comments_count', 'like' => 'likes_count', 'post' => 'posts_count'];
+        $column    = $columnMap[$action] ?? null;
+
+        if ($column === null) {
+            return $session;
         }
 
         /** @var ScreenTimeSession */
-        return $this->repository->update($session->id, $update);
+        return $this->repository->update($session->id, [$column => $session->{$column} + 1]);
+    }
+
+    /**
+     * Increment an action count for a session identified by UUID.
+     *
+     * @param  string  $uuid
+     * @param  int  $userId
+     * @param  string  $action
+     * @return ScreenTimeSession
+     */
+    public function incrementActionByUuid(string $uuid, int $userId, string $action): ScreenTimeSession
+    {
+        return $this->incrementAction($this->getSessionByUuidForUser($uuid, $userId), $action);
     }
 
     /**
@@ -211,18 +238,18 @@ class ScreenTimeTrackingService
         $videoSeconds = $this->repository->sumVideoSecondsInRange($userId, $from, $to);
         $sessions     = $this->repository->countInRange($userId, $from, $to);
 
-        $commentSeconds = $this->repository->sumCommentSecondsInRange($userId, $from, $to);
-        $postSeconds    = $this->repository->sumPostSecondsInRange($userId, $from, $to);
-        $likesSeconds   = $this->repository->sumLikesSecondsInRange($userId, $from, $to);
+        $commentsCount = $this->repository->sumCommentsCountInRange($userId, $from, $to);
+        $likesCount    = $this->repository->sumLikesCountInRange($userId, $from, $to);
+        $postsCount    = $this->repository->sumPostsCountInRange($userId, $from, $to);
 
         return [
             'period'            => $period,
             'total_seconds'     => $totalSeconds,
             'video_seconds'     => $videoSeconds,
             'sessions_count'    => $sessions,
-            'comment_seconds'   => $commentSeconds,
-            'post_seconds'      => $postSeconds,
-            'likes_seconds'     => $likesSeconds,
+            'comments_count'    => $commentsCount,
+            'likes_count'       => $likesCount,
+            'posts_count'       => $postsCount,
             'avg_daily_seconds' => $days > 0 ? (int) round($totalSeconds / $days) : 0,
             'peak_hour'         => $this->repository->getPeakHour($userId, $from, $to),
             'daily_series'      => $this->getDailySeries($userId, $from, $to, $liveSeconds),

@@ -109,11 +109,12 @@ export function AiVideoAttachments({ videoUrl, onSeek }: AiVideoAttachmentsProps
             if (clip) {
                 sentSelRef.current = { start, end }
                 setPendingVideoClip(clip)
+                setTimelineSelection({ start, end })
                 setClipSent(true)
                 setPendingMessage(question)
             }
         },
-        [videoRef, isRecording, setPendingVideoClip, setPendingMessage]
+        [videoRef, isRecording, setPendingVideoClip, setPendingMessage, setTimelineSelection]
     )
 
     useEffect(() => {

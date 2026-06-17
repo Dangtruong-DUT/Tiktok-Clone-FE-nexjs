@@ -82,6 +82,7 @@ return [
         'stats'              => 'Lấy thống kê thời gian sử dụng thành công.',
         'history'            => 'Lấy lịch sử thời gian sử dụng thành công.',
         'video_time_updated' => 'Cập nhật thời gian xem video thành công.',
+        'action_tracked'     => 'Ghi nhận hành động thành công.',
         'rules_retrieved'    => 'Lấy danh sách quy tắc Wellness thành công.',
         'rule_created'       => 'Tạo quy tắc Wellness thành công.',
         'rule_updated'       => 'Cập nhật quy tắc Wellness thành công.',

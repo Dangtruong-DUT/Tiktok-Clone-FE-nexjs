@@ -539,7 +539,8 @@
                     "posts": "Posts",
                     "likes": "Likes",
                     "other": "Other"
-                }
+                },
+                "likes": "Likes"
             },
             "rules": {
                 "createTitle": "Create rule",
@@ -644,14 +645,24 @@
             "ready": "AI Copilot ready",
             "largeVideo": "Your video is large — describe it to me and I'll help!",
             "emptyHint": "Ask me to write a caption, generate hashtags, analyze your hook, and more.",
-            "quickPrompts": ["Write a caption", "Generate hashtags", "Analyze viral potential", "Evaluate the hook"],
+            "quickPrompts": [
+                "Write a caption",
+                "Generate hashtags",
+                "Analyze viral potential",
+                "Evaluate the hook"
+            ],
             "quickPromptsGeneral": [
                 "My account stats",
                 "What can Snapi do?",
                 "Analyze my screen time",
                 "Go to account settings"
             ],
-            "quickPromptsAdmin": ["System user stats", "Pending appeals", "AI costs today", "Video encoding errors"],
+            "quickPromptsAdmin": [
+                "System user stats",
+                "Pending appeals",
+                "AI costs today",
+                "Video encoding errors"
+            ],
             "newSession": "New conversation",
             "input": {
                 "placeholder": "Ask the AI Copilot anything…"

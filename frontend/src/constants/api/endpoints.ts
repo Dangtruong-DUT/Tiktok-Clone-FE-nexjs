@@ -104,6 +104,7 @@ export const BACKEND_API_ENDPOINT = {
         SESSION_START: '/users/me/wellness/sessions/start',
         HEARTBEAT: (uuid: string) => `/users/me/wellness/sessions/${uuid}/heartbeat`,
         VIDEO_TIME: (uuid: string) => `/users/me/wellness/sessions/${uuid}/video-time`,
+        SESSION_ACTION: (uuid: string) => `/users/me/wellness/sessions/${uuid}/action`,
         SESSION_END: (uuid: string) => `/users/me/wellness/sessions/${uuid}/end`,
         RULES: '/users/me/wellness/rules',
         RULE: (uuid: string) => `/users/me/wellness/rules/${uuid}`,

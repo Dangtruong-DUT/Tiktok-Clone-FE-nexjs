@@ -78,6 +78,20 @@ return [
             'metrics'         => ['total_followers', 'new_followers', 'net_growth', 'change_pct'],
         ],
 
+        'get_account_overview' => [
+            'class'           => \App\Services\Analytics\Tools\AccountOverviewTool::class,
+            'description'     => 'Personal account overview: profile, verification, followers, following, total posts, and period activity.',
+            'scopes'          => ['creator'],
+            'subjects'        => ['self'],
+            'admin_only'      => false,
+            'cacheable'       => true,
+            'default_period'  => 'current_month',
+            'allowed_filters' => [],
+            'required_params' => ['period'],
+            'optional_params' => ['compare_with'],
+            'metrics'         => ['username', 'name', 'followers_count', 'following_count', 'total_posts', 'period_posts', 'is_verified', 'is_banned'],
+        ],
+
         'get_screen_time_overview' => [
             'class'           => \App\Services\Analytics\Tools\ScreenTimeOverviewTool::class,
             'description'     => 'Session duration, video watch time ratio, daily usage trend, peak hour. Use for wellness, screen time, usage analysis.',
@@ -89,7 +103,7 @@ return [
             'allowed_filters' => [],
             'required_params' => ['period'],
             'optional_params' => ['compare_with'],
-            'metrics'         => ['avg_session_duration', 'total_screen_time', 'video_watch_ratio', 'daily_series', 'peak_hour', 'page_time_breakdown'],
+            'metrics'         => ['avg_session_duration', 'total_screen_time', 'video_watch_ratio', 'daily_series', 'peak_hour', 'activity_breakdown'],
         ],
 
         'get_top_videos' => [

@@ -82,6 +82,7 @@ return [
         'stats'              => 'Screen time stats retrieved.',
         'history'            => 'Screen time history retrieved.',
         'video_time_updated' => 'Video time updated.',
+        'action_tracked'     => 'Action tracked.',
         'rules_retrieved'    => 'Wellness rules retrieved.',
         'rule_created'       => 'Wellness rule created.',
         'rule_updated'       => 'Wellness rule updated.',

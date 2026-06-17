@@ -14,6 +14,7 @@ import { VideoOverlayIcons } from '@/components/feed-video-player/components/vid
 import { VideoControlsBottom } from '@/components/feed-video-player/components/video-controls-bottom'
 import { VideoQualitySelector } from '@/components/common/video-quality-selector'
 import LoadingIcon from '@/components/lottie-icons/loading'
+import { useWellness } from '@/provider/wellness-context'
 
 interface VideoPlayerProps {
     className?: string
@@ -26,13 +27,14 @@ export default function VideoPlayer({ className, post }: VideoPlayerProps) {
     const [isProgressBarActive, setIsProgressBarActive] = useState(false)
 
     const locale = useLocale()
+    const { reportVideoTime } = useWellness()
 
     const media = post.medias[0]
     const isHls = media?.type === MediaType.HLS_VIDEO
     const hlsUrl = isHls ? media?.url : null
 
     const { isPlaying, setIsPlaying, isMuted, setIsMuted, volume, setVolume, currentTime, duration, isLoading } =
-        useVideoPlayer(videoRef)
+        useVideoPlayer(videoRef, { onPlayTime: reportVideoTime })
 
     const { qualityLevels, currentLevel, switchLevel, switchToAuto, isBuffering } = useHlsPlayer(
         videoRef,

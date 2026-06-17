@@ -68,16 +68,16 @@ class AnalyticsPlannerService
             $plan  = json_decode(trim($clean), true);
 
             if (json_last_error() !== JSON_ERROR_NONE || ! is_array($plan)) {
-                return $this->scopeDefaultPlan($isAdmin, $task);
+                return $this->scopeDefaultPlan($isAdmin, $task, $question);
             }
 
-            return $this->validateAndFilter($plan, $isAdmin, $task);
+            return $this->validateAndFilter($plan, $isAdmin, $task, $question);
         } catch (\Throwable $e) {
             Log::channel(config('ai.logging.channel', 'stack'))->warning('AnalyticsPlannerService failed', [
                 'error' => $e->getMessage(),
             ]);
 
-            return $this->scopeDefaultPlan($isAdmin, $task);
+            return $this->scopeDefaultPlan($isAdmin, $task, $question);
         }
     }
 
@@ -91,10 +91,10 @@ class AnalyticsPlannerService
      * @param  GatewayTask $task
      * @return array{tools: list<array{tool_name: string, params: array<string,mixed>}>, response_view: string, needs_clarification: bool, clarification_question: string|null}
      */
-    private function validateAndFilter(array $raw, bool $isAdmin, GatewayTask $task): array
+    private function validateAndFilter(array $raw, bool $isAdmin, GatewayTask $task, string $question): array
     {
         if ($raw['needs_clarification'] ?? false) {
-            return $this->scopeDefaultPlan($isAdmin, $task);
+            return $this->scopeDefaultPlan($isAdmin, $task, $question);
         }
 
         $validTools    = [];
@@ -103,6 +103,10 @@ class AnalyticsPlannerService
         foreach ((array) ($raw['tools'] ?? []) as $entry) {
             $toolName = (string) ($entry['tool_name'] ?? '');
             $params   = (array)  ($entry['params'] ?? []);
+
+            if (! $isAdmin && $toolName === 'get_post_overview' && $this->isAccountQuestion($question)) {
+                $toolName = 'get_account_overview';
+            }
 
             if (! $this->catalog->exists($toolName)) {
                 Log::channel(config('ai.logging.channel', 'stack'))->debug("Planner returned unknown tool '{$toolName}', skipping");
@@ -132,7 +136,7 @@ class AnalyticsPlannerService
         }
 
         if (empty($validTools)) {
-            return $this->scopeDefaultPlan($isAdmin, $task);
+            return $this->scopeDefaultPlan($isAdmin, $task, $question);
         }
 
         return [
@@ -149,17 +153,27 @@ class AnalyticsPlannerService
      *
      * @return array{tools: list<array{tool_name: string, params: array<string,mixed>}>, response_view: string, needs_clarification: bool, clarification_question: null}
      */
-    private function scopeDefaultPlan(bool $isAdmin, GatewayTask $task): array
+    private function scopeDefaultPlan(bool $isAdmin, GatewayTask $task, string $question): array
     {
+        if (! $isAdmin && $this->isAccountQuestion($question)) {
+            return $this->buildFallbackToolPlan('get_account_overview', $task);
+        }
+
         $intentHint = $task->intent;
 
         if ($intentHint !== null && $this->catalog->exists($intentHint)) {
+            if (! $isAdmin && $intentHint === 'get_post_overview' && $this->isAccountQuestion($question)) {
+                return $this->buildFallbackToolPlan('get_account_overview', $task);
+            }
+
             if (! $this->catalog->isAdminOnly($intentHint) || $isAdmin) {
                 return $this->buildFallbackToolPlan($intentHint, $task);
             }
         }
 
-        $defaultTool = $isAdmin ? 'get_user_growth' : 'get_post_overview';
+        $defaultTool = $isAdmin
+            ? 'get_user_growth'
+            : ($this->isAccountQuestion($question) ? 'get_account_overview' : 'get_post_overview');
         $toolDef     = $this->catalog->tool($defaultTool) ?? [];
 
         return [
@@ -202,7 +216,7 @@ class AnalyticsPlannerService
         }
 
         $hasBreakdown = str_contains($toolName, 'breakdown')
-            || in_array($toolName, ['get_appeal_overview', 'get_post_overview', 'get_user_growth'], true);
+            || in_array($toolName, ['get_appeal_overview', 'get_post_overview', 'get_user_growth', 'get_account_overview'], true);
 
         return [
             'tools' => [['tool_name' => $toolName, 'params' => $params]],
@@ -267,6 +281,62 @@ class AnalyticsPlannerService
     }
 
     /**
+     * Detect if the user's question is about their own account/profile stats rather than post stats.
+     */
+    private function isAccountQuestion(string $question): bool
+    {
+        $normalized = \Illuminate\Support\Str::ascii(mb_strtolower($question));
+
+        $hasAccountSignal = $this->containsAny($normalized, [
+            'tai khoan',
+            'account',
+            'profile',
+            'ho so',
+            'thong ke tai khoan',
+            'thong ke ca nhan',
+            'so lieu cua toi',
+            'my stats',
+            'account statistics',
+            'personal stats',
+        ]);
+
+        if (! $hasAccountSignal) {
+            return false;
+        }
+
+        return $this->containsAny($normalized, [
+            'thong ke',
+            'statistics',
+            'stats',
+            'so lieu',
+            'thong so',
+            'followers',
+            'following',
+            'bai dang',
+            'posts',
+            'post count',
+            'so bai',
+            'thong tin',
+        ]);
+    }
+
+    /**
+     * Check whether any keyword is present in a normalized question.
+     *
+     * @param  list<string>  $needles
+     */
+    private function containsAny(string $haystack, array $needles): bool
+    {
+        foreach ($needles as $needle) {
+            if ($needle !== '' && str_contains($haystack, $needle)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Strip markdown code fences Gemini occasionally wraps around JSON.
      *
      * @param  string  $raw
@@ -301,15 +371,14 @@ Respond with ONLY a valid JSON matching this schema:
 {
   "tools": [
     {
-      "tool_name": "get_post_overview",
+      "tool_name": "get_account_overview",
       "params": {
-        "period": "current_week",
-        "compare_with": "previous_week",
-        "filters": { "status": "scheduled" }
+        "period": "current_month",
+        "compare_with": "previous_month"
       }
     }
   ],
-  "response_view": "summary_with_breakdown",
+  "response_view": "summary_card",
   "needs_clarification": false,
   "clarification_question": null
 }

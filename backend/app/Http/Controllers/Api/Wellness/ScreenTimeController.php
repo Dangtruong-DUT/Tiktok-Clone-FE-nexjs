@@ -83,10 +83,25 @@ class ScreenTimeController extends Controller
      */
     public function heartbeat(Request $request, string $uuid): JsonResponse
     {
-        $data = $request->validate(['page_type' => 'nullable|string|in:posts,comment,likes,other']);
+        $data = $request->validate(['page_type' => 'nullable|string|in:video,other']);
         $this->screenTimeTrackingService->heartbeatByUuid($uuid, (int) auth_user_id(), $data['page_type'] ?? 'other');
 
         return ApiResponse::success(data: null, message: trans('messages.wellness.heartbeat'));
+    }
+
+    /**
+     * Increment an action count (comment, like, or post) for a session.
+     *
+     * @param  Request  $request
+     * @param  string   $uuid
+     * @return JsonResponse
+     */
+    public function trackAction(Request $request, string $uuid): JsonResponse
+    {
+        $data = $request->validate(['action' => 'required|string|in:comment,like,post']);
+        $this->screenTimeTrackingService->incrementActionByUuid($uuid, (int) auth_user_id(), $data['action']);
+
+        return ApiResponse::success(data: null, message: trans('messages.wellness.action_tracked'));
     }
 
     /**

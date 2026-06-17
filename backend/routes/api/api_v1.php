@@ -183,6 +183,7 @@ Route::middleware(['auth:api', 'check_user_status'])->group(function () {
             Route::post('sessions/start',               [ScreenTimeController::class, 'startSession'])->middleware('throttle:20,1')->name('sessions.start');
             Route::post('sessions/{uuid}/heartbeat',    [ScreenTimeController::class, 'heartbeat'])->middleware('throttle:120,1')->name('sessions.heartbeat');
             Route::post('sessions/{uuid}/video-time',   [ScreenTimeController::class, 'updateVideoTime'])->middleware('throttle:60,1')->name('sessions.video-time');
+            Route::post('sessions/{uuid}/action',       [ScreenTimeController::class, 'trackAction'])->middleware('throttle:30,1')->name('sessions.action');
             Route::post('sessions/{uuid}/end',          [ScreenTimeController::class, 'endSession'])->middleware('throttle:20,1')->name('sessions.end');
 
             Route::get('rules',                         [WellnessRuleController::class, 'index'])->name('rules.index');

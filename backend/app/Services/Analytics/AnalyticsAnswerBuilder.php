@@ -196,6 +196,7 @@ PROMPT;
             in_array('get_admin_audit_logs', $tools, true)           => 'analytics_audit',
             in_array('get_top_creators', $tools, true)               => 'analytics_top_creators',
             in_array('get_ai_copilot_metrics', $tools, true)         => 'analytics_ai_copilot',
+            in_array('get_account_overview', $tools, true)          => 'analytics_account_overview',
             array_intersect(['get_appeal_overview', 'get_appeal_sla_metrics'], $tools) !== []
                                                                       => 'analytics_appeals',
             in_array('get_active_user_trend', $tools, true)          => 'analytics_active_users',

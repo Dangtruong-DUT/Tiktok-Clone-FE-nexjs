@@ -91,8 +91,7 @@ export default async function LocaleLayout({
                                 enableSystem
                                 disableTransitionOnChange
                             >
-                                {children}
-                                <WellnessTracker />
+                                <WellnessTracker>{children}</WellnessTracker>
                             </ThemeProvider>
                         </AppProvider>
                     </StoreProvider>

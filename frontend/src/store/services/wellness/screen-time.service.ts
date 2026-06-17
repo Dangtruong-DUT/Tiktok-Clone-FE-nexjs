@@ -55,6 +55,14 @@ export const ScreenTimeApi = createApi({
                 body: { duration_seconds }
             }),
             invalidatesTags: ['ScreenTime']
+        }),
+
+        trackAction: builder.mutation<ApiSuccessResponseWithData<null>, { uuid: string; action: 'comment' | 'like' | 'post' }>({
+            query: ({ uuid, action }) => ({
+                url: BACKEND_API_ENDPOINT.WELLNESS.SESSION_ACTION(uuid),
+                method: 'POST',
+                body: { action }
+            })
         })
     })
 })
@@ -65,5 +73,6 @@ export const {
     useStartSessionMutation,
     useSendHeartbeatMutation,
     useUpdateVideoTimeMutation,
-    useEndSessionMutation
+    useEndSessionMutation,
+    useTrackActionMutation
 } = ScreenTimeApi

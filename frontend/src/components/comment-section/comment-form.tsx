@@ -15,6 +15,7 @@ import { useForm } from 'react-hook-form'
 import { extractHashtags } from '@/utils/social-token.util'
 import MentionHashtagTextField from '@/components/forms/mention-hashtag-text-field'
 import { logger } from '@/utils/logger.util'
+import { useWellness } from '@/provider/wellness-context'
 
 interface CommentFormProps {
     className?: string
@@ -36,6 +37,7 @@ function CommentForm({
     onClose
 }: CommentFormProps) {
     const [createCommentMutate, createCommentResult] = useCreateCommentMutation()
+    const { trackAction } = useWellness()
 
     const form = useForm<CreateCommentsReqBodyType>({
         resolver: zodResolver(CreateCommentsReqBody),
@@ -60,6 +62,7 @@ function CommentForm({
                     mentions: undefined,
                     post_uuid: postUuid
                 }).unwrap()
+                trackAction('comment')
                 form.reset()
                 onClose?.()
             } catch (error) {
@@ -70,7 +73,7 @@ function CommentForm({
                 logger.error(error)
             }
         },
-        [createCommentMutate, createCommentResult.isLoading, form, onClose, postUuid]
+        [createCommentMutate, createCommentResult.isLoading, form, onClose, postUuid, trackAction]
     )
 
     const handleEmojiSelect = (emoji: string) => {

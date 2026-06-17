@@ -11,9 +11,7 @@ import {
     InfiniteQueryActionCreatorResult,
     InfiniteQueryDefinition
 } from '@reduxjs/toolkit/query'
-import { createContext, use, useEffect, useState } from 'react'
-import { useAppDispatch } from '@/store/hooks'
-import { setPageType } from '@/store/features/wellnessSlice'
+import { createContext, use, useState } from 'react'
 
 type VideoContainerContextType = {
     activeTabId: ID_TAB_ITEMS
@@ -55,11 +53,7 @@ interface VideoContainerProps {
 
 export default function VideosProvider({ children, userId }: VideoContainerProps) {
     const [activeTabId, setActiveTabId] = useState<ID_TAB_ITEMS>('videos')
-    const dispatch = useAppDispatch()
 
-    useEffect(() => {
-        dispatch(setPageType(activeTabId === 'liked' ? 'likes' : 'posts'))
-    }, [activeTabId, dispatch])
     const { postList, hasNextPage, fetchNextPage, isFetching, isLoading, isPrivate } = usePostsTabQuery({
         activeTabId,
         userId

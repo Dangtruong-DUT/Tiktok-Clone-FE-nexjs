@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { HeartPulse, Clock, BarChart2, Shield, Plus, Trash2, CheckCircle2, X, Timer } from 'lucide-react'
+import { HeartPulse, Clock, BarChart2, Shield, Plus, Trash2, CheckCircle2, X, Timer, MessageCircle, Heart, FileText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
@@ -196,16 +196,13 @@ export default function WellnessPage() {
     const radarData = (() => {
         if (!stats || stats.total_seconds <= 0) return []
         const toPercent = (s: number) => Math.round((s / stats.total_seconds) * 100)
-        const otherSeconds = Math.max(
-            0,
-            stats.total_seconds - stats.video_seconds - stats.comment_seconds - stats.post_seconds - stats.likes_seconds
-        )
+        const maxCount = Math.max(stats.comments_count, stats.likes_count, stats.posts_count, 1)
         return [
             { activity: t('stats.radarChart.video'),    score: toPercent(stats.video_seconds) },
-            { activity: t('stats.radarChart.comments'), score: toPercent(stats.comment_seconds) },
-            { activity: t('stats.radarChart.posts'),    score: toPercent(stats.post_seconds) },
-            { activity: t('stats.radarChart.likes'),    score: toPercent(stats.likes_seconds) },
-            { activity: t('stats.radarChart.other'),    score: toPercent(otherSeconds) },
+            { activity: t('stats.radarChart.comments'), score: Math.round((stats.comments_count / maxCount) * 100) },
+            { activity: t('stats.radarChart.posts'),    score: Math.round((stats.posts_count / maxCount) * 100) },
+            { activity: t('stats.radarChart.likes'),    score: Math.round((stats.likes_count / maxCount) * 100) },
+            { activity: t('stats.radarChart.other'),    score: toPercent(Math.max(0, stats.total_seconds - stats.video_seconds)) },
         ]
     })()
 
@@ -273,10 +270,27 @@ export default function WellnessPage() {
                             value={formatDuration(stats.avg_daily_seconds)}
                             icon={BarChart2}
                         />
-                        <StatCard 
-                            label={t('tabs.rules')} 
-                            value={`${activeRulesCount}/${rules.length}`} 
-                            icon={Shield} 
+                        <StatCard
+                            label={t('tabs.rules')}
+                            value={`${activeRulesCount}/${rules.length}`}
+                            icon={Shield}
+                        />
+                    </div>
+                    <div className='grid grid-cols-3 gap-4'>
+                        <StatCard
+                            label={t('stats.comments')}
+                            value={stats.comments_count}
+                            icon={MessageCircle}
+                        />
+                        <StatCard
+                            label={t('stats.likes')}
+                            value={stats.likes_count}
+                            icon={Heart}
+                        />
+                        <StatCard
+                            label={t('stats.posts')}
+                            value={stats.posts_count}
+                            icon={FileText}
                         />
                     </div>
                 ) : null}

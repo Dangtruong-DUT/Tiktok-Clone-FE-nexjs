@@ -9,6 +9,7 @@ import {
 } from '@/store/services/content/posts.service'
 import { useCallback, useEffect, useState } from 'react'
 import { logger } from '@/utils/logger.util'
+import { useWellness } from '@/provider/wellness-context'
 
 interface UseLikePostProps {
     postId: string
@@ -21,6 +22,7 @@ export function useLikePost({ postId, initialLikeState, onLiked, onDisliked }: U
     const [unlikePost, { isLoading: isUnlikeLoading }] = useUnlikePostMutation()
     const [isLikedState, setIsLikedState] = useState(initialLikeState)
     const isProcessing = isLikeLoading || isUnlikeLoading
+    const { trackAction } = useWellness()
 
     useEffect(() => {
         setIsLikedState(initialLikeState)
@@ -34,6 +36,7 @@ export function useLikePost({ postId, initialLikeState, onLiked, onDisliked }: U
                 await unlikePost(postId).unwrap()
             } else {
                 await likePost(postId).unwrap()
+                trackAction('like')
             }
         } catch (error) {
             setIsLikedState((prev) => !prev)
