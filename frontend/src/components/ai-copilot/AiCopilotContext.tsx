@@ -8,9 +8,9 @@ type FormPatchFn = (value: string) => void
 type ClipAndSendFn = (start: number, end: number, question: string) => Promise<void>
 
 interface AiCopilotContextValue {
-    // Video / post context pushed by the upload or edit form
     videoContext: Partial<AiCopilotSessionContext>
     setVideoContext: (ctx: Partial<AiCopilotSessionContext>) => void
+    clearVideoContext: () => void
 
     // Form field patch registry
     registerFormPatch: (field: string, fn: FormPatchFn) => void
@@ -73,6 +73,10 @@ export function AiCopilotProvider({ children }: { children: ReactNode }) {
         setVideoContextState((prev) => ({ ...prev, ...ctx }))
     }, [])
 
+    const clearVideoContext = useCallback(() => {
+        setVideoContextState({})
+    }, [])
+
     const registerFormPatch = useCallback((field: string, fn: FormPatchFn) => {
         patchRegistry.current[field] = fn
         setRegisteredFields((prev) => new Set([...prev, field]))
@@ -114,6 +118,7 @@ export function AiCopilotProvider({ children }: { children: ReactNode }) {
             value={{
                 videoContext,
                 setVideoContext,
+                clearVideoContext,
                 registerFormPatch,
                 unregisterFormPatch,
                 applyToForm,

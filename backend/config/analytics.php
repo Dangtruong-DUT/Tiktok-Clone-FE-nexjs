@@ -29,8 +29,8 @@ return [
             'default_period'  => 'last_7_days',
             'allowed_filters' => ['status', 'creator_id', 'content_type'],
             'required_params' => ['period'],
-            'optional_params' => ['compare_with', 'filters', 'user_id'],
-            'metrics'         => ['total_posts', 'published_posts', 'hidden_posts', 'scheduled_posts', 'draft_posts', 'change_pct'],
+            'optional_params' => ['compare_with', 'filters', 'user_id', 'limit'],
+            'metrics'         => ['total_posts', 'published_posts', 'hidden_posts', 'scheduled_posts', 'draft_posts', 'audience_breakdown', 'items', 'change_pct'],
         ],
 
         'get_post_engagement_breakdown' => [
@@ -44,7 +44,7 @@ return [
             'allowed_filters' => ['creator_id', 'content_type', 'status'],
             'required_params' => ['period'],
             'optional_params' => ['compare_with', 'filters', 'user_id'],
-            'metrics'         => ['total_views', 'total_likes', 'total_comments', 'total_shares', 'total_bookmarks', 'engagement_rate'],
+            'metrics'         => ['total_views', 'total_likes', 'total_comments', 'total_shares', 'total_bookmarks', 'engagement_rate', 'by_type_breakdown'],
         ],
 
         'get_post_status_breakdown' => [
@@ -72,7 +72,7 @@ return [
             'allowed_filters' => [],
             'required_params' => ['period'],
             'optional_params' => ['compare_with'],
-            'metrics'         => ['total_followers', 'new_followers', 'unfollows', 'net_growth', 'change_pct'],
+            'metrics'         => ['total_followers', 'new_followers', 'net_growth', 'change_pct'],
         ],
 
         'get_screen_time_overview' => [
@@ -86,7 +86,7 @@ return [
             'allowed_filters' => [],
             'required_params' => ['period'],
             'optional_params' => ['compare_with'],
-            'metrics'         => ['avg_session_duration', 'total_screen_time', 'video_watch_ratio', 'daily_series', 'peak_hour'],
+            'metrics'         => ['avg_session_duration', 'total_screen_time', 'video_watch_ratio', 'daily_series', 'peak_hour', 'page_time_breakdown'],
         ],
 
         'get_top_videos' => [
@@ -113,8 +113,8 @@ return [
             'default_period'  => 'last_7_days',
             'allowed_filters' => ['creator_id', 'status'],
             'required_params' => ['period'],
-            'optional_params' => ['compare_with', 'filters', 'user_id'],
-            'metrics'         => ['total_comments', 'comment_growth', 'change_pct'],
+            'optional_params' => ['compare_with', 'filters', 'user_id', 'limit'],
+            'metrics'         => ['total_comments', 'comment_growth', 'items', 'change_pct'],
         ],
 
         'get_ai_studio_metrics' => [
@@ -128,7 +128,7 @@ return [
             'allowed_filters' => ['intent', 'status'],
             'required_params' => ['period'],
             'optional_params' => ['compare_with', 'filters'],
-            'metrics'         => ['total_tokens', 'total_cost_usd', 'success_rate', 'intent_breakdown', 'daily_series'],
+            'metrics'         => ['total_tokens', 'total_cost_usd', 'total_requests', 'success_rate', 'intent_breakdown', 'daily_series'],
         ],
 
         'get_scheduled_post_metrics' => [
@@ -142,7 +142,7 @@ return [
             'allowed_filters' => ['status', 'source'],
             'required_params' => ['period'],
             'optional_params' => ['compare_with', 'filters'],
-            'metrics'         => ['scheduled_total', 'published', 'failed', 'cancelled', 'success_rate', 'avg_delay_minutes'],
+            'metrics'         => ['scheduled_total', 'published', 'failed', 'cancelled', 'success_rate', 'avg_delay_minutes', 'source_breakdown'],
         ],
 
         /**
@@ -162,8 +162,8 @@ return [
             'default_period'  => 'last_7_days',
             'allowed_filters' => ['role', 'status', 'country'],
             'required_params' => ['period'],
-            'optional_params' => ['compare_with', 'filters'],
-            'metrics'         => ['total_users', 'new_users', 'active_users', 'banned_users', 'change_pct', 'daily_series'],
+            'optional_params' => ['compare_with', 'filters', 'limit'],
+            'metrics'         => ['total_users', 'new_users', 'banned_users', 'verified_users', 'temp_ban_count', 'perm_ban_count', 'daily_series', 'items', 'change_pct'],
         ],
 
         'get_active_user_trend' => [
@@ -190,8 +190,8 @@ return [
             'default_period'  => 'last_30_days',
             'allowed_filters' => ['appeal_status', 'resource_type', 'creator_id', 'post_id', 'video_id'],
             'required_params' => ['period'],
-            'optional_params' => ['compare_with', 'filters'],
-            'metrics'         => ['total_appeals', 'approved', 'rejected', 'pending', 'approval_rate'],
+            'optional_params' => ['compare_with', 'filters', 'limit'],
+            'metrics'         => ['total_appeals', 'approved', 'rejected', 'pending', 'approval_rate', 'items'],
         ],
 
         'get_appeal_sla_metrics' => [
@@ -205,7 +205,7 @@ return [
             'allowed_filters' => ['appeal_status', 'resource_type'],
             'required_params' => ['period'],
             'optional_params' => ['filters'],
-            'metrics'         => ['oldest_pending_days', 'avg_resolution_hours', 'pending_count'],
+            'metrics'         => ['oldest_pending_days', 'avg_resolution_hours', 'pending_count', 'by_type'],
         ],
 
         'get_ai_copilot_metrics' => [
@@ -233,7 +233,7 @@ return [
             'allowed_filters' => ['sort_by'],
             'required_params' => ['period'],
             'optional_params' => ['filters', 'limit'],
-            'metrics'         => ['creator_id', 'username', 'followers', 'views', 'posts', 'engagement_rate'],
+            'metrics'         => ['creator_id', 'username', 'followers', 'views', 'posts', 'avg_engagement_rate'],
         ],
 
         'get_admin_audit_logs' => [
@@ -246,8 +246,8 @@ return [
             'default_period'  => 'last_7_days',
             'allowed_filters' => ['action_type', 'admin_id', 'resource_type'],
             'required_params' => ['period'],
-            'optional_params' => ['filters'],
-            'metrics'         => ['total_actions', 'action_breakdown', 'top_admins'],
+            'optional_params' => ['filters', 'limit'],
+            'metrics'         => ['total_actions', 'action_breakdown', 'top_admins', 'resource_breakdown', 'items'],
         ],
 
 
@@ -275,8 +275,8 @@ return [
             'default_period'  => 'today',
             'allowed_filters' => ['status', 'resolution', 'error_type'],
             'required_params' => ['period'],
-            'optional_params' => ['filters'],
-            'metrics'         => ['pending_jobs', 'processing_jobs', 'failed_jobs', 'stuck_jobs', 'avg_processing_time'],
+            'optional_params' => ['filters', 'limit'],
+            'metrics'         => ['pending_jobs', 'processing_jobs', 'failed_jobs', 'stuck_jobs', 'avg_processing_time', 'error_summary', 'items'],
         ],
 
         'get_queue_failure_stats' => [

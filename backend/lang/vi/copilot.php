@@ -73,6 +73,13 @@ MD,
         'suggestion' => 'Gợi ý',
     ],
 
+    'admin_live_context' => [
+        'heading'          => 'Tình trạng hệ thống (live)',
+        'pending_appeals'  => 'Kháng cáo chờ xử lý',
+        'failed_encodings' => 'Video lỗi mã hóa',
+        'active_queue'     => 'Video đang trong hàng đợi',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Follow-up chips (Vietnamese)
@@ -81,6 +88,12 @@ MD,
     | Keys map to intent values; fallback key is 'default'.
     */
     'chips' => [
+        // Default chips by role/surface — shown when engine returns no specific chips
+        'admin_default'       => ['Thống kê người dùng', 'Tình trạng hệ thống', 'Kháng cáo chờ xử lý', 'Chi phí AI'],
+        'admin_navigation'    => ['Quản lý người dùng', 'Kháng cáo chờ xử lý', 'Nhật ký admin', 'Tình trạng hệ thống'],
+        'admin_app_knowledge' => ['Thống kê hệ thống', 'Kháng cáo chờ xử lý', 'Chi phí AI', 'Top creators'],
+        'creator_default'     => ['Xem thống kê bài đăng', 'Người theo dõi của tôi', 'Wellness & Screen time', 'Đăng video mới'],
+
         'write_caption'    => ['Ngắn hơn', 'Tạo hashtag', 'Phân tích viral', 'Đề xuất CTA'],
         'write_title'      => ['Viết caption', 'Tạo hashtag', 'Viết mô tả'],
         'write_description' => ['Viết caption', 'Tạo hashtag', 'Rút gọn mô tả'],
@@ -100,6 +113,20 @@ MD,
         'analytics'        => ['Xem thống kê khác', 'So sánh kỳ trước', 'Phân tích chi tiết hơn'],
         'analytics_post'   => ['So sánh kỳ trước', 'Xem chi tiết tương tác', 'Thống kê người dùng'],
         'analytics_user_growth' => ['Thống kê bài đăng', 'So sánh tháng trước', 'Top creators'],
+        'analytics_post_engagement' => ['So sánh kỳ trước', 'Top bài đăng', 'Thống kê bài đăng tổng quan'],
+        'analytics_follower_growth' => ['Thống kê bài đăng', 'Top videos của tôi', 'So sánh tháng trước'],
+        'analytics_screen_time'     => ['Thiết lập giới hạn sử dụng', 'So sánh tuần trước', 'Thống kê bài đăng'],
+        'analytics_top_videos'      => ['Xem chi tiết tương tác', 'Thống kê bài đăng', 'So sánh kỳ trước'],
+        'analytics_comments'        => ['Xem thống kê bài đăng', 'Tương tác chi tiết', 'So sánh kỳ trước'],
+        'analytics_ai_studio'       => ['Xem usage theo ngày', 'So sánh tháng trước', 'Chi phí theo intent'],
+        'analytics_scheduled'       => ['Lên lịch bài mới', 'Thống kê bài đăng', 'So sánh kỳ trước'],
+        'analytics_active_users'    => ['Thống kê người dùng mới', 'So sánh tuần trước', 'Top creators'],
+        'analytics_appeals'         => ['SLA kháng cáo', 'Kháng cáo theo loại', 'So sánh kỳ trước'],
+        'analytics_ai_copilot'      => ['Chi phí AI studio', 'Top intents', 'So sánh tháng trước'],
+        'analytics_top_creators'    => ['Thống kê người dùng', 'Top videos platform', 'User growth'],
+        'analytics_audit'           => ['Hành động gần nhất', 'Top admin', 'So sánh kỳ trước'],
+        'analytics_system_health'   => ['Hàng đợi encoding', 'Kháng cáo chờ xử lý', 'Chi phí AI'],
+        'analytics_encoding'        => ['Failed jobs chi tiết', 'System health tổng quan', 'So sánh hôm qua'],
         'analytics_clarification' => ['Thống kê bài đăng', 'Thống kê người dùng', 'Chi phí AI', 'Thống kê hệ thống'],
         'analytics_empty'  => ['Thống kê bài đăng', 'Thống kê người dùng', 'Thống kê hệ thống'],
         'navigation'       => ['Đăng video mới', 'Xem bài đăng của tôi', 'Cài đặt tài khoản'],

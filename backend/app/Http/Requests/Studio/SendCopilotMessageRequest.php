@@ -21,10 +21,10 @@ class SendCopilotMessageRequest extends BaseRequest
             'attachments.frames'                 => [self::NULLABLE, self::ARRAY, self::MAX . ':' . self::MAX_FRAMES],
             'attachments.frames.*'               => [self::NULLABLE, self::STRING],
             'attachments.video_clip'             => [self::NULLABLE, self::STRING],
+            'surface'                            => [self::NULLABLE, self::STRING, self::IN . ':admin,studio_editor,studio_general'],
             // Live form content — what the creator is currently writing
             'current_content'                    => [self::NULLABLE, self::ARRAY],
             'current_content.caption'            => [self::NULLABLE, self::STRING, self::MAX . ':2000'],
-            'current_content.title'              => [self::NULLABLE, self::STRING, self::MAX . ':255'],
             'current_content.hashtags'           => [self::NULLABLE, self::STRING, self::MAX . ':500'],
         ]);
     }

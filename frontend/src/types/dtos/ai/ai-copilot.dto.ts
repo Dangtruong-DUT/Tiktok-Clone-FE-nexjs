@@ -24,13 +24,13 @@ export interface SendAiCopilotMessageAttachmentsDto {
 
 export interface AiCopilotCurrentContentDto {
     caption?: string
-    title?: string
     hashtags?: string
 }
 
 export interface SendAiCopilotMessageReqBodyDto {
     sessionUuid: string
     content: string
+    surface?: 'admin' | 'studio_editor' | 'studio_general'
     attachments?: SendAiCopilotMessageAttachmentsDto
     current_content?: AiCopilotCurrentContentDto
 }

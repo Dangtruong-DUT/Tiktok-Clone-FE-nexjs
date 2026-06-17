@@ -51,8 +51,14 @@ final readonly class GatewayTask
                 default           => 'self',
             };
 
+        $taskType = in_array($payload['task_type'] ?? '', $validTaskTypes, true) ? $payload['task_type'] : 'unknown';
+
+        if ($scope === 'admin' && in_array($taskType, ['content_generation', 'video_review'], true)) {
+            $taskType = 'unknown';
+        }
+
         return new self(
-            taskType:              in_array($payload['task_type'] ?? '', $validTaskTypes, true) ? $payload['task_type'] : 'unknown',
+            taskType:              $taskType,
             scope:                 $scope,
             subject:               $subject,
             intent:                (string) ($payload['intent'] ?? 'unclear'),

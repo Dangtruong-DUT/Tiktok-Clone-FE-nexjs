@@ -4,6 +4,7 @@ namespace App\Services\Analytics\Tools;
 
 use App\Enums\Ai\ScheduledPostStatusEnum;
 use App\Repositories\ScheduledPostRepository;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Scheduled post counts, publish success rate, avg delay, and source breakdown.
@@ -62,6 +63,15 @@ class ScheduledPostMetricsTool extends AbstractAnalyticsTool
             $sourceFilter,
         );
 
+        $sourceBreakdown = DB::table('scheduled_posts')
+            ->whereBetween('scheduled_at', [$range['from'], $range['to']])
+            ->when($sourceFilter !== null, fn ($q) => $q->where('source', $sourceFilter))
+            ->selectRaw('source, COUNT(*) as cnt')
+            ->groupBy('source')
+            ->pluck('cnt', 'source')
+            ->map(fn ($v) => (int) $v)
+            ->toArray();
+
         $data = [
             'scheduled_total'   => $total,
             'published'         => $published,
@@ -69,6 +79,7 @@ class ScheduledPostMetricsTool extends AbstractAnalyticsTool
             'cancelled'         => $cancelled,
             'success_rate'      => $successRate,
             'avg_delay_minutes' => $avgDelay,
+            'source_breakdown'  => $sourceBreakdown,
         ];
 
         return [

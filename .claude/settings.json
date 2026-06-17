@@ -72,7 +72,12 @@
       "Bash(command -v node)",
       "Bash(find /usr/local /opt/homebrew ~/.nvm /Users/nguyendangtruong -name \"node\" -type f 2>/dev/null | head -5)",
       "Read(//usr/local/**)",
-      "Bash(/Users/nguyendangtruong/.nvm/versions/node/v22.21.1/bin/node /Users/nguyendangtruong/Documents/DUT/Orther/project/Tiktok-v2/frontend/node_modules/.bin/tsc --noEmit)"
+      "Bash(/Users/nguyendangtruong/.nvm/versions/node/v22.21.1/bin/node /Users/nguyendangtruong/Documents/DUT/Orther/project/Tiktok-v2/frontend/node_modules/.bin/tsc --noEmit)",
+      "Bash(grep -n \"content\\\\|caption\\\\|fillable\\\\|protected \\\\$\" /Users/nguyendangtruong/Documents/DUT/Orther/project/Tiktok-v2/backend/app/Models/Post.php)",
+      "Bash(php -l app/Services/Analytics/Tools/PostOverviewTool.php)",
+      "Bash(php -l app/Services/Analytics/Tools/PostEngagementBreakdownTool.php)",
+      "Bash(php -l app/Services/Analytics/Tools/UserGrowthTool.php)",
+      "Bash(php -l app/Services/Analytics/Tools/TopCreatorsTool.php)"
     ],
     "additionalDirectories": [
       "/private/tmp"

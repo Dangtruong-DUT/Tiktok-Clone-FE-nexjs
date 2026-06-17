@@ -62,9 +62,9 @@ class ApiResponse
     /**
      * Return a 204 No Content response for successful DELETE operations.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Response
      */
-    public static function noContent()
+    public static function noContent(): \Illuminate\Http\Response
     {
         return response()->noContent();
     }

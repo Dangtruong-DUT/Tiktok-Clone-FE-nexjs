@@ -58,12 +58,21 @@ class ScreenTimeOverviewTool extends AbstractAnalyticsTool
             }
         }
 
+        $commentSeconds = $this->screenTimeRepo->sumCommentSecondsInRange($userId, $range['from'], $range['to']);
+        $postSeconds    = $this->screenTimeRepo->sumPostSecondsInRange($userId, $range['from'], $range['to']);
+        $likesSeconds   = $this->screenTimeRepo->sumLikesSecondsInRange($userId, $range['from'], $range['to']);
+
         $data = [
             'avg_session_duration' => $avgSession,
             'total_screen_time'    => $totalSeconds,
             'video_watch_ratio'    => $videoRatio,
             'daily_series'         => $dailySeries,
             'peak_hour'            => $peakHour,
+            'page_time_breakdown'  => [
+                'comment_seconds' => $commentSeconds,
+                'post_seconds'    => $postSeconds,
+                'likes_seconds'   => $likesSeconds,
+            ],
         ];
 
         return [

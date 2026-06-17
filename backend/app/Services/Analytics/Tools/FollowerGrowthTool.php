@@ -2,10 +2,13 @@
 
 namespace App\Services\Analytics\Tools;
 
+use App\Enums\User\RelationshipTypeEnum;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Follower count, new followers gained, unfollows, net growth for the creator.
+ * Follower count, new followers gained, net growth for the creator.
+ * Note: unfollows cannot be tracked — the `relationships` table has no soft deletes.
  */
 class FollowerGrowthTool extends AbstractAnalyticsTool
 {
@@ -39,26 +42,22 @@ class FollowerGrowthTool extends AbstractAnalyticsTool
             return ['tool' => $this->name(), 'period' => $params['period'], 'data' => [], 'compare' => null, 'change_pct' => null];
         }
 
-        $totalFollowers = DB::table('followers')
-            ->where('following_id', $userId)
-            ->whereNull('deleted_at')
-            ->count();
+        // Use the denormalized counter on the user row for current total — more accurate
+        // than querying relationships directly, as it's kept in sync by the follow service.
+        $totalFollowers = (int) (User::find($userId)?->followers_count ?? 0);
 
-        $newFollowers = DB::table('followers')
-            ->where('following_id', $userId)
+        // New follows created within the period
+        $newFollowers = DB::table('relationships')
+            ->where('target_user_id', $userId)
+            ->where('type', RelationshipTypeEnum::FOLLOW->value)
             ->whereBetween('created_at', [$range['from'], $range['to']])
-            ->count();
-
-        $unfollows = DB::table('followers')
-            ->where('following_id', $userId)
-            ->whereBetween('deleted_at', [$range['from'], $range['to']])
             ->count();
 
         $data = [
             'total_followers' => $totalFollowers,
             'new_followers'   => $newFollowers,
-            'unfollows'       => $unfollows,
-            'net_growth'      => $newFollowers - $unfollows,
+            // unfollows is not trackable: relationships table has no soft deletes
+            'net_growth'      => $newFollowers,
         ];
 
         $compare   = null;
@@ -66,8 +65,9 @@ class FollowerGrowthTool extends AbstractAnalyticsTool
 
         if (isset($params['compare_with'])) {
             $cr = $this->resolveDateRange($params['compare_with']);
-            $prevNew = DB::table('followers')
-                ->where('following_id', $userId)
+            $prevNew = DB::table('relationships')
+                ->where('target_user_id', $userId)
+                ->where('type', RelationshipTypeEnum::FOLLOW->value)
                 ->whereBetween('created_at', [$cr['from'], $cr['to']])
                 ->count();
             $compare   = ['new_followers' => $prevNew];

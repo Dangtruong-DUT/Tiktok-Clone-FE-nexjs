@@ -4,6 +4,7 @@ namespace App\Services\Analytics\Tools;
 
 use App\Enums\Appeal\AppealStatusEnum;
 use App\Repositories\AppealRepository;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Appeal SLA metrics: oldest pending age, average resolution time, backlog count.
@@ -46,10 +47,19 @@ class AppealSlaTool extends AbstractAnalyticsTool
             AppealStatusEnum::REJECTED,
         ]);
 
+        $byType = DB::table('appeals')
+            ->selectRaw('appeal_type, COUNT(*) as cnt')
+            ->groupBy('appeal_type')
+            ->orderByDesc('cnt')
+            ->pluck('cnt', 'appeal_type')
+            ->map(fn ($v) => (int) $v)
+            ->toArray();
+
         $data = [
             'pending_count'        => $pendingCount,
             'oldest_pending_days'  => $oldestDays,
             'avg_resolution_hours' => $avgResolutionHours,
+            'by_type'              => $byType,
         ];
 
         return [

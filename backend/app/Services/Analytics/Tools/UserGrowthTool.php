@@ -2,6 +2,7 @@
 
 namespace App\Services\Analytics\Tools;
 
+use App\Enums\User\UserVerifyStatusEnum;
 use App\Models\User;
 
 /**
@@ -42,9 +43,12 @@ class UserGrowthTool extends AbstractAnalyticsTool
             $base->where('role', $filters['role']);
         }
 
-        $totalUsers  = User::query()->count();
-        $newUsers    = (clone $base)->count();
-        $bannedUsers = User::query()->whereNotNull('banned_at')->count();
+        $totalUsers    = User::query()->count();
+        $newUsers      = (clone $base)->count();
+        $bannedUsers   = User::query()->whereNotNull('banned_at')->count();
+        $verifiedUsers = User::query()->where('verify', UserVerifyStatusEnum::VERIFIED->value)->count();
+        $tempBanCount  = User::query()->whereNotNull('banned_at')->whereNotNull('ban_duration_days')->count();
+        $permBanCount  = User::query()->whereNotNull('banned_at')->whereNull('ban_duration_days')->count();
 
         $dailySeries = $this->buildDailySeries($range['from'], $range['to']);
         $dailyRows   = User::query()
@@ -64,8 +68,28 @@ class UserGrowthTool extends AbstractAnalyticsTool
             'total_users'    => $totalUsers,
             'new_users'      => $newUsers,
             'banned_users'   => $bannedUsers,
+            'verified_users' => $verifiedUsers,
+            'temp_ban_count' => $tempBanCount,
+            'perm_ban_count' => $permBanCount,
             'daily_series'   => $dailySeries,
         ];
+
+        if (isset($params['limit'])) {
+            $data['items'] = User::query()
+                ->whereNotNull('banned_at')
+                ->orderByDesc('banned_at')
+                ->limit((int) $params['limit'])
+                ->select(['id', 'uuid', 'username', 'banned_at', 'ban_duration_days'])
+                ->get()
+                ->map(fn ($u) => [
+                    'user_id'           => $u->id,
+                    'uuid'              => $u->uuid,
+                    'username'          => $u->username,
+                    'banned_at'         => $u->banned_at,
+                    'ban_duration_days' => $u->ban_duration_days,
+                ])
+                ->toArray();
+        }
 
         $compare   = null;
         $changePct = null;

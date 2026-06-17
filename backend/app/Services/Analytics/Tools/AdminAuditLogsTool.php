@@ -68,11 +68,43 @@ class AdminAuditLogsTool extends AbstractAnalyticsTool
             ->pluck('cnt', 'admin_id')
             ->toArray();
 
+        $resourceBreakdown = (clone $query)
+            ->whereNotNull('resource_type')
+            ->selectRaw('resource_type, COUNT(*) as cnt')
+            ->groupBy('resource_type')
+            ->orderByDesc('cnt')
+            ->pluck('cnt', 'resource_type')
+            ->toArray();
+
         $data = [
-            'total_actions'    => $total,
-            'action_breakdown' => $actionBreakdown,
-            'top_admins'       => $topAdmins,
+            'total_actions'      => $total,
+            'action_breakdown'   => $actionBreakdown,
+            'top_admins'         => $topAdmins,
+            'resource_breakdown' => $resourceBreakdown,
         ];
+
+        if (isset($params['limit'])) {
+            $data['items'] = (clone $query)
+                ->join('users', 'admin_logs.admin_id', '=', 'users.id')
+                ->orderByDesc('admin_logs.created_at')
+                ->limit((int) $params['limit'])
+                ->select([
+                    'admin_logs.action',
+                    'users.username as admin_username',
+                    'admin_logs.resource_type',
+                    'admin_logs.resource_id',
+                    'admin_logs.created_at',
+                ])
+                ->get()
+                ->map(fn ($r) => [
+                    'action'         => $r->action,
+                    'admin_username' => $r->admin_username,
+                    'resource_type'  => $r->resource_type,
+                    'resource_id'    => $r->resource_id,
+                    'created_at'     => $r->created_at,
+                ])
+                ->toArray();
+        }
 
         return [
             'tool'       => $this->name(),

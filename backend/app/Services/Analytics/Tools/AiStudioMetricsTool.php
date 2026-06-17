@@ -51,8 +51,10 @@ class AiStudioMetricsTool extends AbstractAnalyticsTool
             $query->where('status', $filters['status']);
         }
 
+        // ai_usage_logs stores total_tokens as a plain INTEGER column, not inside a JSON blob.
+        // (token_usage JSON exists only on ai_copilot_messages, not here.)
         $agg = (clone $query)->selectRaw(
-            "COALESCE(SUM((token_usage->>'total_tokens')::int), 0) as total_tokens,
+            "COALESCE(SUM(total_tokens), 0) as total_tokens,
              COALESCE(SUM(cost_usd), 0) as total_cost_usd,
              COUNT(*) as total_requests,
              COUNT(CASE WHEN status = 'success' THEN 1 END) as success_count"
@@ -70,12 +72,26 @@ class AiStudioMetricsTool extends AbstractAnalyticsTool
             ->pluck('cnt', 'intent')
             ->toArray();
 
+        $dailySeries = (clone $query)
+            ->selectRaw("DATE(created_at) as date, COUNT(*) as requests, COALESCE(SUM(cost_usd), 0) as cost_usd, COALESCE(SUM(total_tokens), 0) as tokens")
+            ->groupByRaw("DATE(created_at)")
+            ->orderBy('date')
+            ->get()
+            ->map(fn ($row) => [
+                'date'     => $row->date,
+                'requests' => (int) $row->requests,
+                'cost_usd' => round((float) $row->cost_usd, 6),
+                'tokens'   => (int) $row->tokens,
+            ])
+            ->toArray();
+
         $data = [
             'total_tokens'     => (int) ($agg->total_tokens ?? 0),
             'total_cost_usd'   => round((float) ($agg->total_cost_usd ?? 0), 4),
             'total_requests'   => $total,
             'success_rate'     => $successRate,
             'intent_breakdown' => $intentBreakdown,
+            'daily_series'     => $dailySeries,
         ];
 
         return [

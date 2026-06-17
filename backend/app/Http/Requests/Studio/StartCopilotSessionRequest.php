@@ -15,12 +15,12 @@ class StartCopilotSessionRequest extends BaseRequest
             'video_size_bytes'                   => [self::NULLABLE, self::INTEGER, self::MIN . ':0'],
             'locale'                             => [self::NULLABLE, self::STRING, self::MAX . ':10'],
             'context_snapshot'                   => [self::NULLABLE, self::ARRAY],
-            'context_snapshot.video_title'       => [self::NULLABLE, self::STRING, self::MAX . ':255'],
             'context_snapshot.video_description' => [self::NULLABLE, self::STRING, self::MAX . ':2000'],
             'context_snapshot.video_category'    => [self::NULLABLE, self::STRING, self::MAX . ':100'],
             'context_snapshot.video_transcript'  => [self::NULLABLE, self::STRING, self::MAX . ':5000'],
             'context_snapshot.ocr_text'          => [self::NULLABLE, self::STRING, self::MAX . ':2000'],
             'context_snapshot.creator_language'  => [self::NULLABLE, self::STRING, self::MAX . ':10'],
+            'context_snapshot.surface'           => [self::NULLABLE, self::STRING, self::MAX . ':50'],
         ]);
     }
 }

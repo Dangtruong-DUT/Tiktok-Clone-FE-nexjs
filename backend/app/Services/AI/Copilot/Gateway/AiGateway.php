@@ -44,14 +44,16 @@ class AiGateway
         string $question,
         string $locale,
         bool   $isAdmin,
+        ?string $surface = null,
         array  $conversationHistory = [],
     ): GatewayTask {
         $template = $this->templateRepo->findByIntent(self::GATEWAY_INTENT);
 
         $systemPrompt = $template?->system_prompt ?? $this->defaultSystemPrompt();
         $systemPrompt = $this->injectKnowledgeCatalog($systemPrompt);
+        $systemPrompt = $this->injectAnalyticsCatalog($systemPrompt, $isAdmin);
+        $systemPrompt = $this->prependRolePolicy($systemPrompt, $isAdmin, $locale, $surface);
         $userPrompt   = $this->buildUserPrompt($question, $locale, $isAdmin, $template?->user_template);
-
         $recentHistory = array_slice($conversationHistory, -3);
         $contents      = array_merge(
             $recentHistory,
@@ -64,7 +66,7 @@ class AiGateway
                 contents:     $contents,
                 config:       GeminiConfig::fromSetting($this->settingRepository->current(), [
                     'temperature'      => 0.1,
-                    'maxOutputTokens'  => 300,
+                    'maxOutputTokens'  => 5000,
                     'responseMimeType' => 'application/json',
                 ]),
             ))->toArray();
@@ -78,7 +80,13 @@ class AiGateway
                 return GatewayTask::unknown();
             }
 
-            return GatewayTask::fromArray($payload);
+            $task = GatewayTask::fromArray($payload);
+
+            if ($surface !== 'studio_editor' && in_array($task->taskType, ['content_generation', 'video_review'], true)) {
+                return GatewayTask::unknown();
+            }
+
+            return $task;
         } catch (\Throwable $e) {
             Log::channel(config('ai.logging.channel', 'stack'))->warning('AI Gateway parse failed, falling back to unknown', [
                 'error' => $e->getMessage(),
@@ -127,6 +135,24 @@ class AiGateway
         return "User message: \"{$question}\"\nuser_role: {$roleHint}\n{$localeHint}\n\nRespond with JSON only.";
     }
 
+    private function prependRolePolicy(string $systemPrompt, bool $isAdmin, string $locale, ?string $surface): string
+    {
+        $language = $locale === 'en' ? 'English' : 'Vietnamese';
+        $languageRule = "The field `clarification_question` must be written in {$language}. "
+            . 'All other fields (task_type, scope, subject, intent, entities, filters, period, compare_with) '
+            . 'must always be in English regardless of the user\'s language.';
+
+        $surfaceRule = $surface === 'studio_editor'
+            ? 'Surface=studio_editor. Content generation and video review are allowed only here.'
+            : 'Surface is not the editor. Do not route to content_generation or video_review.';
+
+        $roleRule = $isAdmin
+            ? 'The user is a super admin. Prefer analytics, app_knowledge, navigation, or unknown.'
+            : 'The user is a creator.';
+
+        return "## Routing Policy\n{$languageRule}\n{$roleRule}\n{$surfaceRule}\n\n{$systemPrompt}";
+    }
+
     /**
      * Append a live knowledge catalog (title + first-chunk excerpt) to the system prompt.
      * Cached for 5 minutes. If the knowledge base is empty, returns the prompt unchanged.
@@ -168,6 +194,71 @@ class AiGateway
     }
 
     /**
+     * Append the full analytics tool catalog to the system prompt.
+     * Gemini needs filters/subjects/params — not just names — to correctly
+     * extract scope, subject, period, and filters into the GatewayTask.
+     * Cached per scope for 5 minutes (same TTL as the RAG catalog).
+     */
+    private function injectAnalyticsCatalog(string $systemPrompt, bool $isAdmin): string
+    {
+        $scope = $isAdmin ? 'admin' : 'creator';
+
+        $lines = Cache::remember("analytics_intent_catalog:{$scope}", 300, function () use ($scope) {
+            $result = [];
+            foreach (config('analytics.tools', []) as $name => $def) {
+                if (! in_array($scope, (array) ($def['scopes'] ?? []), true)) {
+                    continue;
+                }
+
+                $description   = $def['description'] ?? '';
+                $scopes        = implode(', ', $def['scopes'] ?? []);
+                $subjects      = implode(', ', $def['subjects'] ?? []);
+                $required      = implode(', ', $def['required_params'] ?? []);
+                $optional      = implode(', ', $def['optional_params'] ?? []);
+                $filters       = implode(', ', $def['allowed_filters'] ?? []);
+                $metrics       = implode(', ', $def['metrics'] ?? []);
+                $defaultPeriod = $def['default_period'] ?? '';
+
+                $line = "- {$name}: {$description}";
+                $line .= " | scopes: {$scopes}";
+                $line .= " | subjects: {$subjects}";
+                if ($defaultPeriod) {
+                    $line .= " | default_period: {$defaultPeriod}";
+                }
+                if ($required) {
+                    $line .= " | required: {$required}";
+                }
+                if ($optional) {
+                    $line .= " | optional: {$optional}";
+                }
+                if ($filters) {
+                    $line .= " | allowed_filters: {$filters}";
+                }
+                if ($metrics) {
+                    $line .= " | metrics: {$metrics}";
+                }
+
+                $result[] = $line;
+            }
+            return $result;
+        });
+
+        if (empty($lines)) {
+            return $systemPrompt;
+        }
+
+        return $systemPrompt
+            . "\n\n## Available Analytics Intents\n"
+            . "When task_type=analytics, `intent` MUST be one of the tool names below (exact key). "
+            . "Use `scopes`/`subjects` to set the correct scope and subject fields. "
+            . "Extract `filters` only from `allowed_filters` for that tool — do not add other filter keys. "
+            . "For `period`: if the user specifies one use it; otherwise use the tool's `default_period` and do NOT ask for clarification just because period is missing. "
+            . "Set needs_clarification=true only when the user's intent itself is genuinely ambiguous. "
+            . "If no tool matches the user's question, set task_type=unknown instead.\n\n"
+            . implode("\n", $lines);
+    }
+
+    /**
      * Fallback system prompt when no DB template is seeded yet.
      *
      * @return string
@@ -175,46 +266,53 @@ class AiGateway
     private function defaultSystemPrompt(): string
     {
         return <<<'PROMPT'
-You are an AI Gateway for Snapi Studio — a short-form video platform.
-Classify the user's message into a routing task.
+You are an AI Gateway for Snapi Studio — a short-form video creation and management platform.
+Your ONLY job is to classify the user's message into a routing task.
+You do NOT answer questions, generate content, or select analytics tools.
 
-Valid task_types: content_generation, app_knowledge, navigation, analytics, video_review, unknown
+═══════════════════════════════════════════
+LANGUAGE RULE — ABSOLUTE, NO EXCEPTIONS:
+Only `clarification_question` may be written in the user's language (Vietnamese/English).
+Every other field MUST be in English using exact canonical values. Never translate field values.
+═══════════════════════════════════════════
 
-Valid scopes: creator, admin, system, public
-Valid subjects: self, platform, specific_user, specific_post, specific_video
+FIELD CANONICAL VALUES:
 
-Respond with ONLY a valid JSON object matching this schema:
+`task_type`: content_generation | app_knowledge | navigation | analytics | video_review | unknown
+`scope`: creator | admin | system | public
+`subject`: self | platform | specific_user | specific_post | specific_video
+
+`intent`:
+  - analytics → exact tool name from "## Available Analytics Intents" below. NEVER invent.
+  - others → short English snake_case label (write_caption, navigate_to_settings, analyze_hook)
+
+`entities` — English canonical nouns ONLY. NEVER translate from the user's language.
+  Valid: users, posts, videos, comments, followers, hashtags, appeals, encodings, ai_usage, queue
+
+`period` — exact string from valid list, or null. If user omits period, use tool's `default_period`. Do NOT ask for clarification just because period is missing.
+  Valid: today, yesterday, last_7_days, current_week, previous_week, current_month, previous_month, last_30_days, current_quarter, last_90_days, current_year, previous_year
+
+`filters` — keys from tool's allowed_filters only. English values only.
+`needs_tools` — true only when task_type=analytics
+`needs_rag`   — true only when task_type=app_knowledge
+`needs_clarification` — true only when intent is genuinely ambiguous (NOT just missing period)
+
+Respond with ONLY valid JSON:
 {
   "task_type": "analytics",
   "scope": "admin",
   "subject": "platform",
-  "intent": "post_moderation_stats",
-  "entities": ["posts"],
-  "filters": { "status": "hidden", "reason": "toxic" },
-  "period": "current_week",
+  "intent": "get_user_growth",
+  "entities": ["users"],
+  "filters": {},
+  "period": "last_7_days",
   "compare_with": null,
   "needs_tools": true,
   "needs_rag": false,
   "needs_clarification": false,
   "clarification_question": null,
-  "confidence": 0.91
+  "confidence": 0.93
 }
-
-Rules:
-- task_type=content_generation: user wants to write/generate/rewrite content (caption, hashtag, title, description)
-- task_type=app_knowledge: user asks how Snapi features work, what something is
-- task_type=navigation: user wants to navigate to a page/section
-- task_type=analytics: user asks for statistics, metrics, trends, performance data
-- task_type=video_review: user wants video analysis (hook, retention, viral potential, frame review)
-- task_type=unknown: unclear intent → set needs_clarification=true, provide clarification_question
-
-Scope rules:
-- scope=creator when user asks about their own data ("của tôi", "my posts")
-- scope=admin when user_role=super_admin and asks about platform/system data
-- scope=system when asking about technical health (encoding, queue, API errors)
-
-NEVER fallback to task_type=content_generation when uncertain — use task_type=unknown instead.
-NEVER select analytics tools — only classify the task type and extract filter conditions.
 PROMPT;
     }
 }

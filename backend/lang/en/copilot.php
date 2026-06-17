@@ -73,12 +73,25 @@ MD,
         'suggestion' => 'Suggestion',
     ],
 
+    'admin_live_context' => [
+        'heading'          => 'System status (live)',
+        'pending_appeals'  => 'Pending appeals',
+        'failed_encodings' => 'Failed video encodings',
+        'active_queue'     => 'Videos currently in queue',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Follow-up chips (English)
     |--------------------------------------------------------------------------
     */
     'chips' => [
+        // Default chips by role/surface — shown when engine returns no specific chips
+        'admin_default'       => ['User statistics', 'System health', 'Pending appeals', 'AI costs'],
+        'admin_navigation'    => ['User management', 'Pending appeals', 'Admin audit logs', 'System health'],
+        'admin_app_knowledge' => ['System statistics', 'Pending appeals', 'AI costs', 'Top creators'],
+        'creator_default'     => ['View post statistics', 'My follower growth', 'Wellness & Screen time', 'Upload new video'],
+
         'write_caption'    => ['Make it shorter', 'Generate hashtags', 'Analyze viral potential', 'Suggest CTA'],
         'write_title'      => ['Write a caption', 'Generate hashtags', 'Write description'],
         'write_description' => ['Write a caption', 'Generate hashtags', 'Shorten description'],
@@ -98,6 +111,20 @@ MD,
         'analytics'        => ['View other statistics', 'Compare previous period', 'More detailed analysis'],
         'analytics_post'   => ['Compare previous period', 'View engagement details', 'User statistics'],
         'analytics_user_growth' => ['Post statistics', 'Compare last month', 'Top creators'],
+        'analytics_post_engagement' => ['Compare previous period', 'Top videos', 'Post overview'],
+        'analytics_follower_growth' => ['Post statistics', 'My top videos', 'Compare last month'],
+        'analytics_screen_time'     => ['Set usage limit', 'Compare last week', 'Post statistics'],
+        'analytics_top_videos'      => ['View engagement details', 'Post statistics', 'Compare previous period'],
+        'analytics_comments'        => ['Post statistics', 'Engagement details', 'Compare previous period'],
+        'analytics_ai_studio'       => ['Daily usage trend', 'Compare last month', 'Cost by intent'],
+        'analytics_scheduled'       => ['Schedule new post', 'Post statistics', 'Compare previous period'],
+        'analytics_active_users'    => ['New user stats', 'Compare last week', 'Top creators'],
+        'analytics_appeals'         => ['Appeal SLA metrics', 'By appeal type', 'Compare previous period'],
+        'analytics_ai_copilot'      => ['AI studio costs', 'Top intents', 'Compare last month'],
+        'analytics_top_creators'    => ['User statistics', 'Platform top videos', 'User growth'],
+        'analytics_audit'           => ['Recent actions', 'Top admins', 'Compare previous period'],
+        'analytics_system_health'   => ['Encoding queue status', 'Pending appeals', 'AI costs'],
+        'analytics_encoding'        => ['Failed job details', 'System health overview', 'Compare yesterday'],
         'analytics_clarification' => ['Post statistics', 'User statistics', 'AI cost', 'System statistics'],
         'analytics_empty'  => ['Post statistics', 'User statistics', 'System statistics'],
         'navigation'       => ['Upload new video', 'View my posts', 'Account settings'],

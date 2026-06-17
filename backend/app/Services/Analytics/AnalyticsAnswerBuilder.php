@@ -187,17 +187,33 @@ PROMPT;
      */
     private function deriveFollowUpChips(array $toolResults, string $locale): array
     {
-        $toolNames = array_keys($toolResults);
+        $tools = array_keys($toolResults);
 
-        if (in_array('get_post_overview', $toolNames, true) || in_array('get_post_status_breakdown', $toolNames, true)) {
-            return $this->chips('analytics_post', $locale);
-        }
+        $chipKey = match (true) {
+            array_intersect(['get_encoding_queue_status', 'get_queue_failure_stats'], $tools) !== []
+                                                                      => 'analytics_encoding',
+            in_array('get_system_health', $tools, true)              => 'analytics_system_health',
+            in_array('get_admin_audit_logs', $tools, true)           => 'analytics_audit',
+            in_array('get_top_creators', $tools, true)               => 'analytics_top_creators',
+            in_array('get_ai_copilot_metrics', $tools, true)         => 'analytics_ai_copilot',
+            array_intersect(['get_appeal_overview', 'get_appeal_sla_metrics'], $tools) !== []
+                                                                      => 'analytics_appeals',
+            in_array('get_active_user_trend', $tools, true)          => 'analytics_active_users',
+            in_array('get_user_growth', $tools, true)                => 'analytics_user_growth',
+            in_array('get_scheduled_post_metrics', $tools, true)     => 'analytics_scheduled',
+            in_array('get_ai_studio_metrics', $tools, true)          => 'analytics_ai_studio',
+            in_array('get_comment_overview', $tools, true)           => 'analytics_comments',
+            in_array('get_top_videos', $tools, true)                 => 'analytics_top_videos',
+            in_array('get_screen_time_overview', $tools, true)       => 'analytics_screen_time',
+            in_array('get_follower_growth', $tools, true)            => 'analytics_follower_growth',
+            in_array('get_post_engagement_breakdown', $tools, true)  => 'analytics_post_engagement',
+            array_intersect(['get_post_overview', 'get_post_status_breakdown'], $tools) !== []
+                                                                      => 'analytics_post',
+            default                                                   => 'analytics',
+        };
 
-        if (in_array('get_user_growth', $toolNames, true)) {
-            return $this->chips('analytics_user_growth', $locale);
-        }
-
-        return $this->chips('analytics', $locale);
+        $chips = trans("copilot.chips.{$chipKey}", [], $locale);
+        return is_array($chips) ? $chips : (array) trans('copilot.chips.analytics', [], $locale);
     }
 
     /**

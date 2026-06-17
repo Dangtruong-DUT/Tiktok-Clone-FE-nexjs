@@ -16,7 +16,6 @@ use App\Services\AI\Copilot\Gateway\AiGateway;
 use App\Services\AI\Copilot\Orchestrator\CopilotOrchestrator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Log;
 
 class AiCopilotService
 {
@@ -59,7 +58,6 @@ class AiCopilotService
         }
 
         $context = new AiCopilotSessionContext(
-            videoTitle:        $data['context_snapshot']['video_title']        ?? null,
             videoDescription:  $data['context_snapshot']['video_description']  ?? null,
             videoCategory:     $data['context_snapshot']['video_category']     ?? null,
             videoTranscript:   $data['context_snapshot']['video_transcript']   ?? null,
@@ -67,6 +65,7 @@ class AiCopilotService
             creatorLanguage:   $locale,
             uploadSessionUuid: $data['upload_session_uuid']                    ?? null,
             postUuid:          $data['post_uuid']                              ?? null,
+            surface:           $this->resolveSurface($data),
         );
 
         $session = AiCopilotSession::create([
@@ -142,24 +141,31 @@ class AiCopilotService
     {
         $this->assertSessionHasCapacity($session);
 
+        $surface = $this->currentSurface($session);
+        $attachmentsMeta = ['surface' => $surface];
+        if ($this->canUseEditorContext($surface)) {
+            $attachmentsMeta = array_merge($attachmentsMeta, $input->attachmentsMeta());
+        }
+
         $message = AiCopilotMessage::create([
             'uuid'        => $uuid,
             'session_id'  => $session->id,
             'role'        => AiCopilotMessageRoleEnum::USER->value,
             'content'     => $input->content,
-            'attachments' => $input->attachmentsMeta() ?: null,
+            'attachments' => $attachmentsMeta ?: null,
             'provider'    => 'gemini',
         ]);
 
-        if ($input->hasVideoClip() || $input->hasFrames() || $input->hasTimeline() || $input->hasCurrentContent()) {
+        if ($this->canUseEditorContext($surface)
+            && ($input->hasVideoClip() || $input->hasFrames() || $input->hasTimeline() || $input->hasCurrentContent())) {
             $this->cacheAttachments($uuid, [
                 'video_clip'       => $input->videoClip,
                 'frames'           => $input->frames,
                 'timeline_start'   => $input->timelineStart,
                 'timeline_end'     => $input->timelineEnd,
                 'current_caption'  => $input->currentCaption,
-                'current_title'    => $input->currentTitle,
                 'current_hashtags' => $input->currentHashtags,
+                'surface'          => $surface,
             ]);
         }
 
@@ -343,23 +349,39 @@ class AiCopilotService
             timelineStart:   $cached['timeline_start']   ?? null,
             timelineEnd:     $cached['timeline_end']     ?? null,
             videoClip:       $cached['video_clip']       ?? null,
+            surface:         $cached['surface']          ?? ($userMessage->attachments['surface'] ?? null),
             currentCaption:  $cached['current_caption']  ?? null,
-            currentTitle:    $cached['current_title']    ?? null,
             currentHashtags: $cached['current_hashtags'] ?? null,
         );
 
         // Merge session snapshot with live form content sent with this message
         $contextData                     = $session->context_snapshot ?? [];
-        $contextData['current_caption']  = $input->currentCaption  ?? ($contextData['current_caption']  ?? null);
-        $contextData['current_title']    = $input->currentTitle    ?? ($contextData['current_title']    ?? null);
-        $contextData['current_hashtags'] = $input->currentHashtags ?? ($contextData['current_hashtags'] ?? null);
+        $surface = $this->currentSurface($session);
+        $contextData['surface'] = $surface;
+
+        if (! $this->canUseEditorContext($surface)) {
+            $contextData['current_caption']  = null;
+            $contextData['current_hashtags'] = null;
+            $input = new AiCopilotMessageInput(
+                content:         $input->content,
+                frames:          null,
+                timelineStart:   null,
+                timelineEnd:     null,
+                videoClip:       null,
+                surface:         $surface,
+                currentCaption:  null,
+                currentHashtags: null,
+            );
+        } else {
+            $contextData['current_caption']  = $input->currentCaption  ?? ($contextData['current_caption']  ?? null);
+            $contextData['current_hashtags'] = $input->currentHashtags ?? ($contextData['current_hashtags'] ?? null);
+        }
 
         $locale = app()->getLocale();
 
         // Use the already-loaded relation if available to avoid an extra query.
         $sessionUser = $session->relationLoaded('user') ? $session->user : ($session->user_id ? User::find($session->user_id) : null);
         $context     = new AiCopilotSessionContext(
-            videoTitle:        $contextData['video_title']         ?? null,
             videoDescription:  $contextData['video_description']   ?? null,
             videoCategory:     $contextData['video_category']      ?? null,
             videoTranscript:   $contextData['video_transcript']    ?? null,
@@ -367,9 +389,9 @@ class AiCopilotService
             creatorLanguage:   $locale,
             uploadSessionUuid: $contextData['upload_session_uuid'] ?? null,
             postUuid:          $contextData['post_uuid']           ?? null,
+            surface:           $contextData['surface']             ?? null,
             currentCaption:    $contextData['current_caption']     ?? null,
             currentHashtags:   $contextData['current_hashtags']    ?? null,
-            currentTitle:      $contextData['current_title']       ?? null,
             userId:            $session->user_id,
             userRole:          $sessionUser?->role instanceof RoleTypeEnum ? strtolower($sessionUser->role->name) : null,
         );
@@ -383,6 +405,7 @@ class AiCopilotService
                 question:            $input->content,
                 locale:              $locale,
                 isAdmin:             $context->userRole === 'super_admin',
+                surface:             $context->surface,
                 conversationHistory: $history,
             );
 
@@ -405,8 +428,9 @@ class AiCopilotService
                 'intent'             => $task->intent,
                 'intent_confidence'  => $task->confidence,
                 'structured_output'  => $structuredOutput,
-                'follow_up_chips'    => $result->followUpChips ?: $this->gatewayDefaultChips($task->taskType, $locale),
+                'follow_up_chips'    => $this->resolveFollowUpChips($result->followUpChips, $task->taskType, $context, $locale),
                 'token_usage'        => $result->tokenUsage,
+                'latency_ms'         => (int) round((microtime(true) - $startedAt) * 1000),
                 'provider'           => 'gemini',
                 'model'              => $setting->gemini_model,
             ]);
@@ -443,6 +467,7 @@ class AiCopilotService
                 'intent'        => $task?->intent ?? 'unknown',
                 'provider'      => 'gemini',
                 'status'        => 'failed',
+                'latency_ms'    => (int) round((microtime(true) - $startedAt) * 1000),
                 'error_message' => $e->getMessage(),
             ]);
 
@@ -550,6 +575,100 @@ class AiCopilotService
         $chips = trans("copilot.chips.{$taskType}", [], $locale);
 
         return is_array($chips) ? $chips : (array) trans('copilot.chips.default', [], $locale);
+    }
+
+    /**
+     * Normalize follow-up chips based on role, surface, and task context.
+     *
+     * Admin path — task_type aware:
+     *   - analytics → keep engine chips (already tool-specific)
+     *   - navigation → admin_navigation chips (admin-relevant pages)
+     *   - app_knowledge → admin_app_knowledge chips
+     *   - everything else → admin_default
+     *
+     * Creator path:
+     *   - Non-editor + unknown/editor-only task → creator_default (blocks editor-specific chip leak)
+     *   - Non-empty engine chips (other) → keep them
+     *   - Empty chips + non-editor → creator_default
+     *   - Empty chips + editor → gatewayDefaultChips
+     *
+     * @param  list<string>  $chips
+     * @return list<string>
+     */
+    private function resolveFollowUpChips(array $chips, string $taskType, AiCopilotSessionContext $context, string $locale): array
+    {
+        if ($context->userRole === 'super_admin') {
+            // Analytics chips from AnalyticsEngine are tool-specific and always admin-relevant
+            if ($taskType === 'analytics' && ! empty($chips)) {
+                return $chips;
+            }
+            if ($taskType === 'navigation') {
+                $c = trans('copilot.chips.admin_navigation', [], $locale);
+                return is_array($c) ? $c : $this->adminDefaultChips($locale);
+            }
+            if ($taskType === 'app_knowledge') {
+                $c = trans('copilot.chips.admin_app_knowledge', [], $locale);
+                return is_array($c) ? $c : $this->adminDefaultChips($locale);
+            }
+
+            return $this->adminDefaultChips($locale);
+        }
+
+        // For creator: engine chips that are editor-only must not leak to non-editor surfaces
+        $editorOnlyTasks = ['content_generation', 'video_review', 'unknown'];
+        if (! empty($chips) && $context->surface !== 'studio_editor' && in_array($taskType, $editorOnlyTasks, true)) {
+            $c = trans('copilot.chips.creator_default', [], $locale);
+            return is_array($c) ? $c : [];
+        }
+
+        if (! empty($chips)) {
+            return $chips;
+        }
+
+        if ($context->surface !== 'studio_editor') {
+            $c = trans('copilot.chips.creator_default', [], $locale);
+            return is_array($c) ? $c : [];
+        }
+
+        return $this->gatewayDefaultChips($taskType, $locale);
+    }
+
+    private function adminDefaultChips(string $locale): array
+    {
+        $chips = trans('copilot.chips.admin_default', [], $locale);
+        return is_array($chips) ? $chips : [];
+    }
+
+    private function resolveSurface(array $data): string
+    {
+        $surface = (string) ($data['context_snapshot']['surface'] ?? '');
+        if ($surface !== '') {
+            return $surface;
+        }
+
+        if (! empty($data['upload_session_uuid']) || ! empty($data['post_uuid'])) {
+            return 'studio_editor';
+        }
+
+        return 'studio_general';
+    }
+
+    private function currentSurface(AiCopilotSession $session): string
+    {
+        $sessionSurface = (string) ($session->context_snapshot['surface'] ?? '');
+        if ($sessionSurface !== '') {
+            return $sessionSurface;
+        }
+
+        return $this->resolveSurface([
+            'context_snapshot'    => $session->context_snapshot ?? [],
+            'upload_session_uuid' => $session->upload_session_uuid,
+        ]);
+    }
+
+    private function canUseEditorContext(string $surface): bool
+    {
+        return $surface === 'studio_editor';
     }
 
     /**

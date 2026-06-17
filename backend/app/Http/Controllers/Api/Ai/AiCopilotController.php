@@ -174,9 +174,9 @@ class AiCopilotController extends Controller
      * Expire a session immediately (user-initiated close).
      *
      * @param  DestroyCopilotSessionRequest  $request
-     * @return JsonResponse
+     * @return \Illuminate\Http\Response
      */
-    public function destroySession(DestroyCopilotSessionRequest $request, string $uuid): JsonResponse
+    public function destroySession(DestroyCopilotSessionRequest $request, string $uuid): \Illuminate\Http\Response
     {
         $this->copilotService->expireSessionByUuid($uuid, (int) auth_user_id());
 

@@ -9,10 +9,12 @@ import type { StartSessionPayload } from '@/store/services/ai/ai-copilot.service
 interface UseCopilotSessionOptions {
     /** Fired when the session is ready (new or resumed) */
     onReady?: (session: AiCopilotSession) => void
+    surface?: 'admin' | 'studio_editor' | 'studio_general'
 }
 
 export function useCopilotSession(options: UseCopilotSessionOptions = {}) {
     const { videoContext } = useAiCopilotContext()
+    const { onReady, surface } = options
     const [sessionUuid, setSessionUuid] = useState<string | null>(null)
     const startedRef = useRef(false)
 
@@ -30,26 +32,31 @@ export function useCopilotSession(options: UseCopilotSessionOptions = {}) {
             startedRef.current = true
 
             try {
+                const isEditorSurface = surface === 'studio_editor'
                 const res = await startSession({
                     context_snapshot: {
-                        video_title: videoContext.video_title,
-                        video_description: videoContext.video_description,
-                        video_category: videoContext.video_category,
-                        video_transcript: videoContext.video_transcript,
-                        ocr_text: videoContext.ocr_text,
+                        ...(isEditorSurface
+                            ? {
+                                  video_description: videoContext.video_description,
+                                  video_category: videoContext.video_category,
+                                  video_transcript: videoContext.video_transcript,
+                                  ocr_text: videoContext.ocr_text,
+                                  upload_session_uuid: videoContext.upload_session_uuid
+                              }
+                            : {}),
                         creator_language: videoContext.creator_language ?? 'vi',
-                        upload_session_uuid: videoContext.upload_session_uuid
+                        surface: surface ?? 'studio_general'
                     },
                     ...extra
                 }).unwrap()
 
                 setSessionUuid(res.data.uuid)
-                options.onReady?.(res.data)
+                onReady?.(res.data)
             } catch {
                 startedRef.current = false
             }
         },
-        [startSession, videoContext, options]
+        [startSession, videoContext, surface, onReady]
     )
 
     const reset = useCallback(() => {

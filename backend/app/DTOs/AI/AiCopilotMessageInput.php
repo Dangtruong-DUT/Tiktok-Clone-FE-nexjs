@@ -10,8 +10,8 @@ final readonly class AiCopilotMessageInput
         public ?float  $timelineStart   = null,
         public ?float  $timelineEnd     = null,
         public ?string $videoClip       = null,
+        public ?string $surface         = null,
         public ?string $currentCaption  = null,
-        public ?string $currentTitle    = null,
         public ?string $currentHashtags = null,
     ) {}
 
@@ -30,8 +30,8 @@ final readonly class AiCopilotMessageInput
                 ? (float) $attachments['timeline']['end_seconds']
                 : null,
             videoClip:       $attachments['video_clip'] ?? null,
+            surface:         $data['surface'] ?? null,
             currentCaption:  $currentContent['caption']  ?? null,
-            currentTitle:    $currentContent['title']    ?? null,
             currentHashtags: $currentContent['hashtags'] ?? null,
         );
     }
@@ -54,7 +54,6 @@ final readonly class AiCopilotMessageInput
     public function hasCurrentContent(): bool
     {
         return $this->currentCaption !== null
-            || $this->currentTitle !== null
             || $this->currentHashtags !== null;
     }
 
@@ -80,6 +79,10 @@ final readonly class AiCopilotMessageInput
                 'start' => $this->timelineStart,
                 'end'   => $this->timelineEnd,
             ];
+        }
+
+        if ($this->surface) {
+            $meta['surface'] = $this->surface;
         }
 
         return $meta;

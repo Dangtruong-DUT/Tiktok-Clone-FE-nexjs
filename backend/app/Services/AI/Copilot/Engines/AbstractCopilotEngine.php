@@ -76,6 +76,7 @@ abstract class AbstractCopilotEngine
             ? $contextTemplate->system_prompt . "\n\n---\n\n" . $template->system_prompt
             : $template->system_prompt;
 
+
         $contextBlock = $context->toPromptContext();
         if ($contextBlock) {
             // Wrap in explicit delimiters so user-supplied text cannot override instructions above.
@@ -88,10 +89,10 @@ abstract class AbstractCopilotEngine
                 $failedEncoding = DB::table('video_encodings')->where('status', 3)->count();
                 $activeEncoding = DB::table('video_encodings')->whereIn('status', [0, 1])->count();
 
-                return "## Tinh trang he thong (live)\n"
-                    . "- Khang cao cho xu ly: {$pendingAppeals}\n"
-                    . "- Video loi ma hoa: {$failedEncoding}\n"
-                    . "- Video dang trong hang doi: {$activeEncoding}";
+                return '## ' . trans('copilot.admin_live_context.heading') . "\n"
+                    . '- ' . trans('copilot.admin_live_context.pending_appeals')  . ": {$pendingAppeals}\n"
+                    . '- ' . trans('copilot.admin_live_context.failed_encodings') . ": {$failedEncoding}\n"
+                    . '- ' . trans('copilot.admin_live_context.active_queue')     . ": {$activeEncoding}";
             });
 
             $prompt .= "\n\n{$liveState}";
@@ -99,6 +100,7 @@ abstract class AbstractCopilotEngine
 
         return $prompt;
     }
+
 
     /**
      * @return array{role: string, parts: array<int, array<string,mixed>>}

@@ -51,7 +51,16 @@ class ActiveUserTrendTool extends AbstractAnalyticsTool
             }
         }
 
-        $data = ['dau_series' => $dauSeries];
+        $wauRows = DB::table('screen_time_sessions')
+            ->whereBetween('started_at', [$range['from'], $range['to']])
+            ->selectRaw("DATE_TRUNC('week', started_at)::date as week, COUNT(DISTINCT user_id) as cnt")
+            ->groupByRaw("DATE_TRUNC('week', started_at)")
+            ->orderBy('week')
+            ->get()
+            ->mapWithKeys(fn ($r) => [(string) $r->week => (int) $r->cnt])
+            ->toArray();
+
+        $data = ['dau_series' => $dauSeries, 'wau_series' => $wauRows];
 
         $compare   = null;
         $changePct = null;

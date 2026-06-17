@@ -73,7 +73,6 @@ export interface AiCopilotMessage {
 }
 
 export interface AiCopilotSessionContext {
-    video_title?: string
     video_description?: string
     video_category?: string
     video_transcript?: string
@@ -81,6 +80,7 @@ export interface AiCopilotSessionContext {
     creator_language?: string
     upload_session_uuid?: string
     post_uuid?: string
+    surface?: string
 }
 
 export interface AiCopilotSession {

@@ -59,20 +59,37 @@ class AiCopilotMetricsTool extends AbstractAnalyticsTool
             ->toArray();
 
         $topUsersByCost = (clone $query)
-            ->whereNotNull('user_id')
-            ->whereNotNull('cost_usd')
-            ->selectRaw('user_id, COALESCE(SUM(cost_usd), 0) as total_cost')
-            ->groupBy('user_id')
+            ->whereNotNull('ai_usage_logs.cost_usd')
+            ->join('users', 'ai_usage_logs.user_id', '=', 'users.id')
+            ->selectRaw('ai_usage_logs.user_id, users.username, COALESCE(SUM(ai_usage_logs.cost_usd), 0) as total_cost')
+            ->groupBy('ai_usage_logs.user_id', 'users.username')
             ->orderByDesc('total_cost')
             ->limit(10)
             ->get()
-            ->map(fn ($row) => ['user_id' => $row->user_id, 'total_cost_usd' => round((float) $row->total_cost, 4)])
+            ->map(fn ($row) => [
+                'user_id'        => $row->user_id,
+                'username'       => $row->username,
+                'total_cost_usd' => round((float) $row->total_cost, 4),
+            ])
+            ->toArray();
+
+        $dailySeries = (clone $query)
+            ->selectRaw("DATE(created_at) as date, COUNT(*) as requests, COALESCE(SUM(cost_usd), 0) as cost_usd")
+            ->groupByRaw("DATE(created_at)")
+            ->orderBy('date')
+            ->get()
+            ->map(fn ($row) => [
+                'date'     => $row->date,
+                'requests' => (int) $row->requests,
+                'cost_usd' => round((float) $row->cost_usd, 6),
+            ])
             ->toArray();
 
         $data = [
-            'total_requests'     => $total,
-            'top_intents'        => $topIntents,
-            'top_users_by_cost'  => $topUsersByCost,
+            'total_requests'    => $total,
+            'top_intents'       => $topIntents,
+            'top_users_by_cost' => $topUsersByCost,
+            'daily_series'      => $dailySeries,
         ];
 
         $compare   = null;

@@ -83,7 +83,7 @@ class ScreenTimeController extends Controller
      */
     public function heartbeat(Request $request, string $uuid): JsonResponse
     {
-        $data = $request->validate(['page_type' => 'nullable|string|in:posts,comment,likes']);
+        $data = $request->validate(['page_type' => 'nullable|string|in:posts,comment,likes,other']);
         $this->screenTimeTrackingService->heartbeatByUuid($uuid, (int) auth_user_id(), $data['page_type'] ?? 'other');
 
         return ApiResponse::success(data: null, message: trans('messages.wellness.heartbeat'));

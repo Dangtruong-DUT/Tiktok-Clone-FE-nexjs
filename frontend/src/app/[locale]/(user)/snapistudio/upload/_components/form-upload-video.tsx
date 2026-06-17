@@ -76,10 +76,8 @@ export default function FormUploadVideo() {
         registerFormPatch('content', (val) =>
             form.setValue('content', val, { shouldDirty: true, shouldValidate: true })
         )
-        registerFormPatch('title', (val) => form.setValue('content', val, { shouldDirty: true, shouldValidate: true }))
         return () => {
             unregisterFormPatch('content')
-            unregisterFormPatch('title')
         }
     }, [form, registerFormPatch, unregisterFormPatch])
 

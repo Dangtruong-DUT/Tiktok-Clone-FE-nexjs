@@ -78,6 +78,24 @@ class AppealOverviewTool extends AbstractAnalyticsTool
             'approval_rate' => $approvalRate,
         ];
 
+        if (isset($params['limit'])) {
+            $data['items'] = DB::table('appeals')
+                ->join('users', 'appeals.user_id', '=', 'users.id')
+                ->where('appeals.status', 'pending')
+                ->orderBy('appeals.created_at', 'asc')
+                ->limit((int) $params['limit'])
+                ->select(['appeals.uuid', 'appeals.appeal_type', 'users.username', 'appeals.resource_type', 'appeals.created_at'])
+                ->get()
+                ->map(fn ($r) => [
+                    'uuid'          => $r->uuid,
+                    'appeal_type'   => $r->appeal_type,
+                    'username'      => $r->username,
+                    'resource_type' => $r->resource_type,
+                    'created_at'    => $r->created_at,
+                ])
+                ->toArray();
+        }
+
         $compare   = null;
         $changePct = null;
 

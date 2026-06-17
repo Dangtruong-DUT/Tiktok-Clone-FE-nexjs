@@ -67,13 +67,29 @@ class PostEngagementBreakdownTool extends AbstractAnalyticsTool
             ? round(($totalLikes + (int) ($agg->total_comments ?? 0)) / $totalViews * 100, 2)
             : 0.0;
 
+        $typeMap      = [0 => 'post', 1 => 'repost', 2 => 'comment', 3 => 'quote_post'];
+        $typeRows     = (clone $query)
+            ->selectRaw('type, COUNT(*) as cnt, COALESCE(SUM(user_views + guest_views), 0) as views, COALESCE(SUM(likes_count), 0) as likes')
+            ->groupBy('type')
+            ->get();
+        $byTypeBreakdown = [];
+        foreach ($typeRows as $row) {
+            $label = $typeMap[(int) $row->type] ?? (string) $row->type;
+            $byTypeBreakdown[$label] = [
+                'count' => (int) $row->cnt,
+                'views' => (int) $row->views,
+                'likes' => (int) $row->likes,
+            ];
+        }
+
         $data = [
-            'total_views'     => $totalViews,
-            'total_likes'     => $totalLikes,
-            'total_comments'  => (int) ($agg->total_comments ?? 0),
-            'total_shares'    => (int) ($agg->total_shares ?? 0),
-            'total_bookmarks' => (int) ($agg->total_bookmarks ?? 0),
-            'engagement_rate' => $engagementRate,
+            'total_views'        => $totalViews,
+            'total_likes'        => $totalLikes,
+            'total_comments'     => (int) ($agg->total_comments ?? 0),
+            'total_shares'       => (int) ($agg->total_shares ?? 0),
+            'total_bookmarks'    => (int) ($agg->total_bookmarks ?? 0),
+            'engagement_rate'    => $engagementRate,
+            'by_type_breakdown'  => $byTypeBreakdown,
         ];
 
         $compare   = null;

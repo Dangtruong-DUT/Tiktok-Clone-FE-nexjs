@@ -55,6 +55,24 @@ class CommentOverviewTool extends AbstractAnalyticsTool
 
         $total = (clone $query)->count();
 
+        $listItems = null;
+        if (isset($params['limit'])) {
+            $listItems = (clone $query)
+                ->join('users', 'posts.user_id', '=', 'users.id')
+                ->orderByDesc('posts.created_at')
+                ->limit((int) $params['limit'])
+                ->select(['posts.uuid', 'posts.content', 'posts.parent_id', 'users.username', 'posts.created_at'])
+                ->get()
+                ->map(fn ($c) => [
+                    'uuid'            => $c->uuid,
+                    'content_excerpt' => mb_substr((string) $c->content, 0, 80),
+                    'post_id'         => $c->parent_id,
+                    'username'        => $c->username,
+                    'created_at'      => $c->created_at,
+                ])
+                ->toArray();
+        }
+
         $compare   = null;
         $changePct = null;
 
@@ -76,10 +94,15 @@ class CommentOverviewTool extends AbstractAnalyticsTool
             $changePct = $this->changePercent($total, $prevTotal);
         }
 
+        $data = ['total_comments' => $total];
+        if ($listItems !== null) {
+            $data['items'] = $listItems;
+        }
+
         return [
             'tool'       => $this->name(),
             'period'     => $params['period'],
-            'data'       => ['total_comments' => $total],
+            'data'       => $data,
             'compare'    => $compare,
             'change_pct' => $changePct,
         ];

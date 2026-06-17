@@ -4,6 +4,7 @@ namespace App\Services\Analytics\Tools;
 
 use App\Enums\Video\VideoEncodingStatusEnum;
 use App\Repositories\VideoEncodingRepository;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Video encoding queue: pending, processing, failed, stuck jobs, avg processing time.
@@ -48,13 +49,41 @@ class EncodingQueueStatusTool extends AbstractAnalyticsTool
         $stuck             = $this->encodingRepo->countStuck(2, $resolution);
         $avgProcessingTime = $this->encodingRepo->getAvgProcessingMinutes($resolution);
 
+        $errorSummary = DB::table('video_encodings')
+            ->where('status', VideoEncodingStatusEnum::FAILED->value)
+            ->whereNotNull('error_message')
+            ->selectRaw("SUBSTRING(error_message, 1, 100) as pattern, COUNT(*) as cnt")
+            ->groupByRaw("SUBSTRING(error_message, 1, 100)")
+            ->orderByDesc('cnt')
+            ->limit(5)
+            ->get()
+            ->map(fn ($r) => ['pattern' => $r->pattern, 'count' => (int) $r->cnt])
+            ->toArray();
+
         $data = [
             'pending_jobs'        => $pending,
             'processing_jobs'     => $processing,
             'failed_jobs'         => $failed,
             'stuck_jobs'          => $stuck,
             'avg_processing_time' => $avgProcessingTime,
+            'error_summary'       => $errorSummary,
         ];
+
+        if (isset($params['limit'])) {
+            $data['items'] = DB::table('video_encodings')
+                ->where('status', VideoEncodingStatusEnum::FAILED->value)
+                ->orderByDesc('created_at')
+                ->limit((int) $params['limit'])
+                ->select(['uuid', 'status', 'error_message', 'created_at'])
+                ->get()
+                ->map(fn ($r) => [
+                    'uuid'          => $r->uuid,
+                    'status_label'  => 'failed',
+                    'error_message' => mb_substr((string) $r->error_message, 0, 100),
+                    'created_at'    => $r->created_at,
+                ])
+                ->toArray();
+        }
 
         return [
             'tool'       => $this->name(),

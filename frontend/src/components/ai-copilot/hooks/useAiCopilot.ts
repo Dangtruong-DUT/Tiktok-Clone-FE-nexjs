@@ -43,9 +43,11 @@ function hasAnalyzeKeyword(text: string): boolean {
 
 interface UseAiCopilotOptions {
     sessionUuid: string | null
+    surface?: 'admin' | 'studio_editor' | 'studio_general'
+    role?: 'admin' | 'creator'
 }
 
-export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
+export function useAiCopilot({ sessionUuid, surface }: UseAiCopilotOptions) {
     const t = useTranslations('SnapiStudio.aiCopilot')
     const {
         pendingVideoClip,
@@ -140,7 +142,8 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
             // Auto-capture a short clip if the user is asking for analysis but hasn't selected a segment
             let autoClip: string | null = null
             const vidEl = videoRef?.current ?? null
-            if (!pendingVideoClip && !timelineSelection && hasAnalyzeKeyword(content) && vidEl) {
+            const canUseEditorContext = surface === 'studio_editor'
+            if (canUseEditorContext && !pendingVideoClip && !timelineSelection && hasAnalyzeKeyword(content) && vidEl) {
                 const vid = vidEl
                 const clipEnd = Math.min(15, vid.duration || 15)
                 if (clipEnd > 2) {
@@ -149,9 +152,9 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
             }
 
             const attachments: SendAiCopilotMessageAttachmentsDto = {}
-            const effectiveClip = pendingVideoClip ?? autoClip
+            const effectiveClip = surface === 'studio_editor' ? pendingVideoClip ?? autoClip : null
             if (effectiveClip) attachments.video_clip = effectiveClip
-            if (timelineSelection) {
+            if (surface === 'studio_editor' && timelineSelection) {
                 attachments.timeline = {
                     start_seconds: timelineSelection.start,
                     end_seconds: timelineSelection.end
@@ -160,9 +163,10 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
 
             // Build live form content snapshot — AI uses this to know what the creator is currently writing
             const currentContent: Record<string, string> = {}
-            if (videoContext.video_description) currentContent.caption = videoContext.video_description
-            if (videoContext.video_title) currentContent.title = videoContext.video_title
-            if (videoContext.video_category) currentContent.hashtags = videoContext.video_category
+            if (surface === 'studio_editor') {
+                if (videoContext.video_description) currentContent.caption = videoContext.video_description
+                if (videoContext.video_category) currentContent.hashtags = videoContext.video_category
+            }
 
             setPendingVideoClip(null)
             setTimelineSelection(null)
@@ -173,6 +177,7 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
                 const res = await sendMessage({
                     sessionUuid,
                     content,
+                    surface,
                     attachments: Object.keys(attachments).length > 0 ? attachments : undefined,
                     current_content: Object.keys(currentContent).length > 0 ? currentContent : undefined
                 }).unwrap()
@@ -225,7 +230,8 @@ export function useAiCopilot({ sessionUuid }: UseAiCopilotOptions) {
             openEventSource,
             videoContext,
             videoRef,
-            t
+            t,
+            surface
         ]
     )
 

@@ -5,6 +5,7 @@ import { X, Sparkles, RotateCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
+import { usePathname } from 'next/navigation'
 import { useDeleteSessionMutation } from '@/store/services/ai/ai-copilot.service'
 import { useAiCopilotContext } from './AiCopilotContext'
 import { useCopilotSession } from './hooks/useCopilotSession'
@@ -17,17 +18,38 @@ function toStringArray(value: unknown): string[] {
     return Array.isArray(value) && value.every((item): item is string => typeof item === 'string') ? value : []
 }
 
+function detectSurface(pathname: string): 'admin' | 'studio_editor' | 'studio_general' {
+    const path = pathname.toLowerCase()
+
+    if (path.includes('/admin')) {
+        return 'admin'
+    }
+
+    if (path.includes('/snapistudio/upload')) {
+        return 'studio_editor'
+    }
+
+    return 'studio_general'
+}
+
 interface AiCopilotProps {
     role?: 'admin' | 'creator'
 }
 
 export function AiCopilot({ role = 'creator' }: AiCopilotProps) {
     const t = useTranslations('SnapiStudio.aiCopilot')
-    const { isPanelOpen, openPanel, closePanel, videoContext, hasAnyFormField } = useAiCopilotContext()
+    const pathname = usePathname()
+    const surface = detectSurface(pathname)
+    const { isPanelOpen, openPanel, closePanel, videoContext, hasAnyFormField, clearVideoContext, setTimelineSelection, setPendingVideoClip, setPendingMessage } =
+        useAiCopilotContext()
 
-    const { session, sessionUuid, isLoading: isSessionLoading, start, reset: resetSession } = useCopilotSession()
+    const { session, sessionUuid, isLoading: isSessionLoading, start, reset: resetSession } = useCopilotSession({
+        surface
+    })
     const { messages, isSending, send, accept, reject, retry, initFromSession, clearMessages } = useAiCopilot({
-        sessionUuid
+        sessionUuid,
+        surface,
+        role
     })
     const [deleteSession] = useDeleteSessionMutation()
 
@@ -40,10 +62,23 @@ export function AiCopilot({ role = 'creator' }: AiCopilotProps) {
     }, [sessionUuid, deleteSession, clearMessages, resetSession])
 
     useEffect(() => {
+        if (surface === 'studio_editor') return
+
+        clearVideoContext()
+        setTimelineSelection(null)
+        setPendingVideoClip(null)
+        setPendingMessage(null)
+    }, [surface, clearVideoContext, setTimelineSelection, setPendingVideoClip, setPendingMessage])
+
+    useEffect(() => {
         if (isPanelOpen && !sessionUuid) {
-            start({ upload_session_uuid: videoContext.upload_session_uuid })
+            start(
+                surface === 'studio_editor' && videoContext.upload_session_uuid
+                    ? { upload_session_uuid: videoContext.upload_session_uuid }
+                    : {}
+            )
         }
-    }, [isPanelOpen, sessionUuid, start, videoContext])
+    }, [isPanelOpen, sessionUuid, start, videoContext.upload_session_uuid, surface])
 
     useEffect(() => {
         if (session?.messages?.length) initFromSession(session.messages)
@@ -53,7 +88,12 @@ export function AiCopilot({ role = 'creator' }: AiCopilotProps) {
     const adminChips = toStringArray(t.raw('quickPromptsAdmin'))
     const formChips = toStringArray(t.raw('quickPrompts'))
     const generalChips = toStringArray(t.raw('quickPromptsGeneral'))
-    const quickPrompts = role === 'admin' ? adminChips : hasAnyFormField ? formChips : generalChips
+    const quickPrompts =
+        role === 'admin'
+            ? adminChips
+            : surface === 'studio_editor' && hasAnyFormField
+              ? formChips
+              : generalChips
 
     return (
         <>

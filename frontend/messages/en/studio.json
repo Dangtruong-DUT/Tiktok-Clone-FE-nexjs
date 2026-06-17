@@ -649,7 +649,7 @@
                 "My account stats",
                 "What can Snapi do?",
                 "Analyze my screen time",
-                "Content creation ideas"
+                "Go to account settings"
             ],
             "quickPromptsAdmin": ["System user stats", "Pending appeals", "AI costs today", "Video encoding errors"],
             "newSession": "New conversation",

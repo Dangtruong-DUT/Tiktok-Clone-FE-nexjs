@@ -57,13 +57,43 @@ class PostOverviewTool extends AbstractAnalyticsTool
         $published  = (clone $query)->where('status', 'published')->count();
         $draft      = (clone $query)->where('status', 'draft')->count();
         $scheduled  = (clone $query)->where('status', 'scheduled')->count();
+        $hidden     = (clone $query)->where('status', 'hidden')->count();
+
+        $audienceMap  = [0 => 'public', 1 => 'private', 2 => 'friends', 3 => 'following'];
+        $audienceRows = (clone $query)
+            ->selectRaw('audience, COUNT(*) as cnt')
+            ->groupBy('audience')
+            ->pluck('cnt', 'audience')
+            ->toArray();
+        $audienceBreakdown = [];
+        foreach ($audienceRows as $val => $cnt) {
+            $audienceBreakdown[$audienceMap[(int) $val] ?? (string) $val] = (int) $cnt;
+        }
 
         $data = [
-            'total_posts'     => $total,
-            'published_posts' => $published,
-            'draft_posts'     => $draft,
-            'scheduled_posts' => $scheduled,
+            'total_posts'        => $total,
+            'published_posts'    => $published,
+            'draft_posts'        => $draft,
+            'scheduled_posts'    => $scheduled,
+            'hidden_posts'       => $hidden,
+            'audience_breakdown' => $audienceBreakdown,
         ];
+
+        if (isset($params['limit'])) {
+            $data['items'] = (clone $query)
+                ->orderByDesc('created_at')
+                ->limit((int) $params['limit'])
+                ->select(['uuid', 'content', 'status', 'published_at', 'created_at'])
+                ->get()
+                ->map(fn ($p) => [
+                    'uuid'            => $p->uuid,
+                    'content_excerpt' => mb_substr((string) $p->content, 0, 80),
+                    'status'          => $p->status,
+                    'published_at'    => $p->published_at,
+                    'created_at'      => $p->created_at,
+                ])
+                ->toArray();
+        }
 
         $compare    = null;
         $changePct  = null;
