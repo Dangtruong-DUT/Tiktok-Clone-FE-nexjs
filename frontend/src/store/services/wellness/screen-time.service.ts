@@ -45,7 +45,8 @@ export const ScreenTimeApi = createApi({
                 url: BACKEND_API_ENDPOINT.WELLNESS.VIDEO_TIME(uuid),
                 method: 'POST',
                 body: { video_seconds }
-            })
+            }),
+            invalidatesTags: ['ScreenTime']
         }),
 
         endSession: builder.mutation<ApiSuccessResponseWithData<null>, { uuid: string; duration_seconds: number }>({
@@ -62,7 +63,8 @@ export const ScreenTimeApi = createApi({
                 url: BACKEND_API_ENDPOINT.WELLNESS.SESSION_ACTION(uuid),
                 method: 'POST',
                 body: { action }
-            })
+            }),
+            invalidatesTags: ['ScreenTime']
         })
     })
 })

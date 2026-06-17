@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { usePathname } from 'next/navigation'
+import { usePathname } from '@/i18n/navigation'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { setPageType } from '@/store/features/wellnessSlice'
 import { useScreenTimeTracker } from '@/hooks/wellness/useScreenTimeTracker'

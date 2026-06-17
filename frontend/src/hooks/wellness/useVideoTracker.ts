@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { addVideoSeconds } from '@/store/features/wellnessSlice'
 import { useUpdateVideoTimeMutation } from '@/store/services/wellness/screen-time.service'
@@ -48,9 +48,9 @@ export function useVideoTracker(sessionUuid: string | null): {
         return () => clearInterval(interval)
     }, [sessionUuid, dispatch])
 
-    return {
-        addVideoSeconds: (seconds: number) => {
-            videoAccumulatorRef.current += seconds
-        }
-    }
+    const addVideoSeconds = useCallback((seconds: number) => {
+        videoAccumulatorRef.current += seconds
+    }, [])
+
+    return { addVideoSeconds }
 }

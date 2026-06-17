@@ -25,7 +25,8 @@ export function useSessionHeartbeat(sessionUuid: string | null): void {
         if (!sessionUuid) return
 
         const interval = setInterval(() => {
-            sendHeartbeatRef.current({ uuid: sessionUuid, page_type: pageTypeRef.current }).catch(() => {})
+            const pt = pageTypeRef.current === 'video' ? 'video' : 'other'
+            sendHeartbeatRef.current({ uuid: sessionUuid, page_type: pt }).catch(() => {})
         }, HEARTBEAT_INTERVAL_MS)
 
         return () => clearInterval(interval)
