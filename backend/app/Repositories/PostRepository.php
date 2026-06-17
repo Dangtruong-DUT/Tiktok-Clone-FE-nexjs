@@ -140,6 +140,7 @@ class PostRepository extends BaseRepository
 
         $query = $this->query()
             ->where('user_id', $userId)
+            ->where('type', PostTypeEnum::POST->value)
             ->orderByDesc('updated_at');
 
         if ($search !== '') {
