@@ -59,13 +59,9 @@ const wellnessSlice = createSlice({
             state.activeAlert = action.payload
         },
 
-        dismissAlert(state, action: PayloadAction<{ resetContinuous?: boolean }>) {
+        dismissAlert(state) {
             state.isAlertVisible = false
             state.activeAlert = null
-            if (action.payload.resetContinuous) {
-                // Reset session start time so continuous timer restarts from zero
-                state.sessionStartedAt = Date.now()
-            }
         },
 
         addVideoSeconds(state, action: PayloadAction<number>) {

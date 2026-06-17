@@ -123,7 +123,7 @@ class ScreenTimeTrackingService
     public function updateVideoTime(ScreenTimeSession $session, int $seconds): ScreenTimeSession
     {
         if ($session->ended_at !== null) {
-            throw new BusinessException('Session has already ended.');
+            throw new BusinessException(trans('exceptions.wellness.session_ended'));
         }
 
         // Cap video_seconds at the session's elapsed wall-clock time to prevent
@@ -224,7 +224,7 @@ class ScreenTimeTrackingService
             'post_seconds'      => $postSeconds,
             'likes_seconds'     => $likesSeconds,
             'avg_daily_seconds' => $days > 0 ? (int) round($totalSeconds / $days) : 0,
-            'peak_hour'         => $this->getPeakHour($userId, $from, $to),
+            'peak_hour'         => $this->repository->getPeakHour($userId, $from, $to),
             'daily_series'      => $this->getDailySeries($userId, $from, $to, $liveSeconds),
         ];
     }
@@ -269,21 +269,6 @@ class ScreenTimeTrackingService
         }
 
         return (int) now()->diffInSeconds($active->started_at, true);
-    }
-
-    private function getPeakHour(int $userId, Carbon $from, Carbon $to): ?int
-    {
-        $row = DB::table('screen_time_sessions')
-            ->where('user_id', $userId)
-            ->where('started_at', '>=', $from)
-            ->where('started_at', '<=', $to)
-            ->whereNull('deleted_at')
-            ->selectRaw('EXTRACT(HOUR FROM started_at)::int AS hour, COUNT(*) AS cnt')
-            ->groupByRaw('EXTRACT(HOUR FROM started_at)::int')
-            ->orderByRaw('COUNT(*) DESC')
-            ->first();
-
-        return $row ? (int) $row->hour : null;
     }
 
     /**

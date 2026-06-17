@@ -8,7 +8,9 @@ import { useGetStatsQuery } from '@/store/services/wellness/screen-time.service'
 export function useStatsHydration(): void {
     const dispatch = useAppDispatch()
     const isAuthenticated = useAppSelector((s) => !!s.auth.isAuthenticated)
-    const { data: statsData } = useGetStatsQuery({ period: 'today' }, { skip: !isAuthenticated })
+    // Poll every 60 s so todayTotalSeconds stays fresh during an active session,
+    // keeping DailyLimitRule able to fire as the user crosses the threshold.
+    const { data: statsData } = useGetStatsQuery({ period: 'today' }, { skip: !isAuthenticated, pollingInterval: 60_000 })
 
     useEffect(() => {
         if (statsData?.data) {

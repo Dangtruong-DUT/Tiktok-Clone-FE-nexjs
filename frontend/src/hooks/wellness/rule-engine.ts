@@ -89,6 +89,12 @@ export class RuleEvaluator {
             const snoozedUntil = context.snoozedRules[rule.uuid]
             if (snoozedUntil && now < snoozedUntil) continue
 
+            // Snooze just expired: clear the cycle entry so one-shot rules
+            // (DailyLimit, VideoWatch) can re-trigger after the snooze window.
+            if (snoozedUntil && now >= snoozedUntil) {
+                context.cycleTracker.delete(rule.uuid)
+            }
+
             const strategy = this.strategies[rule.type]
             if (strategy?.canTrigger(rule, context)) {
                 return rule

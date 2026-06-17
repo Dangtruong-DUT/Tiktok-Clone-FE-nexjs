@@ -22,21 +22,64 @@ export function useRuleMonitoring(params: { sessionUuid: string | null; sessionS
 
     const { data: rulesData } = useListRulesQuery(undefined, { skip: !isAuthenticated })
 
+    // All mutable state is mirrored into refs so the interval callback always
+    // reads current values without being listed as an effect dependency.
+    // This prevents the interval from being torn down and recreated on every
+    // state change (which would cause immediate re-evaluation and timer drift).
+    const isAlertVisibleRef = useRef(isAlertVisible)
+    const todayTotalSecondsRef = useRef(todayTotalSeconds)
+    const todayVideoSecondsRef = useRef(todayVideoSeconds)
+    const videoWatchSecondsRef = useRef(videoWatchSeconds)
+    const dismissedRulesRef = useRef(dismissedRules)
+    const snoozedRulesRef = useRef(snoozedRules)
+    const rulesDataRef = useRef(rulesData)
+    const sessionUuidRef = useRef(sessionUuid)
+    const sessionStartedAtRef = useRef(sessionStartedAt)
+
+    useEffect(() => {
+        isAlertVisibleRef.current = isAlertVisible
+    }, [isAlertVisible])
+    useEffect(() => {
+        todayTotalSecondsRef.current = todayTotalSeconds
+    }, [todayTotalSeconds])
+    useEffect(() => {
+        todayVideoSecondsRef.current = todayVideoSeconds
+    }, [todayVideoSeconds])
+    useEffect(() => {
+        videoWatchSecondsRef.current = videoWatchSeconds
+    }, [videoWatchSeconds])
+    useEffect(() => {
+        dismissedRulesRef.current = dismissedRules
+    }, [dismissedRules])
+    useEffect(() => {
+        snoozedRulesRef.current = snoozedRules
+    }, [snoozedRules])
+    useEffect(() => {
+        rulesDataRef.current = rulesData
+    }, [rulesData])
+    useEffect(() => {
+        sessionUuidRef.current = sessionUuid
+    }, [sessionUuid])
+    useEffect(() => {
+        sessionStartedAtRef.current = sessionStartedAt
+    }, [sessionStartedAt])
+
     const lastAlertCycleRef = useRef<Map<string, number>>(new Map())
     const evaluator = useMemo(() => new RuleEvaluator(), [])
 
     const evaluateRules = useCallback(() => {
-        if (isAlertVisible) return
-        const rules = rulesData?.data
-        if (!rules || !sessionUuid) return
+        if (isAlertVisibleRef.current) return
+        const rules = rulesDataRef.current?.data
+        const uuid = sessionUuidRef.current
+        if (!rules || !uuid) return
 
         const context: RuleContext = {
-            totalMinutesToday: todayTotalSeconds / 60,
-            videoMinutesToday: (todayVideoSeconds + videoWatchSeconds) / 60,
-            sessionStartedAt,
+            totalMinutesToday: todayTotalSecondsRef.current / 60,
+            videoMinutesToday: (todayVideoSecondsRef.current + videoWatchSecondsRef.current) / 60,
+            sessionStartedAt: sessionStartedAtRef.current,
             currentHour: new Date().getHours(),
-            dismissedRules,
-            snoozedRules,
+            dismissedRules: dismissedRulesRef.current,
+            snoozedRules: snoozedRulesRef.current,
             cycleTracker: lastAlertCycleRef.current
         }
 
@@ -51,27 +94,14 @@ export function useRuleMonitoring(params: { sessionUuid: string | null; sessionS
                 })
             )
         }
-    }, [
-        isAlertVisible,
-        rulesData,
-        sessionUuid,
-        todayTotalSeconds,
-        todayVideoSeconds,
-        videoWatchSeconds,
-        sessionStartedAt,
-        dismissedRules,
-        snoozedRules,
-        evaluator,
-        dispatch
-    ])
+    }, [evaluator, dispatch])
 
     useEffect(() => {
-        const rules = rulesData?.data
-        if (!rules || !sessionUuid) return
+        if (!sessionUuid) return
 
         const interval = setInterval(evaluateRules, RULE_EVAL_INTERVAL_MS)
         evaluateRules()
 
         return () => clearInterval(interval)
-    }, [rulesData, sessionUuid, evaluateRules])
+    }, [sessionUuid, evaluateRules])
 }
